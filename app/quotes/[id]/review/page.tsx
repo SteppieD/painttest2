@@ -205,24 +205,24 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
           <CardContent className="space-y-4">
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Paint Costs</span>
+                <span className="font-medium">${(quote.paint_cost || quote.breakdown.paint || 0).toLocaleString()}</span>
+              </div>
+              
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Sundries ({quote.sundries_percentage || 12}%)</span>
+                <span className="font-medium">${(quote.sundries_cost || quote.breakdown.sundries || 0).toLocaleString()}</span>
+              </div>
+              
+              <div className="flex justify-between items-center py-2">
                 <span className="text-gray-600">Labour Costs</span>
                 <span className="font-medium">${quote.breakdown.labor?.toLocaleString()}</span>
-              </div>
-              
-              <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">Paint & Materials</span>
-                <span className="font-medium">${quote.breakdown.materials?.toLocaleString()}</span>
-              </div>
-              
-              <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">Prep Work & Sundries</span>
-                <span className="font-medium">${quote.breakdown.prepWork?.toLocaleString()}</span>
               </div>
               
               <div className="border-t pt-3">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Subtotal</span>
-                  <span className="font-medium">${subtotal.toLocaleString()}</span>
+                  <span className="font-medium">${(quote.subtotal || subtotal).toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -250,10 +250,18 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-600">Markup Amount</span>
                 <span className="font-medium">
-                  ${Math.round(subtotal * (markupPercentage / 100)).toLocaleString()}
+                  ${Math.round((quote.subtotal || subtotal) * (markupPercentage / 100)).toLocaleString()}
                 </span>
               </div>
             </div>
+
+            {/* Tax */}
+            {quote.tax_rate && quote.tax_rate > 0 && (
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Tax ({quote.tax_rate}%)</span>
+                <span className="font-medium">${(quote.tax_amount || 0).toLocaleString()}</span>
+              </div>
+            )}
 
             {/* Total */}
             <div className="border-t pt-4">

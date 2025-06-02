@@ -224,6 +224,14 @@ export default function DashboardPage() {
               </Button>
               
               <Button
+                variant="outline"
+                onClick={() => router.push("/settings")}
+                className="hidden sm:flex"
+              >
+                Settings
+              </Button>
+              
+              <Button
                 variant="ghost"
                 onClick={handleLogout}
               >

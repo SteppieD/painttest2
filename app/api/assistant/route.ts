@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseMessage, calculateSimpleQuote } from '@/lib/simple-assistant';
+import { dbGet } from '@/lib/database';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -10,17 +11,26 @@ interface AssistantRequest {
   message: string;
   history: ChatMessage[];
   context?: any;
+  companyId?: string;
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const { message, history, context = {} }: AssistantRequest = await request.json();
+    const { message, history, context = {}, companyId }: AssistantRequest = await request.json();
 
     if (!message?.trim()) {
       return NextResponse.json(
         { error: 'Message is required' },
         { status: 400 }
       );
+    }
+
+    // Load company settings for calculations
+    let companySettings = null;
+    if (companyId) {
+      companySettings = dbGet(`
+        SELECT * FROM companies WHERE id = ?
+      `, [companyId]);
     }
 
     // Parse the message and extract information
@@ -38,8 +48,8 @@ export async function POST(request: NextRequest) {
     let quoteData = null;
 
     if (isComplete) {
-      // Calculate the quote
-      const quote = calculateSimpleQuote(updatedContext);
+      // Calculate the quote with company settings
+      const quote = calculateSimpleQuote(updatedContext, companySettings);
       quoteData = {
         ...quote,
         customerName: updatedContext.clientName,
@@ -50,13 +60,19 @@ export async function POST(request: NextRequest) {
         timeline: updatedContext.timeline,
         totalCost: quote.total,
         timeEstimate: updatedContext.timeline === 'rush' ? '2-3 days' : 
-                     updatedContext.timeline === 'flexible' ? '5-7 days' : '3-5 days'
+                     updatedContext.timeline === 'flexible' ? '5-7 days' : '3-5 days',
+        needsMarkupConfirmation: quote.needsMarkupConfirmation
       };
       
       // Store quote in context for later reference
       updatedContext.lastQuote = quote;
       
-      response = `Your quote is $${quote.total.toLocaleString()}. Click 'View Quote Details' above to see the full breakdown and generate a customer quote.`;
+      // Different response based on quote type
+      if (updatedContext.quoteType === 'quick') {
+        response = `Your quick quote is $${quote.total.toLocaleString()}. Your base costs are $${quote.subtotal.toLocaleString()}.`;
+      } else {
+        response = `Your detailed quote is $${quote.total.toLocaleString()}.\n\nPaint: $${quote.breakdown.paint.toLocaleString()}\nSundries: $${quote.breakdown.sundries.toLocaleString()}\nLabor: $${quote.breakdown.labor.toLocaleString()}\nYour Profit: $${quote.breakdown.markup.toLocaleString()}${quote.tax > 0 ? `\nTax: $${quote.tax.toLocaleString()}` : ''}`;
+      }
     } else if (nextQuestion === 'PROVIDE_BREAKDOWN' && context.lastQuote) {
       // Provide breakdown when asked
       const quote = context.lastQuote;

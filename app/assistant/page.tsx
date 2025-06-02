@@ -6,6 +6,7 @@ import { Send, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { MarkupPopup } from "@/components/markup-popup";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -36,6 +37,8 @@ export default function AssistantPage() {
   const [context, setContext] = useState<any>({});
   const [savedQuoteId, setSavedQuoteId] = useState<string | null>(null);
   const [isSavingQuote, setIsSavingQuote] = useState(false);
+  const [showMarkupPopup, setShowMarkupPopup] = useState(false);
+  const [pendingQuoteData, setPendingQuoteData] = useState<any>(null);
 
   // Auto-scroll to bottom
   const scrollToBottom = () => {
@@ -99,7 +102,8 @@ export default function AssistantPage() {
             role: msg.role,
             content: msg.content
           })),
-          context: context
+          context: context,
+          companyId: companyData?.id
         }),
       });
 
@@ -129,37 +133,14 @@ export default function AssistantPage() {
 
       setMessages(prev => [...prev, assistantMessage]);
 
-      // If quote is complete and not already saving, save it
-      if (data.isComplete && data.quoteData && !isSavingQuote && !savedQuoteId) {
-        setIsSavingQuote(true);
-        
-        // Save chat session to history
-        if (data.context.clientName && data.context.address) {
-          saveChatSession(data.context.clientName, data.context.address);
-        }
-
-        // Save quote to database
-        try {
-          const saveResponse = await fetch('/api/quotes', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              quoteData: data.quoteData,
-              companyId: companyData.id
-            }),
-          });
-
-          if (saveResponse.ok) {
-            const saveData = await saveResponse.json();
-            setSavedQuoteId(saveData.quoteId || saveData.quote?.id);
-            setIsSavingQuote(false);
-          }
-        } catch (error) {
-          console.error('Error saving quote:', error);
-          setIsSavingQuote(false);
-        }
+      // If quote is complete and needs markup confirmation, show popup
+      if (data.isComplete && data.quoteData && data.quoteData.needsMarkupConfirmation && !savedQuoteId) {
+        setPendingQuoteData(data.quoteData);
+        setShowMarkupPopup(true);
+      } 
+      // If quote is complete and doesn't need confirmation, save it
+      else if (data.isComplete && data.quoteData && !isSavingQuote && !savedQuoteId) {
+        saveQuoteToDatabase(data.quoteData, data.context);
       }
 
     } catch (error) {
@@ -213,6 +194,83 @@ export default function AssistantPage() {
     
     localStorage.setItem('paintquote_chat_history', JSON.stringify(sessions));
     window.dispatchEvent(new Event('storage'));
+  };
+
+  // Save quote to database
+  const saveQuoteToDatabase = async (quoteData: any, contextData: any) => {
+    if (isSavingQuote) return;
+    
+    setIsSavingQuote(true);
+    
+    // Save chat session to history
+    if (contextData.clientName && contextData.address) {
+      saveChatSession(contextData.clientName, contextData.address);
+    }
+
+    try {
+      const saveResponse = await fetch('/api/quotes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          quoteData: quoteData,
+          companyId: companyData.id
+        }),
+      });
+
+      if (saveResponse.ok) {
+        const saveData = await saveResponse.json();
+        setSavedQuoteId(saveData.quoteId || saveData.quote?.id);
+        setIsSavingQuote(false);
+        
+        // Add confirmation message
+        setTimeout(() => {
+          const confirmMessage: Message = {
+            id: (Date.now() + 2).toString(),
+            role: 'assistant',
+            content: `Quote saved as #${saveData.quoteId}! Click 'View Quote Details' above to review and generate the customer quote.`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, confirmMessage]);
+        }, 500);
+      }
+    } catch (error) {
+      console.error('Error saving quote:', error);
+      setIsSavingQuote(false);
+    }
+  };
+
+  // Handle markup confirmation
+  const handleMarkupConfirm = async (markupPercentage: number) => {
+    if (!pendingQuoteData) return;
+    
+    // Update quote data with confirmed markup
+    const updatedQuoteData = {
+      ...pendingQuoteData,
+      markup: {
+        percentage: markupPercentage,
+        amount: pendingQuoteData.subtotal * (markupPercentage / 100)
+      }
+    };
+    
+    // Recalculate total with new markup
+    updatedQuoteData.totalCost = updatedQuoteData.subtotal + updatedQuoteData.markup.amount + (pendingQuoteData.tax || 0);
+    
+    // Add confirmation message about markup
+    const markupMessage: Message = {
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: `Perfect! Applied ${markupPercentage}% markup ($${updatedQuoteData.markup.amount.toLocaleString()}). Your final quote is $${updatedQuoteData.totalCost.toLocaleString()}.`,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, markupMessage]);
+    
+    // Save the quote
+    await saveQuoteToDatabase(updatedQuoteData, context);
+    
+    setPendingQuoteData(null);
+    setShowMarkupPopup(false);
   };
 
   return (
@@ -311,6 +369,18 @@ export default function AssistantPage() {
           </div>
         </div>
       </div>
+
+      {/* Markup Confirmation Popup */}
+      <MarkupPopup
+        isOpen={showMarkupPopup}
+        onClose={() => {
+          setShowMarkupPopup(false);
+          setPendingQuoteData(null);
+        }}
+        onConfirm={handleMarkupConfirm}
+        baseCost={pendingQuoteData?.subtotal || 0}
+        defaultMarkup={20}
+      />
     </div>
   );
 }

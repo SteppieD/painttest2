@@ -256,12 +256,25 @@ ${quote.company_email || 'info@propaint.com'}
               </div>
             </div>
 
-            {/* Total Price */}
-            <div className="mb-8 bg-blue-50 p-6 rounded-lg text-center">
-              <p className="text-gray-600 mb-2">Total Quote Amount</p>
-              <p className="text-4xl font-bold text-blue-600">
-                ${quote.total_cost?.toLocaleString()}
-              </p>
+            {/* Pricing */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold mb-3">Quote Summary</h3>
+              <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Project Total:</span>
+                  <span className="font-medium">${(quote.subtotal || quote.total_cost)?.toLocaleString()}</span>
+                </div>
+                {quote.tax_rate && quote.tax_rate > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Tax ({quote.tax_rate}%):</span>
+                    <span className="font-medium">${(quote.tax_amount || 0)?.toLocaleString()}</span>
+                  </div>
+                )}
+                <div className="border-t pt-2 flex justify-between text-xl font-bold">
+                  <span>Total Quote:</span>
+                  <span className="text-blue-600">${quote.total_cost?.toLocaleString()}</span>
+                </div>
+              </div>
             </div>
 
             {/* Terms & Conditions */}

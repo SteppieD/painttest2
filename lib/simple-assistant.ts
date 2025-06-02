@@ -203,63 +203,88 @@ export function parseMessage(message: string, context: ConversationContext): {
   };
 }
 
-export function calculateSimpleQuote(context: ConversationContext): {
+export function calculateSimpleQuote(context: ConversationContext, settings?: any): {
   total: number;
   breakdown: {
+    paint: number;
+    sundries: number;
     labor: number;
     materials: number;
     prepWork: number;
     markup: number;
   };
+  subtotal: number;
+  tax: number;
+  needsMarkupConfirmation?: boolean;
 } {
   const sqft = context.sqft || 1000;
   
-  // Base rates per square foot
-  const baseRates = {
-    basic: { interior: 1.75, exterior: 2.45 },
-    premium: { interior: 3.25, exterior: 4.55 },
-    luxury: { interior: 5.25, exterior: 7.35 }
+  // Paint costs per gallon (based on quality)
+  const paintCostsPerGallon = {
+    basic: 22,
+    premium: 28,
+    luxury: 45
   };
-
-  const paintType = context.paintQuality || 'premium';
-  const projectType = context.projectType || 'interior';
   
-  // Calculate base cost
-  let baseCost = 0;
-  if (projectType === 'both') {
-    baseCost = (baseRates[paintType].interior * sqft * 0.6) + 
-               (baseRates[paintType].exterior * sqft * 0.4);
-  } else {
-    baseCost = baseRates[paintType][projectType] * sqft;
-  }
-
-  // Always include standard prep work in base pricing
-  const prepMultiplier = 1.25;
-  const prepCost = baseCost * (prepMultiplier - 1);
-
-  // Timeline multipliers
+  const paintQuality = context.paintQuality || 'premium';
+  const paintCost = paintCostsPerGallon[paintQuality];
+  const coverage = settings?.default_paint_coverage || 350;
+  
+  // Calculate paint needs
+  const gallonsNeeded = Math.ceil(sqft / coverage);
+  const totalPaintCost = gallonsNeeded * paintCost;
+  
+  // Calculate sundries (12% of paint cost by default)
+  const sundriesPercentage = settings?.default_sundries_percentage || 12;
+  const sundriesCost = totalPaintCost * (sundriesPercentage / 100);
+  
+  // Total materials
+  const totalMaterials = totalPaintCost + sundriesCost;
+  
+  // Calculate labor (45% of base revenue)
+  const baseRevenue = sqft * 2.5; // Base calculation rate
+  const laborPercentage = settings?.default_labor_percentage || 45;
+  const laborCost = baseRevenue * (laborPercentage / 100);
+  
+  // Prep work is included in labor/sundries now
+  const prepCost = 0;
+  
+  // Subtotal before markup
+  const subtotal = totalMaterials + laborCost;
+  
+  // Default markup (will be confirmed via popup)
+  const defaultMarkup = settings?.default_markup_percentage || 20;
+  const markupAmount = subtotal * (defaultMarkup / 100);
+  
+  // Calculate tax
+  const taxRate = settings?.tax_rate || 0;
+  const taxOnMaterialsOnly = settings?.tax_on_materials_only || false;
+  const taxableAmount = taxOnMaterialsOnly ? totalMaterials : (subtotal + markupAmount);
+  const taxAmount = taxableAmount * (taxRate / 100);
+  
+  // Timeline adjustment
   const timelineMultipliers = {
-    rush: 1.35,
+    rush: 1.15,
     standard: 1.0,
     flexible: 0.95
   };
-
   const timelineMultiplier = timelineMultipliers[context.timeline || 'standard'];
-
-  // Calculate components
-  const materials = baseCost * 0.35;
-  const labor = baseCost * 0.45;
-  const subtotal = baseCost + prepCost;
-  const markup = subtotal * 0.2;
-  const total = (subtotal + markup) * timelineMultiplier;
+  
+  // Final total
+  const finalTotal = (subtotal + markupAmount + taxAmount) * timelineMultiplier;
 
   return {
-    total: Math.round(total),
+    total: Math.round(finalTotal),
     breakdown: {
-      labor: Math.round(labor),
-      materials: Math.round(materials),
+      paint: Math.round(totalPaintCost),
+      sundries: Math.round(sundriesCost),
+      labor: Math.round(laborCost),
+      materials: Math.round(totalMaterials),
       prepWork: Math.round(prepCost),
-      markup: Math.round(markup)
-    }
+      markup: Math.round(markupAmount)
+    },
+    subtotal: Math.round(subtotal),
+    tax: Math.round(taxAmount),
+    needsMarkupConfirmation: true
   };
 }

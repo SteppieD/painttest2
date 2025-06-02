@@ -51,6 +51,10 @@ function getDb() {
     default_trim_paint_cost REAL DEFAULT 35.00,
     default_labor_percentage INTEGER DEFAULT 30,
     default_paint_coverage INTEGER DEFAULT 350,
+    default_sundries_percentage INTEGER DEFAULT 12,
+    tax_rate REAL DEFAULT 0,
+    tax_on_materials_only BOOLEAN DEFAULT 0,
+    tax_label TEXT DEFAULT 'Tax',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
@@ -88,10 +92,16 @@ function getDb() {
     -- Calculation results
     total_revenue REAL DEFAULT 0,
     total_materials REAL DEFAULT 0,
+    paint_cost REAL DEFAULT 0,
+    sundries_cost REAL DEFAULT 0,
+    sundries_percentage INTEGER DEFAULT 12,
     projected_labor REAL DEFAULT 0,
     labor_percentage INTEGER DEFAULT 30,
     projected_profit REAL DEFAULT 0,
     paint_coverage INTEGER DEFAULT 350,
+    tax_rate REAL DEFAULT 0,
+    tax_amount REAL DEFAULT 0,
+    subtotal REAL DEFAULT 0,
     
     -- Legacy fields
     base_cost REAL,

@@ -19,7 +19,11 @@ export async function GET(request: NextRequest) {
         default_ceilings_paint_cost, 
         default_trim_paint_cost,
         default_labor_percentage, 
-        default_paint_coverage
+        default_paint_coverage,
+        default_sundries_percentage,
+        tax_rate,
+        tax_on_materials_only,
+        tax_label
       FROM companies 
       WHERE id = ?
     `, [companyId]);
@@ -33,7 +37,11 @@ export async function GET(request: NextRequest) {
       default_ceilings_paint_cost: 25.00,
       default_trim_paint_cost: 35.00,
       default_labor_percentage: 30,
-      default_paint_coverage: 350
+      default_paint_coverage: 350,
+      default_sundries_percentage: 12,
+      tax_rate: 0,
+      tax_on_materials_only: false,
+      tax_label: 'Tax'
     };
 
     return NextResponse.json(settings || defaultSettings);
@@ -65,6 +73,10 @@ export async function PUT(request: NextRequest) {
         default_trim_paint_cost = ?,
         default_labor_percentage = ?,
         default_paint_coverage = ?,
+        default_sundries_percentage = ?,
+        tax_rate = ?,
+        tax_on_materials_only = ?,
+        tax_label = ?,
         updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `, [
@@ -76,6 +88,10 @@ export async function PUT(request: NextRequest) {
       settings.default_trim_paint_cost,
       settings.default_labor_percentage,
       settings.default_paint_coverage,
+      settings.default_sundries_percentage,
+      settings.tax_rate,
+      settings.tax_on_materials_only ? 1 : 0,
+      settings.tax_label,
       companyId
     ]);
 
