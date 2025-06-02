@@ -216,11 +216,11 @@ export default function DashboardPage() {
             
             <div className="flex items-center gap-2">
               <Button
-                onClick={() => router.push("/chat")}
+                onClick={() => router.push("/assistant")}
                 className="hidden sm:flex"
               >
                 <MessageSquare className="w-4 h-4 mr-2" />
-                AI Chat
+                Quick Quote
               </Button>
               
               <Button
@@ -237,16 +237,30 @@ export default function DashboardPage() {
 
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push("/chat")}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push("/assistant")}>
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                   <MessageSquare className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold">Start AI Chat</h3>
-                  <p className="text-sm text-gray-600">Create quotes through conversation</p>
+                  <h3 className="font-semibold">Quick Quote</h3>
+                  <p className="text-sm text-gray-600">Fast, simple mobile experience</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push("/chat")}>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <MessageSquare className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">AI Chat (Full)</h3>
+                  <p className="text-sm text-gray-600">Detailed AI conversations</p>
                 </div>
               </div>
             </CardContent>
@@ -259,8 +273,8 @@ export default function DashboardPage() {
                   <Plus className="w-6 h-6 text-green-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold">Manual Quote</h3>
-                  <p className="text-sm text-gray-600">Create quotes using forms</p>
+                  <h3 className="font-semibold">Spreadsheet Quote</h3>
+                  <p className="text-sm text-gray-600">Calculator-based quotes</p>
                 </div>
               </div>
             </CardContent>
