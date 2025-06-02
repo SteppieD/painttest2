@@ -25,15 +25,22 @@ export async function POST(request: NextRequest) {
       customer_email: quoteData.customerEmail || null,
       customer_phone: quoteData.customerPhone || null,
       address: quoteData.address || null,
+      project_type: quoteData.projectType || 'interior',
       rooms: JSON.stringify(quoteData.rooms || []),
       paint_quality: quoteData.paintQuality || null,
       prep_work: quoteData.prepWork || null,
-      timeline: quoteData.timeEstimate || null,
+      timeline: quoteData.timeEstimate || quoteData.timeline || null,
       special_requests: quoteData.specialRequests || null,
       base_cost: quoteData.totalCost || 0,
       markup_percentage: quoteData.markupPercentage || 0,
       final_price: quoteData.finalPrice || quoteData.totalCost || 0,
-      conversation_summary: conversationHistory ? JSON.stringify(conversationHistory) : null,
+      walls_sqft: quoteData.sqft || 0,
+      ceilings_sqft: 0,
+      trim_sqft: 0,
+      total_revenue: quoteData.totalCost || 0,
+      total_materials: quoteData.breakdown?.materials || 0,
+      projected_labor: quoteData.breakdown?.labor || 0,
+      conversation_summary: conversationHistory ? JSON.stringify(conversationHistory) : JSON.stringify([{quoteData}]),
       status: 'pending'
     };
 
@@ -63,7 +70,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const companyId = searchParams.get('companyId');
+    const companyId = searchParams.get('company_id');
     const status = searchParams.get('status');
     const limit = parseInt(searchParams.get('limit') || '50');
 
@@ -92,13 +99,14 @@ export async function GET(request: NextRequest) {
       LIMIT ?
     `, [...params, limit]);
 
-    return NextResponse.json({
-      quotes: (quotes as any[]).map((quote: any) => ({
+    // Return array directly for dashboard compatibility
+    return NextResponse.json(
+      (quotes as any[]).map((quote: any) => ({
         ...quote,
         rooms: quote.rooms ? JSON.parse(quote.rooms) : [],
         conversation_summary: quote.conversation_summary ? JSON.parse(quote.conversation_summary) : null
       }))
-    });
+    );
 
   } catch (error) {
     console.error("Error fetching quotes:", error);

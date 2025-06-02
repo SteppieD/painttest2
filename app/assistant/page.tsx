@@ -34,6 +34,8 @@ export default function AssistantPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [companyData, setCompanyData] = useState<any>(null);
   const [context, setContext] = useState<any>({});
+  const [savedQuoteId, setSavedQuoteId] = useState<string | null>(null);
+  const [isSavingQuote, setIsSavingQuote] = useState(false);
 
   // Auto-scroll to bottom
   const scrollToBottom = () => {
@@ -111,6 +113,12 @@ export default function AssistantPage() {
       if (data.context) {
         setContext(data.context);
       }
+      
+      // Check if context was reset (starting new quote)
+      if (Object.keys(data.context).length === 0 && savedQuoteId) {
+        setSavedQuoteId(null);
+        setIsSavingQuote(false);
+      }
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -121,8 +129,10 @@ export default function AssistantPage() {
 
       setMessages(prev => [...prev, assistantMessage]);
 
-      // If quote is complete, save it
-      if (data.isComplete && data.quoteData) {
+      // If quote is complete and not already saving, save it
+      if (data.isComplete && data.quoteData && !isSavingQuote && !savedQuoteId) {
+        setIsSavingQuote(true);
+        
         // Save chat session to history
         if (data.context.clientName && data.context.address) {
           saveChatSession(data.context.clientName, data.context.address);
@@ -143,19 +153,12 @@ export default function AssistantPage() {
 
           if (saveResponse.ok) {
             const saveData = await saveResponse.json();
-            setTimeout(() => {
-              const saveMessage: Message = {
-                id: (Date.now() + 2).toString(),
-                role: 'assistant',
-                content: `Saved as quote #${saveData.quoteId}. Start another?`,
-                timestamp: new Date()
-              };
-              setMessages(prev => [...prev, saveMessage]);
-              // Don't reset context here - let the user response trigger it
-            }, 1500);
+            setSavedQuoteId(saveData.quoteId || saveData.quote?.id);
+            setIsSavingQuote(false);
           }
         } catch (error) {
           console.error('Error saving quote:', error);
+          setIsSavingQuote(false);
         }
       }
 
@@ -230,6 +233,18 @@ export default function AssistantPage() {
           
           <div className="w-10" /> {/* Spacer for centering */}
         </div>
+        
+        {/* View Quote Details button */}
+        {savedQuoteId && (
+          <div className="px-4 pb-3">
+            <Button
+              onClick={() => router.push(`/quotes/${savedQuoteId}/review`)}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              View Quote Details
+            </Button>
+          </div>
+        )}
       </header>
 
       {/* Messages Area */}

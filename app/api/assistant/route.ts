@@ -47,14 +47,20 @@ export async function POST(request: NextRequest) {
         projectType: updatedContext.projectType,
         sqft: updatedContext.sqft,
         paintQuality: updatedContext.paintQuality,
-        prepWork: updatedContext.prepWork,
         timeline: updatedContext.timeline,
         totalCost: quote.total,
         timeEstimate: updatedContext.timeline === 'rush' ? '2-3 days' : 
                      updatedContext.timeline === 'flexible' ? '5-7 days' : '3-5 days'
       };
       
-      response = `Perfect! Your quote is $${quote.total.toLocaleString()}. I'll save this for you.`;
+      // Store quote in context for later reference
+      updatedContext.lastQuote = quote;
+      
+      response = `Your quote is $${quote.total.toLocaleString()}. Click 'View Quote Details' above to see the full breakdown and generate a customer quote.`;
+    } else if (nextQuestion === 'PROVIDE_BREAKDOWN' && context.lastQuote) {
+      // Provide breakdown when asked
+      const quote = context.lastQuote;
+      response = `Here's the breakdown:\n\nLabour: $${quote.breakdown.labor.toLocaleString()}\nPaint & Materials: $${quote.breakdown.materials.toLocaleString()}\nPrep Work: $${quote.breakdown.prepWork.toLocaleString()}\nMarkup: $${quote.breakdown.markup.toLocaleString()}\n\nTotal: $${quote.total.toLocaleString()}`;
     } else {
       // Acknowledge what we got and ask the next question
       const acknowledgments = [];

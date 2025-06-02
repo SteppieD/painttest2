@@ -73,13 +73,28 @@ export function parseMessage(message: string, context: ConversationContext): {
   let nextQuestion = '';
   let isComplete = false;
 
-  // Check if user wants to start a new quote
-  if ((lowerMessage.includes('another') || lowerMessage.includes('new') || lowerMessage.includes('yes')) 
-      && Object.keys(context).length > 0 && context.clientName) {
+  // Check if user wants to start a new quote (but not if asking about details)
+  if ((lowerMessage.includes('another') || (lowerMessage.includes('new') && !lowerMessage.includes('view'))) 
+      && Object.keys(context).length > 0 && context.clientName 
+      && !lowerMessage.includes('detail') && !lowerMessage.includes('breakdown') 
+      && !lowerMessage.includes('how') && !lowerMessage.includes('what')) {
     // Reset context and start fresh
     return {
       extractedInfo: {},
       nextQuestion: "What's the client's name and address?",
+      isComplete: false
+    };
+  }
+
+  // Check if user is asking about quote details after completion
+  if (context.clientName && context.sqft && context.paintQuality && 
+      (lowerMessage.includes('detail') || lowerMessage.includes('breakdown') || 
+       lowerMessage.includes('labour') || lowerMessage.includes('labor') || 
+       lowerMessage.includes('material') || lowerMessage.includes('paint') ||
+       lowerMessage.includes('how did you') || lowerMessage.includes('what is'))) {
+    return {
+      extractedInfo: {},
+      nextQuestion: 'PROVIDE_BREAKDOWN', // Special flag for breakdown
       isComplete: false
     };
   }
