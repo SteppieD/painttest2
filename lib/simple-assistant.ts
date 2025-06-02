@@ -1,13 +1,65 @@
 // Simple conversational assistant for quick quote generation
 
+// Fuzzy matching for common misspellings
+const fuzzyMatch = {
+  paintQuality: {
+    'lucury': 'luxury',
+    'luxery': 'luxury',
+    'premum': 'premium',
+    'premiem': 'premium',
+    'baisic': 'basic',
+    'basik': 'basic',
+    'economy': 'basic',
+    'standard': 'premium',
+    'high-end': 'luxury',
+    'high end': 'luxury'
+  },
+  projectType: {
+    'intrior': 'interior',
+    'interor': 'interior',
+    'inside': 'interior',
+    'exteror': 'exterior',
+    'exterier': 'exterior',
+    'outside': 'exterior',
+    'both': 'both',
+    'inside and outside': 'both',
+    'interior and exterior': 'both'
+  }
+};
+
+function fuzzyMatchTerm(input: string, category: 'paintQuality' | 'projectType'): string | null {
+  const lower = input.toLowerCase();
+  const matches = fuzzyMatch[category];
+  
+  // Check exact matches first
+  for (const [key, value] of Object.entries(matches)) {
+    if (lower.includes(key)) {
+      return value as string;
+    }
+  }
+  
+  // Check if the correct term is already there
+  const validTerms = category === 'paintQuality' 
+    ? ['basic', 'premium', 'luxury']
+    : ['interior', 'exterior', 'both'];
+    
+  for (const term of validTerms) {
+    if (lower.includes(term)) {
+      return term;
+    }
+  }
+  
+  return null;
+}
+
 interface ConversationContext {
   clientName?: string;
   address?: string;
   projectType?: 'interior' | 'exterior' | 'both';
   sqft?: number;
   paintQuality?: 'basic' | 'premium' | 'luxury';
-  prepWork?: 'minimal' | 'standard' | 'extensive';
   timeline?: 'rush' | 'standard' | 'flexible';
+  quoteType?: 'quick' | 'advanced';
   rooms?: string[];
 }
 
@@ -20,6 +72,17 @@ export function parseMessage(message: string, context: ConversationContext): {
   const extractedInfo: Partial<ConversationContext> = {};
   let nextQuestion = '';
   let isComplete = false;
+
+  // Check if user wants to start a new quote
+  if ((lowerMessage.includes('another') || lowerMessage.includes('new') || lowerMessage.includes('yes')) 
+      && Object.keys(context).length > 0 && context.clientName) {
+    // Reset context and start fresh
+    return {
+      extractedInfo: {},
+      nextQuestion: "What's the client's name and address?",
+      isComplete: false
+    };
+  }
 
   // Try to extract all information from a single message
   // Example: "John Smith at 123 Main St, interior 2000 sqft, premium paint, standard prep, flexible timeline"
@@ -40,14 +103,11 @@ export function parseMessage(message: string, context: ConversationContext): {
     }
   }
 
-  // Extract project type
+  // Extract project type with fuzzy matching
   if (!context.projectType) {
-    if (lowerMessage.includes('interior') && lowerMessage.includes('exterior')) {
-      extractedInfo.projectType = 'both';
-    } else if (lowerMessage.includes('interior') || lowerMessage.includes('inside')) {
-      extractedInfo.projectType = 'interior';
-    } else if (lowerMessage.includes('exterior') || lowerMessage.includes('outside')) {
-      extractedInfo.projectType = 'exterior';
+    const projectType = fuzzyMatchTerm(message, 'projectType');
+    if (projectType) {
+      extractedInfo.projectType = projectType as 'interior' | 'exterior' | 'both';
     }
   }
 
@@ -64,27 +124,16 @@ export function parseMessage(message: string, context: ConversationContext): {
     }
   }
 
-  // Extract paint quality
+  // Extract paint quality with fuzzy matching
   if (!context.paintQuality) {
-    if (lowerMessage.includes('basic') || lowerMessage.includes('economy')) {
-      extractedInfo.paintQuality = 'basic';
-    } else if (lowerMessage.includes('premium') || lowerMessage.includes('quality')) {
-      extractedInfo.paintQuality = 'premium';
-    } else if (lowerMessage.includes('luxury') || lowerMessage.includes('high-end')) {
-      extractedInfo.paintQuality = 'luxury';
+    const paintQuality = fuzzyMatchTerm(message, 'paintQuality');
+    if (paintQuality) {
+      extractedInfo.paintQuality = paintQuality as 'basic' | 'premium' | 'luxury';
     }
   }
 
-  // Extract prep work
-  if (!context.prepWork) {
-    if (lowerMessage.includes('minimal prep') || lowerMessage.includes('light prep')) {
-      extractedInfo.prepWork = 'minimal';
-    } else if (lowerMessage.includes('extensive prep') || lowerMessage.includes('heavy prep')) {
-      extractedInfo.prepWork = 'extensive';
-    } else if (lowerMessage.includes('standard prep') || lowerMessage.includes('normal prep')) {
-      extractedInfo.prepWork = 'standard';
-    }
-  }
+  // Only extract prep work if user mentions unusual conditions
+  // Default to standard prep work included in base pricing
 
   // Extract timeline
   if (!context.timeline) {
@@ -100,20 +149,32 @@ export function parseMessage(message: string, context: ConversationContext): {
   // Update context with extracted info
   const updatedContext = { ...context, ...extractedInfo };
 
+  // First, check if this is the start and ask about quote type
+  if (!updatedContext.quoteType && updatedContext.clientName && updatedContext.address) {
+    // Extract quote type preference
+    if (lowerMessage.includes('quick') || lowerMessage.includes('basic estimate')) {
+      extractedInfo.quoteType = 'quick';
+      updatedContext.quoteType = 'quick';
+    } else if (lowerMessage.includes('advanced') || lowerMessage.includes('detailed')) {
+      extractedInfo.quoteType = 'advanced';
+      updatedContext.quoteType = 'advanced';
+    }
+  }
+
   // Determine next question based on what's missing
   if (!updatedContext.clientName) {
     nextQuestion = "What's the client's name?";
   } else if (!updatedContext.address) {
     nextQuestion = `Got it, ${updatedContext.clientName}. What's the address?`;
+  } else if (!updatedContext.quoteType) {
+    nextQuestion = "Would you like a Quick quote (basic estimate) or Advanced quote (detailed breakdown)?";
   } else if (!updatedContext.projectType) {
     nextQuestion = "Interior or exterior painting?";
   } else if (!updatedContext.sqft) {
     nextQuestion = "How many square feet?";
   } else if (!updatedContext.paintQuality) {
     nextQuestion = "Basic, premium, or luxury paint?";
-  } else if (!updatedContext.prepWork) {
-    nextQuestion = "How much prep work needed?";
-  } else if (!updatedContext.timeline) {
+  } else if (!updatedContext.timeline && updatedContext.quoteType === 'advanced') {
     nextQuestion = "When do they need it done?";
   } else {
     isComplete = true;
@@ -157,14 +218,8 @@ export function calculateSimpleQuote(context: ConversationContext): {
     baseCost = baseRates[paintType][projectType] * sqft;
   }
 
-  // Prep work multipliers
-  const prepMultipliers = {
-    minimal: 1.1,
-    standard: 1.25,
-    extensive: 1.5
-  };
-
-  const prepMultiplier = prepMultipliers[context.prepWork || 'standard'];
+  // Always include standard prep work in base pricing
+  const prepMultiplier = 1.25;
   const prepCost = baseCost * (prepMultiplier - 1);
 
   // Timeline multipliers

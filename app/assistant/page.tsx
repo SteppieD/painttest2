@@ -123,6 +123,11 @@ export default function AssistantPage() {
 
       // If quote is complete, save it
       if (data.isComplete && data.quoteData) {
+        // Save chat session to history
+        if (data.context.clientName && data.context.address) {
+          saveChatSession(data.context.clientName, data.context.address);
+        }
+
         // Save quote to database
         try {
           const saveResponse = await fetch('/api/quotes', {
@@ -146,8 +151,7 @@ export default function AssistantPage() {
                 timestamp: new Date()
               };
               setMessages(prev => [...prev, saveMessage]);
-              // Reset context for next quote
-              setContext({});
+              // Don't reset context here - let the user response trigger it
             }, 1500);
           }
         } catch (error) {
@@ -184,6 +188,29 @@ export default function AssistantPage() {
       </div>
     );
   }
+
+  // Save chat session to history
+  const saveChatSession = (clientName: string, address: string) => {
+    const session = {
+      id: Date.now().toString(),
+      clientName,
+      address,
+      timestamp: new Date(),
+      projectType: context.projectType
+    };
+
+    const history = localStorage.getItem('paintquote_chat_history');
+    const sessions = history ? JSON.parse(history) : [];
+    sessions.unshift(session);
+    
+    // Keep only last 50 sessions
+    if (sessions.length > 50) {
+      sessions.pop();
+    }
+    
+    localStorage.setItem('paintquote_chat_history', JSON.stringify(sessions));
+    window.dispatchEvent(new Event('storage'));
+  };
 
   return (
     <div className="h-screen flex flex-col bg-white">

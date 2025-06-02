@@ -27,7 +27,12 @@ export async function POST(request: NextRequest) {
     const { extractedInfo, nextQuestion, isComplete } = parseMessage(message, context);
     
     // Update context with new information
-    const updatedContext = { ...context, ...extractedInfo };
+    let updatedContext = { ...context, ...extractedInfo };
+    
+    // If the parse function returned empty extractedInfo with a reset question, reset context
+    if (Object.keys(extractedInfo).length === 0 && nextQuestion === "What's the client's name and address?") {
+      updatedContext = {};
+    }
     
     let response = '';
     let quoteData = null;
@@ -52,18 +57,41 @@ export async function POST(request: NextRequest) {
       response = `Perfect! Your quote is $${quote.total.toLocaleString()}. I'll save this for you.`;
     } else {
       // Acknowledge what we got and ask the next question
-      const acknowledgments = [
-        extractedInfo.clientName && `Got it, ${extractedInfo.clientName}.`,
-        extractedInfo.address && `${extractedInfo.address} - noted.`,
-        extractedInfo.projectType && `${extractedInfo.projectType === 'both' ? 'Interior and exterior' : extractedInfo.projectType} painting.`,
-        extractedInfo.sqft && `${extractedInfo.sqft} square feet.`,
-        extractedInfo.paintQuality && `${extractedInfo.paintQuality} quality paint.`,
-        extractedInfo.prepWork && `${extractedInfo.prepWork} prep work.`,
-        extractedInfo.timeline && `${extractedInfo.timeline === 'rush' ? 'Rush job' : extractedInfo.timeline === 'flexible' ? 'Flexible timeline' : 'Standard timeline'}.`
-      ].filter(Boolean);
+      const acknowledgments = [];
+      
+      // Only acknowledge new information
+      if (extractedInfo.clientName && !context.clientName) {
+        acknowledgments.push(`Got it, ${extractedInfo.clientName}.`);
+      }
+      if (extractedInfo.address && !context.address) {
+        acknowledgments.push(`${extractedInfo.address} - noted.`);
+      }
+      if (extractedInfo.quoteType && !context.quoteType) {
+        acknowledgments.push(`${extractedInfo.quoteType === 'quick' ? 'Quick quote' : 'Advanced quote'} - perfect.`);
+      }
+      if (extractedInfo.projectType && !context.projectType) {
+        const projectDesc = extractedInfo.projectType === 'both' ? 'Interior and exterior' : 
+                           extractedInfo.projectType.charAt(0).toUpperCase() + extractedInfo.projectType.slice(1);
+        acknowledgments.push(`${projectDesc} painting.`);
+      }
+      if (extractedInfo.sqft && !context.sqft) {
+        acknowledgments.push(`${extractedInfo.sqft} square feet.`);
+      }
+      if (extractedInfo.paintQuality && !context.paintQuality) {
+        acknowledgments.push(`${extractedInfo.paintQuality.charAt(0).toUpperCase() + extractedInfo.paintQuality.slice(1)} paint.`);
+      }
+      if (extractedInfo.timeline && !context.timeline) {
+        const timelineDesc = extractedInfo.timeline === 'rush' ? 'Rush job' : 
+                           extractedInfo.timeline === 'flexible' ? 'Flexible timeline' : 
+                           'Standard timeline';
+        acknowledgments.push(`${timelineDesc}.`);
+      }
 
+      // Build response with acknowledgments
       if (acknowledgments.length > 0) {
-        response = acknowledgments.join(' ') + ' ' + nextQuestion;
+        // Join up to 2 acknowledgments for brevity
+        const ackText = acknowledgments.slice(0, 2).join(' ');
+        response = ackText + ' ' + nextQuestion;
       } else {
         response = nextQuestion;
       }

@@ -220,7 +220,7 @@ export default function DashboardPage() {
                 className="hidden sm:flex"
               >
                 <MessageSquare className="w-4 h-4 mr-2" />
-                Quick Quote
+                New Quote
               </Button>
               
               <Button
@@ -236,8 +236,8 @@ export default function DashboardPage() {
       </div>
 
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {/* Quick Action - Single Quote Method */}
+        <div className="mb-8">
           <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push("/assistant")}>
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
@@ -245,36 +245,8 @@ export default function DashboardPage() {
                   <MessageSquare className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold">Quick Quote</h3>
-                  <p className="text-sm text-gray-600">Fast, simple mobile experience</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push("/chat")}>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <MessageSquare className="w-6 h-6 text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">AI Chat (Full)</h3>
-                  <p className="text-sm text-gray-600">Detailed AI conversations</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push("/create-quote")}>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Plus className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Spreadsheet Quote</h3>
-                  <p className="text-sm text-gray-600">Calculator-based quotes</p>
+                  <h3 className="font-semibold text-lg">Create New Quote</h3>
+                  <p className="text-sm text-gray-600">Chat with AI to generate quotes quickly</p>
                 </div>
               </div>
             </CardContent>
