@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Copy, Printer, Download, CheckCircle } from "lucide-react";
+import { ArrowLeft, Copy, Printer, Download, CheckCircle, PenTool, Shield, Clock, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 
 // Force dynamic rendering
@@ -27,6 +28,9 @@ interface QuoteData {
   subtotal?: number;
   tax_rate?: number;
   tax_amount?: number;
+  walls_sqft?: number;
+  ceilings_sqft?: number;
+  trim_sqft?: number;
 }
 
 export default function CustomerQuotePage({ params }: { params: { id: string } }) {
@@ -35,6 +39,8 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
   const [quote, setQuote] = useState<QuoteData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [clientSignature, setClientSignature] = useState("");
+  const [isAccepted, setIsAccepted] = useState(false);
 
   useEffect(() => {
     loadQuote();
@@ -76,34 +82,27 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
     if (!quote) return;
     
     const quoteText = `
-PAINTING QUOTE
+PROFESSIONAL PAINTING ESTIMATE
 
+${quote.company_name || 'ProPaint Company'}
 Quote #: ${quote.quote_id}
 Date: ${formatDate(quote.created_at)}
 Valid Until: ${getValidityDate(quote.created_at)}
 
-CLIENT INFORMATION
-${quote.customer_name}
-${quote.address}
+CLIENT: ${quote.customer_name}
+PROPERTY: ${quote.address}
 
-PROJECT DETAILS
-Type: ${quote.project_type} painting
-Square Footage: ${quote.sqft?.toLocaleString()} sq ft
-Paint Quality: ${quote.paint_quality}
-Timeline: ${quote.timeline || 'Standard'}
+PROJECT SCOPE:
+Premium ${quote.project_type} painting with surface preparation
+${quote.sqft?.toLocaleString()} square feet
+${quote.paint_quality} quality materials and application
+Complete project management and cleanup
 
-TOTAL QUOTE: $${quote.total_cost?.toLocaleString()}
+INVESTMENT: $${quote.total_cost?.toLocaleString()}
 
-TERMS & CONDITIONS
-- Quote valid for 30 days
-- 50% deposit required to start work
-- Balance due upon completion
-- Includes all labor, materials, and equipment
-- Minor prep work included (patching small holes, light sanding)
-- Major repairs quoted separately
+This proposal includes professional materials, expert application, and complete project management from start to finish.
 
 Thank you for considering our services!
-${quote.company_name || 'ProPaint Company'}
 ${quote.company_phone || '(555) 123-4567'}
 ${quote.company_email || 'info@propaint.com'}
     `.trim();
@@ -127,6 +126,47 @@ ${quote.company_email || 'info@propaint.com'}
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleAcceptQuote = () => {
+    if (!clientSignature.trim()) {
+      toast({
+        title: "Signature Required",
+        description: "Please type your name to accept this quote.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsAccepted(true);
+    toast({
+      title: "Quote Accepted!",
+      description: "Thank you! We'll contact you within 24 hours to schedule your project.",
+    });
+  };
+
+  const getPaintQualityDescription = (quality: string) => {
+    switch (quality.toLowerCase()) {
+      case 'luxury':
+        return 'Premium luxury finishes with superior durability and coverage';
+      case 'premium':
+        return 'High-quality professional grade paints with excellent coverage';
+      case 'basic':
+        return 'Quality standard paints suitable for most applications';
+      default:
+        return 'Professional grade paints and materials';
+    }
+  };
+
+  const getTimelineDescription = (timeline: string) => {
+    switch (timeline?.toLowerCase()) {
+      case 'rush':
+        return 'Expedited completion within 2-3 business days';
+      case 'flexible':
+        return 'Flexible scheduling to fit your timeline';
+      default:
+        return 'Standard completion timeline of 3-5 business days';
+    }
   };
 
   if (isLoading) {
@@ -154,7 +194,7 @@ ${quote.company_email || 'info@propaint.com'}
     <div className="min-h-screen bg-white print:bg-white">
       {/* Actions Bar - Hidden when printing */}
       <div className="print:hidden bg-gray-50 border-b sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-4 py-3">
+        <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Button
               variant="ghost"
@@ -165,7 +205,7 @@ ${quote.company_email || 'info@propaint.com'}
               Back
             </Button>
             
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <Button
                 variant="outline"
                 size="sm"
@@ -179,7 +219,7 @@ ${quote.company_email || 'info@propaint.com'}
                 ) : (
                   <>
                     <Copy className="w-4 h-4 mr-2" />
-                    Copy
+                    Copy Quote
                   </>
                 )}
               </Button>
@@ -197,114 +237,214 @@ ${quote.company_email || 'info@propaint.com'}
       </div>
 
       {/* Quote Content */}
-      <div className="max-w-3xl mx-auto p-8">
-        <Card className="border-0 shadow-none print:shadow-none">
-          <CardContent className="p-0">
-            {/* Header */}
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        <Card className="border-0 shadow-lg print:shadow-none">
+          <CardContent className="p-8">
+            {/* Professional Header */}
+            <div className="text-center mb-8 pb-6 border-b-2 border-blue-600">
+              <h1 className="text-4xl font-bold text-gray-900 mb-2">
                 {quote.company_name || 'ProPaint Company'}
               </h1>
-              <p className="text-gray-600">Professional Painting Services</p>
+              <p className="text-lg text-blue-600 font-medium">Professional Painting Services</p>
+              <div className="flex justify-center items-center gap-6 mt-4 text-sm text-gray-600">
+                <span>{quote.company_phone || '(555) 123-4567'}</span>
+                <span>•</span>
+                <span>{quote.company_email || 'info@propaint.com'}</span>
+              </div>
             </div>
 
-            {/* Quote Info */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-4">Painting Quote</h2>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+            {/* PAINTING ESTIMATE Title */}
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">PAINTING ESTIMATE</h2>
+              <div className="flex justify-center gap-8 text-sm">
                 <div>
-                  <p className="text-gray-600">Quote Number</p>
-                  <p className="font-medium">{quote.quote_id}</p>
+                  <span className="text-gray-600">Quote #:</span>
+                  <span className="font-bold ml-2">{quote.quote_id}</span>
                 </div>
                 <div>
-                  <p className="text-gray-600">Date</p>
-                  <p className="font-medium">{formatDate(quote.created_at)}</p>
+                  <span className="text-gray-600">Date:</span>
+                  <span className="font-bold ml-2">{formatDate(quote.created_at)}</span>
                 </div>
                 <div>
-                  <p className="text-gray-600">Valid Until</p>
-                  <p className="font-medium">{getValidityDate(quote.created_at)}</p>
+                  <span className="text-gray-600">Valid Until:</span>
+                  <span className="font-bold ml-2 text-red-600">{getValidityDate(quote.created_at)}</span>
                 </div>
               </div>
             </div>
 
-            {/* Client Information */}
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-3">Client Information</h3>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="font-medium">{quote.customer_name}</p>
-                <p className="text-gray-600">{quote.address}</p>
-              </div>
-            </div>
-
-            {/* Project Scope */}
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-3">Project Scope</h3>
-              <div className="bg-gray-50 p-4 rounded-lg space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Type of Work:</span>
-                  <span className="font-medium capitalize">{quote.project_type} Painting</span>
+            {/* Client Information Block */}
+            <div className="mb-8 bg-gray-50 p-6 rounded-lg">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Project Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-gray-600 text-sm">Client</p>
+                  <p className="font-bold text-lg">{quote.customer_name}</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Square Footage:</span>
-                  <span className="font-medium">{quote.sqft?.toLocaleString()} sq ft</span>
+                <div>
+                  <p className="text-gray-600 text-sm">Property Address</p>
+                  <p className="font-medium">{quote.address}</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Paint Quality:</span>
-                  <span className="font-medium capitalize">{quote.paint_quality}</span>
+                <div>
+                  <p className="text-gray-600 text-sm">Project Scope</p>
+                  <p className="font-medium capitalize">{quote.project_type} Painting Project</p>
+                  <p className="text-sm text-gray-600">{quote.sqft?.toLocaleString()} square feet</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Timeline:</span>
-                  <span className="font-medium capitalize">{quote.timeline || 'Standard'}</span>
+                <div>
+                  <p className="text-gray-600 text-sm">Estimated Timeline</p>
+                  <p className="font-medium">{getTimelineDescription(quote.timeline)}</p>
                 </div>
               </div>
             </div>
 
-            {/* Pricing */}
+            {/* Strategic Pricing Presentation */}
             <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-3">Quote Summary</h3>
-              <div className="bg-gray-50 p-4 rounded-lg space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Project Total:</span>
-                  <span className="font-medium">${(quote.subtotal || quote.total_cost)?.toLocaleString()}</span>
-                </div>
-                {quote.tax_rate && quote.tax_rate > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Tax ({quote.tax_rate}%):</span>
-                    <span className="font-medium">${(quote.tax_amount || 0)?.toLocaleString()}</span>
+              <h3 className="text-xl font-bold mb-6 text-gray-900">Professional Services Included</h3>
+              
+              <div className="space-y-4">
+                <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg">
+                  <PenTool className="w-6 h-6 text-blue-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Premium {quote.project_type} Painting with Surface Preparation</h4>
+                    <p className="text-gray-600 text-sm mt-1">
+                      {getPaintQualityDescription(quote.paint_quality)} • Complete surface preparation including cleaning, sanding, and priming as needed
+                    </p>
                   </div>
-                )}
-                <div className="border-t pt-2 flex justify-between text-xl font-bold">
-                  <span>Total Quote:</span>
-                  <span className="text-blue-600">${quote.total_cost?.toLocaleString()}</span>
+                </div>
+
+                <div className="flex items-start gap-4 p-4 bg-green-50 rounded-lg">
+                  <Award className="w-6 h-6 text-green-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Professional Materials and Expert Application</h4>
+                    <p className="text-gray-600 text-sm mt-1">
+                      High-quality paints, primers, and finishes • Professional-grade tools and equipment • Expert color consultation and application techniques
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-lg">
+                  <Shield className="w-6 h-6 text-purple-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Complete Project Management and Cleanup</h4>
+                    <p className="text-gray-600 text-sm mt-1">
+                      Daily cleanup and protection of your property • Complete post-project cleanup • Professional project coordination from start to finish
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Terms & Conditions */}
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-3">Terms & Conditions</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li>• This quote is valid for 30 days from the date of issue</li>
-                <li>• 50% deposit required to begin work</li>
-                <li>• Balance due upon completion of work</li>
-                <li>• Includes all labor, materials, and equipment</li>
-                <li>• Minor prep work included (patching small holes, light sanding)</li>
-                <li>• Major repairs will be quoted separately if required</li>
-                <li>• Work guaranteed for one year from completion</li>
-              </ul>
+            {/* Investment Section */}
+            <div className="mb-8 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-lg">
+              <div className="text-center">
+                <h3 className="text-xl font-semibold mb-2">Total Project Investment</h3>
+                <div className="text-5xl font-bold mb-2">
+                  ${quote.total_cost?.toLocaleString()}
+                </div>
+                <p className="text-blue-100">
+                  Complete professional painting service as described above
+                </p>
+              </div>
             </div>
 
-            {/* Contact Information */}
-            <div className="text-center pt-8 border-t">
-              <p className="font-semibold mb-2">
-                {quote.company_name || 'ProPaint Company'}
-              </p>
-              <p className="text-gray-600">
-                {quote.company_phone || '(555) 123-4567'} | {quote.company_email || 'info@propaint.com'}
-              </p>
-              <p className="text-sm text-gray-500 mt-4">
-                Thank you for considering our services!
-              </p>
+            {/* Trust-Building Elements */}
+            <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-blue-600" />
+                  What&apos;s Included
+                </h4>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li>• Complete surface preparation and cleaning</li>
+                  <li>• Premium paint and materials included</li>
+                  <li>• Professional application and finishing</li>
+                  <li>• Daily cleanup and area protection</li>
+                  <li>• Final walkthrough and touch-ups</li>
+                  <li>• Complete post-project cleanup</li>
+                </ul>
+              </div>
+
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <Award className="w-5 h-5 text-green-600" />
+                  Our Guarantee
+                </h4>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li>• 1-year workmanship warranty</li>
+                  <li>• Licensed and insured professionals</li>
+                  <li>• Satisfaction guarantee</li>
+                  <li>• Clean, respectful service</li>
+                  <li>• On-time project completion</li>
+                  <li>• Free touch-ups within warranty period</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Payment Terms */}
+            <div className="mb-8 bg-yellow-50 border-l-4 border-yellow-400 p-4">
+              <h4 className="font-bold text-gray-900 mb-2">Payment Terms & Project Phases</h4>
+              <div className="text-sm text-gray-700 space-y-1">
+                <p>• 25% deposit to secure your project date</p>
+                <p>• 50% progress payment upon project start</p>
+                <p>• 25% final payment upon completion and your approval</p>
+                <p>• We accept cash, check, and major credit cards</p>
+              </div>
+            </div>
+
+            {/* Digital Signature Section */}
+            {!isAccepted ? (
+              <div className="mb-8 bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
+                <h4 className="font-bold text-gray-900 mb-4 text-center">Accept This Quote</h4>
+                <p className="text-center text-gray-600 mb-4">
+                  Ready to transform your space? Type your name below and click Accept to get started.
+                </p>
+                <div className="max-w-md mx-auto space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Digital Signature (Type your full name)
+                    </label>
+                    <Input
+                      value={clientSignature}
+                      onChange={(e) => setClientSignature(e.target.value)}
+                      placeholder="Type your full name here"
+                      className="text-center"
+                    />
+                  </div>
+                  <Button
+                    onClick={handleAcceptQuote}
+                    disabled={!clientSignature.trim()}
+                    className="w-full bg-green-600 hover:bg-green-700 text-lg py-3"
+                  >
+                    Accept Quote & Get Started
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="mb-8 bg-green-50 border-2 border-green-200 rounded-lg p-6 text-center">
+                <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
+                <h4 className="font-bold text-green-900 text-xl mb-2">Quote Accepted!</h4>
+                <p className="text-green-700 mb-2">
+                  Thank you, {clientSignature}! Your quote has been accepted.
+                </p>
+                <p className="text-sm text-green-600">
+                  We&apos;ll contact you within 24 hours to schedule your project and collect the deposit.
+                </p>
+              </div>
+            )}
+
+            {/* Contact Information Footer */}
+            <div className="text-center pt-6 border-t">
+              <h4 className="font-bold text-gray-900 mb-2">Questions? Ready to Schedule?</h4>
+              <div className="text-gray-600 space-y-1">
+                <p className="font-medium text-lg">
+                  {quote.company_name || 'ProPaint Company'}
+                </p>
+                <p>
+                  {quote.company_phone || '(555) 123-4567'} | {quote.company_email || 'info@propaint.com'}
+                </p>
+                <p className="text-sm text-gray-500 mt-4">
+                  Thank you for choosing us for your painting project!
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
