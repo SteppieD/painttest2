@@ -251,7 +251,7 @@ export async function GET(request: NextRequest) {
         LEFT JOIN companies c ON q.company_id = c.id
         WHERE q.quote_id = ? OR q.id = ?
       `);
-      quotes = stmt.get(quoteId, quoteId) as QuoteRecord | undefined;
+      quotes = stmt.get(quoteId, quoteId) as QuoteRecord | null;
       
       if (!quotes) {
         return NextResponse.json(
