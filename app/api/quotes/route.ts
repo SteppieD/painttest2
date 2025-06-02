@@ -103,8 +103,24 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       (quotes as any[]).map((quote: any) => ({
         ...quote,
-        rooms: quote.rooms ? JSON.parse(quote.rooms) : [],
-        conversation_summary: quote.conversation_summary ? JSON.parse(quote.conversation_summary) : null
+        rooms: (quote && quote.rooms && typeof quote.rooms === 'string' && quote.rooms.trim() !== '') ? 
+          (() => {
+            try {
+              return JSON.parse(quote.rooms);
+            } catch (e) {
+              console.error("Error parsing rooms:", e);
+              return [];
+            }
+          })() : [],
+        conversation_summary: (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') ? 
+          (() => {
+            try {
+              return JSON.parse(quote.conversation_summary);
+            } catch (e) {
+              console.error("Error parsing conversation summary:", e);
+              return null;
+            }
+          })() : null
       }))
     );
 
