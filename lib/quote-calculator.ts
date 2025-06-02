@@ -41,6 +41,21 @@ interface QuoteResult {
     sqft: number;
     roomCount: number;
   };
+  // Additional properties for UI components
+  rooms?: Array<{
+    name: string;
+    length: number;
+    width: number;
+    height: number;
+  }>;
+  totalSqFt?: number;
+  customerName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  address?: string;
+  paintQuality?: string;
+  prepWork?: string;
+  specialRequests?: string;
 }
 
 const DEFAULT_COSTS: CostSettings = {
@@ -147,7 +162,12 @@ export function calculateQuote(
       totalLaborHours,
       sqft: totalSqft,
       roomCount
-    }
+    },
+    // Additional properties for UI components
+    rooms: input.rooms,
+    totalSqFt: totalSqft,
+    paintQuality: input.paintType,
+    prepWork: input.prepWork
   };
 }
 

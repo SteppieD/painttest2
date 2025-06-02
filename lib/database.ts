@@ -1,11 +1,41 @@
 import Database from "better-sqlite3";
 import path from "path";
 
-const dbPath = path.join(process.cwd(), "quotes.db");
-const db = new Database(dbPath);
+let db: Database.Database | null = null;
 
-// Initialize database tables
-db.exec(`
+// Seed demo companies if they don't exist
+const seedDemoCompanies = (database: Database.Database) => {
+  const stmt = database.prepare("SELECT COUNT(*) as count FROM companies");
+  const companyExists = stmt.get() as any;
+  
+  if (companyExists.count === 0) {
+    const companies = [
+      ["DEMO2024", "Demo Painting Company", "(555) 123-4567", "demo@paintingcompany.com"],
+      ["PAINTER001", "Smith Painting LLC", "(555) 987-6543", "info@smithpainting.com"],
+      ["CONTRACTOR123", "Elite Contractors", "(555) 456-7890", "quotes@elitecontractors.com"],
+      ["CUSTOM789", "Custom Paint Works", "(555) 234-5678", "hello@custompaintworks.com"],
+      ["BUILDER456", "Premier Builders", "(555) 345-6789", "contact@premierbuilders.com"],
+      ["PAINT2025", "Modern Paint Solutions", "(555) 567-8901", "info@modernpaint.com"]
+    ];
+
+    const insertStmt = database.prepare(`
+      INSERT INTO companies (access_code, company_name, phone, email) 
+      VALUES (?, ?, ?, ?)
+    `);
+
+    companies.forEach(company => insertStmt.run(...company));
+    console.log("✅ Demo companies seeded successfully");
+  }
+};
+
+// Lazy database initialization
+function getDb() {
+  if (!db) {
+    const dbPath = path.join(process.cwd(), "quotes.db");
+    db = new Database(dbPath);
+    
+    // Initialize database tables
+    db.exec(`
   CREATE TABLE IF NOT EXISTS companies (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     access_code TEXT UNIQUE NOT NULL,
@@ -45,18 +75,27 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_quotes_status ON quotes(status);
 `);
 
+    // Seed demo companies
+    seedDemoCompanies(db);
+  }
+  
+  return db;
+}
 
 export const dbGet = (sql: string, params: any[] = []) => {
+  const db = getDb();
   const stmt = db.prepare(sql);
   return stmt.get(...params);
 };
 
 export const dbAll = (sql: string, params: any[] = []) => {
+  const db = getDb();
   const stmt = db.prepare(sql);
   return stmt.all(...params);
 };
 
 export const dbRun = (sql: string, params: any[] = []) => {
+  const db = getDb();
   const stmt = db.prepare(sql);
   const result = stmt.run(...params);
   return { lastID: result.lastInsertRowid, changes: result.changes };
@@ -102,56 +141,4 @@ export const updateQuote = (id: number, data: any) => {
   );
 };
 
-// Seed demo companies if they don't exist
-const seedDemoCompanies = () => {
-  const companyExists = dbGet("SELECT COUNT(*) as count FROM companies");
-  
-  if ((companyExists as any).count === 0) {
-    const companies = [
-      {
-        access_code: "DEMO2024",
-        company_name: "Demo Painting Company",
-        phone: "(555) 123-4567",
-        email: "demo@paintingcompany.com"
-      },
-      {
-        access_code: "PAINTER001",
-        company_name: "Smith Painting LLC",
-        phone: "(555) 987-6543",
-        email: "info@smithpainting.com"
-      },
-      {
-        access_code: "CONTRACTOR123",
-        company_name: "Elite Contractors",
-        phone: "(555) 456-7890",
-        email: "quotes@elitecontractors.com"
-      },
-      {
-        access_code: "CUSTOM789",
-        company_name: "Custom Paint Works",
-        phone: "(555) 234-5678",
-        email: "hello@custompaintworks.com"
-      },
-      {
-        access_code: "BUILDER456",
-        company_name: "Premier Builders",
-        phone: "(555) 345-6789",
-        email: "contact@premierbuilders.com"
-      },
-      {
-        access_code: "PAINT2025",
-        company_name: "Modern Paint Solutions",
-        phone: "(555) 567-8901",
-        email: "info@modernpaint.com"
-      }
-    ];
-
-    companies.forEach(company => createCompany(company));
-    console.log("✅ Demo companies seeded successfully");
-  }
-};
-
-// Run seeding
-seedDemoCompanies();
-
-export default db;
+export default getDb;
