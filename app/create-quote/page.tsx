@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
 import { ArrowLeft, Save, Menu, X, Palette, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatInterface } from "@/components/chat/enhanced-chat-interface";
