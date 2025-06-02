@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Send, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -26,10 +27,20 @@ interface QuoteData {
   status: string;
   created_at: string;
   conversation_summary?: string;
+  company_id?: string;
+  user_id?: string;
+}
+
+interface ConversationContext {
+  project?: any;
+  stage?: string;
+  messageCount?: number;
+  lastInteraction?: string;
 }
 
 export default function IndividualChatPage({ params }: { params: { id: string } }) {
   const router = useRouter();
+  const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   
@@ -38,6 +49,8 @@ export default function IndividualChatPage({ params }: { params: { id: string } 
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
+  const [conversationContext, setConversationContext] = useState<ConversationContext>({});
+  const [useProfessionalAI, setUseProfessionalAI] = useState(true);
 
   useEffect(() => {
     loadQuoteAndMessages();
@@ -79,15 +92,31 @@ export default function IndividualChatPage({ params }: { params: { id: string } 
             ]);
           }
         } else {
-          // Create initial conversation
+          // Create initial conversation with professional friend greeting
+          const greeting = data.user_id 
+            ? `Hey there! I see you're working on a ${data.project_type} painting project for ${data.customer_name} at ${data.address}. I've calculated an estimate of $${data.quote_amount?.toLocaleString()}. How does that look to you?`
+            : `Hi! I've prepared a quote for your ${data.project_type} painting project at ${data.address}. The total estimate is $${data.quote_amount?.toLocaleString()}. Would you like to see the detailed breakdown?`;
+            
           setMessages([
             {
               id: '1',
               role: 'assistant',
-              content: `Hi! I've prepared a quote for your ${data.project_type} painting project at ${data.address}. The total estimate is $${data.quote_amount?.toLocaleString()}. Would you like to see the detailed breakdown?`,
+              content: greeting,
               timestamp: data.created_at
             }
           ]);
+          
+          // Initialize conversation context
+          setConversationContext({
+            project: {
+              clientName: data.customer_name,
+              address: data.address,
+              projectType: data.project_type,
+              currentQuoteAmount: data.quote_amount
+            },
+            stage: 'reviewing',
+            messageCount: 1
+          });
         }
       }
     } catch (error) {
@@ -117,7 +146,49 @@ export default function IndividualChatPage({ params }: { params: { id: string } 
     }
 
     try {
-      // Simple auto-response based on input
+      // Try to use Professional AI if available
+      if (useProfessionalAI && (quote?.user_id || quote?.company_id)) {
+        const response = await fetch('/api/assistant', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: inputValue.trim(),
+            history: messages,
+            context: conversationContext,
+            userId: quote.user_id,
+            companyId: quote.company_id,
+            useProfessionalAI: true
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          
+          const assistantMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: data.response,
+            timestamp: new Date().toISOString()
+          };
+          
+          setMessages(prev => [...prev, assistantMessage]);
+          setConversationContext(data.context || {});
+          
+          // Handle quote updates if needed
+          if (data.quoteData) {
+            setQuote(prev => prev ? { ...prev, quote_amount: data.quoteData.totalCost } : prev);
+            toast({
+              title: "Quote Updated",
+              description: `New total: $${data.quoteData.totalCost.toLocaleString()}`,
+            });
+          }
+          
+          setIsSending(false);
+          return;
+        }
+      }
+      
+      // Fallback to simple auto-response
       const response = generateAutoResponse(inputValue.trim());
       
       const assistantMessage: Message = {
@@ -135,6 +206,11 @@ export default function IndividualChatPage({ params }: { params: { id: string } 
     } catch (error) {
       console.error('Error sending message:', error);
       setIsSending(false);
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 

@@ -1,130 +1,79 @@
+// Import the new comprehensive database system
+import { getDatabase, getPreparedStatements, dbUtils } from './database/init';
 import Database from "better-sqlite3";
-import path from "path";
 
-let db: Database.Database | null = null;
+// Re-export the new database utilities for use throughout the app
+export { getDatabase, getPreparedStatements, dbUtils };
 
-// Seed demo companies if they don't exist
-const seedDemoCompanies = (database: Database.Database) => {
-  const stmt = database.prepare("SELECT COUNT(*) as count FROM companies");
-  const companyExists = stmt.get() as any;
+// Legacy compatibility - get the database instance
+function getDb() {
+  return getDatabase();
+}
+
+// Legacy data migration for existing quotes
+const migrateLegacyData = () => {
+  const db = getDatabase();
   
-  if (companyExists.count === 0) {
-    const companies = [
-      ["DEMO2024", "Demo Painting Company", "(555) 123-4567", "demo@paintingcompany.com"],
-      ["PAINTER001", "Smith Painting LLC", "(555) 987-6543", "info@smithpainting.com"],
-      ["CONTRACTOR123", "Elite Contractors", "(555) 456-7890", "quotes@elitecontractors.com"],
-      ["CUSTOM789", "Custom Paint Works", "(555) 234-5678", "hello@custompaintworks.com"],
-      ["BUILDER456", "Premier Builders", "(555) 345-6789", "contact@premierbuilders.com"],
-      ["PAINT2025", "Modern Paint Solutions", "(555) 567-8901", "info@modernpaint.com"]
-    ];
-
-    const insertStmt = database.prepare(`
-      INSERT INTO companies (access_code, company_name, phone, email) 
-      VALUES (?, ?, ?, ?)
-    `);
-
-    companies.forEach(company => insertStmt.run(...company));
-    console.log("✅ Demo companies seeded successfully");
+  try {
+    // Check if legacy companies table exists
+    const tableExists = db.prepare(`
+      SELECT name FROM sqlite_master WHERE type='table' AND name='companies'
+    `).get();
+    
+    if (tableExists) {
+      console.log('Legacy companies table found, migrating data...');
+      
+      // Get all companies from legacy table
+      const companies = db.prepare('SELECT * FROM companies').all();
+      
+      // Migrate to new users and cost_settings tables
+      for (const company of companies as any[]) {
+        // Create user record
+        const userId = dbUtils.generateId();
+        const stmt = getPreparedStatements();
+        
+        try {
+          stmt.createUser.run(userId, company.email || `${company.access_code}@temp.com`, company.company_name);
+          
+          // Create cost settings
+          const costSettingsId = dbUtils.generateId();
+          stmt.createCostSettings.run(
+            costSettingsId,
+            userId,
+            25, // default labor rate
+            JSON.stringify({"best": 50, "good": 25, "better": 35}),
+            100, // supplies base cost
+            company.company_name,
+            company.company_name,
+            company.default_labor_percentage || 30,
+            company.default_paint_coverage || 350,
+            JSON.stringify({"door_unit_price": 45, "trim_linear_foot_price": 3}),
+            JSON.stringify({"charge_method": "linear_foot", "price_per_linear_foot": 2.5}),
+            JSON.stringify({
+              "walls": company.default_walls_rate || 3.00,
+              "ceilings": company.default_ceilings_rate || 2.00,
+              "trim_doors": company.default_trim_rate || 5.00
+            }),
+            JSON.stringify({
+              "walls": company.default_walls_paint_cost || 26,
+              "ceilings": company.default_ceilings_paint_cost || 25,
+              "trim_doors": company.default_trim_paint_cost || 35
+            })
+          );
+          
+          console.log(`Migrated company: ${company.company_name}`);
+        } catch (error: any) {
+          console.log(`Company ${company.company_name} already migrated or error:`, error.message);
+        }
+      }
+    }
+  } catch (error) {
+    console.log('No legacy data to migrate or migration complete');
   }
 };
 
-// Lazy database initialization
-function getDb() {
-  if (!db) {
-    const dbPath = path.join(process.cwd(), "quotes.db");
-    db = new Database(dbPath);
-    
-    // Initialize database tables
-    db.exec(`
-  CREATE TABLE IF NOT EXISTS companies (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    access_code TEXT UNIQUE NOT NULL,
-    company_name TEXT NOT NULL,
-    phone TEXT,
-    email TEXT,
-    logo_url TEXT,
-    default_walls_rate REAL DEFAULT 3.00,
-    default_ceilings_rate REAL DEFAULT 2.00,
-    default_trim_rate REAL DEFAULT 1.92,
-    default_walls_paint_cost REAL DEFAULT 26.00,
-    default_ceilings_paint_cost REAL DEFAULT 25.00,
-    default_trim_paint_cost REAL DEFAULT 35.00,
-    default_labor_percentage INTEGER DEFAULT 30,
-    default_paint_coverage INTEGER DEFAULT 350,
-    default_sundries_percentage INTEGER DEFAULT 12,
-    tax_rate REAL DEFAULT 0,
-    tax_on_materials_only BOOLEAN DEFAULT 0,
-    tax_label TEXT DEFAULT 'Tax',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  );
-
-  CREATE TABLE IF NOT EXISTS quotes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    company_id INTEGER NOT NULL,
-    quote_id TEXT UNIQUE NOT NULL,
-    customer_name TEXT NOT NULL,
-    customer_email TEXT,
-    customer_phone TEXT,
-    address TEXT,
-    project_type TEXT,
-    rooms TEXT,
-    paint_quality TEXT,
-    prep_work TEXT,
-    timeline TEXT,
-    special_requests TEXT,
-    
-    -- Area calculations
-    walls_sqft INTEGER DEFAULT 0,
-    ceilings_sqft INTEGER DEFAULT 0,
-    trim_sqft INTEGER DEFAULT 0,
-    
-    -- Charge rates
-    walls_rate REAL DEFAULT 3.00,
-    ceilings_rate REAL DEFAULT 2.00,
-    trim_rate REAL DEFAULT 1.92,
-    
-    -- Paint costs
-    walls_paint_cost REAL DEFAULT 26.00,
-    ceilings_paint_cost REAL DEFAULT 25.00,
-    trim_paint_cost REAL DEFAULT 35.00,
-    
-    -- Calculation results
-    total_revenue REAL DEFAULT 0,
-    total_materials REAL DEFAULT 0,
-    paint_cost REAL DEFAULT 0,
-    sundries_cost REAL DEFAULT 0,
-    sundries_percentage INTEGER DEFAULT 12,
-    projected_labor REAL DEFAULT 0,
-    labor_percentage INTEGER DEFAULT 30,
-    projected_profit REAL DEFAULT 0,
-    paint_coverage INTEGER DEFAULT 350,
-    tax_rate REAL DEFAULT 0,
-    tax_amount REAL DEFAULT 0,
-    subtotal REAL DEFAULT 0,
-    
-    -- Legacy fields
-    base_cost REAL,
-    markup_percentage REAL,
-    final_price REAL,
-    status TEXT DEFAULT 'pending',
-    conversation_summary TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (company_id) REFERENCES companies(id)
-  );
-
-  CREATE INDEX IF NOT EXISTS idx_quotes_company_id ON quotes(company_id);
-  CREATE INDEX IF NOT EXISTS idx_quotes_quote_id ON quotes(quote_id);
-  CREATE INDEX IF NOT EXISTS idx_quotes_status ON quotes(status);
-`);
-
-    // Seed demo companies
-    seedDemoCompanies(db);
-  }
-  
-  return db;
-}
+// Run migration on startup
+migrateLegacyData();
 
 export const dbGet = (sql: string, params: any[] = []) => {
   const db = getDb();
@@ -145,9 +94,22 @@ export const dbRun = (sql: string, params: any[] = []) => {
   return { lastID: result.lastInsertRowid, changes: result.changes };
 };
 
-// Helper functions for common operations
+// Legacy compatibility functions that now use the new schema
 export const getCompanyByAccessCode = (accessCode: string) => {
-  return dbGet("SELECT * FROM companies WHERE access_code = ?", [accessCode]);
+  // For legacy compatibility, look up user by email or access code simulation
+  const user = dbGet("SELECT * FROM users WHERE email LIKE ? OR company_name = ?", [`%${accessCode}%`, accessCode]) as any;
+  if (user) {
+    // Get cost settings for this user
+    const costSettings = dbGet("SELECT * FROM cost_settings WHERE user_id = ?", [user.id]) as any;
+    return {
+      id: user.id,
+      access_code: accessCode,
+      company_name: user.company_name,
+      email: user.email,
+      ...costSettings
+    };
+  }
+  return null;
 };
 
 export const createCompany = (data: {
@@ -157,30 +119,89 @@ export const createCompany = (data: {
   email?: string;
   logo_url?: string;
 }) => {
-  return dbRun(
-    `INSERT INTO companies (access_code, company_name, phone, email, logo_url) 
-     VALUES (?, ?, ?, ?, ?)`,
-    [data.access_code, data.company_name, data.phone || null, data.email || null, data.logo_url || null]
-  );
-};
-
-export const createQuote = (data: any) => {
-  const columns = Object.keys(data).join(", ");
-  const placeholders = Object.keys(data).map(() => "?").join(", ");
-  const values = Object.values(data);
+  const userId = dbUtils.generateId();
+  const stmt = getPreparedStatements();
   
-  return dbRun(
-    `INSERT INTO quotes (${columns}) VALUES (${placeholders})`,
-    values
+  // Create user
+  stmt.createUser.run(userId, data.email || `${data.access_code}@temp.com`, data.company_name);
+  
+  // Create default cost settings
+  const costSettingsId = dbUtils.generateId();
+  stmt.createCostSettings.run(
+    costSettingsId,
+    userId,
+    25, // default labor rate
+    JSON.stringify({"best": 50, "good": 25, "better": 35}),
+    100, // supplies base cost
+    data.company_name,
+    data.company_name,
+    30, // default labor percentage
+    350, // default spread rate
+    JSON.stringify({"door_unit_price": 45, "trim_linear_foot_price": 3}),
+    JSON.stringify({"charge_method": "linear_foot", "price_per_linear_foot": 2.5}),
+    JSON.stringify({"walls": 3.00, "ceilings": 2.00, "trim_doors": 5.00}),
+    JSON.stringify({"walls": 26, "ceilings": 25, "trim_doors": 35})
   );
+  
+  return { lastID: userId, changes: 1 };
 };
 
-export const updateQuote = (id: number, data: any) => {
+// Legacy quote functions - now create projects and quotes in new schema
+export const createQuote = (data: any) => {
+  const projectId = dbUtils.generateId();
+  const quoteId = dbUtils.generateId();
+  const stmt = getPreparedStatements();
+  
+  // Create project first
+  stmt.createProject.run(
+    projectId,
+    data.company_id || data.user_id,
+    data.customer_name,
+    data.address || '',
+    data.customer_email,
+    data.customer_phone,
+    'email',
+    data.special_requests
+  );
+  
+  // Create quote
+  const baseCosts = {
+    walls_cost: (data.walls_sqft || 0) * (data.walls_rate || 3.00),
+    ceilings_cost: (data.ceilings_sqft || 0) * (data.ceilings_rate || 2.00),
+    trim_cost: (data.trim_sqft || 0) * (data.trim_rate || 5.00),
+    paint_cost: data.paint_cost || 0,
+    sundries_cost: data.sundries_cost || 0
+  };
+  
+  stmt.createQuote.run(
+    quoteId,
+    projectId,
+    JSON.stringify(baseCosts),
+    data.markup_percentage || 0,
+    data.final_price || data.total_revenue || 0,
+    JSON.stringify({
+      project_type: data.project_type,
+      paint_quality: data.paint_quality,
+      timeline: data.timeline,
+      rooms: data.rooms
+    }),
+    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+    'simple',
+    'quoted',
+    data.sundries_cost || 0,
+    'draft'
+  );
+  
+  return { lastID: quoteId, changes: 1 };
+};
+
+export const updateQuote = (id: string, data: any) => {
+  // Update quote in new schema
   const updates = Object.keys(data).map(key => `${key} = ?`).join(", ");
   const values = [...Object.values(data), id];
   
   return dbRun(
-    `UPDATE quotes SET ${updates}, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+    `UPDATE quotes SET ${updates} WHERE id = ?`,
     values
   );
 };

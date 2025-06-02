@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseMessage, calculateSimpleQuote } from '@/lib/simple-assistant';
-import { dbGet } from '@/lib/database';
+import { ProfessionalFriendAI } from '@/lib/professional-friend-ai';
+import { dbGet, getPreparedStatements, dbUtils } from '@/lib/database';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -12,11 +13,25 @@ interface AssistantRequest {
   history: ChatMessage[];
   context?: any;
   companyId?: string;
+  userId?: string;
+  useProfessionalAI?: boolean;
 }
+
+// Initialize AI (use environment variable for API key)
+const professionalAI = process.env.GOOGLE_AI_API_KEY 
+  ? new ProfessionalFriendAI(process.env.GOOGLE_AI_API_KEY)
+  : null;
 
 export async function POST(request: NextRequest) {
   try {
-    const { message, history, context = {}, companyId }: AssistantRequest = await request.json();
+    const { 
+      message, 
+      history, 
+      context = {}, 
+      companyId,
+      userId,
+      useProfessionalAI = true // Default to new AI when available
+    }: AssistantRequest = await request.json();
 
     if (!message?.trim()) {
       return NextResponse.json(
@@ -25,12 +40,85 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Load company settings for calculations
+    // Use Professional AI if available and requested
+    if (useProfessionalAI && professionalAI && userId) {
+      try {
+        // Load contractor context
+        const contractorContext = await professionalAI.loadContractorContext(userId);
+        
+        // Build conversation context
+        const conversationContext = {
+          contractor: contractorContext,
+          project: context.project || {},
+          stage: context.stage || 'greeting' as const,
+          lastInteraction: context.lastInteraction ? new Date(context.lastInteraction) : new Date(),
+          messageCount: context.messageCount || 0
+        };
+        
+        // Generate response
+        const aiResponse = await professionalAI.generateResponse(message, conversationContext);
+        
+        // Handle any required actions
+        let quoteData = null;
+        if (aiResponse.actionRequired === 'calculate_quote') {
+          // Get company settings for calculation
+          const companySettings = userId ? dbGet(`
+            SELECT * FROM cost_settings WHERE user_id = ?
+          `, [userId]) : null;
+          
+          // Calculate quote
+          const quote = calculateSimpleQuote({
+            clientName: aiResponse.updatedContext.project.clientName,
+            address: aiResponse.updatedContext.project.address,
+            projectType: aiResponse.updatedContext.project.projectType,
+            sqft: aiResponse.updatedContext.project.sqft,
+            paintQuality: aiResponse.updatedContext.project.paintQuality,
+            timeline: aiResponse.updatedContext.project.timeline,
+          }, companySettings);
+          
+          quoteData = {
+            ...quote,
+            customerName: aiResponse.updatedContext.project.clientName,
+            address: aiResponse.updatedContext.project.address,
+            projectType: aiResponse.updatedContext.project.projectType,
+            sqft: aiResponse.updatedContext.project.sqft,
+            paintQuality: aiResponse.updatedContext.project.paintQuality,
+            timeline: aiResponse.updatedContext.project.timeline,
+            totalCost: quote.total,
+            timeEstimate: aiResponse.updatedContext.project.timeline === 'rush' ? '2-3 days' : 
+                         aiResponse.updatedContext.project.timeline === 'flexible' ? '5-7 days' : '3-5 days',
+            needsMarkupConfirmation: quote.needsMarkupConfirmation
+          };
+          
+          // Update context with quote amount and margin
+          aiResponse.updatedContext.project.currentQuoteAmount = quote.total;
+          aiResponse.updatedContext.project.margin = Math.round((quote.breakdown.markup / quote.subtotal) * 100);
+        }
+        
+        return NextResponse.json({
+          response: aiResponse.response,
+          quoteData,
+          context: aiResponse.updatedContext,
+          isComplete: aiResponse.updatedContext.stage === 'complete',
+          extractedInfo: aiResponse.extractedInfo
+        });
+        
+      } catch (aiError) {
+        console.error('Professional AI error, falling back to simple assistant:', aiError);
+        // Fall through to simple assistant
+      }
+    }
+
+    // Fallback to simple assistant (original logic)
     let companySettings = null;
     if (companyId) {
       companySettings = dbGet(`
         SELECT * FROM companies WHERE id = ?
       `, [companyId]);
+    } else if (userId) {
+      companySettings = dbGet(`
+        SELECT * FROM cost_settings WHERE user_id = ?
+      `, [userId]);
     }
 
     // Parse the message and extract information
@@ -130,7 +218,7 @@ export async function POST(request: NextRequest) {
     console.error('Assistant API error:', error);
     
     return NextResponse.json({
-      response: "Sorry, what was that?",
+      response: "Sorry, I didn't catch that. Could you try again?",
       quoteData: null,
       context: {},
       isComplete: false

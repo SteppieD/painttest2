@@ -31,6 +31,10 @@ interface QuoteData {
   walls_sqft?: number;
   ceilings_sqft?: number;
   trim_sqft?: number;
+  customer_phone?: string;
+  customer_email?: string;
+  prep_work?: string;
+  special_requests?: string;
 }
 
 export default function CustomerQuotePage({ params }: { params: { id: string } }) {
@@ -41,6 +45,7 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
   const [copied, setCopied] = useState(false);
   const [clientSignature, setClientSignature] = useState("");
   const [isAccepted, setIsAccepted] = useState(false);
+  const [showCosts, setShowCosts] = useState(false);
 
   useEffect(() => {
     loadQuote();
@@ -81,7 +86,13 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
   const copyToClipboard = async () => {
     if (!quote) return;
     
-    const quoteText = `
+    // Calculate cost breakdown
+    const laborCost = Math.round((quote.total_cost || 0) * 0.30);
+    const paintCost = Math.round((quote.total_cost || 0) * 0.35);
+    const sundriesCost = Math.round((quote.total_cost || 0) * 0.10);
+    const profit = Math.round((quote.total_cost || 0) * 0.25);
+    
+    let quoteText = `
 PROFESSIONAL PAINTING ESTIMATE
 
 ${quote.company_name || 'ProPaint Company'}
@@ -89,22 +100,51 @@ Quote #: ${quote.quote_id}
 Date: ${formatDate(quote.created_at)}
 Valid Until: ${getValidityDate(quote.created_at)}
 
-CLIENT: ${quote.customer_name}
-PROPERTY: ${quote.address}
+════════════════════════════════════════
 
-PROJECT SCOPE:
-Premium ${quote.project_type} painting with surface preparation
-${quote.sqft?.toLocaleString()} square feet
-${quote.paint_quality} quality materials and application
-Complete project management and cleanup
+CLIENT INFORMATION
+Name: ${quote.customer_name}
+Property: ${quote.address}
+${quote.customer_phone ? `Phone: ${quote.customer_phone}\n` : ''}${quote.customer_email ? `Email: ${quote.customer_email}\n` : ''}
+PROJECT DETAILS
+Type: ${quote.project_type?.charAt(0).toUpperCase() + quote.project_type?.slice(1)} Painting
+Total Area: ${quote.sqft?.toLocaleString()} square feet
+${quote.walls_sqft ? `Walls: ${quote.walls_sqft.toLocaleString()} sqft\n` : ''}${quote.ceilings_sqft ? `Ceilings: ${quote.ceilings_sqft.toLocaleString()} sqft\n` : ''}${quote.trim_sqft ? `Trim: ${quote.trim_sqft.toLocaleString()} sqft\n` : ''}Paint Quality: ${quote.paint_quality?.charAt(0).toUpperCase() + quote.paint_quality?.slice(1)}
+Timeline: ${quote.timeline === 'rush' ? '2-3 days (Rush)' : quote.timeline === 'flexible' ? '5-7 days (Flexible)' : '3-5 days (Standard)'}
+${quote.prep_work ? `Prep Work: ${quote.prep_work}\n` : ''}${quote.special_requests ? `Special Requests: ${quote.special_requests}\n` : ''}
+TOTAL INVESTMENT: $${quote.total_cost?.toLocaleString()}
+`;
+    
+    // Add cost breakdown if showing costs
+    if (showCosts) {
+      quoteText += `
+════════════════════════════════════════
 
-INVESTMENT: $${quote.total_cost?.toLocaleString()}
+COST BREAKDOWN
+Labor: $${laborCost.toLocaleString()}
+Paint & Materials: $${paintCost.toLocaleString()}
+Sundries & Supplies: $${sundriesCost.toLocaleString()}
+Profit & Overhead: $${profit.toLocaleString()}
+════════════════════════════════════════
+`;
+    }
+    
+    quoteText += `
+════════════════════════════════════════
 
-This proposal includes professional materials, expert application, and complete project management from start to finish.
+This comprehensive quote includes:
+✓ Premium ${quote.paint_quality} paint and materials
+✓ Professional surface preparation
+✓ Expert application by trained painters
+✓ Complete cleanup and protection
+✓ 1-year workmanship warranty
+✓ Licensed and insured service
 
-Thank you for considering our services!
+${quote.company_name || 'ProPaint Company'}
 ${quote.company_phone || '(555) 123-4567'}
 ${quote.company_email || 'info@propaint.com'}
+
+Thank you for choosing us!
     `.trim();
 
     try {
@@ -231,6 +271,39 @@ ${quote.company_email || 'info@propaint.com'}
                 <Printer className="w-4 h-4 mr-2" />
                 Print
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowCosts(!showCosts)}
+                className="bg-yellow-50 border-yellow-300 hover:bg-yellow-100"
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                {showCosts ? 'Hide' : 'Show'} Costs
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const element = document.getElementById('quote-content');
+                  if (element) {
+                    const text = element.innerText;
+                    const blob = new Blob([text], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Quote_${quote?.quote_id || 'download'}.txt`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    toast({
+                      title: "Downloaded!",
+                      description: "Quote saved as text file.",
+                    });
+                  }
+                }}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </Button>
             </div>
           </div>
         </div>
@@ -239,7 +312,7 @@ ${quote.company_email || 'info@propaint.com'}
       {/* Quote Content */}
       <div className="max-w-4xl mx-auto px-6 py-8">
         <Card className="border-0 shadow-lg print:shadow-none">
-          <CardContent className="p-8">
+          <CardContent className="p-8" id="quote-content">
             {/* Professional Header */}
             <div className="text-center mb-8 pb-6 border-b-2 border-blue-600">
               <h1 className="text-4xl font-bold text-gray-900 mb-2">
@@ -279,6 +352,8 @@ ${quote.company_email || 'info@propaint.com'}
                 <div>
                   <p className="text-gray-600 text-sm">Client</p>
                   <p className="font-bold text-lg">{quote.customer_name}</p>
+                  {quote.customer_phone && <p className="text-sm text-gray-600">📞 {quote.customer_phone}</p>}
+                  {quote.customer_email && <p className="text-sm text-gray-600">✉️ {quote.customer_email}</p>}
                 </div>
                 <div>
                   <p className="text-gray-600 text-sm">Property Address</p>
@@ -287,13 +362,24 @@ ${quote.company_email || 'info@propaint.com'}
                 <div>
                   <p className="text-gray-600 text-sm">Project Scope</p>
                   <p className="font-medium capitalize">{quote.project_type} Painting Project</p>
-                  <p className="text-sm text-gray-600">{quote.sqft?.toLocaleString()} square feet</p>
+                  <p className="text-sm text-gray-600">{quote.sqft?.toLocaleString()} square feet total</p>
+                  {quote.walls_sqft && <p className="text-sm text-gray-600">• Walls: {quote.walls_sqft.toLocaleString()} sqft</p>}
+                  {quote.ceilings_sqft && <p className="text-sm text-gray-600">• Ceilings: {quote.ceilings_sqft.toLocaleString()} sqft</p>}
+                  {quote.trim_sqft && <p className="text-sm text-gray-600">• Trim: {quote.trim_sqft.toLocaleString()} sqft</p>}
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">Estimated Timeline</p>
+                  <p className="text-gray-600 text-sm">Paint Quality & Timeline</p>
+                  <p className="font-medium">{quote.paint_quality?.charAt(0).toUpperCase() + quote.paint_quality?.slice(1)} Quality</p>
                   <p className="font-medium">{getTimelineDescription(quote.timeline)}</p>
+                  {quote.prep_work && <p className="text-sm text-gray-600 mt-1">Prep: {quote.prep_work}</p>}
                 </div>
               </div>
+              {quote.special_requests && (
+                <div className="mt-4 pt-4 border-t">
+                  <p className="text-gray-600 text-sm">Special Requests</p>
+                  <p className="font-medium">{quote.special_requests}</p>
+                </div>
+              )}
             </div>
 
             {/* Strategic Pricing Presentation */}
@@ -345,6 +431,41 @@ ${quote.company_email || 'info@propaint.com'}
                 </p>
               </div>
             </div>
+
+            {/* Cost Breakdown - Only show when toggle is on */}
+            {showCosts && (
+              <div className="mb-8 bg-yellow-50 border-2 border-yellow-200 p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-yellow-600" />
+                  Cost Breakdown (Internal View)
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Labor (30%)</span>
+                    <span className="font-bold">${Math.round((quote.total_cost || 0) * 0.30).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Paint & Materials (35%)</span>
+                    <span className="font-bold">${Math.round((quote.total_cost || 0) * 0.35).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Sundries & Supplies (10%)</span>
+                    <span className="font-bold">${Math.round((quote.total_cost || 0) * 0.10).toLocaleString()}</span>
+                  </div>
+                  <div className="border-t pt-3 flex justify-between items-center">
+                    <span className="text-gray-700 font-semibold">Profit & Overhead (25%)</span>
+                    <span className="font-bold text-green-600">${Math.round((quote.total_cost || 0) * 0.25).toLocaleString()}</span>
+                  </div>
+                  <div className="border-t pt-3 flex justify-between items-center">
+                    <span className="text-gray-900 font-bold">Total</span>
+                    <span className="font-bold text-lg">${quote.total_cost?.toLocaleString()}</span>
+                  </div>
+                </div>
+                <p className="text-xs text-yellow-700 mt-4 italic">
+                  This breakdown is for internal use only. Do not share with customers unless specifically requested.
+                </p>
+              </div>
+            )}
 
             {/* Trust-Building Elements */}
             <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">

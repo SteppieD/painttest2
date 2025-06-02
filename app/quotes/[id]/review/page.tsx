@@ -42,6 +42,13 @@ interface QuoteData {
   walls_sqft?: number;
   ceilings_sqft?: number;
   trim_sqft?: number;
+  customer_phone?: string;
+  customer_email?: string;
+  prep_work?: string;
+  special_requests?: string;
+  company_name?: string;
+  company_phone?: string;
+  company_email?: string;
 }
 
 export default function QuoteReviewPage({ params }: { params: { id: string } }) {
@@ -265,6 +272,8 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
                   <Label className="text-sm font-medium text-gray-600">Client Details</Label>
                   <p className="font-medium">{quote.customer_name}</p>
                   <p className="text-sm text-gray-600">{quote.address}</p>
+                  {quote.customer_phone && <p className="text-sm text-gray-600">📞 {quote.customer_phone}</p>}
+                  {quote.customer_email && <p className="text-sm text-gray-600">✉️ {quote.customer_email}</p>}
                   <p className="text-sm text-gray-500 mt-1">
                     Quote Date: {new Date(quote.created_at).toLocaleDateString()}
                   </p>
@@ -273,10 +282,20 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
                   <Label className="text-sm font-medium text-gray-600">Scope Summary</Label>
                   <p className="font-medium capitalize">{quote.project_type} Painting</p>
                   <p className="text-sm text-gray-600">{quote.sqft?.toLocaleString()} sq ft total</p>
+                  {quote.walls_sqft && <p className="text-sm text-gray-600">• Walls: {quote.walls_sqft.toLocaleString()} sqft</p>}
+                  {quote.ceilings_sqft && <p className="text-sm text-gray-600">• Ceilings: {quote.ceilings_sqft.toLocaleString()} sqft</p>}
+                  {quote.trim_sqft && <p className="text-sm text-gray-600">• Trim: {quote.trim_sqft.toLocaleString()} sqft</p>}
                   <p className="text-sm text-gray-600">{quote.paint_quality} paint quality</p>
                   <p className="text-sm text-gray-600">Timeline: {quote.timeline || 'Standard'}</p>
+                  {quote.prep_work && <p className="text-sm text-gray-600">Prep: {quote.prep_work}</p>}
                 </div>
               </div>
+              {quote.special_requests && (
+                <div className="mt-4 pt-4 border-t">
+                  <Label className="text-sm font-medium text-gray-600">Special Requests</Label>
+                  <p className="text-sm text-gray-700 mt-1">{quote.special_requests}</p>
+                </div>
+              )}
               
               <div className="flex items-center gap-4 pt-4 border-t">
                 <div className="flex items-center gap-2">

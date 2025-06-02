@@ -225,6 +225,15 @@ export default function DashboardPage() {
               
               <Button
                 variant="outline"
+                onClick={() => router.push("/insights")}
+                className="hidden sm:flex"
+              >
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Insights
+              </Button>
+              
+              <Button
+                variant="outline"
                 onClick={() => router.push("/settings")}
                 className="hidden sm:flex"
               >
