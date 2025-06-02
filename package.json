@@ -1,15 +1,30 @@
 {
-  "name": "nodejs",
+  "name": "simple-paint-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "replit": "npm run build && npm start"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@types/node": "^22.13.11"
+    "@replit/database": "^3.0.1",
+    "better": "^0.1.0",
+    "better-sqlite3": "^11.10.0",
+    "next": "14.2.29",
+    "pg": "^8.16.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^20.14.11",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/sqlite3": "^3.1.11",
+    "typescript": "^5.5.4"
   }
 }
