@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const quote = dbGet(`
+    const quote: any = dbGet(`
       SELECT 
         q.*,
         c.company_name,
@@ -26,15 +26,18 @@ export async function GET(
     }
 
     // Parse the breakdown if it's stored as JSON string
-    if (quote.conversation_summary) {
+    if (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') {
       try {
         const messages = JSON.parse(quote.conversation_summary);
         // Extract breakdown from messages if available
-        const lastMessage = messages[messages.length - 1];
-        if (lastMessage && lastMessage.quoteData) {
-          quote.breakdown = lastMessage.quoteData.breakdown;
+        if (Array.isArray(messages) && messages.length > 0) {
+          const lastMessage = messages[messages.length - 1];
+          if (lastMessage && lastMessage.quoteData) {
+            quote.breakdown = lastMessage.quoteData.breakdown;
+          }
         }
       } catch (e) {
+        console.error("Error parsing conversation summary:", e);
         // If parsing fails, create breakdown from stored values
       }
     }
@@ -51,7 +54,7 @@ export async function GET(
 
     // Ensure we have the necessary fields
     quote.total_cost = quote.final_price || quote.total_revenue || quote.quote_amount;
-    quote.sqft = quote.walls_sqft + quote.ceilings_sqft + quote.trim_sqft;
+    quote.sqft = (quote.walls_sqft || 0) + (quote.ceilings_sqft || 0) + (quote.trim_sqft || 0);
     quote.paint_quality = quote.paint_quality || 'premium';
     quote.timeline = quote.timeline || 'standard';
 

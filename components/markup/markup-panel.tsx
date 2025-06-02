@@ -26,7 +26,7 @@ export function MarkupPanel({
   onSave,
   isSaving = false
 }: MarkupPanelProps) {
-  const baseCost = quote.totalCost
+  const baseCost = quote.totalCost || 0
   const markupAmount = baseCost * (markupPercentage / 100)
   const finalPrice = baseCost + markupAmount
 
@@ -86,15 +86,15 @@ export function MarkupPanel({
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Labor:</span>
-              <span className="font-medium">${quote.breakdown.labor.toLocaleString()}</span>
+              <span className="font-medium">${(quote.breakdown?.labor || 0).toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Materials:</span>
-              <span className="font-medium">${quote.breakdown.materials.toLocaleString()}</span>
+              <span className="font-medium">${(quote.breakdown?.materials || 0).toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Prep Work:</span>
-              <span className="font-medium">${quote.breakdown.prepWork.toLocaleString()}</span>
+              <span className="font-medium">${(quote.breakdown?.prepWork || 0).toLocaleString()}</span>
             </div>
             <div className="pt-2 border-t">
               <div className="flex justify-between">

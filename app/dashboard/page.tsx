@@ -107,7 +107,7 @@ export default function DashboardPage() {
 
   const calculateAnalytics = (quotesData: Quote[]) => {
     const total = quotesData.length;
-    const revenue = quotesData.reduce((sum, quote) => sum + quote.quote_amount, 0);
+    const revenue = quotesData.reduce((sum, quote) => sum + (quote.quote_amount || 0), 0);
     const average = total > 0 ? revenue / total : 0;
 
     const pending = quotesData.filter(q => !q.status || q.status === "pending").length;
@@ -128,7 +128,7 @@ export default function DashboardPage() {
       pendingQuotes: pending,
       acceptedQuotes: accepted,
       thisMonthQuotes: thisMonthQuotes.length,
-      thisMonthRevenue: thisMonthQuotes.reduce((sum, quote) => sum + quote.quote_amount, 0),
+      thisMonthRevenue: thisMonthQuotes.reduce((sum, quote) => sum + (quote.quote_amount || 0), 0),
     });
   };
 

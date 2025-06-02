@@ -25,9 +25,17 @@ interface QuoteData {
     materials: number;
     prepWork: number;
     markup: number;
+    paint?: number;
+    sundries?: number;
   };
   timeline: string;
   created_at: string;
+  paint_cost?: number;
+  sundries_cost?: number;
+  sundries_percentage?: number;
+  subtotal?: number;
+  tax_rate?: number;
+  tax_amount?: number;
 }
 
 export default function QuoteReviewPage({ params }: { params: { id: string } }) {
@@ -62,7 +70,7 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
   };
 
   const calculateTotal = () => {
-    if (!quote) return 0;
+    if (!quote || !quote.breakdown) return 0;
     const subtotal = (quote.breakdown.labor || 0) + 
                     (quote.breakdown.materials || 0) + 
                     (quote.breakdown.prepWork || 0);
@@ -74,7 +82,7 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
     setMarkupPercentage(newPercentage);
     
     // Update the quote in the database
-    if (quote) {
+    if (quote && quote.breakdown) {
       const subtotal = (quote.breakdown.labor || 0) + 
                       (quote.breakdown.materials || 0) + 
                       (quote.breakdown.prepWork || 0);
@@ -206,17 +214,17 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2">
                 <span className="text-gray-600">Paint Costs</span>
-                <span className="font-medium">${(quote.paint_cost || quote.breakdown.paint || 0).toLocaleString()}</span>
+                <span className="font-medium">${(quote.paint_cost || quote.breakdown?.paint || 0).toLocaleString()}</span>
               </div>
               
               <div className="flex justify-between items-center py-2">
                 <span className="text-gray-600">Sundries ({quote.sundries_percentage || 12}%)</span>
-                <span className="font-medium">${(quote.sundries_cost || quote.breakdown.sundries || 0).toLocaleString()}</span>
+                <span className="font-medium">${(quote.sundries_cost || quote.breakdown?.sundries || 0).toLocaleString()}</span>
               </div>
               
               <div className="flex justify-between items-center py-2">
                 <span className="text-gray-600">Labour Costs</span>
-                <span className="font-medium">${quote.breakdown.labor?.toLocaleString()}</span>
+                <span className="font-medium">${(quote.breakdown?.labor || 0).toLocaleString()}</span>
               </div>
               
               <div className="border-t pt-3">

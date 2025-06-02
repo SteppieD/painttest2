@@ -77,6 +77,9 @@ export function calculateQuote(
   let totalSqft = input.sqft || 0;
   if (input.rooms && input.rooms.length > 0) {
     totalSqft = input.rooms.reduce((total, room) => {
+      if (!room || typeof room.length !== 'number' || typeof room.width !== 'number' || typeof room.height !== 'number') {
+        return total;
+      }
       if (input.projectType === 'interior') {
         // Interior: wall area calculation
         const wallArea = 2 * (room.length + room.width) * room.height;

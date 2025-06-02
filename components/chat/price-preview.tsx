@@ -30,9 +30,9 @@ export function PricePreview({ quote, onGenerateQuote, isGenerating }: PricePrev
               Project Details
             </div>
             <div className="text-xs space-y-1">
-              <div>{quote.details.sqft} sq ft</div>
-              <div>{quote.details.roomCount} rooms</div>
-              {quote.details.paintGallons && (
+              <div>{quote.details?.sqft || 0} sq ft</div>
+              <div>{quote.details?.roomCount || 0} rooms</div>
+              {quote.details?.paintGallons && (
                 <div>{quote.details.paintGallons} gallons paint</div>
               )}
             </div>
@@ -44,8 +44,8 @@ export function PricePreview({ quote, onGenerateQuote, isGenerating }: PricePrev
               Timeline
             </div>
             <div className="text-xs space-y-1">
-              <div>{quote.timeEstimate}</div>
-              <div>{quote.details.totalLaborHours} labor hours</div>
+              <div>{quote.timeEstimate || 'TBD'}</div>
+              <div>{quote.details?.totalLaborHours || 0} labor hours</div>
             </div>
           </div>
         </div>
@@ -54,25 +54,25 @@ export function PricePreview({ quote, onGenerateQuote, isGenerating }: PricePrev
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>Labor</span>
-              <span>{formatCurrency(quote.breakdown.labor)}</span>
+              <span>{formatCurrency(quote.breakdown?.labor || 0)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>Materials</span>
-              <span>{formatCurrency(quote.breakdown.materials)}</span>
+              <span>{formatCurrency(quote.breakdown?.materials || 0)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>Prep Work</span>
-              <span>{formatCurrency(quote.breakdown.prepWork)}</span>
+              <span>{formatCurrency(quote.breakdown?.prepWork || 0)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>Markup</span>
-              <span>{formatCurrency(quote.breakdown.markup)}</span>
+              <span>{formatCurrency(quote.breakdown?.markup || 0)}</span>
             </div>
             <div className="border-t pt-2">
               <div className="flex justify-between font-semibold">
                 <span>Total Estimate</span>
                 <span className="text-blue-600">
-                  {formatCurrency(quote.totalCost)}
+                  {formatCurrency(quote.totalCost || 0)}
                 </span>
               </div>
             </div>

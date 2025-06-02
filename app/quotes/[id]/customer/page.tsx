@@ -24,6 +24,9 @@ interface QuoteData {
   company_name?: string;
   company_phone?: string;
   company_email?: string;
+  subtotal?: number;
+  tax_rate?: number;
+  tax_amount?: number;
 }
 
 export default function CustomerQuotePage({ params }: { params: { id: string } }) {
