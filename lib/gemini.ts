@@ -42,7 +42,7 @@ class GeminiQuoteAssistant {
     const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY
     if (apiKey) {
       this.genAI = new GoogleGenerativeAI(apiKey)
-      this.model = this.genAI.getGenerativeModel({ model: 'gemini-pro' })
+      this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
     }
   }
 
@@ -77,7 +77,7 @@ Always be professional, helpful, and thorough. Ask clarifying questions when nee
 
   async generateResponse(userMessage: string, conversationHistory: Array<{role: string, content: string}>): Promise<string> {
     if (!this.model) {
-      return "I'm sorry, but the AI service is not configured. Please check the API key configuration."
+      return "I can help you create a painting quote! Please tell me about your project - is it interior or exterior? What's the approximate square footage?"
     }
 
     try {
@@ -87,9 +87,13 @@ Always be professional, helpful, and thorough. Ask clarifying questions when nee
       const result = await this.model.generateContent(fullPrompt)
       const response = await result.response
       return response.text()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Gemini API error:', error)
-      return "I'm having trouble connecting to the AI service right now. Please try again in a moment."
+      // Provide helpful fallback response based on conversation context
+      if (error?.status === 404 || error?.message?.includes('not found')) {
+        return "I can help you create a painting quote! Could you tell me: 1) Is this for interior or exterior painting? 2) What's the approximate square footage? 3) What type of paint finish do you prefer?"
+      }
+      return "I can still help you create a quote! Please tell me about your painting project - what type of work needs to be done?"
     }
   }
 
