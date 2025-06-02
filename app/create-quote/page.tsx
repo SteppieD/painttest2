@@ -273,7 +273,8 @@ export default function CreateQuotePage() {
         break;
 
       case 'complete':
-        if (lowerInput.includes('another') || lowerInput.includes('new quote')) {
+        const lowerInputComplete = input.toLowerCase();
+        if (lowerInputComplete.includes('another') || lowerInputComplete.includes('new quote')) {
           // Reset for new quote
           setQuoteData({
             customer_name: '',
