@@ -2,21 +2,41 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Search, Plus, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
-import { ChatInterface } from "@/components/chat/chat-interface";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Home, FileText, Settings, LogOut, Palette } from "lucide-react";
-import { QuoteResult } from "@/lib/quote-calculator";
-import { useToast } from "@/components/ui/use-toast";
 
-export default function ChatPage() {
+interface ChatItem {
+  id: number;
+  quote_id: string;
+  customer_name: string;
+  address: string;
+  created_at: string;
+  quote_amount: number;
+  last_message?: string;
+}
+
+const BRAND_COLORS = [
+  'bg-blue-500',
+  'bg-green-500', 
+  'bg-purple-500',
+  'bg-orange-500',
+  'bg-pink-500',
+  'bg-indigo-500',
+  'bg-red-500',
+  'bg-teal-500'
+];
+
+export default function ChatListPage() {
   const router = useRouter();
-  const { toast } = useToast();
+  const [chats, setChats] = useState<ChatItem[]>([]);
+  const [filteredChats, setFilteredChats] = useState<ChatItem[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [companyData, setCompanyData] = useState<any>(null);
-  const [generatedQuote, setGeneratedQuote] = useState<QuoteResult | null>(null);
 
   useEffect(() => {
     // Check authentication
@@ -28,169 +48,190 @@ export default function ChatPage() {
 
     try {
       const parsedCompany = JSON.parse(company);
-      // Check if session is still valid (24 hours)
       if (Date.now() - parsedCompany.loginTime > 24 * 60 * 60 * 1000) {
         localStorage.removeItem("paintquote_company");
         router.push("/access-code");
         return;
       }
       setCompanyData(parsedCompany);
+      loadChats(parsedCompany.id);
     } catch (e) {
       localStorage.removeItem("paintquote_company");
       router.push("/access-code");
     }
   }, [router]);
 
-  const handleQuoteGenerated = (quote: QuoteResult) => {
-    setGeneratedQuote(quote);
-    toast({
-      title: "Quote Generated!",
-      description: `Quote saved successfully. Total: $${quote.totalCost.toLocaleString()}`,
-    });
+  const loadChats = async (companyId: number) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/quotes?company_id=${companyId}`);
+      const data = await response.json();
+      
+      if (Array.isArray(data)) {
+        // Transform quotes into chat items
+        const chatItems = data.map((quote: any) => ({
+          id: quote.id,
+          quote_id: quote.quote_id,
+          customer_name: quote.customer_name,
+          address: quote.address,
+          created_at: quote.created_at,
+          quote_amount: quote.quote_amount || 0,
+          last_message: quote.status === 'pending' ? 'Quote ready for review' : 'Quote completed'
+        }));
+        
+        setChats(chatItems);
+        setFilteredChats(chatItems);
+      }
+    } catch (error) {
+      console.error("Error loading chats:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("paintquote_company");
-    router.push("/access-code");
+  // Filter chats based on search
+  useEffect(() => {
+    const filtered = chats.filter(chat =>
+      chat.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      chat.address.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredChats(filtered);
+  }, [chats, searchTerm]);
+
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
-  if (!companyData) {
+  const getAvatarColor = (name: string) => {
+    const index = name.charCodeAt(0) % BRAND_COLORS.length;
+    return BRAND_COLORS[index];
+  };
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+    
+    if (diffInHours < 24) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (diffInHours < 168) { // Less than a week
+      return date.toLocaleDateString([], { weekday: 'short' });
+    } else {
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+  };
+
+  const handleChatClick = (chatId: number) => {
+    router.push(`/chat/${chatId}`);
+  };
+
+  const handleNewChat = () => {
+    router.push('/assistant');
+  };
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-white border-b shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Palette className="w-8 h-8 text-blue-600" />
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">ProPaint Quote Assistant</h1>
-                <p className="text-sm text-gray-500">{companyData.company_name}</p>
-              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => router.push("/dashboard")}
+                className="w-9 h-9"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <h1 className="text-lg font-semibold">Messages</h1>
             </div>
             
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => router.push("/dashboard")}
-                className="hidden sm:flex"
-              >
-                <Home className="w-4 h-4 mr-2" />
-                Dashboard
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleLogout}
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </div>
+            <Button
+              onClick={handleNewChat}
+              size="icon"
+              className="w-9 h-9 bg-blue-500 hover:bg-blue-600"
+            >
+              <Plus className="w-5 h-5" />
+            </Button>
+          </div>
+          
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              placeholder="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 bg-gray-100 border-0 rounded-lg"
+            />
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-140px)]">
-          {/* Chat Interface */}
-          <div className="lg:col-span-2">
-            <ChatInterface onQuoteGenerated={handleQuoteGenerated} />
+      {/* Chat List */}
+      <div className="divide-y divide-gray-200">
+        {filteredChats.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <Plus className="w-8 h-8 text-gray-400" />
+            </div>
+            <p className="text-gray-500 mb-2">No conversations yet</p>
+            <p className="text-sm text-gray-400 mb-6">Start your first quote to begin chatting</p>
+            <Button 
+              onClick={handleNewChat}
+              className="bg-blue-500 hover:bg-blue-600"
+            >
+              Start New Quote
+            </Button>
           </div>
-
-          {/* Quote Summary Sidebar */}
-          <div className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <FileText className="w-5 h-5 text-blue-600" />
-                  Current Session
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="text-sm">
-                  <p className="text-gray-600 mb-2">Active since:</p>
-                  <p className="font-medium">
-                    {new Date(companyData.loginTime).toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
+        ) : (
+          filteredChats.map((chat) => (
+            <div
+              key={chat.id}
+              onClick={() => handleChatClick(chat.id)}
+              className="px-4 py-3 flex items-center gap-3 hover:bg-gray-50 active:bg-gray-100 cursor-pointer transition-colors"
+            >
+              {/* Avatar */}
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-medium ${getAvatarColor(chat.customer_name)}`}>
+                {getInitials(chat.customer_name)}
+              </div>
+              
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-gray-900 truncate">
+                    {chat.customer_name}
+                  </h3>
+                  <span className="text-sm text-gray-500 flex-shrink-0 ml-2">
+                    {formatTime(chat.created_at)}
+                  </span>
+                </div>
+                
+                <p className="text-sm text-gray-500 truncate">
+                  {chat.address}
+                </p>
+                
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-sm text-gray-400 truncate">
+                    {chat.last_message}
                   </p>
+                  <span className="text-sm font-medium text-green-600 flex-shrink-0 ml-2">
+                    ${chat.quote_amount.toLocaleString()}
+                  </span>
                 </div>
-
-                {generatedQuote && (
-                  <>
-                    <div className="border-t pt-3">
-                      <p className="text-gray-600 mb-2 text-sm">Latest Quote:</p>
-                      <p className="text-2xl font-bold text-blue-600">
-                        ${generatedQuote.totalCost.toLocaleString()}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {generatedQuote.timeEstimate}
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span>Labor:</span>
-                        <span>${generatedQuote.breakdown.labor.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Materials:</span>
-                        <span>${generatedQuote.breakdown.materials.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Prep Work:</span>
-                        <span>${generatedQuote.breakdown.prepWork.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Markup:</span>
-                        <span>${generatedQuote.breakdown.markup.toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                <div className="pt-3 border-t">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => router.push("/dashboard")}
-                    className="w-full"
-                  >
-                    <FileText className="w-4 h-4 mr-2" />
-                    View All Quotes
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Quick Tips</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm space-y-2">
-                <p>💡 Be specific about room dimensions for accurate quotes</p>
-                <p>🎨 Mention paint quality preferences (basic, premium, luxury)</p>
-                <p>⏰ Let me know your timeline needs</p>
-                <p>📋 Include any special prep work requirements</p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
