@@ -43,6 +43,14 @@ function getDb() {
     phone TEXT,
     email TEXT,
     logo_url TEXT,
+    default_walls_rate REAL DEFAULT 3.00,
+    default_ceilings_rate REAL DEFAULT 2.00,
+    default_trim_rate REAL DEFAULT 1.92,
+    default_walls_paint_cost REAL DEFAULT 26.00,
+    default_ceilings_paint_cost REAL DEFAULT 25.00,
+    default_trim_paint_cost REAL DEFAULT 35.00,
+    default_labor_percentage INTEGER DEFAULT 30,
+    default_paint_coverage INTEGER DEFAULT 350,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
@@ -55,11 +63,37 @@ function getDb() {
     customer_email TEXT,
     customer_phone TEXT,
     address TEXT,
+    project_type TEXT,
     rooms TEXT,
     paint_quality TEXT,
     prep_work TEXT,
     timeline TEXT,
     special_requests TEXT,
+    
+    -- Area calculations
+    walls_sqft INTEGER DEFAULT 0,
+    ceilings_sqft INTEGER DEFAULT 0,
+    trim_sqft INTEGER DEFAULT 0,
+    
+    -- Charge rates
+    walls_rate REAL DEFAULT 3.00,
+    ceilings_rate REAL DEFAULT 2.00,
+    trim_rate REAL DEFAULT 1.92,
+    
+    -- Paint costs
+    walls_paint_cost REAL DEFAULT 26.00,
+    ceilings_paint_cost REAL DEFAULT 25.00,
+    trim_paint_cost REAL DEFAULT 35.00,
+    
+    -- Calculation results
+    total_revenue REAL DEFAULT 0,
+    total_materials REAL DEFAULT 0,
+    projected_labor REAL DEFAULT 0,
+    labor_percentage INTEGER DEFAULT 30,
+    projected_profit REAL DEFAULT 0,
+    paint_coverage INTEGER DEFAULT 350,
+    
+    -- Legacy fields
     base_cost REAL,
     markup_percentage REAL,
     final_price REAL,
