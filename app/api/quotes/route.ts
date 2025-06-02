@@ -77,6 +77,35 @@ interface QuoteRequestBody {
   company_id?: number;
 }
 
+interface QuoteRecord {
+  id: number;
+  quote_id?: string;
+  customer_name: string;
+  customer_email?: string;
+  customer_phone?: string;
+  address?: string;
+  project_type?: string;
+  paint_type?: string;
+  prep_work?: string;
+  timeline?: string;
+  rooms_data?: string;
+  sqft?: number;
+  quote_amount: number;
+  labor_cost?: number;
+  materials_cost?: number;
+  prep_work_cost?: number;
+  markup_amount?: number;
+  time_estimate?: string;
+  notes?: string;
+  conversation_history?: string | Array<{role: string; content: string}>;
+  company_id: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  company_name?: string;
+  access_code?: string;
+}
+
 // POST endpoint - Create new quote
 export async function POST(request: NextRequest) {
   try {
@@ -211,7 +240,8 @@ export async function GET(request: NextRequest) {
     const companyId = searchParams.get("company_id");
     const quoteId = searchParams.get("quote_id");
 
-    let stmt, quotes;
+    let stmt: any;
+    let quotes: QuoteRecord | QuoteRecord[] | null;
 
     if (quoteId) {
       // Get specific quote
@@ -221,7 +251,7 @@ export async function GET(request: NextRequest) {
         LEFT JOIN companies c ON q.company_id = c.id
         WHERE q.quote_id = ? OR q.id = ?
       `);
-      quotes = stmt.get(quoteId, quoteId);
+      quotes = stmt.get(quoteId, quoteId) as QuoteRecord | undefined;
       
       if (!quotes) {
         return NextResponse.json(
@@ -231,7 +261,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Parse conversation history if it exists
-      if (quotes.conversation_history) {
+      if (quotes && quotes.conversation_history && typeof quotes.conversation_history === 'string') {
         try {
           quotes.conversation_history = JSON.parse(quotes.conversation_history);
         } catch (e) {
@@ -251,7 +281,7 @@ export async function GET(request: NextRequest) {
         WHERE q.company_id = ?
         ORDER BY q.created_at DESC
       `);
-      quotes = stmt.all(companyId);
+      quotes = stmt.all(companyId) as QuoteRecord[];
     } else {
       // Get all quotes
       stmt = db.prepare(`
@@ -260,7 +290,7 @@ export async function GET(request: NextRequest) {
         LEFT JOIN companies c ON q.company_id = c.id
         ORDER BY q.created_at DESC
       `);
-      quotes = stmt.all();
+      quotes = stmt.all() as QuoteRecord[];
     }
 
     return NextResponse.json(quotes);
