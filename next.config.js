@@ -45,6 +45,7 @@ const nextConfig = {
   
   // Experimental features for Replit compatibility
   experimental: {
+    appDir: true, // Your preference from original config
     serverComponentsExternalPackages: ['better-sqlite3'],
     outputFileTracingRoot: process.cwd(),
   },
