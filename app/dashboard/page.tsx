@@ -31,6 +31,7 @@ interface Quote {
   customer_phone: string;
   address: string;
   quote_amount: number;
+  final_price?: number;
   notes: string;
   status?: string;
   created_at: string;
