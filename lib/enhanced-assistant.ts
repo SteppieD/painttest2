@@ -27,11 +27,24 @@ export function enhancedParseMessage(message: string, context: ConversationConte
   // Extract client name and address with better patterns
   if (!context.clientName || !context.address) {
     // Pattern 1: "Name and the address is Address" or "the name is Name and the address is Address"
-    const andAddressMatch = message.match(/(?:(?:the\s+)?name\s+is\s+)?(.+?)\s+and\s+(?:the\s+)?address\s+is\s+(.+?)$/i);
-    if (andAddressMatch) {
-      extractedInfo.clientName = andAddressMatch[1].trim();
-      extractedInfo.address = andAddressMatch[2].trim();
-      console.log('Extracted from "and address" pattern:', extractedInfo);
+    const nameIsPattern = message.match(/(?:the\s+|client\s+)?name\s+is\s+([^,]+?)\s+and\s+(?:the\s+)?address\s+is\s+(.+?)$/i);
+    if (nameIsPattern) {
+      extractedInfo.clientName = nameIsPattern[1].trim();
+      extractedInfo.address = nameIsPattern[2].trim();
+      console.log('Extracted from "name is X and address is Y" pattern:', extractedInfo);
+    }
+    // Pattern 1b: "Name and the address is Address" (without "name is")
+    else {
+      const simpleAndPattern = message.match(/^([^,\s]+(?:\s+[^,\s]+)*?)\s+and\s+(?:the\s+)?address\s+is\s+(.+?)$/i);
+      if (simpleAndPattern) {
+        const potentialName = simpleAndPattern[1].trim();
+        // Make sure it's likely a name (not too long, doesn't contain address keywords)
+        if (potentialName.length <= 50 && !potentialName.match(/\d+.*(?:street|avenue|drive|road|way|lane)/i)) {
+          extractedInfo.clientName = potentialName;
+          extractedInfo.address = simpleAndPattern[2].trim();
+          console.log('Extracted from "Name and address is Y" pattern:', extractedInfo);
+        }
+      }
     } 
     // Pattern 2: "Name at Address"
     else if (message.match(/^(.+?)\s+at\s+(.+?)$/i)) {

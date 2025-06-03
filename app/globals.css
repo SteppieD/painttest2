@@ -80,6 +80,15 @@
     min-height: 44px;
     min-width: 44px;
   }
+  
+  /* Safe area for mobile devices */
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-inset-top {
+    padding-top: env(safe-area-inset-top);
+  }
 }
 
 /* Chat interface styles */
@@ -91,6 +100,35 @@
 .chat-messages {
   height: calc(100vh - 200px);
   max-height: calc(100vh - 200px);
+}
+
+/* Mobile keyboard handling */
+@media screen and (max-width: 768px) {
+  .mobile-chat-container {
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
+    overflow: hidden;
+  }
+  
+  .mobile-chat-messages {
+    height: calc(100vh - 140px);
+    height: calc(100dvh - 140px);
+    max-height: calc(100vh - 140px);
+    max-height: calc(100dvh - 140px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .mobile-input-area {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 50;
+  }
 }
 
 /* Enhanced mobile scrolling */

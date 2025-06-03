@@ -274,22 +274,31 @@ export default function AssistantPage() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-white">
+    <div className="h-screen flex flex-col bg-white overflow-hidden mobile-chat-container">
       {/* Minimal Header */}
-      <header className="bg-white border-b">
+      <header className="bg-white border-b flex-shrink-0 safe-area-inset-top">
         <div className="px-4 py-3 flex items-center justify-between">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => router.push("/dashboard")}
-            className="text-gray-600"
+            className="text-gray-600 flex-shrink-0"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
           
-          <h1 className="text-lg font-semibold">Quote Assistant</h1>
+          <div className="flex-1 text-center">
+            <h1 className="text-lg font-semibold truncate">
+              {context.clientName && !context.clientName.includes('and their address') 
+                ? `Quote for ${context.clientName.split(' and ')[0]}` 
+                : 'Quote Assistant'}
+            </h1>
+            {context.clientName && context.address && (
+              <p className="text-xs text-gray-500 truncate">{context.address}</p>
+            )}
+          </div>
           
-          <div className="w-10" /> {/* Spacer for centering */}
+          <div className="w-10 flex-shrink-0" /> {/* Spacer for centering */}
         </div>
         
         {/* View Quote Details button */}
@@ -306,8 +315,8 @@ export default function AssistantPage() {
       </header>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
-        <div className="max-w-2xl mx-auto space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0 mobile-chat-messages enhanced-scroll">
+        <div className="max-w-2xl mx-auto space-y-4 pb-20 md:pb-4">
           {messages.map((message) => (
             <div
               key={message.id}
@@ -345,8 +354,8 @@ export default function AssistantPage() {
         </div>
       </div>
 
-      {/* Input Area */}
-      <div className="border-t bg-white">
+      {/* Input Area - Fixed position for mobile */}
+      <div className="border-t bg-white flex-shrink-0 safe-area-inset-bottom md:relative md:bottom-auto mobile-input-area">
         <div className="max-w-2xl mx-auto p-4">
           <div className="flex items-center gap-2">
             <Input
@@ -356,13 +365,16 @@ export default function AssistantPage() {
               onKeyPress={handleKeyPress}
               placeholder="Type your message..."
               disabled={isLoading}
-              className="flex-1 text-[16px] py-3 px-4 rounded-full border-gray-200 focus:border-blue-600"
+              className="flex-1 text-[16px] py-3 px-4 rounded-full border-gray-200 focus:border-blue-600 min-h-[48px]"
+              style={{
+                fontSize: '16px', // Prevents zoom on iOS
+              }}
             />
             <Button
               onClick={sendMessage}
               disabled={!input.trim() || isLoading}
               size="icon"
-              className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+              className="w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 flex-shrink-0"
             >
               <Send className="w-4 h-4" />
             </Button>
