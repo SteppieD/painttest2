@@ -521,16 +521,16 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
                 </thead>
                 <tbody>
                   {/* Paint Line Items */}
-                  {quote.walls_sqft > 0 && (
+                  {quote.walls_sqft && quote.walls_sqft > 0 && (
                     <tr className="border-b hover:bg-gray-50">
                       <td className="py-3 px-4">Wall Painting - {quote.paint_quality} Quality</td>
-                      <td className="text-center py-3 px-4">{quote.walls_sqft.toLocaleString()}</td>
+                      <td className="text-center py-3 px-4">{quote.walls_sqft?.toLocaleString()}</td>
                       <td className="text-center py-3 px-4">sqft</td>
                       <td className="text-right py-3 px-4 text-gray-600">
-                        ${((quote.paint_cost || 0) * 0.6 / quote.walls_sqft).toFixed(2)}
+                        ${((quote.paint_cost || 0) * 0.6 / (quote.walls_sqft || 1)).toFixed(2)}
                       </td>
                       <td className="text-right py-3 px-4 font-medium">
-                        ${((quote.paint_cost || 0) * 0.6 / quote.walls_sqft * (1 + markupPercentage / 100)).toFixed(2)}
+                        ${((quote.paint_cost || 0) * 0.6 / (quote.walls_sqft || 1) * (1 + markupPercentage / 100)).toFixed(2)}
                       </td>
                       <td className="text-right py-3 px-4 font-medium">
                         ${((quote.paint_cost || 0) * 0.6 * (1 + markupPercentage / 100)).toFixed(0)}
@@ -538,16 +538,16 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
                     </tr>
                   )}
                   
-                  {quote.ceilings_sqft > 0 && (
+                  {quote.ceilings_sqft && quote.ceilings_sqft > 0 && (
                     <tr className="border-b hover:bg-gray-50">
                       <td className="py-3 px-4">Ceiling Painting - {quote.paint_quality} Quality</td>
-                      <td className="text-center py-3 px-4">{quote.ceilings_sqft.toLocaleString()}</td>
+                      <td className="text-center py-3 px-4">{quote.ceilings_sqft?.toLocaleString()}</td>
                       <td className="text-center py-3 px-4">sqft</td>
                       <td className="text-right py-3 px-4 text-gray-600">
-                        ${((quote.paint_cost || 0) * 0.3 / quote.ceilings_sqft).toFixed(2)}
+                        ${((quote.paint_cost || 0) * 0.3 / (quote.ceilings_sqft || 1)).toFixed(2)}
                       </td>
                       <td className="text-right py-3 px-4 font-medium">
-                        ${((quote.paint_cost || 0) * 0.3 / quote.ceilings_sqft * (1 + markupPercentage / 100)).toFixed(2)}
+                        ${((quote.paint_cost || 0) * 0.3 / (quote.ceilings_sqft || 1) * (1 + markupPercentage / 100)).toFixed(2)}
                       </td>
                       <td className="text-right py-3 px-4 font-medium">
                         ${((quote.paint_cost || 0) * 0.3 * (1 + markupPercentage / 100)).toFixed(0)}
@@ -555,16 +555,16 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
                     </tr>
                   )}
                   
-                  {quote.trim_sqft > 0 && (
+                  {quote.trim_sqft && quote.trim_sqft > 0 && (
                     <tr className="border-b hover:bg-gray-50">
                       <td className="py-3 px-4">Trim & Detail Work</td>
-                      <td className="text-center py-3 px-4">{quote.trim_sqft.toLocaleString()}</td>
+                      <td className="text-center py-3 px-4">{quote.trim_sqft?.toLocaleString()}</td>
                       <td className="text-center py-3 px-4">linear ft</td>
                       <td className="text-right py-3 px-4 text-gray-600">
-                        ${((quote.paint_cost || 0) * 0.1 / quote.trim_sqft).toFixed(2)}
+                        ${((quote.paint_cost || 0) * 0.1 / (quote.trim_sqft || 1)).toFixed(2)}
                       </td>
                       <td className="text-right py-3 px-4 font-medium">
-                        ${((quote.paint_cost || 0) * 0.1 / quote.trim_sqft * (1 + markupPercentage / 100)).toFixed(2)}
+                        ${((quote.paint_cost || 0) * 0.1 / (quote.trim_sqft || 1) * (1 + markupPercentage / 100)).toFixed(2)}
                       </td>
                       <td className="text-right py-3 px-4 font-medium">
                         ${((quote.paint_cost || 0) * 0.1 * (1 + markupPercentage / 100)).toFixed(0)}
