@@ -110,11 +110,19 @@ export function enhancedParseMessage(message: string, context: ConversationConte
 
   // Extract timeline
   if (!context.timeline) {
-    if (lowerMessage.includes('rush') || lowerMessage.includes('asap') || lowerMessage.includes('urgent')) {
+    // Check for rush timeline (2-3 days)
+    if (lowerMessage.includes('rush') || lowerMessage.includes('asap') || lowerMessage.includes('urgent') ||
+        lowerMessage.match(/2\s*(-|to)\s*3\s*(days?)?/) || lowerMessage === '2-3' || lowerMessage === '2 to 3') {
       extractedInfo.timeline = 'rush';
-    } else if (lowerMessage.includes('flexible') || lowerMessage.includes('no rush')) {
+    } 
+    // Check for flexible timeline (5-7 days)
+    else if (lowerMessage.includes('flexible') || lowerMessage.includes('no rush') ||
+             lowerMessage.match(/5\s*(-|to)\s*7\s*(days?)?/) || lowerMessage === '5-7' || lowerMessage === '5 to 7') {
       extractedInfo.timeline = 'flexible';
-    } else if (lowerMessage.includes('standard') || lowerMessage.includes('normal')) {
+    } 
+    // Check for standard timeline (3-5 days)
+    else if (lowerMessage.includes('standard') || lowerMessage.includes('normal') ||
+             lowerMessage.match(/3\s*(-|to)\s*5\s*(days?)?/) || lowerMessage === '3-5' || lowerMessage === '3 to 5') {
       extractedInfo.timeline = 'standard';
     }
   }
