@@ -130,6 +130,4 @@ dist
 .pnp.*
 
 # Replit debugger
-.breakpoints*.db
-*.db-shm
-*.db-wal
+.breakpoints
