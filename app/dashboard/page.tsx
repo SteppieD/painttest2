@@ -362,16 +362,16 @@ export default function DashboardPage() {
         {/* Quotes List */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Recent Quotes ({filteredQuotes.length})
-              <div className="flex items-center gap-2">
+            <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <span>Recent Quotes ({filteredQuotes.length})</span>
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                 <div className="relative">
                   <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <Input
                     placeholder="Search quotes..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-64"
+                    className="pl-10 w-full sm:w-48"
                   />
                 </div>
                 <select
@@ -407,18 +407,20 @@ export default function DashboardPage() {
               <div className="space-y-4">
                 {filteredQuotes.map((quote) => (
                   <div key={quote.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="font-semibold">{quote.customer_name}</h3>
-                          {quote.quote_id && (
-                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                              {quote.quote_id}
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                          <h3 className="font-semibold text-lg sm:text-base">{quote.customer_name}</h3>
+                          <div className="flex items-center gap-2">
+                            {quote.quote_id && (
+                              <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                                {quote.quote_id}
+                              </span>
+                            )}
+                            <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(quote.status)}`}>
+                              {quote.status || 'pending'}
                             </span>
-                          )}
-                          <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(quote.status)}`}>
-                            {quote.status || 'pending'}
-                          </span>
+                          </div>
                         </div>
                         <p className="text-sm text-gray-600 mb-1">{quote.address}</p>
                         <p className="text-xs text-gray-500">
@@ -426,47 +428,57 @@ export default function DashboardPage() {
                         </p>
                       </div>
                       
-                      <div className="text-right">
-                        <div className="text-xl font-bold text-green-600 mb-2">
-                          {formatCurrency(quote.quote_amount)}
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                        <div className="text-right sm:text-left">
+                          <div className="text-xl font-bold text-green-600">
+                            {formatCurrency(quote.final_price || quote.quote_amount || 0)}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                           <select
                             value={quote.status || "pending"}
                             onChange={(e) => updateQuoteStatus(quote.id, e.target.value)}
-                            className="text-xs px-2 py-1 border rounded"
+                            className="text-xs px-2 py-2 border rounded w-full sm:w-auto"
                           >
                             <option value="pending">Pending</option>
                             <option value="accepted">Accepted</option>
                             <option value="completed">Completed</option>
                             <option value="cancelled">Cancelled</option>
                           </select>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              const customerUrl = `${window.location.origin}/quotes/${quote.quote_id}/customer`;
-                              navigator.clipboard.writeText(customerUrl);
-                              // Show a simple visual feedback
-                              const button = event?.target as HTMLElement;
-                              const originalText = button.textContent;
-                              button.textContent = 'Copied!';
-                              setTimeout(() => {
-                                button.textContent = originalText;
-                              }, 1500);
-                            }}
-                            title="Copy customer quote link"
-                          >
-                            <Copy className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => router.push(`/quotes/${quote.id}`)}
-                            title="View quote details"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
+                          
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                const customerUrl = `${window.location.origin}/quotes/${quote.quote_id}/customer`;
+                                navigator.clipboard.writeText(customerUrl);
+                                // Show a simple visual feedback
+                                const button = event?.target as HTMLElement;
+                                const originalText = button.textContent;
+                                button.textContent = 'Copied!';
+                                setTimeout(() => {
+                                  button.textContent = originalText;
+                                }, 1500);
+                              }}
+                              title="Copy customer quote link"
+                              className="flex-1 sm:flex-none"
+                            >
+                              <Copy className="w-4 h-4 sm:mr-0 mr-2" />
+                              <span className="sm:hidden">Copy Link</span>
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => router.push(`/quotes/${quote.id}`)}
+                              title="View quote details"
+                              className="flex-1 sm:flex-none"
+                            >
+                              <Eye className="w-4 h-4 sm:mr-0 mr-2" />
+                              <span className="sm:hidden">View</span>
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
