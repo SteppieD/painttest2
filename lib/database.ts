@@ -146,53 +146,38 @@ export const createCompany = (data: {
   return { lastID: userId, changes: 1 };
 };
 
-// Legacy quote functions - now create projects and quotes in new schema
+// Legacy quote functions - use legacy quotes table for compatibility
 export const createQuote = (data: any) => {
-  const projectId = dbUtils.generateId();
-  const quoteId = dbUtils.generateId();
   const stmt = getPreparedStatements();
   
-  // Create project first
-  stmt.createProject.run(
-    projectId,
-    data.company_id || data.user_id,
+  // Use the legacy createQuote prepared statement with correct parameters
+  // The prepared statement expects these 17 parameters in order:
+  // company_id, quote_id, customer_name, customer_email, customer_phone,
+  // address, project_type, paint_quality, timeline, special_requests,
+  // walls_sqft, ceilings_sqft, trim_sqft, total_revenue, subtotal,
+  // conversation_summary, status
+  
+  const result = stmt.createQuote.run(
+    data.company_id,
+    data.quote_id,
     data.customer_name,
-    data.address || '',
-    data.customer_email,
-    data.customer_phone,
-    'email',
-    data.special_requests
+    data.customer_email || null,
+    data.customer_phone || null,
+    data.address || null,
+    data.project_type || null,
+    data.paint_quality || null,
+    data.timeline || null,
+    data.special_requests || null,
+    data.walls_sqft || 0,
+    data.ceilings_sqft || 0,
+    data.trim_sqft || 0,
+    data.total_revenue || 0,
+    data.subtotal || data.total_revenue || 0,
+    data.conversation_summary || '[]',
+    data.status || 'pending'
   );
   
-  // Create quote
-  const baseCosts = {
-    walls_cost: (data.walls_sqft || 0) * (data.walls_rate || 3.00),
-    ceilings_cost: (data.ceilings_sqft || 0) * (data.ceilings_rate || 2.00),
-    trim_cost: (data.trim_sqft || 0) * (data.trim_rate || 5.00),
-    paint_cost: data.paint_cost || 0,
-    sundries_cost: data.sundries_cost || 0
-  };
-  
-  stmt.createQuote.run(
-    quoteId,
-    projectId,
-    JSON.stringify(baseCosts),
-    data.markup_percentage || 0,
-    data.final_price || data.total_revenue || 0,
-    JSON.stringify({
-      project_type: data.project_type,
-      paint_quality: data.paint_quality,
-      timeline: data.timeline,
-      rooms: data.rooms
-    }),
-    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
-    'simple',
-    'quoted',
-    data.sundries_cost || 0,
-    'draft'
-  );
-  
-  return { lastID: quoteId, changes: 1 };
+  return { lastID: result.lastInsertRowid, changes: result.changes };
 };
 
 export const updateQuote = (id: string, data: any) => {
