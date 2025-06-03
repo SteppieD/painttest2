@@ -99,29 +99,63 @@ export async function GET(request: NextRequest) {
       LIMIT ?
     `, [...params, limit]);
 
-    // Return array directly for dashboard compatibility
+    // Return array with consistent field mapping (matches individual quote API)
     return NextResponse.json(
-      (quotes as any[]).map((quote: any) => ({
-        ...quote,
-        rooms: (quote && quote.rooms && typeof quote.rooms === 'string' && quote.rooms.trim() !== '') ? 
-          (() => {
-            try {
-              return JSON.parse(quote.rooms);
-            } catch (e) {
-              console.error("Error parsing rooms:", e);
-              return [];
+      (quotes as any[]).map((quote: any) => {
+        // Parse conversation summary for breakdown
+        let breakdown = null;
+        if (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') {
+          try {
+            const messages = JSON.parse(quote.conversation_summary);
+            if (Array.isArray(messages) && messages.length > 0) {
+              const lastMessage = messages[messages.length - 1];
+              if (lastMessage && lastMessage.quoteData) {
+                breakdown = lastMessage.quoteData.breakdown;
+              }
             }
-          })() : [],
-        conversation_summary: (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') ? 
-          (() => {
-            try {
-              return JSON.parse(quote.conversation_summary);
-            } catch (e) {
-              console.error("Error parsing conversation summary:", e);
-              return null;
-            }
-          })() : null
-      }))
+          } catch (e) {
+            console.error("Error parsing conversation summary:", e);
+          }
+        }
+
+        // If no breakdown exists, create it from stored values
+        if (!breakdown) {
+          breakdown = {
+            labor: quote.projected_labor || Math.round((quote.total_revenue || 0) * 0.45),
+            materials: quote.total_materials || Math.round((quote.total_revenue || 0) * 0.35),
+            prepWork: Math.round((quote.total_revenue || 0) * 0.05),
+            markup: Math.round((quote.final_price || quote.total_revenue || 0) - (quote.total_revenue || 0))
+          };
+        }
+
+        return {
+          ...quote,
+          // Add consistent fields that individual API provides
+          breakdown,
+          total_cost: quote.final_price || quote.total_revenue || quote.quote_amount,
+          sqft: (quote.walls_sqft || 0) + (quote.ceilings_sqft || 0) + (quote.trim_sqft || 0),
+          
+          // Parse arrays consistently
+          rooms: (quote && quote.rooms && typeof quote.rooms === 'string' && quote.rooms.trim() !== '') ? 
+            (() => {
+              try {
+                return JSON.parse(quote.rooms);
+              } catch (e) {
+                console.error("Error parsing rooms:", e);
+                return [];
+              }
+            })() : [],
+          conversation_summary: (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') ? 
+            (() => {
+              try {
+                return JSON.parse(quote.conversation_summary);
+              } catch (e) {
+                console.error("Error parsing conversation summary:", e);
+                return null;
+              }
+            })() : null
+        };
+      })
     );
 
   } catch (error) {
