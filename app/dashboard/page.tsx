@@ -273,7 +273,10 @@ export default function DashboardPage() {
 
         {/* Analytics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-blue-200"
+            onClick={() => router.push("/dashboard/total-quotes")}
+          >
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
                 <FileText className="w-4 h-4" />
@@ -288,7 +291,10 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-green-200"
+            onClick={() => router.push("/dashboard/revenue")}
+          >
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
                 <DollarSign className="w-4 h-4" />
@@ -305,7 +311,10 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-blue-200"
+            onClick={() => router.push("/dashboard/average-quote")}
+          >
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
                 <TrendingUp className="w-4 h-4" />
@@ -322,7 +331,10 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-200"
+            onClick={() => router.push("/dashboard/this-month")}
+          >
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
