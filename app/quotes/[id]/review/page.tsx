@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Calculator, FileText, DollarSign, TrendingUp, AlertTriangle, CheckCircle, Edit3, Eye, Save } from "lucide-react";
+import { ArrowLeft, Calculator, FileText, DollarSign, TrendingUp, AlertTriangle, CheckCircle, Edit3, Eye, Save, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -245,11 +245,26 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
             
             <div className="flex items-center gap-3">
               <Button
+                variant="outline"
+                onClick={() => {
+                  const customerUrl = `${window.location.origin}/quotes/${quote.id}/customer`;
+                  navigator.clipboard.writeText(customerUrl);
+                  toast({
+                    title: "Link Copied!",
+                    description: "Customer quote link copied to clipboard",
+                  });
+                }}
+              >
+                <Copy className="w-4 h-4 mr-2" />
+                Copy Customer Link
+              </Button>
+              
+              <Button
                 onClick={() => router.push(`/quotes/${quote.id}/customer`)}
                 className="bg-blue-600 hover:bg-blue-700"
               >
                 <Eye className="w-4 h-4 mr-2" />
-                Generate Professional Quote
+                View Customer Quote
               </Button>
             </div>
           </div>

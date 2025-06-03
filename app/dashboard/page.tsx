@@ -18,7 +18,8 @@ import {
   Calendar,
   Search,
   LogOut,
-  Eye
+  Eye,
+  Copy
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -422,7 +423,26 @@ export default function DashboardPage() {
                           <Button
                             size="sm"
                             variant="outline"
+                            onClick={() => {
+                              const customerUrl = `${window.location.origin}/quotes/${quote.quote_id}/customer`;
+                              navigator.clipboard.writeText(customerUrl);
+                              // Show a simple visual feedback
+                              const button = event?.target as HTMLElement;
+                              const originalText = button.textContent;
+                              button.textContent = 'Copied!';
+                              setTimeout(() => {
+                                button.textContent = originalText;
+                              }, 1500);
+                            }}
+                            title="Copy customer quote link"
+                          >
+                            <Copy className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
                             onClick={() => router.push(`/quotes/${quote.id}`)}
+                            title="View quote details"
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
