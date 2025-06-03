@@ -34,7 +34,7 @@ export function enhancedParseMessage(message: string, context: ConversationConte
       console.log('Extracted from "name is X and address is Y" pattern:', extractedInfo);
     }
     // Pattern 1b: "Name and the address is Address" (without "name is")
-    else {
+    else if (!nameIsPattern) {
       const simpleAndPattern = message.match(/^([^,\s]+(?:\s+[^,\s]+)*?)\s+and\s+(?:the\s+)?address\s+is\s+(.+?)$/i);
       if (simpleAndPattern) {
         const potentialName = simpleAndPattern[1].trim();
@@ -45,32 +45,36 @@ export function enhancedParseMessage(message: string, context: ConversationConte
           console.log('Extracted from "Name and address is Y" pattern:', extractedInfo);
         }
       }
-    } 
-    // Pattern 2: "Name at Address"
-    else if (message.match(/^(.+?)\s+at\s+(.+?)$/i)) {
+    }
+    
+    // Pattern 2: "Name at Address" - only if we haven't found name/address yet
+    if (!extractedInfo.clientName && !extractedInfo.address && message.match(/^(.+?)\s+at\s+(.+?)$/i)) {
       const match = message.match(/^(.+?)\s+at\s+(.+?)$/i);
       if (match) {
         extractedInfo.clientName = match[1].trim();
         extractedInfo.address = match[2].trim();
       }
     }
-    // Pattern 3: "Name, Address"
-    else if (message.includes(',')) {
+    
+    // Pattern 3: "Name, Address" - only if we haven't found name/address yet
+    if (!extractedInfo.clientName && !extractedInfo.address && message.includes(',')) {
       const parts = message.split(',');
       if (parts.length >= 2) {
         extractedInfo.clientName = parts[0].trim();
         extractedInfo.address = parts.slice(1).join(',').trim();
       }
     }
+    
     // Pattern 4: "the name is X" or "my name is X" or "client name is X"
-    else if (!context.clientName && message.match(/(?:the\s+|my\s+|client\s+)?name\s+is\s+(.+?)$/i)) {
+    if (!extractedInfo.clientName && !context.clientName && message.match(/(?:the\s+|my\s+|client\s+)?name\s+is\s+(.+?)$/i)) {
       const nameMatch = message.match(/(?:the\s+|my\s+|client\s+)?name\s+is\s+(.+?)$/i);
       if (nameMatch) {
         extractedInfo.clientName = nameMatch[1].trim();
       }
     }
+    
     // Pattern 5: Just a name (if we don't have one yet)
-    else if (!context.clientName && message.length > 0) {
+    if (!extractedInfo.clientName && !context.clientName && message.length > 0) {
       // Check if this looks like an address (contains numbers and common street words)
       const addressPattern = /\d+.*(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|way|boulevard|blvd|court|ct|place|pl|circle|cir|terrace|ter|parkway|pkwy)/i;
       if (addressPattern.test(message)) {
@@ -82,8 +86,9 @@ export function enhancedParseMessage(message: string, context: ConversationConte
         extractedInfo.clientName = message;
       }
     }
-    // Pattern 5: If we have name but not address, assume the message is address
-    else if (context.clientName && !context.address && message.length > 0) {
+    
+    // Pattern 6: If we have name but not address, assume the message is address
+    if (!extractedInfo.address && context.clientName && !context.address && message.length > 0) {
       extractedInfo.address = message;
     }
   }
