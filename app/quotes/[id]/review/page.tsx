@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Calculator, FileText, DollarSign, TrendingUp, AlertTriangle, CheckCircle, Edit3, Eye, Save, Copy } from "lucide-react";
+import { ArrowLeft, Calculator, FileText, DollarSign, TrendingUp, AlertTriangle, CheckCircle, Edit3, Eye, Save, Copy, MessageSquare, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -49,6 +49,17 @@ interface QuoteData {
   company_name?: string;
   company_phone?: string;
   company_email?: string;
+  line_items?: LineItem[];
+  project_id?: string;
+}
+
+interface LineItem {
+  description: string;
+  quantity: number;
+  unit: string;
+  cost: number;
+  price: number;
+  total: number;
 }
 
 export default function QuoteReviewPage({ params }: { params: { id: string } }) {
@@ -469,17 +480,184 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
                 </Button>
                 
                 <Button
-                  onClick={() => router.push('/assistant')}
+                  onClick={() => {
+                    // Navigate to chat with the project ID if available
+                    const chatUrl = quote.project_id 
+                      ? `/assistant?projectId=${quote.project_id}`
+                      : '/assistant';
+                    router.push(chatUrl);
+                  }}
                   variant="outline"
                   className="w-full"
                 >
-                  <Edit3 className="w-4 h-4 mr-2" />
-                  Adjust Pricing
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Back to Chat
                 </Button>
               </div>
             </CardContent>
           </Card>
         </div>
+
+        {/* Detailed Line Items */}
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Package className="w-5 h-5 text-blue-600" />
+              Detailed Line Items
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-3 px-4 font-medium text-gray-700">Description</th>
+                    <th className="text-center py-3 px-4 font-medium text-gray-700">Qty</th>
+                    <th className="text-center py-3 px-4 font-medium text-gray-700">Unit</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-700">Cost</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-700">Price</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-700">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Paint Line Items */}
+                  {quote.walls_sqft > 0 && (
+                    <tr className="border-b hover:bg-gray-50">
+                      <td className="py-3 px-4">Wall Painting - {quote.paint_quality} Quality</td>
+                      <td className="text-center py-3 px-4">{quote.walls_sqft.toLocaleString()}</td>
+                      <td className="text-center py-3 px-4">sqft</td>
+                      <td className="text-right py-3 px-4 text-gray-600">
+                        ${((quote.paint_cost || 0) * 0.6 / quote.walls_sqft).toFixed(2)}
+                      </td>
+                      <td className="text-right py-3 px-4 font-medium">
+                        ${((quote.paint_cost || 0) * 0.6 / quote.walls_sqft * (1 + markupPercentage / 100)).toFixed(2)}
+                      </td>
+                      <td className="text-right py-3 px-4 font-medium">
+                        ${((quote.paint_cost || 0) * 0.6 * (1 + markupPercentage / 100)).toFixed(0)}
+                      </td>
+                    </tr>
+                  )}
+                  
+                  {quote.ceilings_sqft > 0 && (
+                    <tr className="border-b hover:bg-gray-50">
+                      <td className="py-3 px-4">Ceiling Painting - {quote.paint_quality} Quality</td>
+                      <td className="text-center py-3 px-4">{quote.ceilings_sqft.toLocaleString()}</td>
+                      <td className="text-center py-3 px-4">sqft</td>
+                      <td className="text-right py-3 px-4 text-gray-600">
+                        ${((quote.paint_cost || 0) * 0.3 / quote.ceilings_sqft).toFixed(2)}
+                      </td>
+                      <td className="text-right py-3 px-4 font-medium">
+                        ${((quote.paint_cost || 0) * 0.3 / quote.ceilings_sqft * (1 + markupPercentage / 100)).toFixed(2)}
+                      </td>
+                      <td className="text-right py-3 px-4 font-medium">
+                        ${((quote.paint_cost || 0) * 0.3 * (1 + markupPercentage / 100)).toFixed(0)}
+                      </td>
+                    </tr>
+                  )}
+                  
+                  {quote.trim_sqft > 0 && (
+                    <tr className="border-b hover:bg-gray-50">
+                      <td className="py-3 px-4">Trim & Detail Work</td>
+                      <td className="text-center py-3 px-4">{quote.trim_sqft.toLocaleString()}</td>
+                      <td className="text-center py-3 px-4">linear ft</td>
+                      <td className="text-right py-3 px-4 text-gray-600">
+                        ${((quote.paint_cost || 0) * 0.1 / quote.trim_sqft).toFixed(2)}
+                      </td>
+                      <td className="text-right py-3 px-4 font-medium">
+                        ${((quote.paint_cost || 0) * 0.1 / quote.trim_sqft * (1 + markupPercentage / 100)).toFixed(2)}
+                      </td>
+                      <td className="text-right py-3 px-4 font-medium">
+                        ${((quote.paint_cost || 0) * 0.1 * (1 + markupPercentage / 100)).toFixed(0)}
+                      </td>
+                    </tr>
+                  )}
+                  
+                  {/* Labor Line Item */}
+                  <tr className="border-b hover:bg-gray-50">
+                    <td className="py-3 px-4">Professional Labor</td>
+                    <td className="text-center py-3 px-4">{Math.ceil((quote.sqft || 0) / 400)}</td>
+                    <td className="text-center py-3 px-4">days</td>
+                    <td className="text-right py-3 px-4 text-gray-600">
+                      ${((quote.breakdown?.labor || 0) / Math.ceil((quote.sqft || 1) / 400)).toFixed(0)}
+                    </td>
+                    <td className="text-right py-3 px-4 font-medium">
+                      ${((quote.breakdown?.labor || 0) / Math.ceil((quote.sqft || 1) / 400) * (1 + markupPercentage / 100)).toFixed(0)}
+                    </td>
+                    <td className="text-right py-3 px-4 font-medium">
+                      ${((quote.breakdown?.labor || 0) * (1 + markupPercentage / 100)).toFixed(0)}
+                    </td>
+                  </tr>
+                  
+                  {/* Materials & Sundries */}
+                  <tr className="border-b hover:bg-gray-50">
+                    <td className="py-3 px-4">Materials & Sundries</td>
+                    <td className="text-center py-3 px-4">1</td>
+                    <td className="text-center py-3 px-4">lot</td>
+                    <td className="text-right py-3 px-4 text-gray-600">
+                      ${((quote.sundries_cost || 0) + (quote.breakdown?.materials || 0)).toFixed(0)}
+                    </td>
+                    <td className="text-right py-3 px-4 font-medium">
+                      ${(((quote.sundries_cost || 0) + (quote.breakdown?.materials || 0)) * (1 + markupPercentage / 100)).toFixed(0)}
+                    </td>
+                    <td className="text-right py-3 px-4 font-medium">
+                      ${(((quote.sundries_cost || 0) + (quote.breakdown?.materials || 0)) * (1 + markupPercentage / 100)).toFixed(0)}
+                    </td>
+                  </tr>
+                  
+                  {/* Prep Work if exists */}
+                  {quote.breakdown?.prepWork > 0 && (
+                    <tr className="border-b hover:bg-gray-50">
+                      <td className="py-3 px-4">Surface Preparation</td>
+                      <td className="text-center py-3 px-4">1</td>
+                      <td className="text-center py-3 px-4">job</td>
+                      <td className="text-right py-3 px-4 text-gray-600">
+                        ${(quote.breakdown.prepWork).toFixed(0)}
+                      </td>
+                      <td className="text-right py-3 px-4 font-medium">
+                        ${(quote.breakdown.prepWork * (1 + markupPercentage / 100)).toFixed(0)}
+                      </td>
+                      <td className="text-right py-3 px-4 font-medium">
+                        ${(quote.breakdown.prepWork * (1 + markupPercentage / 100)).toFixed(0)}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+                <tfoot>
+                  <tr className="border-t-2">
+                    <td colSpan={3} className="py-3 px-4 font-medium">Subtotal</td>
+                    <td className="text-right py-3 px-4 text-gray-600 font-medium">
+                      ${calculateSubtotal().toFixed(0)}
+                    </td>
+                    <td className="text-right py-3 px-4 font-medium" colSpan={2}>
+                      ${(calculateSubtotal() * (1 + markupPercentage / 100)).toFixed(0)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={3} className="py-3 px-4 font-medium">Markup ({markupPercentage}%)</td>
+                    <td className="text-right py-3 px-4 text-gray-600">-</td>
+                    <td className="text-right py-3 px-4 font-medium text-green-600" colSpan={2}>
+                      ${calculateMarkupAmount().toFixed(0)}
+                    </td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td colSpan={3} className="py-3 px-4 text-lg font-bold">Total Quote</td>
+                    <td className="text-right py-3 px-4"></td>
+                    <td className="text-right py-3 px-4 text-lg font-bold text-blue-600" colSpan={2}>
+                      ${calculateTotal().toLocaleString()}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+              <p className="text-sm text-blue-900">
+                <strong>Note:</strong> This breakdown shows your internal costs vs. customer prices. 
+                The markup of {markupPercentage}% covers overhead, profit, and business growth.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
