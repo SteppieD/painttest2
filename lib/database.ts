@@ -96,13 +96,23 @@ export const dbRun = (sql: string, params: any[] = []) => {
 
 // Legacy compatibility functions that now use the new schema
 export const getCompanyByAccessCode = (accessCode: string) => {
-  // For legacy compatibility, look up user by email or access code simulation
+  // First try to find in legacy companies table
+  const legacyCompany = dbGet("SELECT * FROM companies WHERE access_code = ?", [accessCode]) as any;
+  if (legacyCompany) {
+    return legacyCompany;
+  }
+  
+  // Then try new users table for newer companies
   const user = dbGet("SELECT * FROM users WHERE email LIKE ? OR company_name = ?", [`%${accessCode}%`, accessCode]) as any;
   if (user) {
     // Get cost settings for this user
     const costSettings = dbGet("SELECT * FROM cost_settings WHERE user_id = ?", [user.id]) as any;
+    
+    // Try to find a legacy company ID for this user
+    const mappedLegacyId = mapUserIdToCompanyId(user.id);
+    
     return {
-      id: user.id,
+      id: mappedLegacyId, // Use mapped legacy ID for compatibility
       access_code: accessCode,
       company_name: user.company_name,
       email: user.email,
@@ -146,9 +156,46 @@ export const createCompany = (data: {
   return { lastID: userId, changes: 1 };
 };
 
+// Helper function to map user ID to legacy company ID
+const mapUserIdToCompanyId = (userId: string | number): number => {
+  // If it's already a number, return it
+  if (typeof userId === 'number') {
+    return userId;
+  }
+  
+  // For string user IDs, try to find the corresponding legacy company ID
+  const legacyCompany = dbGet(`
+    SELECT c.id FROM companies c 
+    LEFT JOIN users u ON c.email = u.email OR c.company_name = u.company_name
+    WHERE u.id = ?
+  `, [userId]) as any;
+  
+  if (legacyCompany) {
+    return legacyCompany.id;
+  }
+  
+  // If no mapping found, try to get the first company (for demo purposes)
+  const firstCompany = dbGet('SELECT id FROM companies ORDER BY id LIMIT 1') as any;
+  if (firstCompany) {
+    console.log(`⚠️ No company mapping for user ${userId}, using company ${firstCompany.id}`);
+    return firstCompany.id;
+  }
+  
+  throw new Error(`No company found for user ID: ${userId}`);
+};
+
 // Legacy quote functions - use legacy quotes table for compatibility
 export const createQuote = (data: any) => {
   const stmt = getPreparedStatements();
+  
+  // Map user ID to legacy company ID if needed
+  let companyId: number;
+  try {
+    companyId = mapUserIdToCompanyId(data.company_id);
+  } catch (error) {
+    console.error('Error mapping user ID to company ID:', error);
+    throw error;
+  }
   
   // Use the legacy createQuote prepared statement with correct parameters
   // The prepared statement expects these 17 parameters in order:
@@ -158,7 +205,7 @@ export const createQuote = (data: any) => {
   // conversation_summary, status
   
   const result = stmt.createQuote.run(
-    data.company_id,
+    companyId, // Use mapped company ID
     data.quote_id,
     data.customer_name,
     data.customer_email || null,
