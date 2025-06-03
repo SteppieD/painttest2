@@ -61,6 +61,11 @@ export interface ConversationContext {
   timeline?: 'rush' | 'standard' | 'flexible';
   quoteType?: 'quick' | 'advanced';
   rooms?: string[];
+  doors?: number;
+  doorPrice?: number; // Default $200, but adjustable
+  walls_sqft?: number;
+  ceilings_sqft?: number;
+  trim_sqft?: number;
 }
 
 export function parseMessage(message: string, context: ConversationContext): {
@@ -211,6 +216,7 @@ export function calculateSimpleQuote(context: ConversationContext, settings?: an
     labor: number;
     materials: number;
     prepWork: number;
+    doors: number;
     markup: number;
   };
   subtotal: number;
@@ -246,11 +252,16 @@ export function calculateSimpleQuote(context: ConversationContext, settings?: an
   const laborPercentage = settings?.default_labor_percentage || 45;
   const laborCost = baseRevenue * (laborPercentage / 100);
   
+  // Calculate door costs
+  const doorCount = context.doors || 0;
+  const doorPrice = context.doorPrice || settings?.default_door_price || 200; // $200 default per door
+  const totalDoorCost = doorCount * doorPrice;
+  
   // Prep work is included in labor/sundries now
   const prepCost = 0;
   
-  // Subtotal before markup
-  const subtotal = totalMaterials + laborCost;
+  // Subtotal before markup (including doors)
+  const subtotal = totalMaterials + laborCost + totalDoorCost;
   
   // Default markup (will be confirmed via popup)
   const defaultMarkup = settings?.default_markup_percentage || 20;
@@ -281,6 +292,7 @@ export function calculateSimpleQuote(context: ConversationContext, settings?: an
       labor: Math.round(laborCost),
       materials: Math.round(totalMaterials),
       prepWork: Math.round(prepCost),
+      doors: Math.round(totalDoorCost),
       markup: Math.round(markupAmount)
     },
     subtotal: Math.round(subtotal),

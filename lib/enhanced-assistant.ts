@@ -1,6 +1,179 @@
 // Enhanced conversational assistant with better pattern matching
 import { ConversationContext, calculateSimpleQuote } from './simple-assistant';
 
+// Intelligent data dump parser for natural language input
+function parseDataDump(message: string, context: ConversationContext): {
+  foundMultipleItems: boolean;
+  extractedInfo: Partial<ConversationContext>;
+} {
+  const extractedInfo: Partial<ConversationContext> = {};
+  let foundItems = 0;
+
+  // Extract client name - multiple patterns
+  const namePatterns = [
+    /(?:client|customer|name)(?:\s+is|\s*:|\s+of)?\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i,
+    /for\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i,
+    /^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:at|needs|wants|has)/i
+  ];
+  
+  for (const pattern of namePatterns) {
+    const match = message.match(pattern);
+    if (match && !extractedInfo.clientName) {
+      const name = match[1].trim();
+      // Ensure it's not an address or other data
+      if (!name.match(/\d+|street|ave|road|drive|sqft|sq|ft|doors?|paint/i)) {
+        extractedInfo.clientName = name;
+        foundItems++;
+        break;
+      }
+    }
+  }
+
+  // Extract address - comprehensive patterns
+  const addressPatterns = [
+    /(?:address|location|property|at|on)\s+(?:is\s+)?(.+?)(?:\s+(?:has|needs|wants|with|\d+\s*(?:sq|square))|\s*,|$)/i,
+    /(\d+\s+[^,\d]+(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|way|boulevard|blvd|court|ct|place|pl)(?:\s+\w+)*)/i
+  ];
+  
+  for (const pattern of addressPatterns) {
+    const match = message.match(pattern);
+    if (match && !extractedInfo.address) {
+      extractedInfo.address = match[1].trim();
+      foundItems++;
+      break;
+    }
+  }
+
+  // Extract square footage
+  const sqftPatterns = [
+    /(\d+(?:,\d{3})*)\s*(?:sq|square)\s*(?:ft|feet|foot)/i,
+    /(\d+(?:,\d{3})*)\s*sqft/i,
+    /(\d+(?:,\d{3})*)\s*sq\s*ft/i,
+    /(\d+(?:,\d{3})*)\s*(?:square\s*)?(?:feet|foot)/i
+  ];
+  
+  for (const pattern of sqftPatterns) {
+    const match = message.match(pattern);
+    if (match && !extractedInfo.sqft) {
+      extractedInfo.sqft = parseInt(match[1].replace(/,/g, ''));
+      foundItems++;
+      break;
+    }
+  }
+
+  // Extract doors
+  const doorPatterns = [
+    /(\d+)\s*doors?/i,
+    /doors?\s*(?::\s*)?(\d+)/i,
+    /(\d+)\s*door\s*(?:trim|frame)/i
+  ];
+  
+  for (const pattern of doorPatterns) {
+    const match = message.match(pattern);
+    if (match && !extractedInfo.doors) {
+      extractedInfo.doors = parseInt(match[1]);
+      foundItems++;
+      break;
+    }
+  }
+
+  // Extract paint quality
+  const paintQualityPatterns = [
+    /\b(basic|standard|premium|luxury|high[- ]?end|low[- ]?end)\s*(?:paint|quality)/i,
+    /\b(sherwin[- ]?williams|benjamin[- ]?moore|behr|valspar)\b/i
+  ];
+  
+  for (const pattern of paintQualityPatterns) {
+    const match = message.match(pattern);
+    if (match && !extractedInfo.paintQuality) {
+      const quality = match[1].toLowerCase();
+      if (quality.includes('basic') || quality.includes('standard') || quality.includes('low')) {
+        extractedInfo.paintQuality = 'basic';
+      } else if (quality.includes('premium') || quality.includes('high')) {
+        extractedInfo.paintQuality = 'premium';
+      } else if (quality.includes('luxury')) {
+        extractedInfo.paintQuality = 'luxury';
+      } else {
+        extractedInfo.paintQuality = 'premium'; // Brand names default to premium
+      }
+      foundItems++;
+      break;
+    }
+  }
+
+  // Extract project type
+  const projectTypePatterns = [
+    /\b(interior|inside|indoor)\b/i,
+    /\b(exterior|outside|outdoor)\b/i,
+    /\b(both|everything|complete|whole\s*house)\b/i
+  ];
+  
+  for (const pattern of projectTypePatterns) {
+    const match = message.match(pattern);
+    if (match && !extractedInfo.projectType) {
+      const type = match[1].toLowerCase();
+      if (type.includes('exterior') || type.includes('outside') || type.includes('outdoor')) {
+        extractedInfo.projectType = 'exterior';
+      } else if (type.includes('both') || type.includes('everything') || type.includes('complete') || type.includes('whole')) {
+        extractedInfo.projectType = 'both';
+      } else {
+        extractedInfo.projectType = 'interior';
+      }
+      foundItems++;
+      break;
+    }
+  }
+
+  // Extract timeline preferences
+  const timelinePatterns = [
+    /\b(rush|urgent|asap|quickly?)\b/i,
+    /\b(flexible|no\s*rush|whenever)\b/i,
+    /(?:in|within)\s*(\d+)\s*(?:days?|weeks?)/i
+  ];
+  
+  for (const pattern of timelinePatterns) {
+    const match = message.match(pattern);
+    if (match && !extractedInfo.timeline) {
+      const timelineText = match[1] ? match[1].toLowerCase() : match[0].toLowerCase();
+      if (timelineText.includes('rush') || timelineText.includes('urgent') || timelineText.includes('asap')) {
+        extractedInfo.timeline = 'rush';
+      } else if (timelineText.includes('flexible') || timelineText.includes('no rush') || timelineText.includes('whenever')) {
+        extractedInfo.timeline = 'flexible';
+      } else {
+        extractedInfo.timeline = 'standard';
+      }
+      foundItems++;
+      break;
+    }
+  }
+
+  // Extract surface breakdown (walls, ceilings, trim)
+  const wallsMatch = message.match(/(\d+)\s*(?:sq\s*ft\s*)?(?:of\s*)?walls?/i);
+  if (wallsMatch) {
+    extractedInfo.walls_sqft = parseInt(wallsMatch[1]);
+    foundItems++;
+  }
+
+  const ceilingsMatch = message.match(/(\d+)\s*(?:sq\s*ft\s*)?(?:of\s*)?ceilings?/i);
+  if (ceilingsMatch) {
+    extractedInfo.ceilings_sqft = parseInt(ceilingsMatch[1]);
+    foundItems++;
+  }
+
+  const trimMatch = message.match(/(\d+)\s*(?:linear\s*ft\s*|lin\s*ft\s*)?(?:of\s*)?trim/i);
+  if (trimMatch) {
+    extractedInfo.trim_sqft = parseInt(trimMatch[1]);
+    foundItems++;
+  }
+
+  console.log(`Data dump parser found ${foundItems} items:`, extractedInfo);
+  
+  return {
+    foundMultipleItems: foundItems >= 3, // Need at least 3 pieces of info to consider it a data dump
+    extractedInfo
+  };
+}
+
 export function enhancedParseMessage(message: string, context: ConversationContext): {
   extractedInfo: Partial<ConversationContext>;
   nextQuestion: string;
@@ -13,6 +186,25 @@ export function enhancedParseMessage(message: string, context: ConversationConte
 
   console.log('Parsing message:', message);
   console.log('Current context:', context);
+
+  // First, try the intelligent data dump parser
+  const dataDumpResult = parseDataDump(message, context);
+  if (dataDumpResult.foundMultipleItems) {
+    console.log('Data dump parsing successful:', dataDumpResult);
+    Object.assign(extractedInfo, dataDumpResult.extractedInfo);
+    
+    // Check if we have enough for a quote
+    if (extractedInfo.clientName && extractedInfo.address && extractedInfo.sqft) {
+      extractedInfo.quoteType = extractedInfo.quoteType || 'quick';
+      extractedInfo.projectType = extractedInfo.projectType || 'interior';
+      
+      return {
+        extractedInfo,
+        nextQuestion: `Perfect! I've extracted all the details: ${extractedInfo.clientName} at ${extractedInfo.address}, ${extractedInfo.sqft} sqft ${extractedInfo.projectType || 'interior'} project${extractedInfo.doors ? ` with ${extractedInfo.doors} doors` : ''}${extractedInfo.paintQuality ? ` using ${extractedInfo.paintQuality} paint` : ''}. Should I create your quote now?`,
+        isComplete: true
+      };
+    }
+  }
 
   // Check if user wants to start a new quote
   if ((lowerMessage.includes('another') || (lowerMessage.includes('new') && !lowerMessage.includes('view'))) 
