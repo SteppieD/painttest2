@@ -1,6 +1,40 @@
+/**
+ * Professional Friend AI System
+ * 
+ * IMPORTANT: TypeScript Safety Guidelines
+ * ----------------------------------------
+ * This module handles contractor data that may be undefined for new users.
+ * Always check for undefined values before using numeric properties:
+ * 
+ * BAD:  contractor.averageJobSize * 1.15
+ * GOOD: contractor.averageJobSize && contractor.averageJobSize * 1.15
+ * 
+ * Common undefined-safe patterns:
+ * - Use optional chaining: contractor.averageJobSize?.toFixed(0)
+ * - Provide defaults: contractor.winRate || 50
+ * - Guard conditions: if (contractor.averageJobSize) { ... }
+ * 
+ * This ensures the app works for both new contractors (no history)
+ * and established contractors (with full analytics).
+ */
+
 import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 import { dbGet, dbAll, getPreparedStatements, dbUtils } from './database';
 
+/**
+ * ContractorContext contains business intelligence data for the contractor.
+ * All numeric fields are optional as they may not have historical data.
+ * 
+ * @property userId - Unique identifier for the contractor
+ * @property name - Contractor's name for personalization
+ * @property company - Company name
+ * @property averageJobSize - Average quote value (may be undefined for new contractors)
+ * @property preferredMargin - Target profit margin percentage
+ * @property winRate - Percentage of quotes accepted
+ * @property totalQuotesThisMonth - Number of quotes created this month
+ * @property revenueThisMonth - Total revenue quoted this month
+ * @property recentProjects - Array of recent project data for pattern analysis
+ */
 export interface ContractorContext {
   userId: string;
   name: string;
@@ -91,7 +125,7 @@ export class ProfessionalFriendAI {
     const revenueThisMonth = monthlyQuotes.reduce((sum, q) => sum + (q.final_price || 0), 0);
     const averageJobSize = monthlyQuotes.length > 0 
       ? revenueThisMonth / monthlyQuotes.length 
-      : 3500;
+      : 3500; // Default to $3,500 for new contractors
     
     // Get recent successful projects for context
     const recentProjects = recentQuotes.slice(0, 5).map(q => {
@@ -348,6 +382,14 @@ export class ProfessionalFriendAI {
     return insights.length > 0 ? insights[0] : '';
   }
   
+  /**
+   * Generates smart pricing suggestions based on contractor's history.
+   * Safely handles undefined values for new contractors without history.
+   * 
+   * @param project - Current project context
+   * @param contractor - Contractor's business context
+   * @returns Suggestion string or null if no relevant suggestion
+   */
   async generateSmartSuggestion(
     project: ProjectContext,
     contractor: ContractorContext
@@ -364,7 +406,10 @@ export class ProfessionalFriendAI {
     
     if (similarProjects && similarProjects.length > 0) {
       const avgAmount = similarProjects.reduce((sum, p) => sum + p.amount, 0) / similarProjects.length;
-      const highestAccepted = Math.max(...similarProjects.filter(p => p.status === 'accepted').map(p => p.amount));
+      const acceptedProjects = similarProjects.filter(p => p.status === 'accepted');
+      const highestAccepted = acceptedProjects.length > 0 
+        ? Math.max(...acceptedProjects.map(p => p.amount))
+        : avgAmount;
       
       if (project.currentQuoteAmount && project.currentQuoteAmount < avgAmount * 0.9) {
         return `I noticed this quote is lower than your recent similar projects (averaging $${avgAmount.toFixed(0)}). You successfully charged $${highestAccepted.toFixed(0)} for a similar job. Want to adjust?`;
@@ -379,7 +424,7 @@ export class ProfessionalFriendAI {
     }
     
     // Timeline-based suggestions
-    if (project.timeline === 'rush' && (!project.currentQuoteAmount || project.currentQuoteAmount < contractor.averageJobSize * 1.15)) {
+    if (project.timeline === 'rush' && contractor.averageJobSize && (!project.currentQuoteAmount || project.currentQuoteAmount < contractor.averageJobSize * 1.15)) {
       return `This is a rush job - don't forget to add your rush premium. I'd suggest at least 15% extra.`;
     }
     
