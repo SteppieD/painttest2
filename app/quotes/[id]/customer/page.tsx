@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Copy, Printer, Download, CheckCircle, PenTool, Shield, Clock, Award } from "lucide-react";
+import { ArrowLeft, Copy, Printer, Download, CheckCircle, PenTool, Shield, Clock, Award, Eye, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
