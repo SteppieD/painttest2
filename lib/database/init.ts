@@ -3,6 +3,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 let db: Database.Database | null = null;
+let isInitialized = false;
 
 export function getDatabase(): Database.Database {
   if (!db) {
@@ -17,13 +18,16 @@ export function getDatabase(): Database.Database {
       db.pragma('foreign_keys = ON');
       db.pragma('journal_mode = WAL');
       
-      // Initialize schema
-      initializeSchema();
-      
-      // Verify tables were created
-      verifyTables();
-      
-      console.log('Database initialized and verified successfully');
+      if (!isInitialized) {
+        // Initialize schema only once
+        initializeSchema();
+        
+        // Verify tables were created
+        verifyTables();
+        
+        isInitialized = true;
+        console.log('Database initialized and verified successfully');
+      }
     } catch (error) {
       console.error('Fatal database initialization error:', error);
       throw error;
