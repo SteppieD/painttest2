@@ -52,7 +52,7 @@ export function enhancedParseMessage(message: string, context: ConversationConte
     // Pattern 4: Just a name (if we don't have one yet)
     else if (!context.clientName && message.length > 0) {
       // Check if this looks like an address (contains numbers and common street words)
-      const addressPattern = /\d+.*(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|way|boulevard|blvd|court|ct|place|pl)/i;
+      const addressPattern = /\d+.*(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|way|boulevard|blvd|court|ct|place|pl|circle|cir|terrace|ter|parkway|pkwy)/i;
       if (addressPattern.test(message)) {
         if (context.clientName) {
           extractedInfo.address = message;
@@ -62,34 +62,92 @@ export function enhancedParseMessage(message: string, context: ConversationConte
         extractedInfo.clientName = message;
       }
     }
+    // Pattern 5: If we have name but not address, assume the message is address
+    else if (context.clientName && !context.address && message.length > 0) {
+      extractedInfo.address = message;
+    }
   }
 
-  // Extract project type
+  // Extract quote type (quick vs advanced) - IMPORTANT: Check this early
+  if (!context.quoteType && context.clientName && context.address) {
+    // Quick quote variations
+    if (lowerMessage.match(/\b(quick|fast|simple|basic|estimate|rough|ballpark)\b/)) {
+      extractedInfo.quoteType = 'quick';
+    } 
+    // Advanced quote variations
+    else if (lowerMessage.match(/\b(advanced|detailed|complete|full|breakdown|itemized|comprehensive)\b/)) {
+      extractedInfo.quoteType = 'advanced';
+    }
+    // Handle numbered options
+    else if (lowerMessage.match(/^\s*[12]\s*$/)) {
+      const num = lowerMessage.trim();
+      if (num === '1') extractedInfo.quoteType = 'quick';
+      else if (num === '2') extractedInfo.quoteType = 'advanced';
+    }
+  }
+
+  // Extract project type with more flexible matching
   if (!context.projectType) {
-    if (lowerMessage.includes('interior') || lowerMessage.includes('inside')) {
-      extractedInfo.projectType = 'interior';
-    } else if (lowerMessage.includes('exterior') || lowerMessage.includes('outside')) {
-      extractedInfo.projectType = 'exterior';
-    } else if (lowerMessage.includes('both') || (lowerMessage.includes('interior') && lowerMessage.includes('exterior'))) {
+    // Both variations - check this first to catch "in and out" patterns
+    if (lowerMessage.match(/\b(both|everything|all|complete|whole\s*house)\b/) ||
+        lowerMessage.match(/\b(in|interior|inside)\s*(and|&|,)\s*(out|exterior|outside)\b/) ||
+        lowerMessage.match(/\b(out|exterior|outside)\s*(and|&|,)\s*(in|interior|inside)\b/) ||
+        lowerMessage.match(/\b(interior\s*and\s*exterior|inside\s*and\s*outside)\b/)) {
       extractedInfo.projectType = 'both';
+    }
+    // Interior variations (only if not both)
+    else if (lowerMessage.match(/\b(interior|inside|indoor|in)\b/) && !lowerMessage.match(/\b(and|&)\s*(out|exterior)/)) {
+      extractedInfo.projectType = 'interior';
+    } 
+    // Exterior variations (only if not both)
+    else if (lowerMessage.match(/\b(exterior|outside|outdoor|out)\b/) && !lowerMessage.match(/\b(and|&)\s*(in|interior)/)) {
+      extractedInfo.projectType = 'exterior';
+    }
+    // If asking about project type and user just says "1", "2", or "3"
+    else if (context.address && !context.projectType && lowerMessage.match(/^\s*[123]\s*$/)) {
+      const num = lowerMessage.trim();
+      if (num === '1') extractedInfo.projectType = 'interior';
+      else if (num === '2') extractedInfo.projectType = 'exterior';
+      else if (num === '3') extractedInfo.projectType = 'both';
     }
   }
 
   // Extract square footage (but be careful about addresses with numbers)
   if (!context.sqft && !extractedInfo.address) {
     // First try to match with explicit units
-    const sqftMatch = message.match(/(\d{3,5})\s*(?:sq\s*ft|sqft|square feet|sf)/i);
+    const sqftMatch = message.match(/(\d{1,2},?\d{3,5}|\d{3,5})\s*(?:sq\s*ft|sqft|square\s*feet|sf|feet|ft)/i);
     if (sqftMatch) {
-      const number = parseInt(sqftMatch[1]);
+      const number = parseInt(sqftMatch[1].replace(/,/g, ''));
       // Only accept reasonable square footage (500-50000)
       if (number >= 500 && number <= 50000) {
         extractedInfo.sqft = number;
       }
-    } else if (context.projectType && !context.sqft) {
+    } 
+    // Handle "about X" or "around X" or "approximately X"
+    else if (message.match(/(?:about|around|approximately|approx\.?)\s*(\d{1,2},?\d{3,5}|\d{3,5})/i)) {
+      const match = message.match(/(?:about|around|approximately|approx\.?)\s*(\d{1,2},?\d{3,5}|\d{3,5})/i);
+      if (match) {
+        const number = parseInt(match[1].replace(/,/g, ''));
+        if (number >= 500 && number <= 50000) {
+          extractedInfo.sqft = number;
+        }
+      }
+    }
+    // Handle "Xk" notation (e.g., "5k" for 5000)
+    else if (message.match(/^\s*(\d+\.?\d*)\s*k\s*$/i)) {
+      const match = message.match(/^\s*(\d+\.?\d*)\s*k\s*$/i);
+      if (match) {
+        const number = parseFloat(match[1]) * 1000;
+        if (number >= 500 && number <= 50000) {
+          extractedInfo.sqft = Math.round(number);
+        }
+      }
+    }
+    else if (context.projectType && !context.sqft) {
       // If we already have project type and are asking for sqft, accept plain numbers
-      const plainNumberMatch = message.match(/^\s*(\d{3,5})\s*$/);
+      const plainNumberMatch = message.match(/^\s*(\d{1,2},?\d{3,5}|\d{3,5})\s*$/);
       if (plainNumberMatch) {
-        const number = parseInt(plainNumberMatch[1]);
+        const number = parseInt(plainNumberMatch[1].replace(/,/g, ''));
         if (number >= 500 && number <= 50000) {
           extractedInfo.sqft = number;
         }
@@ -97,33 +155,72 @@ export function enhancedParseMessage(message: string, context: ConversationConte
     }
   }
 
-  // Extract paint quality
+  // Extract paint quality with more flexible matching
   if (!context.paintQuality) {
-    if (lowerMessage.includes('basic') || lowerMessage.includes('economy')) {
+    // Basic/economy variations
+    if (lowerMessage.match(/\b(basic|economy|cheap|cheapest|budget|low|lowest|minimum)\b/)) {
       extractedInfo.paintQuality = 'basic';
-    } else if (lowerMessage.includes('premium') || lowerMessage.includes('standard')) {
+    } 
+    // Premium/standard variations
+    else if (lowerMessage.match(/\b(premium|standard|good|regular|normal|mid|middle|average|medium)\b/)) {
       extractedInfo.paintQuality = 'premium';
-    } else if (lowerMessage.includes('luxury') || lowerMessage.includes('high-end') || lowerMessage.includes('high end')) {
+    } 
+    // Luxury/high-end variations
+    else if (lowerMessage.match(/\b(luxury|high[-\s]?end|best|finest|top|highest|deluxe|superior)\b/)) {
+      extractedInfo.paintQuality = 'luxury';
+    }
+    // Handle numbered options (1=basic, 2=premium, 3=luxury)
+    else if (context.sqft && !context.paintQuality && lowerMessage.match(/^\s*[123]\s*$/)) {
+      const num = lowerMessage.trim();
+      if (num === '1') extractedInfo.paintQuality = 'basic';
+      else if (num === '2') extractedInfo.paintQuality = 'premium';
+      else if (num === '3') extractedInfo.paintQuality = 'luxury';
+    }
+    // Handle "first", "second", "third" options
+    else if (lowerMessage.match(/\b(first|1st)\b/)) {
+      extractedInfo.paintQuality = 'basic';
+    } else if (lowerMessage.match(/\b(second|2nd)\b/)) {
+      extractedInfo.paintQuality = 'premium';
+    } else if (lowerMessage.match(/\b(third|3rd)\b/)) {
       extractedInfo.paintQuality = 'luxury';
     }
   }
 
-  // Extract timeline
-  if (!context.timeline) {
+  // Extract timeline with more variations
+  if (!context.timeline && !extractedInfo.timeline) {
     // Check for rush timeline (2-3 days)
-    if (lowerMessage.includes('rush') || lowerMessage.includes('asap') || lowerMessage.includes('urgent') ||
-        lowerMessage.match(/2\s*(-|to)\s*3\s*(days?)?/) || lowerMessage === '2-3' || lowerMessage === '2 to 3') {
+    // Don't match "quick" if we just extracted it as quote type or are asking about quote type
+    const isAskingAboutQuoteType = context.clientName && context.address && !context.quoteType;
+    const rushPattern = (extractedInfo.quoteType || isAskingAboutQuoteType) ? 
+      /\b(rush|asap|urgent|quickly|soon|fast|immediately)\b/ :
+      /\b(rush|asap|urgent|quickly|soon|fast|immediately|quick)\b/;
+    
+    if (lowerMessage.match(rushPattern) ||
+        lowerMessage.match(/2\s*(-|to)\s*3\s*(days?)?/) || 
+        lowerMessage.match(/^\s*(2-3|2 to 3)\s*$/) ||
+        lowerMessage.match(/\b(couple|few)\s*(of\s*)?days\b/)) {
       extractedInfo.timeline = 'rush';
     } 
     // Check for flexible timeline (5-7 days)
-    else if (lowerMessage.includes('flexible') || lowerMessage.includes('no rush') ||
-             lowerMessage.match(/5\s*(-|to)\s*7\s*(days?)?/) || lowerMessage === '5-7' || lowerMessage === '5 to 7') {
+    else if (lowerMessage.match(/\b(flexible|no\s*rush|whenever|no\s*hurry|anytime|relaxed)\b/) ||
+             lowerMessage.match(/5\s*(-|to)\s*7\s*(days?)?/) || 
+             lowerMessage.match(/^\s*(5-7|5 to 7)\s*$/) ||
+             lowerMessage.match(/\b(week|7\s*days)\b/)) {
       extractedInfo.timeline = 'flexible';
     } 
     // Check for standard timeline (3-5 days)
-    else if (lowerMessage.includes('standard') || lowerMessage.includes('normal') ||
-             lowerMessage.match(/3\s*(-|to)\s*5\s*(days?)?/) || lowerMessage === '3-5' || lowerMessage === '3 to 5') {
+    else if (lowerMessage.match(/\b(standard|normal|regular|typical)\b/) ||
+             lowerMessage.match(/3\s*(-|to)\s*5\s*(days?)?/) || 
+             lowerMessage.match(/^\s*(3-5|3 to 5)\s*$/) ||
+             lowerMessage.match(/\b(several|few|some)\s*days\b/)) {
       extractedInfo.timeline = 'standard';
+    }
+    // Handle numbered options when asking about timeline
+    else if (context.paintQuality && !context.timeline && lowerMessage.match(/^\s*[123]\s*$/)) {
+      const num = lowerMessage.trim();
+      if (num === '1') extractedInfo.timeline = 'rush';
+      else if (num === '2') extractedInfo.timeline = 'standard';
+      else if (num === '3') extractedInfo.timeline = 'flexible';
     }
   }
 
@@ -135,13 +232,15 @@ export function enhancedParseMessage(message: string, context: ConversationConte
     nextQuestion = "What's the client's name?";
   } else if (!updatedContext.address) {
     nextQuestion = `Got it! ${updatedContext.clientName}. What's the property address?`;
+  } else if (!updatedContext.quoteType) {
+    nextQuestion = "Would you like a Quick quote (basic estimate) or Advanced quote (detailed breakdown)?";
   } else if (!updatedContext.projectType) {
-    nextQuestion = `Perfect! I have ${updatedContext.clientName} at ${updatedContext.address}. What type of painting - interior, exterior, or both?`;
+    nextQuestion = "What type of painting - interior, exterior, or both?";
   } else if (!updatedContext.sqft) {
     nextQuestion = "How many square feet are we looking at?";
   } else if (!updatedContext.paintQuality) {
     nextQuestion = "What paint quality would they like - basic, premium, or luxury?";
-  } else if (!updatedContext.timeline) {
+  } else if (!updatedContext.timeline && updatedContext.quoteType === 'advanced') {
     nextQuestion = "What's the timeline - rush (2-3 days), standard (3-5 days), or flexible (5-7 days)?";
   } else {
     isComplete = true;
