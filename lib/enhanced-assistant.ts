@@ -77,12 +77,22 @@ export function enhancedParseMessage(message: string, context: ConversationConte
 
   // Extract square footage (but be careful about addresses with numbers)
   if (!context.sqft && !extractedInfo.address) {
+    // First try to match with explicit units
     const sqftMatch = message.match(/(\d{3,5})\s*(?:sq\s*ft|sqft|square feet|sf)/i);
     if (sqftMatch) {
       const number = parseInt(sqftMatch[1]);
       // Only accept reasonable square footage (500-50000)
       if (number >= 500 && number <= 50000) {
         extractedInfo.sqft = number;
+      }
+    } else if (context.projectType && !context.sqft) {
+      // If we already have project type and are asking for sqft, accept plain numbers
+      const plainNumberMatch = message.match(/^\s*(\d{3,5})\s*$/);
+      if (plainNumberMatch) {
+        const number = parseInt(plainNumberMatch[1]);
+        if (number >= 500 && number <= 50000) {
+          extractedInfo.sqft = number;
+        }
       }
     }
   }
