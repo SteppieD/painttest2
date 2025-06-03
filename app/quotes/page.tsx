@@ -40,7 +40,10 @@ export default function QuotesPage() {
       const response = await fetch('/api/quotes');
       if (response.ok) {
         const data = await response.json();
+        console.log('Fetched quotes data:', data);
         setQuotes(data.quotes || []);
+      } else {
+        console.error('Failed to fetch quotes:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error fetching quotes:', error);
@@ -88,6 +91,7 @@ export default function QuotesPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'draft': return 'bg-gray-100 text-gray-800 border-gray-300';
+      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
       case 'sent': return 'bg-blue-100 text-blue-800 border-blue-300';
       case 'accepted': return 'bg-green-100 text-green-800 border-green-300';
       case 'rejected': return 'bg-red-100 text-red-800 border-red-300';
@@ -99,6 +103,7 @@ export default function QuotesPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'draft': return <FileText className="w-4 h-4" />;
+      case 'pending': return <Clock className="w-4 h-4" />;
       case 'sent': return <Send className="w-4 h-4" />;
       case 'accepted': return <CheckCircle className="w-4 h-4" />;
       case 'rejected': return <XCircle className="w-4 h-4" />;
@@ -183,6 +188,7 @@ export default function QuotesPage() {
             >
               <option value="all">All Status</option>
               <option value="draft">Draft</option>
+              <option value="pending">Pending</option>
               <option value="sent">Sent</option>
               <option value="accepted">Accepted</option>
               <option value="rejected">Rejected</option>

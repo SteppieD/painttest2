@@ -99,9 +99,8 @@ export async function GET(request: NextRequest) {
       LIMIT ?
     `, [...params, limit]);
 
-    // Return array with consistent field mapping (matches individual quote API)
-    return NextResponse.json(
-      (quotes as any[]).map((quote: any) => {
+    // Map quotes to the format expected by the quotes page
+    const mappedQuotes = (quotes as any[]).map((quote: any) => {
         // Parse conversation summary for breakdown
         let breakdown = null;
         if (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') {
@@ -129,8 +128,19 @@ export async function GET(request: NextRequest) {
         }
 
         return {
-          ...quote,
-          // Add consistent fields that individual API provides
+          id: quote.quote_id || quote.id,
+          projectId: quote.id,
+          clientName: quote.customer_name || 'Unknown Client',
+          propertyAddress: quote.address || 'No address provided',
+          projectType: quote.project_type || 'interior',
+          status: quote.status || 'draft',
+          baseCosts: breakdown,
+          markupPercentage: quote.markup_percentage || 0,
+          finalPrice: quote.final_price || quote.total_revenue || 0,
+          createdAt: quote.created_at,
+          updatedAt: quote.updated_at,
+          
+          // Additional fields for internal use
           breakdown,
           total_cost: quote.final_price || quote.total_revenue || quote.quote_amount,
           sqft: (quote.walls_sqft || 0) + (quote.ceilings_sqft || 0) + (quote.trim_sqft || 0),
@@ -155,8 +165,12 @@ export async function GET(request: NextRequest) {
               }
             })() : null
         };
-      })
-    );
+      });
+
+    // Return in the format expected by the quotes page
+    return NextResponse.json({
+      quotes: mappedQuotes
+    });
 
   } catch (error) {
     console.error("Error fetching quotes:", error);
