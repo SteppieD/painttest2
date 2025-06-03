@@ -6,83 +6,272 @@ let db: Database.Database | null = null;
 
 export function getDatabase(): Database.Database {
   if (!db) {
-    // Initialize database with new name to avoid conflicts
-    db = new Database('painting_contractor.db');
-    
-    // Enable foreign keys
-    db.pragma('foreign_keys = ON');
-    
-    // Set journal mode to WAL for better performance
-    db.pragma('journal_mode = WAL');
-    
-    // Initialize schema
-    initializeSchema();
-    
-    console.log('Database initialized successfully');
+    try {
+      // Use a consistent database file
+      const dbPath = join(process.cwd(), 'painting_quotes_app.db');
+      console.log(`Initializing database at: ${dbPath}`);
+      
+      db = new Database(dbPath);
+      
+      // Enable foreign keys and WAL mode
+      db.pragma('foreign_keys = ON');
+      db.pragma('journal_mode = WAL');
+      
+      // Initialize schema
+      initializeSchema();
+      
+      // Verify tables were created
+      verifyTables();
+      
+      console.log('Database initialized and verified successfully');
+    } catch (error) {
+      console.error('Fatal database initialization error:', error);
+      throw error;
+    }
   }
   
   return db;
 }
 
 function initializeSchema() {
+  if (!db) throw new Error('Database not initialized');
+  
+  console.log('Starting schema initialization...');
+  
+  try {
+    // First, ensure we have the companies table from the legacy system
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS companies (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        access_code TEXT UNIQUE NOT NULL,
+        company_name TEXT NOT NULL,
+        phone TEXT,
+        email TEXT,
+        logo_url TEXT,
+        default_walls_rate REAL DEFAULT 3.00,
+        default_ceilings_rate REAL DEFAULT 2.00,
+        default_trim_rate REAL DEFAULT 1.92,
+        default_walls_paint_cost REAL DEFAULT 26.00,
+        default_ceilings_paint_cost REAL DEFAULT 25.00,
+        default_trim_paint_cost REAL DEFAULT 35.00,
+        default_labor_percentage INTEGER DEFAULT 30,
+        default_paint_coverage INTEGER DEFAULT 350,
+        default_sundries_percentage INTEGER DEFAULT 12,
+        tax_rate REAL DEFAULT 0,
+        tax_on_materials_only BOOLEAN DEFAULT 0,
+        tax_label TEXT DEFAULT 'Tax',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('✓ Companies table created/verified');
+    
+    // Create the quotes table
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS quotes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        company_id INTEGER NOT NULL,
+        quote_id TEXT UNIQUE NOT NULL,
+        customer_name TEXT NOT NULL,
+        customer_email TEXT,
+        customer_phone TEXT,
+        address TEXT,
+        project_type TEXT,
+        rooms TEXT,
+        paint_quality TEXT,
+        prep_work TEXT,
+        timeline TEXT,
+        special_requests TEXT,
+        walls_sqft INTEGER DEFAULT 0,
+        ceilings_sqft INTEGER DEFAULT 0,
+        trim_sqft INTEGER DEFAULT 0,
+        walls_rate REAL DEFAULT 3.00,
+        ceilings_rate REAL DEFAULT 2.00,
+        trim_rate REAL DEFAULT 1.92,
+        walls_paint_cost REAL DEFAULT 26.00,
+        ceilings_paint_cost REAL DEFAULT 25.00,
+        trim_paint_cost REAL DEFAULT 35.00,
+        total_revenue REAL DEFAULT 0,
+        total_materials REAL DEFAULT 0,
+        paint_cost REAL DEFAULT 0,
+        sundries_cost REAL DEFAULT 0,
+        sundries_percentage INTEGER DEFAULT 12,
+        projected_labor REAL DEFAULT 0,
+        labor_percentage INTEGER DEFAULT 30,
+        projected_profit REAL DEFAULT 0,
+        paint_coverage INTEGER DEFAULT 350,
+        tax_rate REAL DEFAULT 0,
+        tax_amount REAL DEFAULT 0,
+        subtotal REAL DEFAULT 0,
+        base_cost REAL,
+        markup_percentage REAL,
+        final_price REAL,
+        status TEXT DEFAULT 'pending',
+        conversation_summary TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (company_id) REFERENCES companies(id)
+      );
+    `);
+    console.log('✓ Quotes table created/verified');
+    
+    // Create indexes
+    db.exec(`
+      CREATE INDEX IF NOT EXISTS idx_quotes_company_id ON quotes(company_id);
+      CREATE INDEX IF NOT EXISTS idx_quotes_quote_id ON quotes(quote_id);
+      CREATE INDEX IF NOT EXISTS idx_quotes_status ON quotes(status);
+    `);
+    console.log('✓ Indexes created/verified');
+    
+    // Now create the new schema tables for the enhanced system
+    // Users table (simplified for now)
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+        email TEXT UNIQUE NOT NULL,
+        company_name TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('✓ Users table created/verified');
+    
+    // Projects table
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS projects (
+        id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+        user_id TEXT,
+        client_name TEXT NOT NULL,
+        property_address TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        client_email TEXT,
+        client_phone TEXT,
+        preferred_contact TEXT DEFAULT 'email' CHECK (preferred_contact IN ('email', 'phone', 'either')),
+        client_notes TEXT
+      );
+    `);
+    console.log('✓ Projects table created/verified');
+    
+    // Chat messages table
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS chat_messages (
+        id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+        project_id TEXT,
+        role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+        content TEXT NOT NULL,
+        metadata TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('✓ Chat messages table created/verified');
+    
+    // Cost settings table
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS cost_settings (
+        id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+        user_id TEXT UNIQUE,
+        labor_cost_per_hour DECIMAL DEFAULT 25,
+        paint_costs TEXT DEFAULT '{"best": 50, "good": 25, "better": 35}',
+        supplies_base_cost DECIMAL DEFAULT 100,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        company_name TEXT,
+        contact_name TEXT,
+        default_labor_percentage DECIMAL DEFAULT 30,
+        default_spread_rate DECIMAL DEFAULT 350,
+        door_trim_pricing TEXT DEFAULT '{"door_unit_price": 45, "trim_linear_foot_price": 3}',
+        baseboard_pricing TEXT DEFAULT '{"charge_method": "linear_foot", "price_per_linear_foot": 2.5}',
+        default_rates TEXT DEFAULT '{"walls": 3.00, "ceilings": 2.00, "trim_doors": 5.00}',
+        default_paint_costs TEXT DEFAULT '{"walls": 26, "ceilings": 25, "trim_doors": 35}'
+      );
+    `);
+    console.log('✓ Cost settings table created/verified');
+    
+    // Seed demo companies if none exist
+    seedDemoCompanies();
+    
+  } catch (error) {
+    console.error('Schema initialization error:', error);
+    throw error;
+  }
+}
+
+function verifyTables() {
+  if (!db) throw new Error('Database not initialized');
+  
+  console.log('Verifying tables...');
+  
+  const requiredTables = ['companies', 'quotes', 'users', 'projects', 'chat_messages', 'cost_settings'];
+  const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all() as any[];
+  const tableNames = tables.map(t => t.name);
+  
+  for (const table of requiredTables) {
+    if (!tableNames.includes(table)) {
+      throw new Error(`Required table '${table}' was not created`);
+    }
+    
+    // Get row count for debugging
+    const count = db.prepare(`SELECT COUNT(*) as count FROM ${table}`).get() as any;
+    console.log(`✓ Table '${table}' exists with ${count.count} rows`);
+  }
+}
+
+function seedDemoCompanies() {
   if (!db) return;
   
   try {
-    // Read and execute schema
-    const schemaPath = join(process.cwd(), 'lib', 'database', 'schema.sql');
-    const schema = readFileSync(schemaPath, 'utf8');
+    const count = db.prepare("SELECT COUNT(*) as count FROM companies").get() as any;
     
-    // Split schema into individual statements and execute
-    const statements = schema
-      .split(';')
-      .map(stmt => stmt.trim())
-      .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
-    
-    for (const statement of statements) {
-      try {
-        db.exec(statement + ';');
-      } catch (error: any) {
-        // Skip statements that might already exist or are not needed
-        if (!error.message.includes('already exists')) {
-          console.warn('Schema execution warning:', error.message);
-        }
+    if (count.count === 0) {
+      console.log('Seeding demo companies...');
+      
+      const companies = [
+        ["DEMO2024", "Demo Painting Company", "(555) 123-4567", "demo@paintingcompany.com"],
+        ["PAINTER001", "Smith Painting LLC", "(555) 987-6543", "info@smithpainting.com"],
+        ["CONTRACTOR123", "Elite Contractors", "(555) 456-7890", "quotes@elitecontractors.com"]
+      ];
+      
+      const insertStmt = db.prepare(`
+        INSERT INTO companies (access_code, company_name, phone, email) 
+        VALUES (?, ?, ?, ?)
+      `);
+      
+      for (const company of companies) {
+        insertStmt.run(...company);
       }
+      
+      console.log('✓ Demo companies seeded successfully');
     }
-    
-    console.log('Database schema initialized');
   } catch (error) {
-    console.error('Error initializing schema:', error);
-    throw error;
+    console.error('Error seeding demo companies:', error);
   }
 }
 
 // Database utility functions
 export const dbUtils = {
-  // Helper to generate UUID-like strings for SQLite
   generateId(): string {
     return 'id_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
   },
   
-  // Helper to parse JSON fields safely
   parseJson(jsonString: string | null): any {
     if (!jsonString) return null;
     try {
       return JSON.parse(jsonString);
-    } catch {
+    } catch (error) {
+      console.error('JSON parse error:', error);
       return null;
     }
   },
   
-  // Helper to stringify JSON fields safely
   stringifyJson(data: any): string {
     try {
       return JSON.stringify(data);
-    } catch {
+    } catch (error) {
+      console.error('JSON stringify error:', error);
       return '{}';
     }
   },
   
-  // Transaction wrapper
   transaction<T>(fn: (db: Database.Database) => T): T {
     const database = getDatabase();
     const transaction = database.transaction(fn);
@@ -90,46 +279,49 @@ export const dbUtils = {
   }
 };
 
-// Prepared statements for common operations
+// Prepared statements
 export function getPreparedStatements() {
   const database = getDatabase();
   
   return {
-    // Users
+    // Legacy quote operations
+    createQuote: database.prepare(`
+      INSERT INTO quotes (
+        company_id, quote_id, customer_name, customer_email, customer_phone,
+        address, project_type, paint_quality, timeline, special_requests,
+        walls_sqft, ceilings_sqft, trim_sqft, total_revenue, subtotal,
+        conversation_summary, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `),
+    
+    getQuoteById: database.prepare(`
+      SELECT q.*, c.company_name, c.phone as company_phone, c.email as company_email
+      FROM quotes q
+      LEFT JOIN companies c ON q.company_id = c.id
+      WHERE q.quote_id = ?
+    `),
+    
+    updateQuote: database.prepare(`
+      UPDATE quotes 
+      SET customer_name = ?, customer_email = ?, customer_phone = ?,
+          address = ?, project_type = ?, paint_quality = ?, timeline = ?,
+          special_requests = ?, walls_sqft = ?, ceilings_sqft = ?, trim_sqft = ?,
+          total_revenue = ?, subtotal = ?, conversation_summary = ?, status = ?,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE quote_id = ?
+    `),
+    
+    // New schema operations
     createUser: database.prepare(`
       INSERT INTO users (id, email, company_name)
       VALUES (?, ?, ?)
     `),
     
-    getUserById: database.prepare(`
-      SELECT * FROM users WHERE id = ?
-    `),
-    
-    getUserByEmail: database.prepare(`
-      SELECT * FROM users WHERE email = ?
-    `),
-    
-    // Projects
     createProject: database.prepare(`
       INSERT INTO projects (id, user_id, client_name, property_address, client_email, client_phone, preferred_contact, client_notes)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `),
     
-    getProjectsByUserId: database.prepare(`
-      SELECT * FROM projects WHERE user_id = ? ORDER BY created_at DESC
-    `),
-    
-    getProjectById: database.prepare(`
-      SELECT * FROM projects WHERE id = ?
-    `),
-    
-    updateProject: database.prepare(`
-      UPDATE projects 
-      SET client_name = ?, property_address = ?, client_email = ?, client_phone = ?, preferred_contact = ?, client_notes = ?, updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?
-    `),
-    
-    // Chat Messages
     createChatMessage: database.prepare(`
       INSERT INTO chat_messages (id, project_id, role, content, metadata)
       VALUES (?, ?, ?, ?, ?)
@@ -139,89 +331,12 @@ export function getPreparedStatements() {
       SELECT * FROM chat_messages WHERE project_id = ? ORDER BY created_at ASC
     `),
     
-    // Cost Settings
     createCostSettings: database.prepare(`
       INSERT OR REPLACE INTO cost_settings (
         id, user_id, labor_cost_per_hour, paint_costs, supplies_base_cost, 
         company_name, contact_name, default_labor_percentage, default_spread_rate,
         door_trim_pricing, baseboard_pricing, default_rates, default_paint_costs
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `),
-    
-    getCostSettingsByUserId: database.prepare(`
-      SELECT * FROM cost_settings WHERE user_id = ?
-    `),
-    
-    // Paint Products
-    createPaintProduct: database.prepare(`
-      INSERT INTO paint_products (id, user_id, product_name, use_case, cost_per_gallon, sheen, is_active)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `),
-    
-    getPaintProductsByUserId: database.prepare(`
-      SELECT * FROM paint_products WHERE user_id = ? AND is_active = TRUE ORDER BY product_name
-    `),
-    
-    getPaintProductById: database.prepare(`
-      SELECT * FROM paint_products WHERE id = ?
-    `),
-    
-    // Quotes
-    createQuote: database.prepare(`
-      INSERT INTO quotes (
-        id, project_id, base_costs, markup_percentage, final_price, details,
-        valid_until, quote_method, job_status, sundries_cost, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `),
-    
-    getQuotesByProjectId: database.prepare(`
-      SELECT * FROM quotes WHERE project_id = ? ORDER BY created_at DESC
-    `),
-    
-    getQuoteById: database.prepare(`
-      SELECT * FROM quotes WHERE id = ?
-    `),
-    
-    updateQuoteStatus: database.prepare(`
-      UPDATE quotes 
-      SET status = ?, sent_at = ?, accepted_at = ?, rejected_at = ?, expires_at = ?
-      WHERE id = ?
-    `),
-    
-    // Quote Surfaces
-    createQuoteSurface: database.prepare(`
-      INSERT INTO quote_surfaces (
-        id, quote_id, surface_type, square_footage, rate_per_sqft, 
-        paint_product_id, custom_paint_name, paint_cost_per_gallon,
-        spread_rate, gallons_needed, paint_cost, surface_total
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `),
-    
-    getQuoteSurfacesByQuoteId: database.prepare(`
-      SELECT * FROM quote_surfaces WHERE quote_id = ?
-    `),
-    
-    // Room Details
-    createRoomDetail: database.prepare(`
-      INSERT INTO room_details (
-        id, project_id, room_name, wall_lengths, ceiling_height,
-        door_count, door_types, window_count, baseboard_length,
-        ceiling_included, trim_included
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `),
-    
-    getRoomDetailsByProjectId: database.prepare(`
-      SELECT * FROM room_details WHERE project_id = ?
-    `),
-    
-    // Quote Versions
-    createQuoteVersion: database.prepare(`
-      INSERT INTO quote_versions (id, quote_id, version, base_costs, markup_percentage, final_price, details, changes, created_by)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `),
-    
-    getQuoteVersionsByQuoteId: database.prepare(`
-      SELECT * FROM quote_versions WHERE quote_id = ? ORDER BY version DESC
     `)
   };
 }

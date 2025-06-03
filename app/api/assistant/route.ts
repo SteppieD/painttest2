@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseMessage, calculateSimpleQuote } from '@/lib/simple-assistant';
+import { enhancedParseMessage } from '@/lib/enhanced-assistant';
 import { ProfessionalFriendAI } from '@/lib/professional-friend-ai';
 import { dbGet, getPreparedStatements, dbUtils } from '@/lib/database';
 
@@ -121,8 +122,9 @@ export async function POST(request: NextRequest) {
       `, [userId]);
     }
 
-    // Parse the message and extract information
-    const { extractedInfo, nextQuestion, isComplete } = parseMessage(message, context);
+    // Use enhanced parser for better pattern matching
+    console.log('Using enhanced parser for message:', message);
+    const { extractedInfo, nextQuestion, isComplete } = enhancedParseMessage(message, context);
     
     // Update context with new information
     let updatedContext = { ...context, ...extractedInfo };
@@ -216,9 +218,16 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Assistant API error:', error);
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
+    
+    // Provide more helpful error response
+    let errorMessage = "Sorry, I didn't catch that. Could you try again?";
+    if (error instanceof Error && error.message.includes('pattern')) {
+      errorMessage = "I couldn't understand that format. Try saying something like 'Koko and the address is 9090 hill drive' or 'Koko at 9090 Hill Drive'.";
+    }
     
     return NextResponse.json({
-      response: "Sorry, I didn't catch that. Could you try again?",
+      response: errorMessage,
       quoteData: null,
       context: {},
       isComplete: false

@@ -52,7 +52,7 @@ function fuzzyMatchTerm(input: string, category: 'paintQuality' | 'projectType')
   return null;
 }
 
-interface ConversationContext {
+export interface ConversationContext {
   clientName?: string;
   address?: string;
   projectType?: 'interior' | 'exterior' | 'both';
