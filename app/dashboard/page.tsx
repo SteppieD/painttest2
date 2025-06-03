@@ -226,6 +226,15 @@ export default function DashboardPage() {
               
               <Button
                 variant="outline"
+                onClick={() => router.push("/quotes")}
+                className="hidden sm:flex"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                All Quotes
+              </Button>
+              
+              <Button
+                variant="outline"
                 onClick={() => router.push("/insights")}
                 className="hidden sm:flex"
               >
