@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+
 export default function AccessCodePage() {
   const [accessCode, setAccessCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);

@@ -1,138 +1,257 @@
 import { NextRequest, NextResponse } from "next/server";
-import Database from "better-sqlite3";
-import path from "path";
+import { dbGet, dbRun, dbAll, createQuote, updateQuote } from "@/lib/database";
+import { generateQuoteId } from "@/lib/utils";
 
-const dbPath = path.join(process.cwd(), "quotes.db");
-const db = new Database(dbPath);
-
-// Ensure quotes table has all required columns
-const setupQuotesTable = () => {
-  try {
-    // Check if status column exists
-    const columns = db.prepare(`PRAGMA table_info(quotes)`).all();
-    const hasStatusColumn = columns.some((col: any) => col.name === "status");
-
-    if (!hasStatusColumn) {
-      db.exec(`ALTER TABLE quotes ADD COLUMN status TEXT DEFAULT 'pending'`);
-      console.log("✅ Added status column to quotes table");
-    }
-
-    // Check if updated_at column exists
-    const hasUpdatedAtColumn = columns.some(
-      (col: any) => col.name === "updated_at",
-    );
-
-    if (!hasUpdatedAtColumn) {
-      db.exec(
-        `ALTER TABLE quotes ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP`,
-      );
-      console.log("✅ Added updated_at column to quotes table");
-    }
-  } catch (error) {
-    console.error("Error setting up quotes table:", error);
-  }
-};
-
-// Run setup
-setupQuotesTable();
-
-// POST endpoint - Create new quote
+// POST - Create a new quote
 export async function POST(request: NextRequest) {
   try {
-    const {
-      customer_name,
-      customer_email,
-      customer_phone,
-      address,
-      quote_amount,
-      notes,
-      company_id,
-    } = await request.json();
+    const { quoteData, companyId, conversationHistory } = await request.json();
 
-    // Validate required fields
-    if (!customer_name || !address || !quote_amount) {
+    if (!quoteData || !companyId) {
       return NextResponse.json(
-        {
-          error:
-            "Missing required fields: customer_name, address, quote_amount",
-        },
-        { status: 400 },
+        { error: "Quote data and company ID are required" },
+        { status: 400 }
       );
     }
 
-    // Get company_id from session storage or default to 1 (DEMO2024)
-    const finalCompanyId = company_id || 1;
+    // Generate unique quote ID
+    const quoteId = generateQuoteId();
 
-    // Insert quote with company association and default status
-    const stmt = db.prepare(`
-      INSERT INTO quotes (customer_name, customer_email, customer_phone, address, quote_amount, notes, company_id, status, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
-    `);
+    // Prepare quote data for database
+    const quote = {
+      company_id: companyId,
+      quote_id: quoteId,
+      customer_name: quoteData.customerName || "Unknown Customer",
+      customer_email: quoteData.customerEmail || null,
+      customer_phone: quoteData.customerPhone || null,
+      address: quoteData.address || null,
+      project_type: quoteData.projectType || 'interior',
+      rooms: JSON.stringify(quoteData.rooms || []),
+      paint_quality: quoteData.paintQuality || null,
+      prep_work: quoteData.prepWork || null,
+      timeline: quoteData.timeEstimate || quoteData.timeline || null,
+      special_requests: quoteData.specialRequests || null,
+      base_cost: quoteData.totalCost || 0,
+      markup_percentage: quoteData.markupPercentage || 0,
+      final_price: quoteData.finalPrice || quoteData.totalCost || 0,
+      walls_sqft: quoteData.sqft || 0,
+      ceilings_sqft: 0,
+      trim_sqft: 0,
+      total_revenue: quoteData.totalCost || 0,
+      total_materials: quoteData.breakdown?.materials || 0,
+      projected_labor: quoteData.breakdown?.labor || 0,
+      conversation_summary: conversationHistory ? JSON.stringify(conversationHistory) : JSON.stringify([{quoteData}]),
+      status: 'pending'
+    };
 
-    const result = stmt.run(
-      customer_name,
-      customer_email || "",
-      customer_phone || "",
-      address,
-      quote_amount,
-      notes || "",
-      finalCompanyId,
-      "pending", // Default status
-    );
+    const result = createQuote(quote);
 
-    console.log(
-      `✅ Quote ${result.lastInsertRowid} saved for company ${finalCompanyId}`,
-    );
+    console.log(`✅ Quote created: ${quoteId} for company ${companyId}`);
 
     return NextResponse.json({
-      id: result.lastInsertRowid,
-      message: "Quote saved successfully",
-      company_id: finalCompanyId,
+      success: true,
+      quoteId,
+      quote: {
+        ...quote,
+        id: result.lastID
+      }
     });
+
   } catch (error) {
-    console.error("Error saving quote:", error);
+    console.error("Error creating quote:", error);
     return NextResponse.json(
-      { error: "Failed to save quote" },
-      { status: 500 },
+      { error: "Failed to create quote" },
+      { status: 500 }
     );
   }
 }
 
-// GET endpoint - Fetch quotes with company filtering
+// GET - Retrieve quotes (with optional company filter)
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const companyId = searchParams.get("company_id");
+    const companyId = searchParams.get('company_id');
+    const status = searchParams.get('status');
+    const limit = parseInt(searchParams.get('limit') || '50');
 
-    let stmt, quotes;
+    let whereClause = '1=1';
+    let params: any[] = [];
 
     if (companyId) {
-      // Get quotes for specific company with company info
-      stmt = db.prepare(`
-        SELECT q.*, c.company_name, c.access_code
-        FROM quotes q
-        LEFT JOIN companies c ON q.company_id = c.id
-        WHERE q.company_id = ?
-        ORDER BY q.created_at DESC
-      `);
-      quotes = stmt.all(companyId);
-    } else {
-      // Get all quotes with company info (admin view)
-      stmt = db.prepare(`
-        SELECT q.*, c.company_name, c.access_code
-        FROM quotes q
-        LEFT JOIN companies c ON q.company_id = c.id
-        ORDER BY q.created_at DESC
-      `);
-      quotes = stmt.all();
+      whereClause += ' AND company_id = ?';
+      params.push(companyId);
     }
 
-    return NextResponse.json(quotes);
+    if (status) {
+      whereClause += ' AND status = ?';
+      params.push(status);
+    }
+
+    const quotes = dbAll(`
+      SELECT 
+        q.*,
+        c.company_name,
+        c.access_code
+      FROM quotes q
+      LEFT JOIN companies c ON q.company_id = c.id
+      WHERE ${whereClause}
+      ORDER BY q.created_at DESC
+      LIMIT ?
+    `, [...params, limit]);
+
+    // Map quotes to the format expected by the quotes page
+    const mappedQuotes = (quotes as any[]).map((quote: any) => {
+        // Parse conversation summary for breakdown
+        let breakdown = null;
+        if (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') {
+          try {
+            const messages = JSON.parse(quote.conversation_summary);
+            if (Array.isArray(messages) && messages.length > 0) {
+              const lastMessage = messages[messages.length - 1];
+              if (lastMessage && lastMessage.quoteData) {
+                breakdown = lastMessage.quoteData.breakdown;
+              }
+            }
+          } catch (e) {
+            console.error("Error parsing conversation summary:", e);
+          }
+        }
+
+        // If no breakdown exists, create it from stored values
+        if (!breakdown) {
+          breakdown = {
+            labor: quote.projected_labor || Math.round((quote.total_revenue || 0) * 0.45),
+            materials: quote.total_materials || Math.round((quote.total_revenue || 0) * 0.35),
+            prepWork: Math.round((quote.total_revenue || 0) * 0.05),
+            markup: Math.round((quote.final_price || quote.total_revenue || 0) - (quote.total_revenue || 0))
+          };
+        }
+
+        return {
+          id: quote.quote_id || quote.id,
+          projectId: quote.id,
+          clientName: quote.customer_name || 'Unknown Client',
+          propertyAddress: quote.address || 'No address provided',
+          projectType: quote.project_type || 'interior',
+          status: quote.status || 'draft',
+          baseCosts: breakdown,
+          markupPercentage: quote.markup_percentage || 0,
+          finalPrice: quote.final_price || quote.total_revenue || 0,
+          createdAt: quote.created_at,
+          updatedAt: quote.updated_at,
+          
+          // Additional fields for internal use
+          breakdown,
+          total_cost: quote.final_price || quote.total_revenue || quote.quote_amount,
+          sqft: (quote.walls_sqft || 0) + (quote.ceilings_sqft || 0) + (quote.trim_sqft || 0),
+          
+          // Parse arrays consistently
+          rooms: (quote && quote.rooms && typeof quote.rooms === 'string' && quote.rooms.trim() !== '') ? 
+            (() => {
+              try {
+                return JSON.parse(quote.rooms);
+              } catch (e) {
+                console.error("Error parsing rooms:", e);
+                return [];
+              }
+            })() : [],
+          conversation_summary: (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') ? 
+            (() => {
+              try {
+                return JSON.parse(quote.conversation_summary);
+              } catch (e) {
+                console.error("Error parsing conversation summary:", e);
+                return null;
+              }
+            })() : null
+        };
+      });
+
+    // Return in the format expected by the quotes page
+    return NextResponse.json({
+      quotes: mappedQuotes
+    });
+
   } catch (error) {
     console.error("Error fetching quotes:", error);
     return NextResponse.json(
       { error: "Failed to fetch quotes" },
-      { status: 500 },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT - Update a quote
+export async function PUT(request: NextRequest) {
+  try {
+    const { id, updates } = await request.json();
+
+    if (!id || !updates) {
+      return NextResponse.json(
+        { error: "Quote ID and updates are required" },
+        { status: 400 }
+      );
+    }
+
+    const result = updateQuote(id, updates);
+
+    if (result.changes === 0) {
+      return NextResponse.json(
+        { error: "Quote not found" },
+        { status: 404 }
+      );
+    }
+
+    console.log(`✅ Quote updated: ${id}`);
+
+    return NextResponse.json({
+      success: true,
+      changes: result.changes
+    });
+
+  } catch (error) {
+    console.error("Error updating quote:", error);
+    return NextResponse.json(
+      { error: "Failed to update quote" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE - Delete a quote
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Quote ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const result = dbRun("DELETE FROM quotes WHERE id = ?", [id]);
+
+    if (result.changes === 0) {
+      return NextResponse.json(
+        { error: "Quote not found" },
+        { status: 404 }
+      );
+    }
+
+    console.log(`✅ Quote deleted: ${id}`);
+
+    return NextResponse.json({
+      success: true,
+      changes: result.changes
+    });
+
+  } catch (error) {
+    console.error("Error deleting quote:", error);
+    return NextResponse.json(
+      { error: "Failed to delete quote" },
+      { status: 500 }
     );
   }
 }

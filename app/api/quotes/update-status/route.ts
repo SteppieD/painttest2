@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import Database from "better-sqlite3";
-import path from "path";
-
-const dbPath = path.join(process.cwd(), "quotes.db");
-const db = new Database(dbPath);
+import { dbRun } from "@/lib/database";
 
 // PUT endpoint - Update quote status
 export async function PUT(request: NextRequest) {
@@ -27,13 +23,11 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update quote status with timestamp
-    const stmt = db.prepare(`
+    const result = dbRun(`
       UPDATE quotes 
-      SET status = ?, updated_at = datetime('now')
+      SET status = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
-    `);
-
-    const result = stmt.run(status, quoteId);
+    `, [status, quoteId]);
 
     if (result.changes === 0) {
       return NextResponse.json({ error: "Quote not found" }, { status: 404 });

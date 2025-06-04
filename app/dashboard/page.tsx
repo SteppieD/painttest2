@@ -3,18 +3,42 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { 
+  Palette, 
+  Plus, 
+  MessageSquare, 
+  FileText, 
+  DollarSign, 
+  TrendingUp,
+  Calendar,
+  Search,
+  LogOut,
+  Eye,
+  Copy
+} from "lucide-react";
+import { formatCurrency, formatDate } from "@/lib/utils";
+
 interface Quote {
   id: number;
+  quote_id: string;
   customer_name: string;
   customer_email: string;
   customer_phone: string;
   address: string;
   quote_amount: number;
+  final_price?: number;
   notes: string;
   status?: string;
   created_at: string;
   company_id: number;
   company_name?: string;
+  project_type?: string;
+  time_estimate?: string;
 }
 
 interface Analytics {
@@ -44,15 +68,18 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("created_at");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-  // Get company info from localStorage
   useEffect(() => {
     const companyData = localStorage.getItem("paintquote_company");
     if (companyData) {
       try {
         const company = JSON.parse(companyData);
+        // Check if session is still valid (24 hours)
+        if (Date.now() - company.loginTime > 24 * 60 * 60 * 1000) {
+          localStorage.removeItem("paintquote_company");
+          router.push("/access-code");
+          return;
+        }
         setCompanyInfo(company);
         loadQuotes(company.id);
       } catch (e) {
@@ -82,21 +109,16 @@ export default function DashboardPage() {
 
   const calculateAnalytics = (quotesData: Quote[]) => {
     const total = quotesData.length;
-    const revenue = quotesData.reduce(
-      (sum, quote) => sum + quote.quote_amount,
-      0,
-    );
+    const revenue = quotesData.reduce((sum, quote) => sum + (quote.quote_amount || 0), 0);
     const average = total > 0 ? revenue / total : 0;
 
-    const pending = quotesData.filter(
-      (q) => !q.status || q.status === "pending",
-    ).length;
-    const accepted = quotesData.filter((q) => q.status === "accepted").length;
+    const pending = quotesData.filter(q => !q.status || q.status === "pending").length;
+    const accepted = quotesData.filter(q => q.status === "accepted").length;
 
     // This month calculations
     const now = new Date();
     const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    const thisMonthQuotes = quotesData.filter((quote) => {
+    const thisMonthQuotes = quotesData.filter(quote => {
       const quoteDate = new Date(quote.created_at);
       return quoteDate >= thisMonthStart;
     });
@@ -108,55 +130,32 @@ export default function DashboardPage() {
       pendingQuotes: pending,
       acceptedQuotes: accepted,
       thisMonthQuotes: thisMonthQuotes.length,
-      thisMonthRevenue: thisMonthQuotes.reduce(
-        (sum, quote) => sum + quote.quote_amount,
-        0,
-      ),
+      thisMonthRevenue: thisMonthQuotes.reduce((sum, quote) => sum + (quote.quote_amount || 0), 0),
     });
   };
 
-  // Filter and sort quotes
+  // Filter quotes
   useEffect(() => {
     let filtered = quotes.filter((quote) => {
       const matchesSearch =
         quote.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         quote.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (quote.quote_id && quote.quote_id.toLowerCase().includes(searchTerm.toLowerCase())) ||
         quote.quote_amount.toString().includes(searchTerm);
 
       const matchesStatus =
         statusFilter === "all" ||
-        (statusFilter === "pending" &&
-          (!quote.status || quote.status === "pending")) ||
+        (statusFilter === "pending" && (!quote.status || quote.status === "pending")) ||
         (statusFilter !== "pending" && quote.status === statusFilter);
 
       return matchesSearch && matchesStatus;
     });
 
-    // Sort quotes
-    filtered.sort((a, b) => {
-      let aValue: any = a[sortBy as keyof Quote];
-      let bValue: any = b[sortBy as keyof Quote];
-
-      if (sortBy === "quote_amount") {
-        aValue = Number(aValue);
-        bValue = Number(bValue);
-      } else if (sortBy === "created_at") {
-        aValue = new Date(aValue).getTime();
-        bValue = new Date(bValue).getTime();
-      } else {
-        aValue = String(aValue).toLowerCase();
-        bValue = String(bValue).toLowerCase();
-      }
-
-      if (sortOrder === "asc") {
-        return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-      } else {
-        return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
-      }
-    });
+    // Sort by most recent first
+    filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
     setFilteredQuotes(filtered);
-  }, [quotes, searchTerm, statusFilter, sortBy, sortOrder]);
+  }, [quotes, searchTerm, statusFilter]);
 
   const updateQuoteStatus = async (quoteId: number, newStatus: string) => {
     try {
@@ -167,11 +166,10 @@ export default function DashboardPage() {
       });
 
       if (response.ok) {
-        // Update local state
-        setQuotes((prev) =>
-          prev.map((quote) =>
-            quote.id === quoteId ? { ...quote, status: newStatus } : quote,
-          ),
+        setQuotes(prev =>
+          prev.map(quote =>
+            quote.id === quoteId ? { ...quote, status: newStatus } : quote
+          )
         );
       }
     } catch (error) {
@@ -179,579 +177,318 @@ export default function DashboardPage() {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   const getStatusColor = (status?: string) => {
     switch (status) {
-      case "accepted":
-        return "#28a745";
-      case "completed":
-        return "#17a2b8";
-      case "cancelled":
-        return "#dc3545";
-      default:
-        return "#ffc107";
+      case "accepted": return "bg-green-100 text-green-800";
+      case "completed": return "bg-blue-100 text-blue-800";
+      case "cancelled": return "bg-red-100 text-red-800";
+      default: return "bg-yellow-100 text-yellow-800";
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("paintquote_company");
+    router.push("/access-code");
   };
 
   if (isLoading) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: "Arial, sans-serif",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <div
-            style={{
-              width: "50px",
-              height: "50px",
-              border: "3px solid #f3f3f3",
-              borderTop: "3px solid #3498db",
-              borderRadius: "50%",
-              animation: "spin 1s linear infinite",
-              margin: "0 auto 20px",
-            }}
-          ></div>
-          <p style={{ color: "#666" }}>Loading dashboard...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
         </div>
-        <style jsx>{`
-          @keyframes spin {
-            0% {
-              transform: rotate(0deg);
-            }
-            100% {
-              transform: rotate(360deg);
-            }
-          }
-        `}</style>
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div
-        style={{
-          backgroundColor: "white",
-          padding: "20px",
-          borderBottom: "1px solid #ddd",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1200px",
-            margin: "0 auto",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <h1
-              style={{ margin: "0 0 5px 0", fontSize: "24px", color: "#333" }}
-            >
-              📊 {companyInfo?.name || "Dashboard"}
-            </h1>
-            <p style={{ margin: 0, color: "#666", fontSize: "14px" }}>
-              {companyInfo?.accessCode} • Manage your painting quotes
-            </p>
-          </div>
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              onClick={() => router.push("/create-quote")}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#28a745",
-                color: "white",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontWeight: "bold",
-              }}
-            >
-              + New Quote
-            </button>
-            <button
-              onClick={() => {
-                localStorage.removeItem("paintquote_company");
-                router.push("/access-code");
-              }}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#6c757d",
-                color: "white",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-              }}
-            >
-              Logout
-            </button>
+      <div className="bg-white border-b shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-3">
+              <Palette className="w-8 h-8 text-blue-600" />
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">ProPaint Quote Assistant</h1>
+                <p className="text-sm text-gray-500">{companyInfo?.company_name}</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => router.push("/assistant")}
+                className="hidden sm:flex"
+              >
+                <MessageSquare className="w-4 h-4 mr-2" />
+                New Quote
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => router.push("/quotes")}
+                className="hidden sm:flex"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                All Quotes
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => router.push("/insights")}
+                className="hidden sm:flex"
+              >
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Insights
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => router.push("/settings")}
+                className="hidden sm:flex"
+              >
+                Settings
+              </Button>
+              
+              <Button
+                variant="ghost"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
-        {/* Analytics Cards */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "20px",
-            marginBottom: "30px",
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
-          >
-            <h3
-              style={{ margin: "0 0 10px 0", color: "#666", fontSize: "14px" }}
-            >
-              Total Quotes
-            </h3>
-            <p
-              style={{
-                margin: 0,
-                fontSize: "24px",
-                fontWeight: "bold",
-                color: "#333",
-              }}
-            >
-              {analytics.totalQuotes}
-            </p>
-          </div>
-
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
-          >
-            <h3
-              style={{ margin: "0 0 10px 0", color: "#666", fontSize: "14px" }}
-            >
-              Total Revenue
-            </h3>
-            <p
-              style={{
-                margin: 0,
-                fontSize: "24px",
-                fontWeight: "bold",
-                color: "#28a745",
-              }}
-            >
-              {formatCurrency(analytics.totalRevenue)}
-            </p>
-          </div>
-
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
-          >
-            <h3
-              style={{ margin: "0 0 10px 0", color: "#666", fontSize: "14px" }}
-            >
-              Average Quote
-            </h3>
-            <p
-              style={{
-                margin: 0,
-                fontSize: "24px",
-                fontWeight: "bold",
-                color: "#3498db",
-              }}
-            >
-              {formatCurrency(analytics.averageQuote)}
-            </p>
-          </div>
-
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
-          >
-            <h3
-              style={{ margin: "0 0 10px 0", color: "#666", fontSize: "14px" }}
-            >
-              This Month
-            </h3>
-            <p
-              style={{
-                margin: 0,
-                fontSize: "18px",
-                fontWeight: "bold",
-                color: "#333",
-              }}
-            >
-              {analytics.thisMonthQuotes} quotes
-            </p>
-            <p style={{ margin: 0, fontSize: "14px", color: "#666" }}>
-              {formatCurrency(analytics.thisMonthRevenue)}
-            </p>
-          </div>
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        {/* Quick Action - Single Quote Method */}
+        <div className="mb-8">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push("/assistant")}>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <MessageSquare className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">Create New Quote</h3>
+                  <p className="text-sm text-gray-600">Chat with AI to generate quotes quickly</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Filters and Search */}
-        <div
-          style={{
-            backgroundColor: "white",
-            padding: "20px",
-            borderRadius: "8px",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            marginBottom: "20px",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "15px",
-              alignItems: "end",
-            }}
+        {/* Analytics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-blue-200"
+            onClick={() => router.push("/dashboard/total-quotes")}
           >
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "5px",
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                }}
-              >
-                Search Quotes
-              </label>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Customer name, address, or amount..."
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  fontSize: "14px",
-                }}
-              />
-            </div>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Total Quotes
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{analytics.totalQuotes}</div>
+              <p className="text-xs text-gray-500">
+                {analytics.pendingQuotes} pending
+              </p>
+            </CardContent>
+          </Card>
 
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "5px",
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                }}
-              >
-                Filter by Status
-              </label>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  fontSize: "14px",
-                }}
-              >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="accepted">Accepted</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
-            </div>
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-green-200"
+            onClick={() => router.push("/dashboard/revenue")}
+          >
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+                <DollarSign className="w-4 h-4" />
+                Total Revenue
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                {formatCurrency(analytics.totalRevenue)}
+              </div>
+              <p className="text-xs text-gray-500">
+                All time
+              </p>
+            </CardContent>
+          </Card>
 
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "5px",
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                }}
-              >
-                Sort By
-              </label>
-              <select
-                value={`${sortBy}-${sortOrder}`}
-                onChange={(e) => {
-                  const [field, order] = e.target.value.split("-");
-                  setSortBy(field);
-                  setSortOrder(order as "asc" | "desc");
-                }}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  fontSize: "14px",
-                }}
-              >
-                <option value="created_at-desc">Newest First</option>
-                <option value="created_at-asc">Oldest First</option>
-                <option value="quote_amount-desc">Highest Amount</option>
-                <option value="quote_amount-asc">Lowest Amount</option>
-                <option value="customer_name-asc">Customer A-Z</option>
-                <option value="customer_name-desc">Customer Z-A</option>
-              </select>
-            </div>
-          </div>
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-blue-200"
+            onClick={() => router.push("/dashboard/average-quote")}
+          >
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+                <TrendingUp className="w-4 h-4" />
+                Average Quote
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-blue-600">
+                {formatCurrency(analytics.averageQuote)}
+              </div>
+              <p className="text-xs text-gray-500">
+                Per quote
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-200"
+            onClick={() => router.push("/dashboard/this-month")}
+          >
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                This Month
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{analytics.thisMonthQuotes}</div>
+              <p className="text-xs text-gray-500">
+                {formatCurrency(analytics.thisMonthRevenue)}
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Quotes List */}
-        <div
-          style={{
-            backgroundColor: "white",
-            borderRadius: "8px",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              padding: "20px",
-              borderBottom: "1px solid #eee",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h2 style={{ margin: 0, fontSize: "18px", color: "#333" }}>
-              Recent Quotes ({filteredQuotes.length})
-            </h2>
-          </div>
-
-          {filteredQuotes.length === 0 ? (
-            <div
-              style={{
-                padding: "40px",
-                textAlign: "center",
-                color: "#666",
-              }}
-            >
-              <p style={{ fontSize: "16px", margin: "0 0 10px 0" }}>
-                {quotes.length === 0
-                  ? "No quotes yet"
-                  : "No quotes match your filters"}
-              </p>
-              <p style={{ fontSize: "14px", margin: 0 }}>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <span>Recent Quotes ({filteredQuotes.length})</span>
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Input
+                    placeholder="Search quotes..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 w-full sm:w-48"
+                  />
+                </div>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                >
+                  <option value="all">All Status</option>
+                  <option value="pending">Pending</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          
+          <CardContent>
+            {filteredQuotes.length === 0 ? (
+              <div className="text-center py-8">
+                <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 mb-4">
+                  {quotes.length === 0 ? "No quotes yet" : "No quotes match your filters"}
+                </p>
                 {quotes.length === 0 && (
-                  <button
-                    onClick={() => router.push("/create-quote")}
-                    style={{
-                      padding: "10px 20px",
-                      backgroundColor: "#28a745",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Create your first quote
-                  </button>
+                  <Button onClick={() => router.push("/chat")}>
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Create Your First Quote
+                  </Button>
                 )}
-              </p>
-            </div>
-          ) : (
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead style={{ backgroundColor: "#f8f9fa" }}>
-                  <tr>
-                    <th
-                      style={{
-                        padding: "12px",
-                        textAlign: "left",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Customer
-                    </th>
-                    <th
-                      style={{
-                        padding: "12px",
-                        textAlign: "left",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Address
-                    </th>
-                    <th
-                      style={{
-                        padding: "12px",
-                        textAlign: "right",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Amount
-                    </th>
-                    <th
-                      style={{
-                        padding: "12px",
-                        textAlign: "center",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Status
-                    </th>
-                    <th
-                      style={{
-                        padding: "12px",
-                        textAlign: "center",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Date
-                    </th>
-                    <th
-                      style={{
-                        padding: "12px",
-                        textAlign: "center",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredQuotes.map((quote) => (
-                    <tr
-                      key={quote.id}
-                      style={{ borderBottom: "1px solid #eee" }}
-                    >
-                      <td style={{ padding: "12px" }}>
-                        <div>
-                          <div style={{ fontWeight: "bold", fontSize: "14px" }}>
-                            {quote.customer_name}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {filteredQuotes.map((quote) => (
+                  <div key={quote.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                          <h3 className="font-semibold text-lg sm:text-base">{quote.customer_name}</h3>
+                          <div className="flex items-center gap-2">
+                            {quote.quote_id && (
+                              <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                                {quote.quote_id}
+                              </span>
+                            )}
+                            <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(quote.status)}`}>
+                              {quote.status || 'pending'}
+                            </span>
                           </div>
-                          {quote.customer_phone && (
-                            <div style={{ fontSize: "12px", color: "#666" }}>
-                              {quote.customer_phone}
-                            </div>
-                          )}
                         </div>
-                      </td>
-                      <td style={{ padding: "12px", fontSize: "14px" }}>
-                        {quote.address}
-                      </td>
-                      <td
-                        style={{
-                          padding: "12px",
-                          textAlign: "right",
-                          fontSize: "16px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {formatCurrency(quote.quote_amount)}
-                      </td>
-                      <td style={{ padding: "12px", textAlign: "center" }}>
-                        <select
-                          value={quote.status || "pending"}
-                          onChange={(e) =>
-                            updateQuoteStatus(quote.id, e.target.value)
-                          }
-                          style={{
-                            padding: "4px 8px",
-                            borderRadius: "4px",
-                            border: "1px solid #ddd",
-                            backgroundColor: getStatusColor(quote.status),
-                            color: "white",
-                            fontSize: "12px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="accepted">Accepted</option>
-                          <option value="completed">Completed</option>
-                          <option value="cancelled">Cancelled</option>
-                        </select>
-                      </td>
-                      <td
-                        style={{
-                          padding: "12px",
-                          textAlign: "center",
-                          fontSize: "14px",
-                        }}
-                      >
-                        {formatDate(quote.created_at)}
-                      </td>
-                      <td style={{ padding: "12px", textAlign: "center" }}>
-                        <button
-                          onClick={() =>
-                            alert(
-                              `Quote ID: ${quote.id}\nNotes: ${quote.notes}`,
-                            )
-                          }
-                          style={{
-                            padding: "4px 8px",
-                            backgroundColor: "#3498db",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                            fontSize: "12px",
-                          }}
-                        >
-                          View
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+                        <p className="text-sm text-gray-600 mb-1">{quote.address}</p>
+                        <p className="text-xs text-gray-500">
+                          {formatDate(new Date(quote.created_at))} • {quote.time_estimate || 'Time estimate pending'}
+                        </p>
+                      </div>
+                      
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                        <div className="text-right sm:text-left">
+                          <div className="text-xl font-bold text-green-600">
+                            {formatCurrency(quote.final_price || quote.quote_amount || 0)}
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                          <select
+                            value={quote.status || "pending"}
+                            onChange={(e) => updateQuoteStatus(quote.id, e.target.value)}
+                            className="text-xs px-2 py-2 border rounded w-full sm:w-auto"
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="accepted">Accepted</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                          </select>
+                          
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                const customerUrl = `${window.location.origin}/quotes/${quote.quote_id}/customer`;
+                                navigator.clipboard.writeText(customerUrl);
+                                // Show a simple visual feedback
+                                const button = event?.target as HTMLElement;
+                                const originalText = button.textContent;
+                                button.textContent = 'Copied!';
+                                setTimeout(() => {
+                                  button.textContent = originalText;
+                                }, 1500);
+                              }}
+                              title="Copy customer quote link"
+                              className="flex-1 sm:flex-none"
+                            >
+                              <Copy className="w-4 h-4 sm:mr-0 mr-2" />
+                              <span className="sm:hidden">Copy Link</span>
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => router.push(`/quotes/${quote.id}`)}
+                              title="View quote details"
+                              className="flex-1 sm:flex-none"
+                            >
+                              <Eye className="w-4 h-4 sm:mr-0 mr-2" />
+                              <span className="sm:hidden">View</span>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

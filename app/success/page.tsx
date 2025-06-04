@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function SuccessPage() {
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+
+function SuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [quoteInfo, setQuoteInfo] = useState<{
@@ -15,11 +18,11 @@ export default function SuccessPage() {
   }>({});
 
   useEffect(() => {
-    const quoteId = searchParams.get("quoteId");
-    const amount = searchParams.get("amount");
-    const company = searchParams.get("company");
-    const newCompany = searchParams.get("newCompany");
-    const companyName = searchParams.get("companyName");
+    const quoteId = searchParams.get("quoteId") ?? undefined;
+    const amount = searchParams.get("amount") ?? undefined;
+    const company = searchParams.get("company") ?? undefined;
+    const newCompany = searchParams.get("newCompany") ?? undefined;
+    const companyName = searchParams.get("companyName") ?? undefined;
 
     setQuoteInfo({ quoteId, amount, company, newCompany, companyName });
   }, [searchParams]);
@@ -171,5 +174,13 @@ export default function SuccessPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 }
