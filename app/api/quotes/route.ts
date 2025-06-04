@@ -53,7 +53,8 @@ export async function POST(request: NextRequest) {
       quoteId,
       quote: {
         ...quote,
-        id: result.lastID
+        id: result.lastID,
+        quote_id: quoteId
       }
     });
 

@@ -12,6 +12,8 @@ interface ChatSession {
   address: string;
   timestamp: Date;
   projectType?: string;
+  projectId?: string;
+  quoteId?: string;
 }
 
 export default function AssistantLayout({
@@ -112,10 +114,16 @@ export default function AssistantLayout({
                 <button
                   key={session.id}
                   onClick={() => {
-                    // Load this chat session
+                    // Navigate to the quote review page if we have a quote ID
+                    if (session.quoteId) {
+                      router.push(`/quotes/${session.quoteId}/review`);
+                    } else {
+                      // For older sessions without quote ID, try to find by client name
+                      router.push(`/quotes?search=${encodeURIComponent(session.clientName)}`);
+                    }
                     if (isMobile) setIsSidebarOpen(false);
                   }}
-                  className="w-full p-3 rounded-lg hover:bg-white hover:shadow-sm transition-all duration-150 flex items-start gap-3 text-left"
+                  className="w-full p-3 rounded-lg hover:bg-white hover:shadow-sm transition-all duration-150 flex items-start gap-3 text-left group"
                 >
                   <div className={cn(
                     "w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold shrink-0",
@@ -124,7 +132,7 @@ export default function AssistantLayout({
                     {getInitialLetter(session.clientName)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 truncate">
+                    <p className="font-medium text-gray-900 truncate group-hover:text-blue-600">
                       {session.clientName}
                     </p>
                     <p className="text-sm text-gray-500 truncate">

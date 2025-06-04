@@ -174,13 +174,15 @@ export default function AssistantPage() {
   }
 
   // Save chat session to history
-  const saveChatSession = (clientName: string, address: string) => {
+  const saveChatSession = (clientName: string, address: string, projectId?: string, quoteId?: string) => {
     const session = {
       id: Date.now().toString(),
       clientName,
       address,
       timestamp: new Date(),
-      projectType: context.projectType
+      projectType: context.projectType,
+      projectId: projectId || null,
+      quoteId: quoteId || null
     };
 
     const history = localStorage.getItem('paintquote_chat_history');
@@ -202,10 +204,7 @@ export default function AssistantPage() {
     
     setIsSavingQuote(true);
     
-    // Save chat session to history
-    if (contextData.clientName && contextData.address) {
-      saveChatSession(contextData.clientName, contextData.address);
-    }
+    // Don't save to history yet - wait until we have the project/quote ID
 
     try {
       const saveResponse = await fetch('/api/quotes', {
@@ -221,15 +220,23 @@ export default function AssistantPage() {
 
       if (saveResponse.ok) {
         const saveData = await saveResponse.json();
-        setSavedQuoteId(saveData.quoteId || saveData.quote?.id);
+        const quoteId = saveData.quoteId || saveData.quote?.id;
+        const projectId = saveData.quote?.projectId || saveData.projectId;
+        
+        setSavedQuoteId(quoteId);
         setIsSavingQuote(false);
+        
+        // Save chat session to history with IDs
+        if (contextData.clientName && contextData.address) {
+          saveChatSession(contextData.clientName, contextData.address, projectId, quoteId);
+        }
         
         // Add confirmation message
         setTimeout(() => {
           const confirmMessage: Message = {
             id: (Date.now() + 2).toString(),
             role: 'assistant',
-            content: `Quote saved as #${saveData.quoteId}! Click 'View Quote Details' above to review and generate the customer quote.`,
+            content: `Quote saved as #${quoteId}! Click 'View Quote Details' above to review and generate the customer quote.`,
             timestamp: new Date()
           };
           setMessages(prev => [...prev, confirmMessage]);
