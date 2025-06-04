@@ -6,11 +6,12 @@ import { ArrowLeft, Calendar, DollarSign, MapPin, User, Clock, CheckCircle, XCir
 
 interface Quote {
   id: string;
-  projectId: string;
+  quote_id?: string;
+  projectId?: string;
   clientName: string;
   propertyAddress: string;
   projectType: string;
-  status: 'draft' | 'sent' | 'accepted' | 'rejected' | 'completed';
+  status: 'draft' | 'sent' | 'accepted' | 'rejected' | 'completed' | 'pending';
   baseCosts: any;
   markupPercentage: number;
   finalPrice: number;
@@ -37,16 +38,34 @@ export default function QuotesPage() {
 
   const fetchQuotes = async () => {
     try {
-      const response = await fetch('/api/quotes');
+      // Check authentication first
+      const companyData = localStorage.getItem("paintquote_company");
+      if (!companyData) {
+        router.push("/access-code");
+        return;
+      }
+
+      const company = JSON.parse(companyData);
+      if (Date.now() - company.loginTime > 24 * 60 * 60 * 1000) {
+        localStorage.removeItem("paintquote_company");
+        router.push("/access-code");
+        return;
+      }
+
+      const response = await fetch(`/api/quotes?company_id=${company.id}`);
       if (response.ok) {
         const data = await response.json();
         console.log('Fetched quotes data:', data);
-        setQuotes(data.quotes || []);
+        // Handle both data.quotes array and direct array response
+        const quotesArray = data.quotes || data || [];
+        setQuotes(Array.isArray(quotesArray) ? quotesArray : []);
       } else {
         console.error('Failed to fetch quotes:', response.status, response.statusText);
+        setQuotes([]);
       }
     } catch (error) {
       console.error('Error fetching quotes:', error);
+      setQuotes([]);
     } finally {
       setLoading(false);
     }
@@ -241,7 +260,12 @@ export default function QuotesPage() {
               <div
                 key={quote.id}
                 className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer border border-gray-200 overflow-hidden group"
-                onClick={() => router.push(`/quotes/${quote.id}/review`)}
+                onClick={() => {
+                  // Use quote_id if available, otherwise use id
+                  const quoteId = quote.id || quote.quote_id || quote.projectId;
+                  console.log('Navigating to quote:', quoteId, quote);
+                  router.push(`/quotes/${quoteId}/review`);
+                }}
               >
                 {/* Quote Header */}
                 <div className="p-6 space-y-4">

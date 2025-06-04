@@ -42,12 +42,38 @@ export default function AssistantLayout({
 
   useEffect(() => {
     // Load chat history from localStorage
-    const loadChatHistory = () => {
+    const loadChatHistory = async () => {
       const history = localStorage.getItem('paintquote_chat_history');
       if (history) {
         try {
           const parsed = JSON.parse(history);
-          setChatHistory(parsed.sort((a: ChatSession, b: ChatSession) => 
+          
+          // Clean up invalid entries (remove sessions for deleted quotes)
+          const validSessions = [];
+          for (const session of parsed) {
+            if (session.quoteId) {
+              try {
+                const response = await fetch(`/api/quotes/${session.quoteId}`);
+                if (response.ok) {
+                  validSessions.push(session);
+                }
+                // If quote doesn't exist, don't include the session
+              } catch (error) {
+                // Keep session if there's a network error (could be temporary)
+                validSessions.push(session);
+              }
+            } else {
+              // Keep older sessions without quote IDs
+              validSessions.push(session);
+            }
+          }
+          
+          // Update localStorage if we removed any invalid entries
+          if (validSessions.length !== parsed.length) {
+            localStorage.setItem('paintquote_chat_history', JSON.stringify(validSessions));
+          }
+          
+          setChatHistory(validSessions.sort((a: ChatSession, b: ChatSession) => 
             new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
           ));
         } catch (e) {
@@ -113,12 +139,24 @@ export default function AssistantLayout({
               chatHistory.map((session, index) => (
                 <button
                   key={session.id}
-                  onClick={() => {
+                  onClick={async () => {
                     // Navigate to the quote review page if we have a quote ID
                     if (session.quoteId) {
-                      router.push(`/quotes/${session.quoteId}/review`);
+                      try {
+                        // Check if quote still exists before navigating
+                        const response = await fetch(`/api/quotes/${session.quoteId}`);
+                        if (response.ok) {
+                          router.push(`/quotes/${session.quoteId}/review`);
+                        } else {
+                          // Quote doesn't exist, search instead
+                          router.push(`/quotes?search=${encodeURIComponent(session.clientName)}`);
+                        }
+                      } catch (error) {
+                        // Network error, fallback to search
+                        router.push(`/quotes?search=${encodeURIComponent(session.clientName)}`);
+                      }
                     } else {
-                      // For older sessions without quote ID, try to find by client name
+                      // For older sessions without quote ID, search by client name
                       router.push(`/quotes?search=${encodeURIComponent(session.clientName)}`);
                     }
                     if (isMobile) setIsSidebarOpen(false);
