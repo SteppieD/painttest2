@@ -47,12 +47,29 @@ export default function AssistantPage() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+    // Refocus input after messages update (with small delay for mobile)
+    const timer = setTimeout(() => {
+      if (!showMarkupPopup && !isSavingQuote) {
+        inputRef.current?.focus();
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [messages, showMarkupPopup, isSavingQuote]);
 
   // Focus input on mount
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+  
+  // Refocus when loading completes
+  useEffect(() => {
+    if (!isLoading && !showMarkupPopup) {
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, showMarkupPopup]);
 
   // Check authentication
   useEffect(() => {
@@ -154,7 +171,7 @@ export default function AssistantPage() {
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
-      inputRef.current?.focus();
+      // Focus is handled by useEffect hooks for better timing
     }
   };
 
@@ -322,7 +339,16 @@ export default function AssistantPage() {
       </header>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0 mobile-chat-messages enhanced-scroll">
+      <div 
+        className="flex-1 overflow-y-auto px-4 py-4 min-h-0 mobile-chat-messages enhanced-scroll"
+        onClick={(e) => {
+          // Refocus input if clicking on non-interactive area
+          const target = e.target as HTMLElement;
+          if (!target.closest('button') && !target.closest('a') && !target.closest('input')) {
+            inputRef.current?.focus();
+          }
+        }}
+      >
         <div className="max-w-2xl mx-auto space-y-4 pb-20 md:pb-4">
           {messages.map((message) => (
             <div
@@ -376,6 +402,11 @@ export default function AssistantPage() {
               style={{
                 fontSize: '16px', // Prevents zoom on iOS
               }}
+              autoComplete="off"
+              autoCorrect="on"
+              autoCapitalize="sentences"
+              enterKeyHint="send"
+              inputMode="text"
             />
             <Button
               onClick={sendMessage}
