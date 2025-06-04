@@ -96,7 +96,11 @@ export default function DashboardPage() {
       const response = await fetch(`/api/quotes?company_id=${companyId}`);
       const data = await response.json();
 
-      if (Array.isArray(data)) {
+      if (data.quotes && Array.isArray(data.quotes)) {
+        setQuotes(data.quotes);
+        calculateAnalytics(data.quotes);
+      } else if (Array.isArray(data)) {
+        // Fallback for direct array response
         setQuotes(data);
         calculateAnalytics(data);
       }

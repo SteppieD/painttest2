@@ -128,12 +128,28 @@ export async function GET(request: NextRequest) {
         }
 
         return {
-          id: quote.quote_id || quote.id,
+          // Dashboard format fields
+          id: quote.id,
+          quote_id: quote.quote_id || `Q${quote.id}`,
+          customer_name: quote.customer_name || 'Unknown Client',
+          customer_email: quote.customer_email || '',
+          customer_phone: quote.customer_phone || '',
+          address: quote.address || 'No address provided',
+          quote_amount: quote.final_price || quote.total_revenue || 0,
+          final_price: quote.final_price || quote.total_revenue || 0,
+          notes: quote.special_requests || '',
+          status: quote.status || 'pending',
+          created_at: quote.created_at,
+          company_id: quote.company_id,
+          company_name: quote.company_name,
+          project_type: quote.project_type || 'interior',
+          time_estimate: quote.timeline,
+          
+          // Additional fields for compatibility
           projectId: quote.id,
           clientName: quote.customer_name || 'Unknown Client',
           propertyAddress: quote.address || 'No address provided',
           projectType: quote.project_type || 'interior',
-          status: quote.status || 'draft',
           baseCosts: breakdown,
           markupPercentage: quote.markup_percentage || 0,
           finalPrice: quote.final_price || quote.total_revenue || 0,
@@ -142,7 +158,7 @@ export async function GET(request: NextRequest) {
           
           // Additional fields for internal use
           breakdown,
-          total_cost: quote.final_price || quote.total_revenue || quote.quote_amount,
+          total_cost: quote.final_price || quote.total_revenue || 0,
           sqft: (quote.walls_sqft || 0) + (quote.ceilings_sqft || 0) + (quote.trim_sqft || 0),
           
           // Parse arrays consistently
