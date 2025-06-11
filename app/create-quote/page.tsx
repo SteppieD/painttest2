@@ -9,18 +9,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import {
-  ProjectAreas,
-  ChargeRates,
-  PaintCosts,
-  QuoteCalculation,
-  calculateQuote,
+  ProjectDimensions,
+  ProfessionalQuote,
+  calculateProfessionalQuote,
+  DEFAULT_PAINT_PRODUCTS,
+  DEFAULT_CHARGE_RATES
+} from "@/lib/professional-quote-calculator";
+import {
   parseCustomerInfo,
   parseProjectType,
-  parseAreas,
-  parseAdjustments,
+  parseDimensions,
+  parseDoorsAndWindows,
+  parsePaintQuality,
+  parseMarkupPercentage,
+  generateFollowUpQuestion,
   generateQuoteDisplay,
-  generateDetailedBreakdown
-} from "@/lib/spreadsheet-calculator";
+  ConversationData
+} from "@/lib/professional-conversation-parser";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -35,12 +40,18 @@ interface Message {
 interface QuoteData {
   customer_name: string;
   address: string;
-  project_type: string;
-  areas: ProjectAreas;
-  rates: ChargeRates;
-  paint_costs: PaintCosts;
-  labor_percentage: number;
-  calculation: QuoteCalculation | null;
+  project_type: 'interior' | 'exterior' | 'both';
+  dimensions: Partial<ProjectDimensions>;
+  selected_products: {
+    primer_level: 0 | 1 | 2;
+    wall_paint_level: 0 | 1 | 2;
+    ceiling_paint_level: 0 | 1 | 2;
+    trim_paint_level: 0 | 1 | 2;
+    include_floor_sealer: boolean;
+  };
+  markup_percentage: number;
+  rates: typeof DEFAULT_CHARGE_RATES;
+  calculation: ProfessionalQuote | null;
 }
 
 export default function CreateQuotePage() {
@@ -53,7 +64,7 @@ export default function CreateQuotePage() {
     {
       id: '1',
       role: 'assistant',
-      content: "Hi! I'll help you create a painting quote using our proven calculation system. Let's start with the basics.\n\nWhat's the customer's name and property address?",
+      content: "Hi! I'll help you create a professional painting quote using industry-standard calculations. Let's start with the basics.\n\nWhat's the customer's name and property address?",
       timestamp: new Date().toISOString()
     }
   ]);
@@ -61,11 +72,17 @@ export default function CreateQuotePage() {
   const [quoteData, setQuoteData] = useState<QuoteData>({
     customer_name: '',
     address: '',
-    project_type: '',
-    areas: { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: 0 },
-    rates: { walls_rate: 3.00, ceilings_rate: 2.00, trim_rate: 1.92 },
-    paint_costs: { walls_paint_cost: 26.00, ceilings_paint_cost: 25.00, trim_paint_cost: 35.00 },
-    labor_percentage: 30,
+    project_type: 'interior',
+    dimensions: {},
+    selected_products: {
+      primer_level: 0,
+      wall_paint_level: 0,
+      ceiling_paint_level: 0,
+      trim_paint_level: 0,
+      include_floor_sealer: false
+    },
+    markup_percentage: 20, // Default 20% markup
+    rates: DEFAULT_CHARGE_RATES,
     calculation: null
   });
 
@@ -113,16 +130,13 @@ export default function CreateQuotePage() {
       setQuoteData(prev => ({
         ...prev,
         rates: {
-          walls_rate: settings.default_walls_rate || 3.00,
-          ceilings_rate: settings.default_ceilings_rate || 2.00,
-          trim_rate: settings.default_trim_rate || 1.92
-        },
-        paint_costs: {
-          walls_paint_cost: settings.default_walls_paint_cost || 26.00,
-          ceilings_paint_cost: settings.default_ceilings_paint_cost || 25.00,
-          trim_paint_cost: settings.default_trim_paint_cost || 35.00
-        },
-        labor_percentage: settings.default_labor_percentage || 30
+          wall_rate_per_sqft: settings.wall_rate_per_sqft || DEFAULT_CHARGE_RATES.wall_rate_per_sqft,
+          ceiling_rate_per_sqft: settings.ceiling_rate_per_sqft || DEFAULT_CHARGE_RATES.ceiling_rate_per_sqft,
+          primer_rate_per_sqft: settings.primer_rate_per_sqft || DEFAULT_CHARGE_RATES.primer_rate_per_sqft,
+          door_rate_each: settings.door_rate_each || DEFAULT_CHARGE_RATES.door_rate_each,
+          window_rate_each: settings.window_rate_each || DEFAULT_CHARGE_RATES.window_rate_each,
+          floor_sealer_rate_per_sqft: settings.floor_sealer_rate_per_sqft || DEFAULT_CHARGE_RATES.floor_sealer_rate_per_sqft
+        }
       }));
     } catch (error) {
       console.error('Failed to load company defaults:', error);
@@ -173,18 +187,29 @@ export default function CreateQuotePage() {
           address: customerInfo.address
         }));
         
-        if (customerInfo.address) {
-          responseContent = `Perfect! I have ${customerInfo.customer_name} at ${customerInfo.address}.\n\nWhat type of painting work are we quoting?\n• Interior (walls, ceilings, trim)\n• Exterior\n• Both interior and exterior`;
+        if (customerInfo.customer_name && customerInfo.address) {
+          responseContent = `Perfect! I have ${customerInfo.customer_name} at ${customerInfo.address}.\n\nWhat type of painting work are we quoting?\n• Interior only\n• Exterior only\n• Both interior and exterior`;
           nextStage = 'project_type';
-        } else {
+        } else if (customerInfo.customer_name && !customerInfo.address) {
           responseContent = `Great! I have the customer name as ${customerInfo.customer_name}. What's the property address?`;
           nextStage = 'address';
+        } else if (!customerInfo.customer_name && customerInfo.address) {
+          responseContent = `I have the address as ${customerInfo.address}. What's the customer's name?`;
+          nextStage = 'customer_name';
+        } else {
+          responseContent = "Please provide both the customer's name and property address.";
         }
         break;
 
       case 'address':
         setQuoteData(prev => ({ ...prev, address: input.trim() }));
-        responseContent = `Thanks! Now I have ${quoteData.customer_name} at ${input.trim()}.\n\nWhat type of painting work are we quoting?\n• Interior (walls, ceilings, trim)\n• Exterior\n• Both interior and exterior`;
+        responseContent = `Thanks! Now I have ${quoteData.customer_name} at ${input.trim()}.\n\nWhat type of painting work are we quoting?\n• Interior only\n• Exterior only\n• Both interior and exterior`;
+        nextStage = 'project_type';
+        break;
+        
+      case 'customer_name':
+        setQuoteData(prev => ({ ...prev, customer_name: input.trim() }));
+        responseContent = `Perfect! Now I have ${input.trim()} at ${quoteData.address}.\n\nWhat type of painting work are we quoting?\n• Interior only\n• Exterior only\n• Both interior and exterior`;
         nextStage = 'project_type';
         break;
 
@@ -192,83 +217,208 @@ export default function CreateQuotePage() {
         const projectType = parseProjectType(input);
         setQuoteData(prev => ({ ...prev, project_type: projectType }));
         
-        if (projectType === 'interior') {
-          responseContent = `Perfect! For interior work, I need the square footage for each surface:\n\n• **Walls** (paintable wall area)\n• **Ceilings** (ceiling area) \n• **Trim** (doors, windows, baseboards)\n\nYou can say something like "1000 walls, 1000 ceilings, 520 trim" or just give me total square footage and I'll estimate the breakdown.`;
-        } else if (projectType === 'exterior') {
-          responseContent = `Got it! For exterior work, I need:\n\n• **Walls** (siding, stucco, etc.)\n• **Trim** (windows, doors, fascia)\n\nCeilings typically aren't painted on exterior jobs. What's the square footage?`;
-        } else {
-          responseContent = `Great! For both interior and exterior work, I'll need square footage for:\n\n• **Interior walls**\n• **Interior ceilings**\n• **Interior trim**\n• **Exterior walls**\n• **Exterior trim**\n\nWhat are the measurements?`;
-        }
-        nextStage = 'areas';
+        responseContent = `Great! For ${projectType} painting, I need the room dimensions:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (in feet)\n${projectType === 'interior' || projectType === 'both' ? '• **Ceiling area** (square footage)\n' : ''}\nFor example: "120 linear feet, 9 foot ceilings${projectType === 'interior' || projectType === 'both' ? ', 1200 sqft ceiling area' : ''}"`;
+        nextStage = 'dimensions';
         break;
 
-      case 'areas':
-        const areas = parseAreas(input, quoteData.project_type);
-        const updatedQuoteData = { ...quoteData, areas };
+      case 'dimensions':
+        const dimensions = parseDimensions(input, quoteData.project_type);
+        setQuoteData(prev => ({ 
+          ...prev, 
+          dimensions: { ...prev.dimensions, ...dimensions }
+        }));
+        
+        // Check if we have enough dimensions to proceed
+        const hasRequiredDimensions = dimensions.wall_linear_feet && dimensions.ceiling_height && 
+          (quoteData.project_type === 'exterior' || dimensions.ceiling_area);
+        
+        if (hasRequiredDimensions) {
+          responseContent = `Excellent! Now I need to count the doors and windows:\n\n• How many **doors** need painting?\n• How many **windows** need painting?\n\nFor example: "3 doors and 5 windows" or "2 doors, no windows"`;
+          nextStage = 'doors_windows';
+        } else {
+          responseContent = generateFollowUpQuestion('dimensions', { dimensions: { ...quoteData.dimensions, ...dimensions }, project_type: quoteData.project_type });
+        }
+        break;
+        
+      case 'doors_windows':
+        const doorsWindows = parseDoorsAndWindows(input);
+        setQuoteData(prev => ({
+          ...prev,
+          dimensions: {
+            ...prev.dimensions,
+            number_of_doors: doorsWindows.doors,
+            number_of_windows: doorsWindows.windows
+          }
+        }));
+        
+        responseContent = `Perfect! Now what paint quality would you like?\n\n• **Good** - Budget-friendly, basic coverage\n• **Better** - Mid-range, better durability  \n• **Best** - Premium, longest lasting\n\nYou can choose the same level for all surfaces or specify different levels.`;
+        nextStage = 'paint_quality';
+        break;
+        
+      case 'paint_quality':
+        const paintQuality = parsePaintQuality(input);
+        const updatedQuoteData = {
+          ...quoteData,
+          selected_products: {
+            ...quoteData.selected_products,
+            wall_paint_level: paintQuality.walls as 0 | 1 | 2,
+            ceiling_paint_level: paintQuality.ceilings as 0 | 1 | 2,
+            trim_paint_level: paintQuality.trim as 0 | 1 | 2
+          }
+        };
         setQuoteData(updatedQuoteData);
         
-        // Calculate quote automatically using spreadsheet formulas
-        const calculation = calculateQuote(
-          areas, 
-          quoteData.rates, 
-          quoteData.paint_costs, 
-          quoteData.labor_percentage
-        );
+        responseContent = `Excellent! Now let's set your profit margin. What markup percentage would you like?\\n\\n\u2022 **10%** - Minimum profit (competitive pricing)\\n\u2022 **20%** - Standard profit (recommended)\\n\u2022 **30%** - Good profit (premium pricing)\\n\u2022 **40%** - High profit (luxury pricing)\\n\\nThis determines how much profit you make above your costs.`;
+        nextStage = 'markup_selection';
+        break;
         
-        setQuoteData(prev => ({ ...prev, calculation }));
+      case 'markup_selection':
+        const markupPercentage = parseMarkupPercentage(input);
+        const finalQuoteData = {
+          ...quoteData,
+          markup_percentage: markupPercentage
+        };
+        setQuoteData(finalQuoteData);
         
-        responseContent = generateQuoteDisplay(calculation, areas, quoteData.rates, quoteData.paint_costs);
-        nextStage = 'quote_review';
+        // Calculate the professional quote with markup
+        if (finalQuoteData.dimensions.wall_linear_feet && 
+            finalQuoteData.dimensions.ceiling_height &&
+            finalQuoteData.dimensions.number_of_doors !== undefined &&
+            finalQuoteData.dimensions.number_of_windows !== undefined) {
+          
+          const calculation = calculateProfessionalQuote(
+            finalQuoteData.dimensions as ProjectDimensions,
+            {
+              primer: {
+                name: DEFAULT_PAINT_PRODUCTS.primer_name,
+                spread_rate: DEFAULT_PAINT_PRODUCTS.primer_spread_rate,
+                cost: DEFAULT_PAINT_PRODUCTS.primer_cost_per_gallon
+              } as any,
+              wall_paint: DEFAULT_PAINT_PRODUCTS.wall_paints[finalQuoteData.selected_products.wall_paint_level],
+              ceiling_paint: DEFAULT_PAINT_PRODUCTS.ceiling_paints[finalQuoteData.selected_products.ceiling_paint_level],
+              trim_paint: DEFAULT_PAINT_PRODUCTS.trim_paints[finalQuoteData.selected_products.trim_paint_level],
+              floor_sealer: DEFAULT_PAINT_PRODUCTS.floor_sealer
+            },
+            finalQuoteData.rates,
+            markupPercentage, // Include the selected markup
+            false // No floor sealer for now
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation }));
+          responseContent = generateQuoteDisplay(calculation, finalQuoteData.customer_name, finalQuoteData.address);
+          nextStage = 'quote_review';
+        } else {
+          responseContent = "I need more information to calculate the quote. Let me ask for the missing details.";
+          nextStage = 'dimensions';
+        }
         break;
 
       case 'quote_review':
         const lowerInput = input.toLowerCase();
         
         if (lowerInput.includes('breakdown') || lowerInput.includes('how did you calculate') || lowerInput.includes('detail')) {
-          responseContent = generateDetailedBreakdown(quoteData.calculation!, quoteData.areas, quoteData.rates, quoteData.paint_costs);
+          const calc = quoteData.calculation!;
+          responseContent = `## 📋 **Detailed Breakdown**\n\n**Materials:**\n• Primer: ${calc.materials.primer.gallons_needed} gal × $${(calc.materials.primer.cost / calc.materials.primer.gallons_needed).toFixed(0)} = $${calc.materials.primer.cost}\n• Wall Paint: ${calc.materials.walls.gallons_needed} gal × $${(calc.materials.walls.cost / calc.materials.walls.gallons_needed).toFixed(0)} = $${calc.materials.walls.cost}\n• Ceiling Paint: ${calc.materials.ceilings.gallons_needed} gal × $${(calc.materials.ceilings.cost / calc.materials.ceilings.gallons_needed).toFixed(0)} = $${calc.materials.ceilings.cost}\n• Trim Paint: ${calc.materials.trim_doors_windows.gallons_needed} gal × $${(calc.materials.trim_doors_windows.cost / calc.materials.trim_doors_windows.gallons_needed).toFixed(0)} = $${calc.materials.trim_doors_windows.cost}\n\n**Labor Rates:**\n• Primer: ${calc.materials.primer.sqft_needed} sqft × $${quoteData.rates.primer_rate_per_sqft} = $${calc.labor.primer_labor}\n• Walls: ${calc.materials.walls.sqft_needed} sqft × $${quoteData.rates.wall_rate_per_sqft} = $${calc.labor.wall_labor}\n• Ceilings: ${calc.materials.ceilings.sqft_needed} sqft × $${quoteData.rates.ceiling_rate_per_sqft} = $${calc.labor.ceiling_labor}\n• Doors: ${calc.materials.trim_doors_windows.doors_count} × $${quoteData.rates.door_rate_each} = $${calc.labor.door_labor}\n• Windows: ${calc.materials.trim_doors_windows.windows_count} × $${quoteData.rates.window_rate_each} = $${calc.labor.window_labor}`;
+        } else if (lowerInput.includes('adjust markup') || lowerInput.includes('change markup') || lowerInput.includes('markup')) {
+          responseContent = `Current markup is ${quoteData.markup_percentage}%. What markup percentage would you like?\n\n• **10%** - Minimum profit\n• **20%** - Standard profit\n• **30%** - Good profit\n• **40%** - High profit`;
+          nextStage = 'markup_adjustment';
         } else if (lowerInput.includes('adjust') || lowerInput.includes('change') || lowerInput.includes('modify')) {
-          responseContent = `What would you like to adjust? I can modify:\n\n• **Square footage** (walls, ceilings, trim)\n• **Charge rates** (currently $${quoteData.rates.walls_rate}/sqft walls, $${quoteData.rates.ceilings_rate}/sqft ceilings, $${quoteData.rates.trim_rate}/sqft trim)\n• **Labor percentage** (currently ${quoteData.labor_percentage}%)\n• **Paint costs**\n\nJust tell me what you'd like to change!`;
+          responseContent = `What would you like to adjust? I can modify:\n\n• **Markup** (currently ${quoteData.markup_percentage}%)\n• **Dimensions** (linear feet, ceiling height, doors, windows)\n• **Paint quality** (good, better, best)\n• **Rates** (currently $${quoteData.rates.wall_rate_per_sqft}/sqft walls, $${quoteData.rates.door_rate_each}/door, $${quoteData.rates.window_rate_each}/window)\n\nJust tell me what you'd like to change!`;
           nextStage = 'adjustments';
         } else if (lowerInput.includes('save') || lowerInput.includes('approve') || lowerInput.includes('finalize')) {
           await saveQuote();
-          responseContent = `✅ Quote saved successfully!\n\n**Final Details:**\n• Customer: ${quoteData.customer_name}\n• Total Quote: $${quoteData.calculation!.revenue.total.toFixed(2)}\n• Projected Profit: $${quoteData.calculation!.profit.toFixed(2)}\n\nWould you like to create another quote or return to the dashboard?`;
+          responseContent = `✅ Quote saved successfully!\n\n**Final Details:**\n• Customer: ${quoteData.customer_name}\n• **Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}**\n• Your Cost: $${quoteData.calculation!.total_cost.toLocaleString()}\n• Your Profit: $${quoteData.calculation!.markup_amount.toLocaleString()}\n\nWould you like to create another quote or return to the dashboard?`;
           nextStage = 'complete';
         } else {
-          responseContent = `Your quote total is **$${quoteData.calculation!.revenue.total.toFixed(2)}** with a projected profit of **$${quoteData.calculation!.profit.toFixed(2)}**.\n\nWhat would you like to do?\n• **"Save"** - Finalize this quote\n• **"Breakdown"** - See detailed calculations\n• **"Adjust"** - Modify pricing or measurements`;
+          responseContent = `**Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}** (Your profit: $${quoteData.calculation!.markup_amount.toLocaleString()})\n\nWhat would you like to do?\n• **"Save"** - Finalize this quote\n• **"Adjust markup"** - Change profit percentage\n• **"Breakdown"** - See detailed calculations`;
         }
+        break;
+        
+      case 'markup_adjustment':
+        const newMarkupPercentage = parseMarkupPercentage(input);
+        const updatedMarkupData = {
+          ...quoteData,
+          markup_percentage: newMarkupPercentage
+        };
+        setQuoteData(updatedMarkupData);
+        
+        // Recalculate with new markup
+        if (updatedMarkupData.dimensions.wall_linear_feet && 
+            updatedMarkupData.dimensions.ceiling_height &&
+            updatedMarkupData.dimensions.number_of_doors !== undefined &&
+            updatedMarkupData.dimensions.number_of_windows !== undefined) {
+          
+          const recalculation = calculateProfessionalQuote(
+            updatedMarkupData.dimensions as ProjectDimensions,
+            {
+              primer: {
+                name: DEFAULT_PAINT_PRODUCTS.primer_name,
+                spread_rate: DEFAULT_PAINT_PRODUCTS.primer_spread_rate,
+                cost: DEFAULT_PAINT_PRODUCTS.primer_cost_per_gallon
+              } as any,
+              wall_paint: DEFAULT_PAINT_PRODUCTS.wall_paints[updatedMarkupData.selected_products.wall_paint_level],
+              ceiling_paint: DEFAULT_PAINT_PRODUCTS.ceiling_paints[updatedMarkupData.selected_products.ceiling_paint_level],
+              trim_paint: DEFAULT_PAINT_PRODUCTS.trim_paints[updatedMarkupData.selected_products.trim_paint_level]
+            },
+            updatedMarkupData.rates,
+            newMarkupPercentage,
+            false
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation: recalculation }));
+          responseContent = `✅ **Updated with ${newMarkupPercentage}% markup!**\\n\\n**Customer Price: $${recalculation.final_price.toLocaleString()}**\\n**Your Profit: $${recalculation.markup_amount.toLocaleString()}**\\n\\nSay \"save\" to finalize or adjust again.`;
+        }
+        nextStage = 'quote_review';
         break;
 
       case 'adjustments':
-        const adjustments = parseAdjustments(input);
+        // Simple adjustment parsing for now - can be enhanced later
+        const lowerAdj = input.toLowerCase();
         let newQuoteData = { ...quoteData };
+        let adjustmentMade = false;
         
-        // Apply adjustments
-        if (adjustments.rates) {
-          newQuoteData.rates = { ...newQuoteData.rates, ...adjustments.rates };
-        }
-        if (adjustments.paintCosts) {
-          newQuoteData.paint_costs = { ...newQuoteData.paint_costs, ...adjustments.paintCosts };
-        }
-        if (adjustments.laborPercent) {
-          newQuoteData.labor_percentage = adjustments.laborPercent;
-        }
-        if (adjustments.areas) {
-          newQuoteData.areas = { ...newQuoteData.areas, ...adjustments.areas };
+        // Check for rate adjustments
+        const rateMatch = input.match(/\$(\d+\.?\d*)/g);
+        if (rateMatch && lowerAdj.includes('wall')) {
+          const newRate = parseFloat(rateMatch[0].replace('$', ''));
+          newQuoteData.rates.wall_rate_per_sqft = newRate;
+          adjustmentMade = true;
         }
         
-        setQuoteData(newQuoteData);
+        // Check for dimension adjustments
+        const numberMatch = input.match(/\d+/g);
+        if (numberMatch && lowerAdj.includes('linear')) {
+          newQuoteData.dimensions.wall_linear_feet = Number(numberMatch[0]);
+          adjustmentMade = true;
+        }
         
-        // Recalculate with adjustments
-        const newCalculation = calculateQuote(
-          newQuoteData.areas, 
-          newQuoteData.rates, 
-          newQuoteData.paint_costs, 
-          newQuoteData.labor_percentage
-        );
-        
-        setQuoteData(prev => ({ ...prev, calculation: newCalculation }));
-        
-        responseContent = `✅ **Updated Quote:**\n\n• **Total Quote:** $${newCalculation.revenue.total.toFixed(2)}\n• **Projected Profit:** $${newCalculation.profit.toFixed(2)}\n\nDoes this look better? Say "save" to finalize or make more adjustments.`;
+        if (adjustmentMade) {
+          setQuoteData(newQuoteData);
+          
+          // Recalculate with adjustments
+          const newCalculation = calculateProfessionalQuote(
+            newQuoteData.dimensions as ProjectDimensions,
+            {
+              primer: {
+                name: DEFAULT_PAINT_PRODUCTS.primer_name,
+                spread_rate: DEFAULT_PAINT_PRODUCTS.primer_spread_rate,
+                cost: DEFAULT_PAINT_PRODUCTS.primer_cost_per_gallon
+              } as any,
+              wall_paint: DEFAULT_PAINT_PRODUCTS.wall_paints[newQuoteData.selected_products.wall_paint_level],
+              ceiling_paint: DEFAULT_PAINT_PRODUCTS.ceiling_paints[newQuoteData.selected_products.ceiling_paint_level],
+              trim_paint: DEFAULT_PAINT_PRODUCTS.trim_paints[newQuoteData.selected_products.trim_paint_level]
+            },
+            newQuoteData.rates,
+            newQuoteData.markup_percentage,
+            false
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation: newCalculation }));
+          
+          responseContent = `✅ **Updated Quote:**\n\n• **Total Quote:** $${newCalculation.total_cost.toLocaleString()}\n• **Materials:** $${newCalculation.materials.total_material_cost.toLocaleString()}\n• **Labor:** $${newCalculation.labor.total_labor.toLocaleString()}\n\nDoes this look better? Say "save" to finalize or make more adjustments.`;
+        } else {
+          responseContent = "I didn't understand that adjustment. Please specify what you'd like to change more clearly. For example: 'Change wall rate to $2.00' or 'Update linear feet to 150'.";
+        }
         nextStage = 'quote_review';
         break;
 
@@ -279,11 +429,17 @@ export default function CreateQuotePage() {
           setQuoteData({
             customer_name: '',
             address: '',
-            project_type: '',
-            areas: { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: 0 },
+            project_type: 'interior',
+            dimensions: {},
+            selected_products: {
+              primer_level: 0,
+              wall_paint_level: 0,
+              ceiling_paint_level: 0,
+              trim_paint_level: 0,
+              include_floor_sealer: false
+            },
+            markup_percentage: 20, // Keep default markup
             rates: quoteData.rates, // Keep company rates
-            paint_costs: quoteData.paint_costs, // Keep company paint costs
-            labor_percentage: quoteData.labor_percentage, // Keep company labor %
             calculation: null
           });
           setConversationStage('customer_info');
@@ -317,6 +473,9 @@ export default function CreateQuotePage() {
     if (!quoteData.calculation || !companyData) return;
 
     try {
+      const calc = quoteData.calculation;
+      const dims = quoteData.dimensions;
+      
       const response = await fetch('/api/quotes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -328,32 +487,43 @@ export default function CreateQuotePage() {
           address: quoteData.address,
           project_type: quoteData.project_type,
           
-          // Area calculations
-          walls_sqft: quoteData.areas.walls_sqft,
-          ceilings_sqft: quoteData.areas.ceilings_sqft,
-          trim_sqft: quoteData.areas.trim_sqft,
+          // Professional dimensions
+          wall_linear_feet: dims.wall_linear_feet || 0,
+          ceiling_height: dims.ceiling_height || 0,
+          ceiling_area: dims.ceiling_area || 0,
+          number_of_doors: dims.number_of_doors || 0,
+          number_of_windows: dims.number_of_windows || 0,
+          floor_area: dims.floor_area || 0,
           
-          // Charge rates
-          walls_rate: quoteData.rates.walls_rate,
-          ceilings_rate: quoteData.rates.ceilings_rate,
-          trim_rate: quoteData.rates.trim_rate,
+          // Professional rates
+          wall_rate_per_sqft: quoteData.rates.wall_rate_per_sqft,
+          ceiling_rate_per_sqft: quoteData.rates.ceiling_rate_per_sqft,
+          primer_rate_per_sqft: quoteData.rates.primer_rate_per_sqft,
+          door_rate_each: quoteData.rates.door_rate_each,
+          window_rate_each: quoteData.rates.window_rate_each,
           
-          // Paint costs
-          walls_paint_cost: quoteData.paint_costs.walls_paint_cost,
-          ceilings_paint_cost: quoteData.paint_costs.ceilings_paint_cost,
-          trim_paint_cost: quoteData.paint_costs.trim_paint_cost,
+          // Material calculations
+          primer_gallons: calc.materials.primer.gallons_needed,
+          wall_paint_gallons: calc.materials.walls.gallons_needed,
+          ceiling_paint_gallons: calc.materials.ceilings.gallons_needed,
+          trim_paint_gallons: calc.materials.trim_doors_windows.gallons_needed,
           
-          // Calculation results
-          total_revenue: quoteData.calculation.revenue.total,
-          total_materials: quoteData.calculation.materials.total,
-          projected_labor: quoteData.calculation.labor.projected_labor,
-          labor_percentage: quoteData.labor_percentage,
-          projected_profit: quoteData.calculation.profit,
+          // Cost breakdown with markup
+          total_materials: calc.materials.total_material_cost,
+          total_labor: calc.labor.total_labor,
+          overhead: calc.overhead,
+          total_cost: calc.total_cost, // Contractor's cost
+          markup_percentage: quoteData.markup_percentage,
+          markup_amount: calc.markup_amount,
+          total_revenue: calc.final_price, // Customer pays this
           
-          // Legacy fields for compatibility
-          quote_amount: quoteData.calculation.revenue.total,
-          final_price: quoteData.calculation.revenue.total,
-          notes: `${quoteData.project_type} - ${quoteData.areas.walls_sqft} walls, ${quoteData.areas.ceilings_sqft} ceilings, ${quoteData.areas.trim_sqft} trim`,
+          // Legacy compatibility fields
+          walls_sqft: calc.materials.walls.sqft_needed,
+          ceilings_sqft: calc.materials.ceilings.sqft_needed,
+          trim_sqft: 0, // Not used in professional calculator
+          quote_amount: calc.final_price, // Customer price
+          final_price: calc.final_price, // Customer price
+          notes: `${quoteData.project_type} - ${dims.wall_linear_feet}LF walls, ${dims.ceiling_height}' high, ${dims.number_of_doors} doors, ${dims.number_of_windows} windows`,
           conversation_summary: JSON.stringify(messages)
         })
       });
@@ -362,7 +532,7 @@ export default function CreateQuotePage() {
         const result = await response.json();
         toast({
           title: "Quote Saved!",
-          description: `Quote ${result.quoteId || result.quote?.id} saved successfully.`,
+          description: `Professional quote ${result.quoteId || result.quote?.id} saved successfully.`,
         });
       } else {
         throw new Error('Failed to save quote');
@@ -413,15 +583,18 @@ export default function CreateQuotePage() {
               
               <div className="flex items-center gap-2">
                 <Calculator className="w-6 h-6 text-blue-600" />
-                <h1 className="text-lg font-semibold">Spreadsheet Calculator</h1>
+                <h1 className="text-lg font-semibold">Create Quote</h1>
               </div>
             </div>
             
             {quoteData.calculation && (
               <div className="text-right">
-                <div className="text-sm text-gray-600">Total Quote</div>
-                <div className="text-lg font-bold text-blue-600">
-                  ${quoteData.calculation.revenue.total.toFixed(2)}
+                <div className="text-sm text-gray-600">Customer Price</div>
+                <div className="text-lg font-bold text-green-600">
+                  ${quoteData.calculation.final_price.toLocaleString()}
+                </div>
+                <div className="text-xs text-gray-500">
+                  Profit: ${quoteData.calculation.markup_amount.toLocaleString()} ({quoteData.markup_percentage}%)
                 </div>
               </div>
             )}

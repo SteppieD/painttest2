@@ -144,7 +144,7 @@ export default function DashboardPage() {
       const matchesSearch =
         quote.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         quote.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (quote.quote_id && quote.quote_id.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (quote.quote_id && String(quote.quote_id).toLowerCase().includes(searchTerm.toLowerCase())) ||
         quote.quote_amount.toString().includes(searchTerm);
 
       const matchesStatus =
@@ -222,7 +222,7 @@ export default function DashboardPage() {
             
             <div className="flex items-center gap-2">
               <Button
-                onClick={() => router.push("/assistant")}
+                onClick={() => router.push("/create-quote")}
                 className="hidden sm:flex"
               >
                 <MessageSquare className="w-4 h-4 mr-2" />
@@ -270,7 +270,7 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Quick Action - Single Quote Method */}
         <div className="mb-8">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push("/assistant")}>
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push("/create-quote")}>
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -402,7 +402,7 @@ export default function DashboardPage() {
                   {quotes.length === 0 ? "No quotes yet" : "No quotes match your filters"}
                 </p>
                 {quotes.length === 0 && (
-                  <Button onClick={() => router.push("/chat")}>
+                  <Button onClick={() => router.push("/create-quote")}>
                     <MessageSquare className="w-4 h-4 mr-2" />
                     Create Your First Quote
                   </Button>

@@ -481,17 +481,14 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
                 
                 <Button
                   onClick={() => {
-                    // Navigate to chat with the project ID if available
-                    const chatUrl = quote.project_id 
-                      ? `/assistant?projectId=${quote.project_id}`
-                      : '/assistant';
-                    router.push(chatUrl);
+                    // Navigate to create quote page
+                    router.push('/create-quote');
                   }}
                   variant="outline"
                   className="w-full"
                 >
                   <MessageSquare className="w-4 h-4 mr-2" />
-                  Back to Chat
+                  Create New Quote
                 </Button>
               </div>
             </CardContent>

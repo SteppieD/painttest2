@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Calendar, DollarSign, MapPin, User, Clock, CheckCircle, XCircle, Send, FileText, Edit } from 'lucide-react';
 
 interface Quote {
-  id: string;
+  id: string | number;
+  quote_id?: string;
   projectId: string;
   clientName: string;
   propertyAddress: string;
@@ -65,7 +66,7 @@ export default function QuotesPage() {
       filtered = filtered.filter(quote => 
         quote.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         quote.propertyAddress.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        quote.id.toLowerCase().includes(searchTerm.toLowerCase())
+        String(quote.quote_id || quote.id).toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -286,7 +287,7 @@ export default function QuotesPage() {
 
                 {/* Hover Actions */}
                 <div className="bg-gray-50 px-6 py-3 border-t border-gray-100 flex items-center justify-between group-hover:bg-gray-100 transition-colors">
-                  <span className="text-sm text-gray-600">Quote #{quote.id.slice(0, 8)}</span>
+                  <span className="text-sm text-gray-600">Quote #{quote.quote_id || quote.id}</span>
                   <div className="flex items-center space-x-2 text-blue-600">
                     <span className="text-sm font-medium">View Details</span>
                     <ArrowLeft className="w-4 h-4 rotate-180" />

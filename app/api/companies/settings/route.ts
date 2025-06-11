@@ -23,7 +23,13 @@ export async function GET(request: NextRequest) {
         default_sundries_percentage,
         tax_rate,
         tax_on_materials_only,
-        tax_label
+        tax_label,
+        overhead_percentage,
+        default_markup_percentage,
+        ceiling_height,
+        paint_multiplier,
+        doors_per_gallon,
+        windows_per_gallon
       FROM companies 
       WHERE id = ?
     `, [companyId]);
@@ -41,7 +47,13 @@ export async function GET(request: NextRequest) {
       default_sundries_percentage: 12,
       tax_rate: 0,
       tax_on_materials_only: false,
-      tax_label: 'Tax'
+      tax_label: 'Tax',
+      overhead_percentage: 10,
+      default_markup_percentage: 20,
+      ceiling_height: 9,
+      paint_multiplier: 1.8,
+      doors_per_gallon: 4.5,
+      windows_per_gallon: 2.5
     };
 
     return NextResponse.json(settings || defaultSettings);
@@ -77,6 +89,12 @@ export async function PUT(request: NextRequest) {
         tax_rate = ?,
         tax_on_materials_only = ?,
         tax_label = ?,
+        overhead_percentage = ?,
+        default_markup_percentage = ?,
+        ceiling_height = ?,
+        paint_multiplier = ?,
+        doors_per_gallon = ?,
+        windows_per_gallon = ?,
         updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `, [
@@ -92,6 +110,12 @@ export async function PUT(request: NextRequest) {
       settings.tax_rate,
       settings.tax_on_materials_only ? 1 : 0,
       settings.tax_label,
+      settings.overhead_percentage || 10,
+      settings.default_markup_percentage || 20,
+      settings.ceiling_height || 9,
+      settings.paint_multiplier || 1.8,
+      settings.doors_per_gallon || 4.5,
+      settings.windows_per_gallon || 2.5,
       companyId
     ]);
 

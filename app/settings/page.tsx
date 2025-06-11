@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Settings } from "lucide-react";
+import { ArrowLeft, Save, Settings, Palette, Plus, Trash2, Edit3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,15 +26,35 @@ interface CompanySettings {
   tax_rate: number;
   tax_on_materials_only: boolean;
   tax_label: string;
+  // New contractor constants
+  overhead_percentage: number;
+  default_markup_percentage: number;
+  ceiling_height: number;
+  paint_multiplier: number;
+  doors_per_gallon: number;
+  windows_per_gallon: number;
+}
+
+interface PaintBrand {
+  id: string;
+  brand_name: string;
+  product_name: string;
+  cost_per_gallon: number;
+  quality_grade: 'good' | 'better' | 'best';
+  coverage_sqft: number;
+  notes?: string;
 }
 
 export default function SettingsPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [settings, setSettings] = useState<CompanySettings | null>(null);
+  const [paints, setPaints] = useState<PaintBrand[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [companyData, setCompanyData] = useState<any>(null);
+  const [editingPaint, setEditingPaint] = useState<PaintBrand | null>(null);
+  const [showAddPaint, setShowAddPaint] = useState(false);
 
   useEffect(() => {
     // Check authentication
@@ -53,6 +73,7 @@ export default function SettingsPage() {
       }
       setCompanyData(parsedCompany);
       loadSettings(parsedCompany.id);
+      loadPaints(parsedCompany.id);
     } catch (e) {
       router.push("/access-code");
     }
@@ -67,6 +88,16 @@ export default function SettingsPage() {
       console.error('Error loading settings:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadPaints = async (companyId: string) => {
+    try {
+      const response = await fetch(`/api/companies/paints?companyId=${companyId}`);
+      const data = await response.json();
+      setPaints(data.paints || []);
+    } catch (error) {
+      console.error('Error loading paints:', error);
     }
   };
 
@@ -100,9 +131,169 @@ export default function SettingsPage() {
     }
   };
 
+  const savePaint = async (paintData: PaintBrand) => {
+    try {
+      const method = paintData.id ? 'PUT' : 'POST';
+      const response = await fetch(`/api/companies/paints?companyId=${companyData.id}`, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(paintData)
+      });
+
+      if (response.ok) {
+        loadPaints(companyData.id);
+        setEditingPaint(null);
+        setShowAddPaint(false);
+        toast({
+          title: "Paint saved!",
+          description: `${paintData.brand_name} ${paintData.product_name} has been saved.`,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save paint. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const deletePaint = async (paintId: string) => {
+    try {
+      const response = await fetch(`/api/companies/paints?companyId=${companyData.id}&paintId=${paintId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        loadPaints(companyData.id);
+        toast({
+          title: "Paint deleted!",
+          description: "The paint has been removed from your collection.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete paint. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const updateSetting = (key: keyof CompanySettings, value: any) => {
     if (!settings) return;
     setSettings({ ...settings, [key]: value });
+  };
+
+  const PaintForm = ({ paint, onSave, onCancel }: { 
+    paint?: PaintBrand | null; 
+    onSave: (paint: PaintBrand) => void; 
+    onCancel: () => void;
+  }) => {
+    const [formData, setFormData] = useState<PaintBrand>(
+      paint || {
+        id: '',
+        brand_name: '',
+        product_name: '',
+        cost_per_gallon: 0,
+        quality_grade: 'good',
+        coverage_sqft: 350,
+        notes: ''
+      }
+    );
+
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!formData.brand_name || !formData.product_name || !formData.cost_per_gallon) {
+        toast({
+          title: "Missing Information",
+          description: "Please fill in brand name, product name, and cost per gallon.",
+          variant: "destructive",
+        });
+        return;
+      }
+      onSave({ ...formData, id: formData.id || `paint_${Date.now()}` });
+    };
+
+    return (
+      <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-lg bg-gray-50">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="brand_name">Brand Name *</Label>
+            <Input
+              id="brand_name"
+              value={formData.brand_name}
+              onChange={(e) => setFormData({ ...formData, brand_name: e.target.value })}
+              placeholder="e.g., Sherwin Williams"
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="product_name">Product Name *</Label>
+            <Input
+              id="product_name"
+              value={formData.product_name}
+              onChange={(e) => setFormData({ ...formData, product_name: e.target.value })}
+              placeholder="e.g., ProClassic Interior"
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="cost_per_gallon">Cost per Gallon *</Label>
+            <Input
+              id="cost_per_gallon"
+              type="number"
+              min="0"
+              step="0.01"
+              value={formData.cost_per_gallon}
+              onChange={(e) => setFormData({ ...formData, cost_per_gallon: Number(e.target.value) })}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="quality_grade">Quality Grade</Label>
+            <select
+              id="quality_grade"
+              value={formData.quality_grade}
+              onChange={(e) => setFormData({ ...formData, quality_grade: e.target.value as 'good' | 'better' | 'best' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="good">Good</option>
+              <option value="better">Better</option>
+              <option value="best">Best</option>
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="coverage_sqft">Coverage (sq ft/gallon)</Label>
+            <Input
+              id="coverage_sqft"
+              type="number"
+              min="200"
+              max="500"
+              value={formData.coverage_sqft}
+              onChange={(e) => setFormData({ ...formData, coverage_sqft: Number(e.target.value) })}
+            />
+          </div>
+          <div>
+            <Label htmlFor="notes">Notes (optional)</Label>
+            <Input
+              id="notes"
+              value={formData.notes || ''}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              placeholder="Any special notes..."
+            />
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+            {paint ? 'Update Paint' : 'Add Paint'}
+          </Button>
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+        </div>
+      </form>
+    );
   };
 
   if (isLoading) {
@@ -206,12 +397,114 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Cost Settings */}
+        {/* Contractor Constants */}
         <Card>
           <CardHeader>
-            <CardTitle>Default Costs & Rates</CardTitle>
+            <CardTitle>Contractor Constants</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div>
+              <Label className="text-sm font-medium mb-2 block">Business Settings</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="overhead-percentage">Overhead Percentage (%)</Label>
+                  <Input
+                    id="overhead-percentage"
+                    type="number"
+                    min="0"
+                    max="50"
+                    value={settings.overhead_percentage || 10}
+                    onChange={(e) => updateSetting('overhead_percentage', Number(e.target.value))}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Applied to materials + labor</p>
+                </div>
+                <div>
+                  <Label htmlFor="default-markup">Default Markup (%)</Label>
+                  <Input
+                    id="default-markup"
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={settings.default_markup_percentage || 20}
+                    onChange={(e) => updateSetting('default_markup_percentage', Number(e.target.value))}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Your standard profit margin</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium mb-2 block">Project Constants</Label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="ceiling-height">Standard Ceiling Height (ft)</Label>
+                  <Input
+                    id="ceiling-height"
+                    type="number"
+                    min="8"
+                    max="12"
+                    step="0.5"
+                    value={settings.ceiling_height || 9}
+                    onChange={(e) => updateSetting('ceiling_height', Number(e.target.value))}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="paint-multiplier">Paint Coverage Multiplier</Label>
+                  <Input
+                    id="paint-multiplier"
+                    type="number"
+                    min="1.0"
+                    max="3.0"
+                    step="0.1"
+                    value={settings.paint_multiplier || 1.8}
+                    onChange={(e) => updateSetting('paint_multiplier', Number(e.target.value))}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">For 2-coat coverage</p>
+                </div>
+                <div>
+                  <Label htmlFor="paint-coverage">Paint Coverage (sq ft/gallon)</Label>
+                  <Input
+                    id="paint-coverage"
+                    type="number"
+                    min="200"
+                    max="500"
+                    value={settings.default_paint_coverage}
+                    onChange={(e) => updateSetting('default_paint_coverage', Number(e.target.value))}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium mb-2 block">Door & Window Constants</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="doors-per-gallon">Doors per Gallon</Label>
+                  <Input
+                    id="doors-per-gallon"
+                    type="number"
+                    min="1"
+                    max="10"
+                    step="0.5"
+                    value={settings.doors_per_gallon || 4.5}
+                    onChange={(e) => updateSetting('doors_per_gallon', Number(e.target.value))}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="windows-per-gallon">Windows per Gallon</Label>
+                  <Input
+                    id="windows-per-gallon"
+                    type="number"
+                    min="1"
+                    max="10"
+                    step="0.5"
+                    value={settings.windows_per_gallon || 2.5}
+                    onChange={(e) => updateSetting('windows_per_gallon', Number(e.target.value))}
+                  />
+                </div>
+              </div>
+            </div>
+
             <div>
               <Label className="text-sm font-medium mb-2 block">Labor & Sundries</Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -239,45 +532,99 @@ export default function SettingsPage() {
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
 
-            <div>
-              <Label className="text-sm font-medium mb-2 block">Paint Coverage & Costs</Label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor="paint-coverage">Coverage (sq ft/gallon)</Label>
-                  <Input
-                    id="paint-coverage"
-                    type="number"
-                    min="200"
-                    max="500"
-                    value={settings.default_paint_coverage}
-                    onChange={(e) => updateSetting('default_paint_coverage', Number(e.target.value))}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="walls-paint-cost">Walls Paint ($/gallon)</Label>
-                  <Input
-                    id="walls-paint-cost"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={settings.default_walls_paint_cost}
-                    onChange={(e) => updateSetting('default_walls_paint_cost', Number(e.target.value))}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="trim-paint-cost">Trim Paint ($/gallon)</Label>
-                  <Input
-                    id="trim-paint-cost"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={settings.default_trim_paint_cost}
-                    onChange={(e) => updateSetting('default_trim_paint_cost', Number(e.target.value))}
-                  />
-                </div>
+        {/* Paint Collection */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <Palette className="w-5 h-5 text-blue-600" />
+                Your Paint Collection
+              </span>
+              <Button
+                onClick={() => setShowAddPaint(true)}
+                className="bg-blue-600 hover:bg-blue-700"
+                size="sm"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Paint
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {showAddPaint && (
+              <PaintForm
+                onSave={savePaint}
+                onCancel={() => setShowAddPaint(false)}
+              />
+            )}
+
+            {editingPaint && (
+              <PaintForm
+                paint={editingPaint}
+                onSave={savePaint}
+                onCancel={() => setEditingPaint(null)}
+              />
+            )}
+
+            {paints.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <Palette className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <p>No paints in your collection yet.</p>
+                <p className="text-sm">Add your most-used paints for quick reference.</p>
               </div>
-            </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {paints.map((paint) => (
+                  <div key={paint.id} className="border rounded-lg p-4 bg-white">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <h3 className="font-semibold">{paint.brand_name}</h3>
+                        <p className="text-sm text-gray-600">{paint.product_name}</p>
+                      </div>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setEditingPaint(paint)}
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deletePaint(paint.id)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="space-y-1 text-sm">
+                      <div className="flex justify-between">
+                        <span>Cost:</span>
+                        <span className="font-medium">${paint.cost_per_gallon}/gal</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Quality:</span>
+                        <span className="capitalize">{paint.quality_grade}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Coverage:</span>
+                        <span>{paint.coverage_sqft} sq ft/gal</span>
+                      </div>
+                      {paint.notes && (
+                        <div className="pt-2 text-xs text-gray-500">
+                          {paint.notes}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

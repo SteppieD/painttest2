@@ -287,7 +287,7 @@ export default function ThisMonthPage() {
       filtered = filtered.filter(quote =>
         quote.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         quote.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        quote.quote_id.toLowerCase().includes(searchTerm.toLowerCase())
+        String(quote.quote_id || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
