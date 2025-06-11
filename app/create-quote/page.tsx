@@ -25,7 +25,7 @@ import {
   generateFollowUpQuestion,
   generateQuoteDisplay,
   ConversationData
-} from "@/lib/professional-conversation-parser";
+} from "@/lib/improved-conversation-parser";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -180,24 +180,22 @@ export default function CreateQuotePage() {
 
     switch (stage) {
       case 'customer_info':
-        const customerInfo = parseCustomerInfo(input);
+        const customerInfo = parseCustomerInfo(input, quoteData);
         setQuoteData(prev => ({ 
           ...prev, 
-          customer_name: customerInfo.customer_name,
-          address: customerInfo.address
+          customer_name: customerInfo.customer_name || prev.customer_name,
+          address: customerInfo.address || prev.address
         }));
         
+        responseContent = generateFollowUpQuestion('customer_info', {
+          customer_name: customerInfo.customer_name || quoteData.customer_name,
+          address: customerInfo.address || quoteData.address
+        });
+        
         if (customerInfo.customer_name && customerInfo.address) {
-          responseContent = `Perfect! I have ${customerInfo.customer_name} at ${customerInfo.address}.\n\nWhat type of painting work are we quoting?\n• Interior only\n• Exterior only\n• Both interior and exterior`;
           nextStage = 'project_type';
-        } else if (customerInfo.customer_name && !customerInfo.address) {
-          responseContent = `Great! I have the customer name as ${customerInfo.customer_name}. What's the property address?`;
-          nextStage = 'address';
-        } else if (!customerInfo.customer_name && customerInfo.address) {
-          responseContent = `I have the address as ${customerInfo.address}. What's the customer's name?`;
-          nextStage = 'customer_name';
         } else {
-          responseContent = "Please provide both the customer's name and property address.";
+          nextStage = 'customer_info';
         }
         break;
 
@@ -222,21 +220,29 @@ export default function CreateQuotePage() {
         break;
 
       case 'dimensions':
-        const dimensions = parseDimensions(input, quoteData.project_type);
+        const dimensions = parseDimensions(input, quoteData.project_type, quoteData.dimensions);
         setQuoteData(prev => ({ 
           ...prev, 
           dimensions: { ...prev.dimensions, ...dimensions }
         }));
         
+        const updatedDimensions = { ...quoteData.dimensions, ...dimensions };
+        
         // Check if we have enough dimensions to proceed
-        const hasRequiredDimensions = dimensions.wall_linear_feet && dimensions.ceiling_height && 
-          (quoteData.project_type === 'exterior' || dimensions.ceiling_area);
+        const hasRequiredDimensions = updatedDimensions.wall_linear_feet && 
+          updatedDimensions.ceiling_height && 
+          (quoteData.project_type === 'exterior' || updatedDimensions.ceiling_area);
         
         if (hasRequiredDimensions) {
           responseContent = `Excellent! Now I need to count the doors and windows:\n\n• How many **doors** need painting?\n• How many **windows** need painting?\n\nFor example: "3 doors and 5 windows" or "2 doors, no windows"`;
           nextStage = 'doors_windows';
         } else {
-          responseContent = generateFollowUpQuestion('dimensions', { dimensions: { ...quoteData.dimensions, ...dimensions }, project_type: quoteData.project_type });
+          responseContent = generateFollowUpQuestion('dimensions', { 
+            dimensions: updatedDimensions, 
+            project_type: quoteData.project_type 
+          });
+          // Stay in dimensions stage to continue collecting info
+          nextStage = 'dimensions';
         }
         break;
         
