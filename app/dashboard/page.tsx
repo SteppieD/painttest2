@@ -416,16 +416,9 @@ export default function DashboardPage() {
                       <div className="flex-1">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
                           <h3 className="font-semibold text-lg sm:text-base">{quote.customer_name}</h3>
-                          <div className="flex items-center gap-2">
-                            {quote.quote_id && (
-                              <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                                {quote.quote_id}
-                              </span>
-                            )}
-                            <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(quote.status)}`}>
-                              {quote.status || 'pending'}
-                            </span>
-                          </div>
+                          <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(quote.status)}`}>
+                            {quote.status || 'pending'}
+                          </span>
                         </div>
                         <p className="text-sm text-gray-600 mb-1">{quote.address}</p>
                         <p className="text-xs text-gray-500">

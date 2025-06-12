@@ -77,19 +77,75 @@ export async function PATCH(
   try {
     const updates = await request.json();
     
+    // Build update query dynamically based on provided fields
+    const updateFields = [];
+    const updateValues = [];
+    
+    // Basic quote info
+    if (updates.customer_name !== undefined) {
+      updateFields.push('customer_name = ?');
+      updateValues.push(updates.customer_name);
+    }
+    if (updates.address !== undefined) {
+      updateFields.push('address = ?');
+      updateValues.push(updates.address);
+    }
+    if (updates.project_type !== undefined) {
+      updateFields.push('project_type = ?');
+      updateValues.push(updates.project_type);
+    }
+    
+    // Dimensions
+    if (updates.wall_linear_feet !== undefined) {
+      updateFields.push('wall_linear_feet = ?');
+      updateValues.push(updates.wall_linear_feet);
+    }
+    if (updates.ceiling_height !== undefined) {
+      updateFields.push('ceiling_height = ?');
+      updateValues.push(updates.ceiling_height);
+    }
+    if (updates.ceiling_area !== undefined) {
+      updateFields.push('ceiling_area = ?');
+      updateValues.push(updates.ceiling_area);
+    }
+    if (updates.number_of_doors !== undefined) {
+      updateFields.push('number_of_doors = ?');
+      updateValues.push(updates.number_of_doors);
+    }
+    if (updates.number_of_windows !== undefined) {
+      updateFields.push('number_of_windows = ?');
+      updateValues.push(updates.number_of_windows);
+    }
+    
+    // Financial
+    if (updates.markup_percentage !== undefined) {
+      updateFields.push('markup_percentage = ?');
+      updateValues.push(updates.markup_percentage);
+    }
+    if (updates.total_cost !== undefined) {
+      updateFields.push('total_cost = ?');
+      updateValues.push(updates.total_cost);
+    }
+    if (updates.final_price !== undefined) {
+      updateFields.push('final_price = ?');
+      updateValues.push(updates.final_price);
+    }
+    if (updates.quote_amount !== undefined) {
+      updateFields.push('quote_amount = ?');
+      updateValues.push(updates.quote_amount);
+    }
+    
+    // Always update timestamp
+    updateFields.push('updated_at = CURRENT_TIMESTAMP');
+    
+    // Add the ID parameters at the end
+    updateValues.push(params.id, params.id);
+    
     const result = dbRun(`
       UPDATE quotes 
-      SET 
-        markup_percentage = COALESCE(?, markup_percentage),
-        final_price = COALESCE(?, final_price),
-        updated_at = CURRENT_TIMESTAMP
+      SET ${updateFields.join(', ')}
       WHERE id = ? OR quote_id = ?
-    `, [
-      updates.markup_percentage,
-      updates.total_cost,
-      params.id,
-      params.id
-    ]);
+    `, updateValues);
 
     if (result.changes === 0) {
       return NextResponse.json(

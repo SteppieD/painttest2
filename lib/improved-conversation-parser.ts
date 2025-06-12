@@ -1,6 +1,6 @@
 // Improved conversation parser with better natural language understanding
 
-import { ProjectDimensions, DEFAULT_CHARGE_RATES, DEFAULT_PAINT_PRODUCTS } from './professional-quote-calculator';
+import { ProjectDimensions, Room, calculateRoomAreas, DEFAULT_CHARGE_RATES, DEFAULT_PAINT_PRODUCTS } from './professional-quote-calculator';
 
 export interface ConversationData {
   customer_name: string;
@@ -29,6 +29,15 @@ const parseCustomerInfo = (input: string, existingData: Partial<ConversationData
     return {
       customer_name: nameMatch ? nameMatch[1].trim() : '',
       address: addressMatch ? addressMatch[1].trim() : ''
+    };
+  }
+  
+  // Handle "Name is X" pattern (standalone)
+  if (lower.includes('name is') && !lower.includes('address')) {
+    const nameMatch = input.match(/(?:the\s+)?name\s+is\s+(.+)/i);
+    return {
+      customer_name: nameMatch ? nameMatch[1].trim() : '',
+      address: existingData.address || ''
     };
   }
   
@@ -111,18 +120,36 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
     if (match) dimensions.ceiling_height = Number(match[1]);
   }
   
-  // Smart ceiling area estimation
+  // Smart ceiling area estimation based on floor area
   if (lower.includes("can't you") || lower.includes("work that out") || lower.includes("calculate") || 
-      lower.includes("don't know") || lower.includes("not sure")) {
+      lower.includes("don't know") || lower.includes("not sure") || lower.includes("floor area")) {
     // User is asking us to calculate or doesn't know
     if (dimensions.wall_linear_feet && !dimensions.ceiling_area) {
-      // Estimate ceiling area from linear feet
-      // Better approach: assume rectangular rooms with reasonable proportions
-      // For large linear footage like 5000 ft, this is likely multiple rooms
-      // A reasonable ratio is: ceiling area ≈ linear feet × 3-4 (based on typical room shapes)
-      const multiplier = 3.5; // Conservative multiplier
-      dimensions.ceiling_area = Math.round(dimensions.wall_linear_feet * multiplier);
-      // For 5000 linear feet, this would be ~15,000 sq ft (much more reasonable)
+      // Default ceiling area = floor area, calculated from overall house width × length
+      // For typical rectangular layouts: perimeter = 2(w + l), so if w = l (square), then w = l = perimeter/4
+      // Area = w × l = (perimeter/4)²
+      // For rectangular homes with ratio 1.5:1, the calculation is slightly different
+      // Using a practical multiplier based on typical home shapes
+      const perimeter = dimensions.wall_linear_feet;
+      // Assume typical rectangular home with 1.3:1 ratio (length:width)
+      // Formula: if perimeter = 2(l + w) and l = 1.3w, then perimeter = 2(1.3w + w) = 4.6w
+      // So w = perimeter/4.6, l = 1.3 × perimeter/4.6
+      // Area = w × l = (perimeter/4.6) × (1.3 × perimeter/4.6) = 1.3 × (perimeter/4.6)²
+      const floorArea = Math.round(1.3 * Math.pow(perimeter / 4.6, 2));
+      dimensions.ceiling_area = floorArea; // Default: ceiling area = floor area
+    }
+  }
+  
+  // Parse floor area if provided (used for ceiling calculation)
+  if (lower.includes('floor area') || lower.includes('house size') || lower.includes('total area')) {
+    const match = input.match(/(\d+\.?\d*)\s*(?:sqft|square feet|sq ft|sf)/i);
+    if (match) {
+      const floorArea = Number(match[1]);
+      dimensions.floor_area = floorArea;
+      // Default: ceiling area = floor area (unless explicitly overridden)
+      if (!dimensions.ceiling_area) {
+        dimensions.ceiling_area = floorArea;
+      }
     }
   }
   
@@ -162,15 +189,15 @@ const generateFollowUpQuestion = (stage: string, data: Partial<ConversationData>
       if (!data.address) {
         return `Perfect! Now I have ${data.customer_name}. What's the property address?`;
       }
-      return `Great! For ${data.customer_name} at ${data.address}.\n\nWhat type of painting work are we quoting?\n• Interior only\n• Exterior only\n• Both interior and exterior`;
+      return `Great! For ${data.customer_name} at ${data.address}.\n\nWhat type of painting work are we quoting?`;
       
     case 'project_type':
       if (data.project_type === 'interior') {
-        return "For interior painting, I need the room dimensions:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (in feet)\n• **Ceiling area** (square footage)\n\nFor example: \"120 linear feet, 9 foot ceilings, 1200 sqft ceiling area\"";
+        return "For interior painting, I need:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (in feet)\n• **Floor area** (total house square footage) - I'll use this for ceiling calculations\n\nFor example: \"120 linear feet, 9 foot ceilings, 1200 sqft house\"";
       } else if (data.project_type === 'exterior') {
         return "For exterior painting, I need:\n\n• **Total siding area** (square footage)\n• **Number of stories**\n• **Linear feet of trim**\n\nFor example: \"2500 sqft siding, 2 story home, 150 linear feet of trim\"";
       } else {
-        return "For both interior and exterior, let's start with interior dimensions:\n\n• **Wall linear footage**\n• **Ceiling height**\n• **Ceiling area**";
+        return "For both interior and exterior, let's start with interior dimensions:\n\n• **Wall linear footage**\n• **Ceiling height**\n• **Floor area** (total house square footage)";
       }
       
     case 'dimensions':
@@ -184,11 +211,12 @@ const generateFollowUpQuestion = (stage: string, data: Partial<ConversationData>
         return `Got it - ${dims.wall_linear_feet} linear feet of walls. What's the ceiling height?`;
       }
       
-      if (!dims.ceiling_area && data.project_type === 'interior') {
-        // Use the improved estimation method
-        const multiplier = 3.5;
-        const estimatedArea = Math.round(dims.wall_linear_feet! * multiplier);
-        return `Perfect! With ${dims.wall_linear_feet} linear feet and ${dims.ceiling_height} foot ceilings, I'm estimating approximately ${estimatedArea.toLocaleString()} sqft of ceiling area.\n\nIs this estimate close, or do you have the exact ceiling square footage?`;
+      if (!dims.floor_area && !dims.ceiling_area && data.project_type === 'interior') {
+        return `Got ${dims.wall_linear_feet} linear feet and ${dims.ceiling_height} foot ceilings.\n\nWhat's the total floor area (house square footage)? I'll use this for ceiling calculations.`;
+      }
+      
+      if (dims.floor_area && !dims.ceiling_area && data.project_type === 'interior') {
+        return `Perfect! I'll use ${dims.floor_area.toLocaleString()} sqft as the ceiling area (same as floor area for most homes).\n\nIf you need a different ceiling area, just let me know the specific square footage.`;
       }
       
       return "Now for doors and windows - how many of each need painting?";
@@ -270,12 +298,106 @@ export const parseMarkupPercentage = (input: string) => {
   return match ? Number(match[1]) : 20;
 };
 
-export const generateQuoteDisplay = (quote: any, customerName: string, address: string) => {
+// Parse room count from user input
+export const parseRoomCount = (input: string): number => {
+  const numbers = input.match(/\d+/g);
+  if (numbers) {
+    return Number(numbers[0]);
+  }
+  
+  const lower = input.toLowerCase();
+  const roomWords = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+  for (let i = 0; i < roomWords.length; i++) {
+    if (lower.includes(roomWords[i])) {
+      return i + 1;
+    }
+  }
+  
+  return 0;
+};
+
+// Parse individual room data from user input
+export const parseRoomData = (input: string, roomName: string): Partial<Room> => {
+  const lower = input.toLowerCase();
+  const numbers = input.match(/\d+\.?\d*/g)?.map(Number) || [];
+  
+  const room: Partial<Room> = {
+    name: roomName,
+    doors: 1, // Default to 1 door per room
+    windows: 1 // Default to 1 window per room
+  };
+  
+  // Parse dimensions
+  if (numbers.length >= 2) {
+    room.length = numbers[0];
+    room.width = numbers[1];
+    
+    if (numbers.length >= 3) {
+      room.height = numbers[2];
+    }
+  }
+  
+  // Parse height if mentioned separately
+  if (lower.includes('height') || lower.includes('ceiling') || lower.includes('tall')) {
+    const heightMatch = input.match(/(\d+\.?\d*)\s*(?:foot|feet|ft|')/i);
+    if (heightMatch) {
+      room.height = Number(heightMatch[1]);
+    }
+  }
+  
+  // Parse doors
+  if (lower.includes('door')) {
+    const doorMatch = input.match(/(\d+)\s*doors?/i);
+    if (doorMatch) {
+      room.doors = Number(doorMatch[1]);
+    } else if (lower.includes('no door') || lower.includes('0 door')) {
+      room.doors = 0;
+    }
+  }
+  
+  // Parse windows
+  if (lower.includes('window')) {
+    const windowMatch = input.match(/(\d+)\s*windows?/i);
+    if (windowMatch) {
+      room.windows = Number(windowMatch[1]);
+    } else if (lower.includes('no window') || lower.includes('0 window')) {
+      room.windows = 0;
+    }
+  }
+  
+  return room;
+};
+
+// Generate room summary for display
+export const generateRoomSummary = (rooms: Room[]): string => {
+  const totalCeilingArea = rooms.reduce((sum, room) => sum + room.ceiling_area, 0);
+  const totalDoors = rooms.reduce((sum, room) => sum + room.doors, 0);
+  const totalWindows = rooms.reduce((sum, room) => sum + room.windows, 0);
+  
+  let summary = `### Room Summary (${rooms.length} rooms)\n`;
+  
+  rooms.forEach((room, index) => {
+    summary += `${index + 1}. **${room.name}**: ${room.length}' × ${room.width}' × ${room.height}' (${room.ceiling_area} sqft ceiling, ${room.doors} doors, ${room.windows} windows)\n`;
+  });
+  
+  summary += `\n**Total Ceiling Area:** ${totalCeilingArea.toLocaleString()} sqft\n`;
+  summary += `**Total Doors:** ${totalDoors}\n`;
+  summary += `**Total Windows:** ${totalWindows}\n`;
+  
+  return summary;
+};
+
+export const generateQuoteDisplay = (quote: any, customerName: string, address: string, rooms?: Room[]) => {
+  let roomBreakdown = '';
+  if (rooms && rooms.length > 0) {
+    roomBreakdown = `\n### Room-by-Room Breakdown\n${generateRoomSummary(rooms)}\n`;
+  }
+
   return `## Professional Painting Quote
 
 **Customer:** ${customerName}
 **Address:** ${address}
-
+${roomBreakdown}
 ### Pricing Summary
 • **Materials:** $${quote.materials.total_material_cost.toLocaleString()}
 • **Labor:** $${quote.labor.total_labor.toLocaleString()}

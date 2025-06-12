@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Eye, Edit3, Send, Link, Copy, CheckCircle } from "lucide-react";
+import { ArrowLeft, Eye, Edit3, Send, Link, Copy, CheckCircle, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -195,7 +195,7 @@ export default function QuotePage({ params }: { params: { id: string } }) {
         </Card>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="cursor-pointer hover:shadow-md transition-shadow" 
                 onClick={() => router.push(`/quotes/${quote.id}/review`)}>
             <CardContent className="p-6 text-center">
@@ -225,6 +225,17 @@ export default function QuotePage({ params }: { params: { id: string } }) {
               <h3 className="font-semibold mb-2">Share Quote</h3>
               <p className="text-sm text-gray-600">
                 Copy link to send to your customer
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card className="cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => router.push(`/create-quote?edit=${quote.id}`)}>
+            <CardContent className="p-6 text-center">
+              <MessageSquare className="w-8 h-8 text-indigo-600 mx-auto mb-3" />
+              <h3 className="font-semibold mb-2">Edit in Chat</h3>
+              <p className="text-sm text-gray-600">
+                Modify quote details through conversation
               </p>
             </CardContent>
           </Card>

@@ -198,11 +198,11 @@ export const createQuote = (data: any) => {
   }
   
   // Use the legacy createQuote prepared statement with correct parameters
-  // The prepared statement expects these 17 parameters in order:
+  // The prepared statement expects these 19 parameters in order:
   // company_id, quote_id, customer_name, customer_email, customer_phone,
   // address, project_type, paint_quality, timeline, special_requests,
   // walls_sqft, ceilings_sqft, trim_sqft, total_revenue, subtotal,
-  // conversation_summary, status
+  // conversation_summary, status, room_data, room_count
   
   const result = stmt.createQuote.run(
     companyId, // Use mapped company ID
@@ -221,7 +221,9 @@ export const createQuote = (data: any) => {
     data.total_revenue || 0,
     data.subtotal || data.total_revenue || 0,
     data.conversation_summary || '[]',
-    data.status || 'pending'
+    data.status || 'pending',
+    data.room_data || null,
+    data.room_count || null
   );
   
   return { lastID: result.lastInsertRowid, changes: result.changes };

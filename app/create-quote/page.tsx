@@ -1,13 +1,18 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Save, Send, Calculator, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+
+// Helper function to render markdown text
+const renderMarkdown = (text: string) => {
+  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+};
 import {
   ProjectDimensions,
   ProfessionalQuote,
@@ -22,10 +27,14 @@ import {
   parseDoorsAndWindows,
   parsePaintQuality,
   parseMarkupPercentage,
+  parseRoomCount,
+  parseRoomData,
+  generateRoomSummary,
   generateFollowUpQuestion,
   generateQuoteDisplay,
   ConversationData
 } from "@/lib/improved-conversation-parser";
+import { Room, calculateRoomAreas, calculateTotalAreasFromRooms } from "@/lib/professional-quote-calculator";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -54,10 +63,12 @@ interface QuoteData {
   calculation: ProfessionalQuote | null;
 }
 
-export default function CreateQuotePage() {
+function CreateQuotePageContent() {
   const router = useRouter();
   const { toast } = useToast();
+  const searchParams = useSearchParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const editQuoteId = searchParams.get('edit');
 
   const [companyData, setCompanyData] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([
@@ -89,15 +100,40 @@ export default function CreateQuotePage() {
   const [conversationStage, setConversationStage] = useState('customer_info');
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [showButtons, setShowButtons] = useState(false);
+  const [buttonOptions, setButtonOptions] = useState<{id: string, label: string, value: any, selected?: boolean}[]>([]);
+  const [selectedSurfaces, setSelectedSurfaces] = useState<string[]>([]);
+  
+  // Room-by-room tracking
+  const [useRoomByRoom, setUseRoomByRoom] = useState(false);
+  const [roomCount, setRoomCount] = useState(0);
+  const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [currentRoomData, setCurrentRoomData] = useState<Partial<Room>>({});
 
   // Auto-scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Helper function to render markdown
+  const renderMarkdown = (text: string) => {
+    return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Auto-scroll when buttons appear
+  useEffect(() => {
+    if (showButtons) {
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100); // Small delay to ensure DOM has updated
+    }
+  }, [showButtons]);
 
   // Check authentication and load company defaults
   useEffect(() => {
@@ -116,11 +152,16 @@ export default function CreateQuotePage() {
       }
       setCompanyData(parsedCompany);
       loadCompanyDefaults(parsedCompany.id);
+      
+      // Load quote data if in edit mode
+      if (editQuoteId) {
+        loadQuoteForEdit(editQuoteId);
+      }
     } catch (e) {
       localStorage.removeItem("paintquote_company");
       router.push("/access-code");
     }
-  }, [router]);
+  }, [router, editQuoteId]);
 
   const loadCompanyDefaults = async (companyId: string) => {
     try {
@@ -143,8 +184,137 @@ export default function CreateQuotePage() {
     }
   };
 
+  const loadQuoteForEdit = async (quoteId: string) => {
+    try {
+      setIsEditMode(true);
+      const response = await fetch(`/api/quotes/${quoteId}`);
+      const quote = await response.json();
+      
+      // Update quote data with existing values
+      setQuoteData(prev => ({
+        ...prev,
+        customer_name: quote.customer_name || '',
+        address: quote.address || '',
+        project_type: quote.project_type || 'interior',
+        dimensions: {
+          wall_linear_feet: quote.wall_linear_feet || undefined,
+          ceiling_height: quote.ceiling_height || undefined,
+          ceiling_area: quote.ceiling_area || undefined,
+          floor_area: quote.floor_area || undefined,
+          number_of_doors: quote.number_of_doors || 0,
+          number_of_windows: quote.number_of_windows || 0,
+        },
+        markup_percentage: quote.markup_percentage || 20,
+      }));
+      
+      // Set initial message for edit mode
+      setMessages([
+        {
+          id: '1',
+          role: 'assistant',
+          content: `I'm loading your existing quote for ${quote.customer_name} at ${quote.address}. 
+
+Current details:
+• Project Type: ${quote.project_type}
+• Wall Linear Feet: ${quote.wall_linear_feet || 'Not set'}
+• Ceiling Height: ${quote.ceiling_height || 'Not set'}ft
+• Floor Area: ${quote.floor_area || 'Not set'} sqft
+• Ceiling Area: ${quote.ceiling_area || quote.floor_area || 'Not set'} sqft
+• Doors: ${quote.number_of_doors || 0}
+• Windows: ${quote.number_of_windows || 0}
+• Current Price: $${quote.final_price || quote.total_cost}
+
+What would you like to modify?`,
+          timestamp: new Date().toISOString()
+        }
+      ]);
+      
+      // Set conversation stage to allow modifications
+      setConversationStage('quote_review');
+    } catch (error) {
+      console.error('Failed to load quote for editing:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load quote. Starting fresh quote instead.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleButtonClick = async (buttonValue: any, buttonLabel: string) => {
+    // Handle surface selection buttons silently (no AI response)
+    if (conversationStage === 'surface_selection') {
+      // If it's the continue button, process normally (with AI response)
+      if (buttonValue === 'continue') {
+        // Let it fall through to normal processing
+      } else {
+        // Handle surface toggle buttons silently
+        const updatedSurfaces = [...selectedSurfaces];
+        
+        // Toggle surface selection
+        if (updatedSurfaces.includes(buttonValue)) {
+          const index = updatedSurfaces.indexOf(buttonValue);
+          updatedSurfaces.splice(index, 1);
+        } else {
+          updatedSurfaces.push(buttonValue);
+        }
+        
+        setSelectedSurfaces(updatedSurfaces);
+        
+        // Update buttons with current selections - keep same label text but track selected state
+        const surfaceButtons = quoteData.project_type === 'interior' || quoteData.project_type === 'both' ? [
+          { id: 'walls', label: '🎨 Walls', value: 'walls', selected: updatedSurfaces.includes('walls') },
+          { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: updatedSurfaces.includes('ceilings') },
+          { id: 'trim', label: '🖼️ Trim & Baseboards', value: 'trim', selected: updatedSurfaces.includes('trim') },
+          { id: 'doors', label: '🚪 Doors', value: 'doors', selected: updatedSurfaces.includes('doors') },
+          { id: 'windows', label: '🪟 Window Frames', value: 'windows', selected: updatedSurfaces.includes('windows') }
+        ] : [
+          { id: 'siding', label: '🏠 Siding', value: 'siding', selected: updatedSurfaces.includes('siding') },
+          { id: 'trim_ext', label: '🖼️ Exterior Trim', value: 'trim_ext', selected: updatedSurfaces.includes('trim_ext') },
+          { id: 'doors_ext', label: '🚪 Front Door', value: 'doors_ext', selected: updatedSurfaces.includes('doors_ext') },
+          { id: 'shutters', label: '🪟 Shutters', value: 'shutters', selected: updatedSurfaces.includes('shutters') },
+          { id: 'deck', label: '🏗️ Deck/Porch', value: 'deck', selected: updatedSurfaces.includes('deck') }
+        ];
+        
+        // Add continue button if surfaces are selected
+        if (updatedSurfaces.length > 0) {
+          surfaceButtons.push({ id: 'continue', label: '➡️ Continue to Dimensions', value: 'continue', selected: false });
+        }
+        
+        setButtonOptions(surfaceButtons);
+        return; // Exit early - no AI response needed for surface toggles
+      }
+    }
+    
+    // For all other buttons (including continue), process normally
+    setShowButtons(false);
+    setButtonOptions([]);
+    
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: buttonLabel,
+      timestamp: new Date().toISOString()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
+
+    try {
+      const aiResponse = await processUserInput(buttonValue, conversationStage);
+      setMessages(prev => [...prev, aiResponse]);
+    } catch (error) {
+      console.error('Error processing button click:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSend = async () => {
     if (!inputValue.trim() || isLoading) return;
+
+    setShowButtons(false);
+    setButtonOptions([]);
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -187,13 +357,25 @@ export default function CreateQuotePage() {
           address: customerInfo.address || prev.address
         }));
         
+        const customerName = customerInfo.customer_name || quoteData.customer_name;
+        const address = customerInfo.address || quoteData.address;
+        
         responseContent = generateFollowUpQuestion('customer_info', {
-          customer_name: customerInfo.customer_name || quoteData.customer_name,
-          address: customerInfo.address || quoteData.address
+          customer_name: customerName,
+          address: address
         });
         
-        if (customerInfo.customer_name && customerInfo.address) {
+        if (customerName && address) {
           nextStage = 'project_type';
+          // Show project type buttons immediately when asking project type question
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'interior', label: 'Interior Only', value: 'interior', selected: false },
+              { id: 'exterior', label: 'Exterior Only', value: 'exterior', selected: false },
+              { id: 'both', label: 'Both Interior & Exterior', value: 'both', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
         } else {
           nextStage = 'customer_info';
         }
@@ -201,13 +383,31 @@ export default function CreateQuotePage() {
 
       case 'address':
         setQuoteData(prev => ({ ...prev, address: input.trim() }));
-        responseContent = `Thanks! Now I have ${quoteData.customer_name} at ${input.trim()}.\n\nWhat type of painting work are we quoting?\n• Interior only\n• Exterior only\n• Both interior and exterior`;
+        responseContent = `Thanks! Now I have ${quoteData.customer_name} at ${input.trim()}.\n\nWhat type of painting work are we quoting?`;
+        // Show project type buttons
+        setTimeout(() => {
+          setButtonOptions([
+            { id: 'interior', label: 'Interior Only', value: 'interior', selected: false },
+            { id: 'exterior', label: 'Exterior Only', value: 'exterior', selected: false },
+            { id: 'both', label: 'Both Interior & Exterior', value: 'both', selected: false }
+          ]);
+          setShowButtons(true);
+        }, 500);
         nextStage = 'project_type';
         break;
         
       case 'customer_name':
         setQuoteData(prev => ({ ...prev, customer_name: input.trim() }));
-        responseContent = `Perfect! Now I have ${input.trim()} at ${quoteData.address}.\n\nWhat type of painting work are we quoting?\n• Interior only\n• Exterior only\n• Both interior and exterior`;
+        responseContent = `Perfect! Now I have ${input.trim()} at ${quoteData.address}.\n\nWhat type of painting work are we quoting?`;
+        // Show project type buttons
+        setTimeout(() => {
+          setButtonOptions([
+            { id: 'interior', label: 'Interior Only', value: 'interior', selected: false },
+            { id: 'exterior', label: 'Exterior Only', value: 'exterior', selected: false },
+            { id: 'both', label: 'Both Interior & Exterior', value: 'both', selected: false }
+          ]);
+          setShowButtons(true);
+        }, 500);
         nextStage = 'project_type';
         break;
 
@@ -215,8 +415,177 @@ export default function CreateQuotePage() {
         const projectType = parseProjectType(input);
         setQuoteData(prev => ({ ...prev, project_type: projectType }));
         
-        responseContent = `Great! For ${projectType} painting, I need the room dimensions:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (in feet)\n${projectType === 'interior' || projectType === 'both' ? '• **Ceiling area** (square footage)\n' : ''}\nFor example: "120 linear feet, 9 foot ceilings${projectType === 'interior' || projectType === 'both' ? ', 1200 sqft ceiling area' : ''}"`;
-        nextStage = 'dimensions';
+        if (projectType === 'interior' || projectType === 'both') {
+          responseContent = `Perfect! For ${projectType} painting, I can calculate this two ways:\n\n**Option 1:** Quick estimate using total linear feet\n**Option 2:** Room-by-room measurements (more accurate for ceilings)\n\nWhich would you prefer?`;
+          // Show measurement method buttons
+          setTimeout(() => {
+            setConversationStage('measurement_method');
+            setButtonOptions([
+              { id: 'quick', label: '⚡ Quick Estimate', value: 'quick', selected: false },
+              { id: 'room_by_room', label: '🏠 Room-by-Room', value: 'room_by_room', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+        } else {
+          responseContent = `Great! For exterior painting, what surfaces do you want to include?`;
+          // Show surface selection buttons for exterior
+          setTimeout(() => {
+            setConversationStage('surface_selection'); // Set stage BEFORE showing buttons
+            setSelectedSurfaces([]); // Reset selected surfaces
+            setButtonOptions([
+              { id: 'siding', label: '🏠 Siding', value: 'siding', selected: false },
+              { id: 'trim_ext', label: '🖼️ Exterior Trim', value: 'trim_ext', selected: false },
+              { id: 'doors_ext', label: '🚪 Front Door', value: 'doors_ext', selected: false },
+              { id: 'shutters', label: '🪟 Shutters', value: 'shutters', selected: false },
+              { id: 'deck', label: '🏗️ Deck/Porch', value: 'deck', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+        }
+        nextStage = projectType === 'exterior' ? 'surface_selection' : 'measurement_method';
+        break;
+
+      case 'measurement_method':
+        if (input === 'room_by_room') {
+          setUseRoomByRoom(true);
+          responseContent = `Great choice! Room-by-room measurements give us precise ceiling areas.\n\nHow many rooms need ceiling painting?`;
+          setTimeout(() => {
+            setButtonOptions([
+              { id: '1', label: '1 Room', value: '1', selected: false },
+              { id: '2', label: '2 Rooms', value: '2', selected: false },
+              { id: '3', label: '3 Rooms', value: '3', selected: false },
+              { id: '4', label: '4 Rooms', value: '4', selected: false },
+              { id: '5', label: '5 Rooms', value: '5', selected: false },
+              { id: 'custom', label: 'More than 5', value: 'custom', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+          nextStage = 'room_count';
+        } else {
+          setUseRoomByRoom(false);
+          const surfaceList = selectedSurfaces.length > 0 ? selectedSurfaces.join(', ') : 'selected surfaces';
+          responseContent = `Perfect! For ${surfaceList} using quick estimates, I need the dimensions:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (in feet)\n• **Floor area** (total house square footage)\n\nFor example: "120 linear feet, 9 foot ceilings, 1200 sqft house"`;
+          nextStage = 'dimensions';
+        }
+        break;
+
+      case 'room_count':
+        const count = input === 'custom' ? 0 : parseRoomCount(input);
+        if (input === 'custom') {
+          responseContent = `How many rooms? (Please enter a number)`;
+          nextStage = 'room_count_custom';
+        } else if (count > 0) {
+          setRoomCount(count);
+          setCurrentRoomIndex(0);
+          setRooms([]);
+          responseContent = `Perfect! Let's measure ${count} rooms.\n\n**Room 1:** What are the dimensions?\nPlease provide: length, width, height (in feet)\n\nExample: "12 by 14, 9 foot ceilings" or "12x14x9"`;
+          nextStage = 'room_dimensions';
+        } else {
+          responseContent = `Please select the number of rooms or choose "More than 5" for custom entry.`;
+          nextStage = 'room_count';
+        }
+        break;
+
+      case 'room_count_custom':
+        const customCount = parseRoomCount(input);
+        if (customCount > 0) {
+          setRoomCount(customCount);
+          setCurrentRoomIndex(0);
+          setRooms([]);
+          responseContent = `Perfect! Let's measure ${customCount} rooms.\n\n**Room 1:** What are the dimensions?\nPlease provide: length, width, height (in feet)\n\nExample: "12 by 14, 9 foot ceilings" or "12x14x9"`;
+          nextStage = 'room_dimensions';
+        } else {
+          responseContent = `Please enter a valid number of rooms.`;
+          nextStage = 'room_count_custom';
+        }
+        break;
+
+      case 'room_dimensions':
+        const roomName = `Room ${currentRoomIndex + 1}`;
+        const parsedRoom = parseRoomData(input, roomName);
+        
+        if (parsedRoom.length && parsedRoom.width && parsedRoom.height) {
+          const completeRoom = calculateRoomAreas({
+            id: `room_${currentRoomIndex + 1}`,
+            name: roomName,
+            length: parsedRoom.length,
+            width: parsedRoom.width,
+            height: parsedRoom.height,
+            doors: parsedRoom.doors || 1,
+            windows: parsedRoom.windows || 1
+          });
+          
+          const updatedRooms = [...rooms, completeRoom];
+          setRooms(updatedRooms);
+          
+          if (currentRoomIndex + 1 < roomCount) {
+            setCurrentRoomIndex(currentRoomIndex + 1);
+            responseContent = `Great! Room ${currentRoomIndex + 1}: ${parsedRoom.length}' × ${parsedRoom.width}' × ${parsedRoom.height}' (${completeRoom.ceiling_area} sqft ceiling)\n\n**Room ${currentRoomIndex + 2}:** What are the dimensions?\nLength, width, height (in feet)`;
+            nextStage = 'room_dimensions';
+          } else {
+            // All rooms collected, update quote data and proceed
+            const roomTotals = calculateTotalAreasFromRooms(updatedRooms);
+            setQuoteData(prev => ({
+              ...prev,
+              dimensions: {
+                ...prev.dimensions,
+                rooms: updatedRooms,
+                room_count: roomCount,
+                ceiling_area: roomTotals.total_ceiling_area,
+                wall_linear_feet: roomTotals.wall_linear_feet,
+                ceiling_height: updatedRooms[0]?.height || 9, // Use first room's height as reference
+                number_of_doors: roomTotals.total_doors,
+                number_of_windows: roomTotals.total_windows
+              }
+            }));
+            
+            responseContent = `Excellent! Here's your room summary:\n\n${generateRoomSummary(updatedRooms)}\n\nNow what paint quality would you like?`;
+            
+            // Show paint quality buttons
+            setTimeout(() => {
+              setButtonOptions([
+                { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+                { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+                { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+              ]);
+              setShowButtons(true);
+            }, 500);
+            nextStage = 'paint_quality';
+          }
+        } else {
+          responseContent = `I need the room dimensions. Please provide length, width, and height.\n\nExample: "12 by 14, 9 foot ceilings" or "12x14x9"`;
+          nextStage = 'room_dimensions';
+        }
+        break;
+
+      case 'surface_selection':
+        // Handle continue to dimensions (surface selection is now handled in handleButtonClick)
+        if (input === 'continue' || input.toLowerCase().includes('continue')) {
+          const surfaceList = selectedSurfaces.length > 0 ? selectedSurfaces.join(', ') : 'selected surfaces';
+          
+          // Check if ceilings are selected for interior projects - offer measurement method choice
+          if (quoteData.project_type === 'interior' && selectedSurfaces.includes('ceilings')) {
+            responseContent = `Perfect! I see you selected ceiling painting.\n\nFor the most accurate quote, how would you like to measure the ceilings?`;
+            setTimeout(() => {
+              setButtonOptions([
+                { id: 'quick', label: '🚀 Quick Estimate', value: 'quick_estimate', selected: false },
+                { id: 'detailed', label: '📏 Room-by-Room (More Accurate)', value: 'room_by_room', selected: false }
+              ]);
+              setShowButtons(true);
+            }, 500);
+            nextStage = 'measurement_method';
+          } else if (quoteData.project_type === 'interior') {
+            responseContent = `Perfect! For ${surfaceList}, I need the dimensions:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (in feet)\n• **Floor area** (total house square footage)\n\nFor example: "120 linear feet, 9 foot ceilings, 1200 sqft house"`;
+            nextStage = 'dimensions';
+          } else {
+            responseContent = `Perfect! For ${surfaceList}, I need the dimensions:\n\n• **Total area** to be painted (square footage)\n• **Number of stories**\n\nFor example: "2500 sqft siding, 2 story home"`;
+            nextStage = 'dimensions';
+          }
+        } else {
+          // Handle text input during surface selection
+          responseContent = `Please use the buttons above to select surfaces, then click "Continue to Dimensions" when ready.`;
+          nextStage = 'surface_selection';
+        }
         break;
 
       case 'dimensions':
@@ -231,7 +600,7 @@ export default function CreateQuotePage() {
         // Check if we have enough dimensions to proceed
         const hasRequiredDimensions = updatedDimensions.wall_linear_feet && 
           updatedDimensions.ceiling_height && 
-          (quoteData.project_type === 'exterior' || updatedDimensions.ceiling_area);
+          (quoteData.project_type === 'exterior' || updatedDimensions.floor_area || updatedDimensions.ceiling_area);
         
         if (hasRequiredDimensions) {
           responseContent = `Excellent! Now I need to count the doors and windows:\n\n• How many **doors** need painting?\n• How many **windows** need painting?\n\nFor example: "3 doors and 5 windows" or "2 doors, no windows"`;
@@ -257,7 +626,16 @@ export default function CreateQuotePage() {
           }
         }));
         
-        responseContent = `Perfect! Now what paint quality would you like?\n\n• **Good** - Budget-friendly, basic coverage\n• **Better** - Mid-range, better durability  \n• **Best** - Premium, longest lasting\n\nYou can choose the same level for all surfaces or specify different levels.`;
+        responseContent = `Perfect! Now what paint quality would you like?`;
+        // Show paint quality buttons
+        setTimeout(() => {
+          setButtonOptions([
+            { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+            { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+            { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+          ]);
+          setShowButtons(true);
+        }, 500);
         nextStage = 'paint_quality';
         break;
         
@@ -274,7 +652,17 @@ export default function CreateQuotePage() {
         };
         setQuoteData(updatedQuoteData);
         
-        responseContent = `Excellent! Now let's set your profit margin. What markup percentage would you like?\\n\\n\u2022 **10%** - Minimum profit (competitive pricing)\\n\u2022 **20%** - Standard profit (recommended)\\n\u2022 **30%** - Good profit (premium pricing)\\n\u2022 **40%** - High profit (luxury pricing)\\n\\nThis determines how much profit you make above your costs.`;
+        responseContent = `Excellent! Now let's set your profit margin. What markup percentage would you like?`;
+        // Show markup buttons
+        setTimeout(() => {
+          setButtonOptions([
+            { id: '10', label: '🎯 10% - Competitive pricing', value: '10%', selected: false },
+            { id: '20', label: '⚖️ 20% - Standard profit (recommended)', value: '20%', selected: false },
+            { id: '30', label: '📈 30% - Good profit margin', value: '30%', selected: false },
+            { id: '40', label: '💎 40% - Premium pricing', value: '40%', selected: false }
+          ]);
+          setShowButtons(true);
+        }, 500);
         nextStage = 'markup_selection';
         break;
         
@@ -286,9 +674,15 @@ export default function CreateQuotePage() {
         };
         setQuoteData(finalQuoteData);
         
+        // Ensure ceiling_area is set (use floor_area if available and ceiling_area not set)
+        if (finalQuoteData.dimensions.floor_area && !finalQuoteData.dimensions.ceiling_area) {
+          finalQuoteData.dimensions.ceiling_area = finalQuoteData.dimensions.floor_area;
+        }
+        
         // Calculate the professional quote with markup
         if (finalQuoteData.dimensions.wall_linear_feet && 
             finalQuoteData.dimensions.ceiling_height &&
+            (finalQuoteData.dimensions.ceiling_area || finalQuoteData.dimensions.floor_area) &&
             finalQuoteData.dimensions.number_of_doors !== undefined &&
             finalQuoteData.dimensions.number_of_windows !== undefined) {
           
@@ -311,7 +705,7 @@ export default function CreateQuotePage() {
           );
           
           setQuoteData(prev => ({ ...prev, calculation }));
-          responseContent = generateQuoteDisplay(calculation, finalQuoteData.customer_name, finalQuoteData.address);
+          responseContent = generateQuoteDisplay(calculation, finalQuoteData.customer_name, finalQuoteData.address, finalQuoteData.dimensions.rooms);
           nextStage = 'quote_review';
         } else {
           responseContent = "I need more information to calculate the quote. Let me ask for the missing details.";
@@ -333,10 +727,27 @@ export default function CreateQuotePage() {
           nextStage = 'adjustments';
         } else if (lowerInput.includes('save') || lowerInput.includes('approve') || lowerInput.includes('finalize')) {
           await saveQuote();
-          responseContent = `✅ Quote saved successfully!\n\n**Final Details:**\n• Customer: ${quoteData.customer_name}\n• **Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}**\n• Your Cost: $${quoteData.calculation!.total_cost.toLocaleString()}\n• Your Profit: $${quoteData.calculation!.markup_amount.toLocaleString()}\n\nWould you like to create another quote or return to the dashboard?`;
+          responseContent = `✅ Quote saved successfully!\n\n**Final Details:**\n• Customer: ${quoteData.customer_name}\n• **Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}**\n• Your Cost: $${quoteData.calculation!.total_cost.toLocaleString()}\n• Your Profit: $${quoteData.calculation!.markup_amount.toLocaleString()}\n\nWhat would you like to do next?`;
+          // Show completion buttons
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'new_quote', label: '➕ Create Another Quote', value: 'another quote', selected: false },
+              { id: 'dashboard', label: '📊 Return to Dashboard', value: 'dashboard', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
           nextStage = 'complete';
         } else {
-          responseContent = `**Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}** (Your profit: $${quoteData.calculation!.markup_amount.toLocaleString()})\n\nWhat would you like to do?\n• **"Save"** - Finalize this quote\n• **"Adjust markup"** - Change profit percentage\n• **"Breakdown"** - See detailed calculations`;
+          responseContent = `**Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}** (Your profit: $${quoteData.calculation!.markup_amount.toLocaleString()})\n\nWhat would you like to do?`;
+          // Show action buttons
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'save', label: '💾 Save Quote', value: 'save', selected: false },
+              { id: 'adjust_markup', label: '📊 Adjust Markup', value: 'adjust markup', selected: false },
+              { id: 'breakdown', label: '🔍 View Breakdown', value: 'breakdown', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
         }
         break;
         
@@ -456,8 +867,24 @@ export default function CreateQuotePage() {
             content: responseContent,
             timestamp: new Date().toISOString()
           };
+        } else if (lowerInputComplete.includes('dashboard')) {
+          router.push('/dashboard');
+          return {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: 'Returning to dashboard...',
+            timestamp: new Date().toISOString()
+          };
         } else {
-          responseContent = `Thanks for using our quote system! You can:\n• **"Another quote"** - Create a new quote\n• **"Dashboard"** - Return to main dashboard\n• **"Exit"** - Close this session`;
+          responseContent = `Thanks for using our quote system! What would you like to do?`;
+          // Show completion options
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'new_quote', label: '➕ Create Another Quote', value: 'another quote', selected: false },
+              { id: 'dashboard', label: '📊 Return to Dashboard', value: 'dashboard', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
         }
         break;
 
@@ -482,8 +909,11 @@ export default function CreateQuotePage() {
       const calc = quoteData.calculation;
       const dims = quoteData.dimensions;
       
-      const response = await fetch('/api/quotes', {
-        method: 'POST',
+      const url = isEditMode && editQuoteId ? `/api/quotes/${editQuoteId}` : '/api/quotes';
+      const method = isEditMode ? 'PATCH' : 'POST';
+      
+      const response = await fetch(url, {
+        method: method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           company_id: companyData.id,
@@ -523,13 +953,19 @@ export default function CreateQuotePage() {
           markup_amount: calc.markup_amount,
           total_revenue: calc.final_price, // Customer pays this
           
+          // Room data (if available)
+          room_data: dims.rooms ? JSON.stringify(dims.rooms) : null,
+          room_count: dims.room_count || null,
+          
           // Legacy compatibility fields
           walls_sqft: calc.materials.walls.sqft_needed,
           ceilings_sqft: calc.materials.ceilings.sqft_needed,
           trim_sqft: 0, // Not used in professional calculator
           quote_amount: calc.final_price, // Customer price
           final_price: calc.final_price, // Customer price
-          notes: `${quoteData.project_type} - ${dims.wall_linear_feet}LF walls, ${dims.ceiling_height}' high, ${dims.number_of_doors} doors, ${dims.number_of_windows} windows`,
+          notes: dims.rooms 
+            ? `${quoteData.project_type} - ${dims.rooms.length} rooms, total ${calc.materials.ceilings.sqft_needed.toLocaleString()} sqft ceiling, ${dims.number_of_doors} doors, ${dims.number_of_windows} windows`
+            : `${quoteData.project_type} - ${dims.wall_linear_feet}LF walls, ${dims.ceiling_height}' high, ${dims.number_of_doors} doors, ${dims.number_of_windows} windows`,
           conversation_summary: JSON.stringify(messages)
         })
       });
@@ -537,8 +973,10 @@ export default function CreateQuotePage() {
       if (response.ok) {
         const result = await response.json();
         toast({
-          title: "Quote Saved!",
-          description: `Professional quote ${result.quoteId || result.quote?.id} saved successfully.`,
+          title: isEditMode ? "Quote Updated!" : "Quote Saved!",
+          description: isEditMode 
+            ? `Quote #${editQuoteId} has been updated successfully.`
+            : `Professional quote ${result.quoteId || result.quote?.id} saved successfully.`,
         });
       } else {
         throw new Error('Failed to save quote');
@@ -589,7 +1027,7 @@ export default function CreateQuotePage() {
               
               <div className="flex items-center gap-2">
                 <Calculator className="w-6 h-6 text-blue-600" />
-                <h1 className="text-lg font-semibold">Create Quote</h1>
+                <h1 className="text-lg font-semibold">{isEditMode ? 'Edit Quote' : 'Create Quote'}</h1>
               </div>
             </div>
             
@@ -627,8 +1065,9 @@ export default function CreateQuotePage() {
                     : "bg-white border rounded-bl-sm"
                 )}
               >
-                <div className="whitespace-pre-wrap text-sm">
-                  {message.content}
+                <div className="whitespace-pre-wrap text-sm" dangerouslySetInnerHTML={{
+                  __html: renderMarkdown(message.content)
+                }}>
                 </div>
                 <div className={cn(
                   "text-xs mt-2",
@@ -646,6 +1085,32 @@ export default function CreateQuotePage() {
                 <div className="flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span className="text-sm text-gray-500">Calculating...</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Interactive Buttons */}
+          {showButtons && buttonOptions.length > 0 && (
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[80%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+                <p className="text-sm text-gray-600 mb-3">Choose an option:</p>
+                <div className="flex flex-wrap gap-2">
+                  {buttonOptions.map((option) => (
+                    <Button
+                      key={option.id}
+                      onClick={() => handleButtonClick(option.value, option.label)}
+                      variant={option.selected ? "default" : "outline"}
+                      className={cn(
+                        "text-sm transition-colors",
+                        option.selected 
+                          ? "bg-blue-600 text-white hover:bg-blue-700 border-blue-600" 
+                          : "hover:bg-blue-50 hover:border-blue-300"
+                      )}
+                    >
+                      {option.label}
+                    </Button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -677,5 +1142,20 @@ export default function CreateQuotePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CreateQuotePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <CreateQuotePageContent />
+    </Suspense>
   );
 }

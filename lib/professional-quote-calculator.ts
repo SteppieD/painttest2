@@ -1,13 +1,27 @@
 // Professional Interior Painting Quote Calculator
 // Based on industry-standard formulas and practices
 
+export interface Room {
+  id: string;
+  name: string;
+  length: number;
+  width: number;
+  height: number;
+  doors: number;
+  windows: number;
+  ceiling_area: number; // Calculated from length × width
+  wall_area: number; // Calculated from perimeter × height - door/window area
+}
+
 export interface ProjectDimensions {
   wall_linear_feet: number;      // Linear footage of walls
   ceiling_height: number;        // Height in feet
-  ceiling_area: number;          // Ceiling square footage
+  ceiling_area: number;          // Ceiling square footage (defaults to floor_area)
   number_of_doors: number;       // Count of doors
   number_of_windows: number;     // Count of windows
-  floor_area?: number;           // Floor area for sealers (optional)
+  floor_area?: number;           // Floor area - used as default for ceiling_area
+  rooms?: Room[];                // Room-by-room measurements
+  room_count?: number;           // Total number of rooms
 }
 
 export interface PaintProducts {
@@ -108,6 +122,48 @@ export interface ProfessionalQuote {
   breakdown_summary: string;
 }
 
+// Room calculation utilities
+export const calculateRoomAreas = (room: Omit<Room, 'ceiling_area' | 'wall_area'>): Room => {
+  const ceiling_area = room.length * room.width;
+  const perimeter = 2 * (room.length + room.width);
+  
+  // Standard door is 21 sqft (3' x 7'), window is 15 sqft (3' x 5')
+  const door_area = room.doors * 21;
+  const window_area = room.windows * 15;
+  
+  const wall_area = (perimeter * room.height) - door_area - window_area;
+  
+  return {
+    ...room,
+    ceiling_area,
+    wall_area
+  };
+};
+
+export const calculateTotalAreasFromRooms = (rooms: Room[]): {
+  total_ceiling_area: number;
+  total_wall_area: number;
+  total_doors: number;
+  total_windows: number;
+  wall_linear_feet: number;
+} => {
+  const totals = rooms.reduce((acc, room) => ({
+    total_ceiling_area: acc.total_ceiling_area + room.ceiling_area,
+    total_wall_area: acc.total_wall_area + room.wall_area,
+    total_doors: acc.total_doors + room.doors,
+    total_windows: acc.total_windows + room.windows,
+    wall_linear_feet: acc.wall_linear_feet + (2 * (room.length + room.width))
+  }), {
+    total_ceiling_area: 0,
+    total_wall_area: 0,
+    total_doors: 0,
+    total_windows: 0,
+    wall_linear_feet: 0
+  });
+  
+  return totals;
+};
+
 // Step 1: Calculate Wall Square Footage
 export const calculateWallArea = (linearFeet: number, ceilingHeight: number): number => {
   return linearFeet * ceilingHeight;
@@ -201,16 +257,34 @@ export const calculateProfessionalQuote = (
   includeFloorSealer: boolean = false
 ): ProfessionalQuote => {
   
-  // Calculate areas
-  const wallSqft = calculateWallArea(dimensions.wall_linear_feet, dimensions.ceiling_height);
+  // Calculate areas - use room-based calculations if available
+  let wallSqft: number;
+  let ceilingSqft: number;
+  let totalDoors: number;
+  let totalWindows: number;
+  
+  if (dimensions.rooms && dimensions.rooms.length > 0) {
+    // Room-based calculation
+    const roomTotals = calculateTotalAreasFromRooms(dimensions.rooms);
+    wallSqft = roomTotals.total_wall_area;
+    ceilingSqft = roomTotals.total_ceiling_area;
+    totalDoors = roomTotals.total_doors;
+    totalWindows = roomTotals.total_windows;
+  } else {
+    // Traditional calculation
+    wallSqft = calculateWallArea(dimensions.wall_linear_feet, dimensions.ceiling_height);
+    ceilingSqft = dimensions.ceiling_area;
+    totalDoors = dimensions.number_of_doors;
+    totalWindows = dimensions.number_of_windows;
+  }
   
   // Calculate materials
   const primer = calculatePrimer(wallSqft, selectedProducts.primer.spread_rate, selectedProducts.primer.cost);
   const walls = calculateWallPaint(wallSqft, selectedProducts.wall_paint.spread_rate, selectedProducts.wall_paint.cost_per_gallon);
-  const ceilings = calculateCeilingPaint(dimensions.ceiling_area, selectedProducts.ceiling_paint.spread_rate, selectedProducts.ceiling_paint.cost_per_gallon);
+  const ceilings = calculateCeilingPaint(ceilingSqft, selectedProducts.ceiling_paint.spread_rate, selectedProducts.ceiling_paint.cost_per_gallon);
   const trim = calculateTrimPaint(
-    dimensions.number_of_doors,
-    dimensions.number_of_windows,
+    totalDoors,
+    totalWindows,
     selectedProducts.trim_paint.doors_per_gallon,
     selectedProducts.trim_paint.windows_per_gallon,
     selectedProducts.trim_paint.cost_per_gallon
@@ -228,9 +302,9 @@ export const calculateProfessionalQuote = (
   // Calculate labor costs
   const primerLabor = wallSqft * rates.primer_rate_per_sqft;
   const wallLabor = wallSqft * rates.wall_rate_per_sqft;
-  const ceilingLabor = dimensions.ceiling_area * rates.ceiling_rate_per_sqft;
-  const doorLabor = dimensions.number_of_doors * rates.door_rate_each;
-  const windowLabor = dimensions.number_of_windows * rates.window_rate_each;
+  const ceilingLabor = ceilingSqft * rates.ceiling_rate_per_sqft;
+  const doorLabor = totalDoors * rates.door_rate_each;
+  const windowLabor = totalWindows * rates.window_rate_each;
   const floorSealerLabor = (includeFloorSealer && dimensions.floor_area && rates.floor_sealer_rate_per_sqft) 
     ? dimensions.floor_area * rates.floor_sealer_rate_per_sqft 
     : 0;
@@ -262,13 +336,13 @@ export const calculateProfessionalQuote = (
         cost: walls.cost
       },
       ceilings: {
-        sqft_needed: dimensions.ceiling_area,
+        sqft_needed: ceilingSqft,
         gallons_needed: ceilings.gallons,
         cost: ceilings.cost
       },
       trim_doors_windows: {
-        doors_count: dimensions.number_of_doors,
-        windows_count: dimensions.number_of_windows,
+        doors_count: totalDoors,
+        windows_count: totalWindows,
         gallons_needed: trim.gallons,
         cost: trim.cost
       },

@@ -5,7 +5,72 @@ import { generateQuoteId } from "@/lib/utils";
 // POST - Create a new quote
 export async function POST(request: NextRequest) {
   try {
-    const { quoteData, companyId, conversationHistory } = await request.json();
+    const requestData = await request.json();
+    
+    // Handle both old format (direct data) and new format (nested structure)
+    let quoteData, companyId, conversationHistory;
+    
+    if (requestData.quoteData && requestData.companyId) {
+      // New nested format
+      ({ quoteData, companyId, conversationHistory } = requestData);
+    } else if (requestData.company_id || requestData.companyId) {
+      // Old flat format - convert to new format
+      companyId = requestData.company_id || requestData.companyId;
+      conversationHistory = requestData.conversation_summary ? 
+        (typeof requestData.conversation_summary === 'string' ? 
+          JSON.parse(requestData.conversation_summary) : requestData.conversation_summary) : [];
+      
+      // Map flat structure to nested quoteData
+      quoteData = {
+        customerName: requestData.customer_name,
+        customerEmail: requestData.customer_email,
+        customerPhone: requestData.customer_phone,
+        address: requestData.address,
+        projectType: requestData.project_type,
+        rooms: requestData.room_data ? (typeof requestData.room_data === 'string' ? JSON.parse(requestData.room_data) : requestData.room_data) : [],
+        roomCount: requestData.room_count,
+        paintQuality: requestData.paint_quality,
+        prepWork: requestData.prep_work,
+        timeEstimate: requestData.timeline,
+        specialRequests: requestData.special_requests || requestData.notes,
+        totalCost: requestData.total_cost,
+        finalPrice: requestData.final_price || requestData.total_revenue,
+        markupPercentage: requestData.markup_percentage,
+        sqft: requestData.walls_sqft,
+        breakdown: {
+          materials: requestData.total_materials,
+          labor: requestData.total_labor,
+          markup: requestData.markup_amount
+        },
+        // Professional calculator fields
+        dimensions: {
+          wall_linear_feet: requestData.wall_linear_feet,
+          ceiling_height: requestData.ceiling_height,
+          ceiling_area: requestData.ceiling_area,
+          number_of_doors: requestData.number_of_doors,
+          number_of_windows: requestData.number_of_windows,
+          floor_area: requestData.floor_area
+        },
+        rates: {
+          wall_rate_per_sqft: requestData.wall_rate_per_sqft,
+          ceiling_rate_per_sqft: requestData.ceiling_rate_per_sqft,
+          primer_rate_per_sqft: requestData.primer_rate_per_sqft,
+          door_rate_each: requestData.door_rate_each,
+          window_rate_each: requestData.window_rate_each
+        },
+        materials: {
+          primer_gallons: requestData.primer_gallons,
+          wall_paint_gallons: requestData.wall_paint_gallons,
+          ceiling_paint_gallons: requestData.ceiling_paint_gallons,
+          trim_paint_gallons: requestData.trim_paint_gallons
+        }
+      };
+    } else {
+      return NextResponse.json(
+        { error: "Quote data and company ID are required" },
+        { status: 400 }
+      );
+    }
 
     if (!quoteData || !companyId) {
       return NextResponse.json(
@@ -27,6 +92,8 @@ export async function POST(request: NextRequest) {
       address: quoteData.address || null,
       project_type: quoteData.projectType || 'interior',
       rooms: JSON.stringify(quoteData.rooms || []),
+      room_data: quoteData.rooms && quoteData.rooms.length > 0 ? JSON.stringify(quoteData.rooms) : null,
+      room_count: quoteData.roomCount || (quoteData.rooms ? quoteData.rooms.length : null),
       paint_quality: quoteData.paintQuality || null,
       prep_work: quoteData.prepWork || null,
       timeline: quoteData.timeEstimate || quoteData.timeline || null,
@@ -34,10 +101,10 @@ export async function POST(request: NextRequest) {
       base_cost: quoteData.totalCost || 0,
       markup_percentage: quoteData.markupPercentage || 0,
       final_price: quoteData.finalPrice || quoteData.totalCost || 0,
-      walls_sqft: quoteData.sqft || 0,
-      ceilings_sqft: 0,
+      walls_sqft: quoteData.sqft || quoteData.dimensions?.wall_linear_feet * (quoteData.dimensions?.ceiling_height || 9) || 0,
+      ceilings_sqft: quoteData.dimensions?.ceiling_area || 0,
       trim_sqft: 0,
-      total_revenue: quoteData.totalCost || 0,
+      total_revenue: quoteData.finalPrice || quoteData.totalCost || 0,
       total_materials: quoteData.breakdown?.materials || 0,
       projected_labor: quoteData.breakdown?.labor || 0,
       conversation_summary: conversationHistory ? JSON.stringify(conversationHistory) : JSON.stringify([{quoteData}]),
@@ -171,6 +238,16 @@ export async function GET(request: NextRequest) {
                 return [];
               }
             })() : [],
+          room_data: (quote && quote.room_data && typeof quote.room_data === 'string' && quote.room_data.trim() !== '') ? 
+            (() => {
+              try {
+                return JSON.parse(quote.room_data);
+              } catch (e) {
+                console.error("Error parsing room_data:", e);
+                return [];
+              }
+            })() : null,
+          room_count: quote.room_count || null,
           conversation_summary: (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') ? 
             (() => {
               try {

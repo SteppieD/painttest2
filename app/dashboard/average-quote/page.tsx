@@ -103,7 +103,13 @@ export default function AverageQuotePage() {
       const response = await fetch(`/api/quotes?company_id=${companyId}`);
       const data = await response.json();
 
-      if (Array.isArray(data)) {
+      if (data.quotes && Array.isArray(data.quotes)) {
+        setQuotes(data.quotes);
+        calculateStats(data.quotes);
+        calculateMonthlyAverages(data.quotes);
+        calculateRangeDistribution(data.quotes);
+        calculateProjectTypeAverages(data.quotes);
+      } else if (Array.isArray(data)) {
         setQuotes(data);
         calculateStats(data);
         calculateMonthlyAverages(data);
@@ -120,7 +126,24 @@ export default function AverageQuotePage() {
   const calculateStats = (quotesData: Quote[]) => {
     if (quotesData.length === 0) return;
 
-    const amounts = quotesData.map(q => q.quote_amount).filter(a => a > 0);
+    const amounts = quotesData.map(q => q.quote_amount || 0).filter(a => a > 0);
+    if (amounts.length === 0) {
+      // No valid amounts, set all stats to 0
+      setStats({
+        overallAverage: 0,
+        pendingAverage: 0,
+        acceptedAverage: 0,
+        completedAverage: 0,
+        medianQuote: 0,
+        standardDeviation: 0,
+        monthlyTrend: 0,
+        quarterlyTrend: 0,
+        topPercentileThreshold: 0,
+        bottomPercentileThreshold: 0,
+      });
+      return;
+    }
+    
     const overallAverage = amounts.reduce((sum, amt) => sum + amt, 0) / amounts.length;
 
     // Calculate averages by status

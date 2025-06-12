@@ -481,14 +481,14 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
                 
                 <Button
                   onClick={() => {
-                    // Navigate to create quote page
-                    router.push('/create-quote');
+                    // Navigate to create quote page with edit mode
+                    router.push(`/create-quote?edit=${quote.id}`);
                   }}
                   variant="outline"
                   className="w-full"
                 >
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Create New Quote
+                  <Edit3 className="w-4 h-4 mr-2" />
+                  Edit in Chat
                 </Button>
               </div>
             </CardContent>

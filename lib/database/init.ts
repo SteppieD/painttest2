@@ -110,6 +110,8 @@ function initializeSchema() {
         base_cost REAL,
         markup_percentage REAL,
         final_price REAL,
+        room_data TEXT,
+        room_count INTEGER,
         status TEXT DEFAULT 'pending',
         conversation_summary TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -118,6 +120,21 @@ function initializeSchema() {
       );
     `);
     console.log('✓ Quotes table created/verified');
+    
+    // Add room_data and room_count columns if they don't exist (for existing databases)
+    try {
+      db.exec(`ALTER TABLE quotes ADD COLUMN room_data TEXT`);
+      console.log('✓ Added room_data column to quotes table');
+    } catch (error) {
+      // Column already exists, ignore error
+    }
+    
+    try {
+      db.exec(`ALTER TABLE quotes ADD COLUMN room_count INTEGER`);
+      console.log('✓ Added room_count column to quotes table');
+    } catch (error) {
+      // Column already exists, ignore error
+    }
     
     // Create indexes
     db.exec(`
@@ -294,8 +311,8 @@ export function getPreparedStatements() {
         company_id, quote_id, customer_name, customer_email, customer_phone,
         address, project_type, paint_quality, timeline, special_requests,
         walls_sqft, ceilings_sqft, trim_sqft, total_revenue, subtotal,
-        conversation_summary, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        conversation_summary, status, room_data, room_count
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `),
     
     getQuoteById: database.prepare(`
