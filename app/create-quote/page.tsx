@@ -30,8 +30,10 @@ import {
   parseRoomCount,
   parseRoomData,
   generateRoomSummary,
+  generateRoomSummaryWithButtons,
   generateFollowUpQuestion,
   generateQuoteDisplay,
+  generateQuoteDisplayWithButtons,
   ConversationData
 } from "@/lib/improved-conversation-parser";
 import { Room, calculateRoomAreas, calculateTotalAreasFromRooms } from "@/lib/professional-quote-calculator";
@@ -111,6 +113,7 @@ function CreateQuotePageContent() {
   const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [currentRoomData, setCurrentRoomData] = useState<Partial<Room>>({});
+  const [editingRoomIndex, setEditingRoomIndex] = useState(-1);
 
   // Auto-scroll to bottom
   const scrollToBottom = () => {
@@ -416,13 +419,17 @@ What would you like to modify?`,
         setQuoteData(prev => ({ ...prev, project_type: projectType }));
         
         if (projectType === 'interior' || projectType === 'both') {
-          responseContent = `Perfect! For ${projectType} painting, I can calculate this two ways:\n\n**Option 1:** Quick estimate using total linear feet\n**Option 2:** Room-by-room measurements (more accurate for ceilings)\n\nWhich would you prefer?`;
-          // Show measurement method buttons
+          responseContent = `Perfect! For ${projectType} painting, what surfaces do you want to include?`;
+          // Show surface selection buttons for interior
           setTimeout(() => {
-            setConversationStage('measurement_method');
+            setConversationStage('surface_selection'); // Set stage BEFORE showing buttons
+            setSelectedSurfaces([]); // Reset selected surfaces
             setButtonOptions([
-              { id: 'quick', label: '⚡ Quick Estimate', value: 'quick', selected: false },
-              { id: 'room_by_room', label: '🏠 Room-by-Room', value: 'room_by_room', selected: false }
+              { id: 'walls', label: '🎨 Walls', value: 'walls', selected: false },
+              { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: false },
+              { id: 'trim', label: '🖼️ Trim & Baseboards', value: 'trim', selected: false },
+              { id: 'doors', label: '🚪 Doors', value: 'doors', selected: false },
+              { id: 'windows', label: '🪟 Window Frames', value: 'windows', selected: false }
             ]);
             setShowButtons(true);
           }, 500);
@@ -442,30 +449,43 @@ What would you like to modify?`,
             setShowButtons(true);
           }, 500);
         }
-        nextStage = projectType === 'exterior' ? 'surface_selection' : 'measurement_method';
+        nextStage = 'surface_selection';
         break;
 
-      case 'measurement_method':
-        if (input === 'room_by_room') {
-          setUseRoomByRoom(true);
-          responseContent = `Great choice! Room-by-room measurements give us precise ceiling areas.\n\nHow many rooms need ceiling painting?`;
-          setTimeout(() => {
-            setButtonOptions([
-              { id: '1', label: '1 Room', value: '1', selected: false },
-              { id: '2', label: '2 Rooms', value: '2', selected: false },
-              { id: '3', label: '3 Rooms', value: '3', selected: false },
-              { id: '4', label: '4 Rooms', value: '4', selected: false },
-              { id: '5', label: '5 Rooms', value: '5', selected: false },
-              { id: 'custom', label: 'More than 5', value: 'custom', selected: false }
-            ]);
-            setShowButtons(true);
-          }, 500);
-          nextStage = 'room_count';
-        } else {
-          setUseRoomByRoom(false);
+
+      case 'surface_selection':
+        // Handle continue to dimensions (surface selection is now handled in handleButtonClick)
+        if (input === 'continue' || input.toLowerCase().includes('continue')) {
           const surfaceList = selectedSurfaces.length > 0 ? selectedSurfaces.join(', ') : 'selected surfaces';
-          responseContent = `Perfect! For ${surfaceList} using quick estimates, I need the dimensions:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (in feet)\n• **Floor area** (total house square footage)\n\nFor example: "120 linear feet, 9 foot ceilings, 1200 sqft house"`;
-          nextStage = 'dimensions';
+          
+          // Check if ceilings are selected for interior projects - go to room-by-room measurement
+          if (quoteData.project_type === 'interior' && selectedSurfaces.includes('ceilings')) {
+            responseContent = `Perfect! I see you selected ceiling painting.\n\nFor accurate ceiling measurements, I'll collect room-by-room dimensions.\n\nHow many rooms need ceiling painting?`;
+            setTimeout(() => {
+              setButtonOptions([
+                { id: '1', label: '1 Room', value: '1', selected: false },
+                { id: '2', label: '2 Rooms', value: '2', selected: false },
+                { id: '3', label: '3 Rooms', value: '3', selected: false },
+                { id: '4', label: '4 Rooms', value: '4', selected: false },
+                { id: '5', label: '5 Rooms', value: '5', selected: false },
+                { id: 'custom', label: 'More than 5', value: 'custom', selected: false }
+              ]);
+              setShowButtons(true);
+            }, 500);
+            nextStage = 'room_count';
+          } else if (quoteData.project_type === 'interior') {
+            // No ceilings selected - simple linear feet + height
+            responseContent = `Perfect! For ${surfaceList}, I need the dimensions:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (in feet)\n\nFor example: "120 linear feet, 9 foot ceilings"`;
+            nextStage = 'dimensions';
+          } else {
+            // Exterior project
+            responseContent = `Perfect! For ${surfaceList}, I need the dimensions:\n\n• **Total area** to be painted (square footage)\n• **Number of stories**\n\nFor example: "2500 sqft siding, 2 story home"`;
+            nextStage = 'dimensions';
+          }
+        } else {
+          // Handle text input during surface selection
+          responseContent = `Please use the buttons above to select surfaces, then click "Continue to Dimensions" when ready.`;
+          nextStage = 'surface_selection';
         }
         break;
 
@@ -478,7 +498,7 @@ What would you like to modify?`,
           setRoomCount(count);
           setCurrentRoomIndex(0);
           setRooms([]);
-          responseContent = `Perfect! Let's measure ${count} rooms.\n\n**Room 1:** What are the dimensions?\nPlease provide: length, width, height (in feet)\n\nExample: "12 by 14, 9 foot ceilings" or "12x14x9"`;
+          responseContent = `Perfect! Let's measure ${count} rooms for ceiling painting.\n\n**Room 1:** What are the dimensions and what would you like to call this room?\nPlease provide: length, width, height (in feet)\n\nExample: "Living Room: 12 by 14, 9 foot ceilings" or "Kitchen: 12x14x9"`;
           nextStage = 'room_dimensions';
         } else {
           responseContent = `Please select the number of rooms or choose "More than 5" for custom entry.`;
@@ -492,7 +512,7 @@ What would you like to modify?`,
           setRoomCount(customCount);
           setCurrentRoomIndex(0);
           setRooms([]);
-          responseContent = `Perfect! Let's measure ${customCount} rooms.\n\n**Room 1:** What are the dimensions?\nPlease provide: length, width, height (in feet)\n\nExample: "12 by 14, 9 foot ceilings" or "12x14x9"`;
+          responseContent = `Perfect! Let's measure ${customCount} rooms for ceiling painting.\n\n**Room 1:** What are the dimensions and what would you like to call this room?\nPlease provide: length, width, height (in feet)\n\nExample: "Living Room: 12 by 14, 9 foot ceilings" or "Kitchen: 12x14x9"`;
           nextStage = 'room_dimensions';
         } else {
           responseContent = `Please enter a valid number of rooms.`;
@@ -501,8 +521,20 @@ What would you like to modify?`,
         break;
 
       case 'room_dimensions':
-        const roomName = `Room ${currentRoomIndex + 1}`;
-        const parsedRoom = parseRoomData(input, roomName);
+        // Parse room name and dimensions
+        let roomName = `Room ${currentRoomIndex + 1}`;
+        let roomDimensionInput = input;
+        
+        // Check if user provided a room name (format: "Room Name: dimensions")
+        if (input.includes(':')) {
+          const parts = input.split(':');
+          if (parts.length >= 2) {
+            roomName = parts[0].trim();
+            roomDimensionInput = parts.slice(1).join(':').trim();
+          }
+        }
+        
+        const parsedRoom = parseRoomData(roomDimensionInput, roomName);
         
         if (parsedRoom.length && parsedRoom.width && parsedRoom.height) {
           const completeRoom = calculateRoomAreas({
@@ -520,7 +552,7 @@ What would you like to modify?`,
           
           if (currentRoomIndex + 1 < roomCount) {
             setCurrentRoomIndex(currentRoomIndex + 1);
-            responseContent = `Great! Room ${currentRoomIndex + 1}: ${parsedRoom.length}' × ${parsedRoom.width}' × ${parsedRoom.height}' (${completeRoom.ceiling_area} sqft ceiling)\n\n**Room ${currentRoomIndex + 2}:** What are the dimensions?\nLength, width, height (in feet)`;
+            responseContent = `Great! **${roomName}**: ${parsedRoom.length}' × ${parsedRoom.width}' × ${parsedRoom.height}' (${completeRoom.ceiling_area} sqft ceiling)\n\n**Room ${currentRoomIndex + 2}:** What are the dimensions and name?\nLength, width, height (in feet)\n\nExample: "Bedroom 2: 10x12x9" or "Master Bath: 8 by 10, 9 foot ceilings"`;
             nextStage = 'room_dimensions';
           } else {
             // All rooms collected, update quote data and proceed
@@ -532,59 +564,204 @@ What would you like to modify?`,
                 rooms: updatedRooms,
                 room_count: roomCount,
                 ceiling_area: roomTotals.total_ceiling_area,
-                wall_linear_feet: roomTotals.wall_linear_feet,
+                wall_linear_feet: roomTotals.wall_linear_feet || prev.dimensions.wall_linear_feet,
                 ceiling_height: updatedRooms[0]?.height || 9, // Use first room's height as reference
                 number_of_doors: roomTotals.total_doors,
                 number_of_windows: roomTotals.total_windows
               }
             }));
             
-            responseContent = `Excellent! Here's your room summary:\n\n${generateRoomSummary(updatedRooms)}\n\nNow what paint quality would you like?`;
+            const roomSummaryWithButtons = generateRoomSummaryWithButtons(updatedRooms);
+            responseContent = `Excellent! Here's your room summary:\n\n${roomSummaryWithButtons.summary}\n\nNow I need the wall dimensions for the areas you want painted:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n\nFor example: "120 linear feet"`;
             
-            // Show paint quality buttons
+            // Show room edit buttons
             setTimeout(() => {
-              setButtonOptions([
-                { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
-                { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
-                { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
-              ]);
+              const wallDimensionButtons = [
+                ...roomSummaryWithButtons.buttons,
+                { id: 'continue_wall', label: '➡️ Continue to Wall Dimensions', value: 'continue_wall', selected: false }
+              ];
+              setButtonOptions(wallDimensionButtons);
               setShowButtons(true);
             }, 500);
-            nextStage = 'paint_quality';
+            nextStage = 'wall_dimensions';
           }
         } else {
-          responseContent = `I need the room dimensions. Please provide length, width, and height.\n\nExample: "12 by 14, 9 foot ceilings" or "12x14x9"`;
+          responseContent = `I need the room dimensions. Please provide length, width, and height.\n\nExample: "${roomName}: 12 by 14, 9 foot ceilings" or "${roomName}: 12x14x9"`;
           nextStage = 'room_dimensions';
         }
         break;
 
-      case 'surface_selection':
-        // Handle continue to dimensions (surface selection is now handled in handleButtonClick)
-        if (input === 'continue' || input.toLowerCase().includes('continue')) {
-          const surfaceList = selectedSurfaces.length > 0 ? selectedSurfaces.join(', ') : 'selected surfaces';
-          
-          // Check if ceilings are selected for interior projects - offer measurement method choice
-          if (quoteData.project_type === 'interior' && selectedSurfaces.includes('ceilings')) {
-            responseContent = `Perfect! I see you selected ceiling painting.\n\nFor the most accurate quote, how would you like to measure the ceilings?`;
-            setTimeout(() => {
-              setButtonOptions([
-                { id: 'quick', label: '🚀 Quick Estimate', value: 'quick_estimate', selected: false },
-                { id: 'detailed', label: '📏 Room-by-Room (More Accurate)', value: 'room_by_room', selected: false }
-              ]);
-              setShowButtons(true);
-            }, 500);
-            nextStage = 'measurement_method';
-          } else if (quoteData.project_type === 'interior') {
-            responseContent = `Perfect! For ${surfaceList}, I need the dimensions:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (in feet)\n• **Floor area** (total house square footage)\n\nFor example: "120 linear feet, 9 foot ceilings, 1200 sqft house"`;
-            nextStage = 'dimensions';
-          } else {
-            responseContent = `Perfect! For ${surfaceList}, I need the dimensions:\n\n• **Total area** to be painted (square footage)\n• **Number of stories**\n\nFor example: "2500 sqft siding, 2 story home"`;
-            nextStage = 'dimensions';
+      case 'wall_dimensions':
+        // Handle room edit buttons
+        if (input.startsWith('edit_room_')) {
+          const roomIndex = parseInt(input.split('_')[2]);
+          const roomToEdit = rooms[roomIndex];
+          if (roomToEdit) {
+            setEditingRoomIndex(roomIndex);
+            responseContent = `**Editing ${roomToEdit.name}**\n\nCurrent dimensions: ${roomToEdit.length}' × ${roomToEdit.width}' × ${roomToEdit.height}'\n\nEnter new dimensions:\nLength, width, height (in feet)\n\nExample: "12 by 14, 9 foot ceilings" or "12x14x9"`;
+            nextStage = 'edit_room';
           }
+          break;
+        }
+        
+        // Handle continue to wall dimensions button
+        if (input === 'continue_wall') {
+          responseContent = `Now I need the wall dimensions for the areas you want painted:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n\nFor example: "120 linear feet"`;
+          nextStage = 'wall_dimensions';
+          break;
+        }
+        
+        // Handle regular wall dimension input
+        const wallDimensions = parseDimensions(input, quoteData.project_type, quoteData.dimensions);
+        setQuoteData(prev => ({ 
+          ...prev, 
+          dimensions: { ...prev.dimensions, ...wallDimensions }
+        }));
+        
+        if (wallDimensions.wall_linear_feet) {
+          responseContent = `Perfect! Now I need to count the doors and windows:\n\n• How many **doors** need painting?\n• How many **windows** need painting?\n\nFor example: "3 doors and 5 windows" or "2 doors, no windows"`;
+          nextStage = 'doors_windows';
         } else {
-          // Handle text input during surface selection
-          responseContent = `Please use the buttons above to select surfaces, then click "Continue to Dimensions" when ready.`;
-          nextStage = 'surface_selection';
+          responseContent = `I need the wall linear footage. How many linear feet of walls need painting?\n\nFor example: "120 linear feet"`;
+          nextStage = 'wall_dimensions';
+        }
+        break;
+
+      case 'edit_room':
+        const editingIndex = editingRoomIndex;
+        const editDimensionInput = input;
+        
+        // Parse new room dimensions
+        const parsedEditedRoom = parseRoomData(editDimensionInput, rooms[editingIndex].name);
+        
+        if (parsedEditedRoom.length && parsedEditedRoom.width && parsedEditedRoom.height) {
+          const updatedRoom = calculateRoomAreas({
+            id: rooms[editingIndex].id,
+            name: rooms[editingIndex].name,
+            length: parsedEditedRoom.length,
+            width: parsedEditedRoom.width,
+            height: parsedEditedRoom.height,
+            doors: parsedEditedRoom.doors || rooms[editingIndex].doors,
+            windows: parsedEditedRoom.windows || rooms[editingIndex].windows
+          });
+          
+          // Update the rooms array
+          const updatedRooms = [...rooms];
+          updatedRooms[editingIndex] = updatedRoom;
+          setRooms(updatedRooms);
+          
+          // Recalculate totals
+          const roomTotals = calculateTotalAreasFromRooms(updatedRooms);
+          setQuoteData(prev => ({
+            ...prev,
+            dimensions: {
+              ...prev.dimensions,
+              rooms: updatedRooms,
+              ceiling_area: roomTotals.total_ceiling_area,
+              number_of_doors: roomTotals.total_doors,
+              number_of_windows: roomTotals.total_windows
+            }
+          }));
+          
+          // Show updated room summary with buttons
+          const roomSummaryWithButtons = generateRoomSummaryWithButtons(updatedRooms);
+          responseContent = `**Room Updated!** ✅\n\n${roomSummaryWithButtons.summary}\n\nNow I need the wall dimensions for the areas you want painted:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n\nFor example: "120 linear feet"`;
+          
+          // Show room edit buttons again
+          setTimeout(() => {
+            const wallDimensionButtons = [
+              ...roomSummaryWithButtons.buttons,
+              { id: 'continue_wall', label: '➡️ Continue to Wall Dimensions', value: 'continue_wall', selected: false }
+            ];
+            setButtonOptions(wallDimensionButtons);
+            setShowButtons(true);
+          }, 500);
+          nextStage = 'wall_dimensions';
+          setEditingRoomIndex(-1);
+        } else {
+          responseContent = `I need the room dimensions. Please provide length, width, and height.\n\nExample: "${rooms[editingIndex].name}: 12 by 14, 9 foot ceilings" or "12x14x9"`;
+          nextStage = 'edit_room';
+        }
+        break;
+
+      case 'edit_room_quote':
+        const editingQuoteIndex = editingRoomIndex;
+        const quoteEditDimensionInput = input;
+        
+        // Parse new room dimensions
+        const parsedQuoteEditedRoom = parseRoomData(quoteEditDimensionInput, rooms[editingQuoteIndex].name);
+        
+        if (parsedQuoteEditedRoom.length && parsedQuoteEditedRoom.width && parsedQuoteEditedRoom.height) {
+          const updatedQuoteRoom = calculateRoomAreas({
+            id: rooms[editingQuoteIndex].id,
+            name: rooms[editingQuoteIndex].name,
+            length: parsedQuoteEditedRoom.length,
+            width: parsedQuoteEditedRoom.width,
+            height: parsedQuoteEditedRoom.height,
+            doors: parsedQuoteEditedRoom.doors || rooms[editingQuoteIndex].doors,
+            windows: parsedQuoteEditedRoom.windows || rooms[editingQuoteIndex].windows
+          });
+          
+          // Update the rooms array
+          const updatedQuoteRooms = [...rooms];
+          updatedQuoteRooms[editingQuoteIndex] = updatedQuoteRoom;
+          setRooms(updatedQuoteRooms);
+          
+          // Recalculate totals and quote
+          const roomQuoteTotals = calculateTotalAreasFromRooms(updatedQuoteRooms);
+          const updatedQuoteData = {
+            ...quoteData,
+            dimensions: {
+              ...quoteData.dimensions,
+              rooms: updatedQuoteRooms,
+              ceiling_area: roomQuoteTotals.total_ceiling_area,
+              number_of_doors: roomQuoteTotals.total_doors,
+              number_of_windows: roomQuoteTotals.total_windows
+            }
+          };
+          setQuoteData(updatedQuoteData);
+          
+          // Recalculate the quote with new room data
+          const newCalculation = calculateProfessionalQuote(
+            updatedQuoteData.dimensions as ProjectDimensions,
+            {
+              primer: {
+                name: DEFAULT_PAINT_PRODUCTS.primer_name,
+                spread_rate: DEFAULT_PAINT_PRODUCTS.primer_spread_rate,
+                cost: DEFAULT_PAINT_PRODUCTS.primer_cost_per_gallon
+              } as any,
+              wall_paint: DEFAULT_PAINT_PRODUCTS.wall_paints[updatedQuoteData.selected_products.wall_paint_level],
+              ceiling_paint: DEFAULT_PAINT_PRODUCTS.ceiling_paints[updatedQuoteData.selected_products.ceiling_paint_level],
+              trim_paint: DEFAULT_PAINT_PRODUCTS.trim_paints[updatedQuoteData.selected_products.trim_paint_level],
+              floor_sealer: DEFAULT_PAINT_PRODUCTS.floor_sealer
+            },
+            updatedQuoteData.rates,
+            updatedQuoteData.markup_percentage,
+            false
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation: newCalculation }));
+          
+          // Show updated quote with buttons
+          const quoteWithButtons = generateQuoteDisplayWithButtons(newCalculation, updatedQuoteData.customer_name, updatedQuoteData.address, updatedQuoteRooms);
+          responseContent = `**Room Updated!** ✅ Quote recalculated.\n\n${quoteWithButtons.quoteText}`;
+          
+          // Show room edit buttons along with standard quote buttons
+          setTimeout(() => {
+            const quoteButtons = [
+              ...quoteWithButtons.roomButtons,
+              { id: 'save', label: '💾 Save Quote', value: 'save', selected: false },
+              { id: 'adjust_markup', label: '📊 Adjust Markup', value: 'adjust_markup', selected: false },
+              { id: 'breakdown', label: '🔍 View Breakdown', value: 'breakdown', selected: false }
+            ];
+            setButtonOptions(quoteButtons);
+            setShowButtons(true);
+          }, 500);
+          nextStage = 'quote_review';
+          setEditingRoomIndex(-1);
+        } else {
+          responseContent = `I need the room dimensions. Please provide length, width, and height.\n\nExample: "${rooms[editingQuoteIndex].name}: 12 by 14, 9 foot ceilings" or "12x14x9"`;
+          nextStage = 'edit_room_quote';
         }
         break;
 
@@ -599,8 +776,7 @@ What would you like to modify?`,
         
         // Check if we have enough dimensions to proceed
         const hasRequiredDimensions = updatedDimensions.wall_linear_feet && 
-          updatedDimensions.ceiling_height && 
-          (quoteData.project_type === 'exterior' || updatedDimensions.floor_area || updatedDimensions.ceiling_area);
+          updatedDimensions.ceiling_height;
         
         if (hasRequiredDimensions) {
           responseContent = `Excellent! Now I need to count the doors and windows:\n\n• How many **doors** need painting?\n• How many **windows** need painting?\n\nFor example: "3 doors and 5 windows" or "2 doors, no windows"`;
@@ -680,11 +856,14 @@ What would you like to modify?`,
         }
         
         // Calculate the professional quote with markup
-        if (finalQuoteData.dimensions.wall_linear_feet && 
+        const ceilingsSelected = selectedSurfaces.includes('ceilings');
+        const hasAllRequiredData = finalQuoteData.dimensions.wall_linear_feet && 
             finalQuoteData.dimensions.ceiling_height &&
-            (finalQuoteData.dimensions.ceiling_area || finalQuoteData.dimensions.floor_area) &&
             finalQuoteData.dimensions.number_of_doors !== undefined &&
-            finalQuoteData.dimensions.number_of_windows !== undefined) {
+            finalQuoteData.dimensions.number_of_windows !== undefined &&
+            (!ceilingsSelected || (finalQuoteData.dimensions.ceiling_area || finalQuoteData.dimensions.floor_area));
+        
+        if (hasAllRequiredData) {
           
           const calculation = calculateProfessionalQuote(
             finalQuoteData.dimensions as ProjectDimensions,
@@ -705,7 +884,26 @@ What would you like to modify?`,
           );
           
           setQuoteData(prev => ({ ...prev, calculation }));
-          responseContent = generateQuoteDisplay(calculation, finalQuoteData.customer_name, finalQuoteData.address, finalQuoteData.dimensions.rooms);
+          
+          // Show quote with room edit buttons if rooms exist
+          if (finalQuoteData.dimensions.rooms && finalQuoteData.dimensions.rooms.length > 0) {
+            const quoteWithButtons = generateQuoteDisplayWithButtons(calculation, finalQuoteData.customer_name, finalQuoteData.address, finalQuoteData.dimensions.rooms);
+            responseContent = quoteWithButtons.quoteText;
+            
+            // Show room edit buttons along with standard quote buttons
+            setTimeout(() => {
+              const quoteButtons = [
+                ...quoteWithButtons.roomButtons,
+                { id: 'save', label: '💾 Save Quote', value: 'save', selected: false },
+                { id: 'adjust_markup', label: '📊 Adjust Markup', value: 'adjust_markup', selected: false },
+                { id: 'breakdown', label: '🔍 View Breakdown', value: 'breakdown', selected: false }
+              ];
+              setButtonOptions(quoteButtons);
+              setShowButtons(true);
+            }, 500);
+          } else {
+            responseContent = generateQuoteDisplay(calculation, finalQuoteData.customer_name, finalQuoteData.address, finalQuoteData.dimensions.rooms);
+          }
           nextStage = 'quote_review';
         } else {
           responseContent = "I need more information to calculate the quote. Let me ask for the missing details.";
@@ -714,6 +912,18 @@ What would you like to modify?`,
         break;
 
       case 'quote_review':
+        // Handle room edit buttons in quote review
+        if (input.startsWith('edit_room_')) {
+          const roomIndex = parseInt(input.split('_')[2]);
+          const roomToEdit = rooms[roomIndex];
+          if (roomToEdit) {
+            setEditingRoomIndex(roomIndex);
+            responseContent = `**Editing ${roomToEdit.name}**\n\nCurrent dimensions: ${roomToEdit.length}' × ${roomToEdit.width}' × ${roomToEdit.height}'\n\nEnter new dimensions:\nLength, width, height (in feet)\n\nExample: "12 by 14, 9 foot ceilings" or "12x14x9"`;
+            nextStage = 'edit_room_quote';
+          }
+          break;
+        }
+        
         const lowerInput = input.toLowerCase();
         
         if (lowerInput.includes('breakdown') || lowerInput.includes('how did you calculate') || lowerInput.includes('detail')) {

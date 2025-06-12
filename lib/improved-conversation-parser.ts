@@ -68,23 +68,45 @@ const parseCustomerInfo = (input: string, existingData: Partial<ConversationData
     };
   }
   
-  // Check if it's just a name (no numbers, no address keywords)
+  // Check for address keywords
   const addressKeywords = ['street', 'st', 'avenue', 'ave', 'road', 'rd', 'drive', 'dr', 'lane', 'ln', 'way', 'court', 'ct', 'blvd', 'boulevard', 'place', 'pl'];
   const hasNumbers = /\d/.test(input);
   const hasAddressKeywords = addressKeywords.some(keyword => 
     lower.includes(` ${keyword}`) || lower.endsWith(keyword)
   );
   
+  // Handle "Name and Address" pattern (natural language)
+  if (lower.includes(' and ') && hasAddressKeywords) {
+    const parts = input.split(/\s+and\s+/i);
+    if (parts.length >= 2) {
+      const potentialName = parts[0].trim();
+      const potentialAddress = parts.slice(1).join(' and ').trim();
+      
+      // Check if the second part looks like an address
+      const secondPartLower = potentialAddress.toLowerCase();
+      const secondPartHasAddressKeywords = addressKeywords.some(keyword => 
+        secondPartLower.includes(` ${keyword}`) || secondPartLower.endsWith(keyword)
+      );
+      
+      if (secondPartHasAddressKeywords || /\d/.test(potentialAddress)) {
+        return {
+          customer_name: potentialName,
+          address: potentialAddress
+        };
+      }
+    }
+  }
+  
+  // If it's just a name (no numbers, no address keywords)
   if (!hasNumbers && !hasAddressKeywords) {
-    // Likely just a name
     return {
       customer_name: input.trim(),
       address: existingData.address || ''
     };
   }
   
-  if (hasNumbers && hasAddressKeywords) {
-    // Likely just an address
+  // If it has address keywords (with or without numbers), treat as address
+  if (hasAddressKeywords) {
     return {
       customer_name: existingData.customer_name || '',
       address: input.trim()
@@ -387,6 +409,34 @@ export const generateRoomSummary = (rooms: Room[]): string => {
   return summary;
 };
 
+// Generate room summary with edit buttons for interactive display
+export const generateRoomSummaryWithButtons = (rooms: Room[]): { summary: string; buttons: any[] } => {
+  const totalCeilingArea = rooms.reduce((sum, room) => sum + room.ceiling_area, 0);
+  const totalDoors = rooms.reduce((sum, room) => sum + room.doors, 0);
+  const totalWindows = rooms.reduce((sum, room) => sum + room.windows, 0);
+  
+  let summary = `### Room Summary (${rooms.length} rooms)\n`;
+  
+  rooms.forEach((room, index) => {
+    summary += `${index + 1}. **${room.name}**: ${room.length}' × ${room.width}' × ${room.height}' (${room.ceiling_area} sqft ceiling, ${room.doors} doors, ${room.windows} windows)\n`;
+  });
+  
+  summary += `\n**Total Ceiling Area:** ${totalCeilingArea.toLocaleString()} sqft\n`;
+  summary += `**Total Doors:** ${totalDoors}\n`;
+  summary += `**Total Windows:** ${totalWindows}\n\n`;
+  summary += `Click a room below to edit its dimensions:`;
+  
+  // Generate edit buttons for each room
+  const buttons = rooms.map((room, index) => ({
+    id: `edit_room_${index}`,
+    label: `✏️ Edit ${room.name}`,
+    value: `edit_room_${index}`,
+    selected: false
+  }));
+  
+  return { summary, buttons };
+};
+
 export const generateQuoteDisplay = (quote: any, customerName: string, address: string, rooms?: Room[]) => {
   let roomBreakdown = '';
   if (rooms && rooms.length > 0) {
@@ -406,4 +456,32 @@ ${roomBreakdown}
 • **Your Profit:** $${quote.markup_amount.toLocaleString()} (${quote.profit_margin.toFixed(1)}% margin)
 
 Ready to save this quote?`;
+};
+
+// Generate quote display with room edit buttons
+export const generateQuoteDisplayWithButtons = (quote: any, customerName: string, address: string, rooms?: Room[]) => {
+  let roomBreakdown = '';
+  let roomButtons: any[] = [];
+  
+  if (rooms && rooms.length > 0) {
+    const roomSummaryWithButtons = generateRoomSummaryWithButtons(rooms);
+    roomBreakdown = `\n### Room-by-Room Breakdown\n${roomSummaryWithButtons.summary}\n`;
+    roomButtons = roomSummaryWithButtons.buttons;
+  }
+
+  const quoteText = `## Professional Painting Quote
+
+**Customer:** ${customerName}
+**Address:** ${address}
+${roomBreakdown}
+### Pricing Summary
+• **Materials:** $${quote.materials.total_material_cost.toLocaleString()}
+• **Labor:** $${quote.labor.total_labor.toLocaleString()}
+• **Your Cost:** $${quote.total_cost.toLocaleString()}
+• **Customer Price:** $${quote.final_price.toLocaleString()}
+• **Your Profit:** $${quote.markup_amount.toLocaleString()} (${quote.profit_margin.toFixed(1)}% margin)
+
+Ready to save this quote?`;
+
+  return { quoteText, roomButtons };
 };
