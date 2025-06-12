@@ -242,11 +242,49 @@ docker run -d -p 3001:3001 --name paintquote-container paintquote-app
 - ✅ Fixed multi-select surface selection UI
 - ✅ Added blue background styling for selected buttons
 
+## 💡 Development Best Practices & Lessons Learned
+
+### Git Workflow Best Practices ✅
+1. **Always Push After Major Features:** Ensure `git push origin main` after completing feature implementations
+2. **Verify Remote Updates:** Check GitHub repository to confirm commits are pushed successfully
+3. **Commit Early & Often:** Make commits for logical feature chunks rather than massive changes
+4. **Include Meaningful Messages:** Use descriptive commit messages that explain the "why" not just "what"
+
+### Code Architecture Principles ✅
+1. **Conversation State Management:** Use clear stage transitions with descriptive names (`edit_room`, `edit_room_quote`)
+2. **Button Generation Functions:** Create reusable functions like `generateRoomSummaryWithButtons()` for consistent UI
+3. **Real-Time Updates:** Always recalculate quotes immediately after data changes for responsive UX
+4. **Variable Naming:** Avoid conflicts by using descriptive names (`roomDimensionInput` vs `editDimensionInput`)
+
+### Natural Language Processing Patterns ✅
+1. **Address Keyword Detection:** Use arrays of address terms for robust pattern matching
+2. **"Name and Address" Parsing:** Handle natural language with "and" splitting plus keyword validation
+3. **Fallback Logic:** Provide smart defaults when parsing fails or is ambiguous
+4. **Input Validation:** Always validate parsed data before state updates
+
+### Interactive UI Best Practices ✅
+1. **Silent Selection:** Surface toggles shouldn't trigger AI responses - keep UX smooth
+2. **Visual Feedback:** Use `selected` state for immediate button highlighting
+3. **Edit Buttons:** Make editing discoverable with clear labels ("✏️ Edit [Room Name]")
+4. **Multiple Edit Points:** Allow editing at different conversation stages for flexibility
+
+### React State Management ✅
+1. **Immutable Updates:** Always use spread operators for state updates (`...prev, newData`)
+2. **Index Tracking:** Use `editingRoomIndex` to track which room is being modified
+3. **Async Updates:** Use `setTimeout()` for button display timing to ensure smooth transitions
+4. **State Validation:** Check required fields before advancing conversation stages
+
+### Error Prevention Strategies ✅
+1. **Logic Loop Prevention:** Validate requirements based on actual selections (ceiling area only when ceilings selected)
+2. **Build Error Prevention:** Use descriptive variable names to avoid redefinition conflicts
+3. **Type Safety:** Maintain TypeScript strictness with proper interface definitions
+4. **Null Checking:** Always check for undefined/null before operations
+
 ## 🎯 Project Context for Claude 4
 
 **Current State:** The painting quote app is fully functional with an advanced interactive room editing system and streamlined conversation flow. Users can create professional quotes, edit room dimensions in real-time, and get instant quote recalculations.
 
-**Last Working Session:** Implemented comprehensive room editing functionality with clickable edit buttons, real-time quote updates, enhanced natural language parsing for customer info, and fixed logic loops that prevented quote completion.
+**Last Working Session:** Implemented comprehensive room editing functionality with clickable edit buttons, real-time quote updates, enhanced natural language parsing for customer info, and fixed logic loops that prevented quote completion. **Remember to always `git push` after completing features!**
 
 **What Works:** Multi-select surface selection, automatic room-by-room ceiling measurements, interactive room editing, natural language parsing, quote calculations, database storage, professional quote display with edit capabilities.
 
