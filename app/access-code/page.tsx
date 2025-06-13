@@ -48,13 +48,17 @@ export default function AccessCodePage() {
           }),
         );
 
+        // Check if user came from homepage sign-in link (has redirect parameter)
+        const redirectParam = new URLSearchParams(window.location.search).get('redirect');
+        const redirectTo = redirectParam || '/dashboard'; // Default to dashboard for normal access code entry
+        
         // Redirect to dashboard or show welcome for new companies
         if (data.isNewCompany) {
           router.push(
-            `/success?newCompany=true&companyName=${encodeURIComponent(data.company.name)}`,
+            `/success?newCompany=true&companyName=${encodeURIComponent(data.company.name)}&redirect=${encodeURIComponent(redirectTo)}`,
           );
         } else {
-          router.push("/dashboard");
+          router.push(redirectTo);
         }
       } else {
         setError(data.error || "Invalid access code");

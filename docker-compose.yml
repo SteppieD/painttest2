@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  painttest-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - HOSTNAME=0.0.0.0
+      - PORT=3001
+    volumes:
+      # Mount data directory for SQLite databases
+      - ./data:/app/data
+      # Mount the database files directly to persist data
+      - ./painting_quotes_app.db:/app/painting_quotes_app.db
+      - ./quotes.db:/app/quotes.db
+    restart: unless-stopped
+    container_name: painttest-app

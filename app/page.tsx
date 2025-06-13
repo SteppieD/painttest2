@@ -10,7 +10,9 @@ import {
   Users,
   TrendingUp,
   Shield,
-  Smartphone
+  Smartphone,
+  FileText,
+  BookOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -78,9 +80,9 @@ export default function HomePage() {
               <span className="text-2xl font-bold text-gray-900">ProPaint Quote</span>
             </div>
             <nav className="hidden md:flex items-center gap-6">
-              <Link href="#features" className="text-gray-600 hover:text-gray-900">Features</Link>
-              <Link href="#pricing" className="text-gray-600 hover:text-gray-900">Pricing</Link>
-              <Link href="#testimonials" className="text-gray-600 hover:text-gray-900">Reviews</Link>
+              <Link href="/painting-estimate-calculator" className="text-gray-600 hover:text-gray-900">Calculator</Link>
+              <Link href="/painting-quote-templates" className="text-gray-600 hover:text-gray-900">Templates</Link>
+              <Link href="/how-to-quote-painting-jobs" className="text-gray-600 hover:text-gray-900">Guide</Link>
               <Link href="/access-code" className="text-blue-600 hover:text-blue-700 font-medium">Sign In</Link>
               <Button asChild>
                 <Link href="/access-code">Start Free Trial</Link>
@@ -252,6 +254,82 @@ export default function HomePage() {
             <br />
             <span className="font-medium">- Mike Johnson, Elite Painting Co.</span>
           </p>
+        </div>
+      </section>
+
+      {/* Resources Section */}
+      <section className="py-20 px-4 bg-white">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Painting Business Resources
+            </h2>
+            <p className="text-xl text-gray-600">
+              Everything you need to grow your painting business and create professional estimates
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <Calculator className="w-8 h-8 text-blue-600 mb-2" />
+                <CardTitle className="text-lg">Estimate Calculator</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Free painting estimate calculator for instant, accurate quotes on any project size.
+                </p>
+                <Link href="/painting-estimate-calculator" className="text-blue-600 hover:text-blue-700 font-medium">
+                  Try Calculator →
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <FileText className="w-8 h-8 text-green-600 mb-2" />
+                <CardTitle className="text-lg">Quote Templates</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Professional painting quote templates for interior, exterior, and commercial projects.
+                </p>
+                <Link href="/painting-quote-templates" className="text-green-600 hover:text-green-700 font-medium">
+                  Download Templates →
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <BookOpen className="w-8 h-8 text-purple-600 mb-2" />
+                <CardTitle className="text-lg">Quoting Guide</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Complete guide on how to quote painting jobs like a professional contractor.
+                </p>
+                <Link href="/how-to-quote-painting-jobs" className="text-purple-600 hover:text-purple-700 font-medium">
+                  Read Guide →
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <Smartphone className="w-8 h-8 text-indigo-600 mb-2" />
+                <CardTitle className="text-lg">Software Features</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Learn about the best painting estimating software features and benefits.
+                </p>
+                <Link href="/painting-estimating-software" className="text-indigo-600 hover:text-indigo-700 font-medium">
+                  Explore Features →
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 

@@ -15,6 +15,7 @@ function SuccessContent() {
     company?: string;
     newCompany?: string;
     companyName?: string;
+    redirect?: string;
   }>({});
 
   useEffect(() => {
@@ -23,8 +24,9 @@ function SuccessContent() {
     const company = searchParams.get("company") ?? undefined;
     const newCompany = searchParams.get("newCompany") ?? undefined;
     const companyName = searchParams.get("companyName") ?? undefined;
+    const redirect = searchParams.get("redirect") ?? undefined;
 
-    setQuoteInfo({ quoteId, amount, company, newCompany, companyName });
+    setQuoteInfo({ quoteId, amount, company, newCompany, companyName, redirect });
   }, [searchParams]);
 
   return (
@@ -123,7 +125,7 @@ function SuccessContent() {
           }}
         >
           <button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push(quoteInfo.redirect || "/dashboard")}
             style={{
               padding: "12px 24px",
               backgroundColor: "#3498db",
@@ -135,7 +137,7 @@ function SuccessContent() {
               fontWeight: "bold",
             }}
           >
-            📊 View Dashboard
+            {quoteInfo.redirect === "/" ? "🏠 Continue to Homepage" : "📊 View Dashboard"}
           </button>
 
           <button

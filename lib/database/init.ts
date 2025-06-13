@@ -1,6 +1,7 @@
 import Database from 'better-sqlite3';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { randomBytes } from 'crypto';
 
 let db: Database.Database | null = null;
 let isInitialized = false;
@@ -179,12 +180,22 @@ function initializeSchema() {
       CREATE TABLE IF NOT EXISTS chat_messages (
         id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
         project_id TEXT,
+        company_id INTEGER,
         role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
         content TEXT NOT NULL,
         metadata TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (company_id) REFERENCES companies(id)
       );
     `);
+    
+    // Add company_id column to existing chat_messages table if it doesn't exist
+    try {
+      db.exec(`ALTER TABLE chat_messages ADD COLUMN company_id INTEGER`);
+      console.log('✓ Added company_id column to chat_messages table');
+    } catch (error) {
+      // Column already exists, ignore error
+    }
     console.log('✓ Chat messages table created/verified');
     
     // Cost settings table
@@ -208,8 +219,52 @@ function initializeSchema() {
     `);
     console.log('✓ Cost settings table created/verified');
     
+    // Admin tables for admin portal
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS admin_users (
+        id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT,
+        full_name TEXT NOT NULL,
+        role TEXT NOT NULL DEFAULT 'admin',
+        is_active INTEGER DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        last_login_at DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('✓ Admin users table created/verified');
+    
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS admin_sessions (
+        id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+        admin_user_id TEXT NOT NULL,
+        session_token TEXT UNIQUE NOT NULL,
+        expires_at DATETIME NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (admin_user_id) REFERENCES admin_users(id) ON DELETE CASCADE
+      );
+    `);
+    console.log('✓ Admin sessions table created/verified');
+    
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS admin_activity_logs (
+        id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+        admin_user_id TEXT,
+        action TEXT NOT NULL,
+        details TEXT,
+        ip_address TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (admin_user_id) REFERENCES admin_users(id) ON DELETE SET NULL
+      );
+    `);
+    console.log('✓ Admin activity logs table created/verified');
+    
     // Seed demo companies if none exist
     seedDemoCompanies();
+    
+    // Seed admin user if none exist
+    seedAdminUser();
     
   } catch (error) {
     console.error('Schema initialization error:', error);
@@ -222,7 +277,7 @@ function verifyTables() {
   
   console.log('Verifying tables...');
   
-  const requiredTables = ['companies', 'quotes', 'users', 'projects', 'chat_messages', 'cost_settings'];
+  const requiredTables = ['companies', 'quotes', 'users', 'projects', 'chat_messages', 'cost_settings', 'admin_users', 'admin_sessions', 'admin_activity_logs'];
   const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all() as any[];
   const tableNames = tables.map(t => t.name);
   
@@ -265,6 +320,34 @@ function seedDemoCompanies() {
     }
   } catch (error) {
     console.error('Error seeding demo companies:', error);
+  }
+}
+
+function seedAdminUser() {
+  if (!db) return;
+  
+  try {
+    const count = db.prepare("SELECT COUNT(*) as count FROM admin_users").get() as any;
+    
+    if (count.count === 0) {
+      console.log('Seeding admin user...');
+      
+      // Generate a random admin ID
+      const adminId = randomBytes(16).toString('hex');
+      
+      const insertStmt = db.prepare(`
+        INSERT INTO admin_users (id, email, full_name, role, is_active) 
+        VALUES (?, ?, ?, ?, ?)
+      `);
+      
+      insertStmt.run(adminId, 'admin@paintingapp.com', 'System Administrator', 'super_admin', 1);
+      
+      console.log('✓ Admin user seeded successfully');
+      console.log('  Email: admin@paintingapp.com');
+      console.log('  Password: admin123 (handled in login API)');
+    }
+  } catch (error) {
+    console.error('Error seeding admin user:', error);
   }
 }
 
