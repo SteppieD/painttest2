@@ -10,6 +10,14 @@ yarn-error.log*
 # Project state documentation (not committed to Git)
 PROJECT_STATE_CLAUDE4.md
 
+# Admin portal business strategy (confidential)
+ADMIN_PORTAL_PLAN.md
+ADMIN_DEVELOPMENT_ROADMAP.md
+ADMIN_TODO_CHECKLIST.md
+
+# SEO strategy and keyword research (confidential)
+SEO_OPTIMIZATION_GUIDE.md
+
 # System files
 .DS_Store
 .claude/

@@ -1,0 +1,40 @@
+# Robots.txt for ProPaint Quote
+# https://propaintquote.com/robots.txt
+
+User-agent: *
+Allow: /
+Allow: /sitemap.xml
+
+# Block admin and user areas from indexing
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /create-quote/
+Disallow: /quotes/
+Disallow: /settings/
+Disallow: /access-code/
+Disallow: /success/
+
+# Block API endpoints
+Disallow: /api/
+
+# Block temporary and cache files
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /_next/
+Disallow: /vercel.svg
+Disallow: /next.svg
+
+# Allow important SEO pages
+Allow: /about
+Allow: /contact
+Allow: /pricing
+Allow: /features
+Allow: /blog
+Allow: /support
+Allow: /demo
+
+# Sitemap location
+Sitemap: https://propaintquote.com/sitemap.xml
+
+# Crawl-delay to be respectful
+Crawl-delay: 1
