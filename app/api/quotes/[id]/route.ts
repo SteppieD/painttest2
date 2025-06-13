@@ -52,6 +52,16 @@ export async function GET(
       };
     }
 
+    // Parse payment terms if they exist
+    if (quote.payment_terms && typeof quote.payment_terms === 'string') {
+      try {
+        quote.payment_terms = JSON.parse(quote.payment_terms);
+      } catch (e) {
+        console.error('Error parsing payment terms:', e);
+        quote.payment_terms = null;
+      }
+    }
+
     // Ensure we have the necessary fields
     quote.total_cost = quote.final_price || quote.total_revenue || quote.quote_amount;
     quote.sqft = (quote.walls_sqft || 0) + (quote.ceilings_sqft || 0) + (quote.trim_sqft || 0);

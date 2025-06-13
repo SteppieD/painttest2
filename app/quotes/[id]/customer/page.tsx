@@ -31,6 +31,18 @@ import { useToast } from "@/components/ui/use-toast";
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
+interface Room {
+  id: string;
+  name: string;
+  length: number;
+  width: number;
+  height: number;
+  ceiling_area: number;
+  wall_area: number;
+  number_of_doors: number;
+  number_of_windows: number;
+}
+
 interface QuoteData {
   id: string;
   quote_id: string;
@@ -61,6 +73,12 @@ interface QuoteData {
   number_of_windows?: number;
   final_price?: number;
   markup_amount?: number;
+  room_data?: string;
+  room_count?: number;
+  payment_terms?: {
+    schedule: string;
+    terms: string;
+  };
 }
 
 export default function CustomerQuotePage({ params }: { params: { id: string } }) {
@@ -71,6 +89,7 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
   const [clientSignature, setClientSignature] = useState("");
   const [isAccepted, setIsAccepted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
     loadQuote();
@@ -82,6 +101,18 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
       if (response.ok) {
         const data = await response.json();
         setQuote(data);
+        
+        // Parse room data if available
+        if (data.room_data && typeof data.room_data === 'string') {
+          try {
+            const roomData = JSON.parse(data.room_data);
+            if (Array.isArray(roomData)) {
+              setRooms(roomData);
+            }
+          } catch (e) {
+            console.error('Error parsing room data:', e);
+          }
+        }
       }
     } catch (error) {
       console.error('Error loading quote:', error);
@@ -296,8 +327,36 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
                   </div>
                   <div className="flex items-center gap-2">
                     <Home className="w-4 h-4 text-gray-400" />
-                    <span>{quote.sqft ? `${quote.sqft.toLocaleString()} sq ft` : 'Custom project'}</span>
+                    <span>Total: {quote.sqft ? `${quote.sqft.toLocaleString()} sq ft` : 'Custom project'}</span>
                   </div>
+                  {(quote.walls_sqft || 0) > 0 && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4" />
+                      <span className="text-gray-600">Walls: {(quote.walls_sqft || 0).toLocaleString()} sq ft</span>
+                    </div>
+                  )}
+                  {(quote.ceilings_sqft || 0) > 0 && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4" />
+                      <span className="text-gray-600">Ceilings: {(quote.ceilings_sqft || 0).toLocaleString()} sq ft</span>
+                    </div>
+                  )}
+                  {(quote.trim_sqft || 0) > 0 && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4" />
+                      <span className="text-gray-600">Trim: {(quote.trim_sqft || 0).toLocaleString()} sq ft</span>
+                    </div>
+                  )}
+                  {(quote.number_of_doors || quote.number_of_windows) && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4" />
+                      <span className="text-gray-600">
+                        {quote.number_of_doors ? `${quote.number_of_doors} doors` : ''}
+                        {quote.number_of_doors && quote.number_of_windows ? ', ' : ''}
+                        {quote.number_of_windows ? `${quote.number_of_windows} windows` : ''}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -327,6 +386,55 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
             </div>
           </CardContent>
         </Card>
+
+        {/* Room Breakdown - Only show if rooms exist */}
+        {rooms.length > 0 && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Home className="w-5 h-5 text-blue-600" />
+                Room Breakdown ({rooms.length} rooms)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {rooms.map((room, index) => (
+                  <div key={room.id || index} className="p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-medium text-gray-900 mb-2">{room.name}</h4>
+                    <div className="space-y-1 text-sm text-gray-600">
+                      <div className="flex justify-between">
+                        <span>Dimensions:</span>
+                        <span>{room.length}' × {room.width}' × {room.height}'</span>
+                      </div>
+                      {room.ceiling_area > 0 && (
+                        <div className="flex justify-between">
+                          <span>Ceiling Area:</span>
+                          <span>{room.ceiling_area} sq ft</span>
+                        </div>
+                      )}
+                      {room.wall_area > 0 && (
+                        <div className="flex justify-between">
+                          <span>Wall Area:</span>
+                          <span>{room.wall_area} sq ft</span>
+                        </div>
+                      )}
+                      {(room.number_of_doors > 0 || room.number_of_windows > 0) && (
+                        <div className="flex justify-between">
+                          <span>Features:</span>
+                          <span>
+                            {room.number_of_doors > 0 ? `${room.number_of_doors} doors` : ''}
+                            {room.number_of_doors > 0 && room.number_of_windows > 0 ? ', ' : ''}
+                            {room.number_of_windows > 0 ? `${room.number_of_windows} windows` : ''}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Services Included */}
         <Card className="mb-6">
@@ -417,37 +525,32 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
           </CardContent>
         </Card>
 
-        {/* Payment Terms */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-green-600" />
-              Simple Payment Schedule
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">25%</div>
-                <div className="font-medium">To Start</div>
-                <div className="text-sm text-gray-600">Secures your project date</div>
+        {/* Payment Terms - Only show if configured for this quote */}
+        {quote.payment_terms && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign className="w-5 h-5 text-green-600" />
+                Payment Terms
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6">
+              <div className="space-y-4">
+                <div className="text-sm text-gray-700">
+                  {quote.payment_terms.terms}
+                </div>
+                {quote.payment_terms.schedule && (
+                  <div className="text-sm text-gray-600">
+                    <strong>Payment Schedule:</strong> {quote.payment_terms.schedule}
+                  </div>
+                )}
+                <div className="text-center text-sm text-gray-600 pt-2 border-t">
+                  We accept cash, check, and all major credit cards
+                </div>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">50%</div>
-                <div className="font-medium">At Start</div>
-                <div className="text-sm text-gray-600">When work begins</div>
-              </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">25%</div>
-                <div className="font-medium">At Completion</div>
-                <div className="text-sm text-gray-600">Upon your approval</div>
-              </div>
-            </div>
-            <div className="mt-4 text-center text-sm text-gray-600">
-              We accept cash, check, and all major credit cards
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Accept Quote */}
         {!isAccepted ? (
