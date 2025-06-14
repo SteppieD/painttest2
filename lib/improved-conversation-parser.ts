@@ -75,20 +75,34 @@ const parseCustomerInfo = (input: string, existingData: Partial<ConversationData
     lower.includes(` ${keyword}`) || lower.endsWith(keyword)
   );
   
-  // Handle "Name and Address" pattern (natural language)
-  if (lower.includes(' and ') && hasAddressKeywords) {
+  // Handle "Name and his/her/their address is..." pattern  
+  if (lower.includes(' and ') && (lower.includes('and his address') || lower.includes('and her address') || lower.includes('and their address') || lower.includes('and the address'))) {
+    const nameMatch = input.match(/^([^,]+?)\s+and\s+(?:his|her|their|the)\s+address\s+is\s+(.+)/i);
+    if (nameMatch) {
+      return {
+        customer_name: nameMatch[1].trim(),
+        address: nameMatch[2].trim()
+      };
+    }
+  }
+  
+  // Handle "Name and Address" pattern (natural language) - but avoid "and his/her/their address" patterns
+  if (lower.includes(' and ') && hasAddressKeywords && !lower.includes('and his') && !lower.includes('and her') && !lower.includes('and their') && !lower.includes('and the address')) {
     const parts = input.split(/\s+and\s+/i);
     if (parts.length >= 2) {
       const potentialName = parts[0].trim();
       const potentialAddress = parts.slice(1).join(' and ').trim();
       
-      // Check if the second part looks like an address
+      // Check if the second part looks like an address (and not explanatory text)
       const secondPartLower = potentialAddress.toLowerCase();
       const secondPartHasAddressKeywords = addressKeywords.some(keyword => 
         secondPartLower.includes(` ${keyword}`) || secondPartLower.endsWith(keyword)
       );
       
-      if (secondPartHasAddressKeywords || /\d/.test(potentialAddress)) {
+      // Also check that it doesn't start with possessive or descriptive phrases
+      const startsWithDescriptive = /^(his|her|their|the)\s+(address|location|home|house|property)/i.test(potentialAddress);
+      
+      if ((secondPartHasAddressKeywords || /\d/.test(potentialAddress)) && !startsWithDescriptive) {
         return {
           customer_name: potentialName,
           address: potentialAddress

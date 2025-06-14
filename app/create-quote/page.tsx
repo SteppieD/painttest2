@@ -115,6 +115,33 @@ function CreateQuotePageContent() {
   const [currentRoomData, setCurrentRoomData] = useState<Partial<Room>>({});
   const [editingRoomIndex, setEditingRoomIndex] = useState(-1);
 
+  // Paint selection tracking
+  const [availableBrands, setAvailableBrands] = useState<any[]>([]);
+  const [currentPaintCategory, setCurrentPaintCategory] = useState<string>('');
+  const [selectedPaintProducts, setSelectedPaintProducts] = useState<{[category: string]: any}>({});
+  const [paintSelectionQueue, setPaintSelectionQueue] = useState<string[]>([]);
+  const [currentPaintCategoryIndex, setCurrentPaintCategoryIndex] = useState(0);
+
+  // Helper function for brand icons
+  const getBrandIcon = (brand: string): string => {
+    const brandIcons: { [key: string]: string } = {
+      'Sherwin-Williams': '🎨',
+      'Benjamin Moore': '🏠',
+      'PPG': '🎭',
+      'Behr': '✨',
+      'Kilz': '🛡️',
+      'Zinsser': '💪',
+    };
+    return brandIcons[brand] || '🎨';
+  };
+
+  // Helper function to determine quality level based on price
+  const getQualityLevel = (price: number): string => {
+    if (price < 50) return 'Good';
+    if (price < 80) return 'Better';
+    return 'Best';
+  };
+
   // Auto-scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -182,8 +209,23 @@ function CreateQuotePageContent() {
           floor_sealer_rate_per_sqft: settings.floor_sealer_rate_per_sqft || DEFAULT_CHARGE_RATES.floor_sealer_rate_per_sqft
         }
       }));
+
+      // Also load available paint brands for this company
+      loadPaintBrands(companyId);
     } catch (error) {
       console.error('Failed to load company defaults:', error);
+    }
+  };
+
+  const loadPaintBrands = async (companyId: string) => {
+    try {
+      const response = await fetch(`/api/paint-products/brands?companyId=${companyId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setAvailableBrands(data.brands || []);
+      }
+    } catch (error) {
+      console.error('Failed to load paint brands:', error);
     }
   };
 
@@ -572,18 +614,57 @@ What would you like to modify?`,
             }));
             
             const roomSummaryWithButtons = generateRoomSummaryWithButtons(updatedRooms);
-            responseContent = `Excellent! Here's your room summary:\n\n${roomSummaryWithButtons.summary}\n\nNow I need the wall dimensions for the areas you want painted:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n\nFor example: "120 linear feet"`;
             
-            // Show room edit buttons
-            setTimeout(() => {
-              const wallDimensionButtons = [
-                ...roomSummaryWithButtons.buttons,
-                { id: 'continue_wall', label: '➡️ Continue to Wall Dimensions', value: 'continue_wall', selected: false }
-              ];
-              setButtonOptions(wallDimensionButtons);
-              setShowButtons(true);
-            }, 500);
-            nextStage = 'wall_dimensions';
+            // Check what additional measurements are needed based on selected surfaces
+            const needsWallDimensions = selectedSurfaces.some(surface => 
+              ['walls', 'trim', 'doors', 'windows'].includes(surface)
+            );
+            const needsDoorsWindows = selectedSurfaces.some(surface => 
+              ['doors', 'windows', 'trim'].includes(surface)
+            );
+            const onlyCeilings = selectedSurfaces.length === 1 && selectedSurfaces.includes('ceilings');
+            
+            if (onlyCeilings) {
+              // For ceiling-only projects, we have all needed measurements from room dimensions
+              responseContent = `Excellent! Here's your room summary:\n\n${roomSummaryWithButtons.summary}\n\n✅ **All measurements collected!** Since you're only painting ceilings, I have everything needed from the room dimensions.`;
+              
+              setTimeout(() => {
+                setButtonOptions([
+                  ...roomSummaryWithButtons.buttons,
+                  { id: 'continue_paint', label: '➡️ Continue to Paint Selection', value: 'continue_paint', selected: false }
+                ]);
+                setShowButtons(true);
+              }, 500);
+              nextStage = 'ready_for_paint_selection';
+            } else if (needsWallDimensions) {
+              // Need wall dimensions for wall/trim/door/window painting
+              const measurementPurpose = selectedSurfaces.includes('walls') 
+                ? 'for calculating wall paint coverage' 
+                : 'for calculating trim, door, and window areas';
+              
+              responseContent = `Excellent! Here's your room summary:\n\n${roomSummaryWithButtons.summary}\n\nNow I need wall dimensions ${measurementPurpose}:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n\nFor example: "120 linear feet"`;
+              
+              setTimeout(() => {
+                const wallDimensionButtons = [
+                  ...roomSummaryWithButtons.buttons,
+                  { id: 'continue_wall', label: '➡️ Continue to Wall Dimensions', value: 'continue_wall', selected: false }
+                ];
+                setButtonOptions(wallDimensionButtons);
+                setShowButtons(true);
+              }, 500);
+              nextStage = 'wall_dimensions';
+            } else {
+              // Fallback case
+              responseContent = `Excellent! Here's your room summary:\n\n${roomSummaryWithButtons.summary}`;
+              setTimeout(() => {
+                setButtonOptions([
+                  ...roomSummaryWithButtons.buttons,
+                  { id: 'continue_paint', label: '➡️ Continue to Paint Selection', value: 'continue_paint', selected: false }
+                ]);
+                setShowButtons(true);
+              }, 500);
+              nextStage = 'ready_for_paint_selection';
+            }
           }
         } else {
           responseContent = `I need the room dimensions. Please provide length, width, and height.\n\nExample: "${roomName}: 12 by 14, 9 foot ceilings" or "${roomName}: 12x14x9"`;
@@ -619,8 +700,74 @@ What would you like to modify?`,
         }));
         
         if (wallDimensions.wall_linear_feet) {
-          responseContent = `Perfect! Now I need to count the doors and windows:\n\n• How many **doors** need painting?\n• How many **windows** need painting?\n\nFor example: "3 doors and 5 windows" or "2 doors, no windows"`;
-          nextStage = 'doors_windows';
+          // Check if we need to ask about doors and windows
+          const needsDoorsWindows = selectedSurfaces.some(surface => 
+            ['doors', 'windows', 'trim'].includes(surface)
+          );
+          
+          if (needsDoorsWindows) {
+            const doorWindowPurpose = [];
+            if (selectedSurfaces.includes('doors')) doorWindowPurpose.push('doors');
+            if (selectedSurfaces.includes('windows')) doorWindowPurpose.push('windows');
+            if (selectedSurfaces.includes('trim')) doorWindowPurpose.push('trim around doors and windows');
+            
+            responseContent = `Perfect! Now I need to count the doors and windows for painting ${doorWindowPurpose.join(', ')}:\n\n• How many **doors** need painting?\n• How many **windows** need painting?\n\nFor example: "3 doors and 5 windows" or "2 doors, no windows"`;
+            nextStage = 'doors_windows';
+          } else {
+            // Skip doors/windows and go straight to paint selection
+            responseContent = `Perfect! I have all the measurements needed for your wall painting project.`;
+            
+            // Set up paint selection queue based on selected surfaces
+            const paintCategories = [];
+            if (selectedSurfaces.includes('walls')) paintCategories.push('walls');
+            if (selectedSurfaces.includes('ceilings')) paintCategories.push('ceilings');
+            if (selectedSurfaces.includes('trim')) paintCategories.push('trim');
+            if (selectedSurfaces.includes('doors')) paintCategories.push('doors');
+            if (selectedSurfaces.includes('windows')) paintCategories.push('windows');
+            
+            setPaintSelectionQueue(paintCategories);
+            setCurrentPaintCategoryIndex(0);
+            
+            if (paintCategories.length > 0) {
+              const firstCategory = paintCategories[0];
+              setCurrentPaintCategory(firstCategory);
+              responseContent += `\n\nGreat! Now let's select paint for your ${firstCategory}.\n\nWhich paint brand do you prefer for ${firstCategory}?`;
+              
+              // Show brand selection buttons
+              setTimeout(() => {
+                const brandButtons = availableBrands
+                  .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
+                  .map(brand => ({
+                    id: `brand_${brand.brand}`,
+                    label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                    value: `brand_${brand.brand}_${firstCategory}`,
+                    selected: false
+                  }));
+                
+                if (brandButtons.length > 0) {
+                  setButtonOptions(brandButtons);
+                  setShowButtons(true);
+                } else {
+                  // Fallback to generic paint quality if no brands available
+                  setButtonOptions([
+                    { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+                    { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+                    { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+                  ]);
+                  setShowButtons(true);
+                }
+              }, 500);
+              
+              // Check if we have brands available to determine next stage
+              const hasBrands = availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
+              if (hasBrands) {
+                nextStage = 'paint_brand_selection';
+              } else {
+                nextStage = 'paint_quality';
+                responseContent += `\n\nPerfect! Now what paint quality would you like for ${firstCategory}?`;
+              }
+            }
+          }
         } else {
           responseContent = `I need the wall linear footage. How many linear feet of walls need painting?\n\nFor example: "120 linear feet"`;
           nextStage = 'wall_dimensions';
@@ -791,6 +938,85 @@ What would you like to modify?`,
         }
         break;
         
+      case 'ready_for_paint_selection':
+        // Handle the continue to paint selection button for ceiling-only projects
+        if (input === 'continue_paint') {
+          // Set up paint selection queue based on selected surfaces
+          const paintCategories = [];
+          if (selectedSurfaces.includes('walls')) paintCategories.push('walls');
+          if (selectedSurfaces.includes('ceilings')) paintCategories.push('ceilings');
+          if (selectedSurfaces.includes('trim')) paintCategories.push('trim');
+          if (selectedSurfaces.includes('doors')) paintCategories.push('doors');
+          if (selectedSurfaces.includes('windows')) paintCategories.push('windows');
+          
+          setPaintSelectionQueue(paintCategories);
+          setCurrentPaintCategoryIndex(0);
+          
+          if (paintCategories.length > 0) {
+            const firstCategory = paintCategories[0];
+            setCurrentPaintCategory(firstCategory);
+            responseContent = `Great! Now let's select paint for your ${firstCategory}.\n\nWhich paint brand do you prefer for ${firstCategory}?`;
+            
+            // Show brand selection buttons
+            setTimeout(() => {
+              const brandButtons = availableBrands
+                .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
+                .map(brand => ({
+                  id: `brand_${brand.brand}`,
+                  label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                  value: `brand_${brand.brand}_${firstCategory}`,
+                  selected: false
+                }));
+              
+              if (brandButtons.length > 0) {
+                setButtonOptions(brandButtons);
+                setShowButtons(true);
+              } else {
+                // Fallback to generic paint quality if no brands available
+                setButtonOptions([
+                  { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+                  { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+                  { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+                ]);
+                setShowButtons(true);
+              }
+            }, 500);
+            
+            // Check if we have brands available to determine next stage
+            const hasBrands = availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
+            if (hasBrands) {
+              nextStage = 'paint_brand_selection';
+            } else {
+              nextStage = 'paint_quality';
+              responseContent = `Perfect! Now what paint quality would you like for ${firstCategory}?`;
+            }
+          } else {
+            responseContent = `Perfect! Now what paint quality would you like?`;
+            // Show paint quality buttons as fallback
+            setTimeout(() => {
+              setButtonOptions([
+                { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+                { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+                { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+              ]);
+              setShowButtons(true);
+            }, 500);
+            nextStage = 'paint_quality';
+          }
+        } else {
+          // Handle room edit buttons (same logic as other stages)
+          if (input.startsWith('edit_room_')) {
+            const roomIndex = parseInt(input.split('_')[2]);
+            const roomToEdit = rooms[roomIndex];
+            if (roomToEdit) {
+              setEditingRoomIndex(roomIndex);
+              responseContent = `**Editing ${roomToEdit.name}**\n\nCurrent dimensions: ${roomToEdit.length}' × ${roomToEdit.width}' × ${roomToEdit.height}'\n\nEnter new dimensions:\nLength, width, height (in feet)\n\nExample: "12 by 14, 9 foot ceilings" or "12x14x9"`;
+              nextStage = 'edit_room';
+            }
+          }
+        }
+        break;
+        
       case 'doors_windows':
         const doorsWindows = parseDoorsAndWindows(input);
         setQuoteData(prev => ({
@@ -802,17 +1028,68 @@ What would you like to modify?`,
           }
         }));
         
-        responseContent = `Perfect! Now what paint quality would you like?`;
-        // Show paint quality buttons
-        setTimeout(() => {
-          setButtonOptions([
-            { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
-            { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
-            { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
-          ]);
-          setShowButtons(true);
-        }, 500);
-        nextStage = 'paint_quality';
+        // Set up paint selection queue based on selected surfaces
+        const paintCategories = [];
+        if (selectedSurfaces.includes('walls')) paintCategories.push('walls');
+        if (selectedSurfaces.includes('ceilings')) paintCategories.push('ceilings');
+        if (selectedSurfaces.includes('trim')) paintCategories.push('trim');
+        if (selectedSurfaces.includes('doors')) paintCategories.push('doors');
+        if (selectedSurfaces.includes('windows')) paintCategories.push('windows');
+        
+        setPaintSelectionQueue(paintCategories);
+        setCurrentPaintCategoryIndex(0);
+        
+        if (paintCategories.length > 0) {
+          const firstCategory = paintCategories[0];
+          setCurrentPaintCategory(firstCategory);
+          responseContent = `Great! Now let's select paint for your ${firstCategory}.\n\nWhich paint brand do you prefer for ${firstCategory}?`;
+          
+          // Show brand selection buttons
+          setTimeout(() => {
+            const brandButtons = availableBrands
+              .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
+              .map(brand => ({
+                id: `brand_${brand.brand}`,
+                label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                value: `brand_${brand.brand}_${firstCategory}`,
+                selected: false
+              }));
+            
+            if (brandButtons.length > 0) {
+              setButtonOptions(brandButtons);
+              setShowButtons(true);
+            } else {
+              // Fallback to generic paint quality if no brands available
+              setButtonOptions([
+                { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+                { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+                { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+              ]);
+              setShowButtons(true);
+            }
+          }, 500);
+          
+          // Check if we have brands available to determine next stage
+          const hasBrands = availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
+          if (hasBrands) {
+            nextStage = 'paint_brand_selection';
+          } else {
+            nextStage = 'paint_quality';
+            responseContent = `Perfect! Now what paint quality would you like for ${firstCategory}?`;
+          }
+        } else {
+          responseContent = `Perfect! Now what paint quality would you like?`;
+          // Show paint quality buttons as fallback
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+              { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+              { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+          nextStage = 'paint_quality';
+        }
         break;
         
       case 'paint_quality':
@@ -840,6 +1117,201 @@ What would you like to modify?`,
           setShowButtons(true);
         }, 500);
         nextStage = 'markup_selection';
+        break;
+
+      case 'paint_brand_selection':
+        // Handle brand selection for current paint category
+        if (input.startsWith('brand_')) {
+          const parts = input.split('_');
+          const selectedBrand = parts[1];
+          const category = parts[2];
+          
+          // Fetch products for this brand and category
+          try {
+            const response = await fetch('/api/paint-products/brands', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                companyId: companyData.id,
+                brand: selectedBrand,
+                category: category
+              })
+            });
+            
+            if (response.ok) {
+              const data = await response.json();
+              
+              if (data.products && data.products.length > 0) {
+                responseContent = `Great choice! Here are the ${selectedBrand} ${category} paint options:\n\nChoose your ${selectedBrand} ${category} paint:`;
+                
+                // Show product selection buttons
+                setTimeout(() => {
+                  const productButtons = data.products.map((product: any, index: number) => {
+                    const quality = getQualityLevel(product.cost_per_gallon);
+                    return {
+                      id: `product_${product.id}`,
+                      label: `${product.product_name} - $${product.cost_per_gallon}/gal (${quality})`,
+                      value: `product_${product.id}_${category}`,
+                      selected: false
+                    };
+                  });
+                  setButtonOptions(productButtons);
+                  setShowButtons(true);
+                }, 500);
+                nextStage = 'paint_product_selection';
+              } else {
+                responseContent = `Sorry, no ${selectedBrand} ${category} paint products found. Let me show you other options.`;
+                nextStage = 'paint_quality';
+              }
+            }
+          } catch (error) {
+            responseContent = `Error loading ${selectedBrand} products. Let's continue with standard paint quality options.`;
+            nextStage = 'paint_quality';
+          }
+        }
+        break;
+
+      case 'paint_product_selection':
+        // Handle specific product selection
+        if (input.startsWith('product_')) {
+          const parts = input.split('_');
+          const productId = parts[1];
+          const category = parts[2];
+          
+          // Find the selected product from available brands
+          let selectedProduct = null;
+          for (const brand of availableBrands) {
+            if (brand.products[category]) {
+              selectedProduct = brand.products[category].find((p: any) => p.id === productId);
+              if (selectedProduct) break;
+            }
+          }
+          
+          if (selectedProduct) {
+            // Store the selected product
+            setSelectedPaintProducts(prev => ({
+              ...prev,
+              [category]: selectedProduct
+            }));
+            
+            responseContent = `Perfect! Selected ${selectedProduct.product_name} at $${selectedProduct.cost_per_gallon}/gallon for ${category}.\n\nIs this cost correct for ${category} paint?`;
+            
+            // Show cost validation buttons
+            setTimeout(() => {
+              setButtonOptions([
+                { id: 'cost_correct', label: '✅ Yes, cost is correct', value: `cost_approved_${category}`, selected: false },
+                { id: 'cost_adjust', label: '💰 Adjust the cost', value: `cost_adjust_${category}`, selected: false },
+                { id: 'choose_different', label: '🔄 Choose different product', value: `choose_different_${category}`, selected: false }
+              ]);
+              setShowButtons(true);
+            }, 500);
+            nextStage = 'paint_cost_validation';
+          }
+        }
+        break;
+
+      case 'paint_cost_validation':
+        // Handle cost validation responses
+        if (input.startsWith('cost_approved_')) {
+          const category = input.split('_')[2];
+          
+          // Move to next paint category or finish paint selection
+          const nextCategoryIndex = currentPaintCategoryIndex + 1;
+          
+          if (nextCategoryIndex < paintSelectionQueue.length) {
+            const nextCategory = paintSelectionQueue[nextCategoryIndex];
+            setCurrentPaintCategory(nextCategory);
+            setCurrentPaintCategoryIndex(nextCategoryIndex);
+            
+            responseContent = `Great! Now let's select paint for your ${nextCategory}.\n\nWhich paint brand do you prefer for ${nextCategory}?`;
+            
+            // Show brand selection for next category
+            setTimeout(() => {
+              const brandButtons = availableBrands
+                .filter(brand => brand.products[nextCategory] && brand.products[nextCategory].length > 0)
+                .map(brand => ({
+                  id: `brand_${brand.brand}`,
+                  label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                  value: `brand_${brand.brand}_${nextCategory}`,
+                  selected: false
+                }));
+              
+              setButtonOptions(brandButtons);
+              setShowButtons(true);
+            }, 500);
+            nextStage = 'paint_brand_selection';
+          } else {
+            // All paint categories selected, move to markup
+            responseContent = `Excellent! All paint selections complete. Now let's set your profit margin.\n\nWhat markup percentage would you like?`;
+            
+            setTimeout(() => {
+              setButtonOptions([
+                { id: '10', label: '🎯 10% - Competitive pricing', value: '10%', selected: false },
+                { id: '20', label: '⚖️ 20% - Standard profit (recommended)', value: '20%', selected: false },
+                { id: '30', label: '📈 30% - Good profit margin', value: '30%', selected: false },
+                { id: '40', label: '💎 40% - Premium pricing', value: '40%', selected: false }
+              ]);
+              setShowButtons(true);
+            }, 500);
+            nextStage = 'markup_selection';
+          }
+        } else if (input.startsWith('cost_adjust_')) {
+          const category = input.split('_')[2];
+          responseContent = `What should the cost per gallon be for ${category} paint? (Enter just the number, e.g., "45" for $45/gallon)`;
+          nextStage = 'paint_cost_adjustment';
+        } else if (input.startsWith('choose_different_')) {
+          const category = input.split('_')[2];
+          responseContent = `Let's choose a different ${category} paint.\n\nWhich brand would you prefer?`;
+          
+          setTimeout(() => {
+            const brandButtons = availableBrands
+              .filter(brand => brand.products[category] && brand.products[category].length > 0)
+              .map(brand => ({
+                id: `brand_${brand.brand}`,
+                label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                value: `brand_${brand.brand}_${category}`,
+                selected: false
+              }));
+            
+            setButtonOptions(brandButtons);
+            setShowButtons(true);
+          }, 500);
+          nextStage = 'paint_brand_selection';
+        }
+        break;
+
+      case 'paint_cost_adjustment':
+        // Handle manual cost adjustment
+        const costMatch = input.match(/\d+\.?\d*/);
+        if (costMatch) {
+          const newCost = parseFloat(costMatch[0]);
+          const category = currentPaintCategory;
+          
+          if (selectedPaintProducts[category]) {
+            // Update the cost for the selected product
+            setSelectedPaintProducts(prev => ({
+              ...prev,
+              [category]: {
+                ...prev[category],
+                cost_per_gallon: newCost
+              }
+            }));
+            
+            responseContent = `Updated! ${category} paint cost set to $${newCost}/gallon.\n\nShall we continue?`;
+            
+            setTimeout(() => {
+              setButtonOptions([
+                { id: 'continue_next', label: '✅ Continue to next paint', value: `cost_approved_${category}`, selected: false },
+                { id: 'adjust_again', label: '💰 Adjust cost again', value: `cost_adjust_${category}`, selected: false }
+              ]);
+              setShowButtons(true);
+            }, 500);
+            nextStage = 'paint_cost_validation';
+          }
+        } else {
+          responseContent = `Please enter a valid cost (just the number). For example, enter "65" for $65 per gallon.`;
+          nextStage = 'paint_cost_adjustment';
+        }
         break;
         
       case 'markup_selection':
@@ -955,6 +1427,21 @@ What would you like to modify?`,
             responseContent = `❌ There was an error saving the quote. Please try again.`;
             nextStage = 'quote_review';
           }
+        } else if (lowerInput.includes('edit') || lowerInput.includes('edit quote')) {
+          responseContent = `What would you like to edit?\n\nI can help you modify specific parts of the quote:`;
+          
+          // Show edit options
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'edit_customer', label: '👤 Customer Info', value: 'edit_customer_info', selected: false },
+              { id: 'edit_dimensions', label: '📏 Dimensions', value: 'edit_dimensions', selected: false },
+              { id: 'edit_paint', label: '🎨 Paint Products', value: 'edit_paint_products', selected: false },
+              { id: 'edit_markup', label: '💵 Markup & Pricing', value: 'edit_markup', selected: false },
+              { id: 'back_to_quote', label: '← Back to Quote', value: 'back_to_quote', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+          nextStage = 'quote_editing';
         } else {
           responseContent = `**Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}** (Your profit: $${quoteData.calculation!.markup_amount.toLocaleString()})\n\nWhat would you like to do?`;
           // Show action buttons
@@ -962,7 +1449,8 @@ What would you like to modify?`,
             setButtonOptions([
               { id: 'save', label: '💾 Save Quote', value: 'save', selected: false },
               { id: 'adjust_markup', label: '📊 Adjust Markup', value: 'adjust markup', selected: false },
-              { id: 'breakdown', label: '🔍 View Breakdown', value: 'breakdown', selected: false }
+              { id: 'breakdown', label: '🔍 View Breakdown', value: 'breakdown', selected: false },
+              { id: 'edit_quote', label: '✏️ Edit Quote', value: 'edit quote', selected: false }
             ]);
             setShowButtons(true);
           }, 500);
@@ -1004,6 +1492,126 @@ What would you like to modify?`,
           responseContent = `✅ **Updated with ${newMarkupPercentage}% markup!**\\n\\n**Customer Price: $${recalculation.final_price.toLocaleString()}**\\n**Your Profit: $${recalculation.markup_amount.toLocaleString()}**\\n\\nSay \"save\" to finalize or adjust again.`;
         }
         nextStage = 'quote_review';
+        break;
+
+      case 'quote_editing':
+        // Handle quote editing menu selections
+        if (input === 'edit_customer_info') {
+          responseContent = `Let's update the customer information.\n\nCurrent: ${quoteData.customer_name} at ${quoteData.address}\n\nEnter new customer name and address:`;
+          nextStage = 'edit_customer_info';
+        } else if (input === 'edit_dimensions') {
+          responseContent = `Let's update the project dimensions.\n\nCurrent dimensions:\n• Wall linear feet: ${quoteData.dimensions.wall_linear_feet || 'Not set'}\n• Ceiling height: ${quoteData.dimensions.ceiling_height || 'Not set'}ft\n• Doors: ${quoteData.dimensions.number_of_doors || 0}\n• Windows: ${quoteData.dimensions.number_of_windows || 0}\n\nWhat would you like to change?`;
+          
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'edit_linear_feet', label: '📐 Wall Linear Feet', value: 'edit_wall_linear_feet', selected: false },
+              { id: 'edit_ceiling_height', label: '📏 Ceiling Height', value: 'edit_ceiling_height', selected: false },
+              { id: 'edit_doors', label: '🚪 Number of Doors', value: 'edit_doors', selected: false },
+              { id: 'edit_windows', label: '🪟 Number of Windows', value: 'edit_windows', selected: false },
+              { id: 'back_to_edit_menu', label: '← Back to Edit Menu', value: 'back_to_edit_menu', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+          nextStage = 'edit_dimensions_menu';
+        } else if (input === 'edit_paint_products') {
+          responseContent = `Let's update the paint selections.\n\nCurrent paint products:\n${Object.entries(selectedPaintProducts).map(([category, product]: [string, any]) => 
+            `• ${category}: ${product?.product_name || 'Not selected'} - $${product?.cost_per_gallon || 'N/A'}/gal`
+          ).join('\n')}\n\nWhich paint category would you like to change?`;
+          
+          setTimeout(() => {
+            const paintButtons = Object.keys(selectedPaintProducts).map(category => ({
+              id: `edit_paint_${category}`,
+              label: `🎨 ${category.charAt(0).toUpperCase() + category.slice(1)} Paint`,
+              value: `edit_paint_${category}`,
+              selected: false
+            }));
+            
+            paintButtons.push({ id: 'back_to_edit_menu', label: '← Back to Edit Menu', value: 'back_to_edit_menu', selected: false });
+            
+            setButtonOptions(paintButtons);
+            setShowButtons(true);
+          }, 500);
+          nextStage = 'edit_paint_menu';
+        } else if (input === 'edit_markup') {
+          responseContent = `Current markup: ${quoteData.markup_percentage}%\n\nWhat markup percentage would you like?`;
+          
+          setTimeout(() => {
+            setButtonOptions([
+              { id: '10', label: '🎯 10% - Competitive pricing', value: '10%', selected: false },
+              { id: '20', label: '⚖️ 20% - Standard profit (recommended)', value: '20%', selected: false },
+              { id: '30', label: '📈 30% - Good profit margin', value: '30%', selected: false },
+              { id: '40', label: '💎 40% - Premium pricing', value: '40%', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+          nextStage = 'markup_adjustment';
+        } else if (input === 'back_to_quote') {
+          responseContent = `**Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}** (Your profit: $${quoteData.calculation!.markup_amount.toLocaleString()})\n\nWhat would you like to do?`;
+          
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'save', label: '💾 Save Quote', value: 'save', selected: false },
+              { id: 'adjust_markup', label: '📊 Adjust Markup', value: 'adjust markup', selected: false },
+              { id: 'breakdown', label: '🔍 View Breakdown', value: 'breakdown', selected: false },
+              { id: 'edit_quote', label: '✏️ Edit Quote', value: 'edit quote', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+          nextStage = 'quote_review';
+        }
+        break;
+
+      case 'edit_customer_info':
+        // Handle customer info editing
+        const newCustomerInfo = parseCustomerInfo(input, quoteData);
+        setQuoteData(prev => ({
+          ...prev,
+          customer_name: newCustomerInfo.customer_name || prev.customer_name,
+          address: newCustomerInfo.address || prev.address
+        }));
+        
+        responseContent = `✅ Customer info updated!\n\nNew details: ${newCustomerInfo.customer_name || quoteData.customer_name} at ${newCustomerInfo.address || quoteData.address}\n\nWould you like to edit anything else?`;
+        
+        setTimeout(() => {
+          setButtonOptions([
+            { id: 'continue_editing', label: '✏️ Edit More', value: 'edit quote', selected: false },
+            { id: 'recalculate', label: '🔄 Recalculate Quote', value: 'recalculate_quote', selected: false },
+            { id: 'back_to_quote', label: '← Back to Quote', value: 'back_to_quote', selected: false }
+          ]);
+          setShowButtons(true);
+        }, 500);
+        nextStage = 'quote_editing';
+        break;
+
+      case 'edit_dimensions_menu':
+        // Handle dimension editing menu
+        if (input === 'edit_wall_linear_feet') {
+          responseContent = `Current wall linear feet: ${quoteData.dimensions.wall_linear_feet || 'Not set'}\n\nEnter new wall linear feet:`;
+          nextStage = 'edit_wall_linear_feet';
+        } else if (input === 'edit_ceiling_height') {
+          responseContent = `Current ceiling height: ${quoteData.dimensions.ceiling_height || 'Not set'} feet\n\nEnter new ceiling height (in feet):`;
+          nextStage = 'edit_ceiling_height';
+        } else if (input === 'edit_doors') {
+          responseContent = `Current number of doors: ${quoteData.dimensions.number_of_doors || 0}\n\nEnter new number of doors:`;
+          nextStage = 'edit_doors';
+        } else if (input === 'edit_windows') {
+          responseContent = `Current number of windows: ${quoteData.dimensions.number_of_windows || 0}\n\nEnter new number of windows:`;
+          nextStage = 'edit_windows';
+        } else if (input === 'back_to_edit_menu') {
+          responseContent = `What would you like to edit?\n\nI can help you modify specific parts of the quote:`;
+          
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'edit_customer', label: '👤 Customer Info', value: 'edit_customer_info', selected: false },
+              { id: 'edit_dimensions', label: '📏 Dimensions', value: 'edit_dimensions', selected: false },
+              { id: 'edit_paint', label: '🎨 Paint Products', value: 'edit_paint_products', selected: false },
+              { id: 'edit_markup', label: '💵 Markup & Pricing', value: 'edit_markup', selected: false },
+              { id: 'back_to_quote', label: '← Back to Quote', value: 'back_to_quote', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+          nextStage = 'quote_editing';
+        }
         break;
 
       case 'adjustments':
