@@ -20,20 +20,26 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 - **Chat Interface** (`/settings/products/chat`) - Conversational updates
 - **Bulk Operations** - Percentage price increases, product additions
 
-## Quote Editing System
-- **Interactive Edit Page** (`/quotes/[id]/edit`) - Component-based quote editing
-- **Edit Buttons** - Click to edit specific parts: Customer info, rooms, measurements, paint quality
-- **Auto-Calculation** - Automatic quote recalculation when measurements change
-- **Room Editor** - Individual room dimension and feature editing
-- **Live Updates** - Real-time price updates as changes are made
+## Enhanced Quote Creation System (LATEST UPDATES)
+- **Smart Measurement Logic** - Only asks for measurements actually needed based on selected surfaces
+- **Surface-Specific Flow** - Ceiling-only projects skip wall dimensions and doors/windows count
+- **Interactive Paint Selection** - Brand and product selection with visual styling and quality indicators
+- **Paint Cost Validation** - Category-by-category cost validation questions
+- **Required Surface Selection** - Users must select surfaces before proceeding to measurements
+- **Quote Editing Menu** - Comprehensive editing with customer info, dimensions, and paint selection options
+- **Real-time Updates** - Live price calculations and measurement explanations
 
-## Current Status (Updated Jan 20, 2025)
+## Current Status (Updated Jun 14, 2025)
+- **Smart Measurement Collection**: ✅ Surface-specific measurement logic implemented
+- **Enhanced Paint Selection**: ✅ Interactive brand/product selection with 12 products across 4 brands
+- **Customer Name Parsing**: ✅ Fixed possessive pronoun parsing issues
+- **Surface Selection UX**: ✅ Required surface selection before measurements
+- **Quote Editing**: ✅ Comprehensive quote editing menu with real-time updates
 - **Admin Portal**: ✅ Fully operational with customer management and analytics
 - **Quote Calculations**: ✅ Fixed NaN errors, all pricing working correctly
-- **Customer Base**: 3 active companies, 7 quotes, $23,111 total revenue tracked
+- **Customer Base**: 3 active companies, 9 quotes, $25,398+ total revenue tracked
 - **Mobile Ready**: ✅ Responsive design on all devices
-- **Business Intelligence**: Real-time metrics and customer insights
-- **End-to-End Testing**: ✅ All core features verified working (Jan 20, 2025)
+- **Docker Ready**: ✅ Production build tested and operational
 
 ## Architecture & Structure
 - **Frontend**: Next.js 14 with App Router, React 18, TypeScript
@@ -56,10 +62,11 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 - Use prepared statements for all queries
 - Handle database errors gracefully with proper error messages
 
-## AI Assistant Integration
-- AI logic is in `/lib/enhanced-assistant.ts` and `/lib/professional-friend-ai.ts`
-- Keep AI responses professional yet friendly
-- Ensure quote calculations are accurate and transparent
+## Enhanced Quote Creation Logic
+- **Customer Name Parsing** (`/lib/improved-conversation-parser.ts`) - Fixed "Name and his/her/their address" patterns
+- **Smart Measurement Collection** (`/app/create-quote/page.tsx`) - Surface-specific measurement logic
+- **Paint Selection System** (`/api/paint-products/brands`, `/components/ui/paint-*-selector.tsx`) - Interactive brand/product selection
+- **Conversation Stages** - `paint_brand_selection`, `paint_product_selection`, `paint_cost_validation`, `quote_editing`, `ready_for_paint_selection`
 
 ## Component Best Practices
 - Use server components by default, client components only when needed
@@ -91,10 +98,19 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 ## Personal Preferences
 @~/.claude/CLAUDE.md
 
-## Latest Test Results (Jan 20, 2025)
-- **Server Launch**: ✅ Next.js dev server running on port 3001
-- **Customer Flow**: ✅ Access code validation → Dashboard → Quote creation
-- **Admin Portal**: ✅ Login → Analytics ($23,111 revenue) → Customer management
-- **Database**: ✅ All tables initialized (3 companies, 7 quotes, 4 users, 1 admin)
-- **API Endpoints**: ✅ All core APIs tested and working
-- **Mobile Responsive**: ✅ Viewport meta tags and responsive design verified
+## Latest Test Results (Jun 14, 2025)
+- **Smart Measurement Logic**: ✅ Ceiling-only projects skip unnecessary measurements
+- **Customer Name Parsing**: ✅ "Sarah Martinez and her address is 456 Oak Street" → Name: "Sarah Martinez"
+- **Paint Selection System**: ✅ 12 products across 4 brands (Sherwin-Williams, Benjamin Moore, Kilz, Zinsser)
+- **Surface Selection UX**: ✅ Required surface selection prevents user confusion
+- **Quote Creation API**: ✅ New quotes created successfully (QUOTE-MBWSOJ29-B55ID8)
+- **Docker Deployment**: ✅ Production build and end-to-end testing completed
+- **Database Integrity**: ✅ 9 quotes, $25,398+ revenue tracked across 3 companies
+- **Git Branch**: ✅ `feature/smart-measurement-collection` created with all improvements
+
+## Key File Updates (Jun 14, 2025)
+- `app/create-quote/page.tsx` - Smart measurement logic and paint selection stages
+- `lib/improved-conversation-parser.ts` - Fixed customer name parsing with possessive pronouns
+- `app/api/paint-products/brands/route.ts` - Brand/category grouping API
+- `components/ui/paint-brand-selector.tsx` - Visual brand selection component
+- `components/ui/paint-product-selector.tsx` - Product selection with quality indicators
