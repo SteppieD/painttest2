@@ -98,6 +98,9 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 ## Personal Preferences
 @~/.claude/CLAUDE.md
 
+## Efficiency Instructions
+@~/.claude/efficiency-instructions.md
+
 ## Latest Test Results (Jun 14, 2025)
 - **Smart Measurement Logic**: ✅ Ceiling-only projects skip unnecessary measurements
 - **Customer Name Parsing**: ✅ "Sarah Martinez and her address is 456 Oak Street" → Name: "Sarah Martinez"
