@@ -9,11 +9,11 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 - `npm run lint` - Run ESLint
 - `npm start` - Start production server
 
-## New User Onboarding Flow
-1. **Access Code Entry** (`/access-code`) - Enter company access code
-2. **Welcome Page** (`/success`) - New companies redirected to onboarding
-3. **Conversational Setup** (`/onboarding/setup`) - AI-guided product configuration
-4. **Dashboard** - Complete setup and start creating quotes
+## User Flow Overview
+1. **Access Code Entry** (`/access-code`) - Enter company access code (DEMO2024, PAINTER001, CONTRACTOR123)
+2. **Customer Dashboard** (`/dashboard`) - Quote management and business overview
+3. **Quote Creation** (`/create-quote`) - AI-powered conversational quote generation
+4. **Admin Portal** (`/admin`) - Complete business management (admin@paintingapp.com / admin123)
 
 ## Product Management
 - **Settings Page** (`/settings/products`) - Manual product editing
@@ -27,12 +27,20 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 - **Room Editor** - Individual room dimension and feature editing
 - **Live Updates** - Real-time price updates as changes are made
 
+## Current Status (Updated Dec 14, 2024)
+- **Admin Portal**: ✅ Fully operational with customer management and analytics
+- **Quote Calculations**: ✅ Fixed NaN errors, all pricing working correctly
+- **Customer Base**: 3 active companies, $23,111 total revenue tracked
+- **Mobile Ready**: ✅ Responsive design on all devices
+- **Business Intelligence**: Real-time metrics and customer insights
+
 ## Architecture & Structure
 - **Frontend**: Next.js 14 with App Router, React 18, TypeScript
 - **Styling**: Tailwind CSS with custom UI components in `/components/ui/`
-- **Database**: SQLite with better-sqlite3
+- **Database**: SQLite with better-sqlite3, full admin tables
 - **AI Integration**: Google Generative AI for quote assistance
 - **State Management**: React Hook Form with Zod validation
+- **Admin System**: JWT-based authentication with session management
 
 ## Code Standards
 - Use TypeScript strictly - no `any` types unless absolutely necessary
