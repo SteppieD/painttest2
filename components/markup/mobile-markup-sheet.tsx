@@ -135,15 +135,11 @@ export function MobileMarkupSheet({
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Labor</span>
-                <span className="font-medium">${quote.breakdown.labor.toLocaleString()}</span>
+                <span className="font-medium">${(quote.breakdown.labor?.total || 0).toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Materials</span>
-                <span className="font-medium">${quote.breakdown.materials.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Prep Work</span>
-                <span className="font-medium">${quote.breakdown.prepWork.toLocaleString()}</span>
+                <span className="font-medium">${(quote.breakdown.materials?.total || 0).toLocaleString()}</span>
               </div>
               <div className="pt-3 border-t border-gray-200 space-y-2">
                 <div className="flex justify-between items-center">
@@ -167,10 +163,10 @@ export function MobileMarkupSheet({
                   <span className="text-gray-600">Timeline:</span>
                   <span className="font-medium">{quote.timeEstimate}</span>
                 </div>
-                {quote.totalSqFt && (
+                {quote.details?.sqft && (
                   <div className="flex justify-between">
                     <span className="text-gray-600">Total Sq Ft:</span>
-                    <span className="font-medium">{quote.totalSqFt}</span>
+                    <span className="font-medium">{quote.details.sqft}</span>
                   </div>
                 )}
               </div>

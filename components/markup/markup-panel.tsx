@@ -86,15 +86,11 @@ export function MarkupPanel({
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Labor:</span>
-              <span className="font-medium">${(quote.breakdown?.labor || 0).toLocaleString()}</span>
+              <span className="font-medium">${(quote.breakdown?.labor?.total || 0).toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Materials:</span>
-              <span className="font-medium">${(quote.breakdown?.materials || 0).toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Prep Work:</span>
-              <span className="font-medium">${(quote.breakdown?.prepWork || 0).toLocaleString()}</span>
+              <span className="font-medium">${(quote.breakdown?.materials?.total || 0).toLocaleString()}</span>
             </div>
             <div className="pt-2 border-t">
               <div className="flex justify-between">
@@ -112,13 +108,13 @@ export function MarkupPanel({
         <Separator />
 
         {/* Project Details */}
-        {quote.rooms && (
+        {quote.details && (
           <div className="space-y-2">
             <h3 className="text-sm font-medium">Project Details</h3>
             <div className="text-sm text-gray-600 space-y-1">
-              <p>Rooms: {quote.rooms.length}</p>
-              <p>Total Sq Ft: {quote.totalSqFt}</p>
-              <p>Timeline: {quote.timeEstimate}</p>
+              <p>Rooms: {quote.details.roomCount || 0}</p>
+              <p>Total Sq Ft: {quote.details.sqft || 0}</p>
+              <p>Timeline: {quote.timeEstimate || 'TBD'}</p>
             </div>
           </div>
         )}

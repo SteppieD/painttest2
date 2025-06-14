@@ -273,21 +273,45 @@ export const calculateProfessionalQuote = (
   } else {
     // Traditional calculation
     wallSqft = calculateWallArea(dimensions.wall_linear_feet, dimensions.ceiling_height);
-    ceilingSqft = dimensions.ceiling_area;
-    totalDoors = dimensions.number_of_doors;
-    totalWindows = dimensions.number_of_windows;
+    
+    // Auto-calculate ceiling area if missing
+    if (!dimensions.ceiling_area && dimensions.wall_linear_feet) {
+      // Estimate ceiling area from perimeter (assuming typical rectangular home with 1.3:1 ratio)
+      const perimeter = dimensions.wall_linear_feet;
+      // Formula: if perimeter = 2(l + w) and l = 1.3w, then perimeter = 2(1.3w + w) = 4.6w
+      // So w = perimeter/4.6, l = 1.3 × perimeter/4.6
+      // Area = w × l = (perimeter/4.6) × (1.3 × perimeter/4.6) = 1.3 × (perimeter/4.6)²
+      ceilingSqft = Math.round(1.3 * Math.pow(perimeter / 4.6, 2));
+    } else {
+      ceilingSqft = dimensions.ceiling_area || 0;
+    }
+    
+    totalDoors = dimensions.number_of_doors || 0;
+    totalWindows = dimensions.number_of_windows || 0;
   }
   
-  // Calculate materials
-  const primer = calculatePrimer(wallSqft, selectedProducts.primer.spread_rate, selectedProducts.primer.cost);
-  const walls = calculateWallPaint(wallSqft, selectedProducts.wall_paint.spread_rate, selectedProducts.wall_paint.cost_per_gallon);
-  const ceilings = calculateCeilingPaint(ceilingSqft, selectedProducts.ceiling_paint.spread_rate, selectedProducts.ceiling_paint.cost_per_gallon);
+  // Calculate materials (with safety checks for NaN)
+  const primer = calculatePrimer(
+    wallSqft || 0, 
+    selectedProducts.primer?.spread_rate || 400, 
+    selectedProducts.primer?.cost || 45
+  );
+  const walls = calculateWallPaint(
+    wallSqft || 0, 
+    selectedProducts.wall_paint?.spread_rate || 400, 
+    selectedProducts.wall_paint?.cost_per_gallon || 35
+  );
+  const ceilings = calculateCeilingPaint(
+    ceilingSqft || 0, 
+    selectedProducts.ceiling_paint?.spread_rate || 400, 
+    selectedProducts.ceiling_paint?.cost_per_gallon || 32
+  );
   const trim = calculateTrimPaint(
-    totalDoors,
-    totalWindows,
-    selectedProducts.trim_paint.doors_per_gallon,
-    selectedProducts.trim_paint.windows_per_gallon,
-    selectedProducts.trim_paint.cost_per_gallon
+    totalDoors || 0,
+    totalWindows || 0,
+    selectedProducts.trim_paint?.doors_per_gallon || 4.5,
+    selectedProducts.trim_paint?.windows_per_gallon || 2.5,
+    selectedProducts.trim_paint?.cost_per_gallon || 40
   );
   
   let floorSealer = undefined;
@@ -299,12 +323,12 @@ export const calculateProfessionalQuote = (
     );
   }
   
-  // Calculate labor costs
-  const primerLabor = wallSqft * rates.primer_rate_per_sqft;
-  const wallLabor = wallSqft * rates.wall_rate_per_sqft;
-  const ceilingLabor = ceilingSqft * rates.ceiling_rate_per_sqft;
-  const doorLabor = totalDoors * rates.door_rate_each;
-  const windowLabor = totalWindows * rates.window_rate_each;
+  // Calculate labor costs (with safety checks for NaN)
+  const primerLabor = (wallSqft || 0) * (rates.primer_rate_per_sqft || 0.45);
+  const wallLabor = (wallSqft || 0) * (rates.wall_rate_per_sqft || 1.50);
+  const ceilingLabor = (ceilingSqft || 0) * (rates.ceiling_rate_per_sqft || 1.25);
+  const doorLabor = (totalDoors || 0) * (rates.door_rate_each || 150);
+  const windowLabor = (totalWindows || 0) * (rates.window_rate_each || 100);
   const floorSealerLabor = (includeFloorSealer && dimensions.floor_area && rates.floor_sealer_rate_per_sqft) 
     ? dimensions.floor_area * rates.floor_sealer_rate_per_sqft 
     : 0;

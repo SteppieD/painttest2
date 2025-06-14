@@ -197,12 +197,12 @@ export default function QuotePage({ params }: { params: { id: string } }) {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="cursor-pointer hover:shadow-md transition-shadow" 
-                onClick={() => router.push(`/quotes/${quote.id}/review`)}>
+                onClick={() => router.push(`/quotes/${quote.id}/edit`)}>
             <CardContent className="p-6 text-center">
               <Edit3 className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Review & Edit</h3>
+              <h3 className="font-semibold mb-2">Edit Quote</h3>
               <p className="text-sm text-gray-600">
-                View internal details, adjust markup, and analyze costs
+                Update customer info, measurements, pricing, and details
               </p>
             </CardContent>
           </Card>

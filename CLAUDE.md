@@ -9,6 +9,24 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 - `npm run lint` - Run ESLint
 - `npm start` - Start production server
 
+## New User Onboarding Flow
+1. **Access Code Entry** (`/access-code`) - Enter company access code
+2. **Welcome Page** (`/success`) - New companies redirected to onboarding
+3. **Conversational Setup** (`/onboarding/setup`) - AI-guided product configuration
+4. **Dashboard** - Complete setup and start creating quotes
+
+## Product Management
+- **Settings Page** (`/settings/products`) - Manual product editing
+- **Chat Interface** (`/settings/products/chat`) - Conversational updates
+- **Bulk Operations** - Percentage price increases, product additions
+
+## Quote Editing System
+- **Interactive Edit Page** (`/quotes/[id]/edit`) - Component-based quote editing
+- **Edit Buttons** - Click to edit specific parts: Customer info, rooms, measurements, paint quality
+- **Auto-Calculation** - Automatic quote recalculation when measurements change
+- **Room Editor** - Individual room dimension and feature editing
+- **Live Updates** - Real-time price updates as changes are made
+
 ## Architecture & Structure
 - **Frontend**: Next.js 14 with App Router, React 18, TypeScript
 - **Styling**: Tailwind CSS with custom UI components in `/components/ui/`

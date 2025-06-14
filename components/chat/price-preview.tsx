@@ -54,15 +54,11 @@ export function PricePreview({ quote, onGenerateQuote, isGenerating }: PricePrev
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>Labor</span>
-              <span>{formatCurrency(quote.breakdown?.labor || 0)}</span>
+              <span>{formatCurrency(quote.breakdown?.labor?.total || 0)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>Materials</span>
-              <span>{formatCurrency(quote.breakdown?.materials || 0)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span>Prep Work</span>
-              <span>{formatCurrency(quote.breakdown?.prepWork || 0)}</span>
+              <span>{formatCurrency(quote.breakdown?.materials?.total || 0)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>Markup</span>

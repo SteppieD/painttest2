@@ -936,17 +936,25 @@ What would you like to modify?`,
           responseContent = `What would you like to adjust? I can modify:\n\n• **Markup** (currently ${quoteData.markup_percentage}%)\n• **Dimensions** (linear feet, ceiling height, doors, windows)\n• **Paint quality** (good, better, best)\n• **Rates** (currently $${quoteData.rates.wall_rate_per_sqft}/sqft walls, $${quoteData.rates.door_rate_each}/door, $${quoteData.rates.window_rate_each}/window)\n\nJust tell me what you'd like to change!`;
           nextStage = 'adjustments';
         } else if (lowerInput.includes('save') || lowerInput.includes('approve') || lowerInput.includes('finalize')) {
-          await saveQuote();
-          responseContent = `✅ Quote saved successfully!\n\n**Final Details:**\n• Customer: ${quoteData.customer_name}\n• **Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}**\n• Your Cost: $${quoteData.calculation!.total_cost.toLocaleString()}\n• Your Profit: $${quoteData.calculation!.markup_amount.toLocaleString()}\n\nWhat would you like to do next?`;
-          // Show completion buttons
-          setTimeout(() => {
-            setButtonOptions([
-              { id: 'new_quote', label: '➕ Create Another Quote', value: 'another quote', selected: false },
-              { id: 'dashboard', label: '📊 Return to Dashboard', value: 'dashboard', selected: false }
-            ]);
-            setShowButtons(true);
-          }, 500);
-          nextStage = 'complete';
+          try {
+            const quoteId = await saveQuote();
+            responseContent = `✅ Quote saved successfully!\n\n**Final Details:**\n• Customer: ${quoteData.customer_name}\n• **Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}**\n• Your Cost: $${quoteData.calculation!.total_cost.toLocaleString()}\n• Your Profit: $${quoteData.calculation!.markup_amount.toLocaleString()}\n\nWhat would you like to do next?`;
+            
+            // Show completion buttons including View Quote
+            setTimeout(() => {
+              const completionButtons = [
+                { id: 'view_quote', label: '👁️ View Quote', value: `view_quote_${quoteId}`, selected: false },
+                { id: 'new_quote', label: '➕ Create Another Quote', value: 'another quote', selected: false },
+                { id: 'dashboard', label: '📊 Return to Dashboard', value: 'dashboard', selected: false }
+              ];
+              setButtonOptions(completionButtons);
+              setShowButtons(true);
+            }, 500);
+            nextStage = 'complete';
+          } catch (error) {
+            responseContent = `❌ There was an error saving the quote. Please try again.`;
+            nextStage = 'quote_review';
+          }
         } else {
           responseContent = `**Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}** (Your profit: $${quoteData.calculation!.markup_amount.toLocaleString()})\n\nWhat would you like to do?`;
           // Show action buttons
@@ -1051,7 +1059,18 @@ What would you like to modify?`,
 
       case 'complete':
         const lowerInputComplete = input.toLowerCase();
-        if (lowerInputComplete.includes('another') || lowerInputComplete.includes('new quote')) {
+        
+        // Handle View Quote button (format: view_quote_{id})
+        if (input.startsWith('view_quote_')) {
+          const quoteId = input.replace('view_quote_', '');
+          router.push(`/quotes/${quoteId}`);
+          return {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: 'Opening quote details...',
+            timestamp: new Date().toISOString()
+          };
+        } else if (lowerInputComplete.includes('another') || lowerInputComplete.includes('new quote')) {
           // Reset for new quote
           setQuoteData({
             customer_name: '',
@@ -1087,12 +1106,17 @@ What would you like to modify?`,
           };
         } else {
           responseContent = `Thanks for using our quote system! What would you like to do?`;
-          // Show completion options
+          // Show completion options (include View Quote if we have a saved quote)
           setTimeout(() => {
-            setButtonOptions([
+            const completionButtons = [];
+            if (savedQuoteId) {
+              completionButtons.push({ id: 'view_quote', label: '👁️ View Quote', value: `view_quote_${savedQuoteId}`, selected: false });
+            }
+            completionButtons.push(
               { id: 'new_quote', label: '➕ Create Another Quote', value: 'another quote', selected: false },
               { id: 'dashboard', label: '📊 Return to Dashboard', value: 'dashboard', selected: false }
-            ]);
+            );
+            setButtonOptions(completionButtons);
             setShowButtons(true);
           }, 500);
         }
@@ -1111,6 +1135,8 @@ What would you like to modify?`,
       timestamp: new Date().toISOString()
     };
   };
+
+  const [savedQuoteId, setSavedQuoteId] = useState<string | null>(null);
 
   const saveQuote = async () => {
     if (!quoteData.calculation || !companyData) return;
@@ -1182,12 +1208,17 @@ What would you like to modify?`,
 
       if (response.ok) {
         const result = await response.json();
+        // Store the quote ID for the View Quote button
+        setSavedQuoteId(result.quote?.id || editQuoteId);
+        
         toast({
           title: isEditMode ? "Quote Updated!" : "Quote Saved!",
           description: isEditMode 
             ? `Quote #${editQuoteId} has been updated successfully.`
             : `Professional quote ${result.quoteId || result.quote?.id} saved successfully.`,
         });
+        
+        return result.quote?.id || editQuoteId; // Return the quote ID for immediate use
       } else {
         throw new Error('Failed to save quote');
       }
@@ -1198,6 +1229,7 @@ What would you like to modify?`,
         description: "Failed to save quote. Please try again.",
         variant: "destructive",
       });
+      throw error; // Re-throw to handle in the calling function
     }
   };
 

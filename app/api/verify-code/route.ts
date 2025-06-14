@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCompanyByAccessCode, createCompany, dbAll } from "@/lib/database";
+import { getCompanyByAccessCode, createCompany, dbAll, dbRun } from "@/lib/database";
 
 // Type definitions
 interface Company {
@@ -60,6 +60,13 @@ export async function POST(request: NextRequest) {
           email: ""
         });
 
+        // Create a user record for the new company
+        const userId = crypto.randomUUID();
+        dbRun(
+          `INSERT INTO users (id, email, company_name) VALUES (?, ?, ?)`,
+          [userId, `${normalizedCode.toLowerCase()}@example.com`, companyName]
+        );
+
         console.log(
           `🆕 Auto-created company: ${companyName} with code ${normalizedCode}`,
         );
@@ -67,7 +74,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: true,
           company: {
-            id: result.lastID,
+            id: userId, // Use the user ID instead of company ID
             accessCode: normalizedCode,
             name: companyName,
             phone: "",

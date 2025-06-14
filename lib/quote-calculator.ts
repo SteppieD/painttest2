@@ -1,190 +1,204 @@
-interface CostSettings {
-  labor_rate: number;
-  paint_good: number;
-  paint_better: number;
-  paint_best: number;
-  supplies_base: number;
-  markup_percentage: number;
+export interface QuoteCalculationData {
+  walls_sqft?: number;
+  ceilings_sqft?: number;
+  trim_sqft?: number;
+  number_of_doors?: number;
+  number_of_windows?: number;
+  paint_quality?: string;
+  project_type?: string;
+  markup_percentage?: number;
 }
 
-interface QuoteCalculationInput {
-  projectType: 'interior' | 'exterior' | 'both';
-  rooms?: Array<{
-    name: string;
-    length: number;
-    width: number;
-    height: number;
-  }>;
-  sqft?: number;
-  paintType: 'basic' | 'premium' | 'luxury';
-  prepWork: 'minimal' | 'standard' | 'extensive';
-  timeline: 'rush' | 'standard' | 'flexible';
-}
-
-interface QuoteResult {
-  laborCost: number;
-  materialsCost: number;
-  prepWorkCost: number;
-  baseCost: number;
-  markupAmount: number;
+export interface QuoteResult {
+  breakdown: QuoteBreakdown;
+  total: number;
   totalCost: number;
-  timeEstimate: string;
-  breakdown: {
-    labor: number;
-    materials: number;
-    prepWork: number;
-    markup: number;
-  };
-  details: {
+  timestamp: string;
+  timeEstimate?: string;
+  details?: {
+    sqft?: number;
+    roomCount?: number;
     paintGallons?: number;
-    totalLaborHours: number;
-    sqft: number;
-    roomCount: number;
+    totalLaborHours?: number;
   };
-  // Additional properties for UI components
-  rooms?: Array<{
-    name: string;
-    length: number;
-    width: number;
-    height: number;
-  }>;
-  totalSqFt?: number;
-  customerName?: string;
-  customerEmail?: string;
-  customerPhone?: string;
-  address?: string;
-  paintQuality?: string;
-  prepWork?: string;
-  specialRequests?: string;
 }
 
-const DEFAULT_COSTS: CostSettings = {
-  labor_rate: 45,
-  paint_good: 35,
-  paint_better: 55,
-  paint_best: 85,
-  supplies_base: 150,
-  markup_percentage: 35
+export interface QuoteBreakdown {
+  materials: {
+    wallPaint: number;
+    ceilingPaint: number;
+    trimPaint: number;
+    primer: number;
+    supplies: number;
+    total: number;
+  };
+  labor: {
+    wallLabor: number;
+    ceilingLabor: number;
+    trimLabor: number;
+    prepLabor: number;
+    total: number;
+  };
+  subtotal: number;
+  markup: number;
+  total: number;
+}
+
+// Default rates per square foot
+const DEFAULT_RATES = {
+  walls: 3.00,
+  ceilings: 2.00,
+  trim: 5.00,
+  doors: 45.00, // per door
+  windows: 15.00, // per window
 };
 
-export function calculateQuote(
-  input: QuoteCalculationInput,
-  customCosts?: Partial<CostSettings>
-): QuoteResult {
-  const costs = { ...DEFAULT_COSTS, ...customCosts };
-  
-  // Calculate square footage
-  let totalSqft = input.sqft || 0;
-  if (input.rooms && input.rooms.length > 0) {
-    totalSqft = input.rooms.reduce((total, room) => {
-      if (!room || typeof room.length !== 'number' || typeof room.width !== 'number' || typeof room.height !== 'number') {
-        return total;
-      }
-      if (input.projectType === 'interior') {
-        // Interior: wall area calculation
-        const wallArea = 2 * (room.length + room.width) * room.height;
-        return total + wallArea;
-      } else {
-        // Exterior: perimeter calculation
-        const perimeter = 2 * (room.length + room.width);
-        return total + perimeter * room.height;
-      }
-    }, 0);
-  }
+// Paint costs per gallon by quality
+const PAINT_COSTS = {
+  good: { walls: 25, ceilings: 23, trim: 30 },
+  better: { walls: 35, ceilings: 32, trim: 40 },
+  best: { walls: 50, ceilings: 45, trim: 55 },
+  premium: { walls: 60, ceilings: 55, trim: 65 },
+};
 
-  const roomCount = input.rooms?.length || Math.ceil(totalSqft / 150); // Estimate rooms if not provided
+// Coverage rates (sq ft per gallon)
+const COVERAGE_RATES = {
+  walls: 350,
+  ceilings: 350,
+  trim: 300, // Lower coverage for trim due to more precise work
+};
 
-  // Paint calculation
-  const paintQualityMap = {
-    basic: 'paint_good',
-    premium: 'paint_better', 
-    luxury: 'paint_best'
-  } as const;
-  
-  const coats = input.projectType === 'exterior' ? 2 : 2;
-  const coverage = 350; // sq ft per gallon
-  const paintGallons = Math.ceil((totalSqft * coats) / coverage);
-  const paintCost = paintGallons * costs[paintQualityMap[input.paintType]];
+export function calculateQuote(data: QuoteCalculationData): QuoteBreakdown {
+  const wallsSqft = data.walls_sqft || 0;
+  const ceilingsSqft = data.ceilings_sqft || 0;
+  const trimSqft = data.trim_sqft || 0;
+  const numberOfDoors = data.number_of_doors || 0;
+  const numberOfWindows = data.number_of_windows || 0;
+  const paintQuality = data.paint_quality || 'better';
+  const markupPercentage = data.markup_percentage || 30;
 
-  // Labor calculation
-  let hoursPerSqft = 0.15; // Base rate
-  if (input.projectType === 'exterior') hoursPerSqft *= 1.5;
-  if (input.paintType === 'premium') hoursPerSqft *= 1.2;
-  if (input.paintType === 'luxury') hoursPerSqft *= 1.4;
+  // Get paint costs for the selected quality
+  const paintCosts = PAINT_COSTS[paintQuality as keyof typeof PAINT_COSTS] || PAINT_COSTS.better;
 
-  const totalLaborHours = Math.ceil(totalSqft * hoursPerSqft);
-  const laborCost = totalLaborHours * costs.labor_rate;
+  // Calculate paint quantities needed (in gallons)
+  const wallPaintGallons = Math.ceil(wallsSqft / COVERAGE_RATES.walls);
+  const ceilingPaintGallons = Math.ceil(ceilingsSqft / COVERAGE_RATES.ceilings);
+  const trimPaintGallons = Math.ceil(trimSqft / COVERAGE_RATES.trim);
 
-  // Prep work cost
-  const prepWorkMultipliers = {
-    minimal: 0.1,
-    standard: 0.25,
-    extensive: 0.5
+  // Calculate primer needed (assume 1 coat primer for all surfaces)
+  const primerGallons = Math.ceil((wallsSqft + ceilingsSqft + trimSqft) / 400); // Primer covers more
+
+  // Material costs
+  const materials = {
+    wallPaint: wallPaintGallons * paintCosts.walls,
+    ceilingPaint: ceilingPaintGallons * paintCosts.ceilings,
+    trimPaint: trimPaintGallons * paintCosts.trim,
+    primer: primerGallons * 25, // Standard primer cost
+    supplies: Math.max(50, (wallsSqft + ceilingsSqft + trimSqft) * 0.15), // Brushes, rollers, etc.
+    total: 0,
   };
-  const prepWorkCost = laborCost * prepWorkMultipliers[input.prepWork];
 
-  // Materials cost (paint + supplies)
-  const materialsCost = paintCost + costs.supplies_base;
+  materials.total = materials.wallPaint + materials.ceilingPaint + materials.trimPaint + materials.primer + materials.supplies;
 
-  // Base cost
-  const baseCost = laborCost + materialsCost + prepWorkCost;
+  // Labor costs (based on surface area and complexity)
+  const labor = {
+    wallLabor: wallsSqft * DEFAULT_RATES.walls,
+    ceilingLabor: ceilingsSqft * DEFAULT_RATES.ceilings,
+    trimLabor: trimSqft * DEFAULT_RATES.trim,
+    prepLabor: numberOfDoors * DEFAULT_RATES.doors + numberOfWindows * DEFAULT_RATES.windows,
+    total: 0,
+  };
 
-  // Timeline adjustments
-  let timelineMultiplier = 1;
-  if (input.timeline === 'rush') timelineMultiplier = 1.35;
-  if (input.timeline === 'flexible') timelineMultiplier = 0.9;
+  labor.total = labor.wallLabor + labor.ceilingLabor + labor.trimLabor + labor.prepLabor;
 
-  const adjustedBaseCost = baseCost * timelineMultiplier;
-
-  // Markup
-  const markupAmount = adjustedBaseCost * (costs.markup_percentage / 100);
-  const totalCost = adjustedBaseCost + markupAmount;
-
-  // Time estimate
-  const baseTimeDays = Math.ceil(totalLaborHours / 8);
-  let timeEstimate = `${baseTimeDays} days`;
-  if (input.timeline === 'rush') timeEstimate = `${Math.ceil(baseTimeDays * 0.7)} days (rush)`;
-  if (input.timeline === 'flexible') timeEstimate = `${Math.ceil(baseTimeDays * 1.3)} days`;
+  // Calculate totals
+  const subtotal = materials.total + labor.total;
+  const markup = subtotal * (markupPercentage / 100);
+  const total = subtotal + markup;
 
   return {
-    laborCost,
-    materialsCost,
-    prepWorkCost,
-    baseCost: adjustedBaseCost,
-    markupAmount,
-    totalCost: Math.round(totalCost),
-    timeEstimate,
-    breakdown: {
-      labor: laborCost,
-      materials: materialsCost,
-      prepWork: prepWorkCost,
-      markup: markupAmount
-    },
-    details: {
-      paintGallons,
-      totalLaborHours,
-      sqft: totalSqft,
-      roomCount
-    },
-    // Additional properties for UI components
-    rooms: input.rooms,
-    totalSqFt: totalSqft,
-    paintQuality: input.paintType,
-    prepWork: input.prepWork
+    materials,
+    labor,
+    subtotal,
+    markup,
+    total: Math.round(total),
   };
 }
 
-export function applyMarkup(baseCost: number, markupPercentage: number) {
-  const markupAmount = baseCost * (markupPercentage / 100);
-  const finalPrice = baseCost + markupAmount;
+export function calculateSurfaceArea(length: number, width: number, height: number, doors: number = 0, windows: number = 0) {
+  // Wall area calculation
+  const wallPerimeter = 2 * (length + width);
+  const wallArea = wallPerimeter * height;
+  
+  // Subtract door and window areas
+  const doorArea = doors * 21; // Standard door is 3' x 7'
+  const windowArea = windows * 15; // Average window is 3' x 5'
+  const netWallArea = Math.max(0, wallArea - doorArea - windowArea);
+
+  // Ceiling area
+  const ceilingArea = length * width;
 
   return {
-    baseCost,
-    markupPercentage,
-    markupAmount,
-    finalPrice,
-    profit: markupAmount,
+    walls: Math.round(netWallArea),
+    ceiling: Math.round(ceilingArea),
+    perimeter: Math.round(wallPerimeter),
   };
 }
 
-export { DEFAULT_COSTS, type CostSettings, type QuoteCalculationInput, type QuoteResult };
+export function updateQuoteWithRoomData(rooms: any[]): QuoteCalculationData {
+  let totalWalls = 0;
+  let totalCeilings = 0;
+  let totalDoors = 0;
+  let totalWindows = 0;
+
+  rooms.forEach(room => {
+    if (room.wall_area) totalWalls += room.wall_area;
+    if (room.ceiling_area) totalCeilings += room.ceiling_area;
+    if (room.number_of_doors) totalDoors += room.number_of_doors;
+    if (room.number_of_windows) totalWindows += room.number_of_windows;
+  });
+
+  return {
+    walls_sqft: totalWalls,
+    ceilings_sqft: totalCeilings,
+    number_of_doors: totalDoors,
+    number_of_windows: totalWindows,
+  };
+}
+
+export function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+export function getQuoteItemizedBreakdown(breakdown: QuoteBreakdown) {
+  const items = [
+    { 
+      category: 'Materials',
+      items: [
+        { name: 'Wall Paint', amount: breakdown.materials.wallPaint },
+        { name: 'Ceiling Paint', amount: breakdown.materials.ceilingPaint },
+        { name: 'Trim Paint', amount: breakdown.materials.trimPaint },
+        { name: 'Primer', amount: breakdown.materials.primer },
+        { name: 'Supplies & Materials', amount: breakdown.materials.supplies },
+      ],
+      total: breakdown.materials.total
+    },
+    {
+      category: 'Labor',
+      items: [
+        { name: 'Wall Painting', amount: breakdown.labor.wallLabor },
+        { name: 'Ceiling Painting', amount: breakdown.labor.ceilingLabor },
+        { name: 'Trim & Detail Work', amount: breakdown.labor.trimLabor },
+        { name: 'Prep Work', amount: breakdown.labor.prepLabor },
+      ],
+      total: breakdown.labor.total
+    }
+  ];
+
+  return items;
+}

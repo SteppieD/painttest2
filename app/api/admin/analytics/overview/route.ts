@@ -16,10 +16,12 @@ export async function GET(request: NextRequest) {
       SELECT 
         COUNT(*) as total_quotes,
         SUM(CASE WHEN DATE(created_at) = DATE('now') THEN 1 ELSE 0 END) as quotes_today,
-        SUM(CASE WHEN final_price IS NOT NULL THEN final_price ELSE 0 END) as total_revenue,
-        SUM(CASE WHEN DATE(created_at) >= DATE('now', 'start of month') AND final_price IS NOT NULL THEN final_price ELSE 0 END) as revenue_this_month
+        COALESCE(SUM(total_revenue), 0) as total_revenue,
+        COALESCE(SUM(CASE WHEN DATE(created_at) >= DATE('now', 'start of month') THEN total_revenue ELSE 0 END), 0) as revenue_this_month
       FROM quotes
     `);
+
+    console.log('Quote stats:', quoteStats);
 
     // Get access code statistics
     const accessCodeStats: any = dbGet(`

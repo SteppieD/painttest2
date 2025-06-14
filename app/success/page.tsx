@@ -125,7 +125,13 @@ function SuccessContent() {
           }}
         >
           <button
-            onClick={() => router.push(quoteInfo.redirect || "/dashboard")}
+            onClick={() => {
+              if (quoteInfo.newCompany === "true") {
+                router.push("/onboarding/setup");
+              } else {
+                router.push(quoteInfo.redirect || "/dashboard");
+              }
+            }}
             style={{
               padding: "12px 24px",
               backgroundColor: "#3498db",
@@ -137,7 +143,8 @@ function SuccessContent() {
               fontWeight: "bold",
             }}
           >
-            {quoteInfo.redirect === "/" ? "🏠 Continue to Homepage" : "📊 View Dashboard"}
+            {quoteInfo.newCompany === "true" ? "🚀 Set Up Company Profile" : 
+             quoteInfo.redirect === "/" ? "🏠 Continue to Homepage" : "📊 View Dashboard"}
           </button>
 
           <button

@@ -68,6 +68,8 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true);
 
   useEffect(() => {
     const companyData = localStorage.getItem("paintquote_company");
@@ -82,6 +84,7 @@ export default function DashboardPage() {
         }
         setCompanyInfo(company);
         loadQuotes(company.id);
+        checkOnboardingStatus(company.id);
       } catch (e) {
         router.push("/access-code");
       }
@@ -136,6 +139,23 @@ export default function DashboardPage() {
       thisMonthQuotes: thisMonthQuotes.length,
       thisMonthRevenue: thisMonthQuotes.reduce((sum, quote) => sum + (quote.quote_amount || 0), 0),
     });
+  };
+
+  const checkOnboardingStatus = async (companyId: number) => {
+    try {
+      setIsCheckingOnboarding(true);
+      const response = await fetch(`/api/paint-products?user_id=${companyId}`);
+      const data = await response.json();
+      
+      // Always allow access regardless of product setup
+      setNeedsOnboarding(false);
+    } catch (error) {
+      console.error("Error checking onboarding status:", error);
+      // Don't block access on error
+      setNeedsOnboarding(false);
+    } finally {
+      setIsCheckingOnboarding(false);
+    }
   };
 
   // Filter quotes
@@ -268,6 +288,34 @@ export default function DashboardPage() {
       </div>
 
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        {/* Quick Settings Access - Optional */}
+        {!isCheckingOnboarding && (
+          <div className="mb-6">
+            <Card className="bg-gradient-to-r from-gray-50 to-blue-50 border border-blue-100">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Palette className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-gray-900">Customize Your Products & Pricing</h3>
+                      <p className="text-sm text-gray-600">Set up paint products and costs for accurate quotes</p>
+                    </div>
+                  </div>
+                  <Button 
+                    variant="outline"
+                    onClick={() => router.push("/settings/products")}
+                    className="flex items-center gap-2"
+                  >
+                    Settings
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Quick Action - Single Quote Method */}
         <div className="mb-8">
           <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push("/create-quote")}>

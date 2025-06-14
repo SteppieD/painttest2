@@ -105,7 +105,29 @@ export async function PATCH(
       updateValues.push(updates.project_type);
     }
     
-    // Dimensions
+    // Contact info
+    if (updates.customer_email !== undefined) {
+      updateFields.push('customer_email = ?');
+      updateValues.push(updates.customer_email);
+    }
+    if (updates.customer_phone !== undefined) {
+      updateFields.push('customer_phone = ?');
+      updateValues.push(updates.customer_phone);
+    }
+    
+    // Dimensions and measurements
+    if (updates.walls_sqft !== undefined) {
+      updateFields.push('walls_sqft = ?');
+      updateValues.push(updates.walls_sqft);
+    }
+    if (updates.ceilings_sqft !== undefined) {
+      updateFields.push('ceilings_sqft = ?');
+      updateValues.push(updates.ceilings_sqft);
+    }
+    if (updates.trim_sqft !== undefined) {
+      updateFields.push('trim_sqft = ?');
+      updateValues.push(updates.trim_sqft);
+    }
     if (updates.wall_linear_feet !== undefined) {
       updateFields.push('wall_linear_feet = ?');
       updateValues.push(updates.wall_linear_feet);
@@ -125,6 +147,32 @@ export async function PATCH(
     if (updates.number_of_windows !== undefined) {
       updateFields.push('number_of_windows = ?');
       updateValues.push(updates.number_of_windows);
+    }
+    
+    // Project details
+    if (updates.paint_quality !== undefined) {
+      updateFields.push('paint_quality = ?');
+      updateValues.push(updates.paint_quality);
+    }
+    if (updates.prep_work !== undefined) {
+      updateFields.push('prep_work = ?');
+      updateValues.push(updates.prep_work);
+    }
+    if (updates.special_requests !== undefined) {
+      updateFields.push('special_requests = ?');
+      updateValues.push(updates.special_requests);
+    }
+    if (updates.timeline !== undefined) {
+      updateFields.push('timeline = ?');
+      updateValues.push(updates.timeline);
+    }
+    if (updates.room_data !== undefined) {
+      updateFields.push('room_data = ?');
+      updateValues.push(updates.room_data);
+    }
+    if (updates.room_count !== undefined) {
+      updateFields.push('room_count = ?');
+      updateValues.push(updates.room_count);
     }
     
     // Financial

@@ -34,13 +34,41 @@ export default function AdminDashboard() {
 
   const loadDashboardStats = async () => {
     try {
+      console.log('Loading dashboard stats...');
       const response = await fetch('/api/admin/analytics/overview');
+      console.log('Response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Dashboard data:', data);
         setStats(data);
+      } else {
+        console.error('Response not ok:', response.status, response.statusText);
+        // Set default stats if API fails
+        setStats({
+          totalCustomers: 0,
+          activeCustomers: 0,
+          totalQuotes: 0,
+          quotesToday: 0,
+          totalRevenue: 0,
+          revenueThisMonth: 0,
+          activeAccessCodes: 0,
+          totalAccessCodes: 0
+        });
       }
     } catch (error) {
       console.error('Failed to load dashboard stats:', error);
+      // Set default stats if fetch fails
+      setStats({
+        totalCustomers: 0,
+        activeCustomers: 0,
+        totalQuotes: 0,
+        quotesToday: 0,
+        totalRevenue: 0,
+        revenueThisMonth: 0,
+        activeAccessCodes: 0,
+        totalAccessCodes: 0
+      });
     } finally {
       setIsLoading(false);
     }
