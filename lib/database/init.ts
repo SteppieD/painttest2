@@ -65,11 +65,28 @@ function initializeSchema() {
         tax_rate REAL DEFAULT 0,
         tax_on_materials_only BOOLEAN DEFAULT 0,
         tax_label TEXT DEFAULT 'Tax',
+        quote_limit INTEGER DEFAULT NULL,
+        is_trial BOOLEAN DEFAULT 0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
     `);
     console.log('✓ Companies table created/verified');
+    
+    // Add trial columns to existing companies table if they don't exist
+    try {
+      db.exec(`ALTER TABLE companies ADD COLUMN quote_limit INTEGER DEFAULT NULL`);
+      console.log('✓ Added quote_limit column to companies table');
+    } catch (error) {
+      // Column already exists, ignore error
+    }
+    
+    try {
+      db.exec(`ALTER TABLE companies ADD COLUMN is_trial BOOLEAN DEFAULT 0`);
+      console.log('✓ Added is_trial column to companies table');
+    } catch (error) {
+      // Column already exists, ignore error
+    }
     
     // Create the quotes table
     db.exec(`

@@ -50,7 +50,7 @@ export default function HomePage() {
               <Link href="/how-to-quote-painting-jobs" className="text-gray-600 hover:text-gray-900">Guide</Link>
               <Link href="/access-code" className="text-blue-600 hover:text-blue-700 font-medium">Sign In</Link>
               <Button asChild>
-                <Link href="/access-code">Start Free Trial</Link>
+                <Link href="/trial-signup">Create Free Account</Link>
               </Button>
             </nav>
 
@@ -102,8 +102,8 @@ export default function HomePage() {
                 </Link>
                 <div className="pt-2">
                   <Button asChild className="w-full">
-                    <Link href="/access-code" onClick={closeMobileMenu}>
-                      Start Free Trial
+                    <Link href="/trial-signup" onClick={closeMobileMenu}>
+                      Create Free Account
                     </Link>
                   </Button>
                 </div>
@@ -124,19 +124,19 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button size="lg" asChild className="text-lg px-8 py-6">
-              <Link href="/access-code">
-                Start Free Trial
+              <Link href="/trial-signup">
+                Create Free Account
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild className="text-lg px-8 py-6">
-              <Link href="#demo">Watch Demo</Link>
+              <Link href="/access-code">Have Access Code?</Link>
             </Button>
           </div>
           <div className="flex items-center justify-center gap-8 text-sm text-gray-500">
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-500" />
-              <span>Free 14-day trial</span>
+              <span>1 Free Quote Included</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-500" />
@@ -364,13 +364,13 @@ export default function HomePage() {
             Start your free trial today and see why contractors choose ProPaint Quote
           </p>
           <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6">
-            <Link href="/access-code">
-              Start Free Trial Now
+            <Link href="/trial-signup">
+              Create Free Account Now
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
           </Button>
           <p className="text-blue-200 mt-4 text-sm">
-            Free 14-day trial • No credit card required • Cancel anytime
+            1 Free Quote • No credit card required • Instant access
           </p>
         </div>
       </section>

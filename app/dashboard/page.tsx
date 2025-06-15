@@ -65,6 +65,11 @@ export default function DashboardPage() {
     thisMonthRevenue: 0,
   });
   const [companyInfo, setCompanyInfo] = useState<any>(null);
+  const [quotaInfo, setQuotaInfo] = useState<{isTrial: boolean, quotesUsed: number, quotesAllowed: number | null}>({
+    isTrial: false, 
+    quotesUsed: 0, 
+    quotesAllowed: null
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -84,6 +89,7 @@ export default function DashboardPage() {
         }
         setCompanyInfo(company);
         loadQuotes(company.id);
+        loadQuotaInfo(company.id);
         checkOnboardingStatus(company.id);
       } catch (e) {
         router.push("/access-code");
@@ -148,6 +154,23 @@ export default function DashboardPage() {
       thisMonthQuotes: thisMonthQuotes.length,
       thisMonthRevenue: thisMonthRevenue,
     });
+  };
+
+  const loadQuotaInfo = async (companyId: number) => {
+    try {
+      const response = await fetch(`/api/company-quota?company_id=${companyId}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setQuotaInfo({
+          isTrial: data.is_trial,
+          quotesUsed: data.quotes_used,
+          quotesAllowed: data.quote_limit
+        });
+      }
+    } catch (error) {
+      console.error("Error loading quota info:", error);
+    }
   };
 
   const checkOnboardingStatus = async (companyId: number) => {
@@ -341,6 +364,61 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Trial Quota Warning */}
+        {quotaInfo.isTrial && quotaInfo.quotesAllowed && (
+          <div className="mb-6">
+            <Card className={`border-2 ${
+              quotaInfo.quotesUsed >= quotaInfo.quotesAllowed 
+                ? 'border-red-200 bg-red-50' 
+                : quotaInfo.quotesUsed >= quotaInfo.quotesAllowed * 0.8 
+                ? 'border-yellow-200 bg-yellow-50' 
+                : 'border-blue-200 bg-blue-50'
+            }`}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                      quotaInfo.quotesUsed >= quotaInfo.quotesAllowed 
+                        ? 'bg-red-100' 
+                        : quotaInfo.quotesUsed >= quotaInfo.quotesAllowed * 0.8 
+                        ? 'bg-yellow-100' 
+                        : 'bg-blue-100'
+                    }`}>
+                      <FileText className={`w-5 h-5 ${
+                        quotaInfo.quotesUsed >= quotaInfo.quotesAllowed 
+                          ? 'text-red-600' 
+                          : quotaInfo.quotesUsed >= quotaInfo.quotesAllowed * 0.8 
+                          ? 'text-yellow-600' 
+                          : 'text-blue-600'
+                      }`} />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        Trial Account - {quotaInfo.quotesUsed} of {quotaInfo.quotesAllowed} quotes used
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        {quotaInfo.quotesUsed >= quotaInfo.quotesAllowed 
+                          ? "Quote limit reached. Upgrade to create more quotes."
+                          : `${quotaInfo.quotesAllowed - quotaInfo.quotesUsed} quotes remaining in your trial.`
+                        }
+                      </p>
+                    </div>
+                  </div>
+                  {quotaInfo.quotesUsed >= quotaInfo.quotesAllowed && (
+                    <Button 
+                      variant="default"
+                      className="bg-blue-600 hover:bg-blue-700"
+                      onClick={() => window.open('mailto:sales@propaintquote.com?subject=Upgrade Request', '_blank')}
+                    >
+                      Upgrade Now
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Analytics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

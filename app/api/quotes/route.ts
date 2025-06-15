@@ -79,6 +79,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check company quota limits for trial accounts
+    const company = dbGet("SELECT quote_limit, is_trial, company_name FROM companies WHERE id = ?", [companyId]) as any;
+    if (!company) {
+      return NextResponse.json(
+        { error: "Company not found" },
+        { status: 404 }
+      );
+    }
+
+    // Check if this is a trial account with quote limits
+    if (company.is_trial && company.quote_limit !== null) {
+      const existingQuotes = dbGet("SELECT COUNT(*) as count FROM quotes WHERE company_id = ?", [companyId]) as any;
+      if (existingQuotes.count >= company.quote_limit) {
+        return NextResponse.json(
+          { 
+            error: "Quote limit reached",
+            message: `Your trial account is limited to ${company.quote_limit} quote${company.quote_limit === 1 ? '' : 's'}. Please upgrade to create more quotes.`,
+            quotesUsed: existingQuotes.count,
+            quotesAllowed: company.quote_limit,
+            upgradeRequired: true
+          },
+          { status: 403 }
+        );
+      }
+    }
+
     // Generate unique quote ID
     const quoteId = generateQuoteId();
 
