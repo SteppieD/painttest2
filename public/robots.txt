@@ -33,6 +33,12 @@ Allow: /blog
 Allow: /support
 Allow: /demo
 
+# Allow new SEO landing pages
+Allow: /painting-estimate-calculator-free
+Allow: /how-to-quote-painting-jobs-professionally
+Allow: /painting-quote-templates-free
+Allow: /trial-signup
+
 # Sitemap location
 Sitemap: https://propaintquote.com/sitemap.xml
 
