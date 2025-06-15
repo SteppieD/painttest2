@@ -437,15 +437,15 @@ function seedDefaultPaintProducts() {
       { projectType: 'exterior', category: 'trim_paint', supplier: 'PPG', productName: 'Manor Hall', productLine: 'Exterior', costPerGallon: 70, displayOrder: 3, sheen: 'Semi-Gloss' }
     ];
     
-    // Get all companies
-    const companies = db.prepare("SELECT id FROM companies").all() as any[];
+    // Get all users that were created from companies migration
+    const users = db.prepare("SELECT id FROM users").all() as any[];
     
-    // For each company, check if they have paint products
-    for (const company of companies) {
-      const productCount = db.prepare("SELECT COUNT(*) as count FROM company_paint_products WHERE user_id = ?").get(company.id) as any;
+    // For each user, check if they have paint products
+    for (const user of users) {
+      const productCount = db.prepare("SELECT COUNT(*) as count FROM company_paint_products WHERE user_id = ?").get(user.id) as any;
       
       if (productCount.count === 0) {
-        console.log(`Seeding default paint products for company ${company.id}...`);
+        console.log(`Seeding default paint products for user ${user.id}...`);
         
         const insertStmt = db.prepare(`
           INSERT INTO company_paint_products (
@@ -456,7 +456,7 @@ function seedDefaultPaintProducts() {
         
         for (const product of defaultProducts) {
           insertStmt.run(
-            company.id,
+            user.id,
             product.projectType,
             product.category,
             product.supplier,
@@ -469,7 +469,7 @@ function seedDefaultPaintProducts() {
           );
         }
         
-        console.log(`✓ Default paint products seeded for company ${company.id}`);
+        console.log(`✓ Default paint products seeded for user ${user.id}`);
       }
     }
   } catch (error) {
