@@ -240,11 +240,11 @@ const generateFollowUpQuestion = (stage: string, data: Partial<ConversationData>
       const dims = data.dimensions || {};
       
       if (!dims.wall_linear_feet) {
-        return "What's the total linear footage of walls to be painted?";
+        return "I need the total linear footage of walls to calculate the wall area for paint coverage. What's the total linear footage of walls to be painted?";
       }
       
       if (!dims.ceiling_height) {
-        return `Got it - ${dims.wall_linear_feet} linear feet of walls. What's the ceiling height?`;
+        return `Got it - ${dims.wall_linear_feet} linear feet of walls. I need the ceiling height to calculate the wall area (linear feet × height). What's the ceiling height?`;
       }
       
       if (!dims.floor_area && !dims.ceiling_area && data.project_type === 'interior') {
@@ -255,7 +255,7 @@ const generateFollowUpQuestion = (stage: string, data: Partial<ConversationData>
         return `Perfect! I'll use ${dims.floor_area.toLocaleString()} sqft as the ceiling area (same as floor area for most homes).\n\nIf you need a different ceiling area, just let me know the specific square footage.`;
       }
       
-      return "Now for doors and windows - how many of each need painting?";
+      return "I need to count the doors and windows to calculate the exact surface area for paint coverage. How many doors and windows need painting?";
       
     case 'doors_windows':
       if (!data.dimensions?.number_of_doors && !data.dimensions?.number_of_windows) {

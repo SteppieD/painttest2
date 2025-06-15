@@ -108,19 +108,21 @@ export default function ThisMonthPage() {
       const response = await fetch(`/api/quotes?company_id=${companyId}`);
       const data = await response.json();
 
-      if (Array.isArray(data)) {
-        setQuotes(data);
+      // Handle both direct array and wrapped response
+      const quotesArray = Array.isArray(data) ? data : (data.quotes || []);
+      if (quotesArray.length >= 0) {
+        setQuotes(quotesArray);
         
         // Filter for this month
         const now = new Date();
-        const thisMonthQuotes = data.filter((quote: Quote) => {
+        const thisMonthQuotes = quotesArray.filter((quote: Quote) => {
           const quoteDate = new Date(quote.created_at);
           return quoteDate.getMonth() === now.getMonth() && 
                  quoteDate.getFullYear() === now.getFullYear();
         });
         
         setMonthQuotes(thisMonthQuotes);
-        calculateStats(thisMonthQuotes, data);
+        calculateStats(thisMonthQuotes, quotesArray);
         calculateDailyData(thisMonthQuotes);
         calculateProjectTypeBreakdown(thisMonthQuotes);
       }
@@ -137,7 +139,7 @@ export default function ThisMonthPage() {
     const daysPassed = now.getDate();
     
     const totalQuotes = monthQuotesData.length;
-    const totalRevenue = monthQuotesData.reduce((sum, quote) => sum + quote.quote_amount, 0);
+    const totalRevenue = monthQuotesData.reduce((sum, quote) => sum + (quote.quote_amount || 0), 0);
     const averageQuote = totalQuotes > 0 ? totalRevenue / totalQuotes : 0;
 
     // Status breakdown
@@ -164,7 +166,7 @@ export default function ThisMonthPage() {
         dailyMap[dateKey] = { count: 0, revenue: 0 };
       }
       dailyMap[dateKey].count++;
-      dailyMap[dateKey].revenue += quote.quote_amount;
+      dailyMap[dateKey].revenue += quote.quote_amount || 0;
     });
 
     let bestDay = { date: '', count: 0, revenue: 0 };
@@ -188,7 +190,7 @@ export default function ThisMonthPage() {
       const weekNumber = Math.ceil(date.getDate() / 7);
       if (weekData[weekNumber]) {
         weekData[weekNumber].quotes++;
-        weekData[weekNumber].revenue += quote.quote_amount;
+        weekData[weekNumber].revenue += quote.quote_amount || 0;
       }
     });
 
@@ -234,7 +236,7 @@ export default function ThisMonthPage() {
       const dateKey = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       if (dailyMap[dateKey]) {
         dailyMap[dateKey].quotes++;
-        dailyMap[dateKey].revenue += quote.quote_amount;
+        dailyMap[dateKey].revenue += quote.quote_amount || 0;
       }
     });
 
@@ -256,7 +258,7 @@ export default function ThisMonthPage() {
         typeMap[type] = { count: 0, revenue: 0 };
       }
       typeMap[type].count++;
-      typeMap[type].revenue += quote.quote_amount;
+      typeMap[type].revenue += quote.quote_amount || 0;
     });
 
     const data = Object.entries(typeMap)
@@ -313,7 +315,7 @@ export default function ThisMonthPage() {
         q.quote_id,
         q.customer_name,
         q.address,
-        q.quote_amount,
+        q.quote_amount || 0,
         q.status || "pending",
         new Date(q.created_at).toLocaleDateString()
       ].join(","))

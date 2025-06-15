@@ -5,11 +5,12 @@ const db = new Database("./painting_quotes_app.db");
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId, products } = await req.json();
+    const { companyId, userId, products } = await req.json();
+    const id = companyId || userId; // Support both for backwards compatibility
 
-    if (!userId || !products) {
+    if (!id || !products) {
       return NextResponse.json(
-        { error: "User ID and products are required" },
+        { error: "Company ID and products are required" },
         { status: 400 }
       );
     }
@@ -33,13 +34,13 @@ export async function POST(req: NextRequest) {
     `);
 
     const insertMany = db.transaction((products: any[]) => {
-      // Delete existing products for this user
-      deleteStmt.run(userId);
+      // Delete existing products for this company
+      deleteStmt.run(id);
 
       // Insert new products
       for (const product of products) {
         insertStmt.run(
-          userId,
+          id,
           product.projectType,
           product.productCategory,
           product.supplier,
@@ -54,16 +55,6 @@ export async function POST(req: NextRequest) {
 
     insertMany(products);
 
-    // Update company profile onboarding status
-    const updateProfileStmt = db.prepare(`
-      UPDATE company_profiles
-      SET onboarding_completed = TRUE,
-          onboarding_step = 'completed',
-          updated_at = CURRENT_TIMESTAMP
-      WHERE user_id = ?
-    `);
-    updateProfileStmt.run(userId);
-
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error saving paint products:", error);
@@ -77,22 +68,39 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
-    const userId = searchParams.get("userId");
+    const companyId = searchParams.get("companyId") || searchParams.get("userId");
 
-    if (!userId) {
+    if (!companyId) {
       return NextResponse.json(
-        { error: "User ID is required" },
+        { error: "Company ID is required" },
         { status: 400 }
       );
     }
 
     const products = db.prepare(`
       SELECT * FROM company_paint_products
-      WHERE user_id = ? AND is_active = TRUE
+      WHERE user_id = ? AND is_active = 1
       ORDER BY project_type, product_category, display_order
-    `).all(userId);
+    `).all(companyId);
 
-    return NextResponse.json({ products });
+    // Transform snake_case to camelCase for frontend compatibility
+    const transformedProducts = products.map((product: any) => ({
+      id: product.id,
+      projectType: product.project_type,
+      productCategory: product.product_category,
+      supplier: product.supplier,
+      productName: product.product_name,
+      productLine: product.product_line,
+      costPerGallon: product.cost_per_gallon,
+      displayOrder: product.display_order,
+      sheen: product.sheen,
+      coveragePerGallon: product.coverage_per_gallon,
+      isActive: product.is_active,
+      createdAt: product.created_at,
+      updatedAt: product.updated_at
+    }));
+
+    return NextResponse.json({ products: transformedProducts });
   } catch (error) {
     console.error("Error fetching paint products:", error);
     return NextResponse.json(

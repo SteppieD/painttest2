@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
@@ -12,63 +15,23 @@ import {
   Shield,
   Smartphone,
   FileText,
-  BookOpen
+  BookOpen,
+  Menu,
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export const metadata: Metadata = {
-  title: 'ProPaint Quote - Professional Painting Quote Software for Contractors',
-  description: 'Generate accurate painting quotes in minutes with ProPaint Quote. The #1 painting estimation software trusted by professional contractors. Try free today!',
-  keywords: 'painting quote software, painting estimator, contractor quote tool, painting business software, painting calculator, estimate painting jobs',
-  authors: [{ name: 'ProPaint Quote' }],
-  creator: 'ProPaint Quote',
-  publisher: 'ProPaint Quote',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL('https://propaintquote.com'),
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    title: 'ProPaint Quote - Professional Painting Quote Software',
-    description: 'Generate accurate painting quotes in minutes. Trusted by professional contractors nationwide.',
-    url: '/',
-    siteName: 'ProPaint Quote',
-    locale: 'en_US',
-    type: 'website',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'ProPaint Quote - Professional Painting Software',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'ProPaint Quote - Professional Painting Quote Software',
-    description: 'Generate accurate painting quotes in minutes. Trusted by professional contractors.',
-    images: ['/og-image.jpg'],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-};
-
 export default function HomePage() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -79,6 +42,8 @@ export default function HomePage() {
               <Palette className="w-8 h-8 text-blue-600" />
               <span className="text-2xl font-bold text-gray-900">ProPaint Quote</span>
             </div>
+            
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-6">
               <Link href="/painting-estimate-calculator" className="text-gray-600 hover:text-gray-900">Calculator</Link>
               <Link href="/painting-quote-templates" className="text-gray-600 hover:text-gray-900">Templates</Link>
@@ -88,7 +53,63 @@ export default function HomePage() {
                 <Link href="/access-code">Start Free Trial</Link>
               </Button>
             </nav>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={toggleMobileMenu}
+              className="md:hidden p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
           </div>
+
+          {/* Mobile Navigation Menu */}
+          {isMobileMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 border-t">
+              <nav className="flex flex-col space-y-4 pt-4">
+                <Link 
+                  href="/painting-estimate-calculator" 
+                  className="text-gray-600 hover:text-gray-900 py-2"
+                  onClick={closeMobileMenu}
+                >
+                  Calculator
+                </Link>
+                <Link 
+                  href="/painting-quote-templates" 
+                  className="text-gray-600 hover:text-gray-900 py-2"
+                  onClick={closeMobileMenu}
+                >
+                  Templates
+                </Link>
+                <Link 
+                  href="/how-to-quote-painting-jobs" 
+                  className="text-gray-600 hover:text-gray-900 py-2"
+                  onClick={closeMobileMenu}
+                >
+                  Guide
+                </Link>
+                <Link 
+                  href="/access-code" 
+                  className="text-blue-600 hover:text-blue-700 font-medium py-2"
+                  onClick={closeMobileMenu}
+                >
+                  Sign In
+                </Link>
+                <div className="pt-2">
+                  <Button asChild className="w-full">
+                    <Link href="/access-code" onClick={closeMobileMenu}>
+                      Start Free Trial
+                    </Link>
+                  </Button>
+                </div>
+              </nav>
+            </div>
+          )}
         </div>
       </header>
 

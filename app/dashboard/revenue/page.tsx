@@ -95,11 +95,13 @@ export default function RevenuePage() {
       const response = await fetch(`/api/quotes?company_id=${companyId}`);
       const data = await response.json();
 
-      if (Array.isArray(data)) {
-        setQuotes(data);
-        calculateStats(data);
-        calculateMonthlyRevenue(data);
-        calculateProjectTypeRevenue(data);
+      // Handle both direct array and wrapped response
+      const quotesArray = Array.isArray(data) ? data : (data.quotes || []);
+      if (quotesArray.length >= 0) {
+        setQuotes(quotesArray);
+        calculateStats(quotesArray);
+        calculateMonthlyRevenue(quotesArray);
+        calculateProjectTypeRevenue(quotesArray);
       }
     } catch (error) {
       console.error("Error loading quotes:", error);
@@ -114,9 +116,9 @@ export default function RevenuePage() {
     const completedQuotes = quotesData.filter(q => q.status === "completed");
     const pendingQuotes = quotesData.filter(q => !q.status || q.status === "pending");
     
-    const acceptedRevenue = acceptedQuotes.reduce((sum, quote) => sum + quote.quote_amount, 0);
-    const completedRevenue = completedQuotes.reduce((sum, quote) => sum + quote.quote_amount, 0);
-    const pendingRevenue = pendingQuotes.reduce((sum, quote) => sum + quote.quote_amount, 0);
+    const acceptedRevenue = acceptedQuotes.reduce((sum, quote) => sum + (quote.quote_amount || 0), 0);
+    const completedRevenue = completedQuotes.reduce((sum, quote) => sum + (quote.quote_amount || 0), 0);
+    const pendingRevenue = pendingQuotes.reduce((sum, quote) => sum + (quote.quote_amount || 0), 0);
 
     const quoteAmounts = quotesData.map(q => q.quote_amount).filter(a => a > 0);
     const highestQuote = quoteAmounts.length > 0 ? Math.max(...quoteAmounts) : 0;
@@ -130,7 +132,7 @@ export default function RevenuePage() {
         const date = new Date(q.created_at);
         return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
       })
-      .reduce((sum, quote) => sum + quote.quote_amount, 0);
+      .reduce((sum, quote) => sum + (quote.quote_amount || 0), 0);
 
     const lastMonthRevenue = quotesData
       .filter(q => {
@@ -139,7 +141,7 @@ export default function RevenuePage() {
         return date.getMonth() === lastMonth.getMonth() && 
                date.getFullYear() === lastMonth.getFullYear();
       })
-      .reduce((sum, quote) => sum + quote.quote_amount, 0);
+      .reduce((sum, quote) => sum + (quote.quote_amount || 0), 0);
 
     const monthlyGrowth = lastMonthRevenue > 0 
       ? ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100 
@@ -148,11 +150,11 @@ export default function RevenuePage() {
     // Calculate yearly growth
     const thisYearRevenue = quotesData
       .filter(q => new Date(q.created_at).getFullYear() === now.getFullYear())
-      .reduce((sum, quote) => sum + quote.quote_amount, 0);
+      .reduce((sum, quote) => sum + (quote.quote_amount || 0), 0);
 
     const lastYearRevenue = quotesData
       .filter(q => new Date(q.created_at).getFullYear() === now.getFullYear() - 1)
-      .reduce((sum, quote) => sum + quote.quote_amount, 0);
+      .reduce((sum, quote) => sum + (quote.quote_amount || 0), 0);
 
     const yearlyGrowth = lastYearRevenue > 0 
       ? ((thisYearRevenue - lastYearRevenue) / lastYearRevenue) * 100 
@@ -192,7 +194,7 @@ export default function RevenuePage() {
       const date = new Date(quote.created_at);
       const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
       if (monthRevenue.hasOwnProperty(monthKey)) {
-        monthRevenue[monthKey] += quote.quote_amount;
+        monthRevenue[monthKey] += quote.quote_amount || 0;
       }
     });
 
@@ -212,7 +214,7 @@ export default function RevenuePage() {
       if (!typeRevenue[type]) {
         typeRevenue[type] = { revenue: 0, count: 0 };
       }
-      typeRevenue[type].revenue += quote.quote_amount;
+      typeRevenue[type].revenue += quote.quote_amount || 0;
       typeRevenue[type].count += 1;
     });
 
@@ -271,7 +273,7 @@ export default function RevenuePage() {
     }
 
     // Sort by amount descending
-    return filtered.sort((a, b) => b.quote_amount - a.quote_amount);
+    return filtered.sort((a, b) => (b.quote_amount || 0) - (a.quote_amount || 0));
   };
 
   const exportData = () => {
@@ -282,7 +284,7 @@ export default function RevenuePage() {
         q.quote_id,
         q.customer_name,
         q.address,
-        q.quote_amount,
+        q.quote_amount || 0,
         q.status || "pending",
         q.project_type || "General",
         new Date(q.created_at).toLocaleDateString()

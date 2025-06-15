@@ -37,6 +37,8 @@ import {
   ConversationData
 } from "@/lib/improved-conversation-parser";
 import { Room, calculateRoomAreas, calculateTotalAreasFromRooms } from "@/lib/professional-quote-calculator";
+import { PaintBrandSelector } from "@/components/ui/paint-brand-selector";
+import { PaintProductSelector } from "@/components/ui/paint-product-selector";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -102,6 +104,7 @@ function CreateQuotePageContent() {
   const [conversationStage, setConversationStage] = useState('customer_info');
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [buttonOptions, setButtonOptions] = useState<{id: string, label: string, value: any, selected?: boolean}[]>([]);
@@ -117,10 +120,21 @@ function CreateQuotePageContent() {
 
   // Paint selection tracking
   const [availableBrands, setAvailableBrands] = useState<any[]>([]);
+  const [topBrands, setTopBrands] = useState<any[]>([]);
+  const [otherBrands, setOtherBrands] = useState<any[]>([]);
   const [currentPaintCategory, setCurrentPaintCategory] = useState<string>('');
   const [selectedPaintProducts, setSelectedPaintProducts] = useState<{[category: string]: any}>({});
   const [paintSelectionQueue, setPaintSelectionQueue] = useState<string[]>([]);
   const [currentPaintCategoryIndex, setCurrentPaintCategoryIndex] = useState(0);
+
+  // New measurement-driven workflow state
+  const [measurementQueue, setMeasurementQueue] = useState<string[]>([]);
+  const [currentMeasurementCategory, setCurrentMeasurementCategory] = useState<string>('');
+  const [categoryCompletionStatus, setCategoryCompletionStatus] = useState<{[category: string]: {measured: boolean, paintSelected: boolean}}>({});
+  const [showPaintBrandSelector, setShowPaintBrandSelector] = useState(false);
+  const [showPaintProductSelector, setShowPaintProductSelector] = useState(false);
+  const [selectedBrandForCategory, setSelectedBrandForCategory] = useState<string>('');
+  const [availableProductsForCategory, setAvailableProductsForCategory] = useState<any[]>([]);
 
   // Helper function for brand icons
   const getBrandIcon = (brand: string): string => {
@@ -140,6 +154,164 @@ function CreateQuotePageContent() {
     if (price < 50) return 'Good';
     if (price < 80) return 'Better';
     return 'Best';
+  };
+
+  // Helper functions for measurement-driven workflow
+  const initializeMeasurementQueue = (surfaces: string[]) => {
+    const queue: string[] = [];
+    const status: {[category: string]: {measured: boolean, paintSelected: boolean}} = {};
+    
+    surfaces.forEach(surface => {
+      queue.push(surface);
+      status[surface] = { measured: false, paintSelected: false };
+    });
+    
+    setMeasurementQueue(queue);
+    setCategoryCompletionStatus(status);
+    if (queue.length > 0) {
+      setCurrentMeasurementCategory(queue[0]);
+    }
+  };
+
+  const markCategoryMeasured = (category: string) => {
+    setCategoryCompletionStatus(prev => ({
+      ...prev,
+      [category]: { ...prev[category], measured: true }
+    }));
+  };
+
+  const markCategoryPaintSelected = (category: string) => {
+    setCategoryCompletionStatus(prev => ({
+      ...prev,
+      [category]: { ...prev[category], paintSelected: true }
+    }));
+  };
+
+  const getNextCategoryForMeasurement = () => {
+    const incomplete = measurementQueue.find(category => 
+      !categoryCompletionStatus[category]?.measured
+    );
+    return incomplete || null;
+  };
+
+  const getNextCategoryForPaintSelection = () => {
+    const measured = measurementQueue.find(category => 
+      categoryCompletionStatus[category]?.measured && 
+      !categoryCompletionStatus[category]?.paintSelected
+    );
+    return measured || null;
+  };
+
+  const isWorkflowComplete = () => {
+    return measurementQueue.every(category => 
+      categoryCompletionStatus[category]?.measured && 
+      categoryCompletionStatus[category]?.paintSelected
+    );
+  };
+
+  // Paint selection component callbacks
+  const handleBrandSelect = async (brand: string) => {
+    setSelectedBrandForCategory(brand);
+    setShowPaintBrandSelector(false);
+    
+    // Fetch products for this brand and category
+    try {
+      const response = await fetch('/api/paint-products/brands', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          companyId: companyData.id,
+          brand: brand,
+          category: currentMeasurementCategory
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAvailableProductsForCategory(data.products || []);
+        setShowPaintProductSelector(true);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
+
+  const handleProductSelect = (product: any) => {
+    // Store the selected product
+    setSelectedPaintProducts(prev => ({
+      ...prev,
+      [currentMeasurementCategory]: product
+    }));
+    
+    // Mark category as paint selected
+    markCategoryPaintSelected(currentMeasurementCategory);
+    setShowPaintProductSelector(false);
+    
+    // Move to next category or finish
+    const nextCategory = getNextCategoryForMeasurement();
+    if (nextCategory) {
+      setCurrentMeasurementCategory(nextCategory);
+      
+      // Add a message about completing this category and moving to next
+      const completionMessage: Message = {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: `✅ **${currentMeasurementCategory.charAt(0).toUpperCase() + currentMeasurementCategory.slice(1)} Complete!**\n\nPaint selected: ${product.product_name}\n\nNow let's collect measurements for **${nextCategory}**.`,
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, completionMessage]);
+      
+      // Provide category-specific measurement instructions for the next category
+      let measurementInstructions = '';
+      if (nextCategory === 'ceilings') {
+        measurementInstructions = `\n\nFor ceiling painting, I need the ceiling area.\n\nPlease provide:\n• **Ceiling area:** in square feet\n• Or **floor area:** (I can calculate ceiling area from floor area)\n\nExample: "ceiling area: 200 sq ft" or "floor area: 200 sq ft"`;
+      } else if (nextCategory === 'walls') {
+        measurementInstructions = `\n\nFor wall painting, I need the wall dimensions.\n\nPlease provide:\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (to calculate wall area)\n\nExample: "120 linear feet, 9 foot ceilings"`;
+      } else if (nextCategory === 'doors') {
+        measurementInstructions = `\n\nFor door painting, I need the door count.\n\nPlease provide:\n• **Number of doors** to be painted\n\nExample: "3 doors"`;
+      } else if (nextCategory === 'windows') {
+        measurementInstructions = `\n\nFor window painting, I need the window count.\n\nPlease provide:\n• **Number of windows** to be painted\n\nExample: "5 windows"`;
+      } else if (nextCategory === 'trim') {
+        measurementInstructions = `\n\nFor trim painting, I need to know about doors and windows (trim goes around them).\n\nPlease provide:\n• **Number of doors** and **windows** that have trim\n\nExample: "3 doors and 5 windows" or "2 doors, no windows"`;
+      }
+      
+      if (measurementInstructions) {
+        const instructionMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: measurementInstructions,
+          timestamp: new Date().toISOString()
+        };
+        setMessages(prev => [...prev, instructionMessage]);
+      }
+      
+      setConversationStage('category_measurement_collection');
+    } else {
+      // Check if all categories are complete
+      if (isWorkflowComplete()) {
+        // Move to markup selection
+        const completionMessage: Message = {
+          id: Date.now().toString(),
+          role: 'assistant',
+          content: `🎉 **All surfaces complete!** \n\nMeasurements and paint selections are done. Now let's set your profit margin.\n\nWhat markup percentage would you like?`,
+          timestamp: new Date().toISOString()
+        };
+        setMessages(prev => [...prev, completionMessage]);
+        setConversationStage('markup_selection');
+        
+        // Show markup buttons
+        setTimeout(() => {
+          setButtonOptions([
+            { id: '15', label: '15%', value: '15', selected: false },
+            { id: '20', label: '20%', value: '20', selected: true },
+            { id: '25', label: '25%', value: '25', selected: false },
+            { id: '30', label: '30%', value: '30', selected: false },
+            { id: 'custom', label: 'Custom %', value: 'custom', selected: false }
+          ]);
+          setShowButtons(true);
+        }, 500);
+      }
+    }
   };
 
   // Auto-scroll to bottom
@@ -223,6 +395,8 @@ function CreateQuotePageContent() {
       if (response.ok) {
         const data = await response.json();
         setAvailableBrands(data.brands || []);
+        setTopBrands(data.topBrands || []);
+        setOtherBrands(data.otherBrands || []);
       }
     } catch (error) {
       console.error('Failed to load paint brands:', error);
@@ -343,20 +517,59 @@ What would you like to modify?`,
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
+    
+    // Start thinking phase
+    setIsThinking(true);
 
     try {
+      // Process the response while thinking
       const aiResponse = await processUserInput(buttonValue, conversationStage);
-      setMessages(prev => [...prev, aiResponse]);
+      
+      // Calculate thinking duration based on response length
+      const thinkingDuration = calculateThinkingDuration(aiResponse.content.length);
+      
+      // Wait for thinking duration to complete
+      setTimeout(() => {
+        setIsThinking(false);
+        setIsLoading(true);
+        
+        // Small delay before showing the actual response for smooth transition
+        setTimeout(() => {
+          setMessages(prev => [...prev, aiResponse]);
+          setIsLoading(false);
+        }, 100);
+      }, thinkingDuration);
+      
     } catch (error) {
       console.error('Error processing button click:', error);
-    } finally {
-      setIsLoading(false);
+      
+      // Even for errors, show thinking briefly
+      setTimeout(() => {
+        setIsThinking(false);
+        setIsLoading(true);
+        
+        setTimeout(() => {
+          const errorMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: "I'm sorry, I encountered an error. Please try again or contact support.",
+            timestamp: new Date().toISOString()
+          };
+          setMessages(prev => [...prev, errorMessage]);
+          setIsLoading(false);
+        }, 100);
+      }, 500);
     }
   };
 
+  // Helper function to calculate thinking duration based on response length
+  const calculateThinkingDuration = (responseLength: number): number => {
+    // Base time: 500ms, add 500ms for longer responses (>200 chars)
+    return responseLength > 200 ? 1000 : 500;
+  };
+
   const handleSend = async () => {
-    if (!inputValue.trim() || isLoading) return;
+    if (!inputValue.trim() || isLoading || isThinking) return;
 
     setShowButtons(false);
     setButtonOptions([]);
@@ -370,22 +583,48 @@ What would you like to modify?`,
 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
-    setIsLoading(true);
+    
+    // Start thinking phase
+    setIsThinking(true);
 
     try {
+      // Process the response while thinking
       const aiResponse = await processUserInput(inputValue, conversationStage);
-      setMessages(prev => [...prev, aiResponse]);
+      
+      // Calculate thinking duration based on response length
+      const thinkingDuration = calculateThinkingDuration(aiResponse.content.length);
+      
+      // Wait for thinking duration to complete
+      setTimeout(() => {
+        setIsThinking(false);
+        setIsLoading(true);
+        
+        // Small delay before showing the actual response for smooth transition
+        setTimeout(() => {
+          setMessages(prev => [...prev, aiResponse]);
+          setIsLoading(false);
+        }, 100);
+      }, thinkingDuration);
+      
     } catch (error) {
       console.error('Error processing input:', error);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: "I'm sorry, I encountered an error. Please try again or contact support.",
-        timestamp: new Date().toISOString()
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
+      
+      // Even for errors, show thinking briefly
+      setTimeout(() => {
+        setIsThinking(false);
+        setIsLoading(true);
+        
+        setTimeout(() => {
+          const errorMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: "I'm sorry, I encountered an error. Please try again or contact support.",
+            timestamp: new Date().toISOString()
+          };
+          setMessages(prev => [...prev, errorMessage]);
+          setIsLoading(false);
+        }, 100);
+      }, 500);
     }
   };
 
@@ -461,7 +700,7 @@ What would you like to modify?`,
         setQuoteData(prev => ({ ...prev, project_type: projectType }));
         
         if (projectType === 'interior' || projectType === 'both') {
-          responseContent = `Perfect! For ${projectType} painting, what surfaces do you want to include?`;
+          responseContent = `Perfect! For ${projectType} painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
           // Show surface selection buttons for interior
           setTimeout(() => {
             setConversationStage('surface_selection'); // Set stage BEFORE showing buttons
@@ -476,7 +715,7 @@ What would you like to modify?`,
             setShowButtons(true);
           }, 500);
         } else {
-          responseContent = `Great! For exterior painting, what surfaces do you want to include?`;
+          responseContent = `Perfect! For exterior painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
           // Show surface selection buttons for exterior
           setTimeout(() => {
             setConversationStage('surface_selection'); // Set stage BEFORE showing buttons
@@ -498,32 +737,36 @@ What would you like to modify?`,
       case 'surface_selection':
         // Handle continue to dimensions (surface selection is now handled in handleButtonClick)
         if (input === 'continue' || input.toLowerCase().includes('continue')) {
-          const surfaceList = selectedSurfaces.length > 0 ? selectedSurfaces.join(', ') : 'selected surfaces';
-          
-          // Check if ceilings are selected for interior projects - go to room-by-room measurement
-          if (quoteData.project_type === 'interior' && selectedSurfaces.includes('ceilings')) {
-            responseContent = `Perfect! I see you selected ceiling painting.\n\nFor accurate ceiling measurements, I'll collect room-by-room dimensions.\n\nHow many rooms need ceiling painting?`;
-            setTimeout(() => {
-              setButtonOptions([
-                { id: '1', label: '1 Room', value: '1', selected: false },
-                { id: '2', label: '2 Rooms', value: '2', selected: false },
-                { id: '3', label: '3 Rooms', value: '3', selected: false },
-                { id: '4', label: '4 Rooms', value: '4', selected: false },
-                { id: '5', label: '5 Rooms', value: '5', selected: false },
-                { id: 'custom', label: 'More than 5', value: 'custom', selected: false }
-              ]);
-              setShowButtons(true);
-            }, 500);
-            nextStage = 'room_count';
-          } else if (quoteData.project_type === 'interior') {
-            // No ceilings selected - simple linear feet + height
-            responseContent = `Perfect! For ${surfaceList}, I need the dimensions:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (in feet)\n\nFor example: "120 linear feet, 9 foot ceilings"`;
-            nextStage = 'dimensions';
-          } else {
-            // Exterior project
-            responseContent = `Perfect! For ${surfaceList}, I need the dimensions:\n\n• **Total area** to be painted (square footage)\n• **Number of stories**\n\nFor example: "2500 sqft siding, 2 story home"`;
-            nextStage = 'dimensions';
+          // Require at least one surface to be selected
+          if (selectedSurfaces.length === 0) {
+            responseContent = `Please select at least one surface to paint before continuing.\n\nUse the buttons above to choose which surfaces you want to include in the quote.`;
+            nextStage = 'surface_selection';
+            break;
           }
+          
+          // Initialize the measurement queue for the new workflow
+          initializeMeasurementQueue(selectedSurfaces);
+          
+          const surfaceList = selectedSurfaces.join(', ');
+          const firstCategory = measurementQueue[0];
+          
+          // Start the new measurement-driven workflow
+          responseContent = `Perfect! You selected: **${surfaceList}**\n\nI'll collect measurements and paint selection for each surface category. Let's start with **${firstCategory}**.\n\n`;
+          
+          // Provide category-specific measurement instructions
+          if (firstCategory === 'ceilings') {
+            responseContent += `For ceiling painting, I need the ceiling area.\n\nPlease provide:\n• **Ceiling area:** in square feet\n• Or **floor area:** (I can calculate ceiling area from floor area)\n\nExample: "ceiling area: 200 sq ft" or "floor area: 200 sq ft"`;
+          } else if (firstCategory === 'walls') {
+            responseContent += `For wall painting, I need the wall dimensions.\n\nPlease provide:\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (to calculate wall area)\n\nExample: "120 linear feet, 9 foot ceilings"`;
+          } else if (firstCategory === 'doors') {
+            responseContent += `For door painting, I need the door count.\n\nPlease provide:\n• **Number of doors** to be painted\n\nExample: "3 doors"`;
+          } else if (firstCategory === 'windows') {
+            responseContent += `For window painting, I need the window count.\n\nPlease provide:\n• **Number of windows** to be painted\n\nExample: "5 windows"`;
+          } else if (firstCategory === 'trim') {
+            responseContent += `For trim painting, I need to know about doors and windows (trim goes around them).\n\nPlease provide:\n• **Number of doors** and **windows** that have trim\n\nExample: "3 doors and 5 windows" or "2 doors, no windows"`;
+          }
+          
+          nextStage = 'category_measurement_collection';
         } else {
           // Handle text input during surface selection
           responseContent = `Please use the buttons above to select surfaces, then click "Continue to Dimensions" when ready.`;
@@ -540,7 +783,7 @@ What would you like to modify?`,
           setRoomCount(count);
           setCurrentRoomIndex(0);
           setRooms([]);
-          responseContent = `Perfect! Let's measure ${count} rooms for ceiling painting.\n\n**Room 1:** What are the dimensions and what would you like to call this room?\nPlease provide: length, width, height (in feet)\n\nExample: "Living Room: 12 by 14, 9 foot ceilings" or "Kitchen: 12x14x9"`;
+          responseContent = `Perfect! Let's measure ${count} rooms for ceiling painting.\n\nI need the room dimensions to calculate the ceiling area for accurate paint coverage.\n\n**Room 1:** What are the dimensions and what would you like to call this room?\nPlease provide: length, width, height (in feet)\n\nExample: "Living Room: 12 by 14, 9 foot ceilings" or "Kitchen: 12x14x9"`;
           nextStage = 'room_dimensions';
         } else {
           responseContent = `Please select the number of rooms or choose "More than 5" for custom entry.`;
@@ -554,7 +797,7 @@ What would you like to modify?`,
           setRoomCount(customCount);
           setCurrentRoomIndex(0);
           setRooms([]);
-          responseContent = `Perfect! Let's measure ${customCount} rooms for ceiling painting.\n\n**Room 1:** What are the dimensions and what would you like to call this room?\nPlease provide: length, width, height (in feet)\n\nExample: "Living Room: 12 by 14, 9 foot ceilings" or "Kitchen: 12x14x9"`;
+          responseContent = `Perfect! Let's measure ${customCount} rooms for ceiling painting.\n\nI need the room dimensions to calculate the ceiling area for accurate paint coverage.\n\n**Room 1:** What are the dimensions and what would you like to call this room?\nPlease provide: length, width, height (in feet)\n\nExample: "Living Room: 12 by 14, 9 foot ceilings" or "Kitchen: 12x14x9"`;
           nextStage = 'room_dimensions';
         } else {
           responseContent = `Please enter a valid number of rooms.`;
@@ -642,7 +885,7 @@ What would you like to modify?`,
                 ? 'for calculating wall paint coverage' 
                 : 'for calculating trim, door, and window areas';
               
-              responseContent = `Excellent! Here's your room summary:\n\n${roomSummaryWithButtons.summary}\n\nNow I need wall dimensions ${measurementPurpose}:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n\nFor example: "120 linear feet"`;
+              responseContent = `Excellent! Here's your room summary:\n\n${roomSummaryWithButtons.summary}\n\nI need the wall dimensions ${measurementPurpose}:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n\nFor example: "120 linear feet"`;
               
               setTimeout(() => {
                 const wallDimensionButtons = [
@@ -687,7 +930,7 @@ What would you like to modify?`,
         
         // Handle continue to wall dimensions button
         if (input === 'continue_wall') {
-          responseContent = `Now I need the wall dimensions for the areas you want painted:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n\nFor example: "120 linear feet"`;
+          responseContent = `I need the wall dimensions to calculate the wall area and determine paint coverage:\n\n• **Wall linear footage** (perimeter of walls to be painted)\n\nFor example: "120 linear feet"`;
           nextStage = 'wall_dimensions';
           break;
         }
@@ -711,7 +954,7 @@ What would you like to modify?`,
             if (selectedSurfaces.includes('windows')) doorWindowPurpose.push('windows');
             if (selectedSurfaces.includes('trim')) doorWindowPurpose.push('trim around doors and windows');
             
-            responseContent = `Perfect! Now I need to count the doors and windows for painting ${doorWindowPurpose.join(', ')}:\n\n• How many **doors** need painting?\n• How many **windows** need painting?\n\nFor example: "3 doors and 5 windows" or "2 doors, no windows"`;
+            responseContent = `Perfect! I need to count the doors and windows to calculate the exact paint coverage for ${doorWindowPurpose.join(', ')}:\n\n• How many **doors** need painting?\n• How many **windows** need painting?\n\nFor example: "3 doors and 5 windows" or "2 doors, no windows"`;
             nextStage = 'doors_windows';
           } else {
             // Skip doors/windows and go straight to paint selection
@@ -733,9 +976,9 @@ What would you like to modify?`,
               setCurrentPaintCategory(firstCategory);
               responseContent += `\n\nGreat! Now let's select paint for your ${firstCategory}.\n\nWhich paint brand do you prefer for ${firstCategory}?`;
               
-              // Show brand selection buttons
+              // Show brand selection buttons - prioritize top brands
               setTimeout(() => {
-                const brandButtons = availableBrands
+                const topBrandButtons = topBrands
                   .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
                   .map(brand => ({
                     id: `brand_${brand.brand}`,
@@ -744,22 +987,39 @@ What would you like to modify?`,
                     selected: false
                   }));
                 
-                if (brandButtons.length > 0) {
-                  setButtonOptions(brandButtons);
+                if (topBrandButtons.length > 0) {
+                  setButtonOptions(topBrandButtons);
                   setShowButtons(true);
                 } else {
-                  // Fallback to generic paint quality if no brands available
-                  setButtonOptions([
-                    { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
-                    { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
-                    { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
-                  ]);
-                  setShowButtons(true);
+                  // Fallback to all brands limited to 3
+                  const allBrandButtons = availableBrands
+                    .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
+                    .slice(0, 3)
+                    .map(brand => ({
+                      id: `brand_${brand.brand}`,
+                      label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                      value: `brand_${brand.brand}_${firstCategory}`,
+                      selected: false
+                    }));
+                  
+                  if (allBrandButtons.length > 0) {
+                    setButtonOptions(allBrandButtons);
+                    setShowButtons(true);
+                  } else {
+                    // Final fallback to generic paint quality
+                    setButtonOptions([
+                      { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+                      { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+                      { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+                    ]);
+                    setShowButtons(true);
+                  }
                 }
               }, 500);
               
               // Check if we have brands available to determine next stage
-              const hasBrands = availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
+              const hasBrands = topBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0) ||
+                               availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
               if (hasBrands) {
                 nextStage = 'paint_brand_selection';
               } else {
@@ -926,7 +1186,7 @@ What would you like to modify?`,
           updatedDimensions.ceiling_height;
         
         if (hasRequiredDimensions) {
-          responseContent = `Excellent! Now I need to count the doors and windows:\n\n• How many **doors** need painting?\n• How many **windows** need painting?\n\nFor example: "3 doors and 5 windows" or "2 doors, no windows"`;
+          responseContent = `Excellent! I need to count the doors and windows to calculate the exact surface area for paint coverage:\n\n• How many **doors** need painting?\n• How many **windows** need painting?\n\nFor example: "3 doors and 5 windows" or "2 doors, no windows"`;
           nextStage = 'doors_windows';
         } else {
           responseContent = generateFollowUpQuestion('dimensions', { 
@@ -957,9 +1217,9 @@ What would you like to modify?`,
             setCurrentPaintCategory(firstCategory);
             responseContent = `Great! Now let's select paint for your ${firstCategory}.\n\nWhich paint brand do you prefer for ${firstCategory}?`;
             
-            // Show brand selection buttons
+            // Show brand selection buttons - prioritize top brands
             setTimeout(() => {
-              const brandButtons = availableBrands
+              const topBrandButtons = topBrands
                 .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
                 .map(brand => ({
                   id: `brand_${brand.brand}`,
@@ -968,22 +1228,39 @@ What would you like to modify?`,
                   selected: false
                 }));
               
-              if (brandButtons.length > 0) {
-                setButtonOptions(brandButtons);
+              if (topBrandButtons.length > 0) {
+                setButtonOptions(topBrandButtons);
                 setShowButtons(true);
               } else {
-                // Fallback to generic paint quality if no brands available
-                setButtonOptions([
-                  { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
-                  { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
-                  { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
-                ]);
-                setShowButtons(true);
+                // Fallback to all brands if no top brands available
+                const allBrandButtons = availableBrands
+                  .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
+                  .slice(0, 3) // Limit to 3 even for fallback
+                  .map(brand => ({
+                    id: `brand_${brand.brand}`,
+                    label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                    value: `brand_${brand.brand}_${firstCategory}`,
+                    selected: false
+                  }));
+                
+                if (allBrandButtons.length > 0) {
+                  setButtonOptions(allBrandButtons);
+                  setShowButtons(true);
+                } else {
+                  // Final fallback to generic paint quality
+                  setButtonOptions([
+                    { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+                    { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+                    { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+                  ]);
+                  setShowButtons(true);
+                }
               }
             }, 500);
             
             // Check if we have brands available to determine next stage
-            const hasBrands = availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
+            const hasBrands = topBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0) ||
+                             availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
             if (hasBrands) {
               nextStage = 'paint_brand_selection';
             } else {
@@ -1044,9 +1321,9 @@ What would you like to modify?`,
           setCurrentPaintCategory(firstCategory);
           responseContent = `Great! Now let's select paint for your ${firstCategory}.\n\nWhich paint brand do you prefer for ${firstCategory}?`;
           
-          // Show brand selection buttons
+          // Show brand selection buttons - prioritize top brands
           setTimeout(() => {
-            const brandButtons = availableBrands
+            const topBrandButtons = topBrands
               .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
               .map(brand => ({
                 id: `brand_${brand.brand}`,
@@ -1055,22 +1332,39 @@ What would you like to modify?`,
                 selected: false
               }));
             
-            if (brandButtons.length > 0) {
-              setButtonOptions(brandButtons);
+            if (topBrandButtons.length > 0) {
+              setButtonOptions(topBrandButtons);
               setShowButtons(true);
             } else {
-              // Fallback to generic paint quality if no brands available
-              setButtonOptions([
-                { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
-                { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
-                { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
-              ]);
-              setShowButtons(true);
+              // Fallback to all brands limited to 3
+              const allBrandButtons = availableBrands
+                .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
+                .slice(0, 3)
+                .map(brand => ({
+                  id: `brand_${brand.brand}`,
+                  label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                  value: `brand_${brand.brand}_${firstCategory}`,
+                  selected: false
+                }));
+              
+              if (allBrandButtons.length > 0) {
+                setButtonOptions(allBrandButtons);
+                setShowButtons(true);
+              } else {
+                // Final fallback to generic paint quality
+                setButtonOptions([
+                  { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+                  { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+                  { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+                ]);
+                setShowButtons(true);
+              }
             }
           }, 500);
           
           // Check if we have brands available to determine next stage
-          const hasBrands = availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
+          const hasBrands = topBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0) ||
+                           availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
           if (hasBrands) {
             nextStage = 'paint_brand_selection';
           } else {
@@ -1225,9 +1519,9 @@ What would you like to modify?`,
             
             responseContent = `Great! Now let's select paint for your ${nextCategory}.\n\nWhich paint brand do you prefer for ${nextCategory}?`;
             
-            // Show brand selection for next category
+            // Show brand selection for next category - prioritize top brands
             setTimeout(() => {
-              const brandButtons = availableBrands
+              const topBrandButtons = topBrands
                 .filter(brand => brand.products[nextCategory] && brand.products[nextCategory].length > 0)
                 .map(brand => ({
                   id: `brand_${brand.brand}`,
@@ -1236,7 +1530,21 @@ What would you like to modify?`,
                   selected: false
                 }));
               
-              setButtonOptions(brandButtons);
+              if (topBrandButtons.length > 0) {
+                setButtonOptions(topBrandButtons);
+              } else {
+                // Fallback to all brands limited to 3
+                const allBrandButtons = availableBrands
+                  .filter(brand => brand.products[nextCategory] && brand.products[nextCategory].length > 0)
+                  .slice(0, 3)
+                  .map(brand => ({
+                    id: `brand_${brand.brand}`,
+                    label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                    value: `brand_${brand.brand}_${nextCategory}`,
+                    selected: false
+                  }));
+                setButtonOptions(allBrandButtons);
+              }
               setShowButtons(true);
             }, 500);
             nextStage = 'paint_brand_selection';
@@ -1311,6 +1619,106 @@ What would you like to modify?`,
         } else {
           responseContent = `Please enter a valid cost (just the number). For example, enter "65" for $65 per gallon.`;
           nextStage = 'paint_cost_adjustment';
+        }
+        break;
+
+      case 'category_measurement_collection':
+        // Collect measurements for the current category
+        const category = currentMeasurementCategory;
+        
+        if (category === 'ceilings') {
+          // For ceilings, we might already have room data or need ceiling area
+          const ceilingDimensions = parseDimensions(input, quoteData.project_type);
+          
+          setQuoteData(prev => ({
+            ...prev,
+            dimensions: { ...prev.dimensions, ...ceilingDimensions }
+          }));
+          
+          if (ceilingDimensions.ceiling_area || ceilingDimensions.floor_area) {
+            markCategoryMeasured(category);
+            setCurrentPaintCategory(category); // Set for paint selection
+            responseContent = `Perfect! Ceiling measurements recorded for ${category}.\n\nNow let's select the paint for your ${category}.`;
+            nextStage = 'category_paint_selection';
+          } else {
+            responseContent = `I need the ceiling area for accurate coverage calculation.\n\nPlease provide: "ceiling area: X sq ft" or "floor area: X sq ft" (I can use floor area to calculate ceiling area).`;
+            nextStage = 'category_measurement_collection';
+          }
+        } else if (category === 'walls') {
+          // For walls, we need linear footage and height
+          const wallDimensions = parseDimensions(input, quoteData.project_type);
+          
+          setQuoteData(prev => ({
+            ...prev,
+            dimensions: { ...prev.dimensions, ...wallDimensions }
+          }));
+          
+          if (wallDimensions.wall_linear_feet && wallDimensions.ceiling_height) {
+            markCategoryMeasured(category);
+            setCurrentPaintCategory(category); // Set for paint selection
+            responseContent = `Perfect! Wall measurements recorded.\n\nNow let's select the paint for your ${category}.`;
+            nextStage = 'category_paint_selection';
+          } else {
+            const missing = [];
+            if (!wallDimensions.wall_linear_feet) missing.push('linear footage');
+            if (!wallDimensions.ceiling_height) missing.push('ceiling height');
+            responseContent = `I still need the ${missing.join(' and ')} for ${category}.\n\nExample: "120 linear feet, 9 foot ceilings"`;
+            nextStage = 'category_measurement_collection';
+          }
+        } else if (['trim', 'doors', 'windows'].includes(category)) {
+          // For trim/doors/windows, we need counts
+          const doorWindowData = parseDoorsAndWindows(input);
+          
+          // Convert the parsed data to the expected format
+          const dimensionData = {
+            number_of_doors: doorWindowData.doors,
+            number_of_windows: doorWindowData.windows
+          };
+          
+          setQuoteData(prev => ({
+            ...prev,
+            dimensions: { ...prev.dimensions, ...dimensionData }
+          }));
+          
+          const hasNeededData = (category === 'doors' && doorWindowData.doors !== undefined && doorWindowData.doors > 0) ||
+                               (category === 'windows' && doorWindowData.windows !== undefined && doorWindowData.windows > 0) ||
+                               (category === 'trim' && (doorWindowData.doors > 0 || doorWindowData.windows > 0));
+          
+          if (hasNeededData) {
+            markCategoryMeasured(category);
+            setCurrentPaintCategory(category); // Set for paint selection
+            responseContent = `Perfect! ${category} count recorded.\n\nNow let's select the paint for your ${category}.`;
+            nextStage = 'category_paint_selection';
+          } else {
+            responseContent = `I need the count for ${category}.\n\nExample: "3 doors" or "5 windows" or "3 doors and 5 windows"`;
+            nextStage = 'category_measurement_collection';
+          }
+        }
+        break;
+
+      case 'category_paint_selection':
+        // Initialize paint brand selection for the current category
+        if (!showPaintBrandSelector && !showPaintProductSelector) {
+          // Reset paint selection state for new category
+          setSelectedBrandForCategory('');
+          setAvailableProductsForCategory([]);
+          
+          // Fetch available brands for this category
+          fetch(`/api/paint-products/brands?companyId=${companyData.id}`)
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                setAvailableBrands(data.brands || []);
+                setTopBrands(data.topBrands || []);
+                setOtherBrands(data.otherBrands || []);
+                setShowPaintBrandSelector(true);
+              }
+            })
+            .catch(error => {
+              console.error('Error fetching brands:', error);
+            });
+          
+          responseContent = `Perfect! Now let's select paint for your **${currentMeasurementCategory}**.`;
         }
         break;
         
@@ -1929,7 +2337,22 @@ What would you like to modify?`,
             </div>
           ))}
           
-          {isLoading && (
+          {isThinking && (
+            <div className="flex gap-3 justify-start">
+              <div className="bg-white border p-4 rounded-lg rounded-bl-sm shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  </div>
+                  <span className="text-sm text-gray-500">Thinking...</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {isLoading && !isThinking && (
             <div className="flex gap-3 justify-start">
               <div className="bg-white border p-4 rounded-lg rounded-bl-sm shadow-sm">
                 <div className="flex items-center gap-2">
@@ -1965,6 +2388,37 @@ What would you like to modify?`,
               </div>
             </div>
           )}
+
+          {/* Paint Brand Selector */}
+          {showPaintBrandSelector && (
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+                <PaintBrandSelector
+                  brands={availableBrands}
+                  topBrands={topBrands}
+                  otherBrands={otherBrands}
+                  category={currentMeasurementCategory}
+                  onBrandSelect={handleBrandSelect}
+                  selectedBrand={selectedBrandForCategory}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Paint Product Selector */}
+          {showPaintProductSelector && (
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+                <PaintProductSelector
+                  products={availableProductsForCategory}
+                  brand={selectedBrandForCategory}
+                  category={currentMeasurementCategory}
+                  onProductSelect={handleProductSelect}
+                  selectedProduct={selectedPaintProducts[currentMeasurementCategory]}
+                />
+              </div>
+            </div>
+          )}
           
           <div ref={messagesEndRef} />
         </div>
@@ -1977,12 +2431,12 @@ What would you like to modify?`,
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Type your response..."
-              disabled={isLoading}
+              disabled={isLoading || isThinking}
               className="flex-1"
             />
             <Button
               onClick={handleSend}
-              disabled={!inputValue.trim() || isLoading}
+              disabled={!inputValue.trim() || isLoading || isThinking}
               size="icon"
               className="shrink-0"
             >

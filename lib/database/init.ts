@@ -260,11 +260,55 @@ function initializeSchema() {
     `);
     console.log('✓ Admin activity logs table created/verified');
     
+    // Paint products table for company paint catalog
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS company_paint_products (
+        id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+        user_id TEXT NOT NULL,
+        -- Product categorization
+        project_type TEXT NOT NULL CHECK (project_type IN ('interior', 'exterior')),
+        product_category TEXT NOT NULL CHECK (product_category IN ('primer', 'ceiling_paint', 'wall_paint', 'trim_paint')),
+        -- Product details
+        supplier TEXT NOT NULL,
+        product_name TEXT NOT NULL,
+        product_line TEXT, -- e.g., "ProClassic", "Duration", etc.
+        cost_per_gallon DECIMAL NOT NULL,
+        -- Display order (1-3 for each category)
+        display_order INTEGER DEFAULT 1 CHECK (display_order BETWEEN 1 AND 3),
+        -- Additional info
+        coverage_per_gallon INTEGER DEFAULT 350,
+        sheen TEXT,
+        is_active BOOLEAN DEFAULT TRUE,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      );
+    `);
+    
+    // Create indexes for paint products
+    db.exec(`
+      CREATE INDEX IF NOT EXISTS idx_company_paint_products_user_id ON company_paint_products(user_id);
+      CREATE INDEX IF NOT EXISTS idx_company_paint_products_type_category ON company_paint_products(project_type, product_category);
+    `);
+    
+    // Create trigger for paint products
+    db.exec(`
+      CREATE TRIGGER IF NOT EXISTS update_company_paint_products_updated_at
+        AFTER UPDATE ON company_paint_products
+        BEGIN
+          UPDATE company_paint_products SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+        END;
+    `);
+    console.log('✓ Company paint products table created/verified');
+    
     // Seed demo companies if none exist
     seedDemoCompanies();
     
     // Seed admin user if none exist
     seedAdminUser();
+    
+    // Seed default paint products for companies
+    seedDefaultPaintProducts();
     
   } catch (error) {
     console.error('Schema initialization error:', error);
@@ -348,6 +392,88 @@ function seedAdminUser() {
     }
   } catch (error) {
     console.error('Error seeding admin user:', error);
+  }
+}
+
+function seedDefaultPaintProducts() {
+  if (!db) return;
+  
+  try {
+    // Default paint products - 3 per category with popular brands and realistic pricing
+    const defaultProducts = [
+      // Interior Primers
+      { projectType: 'interior', category: 'primer', supplier: 'Zinsser', productName: 'Bulls Eye 1-2-3', productLine: 'Water-Based', costPerGallon: 28, displayOrder: 1, sheen: 'Flat' },
+      { projectType: 'interior', category: 'primer', supplier: 'Kilz', productName: 'Premium Primer', productLine: 'Multi-Surface', costPerGallon: 25, displayOrder: 2, sheen: 'Flat' },
+      { projectType: 'interior', category: 'primer', supplier: 'Sherwin-Williams', productName: 'ProBlock', productLine: 'Interior/Exterior', costPerGallon: 32, displayOrder: 3, sheen: 'Flat' },
+      
+      // Interior Ceiling Paint
+      { projectType: 'interior', category: 'ceiling_paint', supplier: 'Benjamin Moore', productName: 'Waterborne Ceiling Paint', productLine: 'Ultra Flat', costPerGallon: 55, displayOrder: 1, sheen: 'Ultra Flat' },
+      { projectType: 'interior', category: 'ceiling_paint', supplier: 'Sherwin-Williams', productName: 'ProMar Ceiling Paint', productLine: 'Interior', costPerGallon: 42, displayOrder: 2, sheen: 'Flat' },
+      { projectType: 'interior', category: 'ceiling_paint', supplier: 'Behr', productName: 'Premium Plus Ceiling', productLine: 'Interior', costPerGallon: 38, displayOrder: 3, sheen: 'Flat' },
+      
+      // Interior Wall Paint
+      { projectType: 'interior', category: 'wall_paint', supplier: 'Benjamin Moore', productName: 'Regal Select', productLine: 'Interior', costPerGallon: 65, displayOrder: 1, sheen: 'Eggshell' },
+      { projectType: 'interior', category: 'wall_paint', supplier: 'Sherwin-Williams', productName: 'ProClassic', productLine: 'Interior Acrylic', costPerGallon: 58, displayOrder: 2, sheen: 'Satin' },
+      { projectType: 'interior', category: 'wall_paint', supplier: 'Behr', productName: 'Premium Plus Ultra', productLine: 'Interior', costPerGallon: 45, displayOrder: 3, sheen: 'Eggshell' },
+      
+      // Interior Trim Paint
+      { projectType: 'interior', category: 'trim_paint', supplier: 'Benjamin Moore', productName: 'Advance', productLine: 'Waterborne Alkyd', costPerGallon: 75, displayOrder: 1, sheen: 'Semi-Gloss' },
+      { projectType: 'interior', category: 'trim_paint', supplier: 'Sherwin-Williams', productName: 'ProClassic', productLine: 'Waterbased Acrylic-Alkyd', costPerGallon: 68, displayOrder: 2, sheen: 'Semi-Gloss' },
+      { projectType: 'interior', category: 'trim_paint', supplier: 'PPG', productName: 'Break-Through!', productLine: 'Interior/Exterior', costPerGallon: 72, displayOrder: 3, sheen: 'Semi-Gloss' },
+      
+      // Exterior Primers
+      { projectType: 'exterior', category: 'primer', supplier: 'Kilz', productName: 'Adhesion Primer', productLine: 'Interior/Exterior', costPerGallon: 35, displayOrder: 1, sheen: 'Flat' },
+      { projectType: 'exterior', category: 'primer', supplier: 'Zinsser', productName: 'Cover Stain', productLine: 'Oil-Based', costPerGallon: 38, displayOrder: 2, sheen: 'Flat' },
+      { projectType: 'exterior', category: 'primer', supplier: 'Benjamin Moore', productName: 'Fresh Start', productLine: 'High-Hiding', costPerGallon: 42, displayOrder: 3, sheen: 'Flat' },
+      
+      // Exterior Wall Paint
+      { projectType: 'exterior', category: 'wall_paint', supplier: 'Benjamin Moore', productName: 'Aura Exterior', productLine: 'Premium', costPerGallon: 85, displayOrder: 1, sheen: 'Satin' },
+      { projectType: 'exterior', category: 'wall_paint', supplier: 'Sherwin-Williams', productName: 'Duration', productLine: 'Exterior Acrylic', costPerGallon: 78, displayOrder: 2, sheen: 'Satin' },
+      { projectType: 'exterior', category: 'wall_paint', supplier: 'Behr', productName: 'Marquee', productLine: 'Exterior', costPerGallon: 65, displayOrder: 3, sheen: 'Satin' },
+      
+      // Exterior Trim Paint
+      { projectType: 'exterior', category: 'trim_paint', supplier: 'Benjamin Moore', productName: 'Advance Exterior', productLine: 'Waterborne Alkyd', costPerGallon: 82, displayOrder: 1, sheen: 'Gloss' },
+      { projectType: 'exterior', category: 'trim_paint', supplier: 'Sherwin-Williams', productName: 'ProClassic', productLine: 'Exterior', costPerGallon: 75, displayOrder: 2, sheen: 'Gloss' },
+      { projectType: 'exterior', category: 'trim_paint', supplier: 'PPG', productName: 'Manor Hall', productLine: 'Exterior', costPerGallon: 70, displayOrder: 3, sheen: 'Semi-Gloss' }
+    ];
+    
+    // Get all companies
+    const companies = db.prepare("SELECT id FROM companies").all() as any[];
+    
+    // For each company, check if they have paint products
+    for (const company of companies) {
+      const productCount = db.prepare("SELECT COUNT(*) as count FROM company_paint_products WHERE user_id = ?").get(company.id) as any;
+      
+      if (productCount.count === 0) {
+        console.log(`Seeding default paint products for company ${company.id}...`);
+        
+        const insertStmt = db.prepare(`
+          INSERT INTO company_paint_products (
+            user_id, project_type, product_category, supplier, product_name,
+            product_line, cost_per_gallon, display_order, sheen, coverage_per_gallon
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `);
+        
+        for (const product of defaultProducts) {
+          insertStmt.run(
+            company.id,
+            product.projectType,
+            product.category,
+            product.supplier,
+            product.productName,
+            product.productLine,
+            product.costPerGallon,
+            product.displayOrder,
+            product.sheen,
+            350 // Default coverage
+          );
+        }
+        
+        console.log(`✓ Default paint products seeded for company ${company.id}`);
+      }
+    }
+  } catch (error) {
+    console.error('Error seeding default paint products:', error);
   }
 }
 

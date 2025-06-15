@@ -5,11 +5,12 @@ const db = new Database("./painting_quotes_app.db");
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId, product } = await req.json();
+    const { userId, companyId, product } = await req.json();
+    const id = companyId || userId; // Support both for backwards compatibility
 
-    if (!userId || !product) {
+    if (!id || !product) {
       return NextResponse.json(
-        { error: "User ID and product are required" },
+        { error: "Company ID and product are required" },
         { status: 400 }
       );
     }
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
         product.costPerGallon,
         product.sheen || null,
         product.id,
-        userId
+        id
       );
     } else {
       // Create new product
@@ -53,7 +54,7 @@ export async function POST(req: NextRequest) {
       `);
 
       insertStmt.run(
-        userId,
+        id,
         product.projectType,
         product.productCategory,
         product.supplier,
@@ -88,7 +89,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     const deleteStmt = db.prepare(
-      "UPDATE company_paint_products SET is_active = FALSE WHERE id = ?"
+      "UPDATE company_paint_products SET is_active = 0 WHERE id = ?"
     );
     deleteStmt.run(productId);
 

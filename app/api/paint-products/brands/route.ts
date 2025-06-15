@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
     });
     
     // Convert to array and sort brands by popularity (Sherwin-Williams, Benjamin Moore first)
-    const brandPriority = ['Sherwin-Williams', 'Benjamin Moore', 'PPG', 'Behr'];
+    const brandPriority = ['Sherwin-Williams', 'Benjamin Moore', 'Behr', 'PPG', 'Kilz', 'Zinsser'];
     const sortedBrands = Object.values(brandGroups).sort((a, b) => {
       const aIndex = brandPriority.indexOf(a.brand);
       const bIndex = brandPriority.indexOf(b.brand);
@@ -84,17 +84,24 @@ export async function GET(request: NextRequest) {
       return a.brand.localeCompare(b.brand);
     });
     
+    // Get top 3 brands and all other brands
+    const topBrands = sortedBrands.slice(0, 3);
+    const otherBrands = sortedBrands.slice(3);
+    
     // Also provide a summary for quick access
     const availableBrands = sortedBrands.map(bg => bg.brand);
-    const availableCategories = [...new Set(products.map(p => p.use_case))];
+    const availableCategories = Array.from(new Set(products.map(p => p.use_case)));
     
     return NextResponse.json({
       success: true,
       brands: sortedBrands,
+      topBrands: topBrands,
+      otherBrands: otherBrands,
       summary: {
         availableBrands,
         availableCategories,
-        totalProducts: products.length
+        totalProducts: products.length,
+        topBrandNames: topBrands.map(b => b.brand)
       }
     });
     

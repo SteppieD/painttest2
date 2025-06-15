@@ -92,10 +92,12 @@ export default function TotalQuotesPage() {
       const response = await fetch(`/api/quotes?company_id=${companyId}`);
       const data = await response.json();
 
-      if (Array.isArray(data)) {
-        setQuotes(data);
-        calculateStats(data);
-        calculateMonthlyData(data);
+      // Handle both direct array and wrapped response
+      const quotesArray = Array.isArray(data) ? data : (data.quotes || []);
+      if (quotesArray.length >= 0) {
+        setQuotes(quotesArray);
+        calculateStats(quotesArray);
+        calculateMonthlyData(quotesArray);
       }
     } catch (error) {
       console.error("Error loading quotes:", error);
@@ -234,7 +236,7 @@ export default function TotalQuotesPage() {
         q.quote_id,
         q.customer_name,
         q.address,
-        q.quote_amount,
+        q.quote_amount || 0,
         q.status || "pending",
         new Date(q.created_at).toLocaleDateString()
       ].join(","))

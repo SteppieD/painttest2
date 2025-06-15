@@ -31,17 +31,16 @@ export async function GET(request: NextRequest) {
         dateFilter = '';
     }
     
-    const userFilter = userId ? `AND p.user_id = '${userId}'` : '';
+    const userFilter = userId ? `AND q.company_id = '${userId}'` : '';
     
     // Get all quotes
     const allQuotes = dbAll(`
       SELECT 
         q.*,
-        p.client_name,
-        p.property_address,
-        p.user_id
+        q.customer_name as client_name,
+        q.address as property_address,
+        q.company_id as user_id
       FROM quotes q
-      JOIN projects p ON q.project_id = p.id
       WHERE 1=1 ${userFilter} ${dateFilter}
       ORDER BY q.created_at DESC
     `) as any[];
@@ -51,7 +50,7 @@ export async function GET(request: NextRequest) {
     const acceptedQuotes = allQuotes.filter(q => q.status === 'accepted');
     const winRate = totalQuotes > 0 ? (acceptedQuotes.length / totalQuotes) * 100 : 0;
     
-    const totalRevenue = allQuotes.reduce((sum, q) => sum + (q.final_price || 0), 0);
+    const totalRevenue = allQuotes.reduce((sum, q) => sum + (q.total_revenue || 0), 0);
     const averageQuoteValue = totalQuotes > 0 ? totalRevenue / totalQuotes : 0;
     
     // This month's metrics
@@ -59,7 +58,7 @@ export async function GET(request: NextRequest) {
       new Date(q.created_at) >= startOfMonth
     );
     const quotesThisMonth = thisMonthQuotes.length;
-    const revenueThisMonth = thisMonthQuotes.reduce((sum, q) => sum + (q.final_price || 0), 0);
+    const revenueThisMonth = thisMonthQuotes.reduce((sum, q) => sum + (q.total_revenue || 0), 0);
     
     // Last month's metrics
     const lastMonthQuotes = allQuotes.filter(q => {
@@ -67,7 +66,7 @@ export async function GET(request: NextRequest) {
       return quoteDate >= startOfLastMonth && quoteDate <= endOfLastMonth;
     });
     const quotesLastMonth = lastMonthQuotes.length;
-    const revenueLastMonth = lastMonthQuotes.reduce((sum, q) => sum + (q.final_price || 0), 0);
+    const revenueLastMonth = lastMonthQuotes.reduce((sum, q) => sum + (q.total_revenue || 0), 0);
     
     // Calculate average margin
     const quotesWithMargin = allQuotes.filter(q => q.markup_percentage != null);
@@ -81,7 +80,7 @@ export async function GET(request: NextRequest) {
       if (!acc[key]) {
         acc[key] = { name: key, totalSpent: 0, jobCount: 0 };
       }
-      acc[key].totalSpent += quote.final_price || 0;
+      acc[key].totalSpent += quote.total_revenue || 0;
       acc[key].jobCount += 1;
       return acc;
     }, {});
@@ -118,7 +117,7 @@ export async function GET(request: NextRequest) {
       
       monthlyTrend.push({
         month: monthStart.toLocaleDateString('en-US', { month: 'short' }),
-        revenue: monthQuotes.reduce((sum, q) => sum + (q.final_price || 0), 0),
+        revenue: monthQuotes.reduce((sum, q) => sum + (q.total_revenue || 0), 0),
         quotes: monthQuotes.length
       });
     }

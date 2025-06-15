@@ -112,9 +112,9 @@ export default function ProductSettingsPage() {
     }
   }, [router]);
 
-  const loadProducts = async (userId: string) => {
+  const loadProducts = async (companyId: string) => {
     try {
-      const response = await fetch(`/api/paint-products?userId=${userId}`);
+      const response = await fetch(`/api/paint-products?companyId=${companyId}`);
       const data = await response.json();
       setProducts(data.products || []);
     } catch (error) {
@@ -134,7 +134,7 @@ export default function ProductSettingsPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: companyData.id,
+          companyId: companyData.id,
           product,
         }),
       });
