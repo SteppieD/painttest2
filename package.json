@@ -8,7 +8,9 @@
     "start": "next start --hostname 0.0.0.0 --port 3001",
     "lint": "next lint",
     "replit": "npm run build && npm start",
-    "setup-db": "node -e \"console.log('Database auto-initialized on first run')\""
+    "setup-db": "node -e \"console.log('Database auto-initialized on first run')\"",
+    "deploy:build": "npm run build",
+    "deploy:start": "npm start"
   },
   "engines": {
     "node": ">=18.0.0",

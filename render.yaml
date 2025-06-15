@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: painting-quote-app
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - key: PORT
+        value: "3001"
+    disk:
+      name: painting-app-db
+      mountPath: /app
+      sizeGB: 1

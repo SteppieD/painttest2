@@ -3532,3 +3532,837 @@ Require stack:
  GET /create-quote 200 in 27ms
  ✓ Compiled in 439ms (876 modules)
  ✓ Compiled in 148ms (525 modules)
+ GET /create-quote 200 in 156ms
+ ✓ Compiled /_not-found in 274ms (865 modules)
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ ✓ Compiled /_error in 144ms (867 modules)
+ GET /_next/static/css/app/layout.css?v=1750008966457 500 in 483ms
+ GET /_next/static/chunks/main-app.js?v=1750008966457 500 in 480ms
+ GET /_next/static/chunks/app-pages-internals.js 500 in 479ms
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ GET /manifest.json 500 in 10ms
+ GET /create-quote 200 in 92ms
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ GET /_next/static/css/app/layout.css?v=1750008968249 500 in 22ms
+ GET /_next/static/chunks/main-app.js?v=1750008968249 500 in 20ms
+ GET /_next/static/chunks/app-pages-internals.js 500 in 18ms
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ GET /manifest.json 500 in 7ms
+ GET /create-quote 200 in 36ms
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ GET /_next/static/css/app/layout.css?v=1750008969109 500 in 30ms
+ GET /_next/static/chunks/main-app.js?v=1750008969109 500 in 28ms
+ GET /_next/static/chunks/app-pages-internals.js 500 in 25ms
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js
+- /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js
+- /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:198:28)
+    at /Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js:162:22)
+    at /Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8793
+    at Object.<anonymous> (/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js:1:8841)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js:109:84)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2090:30)
+    at async pipe.req.req (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:2056:30)
+    at async DevServer.pipeImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/Desktop/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:370:24)
+    at async requestHandlerImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/sepg/Desktop/painttest2/.next/server/webpack-runtime.js',
+    '/Users/sepg/Desktop/painttest2/.next/server/app/_not-found/page.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/require.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/load-components.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/build/utils.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ GET /manifest.json 500 in 8ms
+[?25h
