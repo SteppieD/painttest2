@@ -48,9 +48,9 @@ export default function HomePage() {
               <Link href="/painting-estimate-calculator" className="text-gray-600 hover:text-gray-900">Calculator</Link>
               <Link href="/painting-quote-templates" className="text-gray-600 hover:text-gray-900">Templates</Link>
               <Link href="/how-to-quote-painting-jobs" className="text-gray-600 hover:text-gray-900">Guide</Link>
-              <Link href="/access-code" className="text-blue-600 hover:text-blue-700 font-medium">Sign In</Link>
-              <Button asChild>
-                <Link href="/trial-signup">Create Free Account</Link>
+              <Link href="/access-code" className="text-gray-600 hover:text-gray-900 text-sm">Sign In</Link>
+              <Button asChild className="bg-blue-600 hover:bg-blue-700">
+                <Link href="/trial-signup">Start Free Trial</Link>
               </Button>
             </nav>
 
@@ -95,15 +95,15 @@ export default function HomePage() {
                 </Link>
                 <Link 
                   href="/access-code" 
-                  className="text-blue-600 hover:text-blue-700 font-medium py-2"
+                  className="text-gray-600 hover:text-gray-900 py-2"
                   onClick={closeMobileMenu}
                 >
                   Sign In
                 </Link>
                 <div className="pt-2">
-                  <Button asChild className="w-full">
+                  <Button asChild className="w-full bg-blue-600 hover:bg-blue-700">
                     <Link href="/trial-signup" onClick={closeMobileMenu}>
-                      Create Free Account
+                      Start Free Trial
                     </Link>
                   </Button>
                 </div>
@@ -122,16 +122,19 @@ export default function HomePage() {
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Stop losing jobs to slow estimates. ProPaint Quote helps professional painters create accurate, detailed quotes that win more business and increase profits.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" asChild className="text-lg px-8 py-6">
+          <div className="flex flex-col items-center gap-4 justify-center mb-12">
+            <Button size="lg" asChild className="text-lg px-12 py-6 bg-blue-600 hover:bg-blue-700">
               <Link href="/trial-signup">
-                Create Free Account
+                Start Free Trial Now
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
-            <Button variant="outline" size="lg" asChild className="text-lg px-8 py-6">
-              <Link href="/access-code">Have Access Code?</Link>
-            </Button>
+            <p className="text-sm text-gray-600">
+              Already have an access code? 
+              <Link href="/access-code" className="text-blue-600 hover:text-blue-700 ml-1 underline">
+                Sign in here
+              </Link>
+            </p>
           </div>
           <div className="flex items-center justify-center gap-8 text-sm text-gray-500">
             <div className="flex items-center gap-2">

@@ -61,11 +61,17 @@ export default function AccessCodePage() {
           router.push(redirectTo);
         }
       } else {
-        setError(data.error || "Invalid access code");
+        if (data.error && data.error.includes("not found")) {
+          setError("Access code not found. Please check your code or create a new trial account.");
+        } else if (data.error && data.error.includes("expired")) {
+          setError("This access code has expired. Please contact support or create a new trial account.");
+        } else {
+          setError("Invalid access code. Please check your spelling and try again.");
+        }
       }
     } catch (error) {
       console.error("Error:", error);
-      setError("Network error. Please try again.");
+      setError("Connection problem. Please check your internet and try again.");
     } finally {
       setIsLoading(false);
     }

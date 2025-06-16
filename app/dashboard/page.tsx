@@ -19,7 +19,9 @@ import {
   Search,
   LogOut,
   Eye,
-  Copy
+  Copy,
+  Calculator,
+  ArrowRight
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -272,44 +274,19 @@ export default function DashboardPage() {
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Button
-                onClick={() => router.push("/create-quote")}
-                className="hidden sm:flex"
+                onClick={() => router.push("/create-quote-pro")}
+                className="bg-green-600 hover:bg-green-700"
               >
-                <MessageSquare className="w-4 h-4 mr-2" />
+                <Calculator className="w-4 h-4 mr-2" />
                 New Quote
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => router.push("/quotes")}
-                className="hidden sm:flex"
-              >
-                <FileText className="w-4 h-4 mr-2" />
-                All Quotes
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => router.push("/insights")}
-                className="hidden sm:flex"
-              >
-                <TrendingUp className="w-4 h-4 mr-2" />
-                Insights
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => router.push("/settings")}
-                className="hidden sm:flex"
-              >
-                Settings
               </Button>
               
               <Button
                 variant="ghost"
                 onClick={handleLogout}
+                className="text-gray-500 hover:text-gray-700"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
@@ -348,17 +325,22 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Quick Action - Single Quote Method */}
+        {/* Primary Action - Create Quote */}
         <div className="mb-8">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push("/create-quote")}>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <MessageSquare className="w-6 h-6 text-blue-600" />
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-green-200 bg-green-50" onClick={() => router.push("/create-quote-pro")}>
+            <CardContent className="p-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-green-600 rounded-lg flex items-center justify-center">
+                    <Calculator className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-green-900">Create Professional Quote</h3>
+                    <p className="text-green-700">Room-by-room measurements • Industry pricing • Customer-ready output</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-lg">Create New Quote</h3>
-                  <p className="text-sm text-gray-600">Chat with AI to generate quotes quickly</p>
+                <div className="text-green-600">
+                  <ArrowRight className="w-6 h-6" />
                 </div>
               </div>
             </CardContent>
@@ -420,83 +402,64 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Analytics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card 
-            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-blue-200"
-            onClick={() => router.push("/dashboard/total-quotes")}
-          >
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                <FileText className="w-4 h-4" />
-                Total Quotes
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{analytics.totalQuotes}</div>
-              <p className="text-xs text-gray-500">
-                {analytics.pendingQuotes} pending
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-green-200"
-            onClick={() => router.push("/dashboard/revenue")}
-          >
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                <DollarSign className="w-4 h-4" />
-                Total Revenue
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">
-                {formatCurrency(analytics.totalRevenue)}
+        {/* Business Metrics - Contractor Focus */}
+        <div className="mb-8">
+          <div className="bg-white rounded-lg border p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Business Performance</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">{analytics.totalQuotes}</div>
+                <div className="text-sm text-gray-500">Total Quotes</div>
+                <div className="text-xs text-green-600 mt-1">
+                  {analytics.acceptedQuotes} won ({analytics.totalQuotes > 0 ? Math.round((analytics.acceptedQuotes / analytics.totalQuotes) * 100) : 0}%)
+                </div>
               </div>
-              <p className="text-xs text-gray-500">
-                All time
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-blue-200"
-            onClick={() => router.push("/dashboard/average-quote")}
-          >
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                <TrendingUp className="w-4 h-4" />
-                Average Quote
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-blue-600">
-                {formatCurrency(analytics.averageQuote)}
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">{formatCurrency(analytics.totalRevenue)}</div>
+                <div className="text-sm text-gray-500">Revenue Generated</div>
+                <div className="text-xs text-gray-500 mt-1">All time</div>
               </div>
-              <p className="text-xs text-gray-500">
-                Per quote
-              </p>
-            </CardContent>
-          </Card>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600">{formatCurrency(analytics.averageQuote)}</div>
+                <div className="text-sm text-gray-500">Average Job Value</div>
+                <div className="text-xs text-gray-500 mt-1">Per quote</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-orange-600">{analytics.pendingQuotes}</div>
+                <div className="text-sm text-gray-500">Awaiting Response</div>
+                <div className="text-xs text-gray-500 mt-1">Follow up needed</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <Card 
-            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-200"
-            onClick={() => router.push("/dashboard/this-month")}
-          >
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                This Month
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{analytics.thisMonthQuotes}</div>
-              <p className="text-xs text-gray-500">
-                {formatCurrency(analytics.thisMonthRevenue)}
-              </p>
-            </CardContent>
-          </Card>
+        {/* Secondary Navigation */}
+        <div className="mb-8">
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant="outline"
+              onClick={() => router.push("/quotes")}
+              className="flex items-center gap-2"
+            >
+              <FileText className="w-4 h-4" />
+              View All Quotes
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => router.push("/insights")}
+              className="flex items-center gap-2"
+            >
+              <TrendingUp className="w-4 h-4" />
+              Analytics
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => router.push("/settings")}
+              className="flex items-center gap-2"
+            >
+              Settings
+            </Button>
+          </div>
         </div>
 
         {/* Quotes List */}
@@ -537,9 +500,9 @@ export default function DashboardPage() {
                   {quotes.length === 0 ? "No quotes yet" : "No quotes match your filters"}
                 </p>
                 {quotes.length === 0 && (
-                  <Button onClick={() => router.push("/create-quote")}>
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Create Your First Quote
+                  <Button onClick={() => router.push("/create-quote-pro")} className="bg-green-600 hover:bg-green-700">
+                    <Calculator className="w-4 h-4 mr-2" />
+                    Create Your First Professional Quote
                   </Button>
                 )}
               </div>
