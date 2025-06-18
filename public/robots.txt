@@ -38,6 +38,12 @@ Allow: /painting-estimate-calculator-free
 Allow: /how-to-quote-painting-jobs-professionally
 Allow: /painting-quote-templates-free
 Allow: /trial-signup
+Allow: /painting-estimating-software-contractors
+Allow: /painting-quote-generator-ai
+Allow: /painting-business-software
+Allow: /house-painting-estimate-calculator
+Allow: /commercial-painting-estimating-software
+Allow: /mobile-painting-estimate-app
 
 # Sitemap location
 Sitemap: https://propaintquote.com/sitemap.xml
