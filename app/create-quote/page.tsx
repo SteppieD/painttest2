@@ -41,6 +41,8 @@ import { PaintBrandSelector } from "@/components/ui/paint-brand-selector";
 import { PaintProductSelector } from "@/components/ui/paint-product-selector";
 import { FavoritePaintSelector } from "@/components/ui/favorite-paint-selector";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
+import { calculateProgressiveEstimate, generateEstimateMessage, type ProgressiveEstimate } from "@/lib/progressive-calculator";
+import { ProgressiveEstimateDisplay, FloatingEstimateWidget } from "@/components/ui/progressive-estimate-display";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -146,6 +148,11 @@ function CreateQuotePageContent() {
   const [isInitializing, setIsInitializing] = useState(true);
   const [initializationError, setInitializationError] = useState<string | null>(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
+
+  // Progressive estimation state
+  const [currentEstimate, setCurrentEstimate] = useState<ProgressiveEstimate | null>(null);
+  const [showEstimate, setShowEstimate] = useState(false);
+  const [estimateFloating, setEstimateFloating] = useState(false);
 
   // Helper function for brand icons
   const getBrandIcon = (brand: string): string => {
@@ -475,6 +482,42 @@ What would you like to modify?`,
     // Set conversation stage to allow modifications
     setConversationStage('quote_review');
   };
+
+  // Progressive estimation update function
+  const updateProgressiveEstimate = () => {
+    const partialData = {
+      customer_name: quoteData.customer_name,
+      address: quoteData.address,
+      project_type: quoteData.project_type,
+      selectedSurfaces,
+      dimensions: quoteData.dimensions,
+      markup_percentage: quoteData.markup_percentage,
+      estimatedRoomCount: roomCount || undefined
+    };
+
+    const estimate = calculateProgressiveEstimate(partialData, quoteData.rates);
+    setCurrentEstimate(estimate);
+    
+    // Show estimate once we have basic info
+    if (!showEstimate && (selectedSurfaces.length > 0 || quoteData.dimensions.floor_area)) {
+      setShowEstimate(true);
+    }
+  };
+
+  // Update estimate when relevant data changes
+  useEffect(() => {
+    if (!isInitializing && companyData) {
+      updateProgressiveEstimate();
+    }
+  }, [
+    selectedSurfaces,
+    quoteData.dimensions,
+    quoteData.project_type,
+    quoteData.markup_percentage,
+    roomCount,
+    isInitializing,
+    companyData
+  ]);
 
   // Old sequential loading functions removed - now using batch loader
 
@@ -2429,6 +2472,27 @@ What would you like to modify?`,
               </div>
             </div>
           ))}
+
+          {/* Progressive Estimate Display */}
+          {currentEstimate && showEstimate && !isThinking && (
+            <div className="flex justify-center">
+              <ProgressiveEstimateDisplay
+                estimate={currentEstimate}
+                isVisible={true}
+                onEstimateClick={() => {
+                  // Add estimate details to chat
+                  const estimateMessage = generateEstimateMessage(currentEstimate);
+                  const newMessage: Message = {
+                    id: Date.now().toString(),
+                    role: 'assistant',
+                    content: `## Current Estimate\n\n${estimateMessage}\n\n*This estimate updates automatically as you provide more details.*`,
+                    timestamp: new Date().toISOString()
+                  };
+                  setMessages(prev => [...prev, newMessage]);
+                }}
+              />
+            </div>
+          )}
           
           {isThinking && (
             <div className="flex gap-3 justify-start">
@@ -2553,6 +2617,15 @@ What would you like to modify?`,
           </div>
         </div>
       </div>
+
+      {/* Floating Estimate Widget */}
+      {currentEstimate && !showEstimate && (
+        <FloatingEstimateWidget
+          estimate={currentEstimate}
+          isVisible={true}
+          onToggle={() => setShowEstimate(true)}
+        />
+      )}
     </div>
   );
 }
