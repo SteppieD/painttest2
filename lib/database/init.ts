@@ -318,6 +318,9 @@ function initializeSchema() {
     `);
     console.log('✓ Company paint products table created/verified');
     
+    // Initialize subscription system
+    initializeSubscriptionSchema();
+    
     // Seed demo companies if none exist
     seedDemoCompanies();
     
@@ -326,6 +329,9 @@ function initializeSchema() {
     
     // Seed default paint products for companies
     seedDefaultPaintProducts();
+    
+    // Initialize subscriptions for existing companies
+    initializeExistingCompanySubscriptions();
     
   } catch (error) {
     console.error('Schema initialization error:', error);
@@ -594,6 +600,43 @@ export function closeDatabase() {
     db.close();
     db = null;
     console.log('Database connection closed');
+  }
+}
+
+function initializeSubscriptionSchema() {
+  if (!db) throw new Error('Database not initialized');
+  
+  console.log('Initializing subscription system...');
+  
+  try {
+    // Read and execute subscription schema
+    const subscriptionSchemaPath = join(process.cwd(), 'lib', 'database', 'subscription-schema.sql');
+    const subscriptionSchema = readFileSync(subscriptionSchemaPath, 'utf8');
+    
+    // Execute the subscription schema
+    db.exec(subscriptionSchema);
+    
+    console.log('✓ Subscription system initialized');
+  } catch (error) {
+    console.error('Failed to initialize subscription system:', error);
+    // Don't throw - this is optional for now
+  }
+}
+
+async function initializeExistingCompanySubscriptions() {
+  if (!db) throw new Error('Database not initialized');
+  
+  try {
+    // Import the subscription manager here to avoid circular dependencies
+    const { subscriptionManager } = await import('../subscription-manager');
+    
+    // Find companies without subscriptions and create trial subscriptions
+    await subscriptionManager.migrateExistingCompanies();
+    
+    console.log('✓ Existing companies migrated to subscription system');
+  } catch (error) {
+    console.error('Failed to initialize existing company subscriptions:', error);
+    // Don't throw - this is optional for now
   }
 }
 

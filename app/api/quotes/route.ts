@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbGet, dbRun, dbAll, createQuote, updateQuote } from "@/lib/database";
 import { generateQuoteId } from "@/lib/utils";
+import { subscriptionManager } from "@/lib/subscription-manager";
 
 // POST - Create a new quote
 export async function POST(request: NextRequest) {
@@ -79,30 +80,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check company quota limits for trial accounts
-    const company = dbGet("SELECT quote_limit, is_trial, company_name FROM companies WHERE id = ?", [companyId]) as any;
-    if (!company) {
+    // Check subscription limits using new subscription manager
+    const quotePermission = await subscriptionManager.canCreateQuote(companyId);
+    
+    if (!quotePermission.allowed) {
       return NextResponse.json(
-        { error: "Company not found" },
-        { status: 404 }
+        { 
+          error: "Quote limit reached",
+          message: quotePermission.reason,
+          quotesRemaining: quotePermission.quotesRemaining,
+          planName: quotePermission.planName,
+          upgradeRequired: true
+        },
+        { status: 403 }
       );
-    }
-
-    // Check if this is a trial account with quote limits
-    if (company.is_trial && company.quote_limit !== null) {
-      const existingQuotes = dbGet("SELECT COUNT(*) as count FROM quotes WHERE company_id = ?", [companyId]) as any;
-      if (existingQuotes.count >= company.quote_limit) {
-        return NextResponse.json(
-          { 
-            error: "Quote limit reached",
-            message: `Your trial account is limited to ${company.quote_limit} quote${company.quote_limit === 1 ? '' : 's'}. Please upgrade to create more quotes.`,
-            quotesUsed: existingQuotes.count,
-            quotesAllowed: company.quote_limit,
-            upgradeRequired: true
-          },
-          { status: 403 }
-        );
-      }
     }
 
     // Generate unique quote ID
@@ -138,6 +129,14 @@ export async function POST(request: NextRequest) {
     };
 
     const result = createQuote(quote);
+
+    // Record quote creation in subscription system
+    try {
+      await subscriptionManager.recordQuoteCreation(companyId, quoteId);
+    } catch (error) {
+      console.error('Failed to record quote usage:', error);
+      // Don't fail the quote creation if usage tracking fails
+    }
 
     console.log(`✅ Quote created: ${quoteId} for company ${companyId}`);
 

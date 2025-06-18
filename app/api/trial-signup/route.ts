@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/database/init";
+import { subscriptionManager } from "@/lib/subscription-manager";
 
 export async function POST(request: NextRequest) {
   try {
@@ -81,6 +82,14 @@ export async function POST(request: NextRequest) {
       1, // quote_limit (1 free quote for trial)
       1  // is_trial (true)
     );
+
+    // Create subscription for the new company
+    try {
+      await subscriptionManager.createTrialSubscription(result.lastInsertRowid as number, 'plan_free');
+    } catch (error) {
+      console.error('Failed to create trial subscription:', error);
+      // Don't fail the account creation if subscription creation fails
+    }
 
     // Log the trial account creation
     console.log(`✅ Trial account created: ${cleanAccessCode} - ${companyName} (${email})`);
