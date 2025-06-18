@@ -8,3 +8,70 @@ t=2025-06-15T11:13:01-0700 lvl=info msg="started tunnel" obj=tunnels name=comman
 t=2025-06-15T11:14:58-0700 lvl=info msg=start pg=/api/tunnels id=c77403224106ebaf
 t=2025-06-15T11:14:58-0700 lvl=info msg=end pg=/api/tunnels id=c77403224106ebaf status=200 dur=711.125µs
 t=2025-06-15T11:15:03-0700 lvl=info msg="join connections" obj=join id=9ad77b90e6ee l=127.0.0.1:3001 r=162.156.191.199:63023
+t=2025-06-15T11:39:20-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=57fc110b1197 clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T11:39:20-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T11:39:21-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T11:39:21-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T11:41:10-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=474b7e362aa4 clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T11:41:10-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T11:41:11-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T11:41:11-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T13:03:41-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="read EOF from remote peer"
+t=2025-06-15T13:03:41-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T13:03:41-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T13:04:43-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=546db5be8467 clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T13:04:48-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=b0b0892ee188 clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T13:04:48-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T13:04:48-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T13:04:48-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T13:12:14-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=3420dcbbf062 clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T13:12:14-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T13:12:14-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T13:12:14-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T13:28:11-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=f7c7d8624992 clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T13:28:11-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T13:28:12-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T13:28:12-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T13:32:44-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=48c33099f99d clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T13:32:44-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T13:32:44-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T13:32:44-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T13:37:29-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=fa8028ef96b2 clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T13:37:29-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T13:37:30-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T13:37:30-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T14:19:21-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=4515e458c24f clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T14:19:21-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T14:19:22-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T14:19:22-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T14:30:18-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=b3bfc0d1be8a clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T14:30:18-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T14:30:18-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T14:30:18-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T14:31:36-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=41a0ea186e17 clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T14:31:36-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T14:31:37-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T14:31:37-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T18:50:17-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=6ea44754c5e9 clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T18:50:17-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T18:50:17-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T18:50:17-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T18:53:04-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=1d3c1f6ad99a clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T18:53:04-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T18:53:05-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T18:53:05-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T19:10:46-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=845824131236 clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T19:10:46-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T19:10:47-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T19:10:47-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T19:12:32-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="read EOF from remote peer"
+t=2025-06-15T19:12:33-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T19:12:33-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T19:13:01-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=fb93c27888aa clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T20:13:01-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=ae10ebbded5e clientid=20c4c9041d1ff38820fd8bf82af3c9e1
+t=2025-06-15T20:13:01-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=497435f8af01 err="session closed"
+t=2025-06-15T20:13:02-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2025-06-15T20:13:02-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-06-15T23:07:36-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2025-06-15T23:07:36-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2025-06-15T23:07:36-0700 lvl=info msg="accept failed" obj=tunnels.session obj=csess id=497435f8af01 err="reconnecting session closed"

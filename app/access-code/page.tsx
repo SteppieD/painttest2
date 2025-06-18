@@ -48,12 +48,20 @@ export default function AccessCodePage() {
           }),
         );
 
+        // Check setup completion status
+        const preferencesResponse = await fetch(`/api/companies/preferences?companyId=${data.company.id}`);
+        const preferencesData = await preferencesResponse.json();
+        const setupCompleted = preferencesData.preferences?.setup_completed;
+
         // Check if user came from homepage sign-in link (has redirect parameter)
         const redirectParam = new URLSearchParams(window.location.search).get('redirect');
         const redirectTo = redirectParam || '/dashboard'; // Default to dashboard for normal access code entry
         
-        // Redirect to dashboard or show welcome for new companies
-        if (data.isNewCompany) {
+        // Redirect based on setup completion and new company status
+        if (data.isNewCompany || !setupCompleted) {
+          // New companies or companies that haven't completed setup go to setup wizard
+          router.push(`/setup?code=${data.company.accessCode}`);
+        } else if (data.isNewCompany) {
           router.push(
             `/success?newCompany=true&companyName=${encodeURIComponent(data.company.name)}&redirect=${encodeURIComponent(redirectTo)}`,
           );

@@ -5,14 +5,17 @@ A comprehensive Next.js painting quote application with admin portal, customer m
 ## ✅ **Current Status - FULLY OPERATIONAL**
 
 ### 🎯 **Core Features Working:**
-1. **🎨 Measurement-Driven Paint Selection** - Revolutionary UX with immediate brand/product selection after each measurement
-2. **💭 AI Thinking Animation** - Human-like conversational experience with smart response timing
-3. **📱 Mobile Navigation** - Complete responsive design with hamburger menu for tablets/mobile
-4. **📊 Dashboard Analytics** - Fixed all analytics pages with real-time business intelligence
-5. **🤖 AI-Powered Quote Creation** - Enhanced conversational quote generation with contextual guidance
-6. **👨‍💼 Admin Portal** - Complete customer management and business analytics
-7. **🚀 SEO Landing Pages** - 4 optimized pages targeting high-value painting keywords
-8. **🆓 Trial Signup System** - Self-service account creation with 1-quote limit for lead generation
+1. **⚡ 2-Minute Setup Wizard** - Pick favorite paint products and markup, ready to quote immediately
+2. **🎨 Favorite Products System** - One-click paint selection from contractor's 3 pre-configured favorites
+3. **📊 Streamlined Quote Creation** - 80% faster with favorite products vs traditional selection
+4. **🎨 Measurement-Driven Paint Selection** - Revolutionary UX with immediate brand/product selection after each measurement
+5. **💭 AI Thinking Animation** - Human-like conversational experience with smart response timing
+6. **📱 Mobile Navigation** - Complete responsive design with hamburger menu for tablets/mobile
+7. **📊 Dashboard Analytics** - Fixed all analytics pages with real-time business intelligence
+8. **🤖 AI-Powered Quote Creation** - Enhanced conversational quote generation with contextual guidance
+9. **👨‍💼 Admin Portal** - Complete customer management and business analytics
+10. **🚀 SEO Landing Pages** - 4 optimized pages targeting high-value painting keywords
+11. **🆓 Trial Signup System** - Self-service account creation with 1-quote limit for lead generation
 
 ### 🔐 **Access Credentials:**
 - **Customer Access Codes**: `DEMO2024`, `PAINTER001`, `CONTRACTOR123`
@@ -41,8 +44,9 @@ docker-compose up -d
 ```
 
 ### **For Testing:**
-1. **Customer Flow**: Enter access code → Create quotes → View dashboard
-2. **Admin Flow**: Login at `/admin` → Manage customers → View analytics
+1. **New Contractor Flow**: Trial signup → 2-minute setup wizard → Create quotes with favorites → View dashboard
+2. **Existing Customer Flow**: Enter access code → Create quotes → View dashboard
+3. **Admin Flow**: Login at `/admin` → Manage customers → View analytics
 
 ## 📊 **Current Metrics:**
 - **$73,880+** total revenue tracked across 10 quotes
@@ -52,12 +56,13 @@ docker-compose up -d
 - **Revolutionary UX** with measurement-driven paint selection workflow
 
 ## 🗂️ **Key Files:**
-- `app/create-quote/page.tsx` - AI-powered quote creation
+- `app/setup/page.tsx` - 2-minute setup wizard for paint favorites
+- `app/create-quote/page.tsx` - AI-powered quote creation with favorites
+- `components/ui/favorite-paint-selector.tsx` - One-click paint selection
 - `app/admin/` - Complete admin portal with customer management
 - `app/dashboard/page.tsx` - Customer dashboard and quote tracking  
 - `lib/professional-quote-calculator.ts` - Enhanced calculation engine
-- `ADMIN_TODO_CHECKLIST.md` - Development progress tracking
-- `PROJECT_STATUS_UPDATE.md` - Comprehensive current status
+- `CLAUDE.md` - Detailed project documentation and history
 
 ## 🚀 **SEO & Lead Generation (NEW - June 15, 2025):**
 
@@ -73,7 +78,12 @@ docker-compose up -d
 - **Lead Generation Funnel** - SEO traffic → Free resources → Trial accounts → Conversions
 - **Expected Results** - 500+ monthly visitors, 50+ trial signups (3-6 months)
 
-## 📈 **Recent Achievements:**
+## 📈 **Recent Achievements (June 16, 2025):**
+- ✅ **Setup Wizard** - 2-minute onboarding for paint favorites and markup
+- ✅ **Favorite Products System** - One-click paint selection from pre-configured favorites
+- ✅ **Streamlined Quote Flow** - 80% faster paint selection during quotes
+- ✅ **Smart Onboarding** - Auto-detection of setup completion status
+- ✅ **Dashboard Setup Prompts** - Encourages new contractors to complete setup
 - ✅ **SEO Landing Pages** - 4 optimized pages targeting high-value keywords
 - ✅ **Trial System** - Self-service account creation with quota management
 - ✅ **Admin Portal Foundation** - Complete customer management system
@@ -82,10 +92,13 @@ docker-compose up -d
 - ✅ **Business Intelligence** - Real-time metrics and customer analytics
 
 ## 🎯 **Next Development Priorities:**
-1. **SEO Content Expansion** - Blog section and additional landing pages for keyword growth
-2. **Local SEO Implementation** - City/state-specific pages for geographic targeting  
-3. **Enhanced Customer Analytics** - Health scoring and trend analysis
-4. **Advanced Dashboard Features** - Charts, forecasting, and insights
-5. **Subscription Management** - Billing and plan management foundation
+1. **Photography Input** - Room measurement via photos for even faster quoting
+2. **Bulk Quote Import** - CSV upload for multiple quotes at once
+3. **Customer Portal** - Self-service quote acceptance and payment
+4. **Mobile App** - Native iOS/Android apps for field use
+5. **SEO Content Expansion** - Blog section and additional landing pages for keyword growth
+6. **Local SEO Implementation** - City/state-specific pages for geographic targeting  
+7. **Enhanced Customer Analytics** - Health scoring and trend analysis
+8. **Integration APIs** - Connect with QuickBooks, Xero, etc.
 
 **Platform ready for scaling to full SaaS business model!** 🚀

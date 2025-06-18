@@ -17,8 +17,7 @@ import {
   Edit3, 
   Eye, 
   Copy, 
-  Send,
-  ProfessionalQuote
+  Send
 } from "lucide-react";
 
 interface ContractorQuoteReviewProps {

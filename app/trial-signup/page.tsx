@@ -78,9 +78,9 @@ export default function TrialSignupPage() {
 
       setSuccess(true);
       
-      // Auto-redirect after 3 seconds
+      // Auto-redirect to setup after 3 seconds
       setTimeout(() => {
-        router.push(`/access-code?code=${formData.accessCode}`);
+        router.push(`/setup?code=${formData.accessCode}`);
       }, 3000);
 
     } catch (error: any) {

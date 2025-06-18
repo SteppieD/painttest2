@@ -39,6 +39,7 @@ import {
 import { Room, calculateRoomAreas, calculateTotalAreasFromRooms } from "@/lib/professional-quote-calculator";
 import { PaintBrandSelector } from "@/components/ui/paint-brand-selector";
 import { PaintProductSelector } from "@/components/ui/paint-product-selector";
+import { FavoritePaintSelector } from "@/components/ui/favorite-paint-selector";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -135,6 +136,10 @@ function CreateQuotePageContent() {
   const [showPaintProductSelector, setShowPaintProductSelector] = useState(false);
   const [selectedBrandForCategory, setSelectedBrandForCategory] = useState<string>('');
   const [availableProductsForCategory, setAvailableProductsForCategory] = useState<any[]>([]);
+  
+  // Favorite paint selector state
+  const [showFavoritePaintSelector, setShowFavoritePaintSelector] = useState(false);
+  const [useFavoriteSelector, setUseFavoriteSelector] = useState(true); // Default to using favorites
 
   // Helper function for brand icons
   const getBrandIcon = (brand: string): string => {
@@ -246,71 +251,62 @@ function CreateQuotePageContent() {
     // Mark category as paint selected
     markCategoryPaintSelected(currentMeasurementCategory);
     setShowPaintProductSelector(false);
+  };
+
+  const handleFavoriteProductSelect = (product: any) => {
+    // Store the selected favorite product
+    setSelectedPaintProducts(prev => ({
+      ...prev,
+      [currentMeasurementCategory]: product
+    }));
+    
+    // Mark category as paint selected
+    markCategoryPaintSelected(currentMeasurementCategory);
+    setShowFavoritePaintSelector(false);
     
     // Move to next category or finish
     const nextCategory = getNextCategoryForMeasurement();
     if (nextCategory) {
       setCurrentMeasurementCategory(nextCategory);
+      setConversationStage('category_measurement_collection');
       
-      // Add a message about completing this category and moving to next
+      // Add a message about the selection and moving to next category
+      const confirmMessage: Message = {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: `Great choice! **${product.supplier} ${product.productName}** selected for ${currentMeasurementCategory}.\n\nNext: Let's measure **${nextCategory}**.`,
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, confirmMessage]);
+    } else {
+      // All categories complete
+      checkWorkflowCompletion();
+    }
+  };
+
+  // Helper function to handle workflow completion when all categories are done
+  const checkWorkflowCompletion = () => {
+    if (isWorkflowComplete()) {
       const completionMessage: Message = {
         id: Date.now().toString(),
         role: 'assistant',
-        content: `✅ **${currentMeasurementCategory.charAt(0).toUpperCase() + currentMeasurementCategory.slice(1)} Complete!**\n\nPaint selected: ${product.product_name}\n\nNow let's collect measurements for **${nextCategory}**.`,
+        content: `🎉 **All surfaces complete!** \n\nMeasurements and paint selections are done. Now let's set your profit margin.\n\nWhat markup percentage would you like?`,
         timestamp: new Date().toISOString()
       };
       setMessages(prev => [...prev, completionMessage]);
+      setConversationStage('markup_selection');
       
-      // Provide category-specific measurement instructions for the next category
-      let measurementInstructions = '';
-      if (nextCategory === 'ceilings') {
-        measurementInstructions = `\n\nFor ceiling painting, I need the ceiling area.\n\nPlease provide:\n• **Ceiling area:** in square feet\n• Or **floor area:** (I can calculate ceiling area from floor area)\n\nExample: "ceiling area: 200 sq ft" or "floor area: 200 sq ft"`;
-      } else if (nextCategory === 'walls') {
-        measurementInstructions = `\n\nFor wall painting, I need the wall dimensions.\n\nPlease provide:\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (to calculate wall area)\n\nExample: "120 linear feet, 9 foot ceilings"`;
-      } else if (nextCategory === 'doors') {
-        measurementInstructions = `\n\nFor door painting, I need the door count.\n\nPlease provide:\n• **Number of doors** to be painted\n\nExample: "3 doors"`;
-      } else if (nextCategory === 'windows') {
-        measurementInstructions = `\n\nFor window painting, I need the window count.\n\nPlease provide:\n• **Number of windows** to be painted\n\nExample: "5 windows"`;
-      } else if (nextCategory === 'trim') {
-        measurementInstructions = `\n\nFor trim painting, I need to know about doors and windows (trim goes around them).\n\nPlease provide:\n• **Number of doors** and **windows** that have trim\n\nExample: "3 doors and 5 windows" or "2 doors, no windows"`;
-      }
-      
-      if (measurementInstructions) {
-        const instructionMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: measurementInstructions,
-          timestamp: new Date().toISOString()
-        };
-        setMessages(prev => [...prev, instructionMessage]);
-      }
-      
-      setConversationStage('category_measurement_collection');
-    } else {
-      // Check if all categories are complete
-      if (isWorkflowComplete()) {
-        // Move to markup selection
-        const completionMessage: Message = {
-          id: Date.now().toString(),
-          role: 'assistant',
-          content: `🎉 **All surfaces complete!** \n\nMeasurements and paint selections are done. Now let's set your profit margin.\n\nWhat markup percentage would you like?`,
-          timestamp: new Date().toISOString()
-        };
-        setMessages(prev => [...prev, completionMessage]);
-        setConversationStage('markup_selection');
-        
-        // Show markup buttons
-        setTimeout(() => {
-          setButtonOptions([
-            { id: '15', label: '15%', value: '15', selected: false },
-            { id: '20', label: '20%', value: '20', selected: true },
-            { id: '25', label: '25%', value: '25', selected: false },
-            { id: '30', label: '30%', value: '30', selected: false },
-            { id: 'custom', label: 'Custom %', value: 'custom', selected: false }
-          ]);
-          setShowButtons(true);
-        }, 500);
-      }
+      // Show markup buttons
+      setTimeout(() => {
+        setButtonOptions([
+          { id: '15', label: '15%', value: '15', selected: false },
+          { id: '20', label: '20%', value: '20', selected: true },
+          { id: '25', label: '25%', value: '25', selected: false },
+          { id: '30', label: '30%', value: '30', selected: false },
+          { id: 'custom', label: 'Custom %', value: 'custom', selected: false }
+        ]);
+        setShowButtons(true);
+      }, 500);
     }
   };
 
@@ -382,10 +378,34 @@ function CreateQuotePageContent() {
         }
       }));
 
+      // Check setup status and determine if we should use favorites
+      await checkSetupStatus(companyId);
+      
       // Also load available paint brands for this company
       loadPaintBrands(companyId);
     } catch (error) {
       console.error('Failed to load company defaults:', error);
+    }
+  };
+
+  const checkSetupStatus = async (companyId: string) => {
+    try {
+      // Check if company has completed setup
+      const preferencesResponse = await fetch(`/api/companies/preferences?companyId=${companyId}`);
+      const preferencesData = await preferencesResponse.json();
+      const setupCompleted = preferencesData.preferences?.setup_completed;
+      
+      // Check if they have any favorite products
+      const productsResponse = await fetch(`/api/paint-products?companyId=${companyId}`);
+      const productsData = await productsResponse.json();
+      const hasFavorites = (productsData.products || []).length > 0;
+      
+      // Use favorites if setup is completed and they have favorites
+      setUseFavoriteSelector(setupCompleted && hasFavorites);
+    } catch (error) {
+      console.error('Error checking setup status:', error);
+      // Default to traditional flow if there's an error
+      setUseFavoriteSelector(false);
     }
   };
 
@@ -1697,28 +1717,34 @@ What would you like to modify?`,
         break;
 
       case 'category_paint_selection':
-        // Initialize paint brand selection for the current category
-        if (!showPaintBrandSelector && !showPaintProductSelector) {
-          // Reset paint selection state for new category
-          setSelectedBrandForCategory('');
-          setAvailableProductsForCategory([]);
-          
-          // Fetch available brands for this category
-          fetch(`/api/paint-products/brands?companyId=${companyData.id}`)
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                setAvailableBrands(data.brands || []);
-                setTopBrands(data.topBrands || []);
-                setOtherBrands(data.otherBrands || []);
-                setShowPaintBrandSelector(true);
-              }
-            })
-            .catch(error => {
-              console.error('Error fetching brands:', error);
-            });
-          
-          responseContent = `Perfect! Now let's select paint for your **${currentMeasurementCategory}**.`;
+        // Initialize paint selection for the current category
+        if (!showPaintBrandSelector && !showPaintProductSelector && !showFavoritePaintSelector) {
+          // Use favorites if available, otherwise fall back to brand/product selection
+          if (useFavoriteSelector) {
+            setShowFavoritePaintSelector(true);
+            responseContent = `Perfect! Now choose your paint for **${currentMeasurementCategory}** from your favorites:`;
+          } else {
+            // Reset paint selection state for new category
+            setSelectedBrandForCategory('');
+            setAvailableProductsForCategory([]);
+            
+            // Fetch available brands for this category
+            fetch(`/api/paint-products/brands?companyId=${companyData.id}`)
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  setAvailableBrands(data.brands || []);
+                  setTopBrands(data.topBrands || []);
+                  setOtherBrands(data.otherBrands || []);
+                  setShowPaintBrandSelector(true);
+                }
+              })
+              .catch(error => {
+                console.error('Error fetching brands:', error);
+              });
+            
+            responseContent = `Perfect! Now let's select paint for your **${currentMeasurementCategory}**.`;
+          }
         }
         break;
         
@@ -2414,6 +2440,21 @@ What would you like to modify?`,
                   brand={selectedBrandForCategory}
                   category={currentMeasurementCategory}
                   onProductSelect={handleProductSelect}
+                  selectedProduct={selectedPaintProducts[currentMeasurementCategory]}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Favorite Paint Selector */}
+          {showFavoritePaintSelector && companyData && (
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+                <FavoritePaintSelector
+                  category={currentMeasurementCategory}
+                  projectType={quoteData.project_type}
+                  companyId={companyData.id}
+                  onProductSelect={handleFavoriteProductSelect}
                   selectedProduct={selectedPaintProducts[currentMeasurementCategory]}
                 />
               </div>

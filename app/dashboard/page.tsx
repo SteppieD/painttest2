@@ -178,15 +178,23 @@ export default function DashboardPage() {
   const checkOnboardingStatus = async (companyId: number) => {
     try {
       setIsCheckingOnboarding(true);
-      const response = await fetch(`/api/paint-products?user_id=${companyId}`);
-      const data = await response.json();
       
-      // Always allow access regardless of product setup
-      setNeedsOnboarding(false);
+      // Check if company has completed setup
+      const preferencesResponse = await fetch(`/api/companies/preferences?companyId=${companyId}`);
+      const preferencesData = await preferencesResponse.json();
+      const setupCompleted = preferencesData.preferences?.setup_completed;
+      
+      // Check if they have any paint products
+      const productsResponse = await fetch(`/api/paint-products?companyId=${companyId}`);
+      const productsData = await productsResponse.json();
+      const hasProducts = (productsData.products || []).length > 0;
+      
+      // Need onboarding if setup is not completed or no products
+      setNeedsOnboarding(!setupCompleted || !hasProducts);
     } catch (error) {
       console.error("Error checking onboarding status:", error);
-      // Don't block access on error
-      setNeedsOnboarding(false);
+      // Don't block access on error, but suggest setup
+      setNeedsOnboarding(true);
     } finally {
       setIsCheckingOnboarding(false);
     }
@@ -276,7 +284,7 @@ export default function DashboardPage() {
             
             <div className="flex items-center gap-3">
               <Button
-                onClick={() => router.push("/create-quote-pro")}
+                onClick={() => router.push("/create-quote")}
                 className="bg-green-600 hover:bg-green-700"
               >
                 <Calculator className="w-4 h-4 mr-2" />
@@ -297,8 +305,45 @@ export default function DashboardPage() {
       </div>
 
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        {/* Setup Completion Prompt */}
+        {!isCheckingOnboarding && needsOnboarding && (
+          <div className="mb-8">
+            <Card className="bg-gradient-to-r from-blue-50 to-green-50 border-2 border-blue-200">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Palette className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Complete Your Setup
+                </h2>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                  Set up your favorite paint products and pricing to create quotes quickly. 
+                  This takes just 2 minutes and you'll be ready to start quoting!
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button 
+                    onClick={() => router.push("/setup")}
+                    className="bg-blue-600 hover:bg-blue-700 px-8"
+                    size="lg"
+                  >
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Complete Setup
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => setNeedsOnboarding(false)}
+                    size="lg"
+                  >
+                    Skip for Now
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Quick Settings Access - Optional */}
-        {!isCheckingOnboarding && (
+        {!isCheckingOnboarding && !needsOnboarding && (
           <div className="mb-6">
             <Card className="bg-gradient-to-r from-gray-50 to-blue-50 border border-blue-100">
               <CardContent className="p-4">
@@ -327,7 +372,7 @@ export default function DashboardPage() {
 
         {/* Primary Action - Create Quote */}
         <div className="mb-8">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-green-200 bg-green-50" onClick={() => router.push("/create-quote-pro")}>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-green-200 bg-green-50" onClick={() => router.push("/create-quote")}>
             <CardContent className="p-8">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">

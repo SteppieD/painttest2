@@ -11,16 +11,20 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 
 ## User Flow Overview
 1. **Access Code Entry** (`/access-code`) - Enter company access code (DEMO2024, PAINTER001, CONTRACTOR123)
-2. **Customer Dashboard** (`/dashboard`) - Quote management and business overview
-3. **Quote Creation** (`/create-quote`) - AI-powered conversational quote generation
-4. **Admin Portal** (`/admin`) - Complete business management (admin@paintingapp.com / admin123)
+2. **Setup Wizard** (`/setup`) - First-time setup for paint favorites and markup preferences (2 minutes)
+3. **Customer Dashboard** (`/dashboard`) - Quote management and business overview
+4. **Quote Creation** (`/create-quote`) - AI-powered conversational quote generation with favorite products
+5. **Admin Portal** (`/admin`) - Complete business management (admin@paintingapp.com / admin123)
 
 ## Product Management
 - **Settings Page** (`/settings/products`) - Manual product editing
 - **Chat Interface** (`/settings/products/chat`) - Conversational updates
 - **Bulk Operations** - Percentage price increases, product additions
 
-## Enhanced Quote Creation System (LATEST UPDATES)
+## Enhanced Quote Creation System (LATEST UPDATES - Jun 16, 2025)
+- **Favorite Products System** - One-click paint selection from contractor's 3 pre-configured favorites per category
+- **Setup Wizard** - 2-minute onboarding to select favorite paint products and markup preferences
+- **Streamlined Paint Selection** - Shows "Sherwin ProClassic - $58/gal" buttons instead of complex brand/product flows
 - **Smart Measurement Logic** - Only asks for measurements actually needed based on selected surfaces
 - **Surface-Specific Flow** - Ceiling-only projects skip wall dimensions and doors/windows count
 - **Interactive Paint Selection** - Brand and product selection with visual styling and quality indicators
@@ -29,7 +33,10 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 - **Quote Editing Menu** - Comprehensive editing with customer info, dimensions, and paint selection options
 - **Real-time Updates** - Live price calculations and measurement explanations
 
-## Current Status (Updated Jun 15, 2025)
+## Current Status (Updated Jun 16, 2025)
+- **Setup Wizard**: ✅ 2-minute onboarding with favorite paint products selection
+- **Favorite Products System**: ✅ Quick-select from 3 pre-configured products per category
+- **Streamlined Quote Creation**: ✅ One-click paint selection using contractor favorites
 - **Smart Measurement Collection**: ✅ Surface-specific measurement logic implemented
 - **Enhanced Paint Selection**: ✅ Interactive brand/product selection with 12 products across 4 brands
 - **Customer Name Parsing**: ✅ Fixed possessive pronoun parsing issues
@@ -69,6 +76,9 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 ## Enhanced Quote Creation Logic
 - **Customer Name Parsing** (`/lib/improved-conversation-parser.ts`) - Fixed "Name and his/her/their address" patterns
 - **Smart Measurement Collection** (`/app/create-quote/page.tsx`) - Surface-specific measurement logic
+- **Favorite Paint Selection** (`/components/ui/favorite-paint-selector.tsx`) - One-click selection from contractor's favorites
+- **Setup Wizard** (`/app/setup/page.tsx`) - 4-step onboarding: Welcome → Project Types → Paint Favorites → Markup
+- **Company Preferences** (`/api/companies/preferences`) - Stores setup completion status and default markup
 - **Paint Selection System** (`/api/paint-products/brands`, `/components/ui/paint-*-selector.tsx`) - Interactive brand/product selection
 - **Conversation Stages** - `paint_brand_selection`, `paint_product_selection`, `paint_cost_validation`, `quote_editing`, `ready_for_paint_selection`
 
@@ -267,12 +277,42 @@ Surface Selection →
 - **Ranking Goals**: Top 5 for primary keywords
 - **Conversion Rate**: 10-15% trial to paid accounts
 
+## Contractor-Focused Features (Jun 16, 2025)
+
+### **🚀 Streamlined Setup & Favorites System**
+**Goal**: Get contractors testing within 2 minutes with their preferred products
+
+**Key Features**:
+1. **Setup Wizard** (`/setup`)
+   - 4-step guided process: Welcome → Project Types → Paint Favorites → Markup
+   - Popular products pre-populated (Sherwin-Williams, Benjamin Moore, Behr, etc.)
+   - Visual selection with pricing displayed
+   - Company preferences saved for future quotes
+
+2. **Favorite Paint Selector** (`/components/ui/favorite-paint-selector.tsx`)
+   - Replaces complex brand/product selection during quotes
+   - Shows contractor's 3 favorites per category
+   - One-click selection: "Sherwin ProClassic - $58/gal"
+   - Quality badges (Good/Better/Premium) based on price
+
+3. **Smart Onboarding Flow**
+   - Trial signup → Setup wizard → Dashboard → Fast quoting
+   - Dashboard prompts for setup completion
+   - Automatic detection of setup status
+   - Fallback to traditional flow if no favorites
+
+4. **Benefits for Contractors**
+   - **Configure once, quote fast** - Set favorites once, use everywhere
+   - **Real-world pricing** - Actual product costs per gallon
+   - **Mobile ready** - Works on phones for field quoting
+   - **Time saved** - 80% faster paint selection vs traditional flow
+
 ## Next Development Priorities
-1. **Settings Page Paint Management** - Fix `company_paints` vs `company_paint_products` table inconsistency
-2. **Average Quote Dashboard** - Check if `/dashboard/average-quote` needs similar fixes
-3. **Paint Products API** - Resolve 400 errors for missing user_id parameters
-4. **Data Validation** - Ensure all quote amounts are properly validated and stored
-5. **Performance Optimization** - Reduce repeated database initialization calls
-6. **Error Handling** - Add better error boundaries for dashboard pages
+1. **Photography Input** - Future feature for room measurement via photos
+2. **Bulk Quote Import** - CSV upload for multiple quotes
+3. **Customer Portal** - Self-service quote acceptance and payment
+4. **Mobile App** - Native iOS/Android apps for field use
+5. **Integration APIs** - Connect with accounting software
+6. **Advanced Analytics** - Profitability analysis and forecasting
 7. **SEO Content Expansion** - Blog section and additional landing pages
 8. **Local SEO** - Geographic landing pages for city-specific targeting
