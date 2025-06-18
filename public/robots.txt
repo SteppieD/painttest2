@@ -1,5 +1,5 @@
-# Robots.txt for ProPaint Quote
-# https://propaintquote.com/robots.txt
+# Robots.txt for Paint Quote App
+# https://paintquoteapp.com/robots.txt
 
 User-agent: *
 Allow: /
@@ -46,7 +46,7 @@ Allow: /commercial-painting-estimating-software
 Allow: /mobile-painting-estimate-app
 
 # Sitemap location
-Sitemap: https://propaintquote.com/sitemap.xml
+Sitemap: https://paintquoteapp.com/sitemap.xml
 
 # Crawl-delay to be respectful
 Crawl-delay: 1
