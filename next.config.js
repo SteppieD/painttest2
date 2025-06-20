@@ -49,8 +49,7 @@ const nextConfig = {
     outputFileTracingRoot: process.cwd(),
   },
   
-  // Output configuration for Replit
-  output: 'standalone',
+  // Standard output for Railway deployment
   
   // Type checking configuration
   typescript: {
