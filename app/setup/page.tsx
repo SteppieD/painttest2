@@ -6,14 +6,27 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { CheckCircle, Palette, DollarSign, Rocket, ArrowRight, Star, Info } from "lucide-react";
+import { CheckCircle, Palette, DollarSign, Rocket, ArrowRight, Star, Info, Edit3, X } from "lucide-react";
 
 interface PaintProduct {
   supplier: string;
   name: string;
   tier: 'good' | 'better' | 'best';
   popular?: boolean;
+  cost?: number; // For editing
+}
+
+interface EditingProduct {
+  key: string;
+  supplier: string;
+  name: string;
+  cost: number;
+  category: string;
+  projectType: string;
 }
 
 const POPULAR_PRODUCTS = {
@@ -98,6 +111,10 @@ export default function SetupPageImproved() {
   const [projectTypes, setProjectTypes] = useState<string[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<{[key: string]: PaintProduct}>({});
   const [markupPercentage, setMarkupPercentage] = useState(20);
+  
+  // Edit modal state
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<EditingProduct | null>(null);
 
   const totalSteps = 4;
   const progress = (currentStep / totalSteps) * 100;
@@ -136,6 +153,60 @@ export default function SetupPageImproved() {
     }
   };
 
+  const getDefaultPrice = (tier: string, category: string): number => {
+    const defaultPrices = {
+      good: { primer: 25, wall_paint: 40, ceiling_paint: 35, trim_paint: 55 },
+      better: { primer: 30, wall_paint: 50, ceiling_paint: 45, trim_paint: 65 },
+      best: { primer: 40, wall_paint: 65, ceiling_paint: 55, trim_paint: 75 }
+    };
+    return defaultPrices[tier as keyof typeof defaultPrices]?.[category as keyof typeof defaultPrices.good] || 50;
+  };
+
+  const startEditingProduct = (key: string, product: PaintProduct, projectType: string, category: string) => {
+    const cost = product.cost || getDefaultPrice(product.tier, category);
+    setEditingProduct({
+      key,
+      supplier: product.supplier,
+      name: product.name,
+      cost,
+      category,
+      projectType
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const saveEditedProduct = () => {
+    if (!editingProduct) return;
+    
+    setSelectedProducts(prev => ({
+      ...prev,
+      [editingProduct.key]: {
+        ...prev[editingProduct.key],
+        supplier: editingProduct.supplier,
+        name: editingProduct.name,
+        cost: editingProduct.cost
+      }
+    }));
+    
+    setIsEditModalOpen(false);
+    setEditingProduct(null);
+    
+    toast({
+      title: "Product Updated",
+      description: "Your paint product details have been saved.",
+    });
+  };
+
+  const removeProduct = (key: string) => {
+    setSelectedProducts(prev => {
+      const newProducts = { ...prev };
+      delete newProducts[key];
+      return newProducts;
+    });
+    setIsEditModalOpen(false);
+    setEditingProduct(null);
+  };
+
   const renderProductSelection = (category: string, categoryLabel: string, projectType: 'interior' | 'exterior') => {
     const productCategory = POPULAR_PRODUCTS[projectType];
     const products = productCategory[category as keyof typeof productCategory];
@@ -143,49 +214,105 @@ export default function SetupPageImproved() {
     if (!products) return null;
     
     const selectedKey = `${projectType}_${category}`;
+    const selectedProduct = selectedProducts[selectedKey];
     
     return (
-      <div key={selectedKey} className="mb-6">
-        <h4 className="font-medium text-gray-900 mb-3 capitalize">
+      <div key={selectedKey} className="mb-8">
+        <h4 className="font-medium text-gray-900 mb-4 capitalize flex items-center gap-2">
           {categoryLabel}
+          {selectedProduct && <Badge variant="outline" className="bg-green-50 text-green-700">Selected</Badge>}
         </h4>
-        <div className="grid grid-cols-1 gap-3">
-          {products.map((product, index) => {
-            const isSelected = selectedProducts[selectedKey]?.name === product.name;
-            return (
-              <Button
-                key={index}
-                type="button"
-                variant={isSelected ? "default" : "outline"}
-                className={`h-auto p-4 justify-start text-left ${
-                  isSelected ? "bg-blue-600 text-white hover:bg-blue-700" : ""
-                } ${product.popular ? "ring-1 ring-blue-300" : ""}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSelectedProducts(prev => ({
-                    ...prev,
-                    [selectedKey]: product
-                  }))
-                }}
-              >
-                <div className="flex justify-between items-center w-full">
+
+        {/* Selected Product Section */}
+        {selectedProduct && (
+          <div className="mb-4">
+            <h5 className="text-sm font-medium text-gray-700 mb-2">Your Selection:</h5>
+            <Card 
+              className="border-green-200 bg-green-50 cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => startEditingProduct(selectedKey, selectedProduct, projectType, category)}
+            >
+              <CardContent className="p-4">
+                <div className="flex justify-between items-center">
                   <div className="flex-1">
-                    <div className="font-medium flex items-center">
-                      {product.supplier}
-                      {product.popular && (
+                    <div className="font-medium text-green-800 flex items-center">
+                      {selectedProduct.supplier}
+                      {selectedProduct.popular && (
                         <Star className="w-4 h-4 ml-2 fill-current text-yellow-500" />
                       )}
                     </div>
-                    <div className="text-sm opacity-75">{product.name}</div>
+                    <div className="text-sm text-green-700">{selectedProduct.name}</div>
+                    <div className="text-sm text-green-600 mt-1">
+                      ${selectedProduct.cost || getDefaultPrice(selectedProduct.tier, category)}/gal
+                    </div>
                   </div>
-                  <div className="flex items-center">
-                    {getTierBadge(product.tier)}
-                    {isSelected && <CheckCircle className="w-5 h-5 ml-2" />}
+                  <div className="flex items-center gap-2">
+                    {getTierBadge(selectedProduct.tier)}
+                    <Button size="sm" variant="ghost" className="text-green-700 hover:text-green-800">
+                      <Edit3 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
-              </Button>
-            );
-          })}
+                <div className="text-xs text-green-600 mt-2 flex items-center gap-1">
+                  <Edit3 className="w-3 h-3" />
+                  Click to edit price and details
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Available Products Section */}
+        <div>
+          <h5 className="text-sm font-medium text-gray-700 mb-3">
+            {selectedProduct ? 'Or choose a different option:' : 'Choose your preferred product:'}
+          </h5>
+          <div className="grid grid-cols-1 gap-3">
+            {products.map((product, index) => {
+              const isSelected = selectedProducts[selectedKey]?.name === product.name;
+              return (
+                <Button
+                  key={index}
+                  type="button"
+                  variant="outline"
+                  className={`h-auto p-4 justify-start text-left ${
+                    isSelected ? "opacity-50" : "hover:bg-gray-50"
+                  } ${product.popular ? "ring-1 ring-blue-300" : ""}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const cost = getDefaultPrice(product.tier, category);
+                    setSelectedProducts(prev => ({
+                      ...prev,
+                      [selectedKey]: { ...product, cost }
+                    }));
+                    toast({
+                      title: "Product Selected",
+                      description: `${product.supplier} ${product.name} selected for ${categoryLabel.toLowerCase()}.`,
+                    });
+                  }}
+                  disabled={isSelected}
+                >
+                  <div className="flex justify-between items-center w-full">
+                    <div className="flex-1">
+                      <div className="font-medium flex items-center">
+                        {product.supplier}
+                        {product.popular && (
+                          <Star className="w-4 h-4 ml-2 fill-current text-yellow-500" />
+                        )}
+                      </div>
+                      <div className="text-sm opacity-75">{product.name}</div>
+                      <div className="text-sm text-gray-600 mt-1">
+                        ${getDefaultPrice(product.tier, category)}/gal
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      {getTierBadge(product.tier)}
+                      {isSelected && <CheckCircle className="w-5 h-5 ml-2 text-green-600" />}
+                    </div>
+                  </div>
+                </Button>
+              );
+            })}
+          </div>
         </div>
       </div>
     );
@@ -213,7 +340,7 @@ export default function SetupPageImproved() {
           productCategory: category,
           supplier: product.supplier,
           productName: product.name,
-          costPerGallon: basePrice || 50, // Default fallback
+          costPerGallon: product.cost || basePrice || 50, // Use custom cost if set, otherwise default
           displayOrder: 1,
         };
       });
@@ -409,8 +536,8 @@ export default function SetupPageImproved() {
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 flex items-start gap-2">
                   <Info className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                   <div className="text-sm text-blue-800">
-                    <p className="font-medium mb-1">You'll set your actual prices later</p>
-                    <p>Just pick the brands you prefer to work with. You can update your pricing anytime in Settings.</p>
+                    <p className="font-medium mb-1">Customize your products</p>
+                    <p>Pick your preferred brands and click on selected products to edit pricing. You can always update these later in Settings.</p>
                   </div>
                 </div>
                 
@@ -515,6 +642,105 @@ export default function SetupPageImproved() {
           )}
         </div>
       </div>
+
+      {/* Edit Product Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Edit Paint Product</DialogTitle>
+            <DialogDescription>
+              Customize the details and pricing for your selected paint product.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {editingProduct && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="supplier">Supplier/Brand</Label>
+                <Input
+                  id="supplier"
+                  value={editingProduct.supplier}
+                  onChange={(e) => setEditingProduct({
+                    ...editingProduct,
+                    supplier: e.target.value
+                  })}
+                  placeholder="e.g., Sherwin-Williams"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="productName">Product Name</Label>
+                <Input
+                  id="productName"
+                  value={editingProduct.name}
+                  onChange={(e) => setEditingProduct({
+                    ...editingProduct,
+                    name: e.target.value
+                  })}
+                  placeholder="e.g., ProClassic Interior Acrylic"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="cost">Cost per Gallon</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="cost"
+                    type="number"
+                    step="0.01"
+                    value={editingProduct.cost}
+                    onChange={(e) => setEditingProduct({
+                      ...editingProduct,
+                      cost: parseFloat(e.target.value) || 0
+                    })}
+                    className="pl-8"
+                    placeholder="0.00"
+                  />
+                </div>
+                <p className="text-xs text-gray-500">
+                  This is your cost - markup will be applied during quoting
+                </p>
+              </div>
+
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="text-sm">
+                  <span className="font-medium text-gray-700">Category:</span> {editingProduct.category.replace('_', ' ')}
+                </div>
+                <div className="text-sm">
+                  <span className="font-medium text-gray-700">Project Type:</span> {editingProduct.projectType}
+                </div>
+              </div>
+
+              <div className="flex justify-between gap-3 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => removeProduct(editingProduct.key)}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Remove
+                </Button>
+                
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsEditModalOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={saveEditedProduct}
+                    disabled={!editingProduct.supplier || !editingProduct.name || editingProduct.cost <= 0}
+                  >
+                    Save Changes
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
