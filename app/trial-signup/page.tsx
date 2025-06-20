@@ -62,7 +62,19 @@ export default function TrialSignupPage() {
         body: JSON.stringify(formData),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers.get('content-type'));
+
+      // Check if response is actually JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const textResponse = await response.text();
+        console.error('Non-JSON response:', textResponse);
+        throw new Error("Server error: Invalid response format. Please try again.");
+      }
+
       const result = await response.json();
+      console.log('API response:', result);
 
       if (!response.ok) {
         if (result.error && result.error.includes("already exists")) {
@@ -72,7 +84,7 @@ export default function TrialSignupPage() {
         } else if (result.error && result.error.includes("validation")) {
           throw new Error("Please check your information and try again.");
         } else {
-          throw new Error("Account creation failed. Please try again or contact support.");
+          throw new Error(result.error || "Account creation failed. Please try again or contact support.");
         }
       }
 
@@ -84,6 +96,7 @@ export default function TrialSignupPage() {
       }, 3000);
 
     } catch (error: any) {
+      console.error('Trial signup error:', error);
       if (error.message) {
         setError(error.message);
       } else {
