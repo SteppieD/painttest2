@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { AlertCircle, Check, Palette } from "lucide-react";
+import { AlertCircle, Check, Palette, Copy } from "lucide-react";
 
 export default function TrialSignupPage() {
   const router = useRouter();
@@ -133,7 +133,23 @@ export default function TrialSignupPage() {
           <CardContent className="text-center space-y-4">
             <div className="p-4 bg-gray-50 rounded-lg">
               <p className="text-sm text-gray-600 mb-2">Your Access Code:</p>
-              <p className="text-xl font-bold text-blue-600">{formData.accessCode}</p>
+              <div className="flex items-center justify-center gap-2">
+                <p className="text-xl font-bold text-blue-600">{formData.accessCode}</p>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    navigator.clipboard.writeText(formData.accessCode);
+                    alert('Access code copied to clipboard!');
+                  }}
+                  className="h-8"
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                Click the copy button to save your access code
+              </p>
             </div>
             <div className="text-sm text-gray-600">
               <p className="mb-2">✅ 1 Free Quote Included</p>
@@ -200,7 +216,22 @@ export default function TrialSignupPage() {
               {formData.accessCode && (
                 <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <Label className="text-sm font-medium text-blue-900">Your Access Code</Label>
-                  <p className="text-lg font-bold text-blue-700 mt-1">{formData.accessCode}</p>
+                  <div className="flex items-center justify-between mt-1">
+                    <p className="text-lg font-bold text-blue-700">{formData.accessCode}</p>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(formData.accessCode);
+                        alert('Access code copied to clipboard!');
+                      }}
+                      className="h-7 text-blue-600 hover:text-blue-700 hover:bg-blue-100"
+                    >
+                      <Copy className="h-3 w-3 mr-1" />
+                      Copy
+                    </Button>
+                  </div>
                   <p className="text-xs text-blue-600 mt-1">
                     Save this code - you'll use it to sign in after creating your account
                   </p>

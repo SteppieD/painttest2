@@ -280,7 +280,28 @@ export default function DashboardPage() {
               <Palette className="w-8 h-8 text-blue-600" />
               <div>
                 <h1 className="text-xl font-bold text-gray-900">ProPaint Quote Assistant</h1>
-                <p className="text-sm text-gray-500">{companyInfo?.company_name}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm text-gray-500">{companyInfo?.company_name}</p>
+                  {companyInfo?.access_code && (
+                    <>
+                      <span className="text-sm text-gray-400">•</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm text-gray-500">Code: {companyInfo.access_code}</span>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            navigator.clipboard.writeText(companyInfo.access_code);
+                            alert('Access code copied to clipboard!');
+                          }}
+                          className="h-6 w-6 p-0 hover:bg-gray-100"
+                        >
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
             

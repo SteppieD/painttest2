@@ -95,7 +95,25 @@ export async function POST(request: NextRequest) {
       phone
     });
 
-    console.log(`✅ Trial account created with Supabase: ${cleanAccessCode} - ${companyName} (${email})`)
+    console.log(`✅ Trial account created with Supabase: ${cleanAccessCode} - ${companyName} (${email})`);
+
+    // Send email with access code
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/send-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          companyName,
+          accessCode: cleanAccessCode,
+          type: 'trial_signup'
+        })
+      });
+      console.log('📧 Welcome email sent to:', email);
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError);
+      // Don't fail the signup if email fails
+    }
 
     return NextResponse.json({
       success: true,

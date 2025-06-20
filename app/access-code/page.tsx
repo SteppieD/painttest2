@@ -199,10 +199,25 @@ export default function AccessCodePage() {
               textDecoration: "underline",
               cursor: "pointer",
               fontSize: "12px",
+              marginBottom: "10px",
+              display: "block",
+              width: "100%",
             }}
           >
             View Demo Access Codes
           </button>
+          
+          <a
+            href="/forgot-code"
+            style={{
+              color: "#3498db",
+              textDecoration: "underline",
+              fontSize: "12px",
+              display: "inline-block",
+            }}
+          >
+            Forgot your access code?
+          </a>
         </div>
 
         {showDemoCodes && (
