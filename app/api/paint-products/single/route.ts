@@ -4,15 +4,21 @@ import { supabaseDb } from "@/lib/database/supabase-adapter";
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId, companyId, product } = await req.json();
+    const requestBody = await req.json();
+    console.log("Product save request:", requestBody);
+    
+    const { userId, companyId, product } = requestBody;
     const id = companyId || userId; // Support both for backwards compatibility
 
     if (!id || !product) {
+      console.error("Missing required fields:", { id, product });
       return NextResponse.json(
         { error: "Company ID and product are required" },
         { status: 400 }
       );
     }
+
+    console.log("Processing product save:", { id, productId: product.id, supplier: product.supplier });
 
     if (product.id) {
       // Update existing product
@@ -44,8 +50,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error saving product:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      companyId: id,
+      productData: product
+    });
     return NextResponse.json(
-      { error: "Failed to save product" },
+      { 
+        error: "Failed to save product", 
+        details: error instanceof Error ? error.message : String(error)
+      },
       { status: 500 }
     );
   }
