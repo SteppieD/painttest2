@@ -5,8 +5,13 @@ import { vercelDb } from "@/lib/database/vercel-adapter";
 import { supabaseDb } from "@/lib/database/supabase-adapter";
 
 export async function POST(request: NextRequest) {
+  console.log('Trial signup API called');
+  
   try {
-    const { companyName, accessCode, contactName, email, phone } = await request.json();
+    const body = await request.json();
+    console.log('Request body:', body);
+    
+    const { companyName, accessCode, contactName, email, phone } = body;
 
     // Validation
     if (!companyName || !accessCode || !email) {
