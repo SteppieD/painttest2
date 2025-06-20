@@ -205,6 +205,23 @@ export class SupabaseDatabaseAdapter {
 
     return data;
   }
+
+  async getAllCompanies() {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    const { data, error } = await this.supabase
+      .from('companies')
+      .select('access_code, company_name, phone')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  }
 }
 
 // Create a lazy-loaded instance
@@ -229,6 +246,7 @@ export const supabaseDb = {
   checkExistingCompany: async (accessCode: string, email: string) => getSupabaseDb().checkExistingCompany(accessCode, email),
   seedDemoCompanies: async () => getSupabaseDb().seedDemoCompanies(),
   getCompanyByAccessCode: async (accessCode: string) => getSupabaseDb().getCompanyByAccessCode(accessCode),
+  getAllCompanies: async () => getSupabaseDb().getAllCompanies(),
   createQuote: async (quoteData: any) => getSupabaseDb().createQuote(quoteData),
   getQuotesByCompany: async (companyId: number) => getSupabaseDb().getQuotesByCompany(companyId),
 };
