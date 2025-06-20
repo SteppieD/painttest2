@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import Database from "better-sqlite3";
+import { dbGet, dbAll, dbRun } from "../../../lib/database";
 
-const db = new Database("./painting_quotes_app.db");
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,13 +28,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if profile already exists
-    const existingProfile = db.prepare(
-      "SELECT id FROM company_profiles WHERE user_id = ?"
-    ).get(userId);
+    const existingProfile = dbGet(
+      "SELECT id FROM company_profiles WHERE user_id = ?",
+      [userId]
+    );
 
     if (existingProfile) {
       // Update existing profile
-      const updateStmt = db.prepare(`
+      dbRun(`
         UPDATE company_profiles
         SET company_name = ?,
             company_logo_url = ?,
@@ -50,9 +50,7 @@ export async function POST(req: NextRequest) {
             payment_terms = ?,
             updated_at = CURRENT_TIMESTAMP
         WHERE user_id = ?
-      `);
-
-      updateStmt.run(
+      `, [
         companyName,
         companyLogoUrl || null,
         companyAddress || null,
@@ -65,10 +63,10 @@ export async function POST(req: NextRequest) {
         quoteFooterText || null,
         paymentTerms || "Net 30",
         userId
-      );
+      ]);
     } else {
       // Create new profile
-      const insertStmt = db.prepare(`
+      dbRun(`
         INSERT INTO company_profiles (
           user_id,
           company_name,
@@ -84,9 +82,7 @@ export async function POST(req: NextRequest) {
           payment_terms,
           onboarding_step
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `);
-
-      insertStmt.run(
+      `, [
         userId,
         companyName,
         companyLogoUrl || null,
@@ -100,7 +96,7 @@ export async function POST(req: NextRequest) {
         quoteFooterText || null,
         paymentTerms || "Net 30",
         "paint_products"
-      );
+      ]);
     }
 
     return NextResponse.json({ success: true });
@@ -125,9 +121,9 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const profile = db.prepare(`
+    const profile = dbGet(`
       SELECT * FROM company_profiles WHERE user_id = ?
-    `).get(userId);
+    `, [userId]);
 
     if (!profile) {
       return NextResponse.json(

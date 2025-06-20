@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Database from 'better-sqlite3';
-import path from 'path';
-
-const dbPath = path.join(process.cwd(), 'painting_quotes_app.db');
+import { dbGet, dbAll, dbRun } from "@/lib/database";
 
 interface PaintProduct {
   id: string;
@@ -29,10 +26,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Company ID is required' }, { status: 400 });
   }
 
-  let db: Database.Database | null = null;
-  
   try {
-    db = new Database(dbPath);
     
     // Get all paint products for the company, grouped by brand and category
     const query = `
@@ -49,7 +43,7 @@ export async function GET(request: NextRequest) {
       ORDER BY cp.supplier, cp.product_category, cp.cost_per_gallon
     `;
     
-    const products = db.prepare(query).all(companyId) as PaintProduct[];
+    const products = dbAll(query, [companyId]) as PaintProduct[];
     
     // Group products by brand and category
     const brandGroups: { [brand: string]: BrandGroup } = {};
@@ -111,10 +105,6 @@ export async function GET(request: NextRequest) {
       { error: 'Failed to fetch paint products by brand' },
       { status: 500 }
     );
-  } finally {
-    if (db) {
-      db.close();
-    }
   }
 }
 
@@ -127,7 +117,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Company ID and brand are required' }, { status: 400 });
     }
 
-    const db = new Database(dbPath);
     
     let query = `
       SELECT 
@@ -151,8 +140,7 @@ export async function POST(request: NextRequest) {
     
     query += ' ORDER BY cost_per_gallon';
     
-    const products = db.prepare(query).all(...params) as PaintProduct[];
-    db.close();
+    const products = dbAll(query, params) as PaintProduct[];
     
     return NextResponse.json({
       success: true,

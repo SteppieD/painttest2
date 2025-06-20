@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import Database from "better-sqlite3";
+import { dbGet, dbAll, dbRun } from "../../../lib/database";
 
-const db = new Database("./painting_quotes_app.db");
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,31 +28,27 @@ export async function POST(req: NextRequest) {
     ];
 
     // Insert default colors for new users
-    const insertStmt = db.prepare(`
-      INSERT OR IGNORE INTO paint_colors (
-        user_id,
-        color_name,
-        color_code,
-        color_brand,
-        hex_color,
-        is_custom
-      ) VALUES (?, ?, ?, ?, ?, ?)
-    `);
+    for (const color of defaultColors) {
+      dbRun(`
+        INSERT OR IGNORE INTO paint_colors (
+          user_id,
+          color_name,
+          color_code,
+          color_brand,
+          hex_color,
+          is_custom
+        ) VALUES (?, ?, ?, ?, ?, ?)
+      `, [
+        userId,
+        color.name,
+        color.code,
+        color.brand,
+        color.hex,
+        false
+      ]);
+    }
 
-    const insertMany = db.transaction(() => {
-      for (const color of defaultColors) {
-        insertStmt.run(
-          userId,
-          color.name,
-          color.code,
-          color.brand,
-          color.hex,
-          false
-        );
-      }
-    });
 
-    insertMany();
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -77,11 +72,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const colors = db.prepare(`
+    const colors = dbAll(`
       SELECT * FROM paint_colors
       WHERE user_id = ? AND is_active = TRUE
       ORDER BY color_brand, color_name
-    `).all(userId);
+    `, [userId]);
 
     return NextResponse.json({ colors });
   } catch (error) {

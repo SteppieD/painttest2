@@ -1,20 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import Database from "better-sqlite3";
+import { dbGet, dbRun } from "@/lib/database";
 
-const db = new Database("./painting_quotes_app.db");
-
-// Ensure the preferences table exists
-db.exec(`
-  CREATE TABLE IF NOT EXISTS company_preferences (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    company_id INTEGER NOT NULL,
-    default_markup INTEGER DEFAULT 20,
-    setup_completed BOOLEAN DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (company_id) REFERENCES companies (id)
-  )
-`);
+// Initialize preferences table (will be handled by database adapter)
+console.log('Company preferences API initialized');
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,25 +16,24 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if preferences already exist
-    const existing = db.prepare(
-      "SELECT id FROM company_preferences WHERE company_id = ?"
-    ).get(companyId);
+    const existing = dbGet(
+      "SELECT id FROM company_preferences WHERE company_id = ?",
+      [companyId]
+    );
 
     if (existing) {
       // Update existing preferences
-      const updateStmt = db.prepare(`
+      dbRun(`
         UPDATE company_preferences 
         SET default_markup = ?, setup_completed = ?, updated_at = CURRENT_TIMESTAMP
         WHERE company_id = ?
-      `);
-      updateStmt.run(defaultMarkup || 20, setupCompleted ? 1 : 0, companyId);
+      `, [defaultMarkup || 20, setupCompleted ? 1 : 0, companyId]);
     } else {
       // Create new preferences
-      const insertStmt = db.prepare(`
+      dbRun(`
         INSERT INTO company_preferences (company_id, default_markup, setup_completed)
         VALUES (?, ?, ?)
-      `);
-      insertStmt.run(companyId, defaultMarkup || 20, setupCompleted ? 1 : 0);
+      `, [companyId, defaultMarkup || 20, setupCompleted ? 1 : 0]);
     }
 
     return NextResponse.json({ success: true });
@@ -71,9 +58,9 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const preferences = db.prepare(`
+    const preferences = dbGet(`
       SELECT * FROM company_preferences WHERE company_id = ?
-    `).get(companyId);
+    `, [companyId]);
 
     return NextResponse.json({ 
       preferences: preferences || {

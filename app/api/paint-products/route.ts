@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import Database from "better-sqlite3";
+import { dbGet, dbAll, dbRun } from "../../../lib/database";
 
-const db = new Database("./painting_quotes_app.db");
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,45 +14,35 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Start a transaction
-    const deleteStmt = db.prepare(
-      "DELETE FROM company_paint_products WHERE user_id = ?"
-    );
-    const insertStmt = db.prepare(`
-      INSERT INTO company_paint_products (
-        user_id,
-        project_type,
-        product_category,
-        supplier,
-        product_name,
-        product_line,
-        cost_per_gallon,
-        display_order,
-        sheen
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
+    // Delete existing products for this company
+    dbRun("DELETE FROM company_paint_products WHERE user_id = ?", [id]);
 
-    const insertMany = db.transaction((products: any[]) => {
-      // Delete existing products for this company
-      deleteStmt.run(id);
-
-      // Insert new products
-      for (const product of products) {
-        insertStmt.run(
-          id,
-          product.projectType,
-          product.productCategory,
-          product.supplier,
-          product.productName,
-          product.productLine || null,
-          product.costPerGallon,
-          product.displayOrder,
-          product.sheen || null
-        );
-      }
-    });
-
-    insertMany(products);
+    // Insert new products
+    for (const product of products) {
+      dbRun(`
+        INSERT INTO company_paint_products (
+          user_id,
+          project_type,
+          product_category,
+          supplier,
+          product_name,
+          product_line,
+          cost_per_gallon,
+          display_order,
+          sheen
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `, [
+        id,
+        product.projectType,
+        product.productCategory,
+        product.supplier,
+        product.productName,
+        product.productLine || null,
+        product.costPerGallon,
+        product.displayOrder,
+        product.sheen || null
+      ]);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -77,11 +66,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const products = db.prepare(`
+    const products = dbAll(`
       SELECT * FROM company_paint_products
       WHERE user_id = ? AND is_active = 1
       ORDER BY project_type, product_category, display_order
-    `).all(companyId);
+    `, [companyId]);
 
     // Transform snake_case to camelCase for frontend compatibility
     const transformedProducts = products.map((product: any) => ({

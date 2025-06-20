@@ -31,7 +31,6 @@
     "@supabase/supabase-js": "^2.39.1",
     "@vercel/postgres": "^0.10.0",
     "bcryptjs": "^3.0.2",
-    "better-sqlite3": "^11.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",

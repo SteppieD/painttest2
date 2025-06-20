@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import Database from "better-sqlite3";
+import { dbGet, dbAll, dbRun } from "../../../lib/database";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || "");
-const db = new Database("./painting_quotes_app.db");
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,11 +16,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Get current products
-    const products = db.prepare(`
+    const products = dbAll(`
       SELECT * FROM company_paint_products
       WHERE user_id = ? AND is_active = TRUE
       ORDER BY project_type, product_category, display_order
-    `).all(userId);
+    `, [userId]);
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -142,17 +141,11 @@ function parseUpdateRequest(message: string, products: any[]) {
 async function applyProductUpdates(userId: string, products: any[], action: string) {
   if (action === "show_products") return;
 
-  const updateStmt = db.prepare(`
-    UPDATE company_paint_products
-    SET cost_per_gallon = ?, updated_at = CURRENT_TIMESTAMP
-    WHERE id = ? AND user_id = ?
-  `);
-
-  const updateMany = db.transaction(() => {
-    for (const product of products) {
-      updateStmt.run(product.costPerGallon, product.id, userId);
-    }
-  });
-
-  updateMany();
+  for (const product of products) {
+    dbRun(`
+      UPDATE company_paint_products
+      SET cost_per_gallon = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ? AND user_id = ?
+    `, [product.costPerGallon, product.id, userId]);
+  }
 }
