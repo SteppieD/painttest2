@@ -1,5 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCompanyByAccessCode, createCompany, dbAll, dbRun } from "@/lib/database";
+
+// Vercel Functions require external database (Supabase only)
+const getSupabaseDb = async () => {
+  try {
+    const { supabaseDb } = await import("@/lib/database/supabase-adapter");
+    return supabaseDb;
+  } catch (error) {
+    console.error('Failed to import Supabase adapter:', error);
+    return null;
+  }
+};
 
 // Type definitions
 interface Company {
@@ -25,8 +35,17 @@ export async function POST(request: NextRequest) {
     // Convert to uppercase for consistency
     const normalizedCode = accessCode.toString().toUpperCase();
 
+    // Get Supabase database connection
+    const supabaseDb = await getSupabaseDb();
+    if (!supabaseDb) {
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 500 },
+      );
+    }
+
     // Check if access code exists in companies table
-    const company = getCompanyByAccessCode(normalizedCode) as Company | undefined;
+    const company = await supabaseDb.getCompanyByAccessCode(normalizedCode);
 
     if (company) {
       // Valid company found
@@ -53,19 +72,12 @@ export async function POST(request: NextRequest) {
         // Auto-create new company for valid pattern
         const companyName = `Company ${normalizedCode}`;
 
-        const result = createCompany({
-          access_code: normalizedCode,
-          company_name: companyName,
+        const result = await supabaseDb.createTrialCompany({
+          accessCode: normalizedCode,
+          companyName: companyName,
           phone: "",
-          email: ""
+          email: `${normalizedCode.toLowerCase()}@example.com`
         });
-
-        // Create a user record for the new company
-        const userId = crypto.randomUUID();
-        dbRun(
-          `INSERT INTO users (id, email, company_name) VALUES (?, ?, ?)`,
-          [userId, `${normalizedCode.toLowerCase()}@example.com`, companyName]
-        );
 
         console.log(
           `🆕 Auto-created company: ${companyName} with code ${normalizedCode}`,
@@ -74,11 +86,11 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: true,
           company: {
-            id: userId, // Use the user ID instead of company ID
+            id: result.id,
             accessCode: normalizedCode,
             name: companyName,
             phone: "",
-            email: "",
+            email: `${normalizedCode.toLowerCase()}@example.com`,
             logoUrl: null,
           },
           isNewCompany: true,
@@ -106,11 +118,15 @@ export async function POST(request: NextRequest) {
 // GET endpoint to list available demo companies (for testing)
 export async function GET() {
   try {
-    const companies = dbAll(`
-      SELECT access_code, company_name, phone 
-      FROM companies 
-      ORDER BY created_at ASC
-    `) as Pick<Company, "access_code" | "company_name" | "phone">[];
+    const supabaseDb = await getSupabaseDb();
+    if (!supabaseDb) {
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 500 },
+      );
+    }
+
+    const companies = await supabaseDb.getAllCompanies();
 
     return NextResponse.json({
       companies,
