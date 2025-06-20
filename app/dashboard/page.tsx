@@ -191,7 +191,8 @@ export default function DashboardPage() {
       
       console.log('Setup status check:', { setupCompleted, hasProducts, preferences: preferencesData.preferences });
       
-      // Need onboarding if setup is not completed AND no products
+      // Show onboarding only if setup is not completed AND no products exist
+      // Hide it if either setup is completed OR products exist
       setNeedsOnboarding(!setupCompleted && !hasProducts);
     } catch (error) {
       console.error("Error checking onboarding status:", error);
