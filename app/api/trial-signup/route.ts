@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/database/init";
 import { subscriptionManager } from "@/lib/subscription-manager";
+import { vercelDb } from "@/lib/database/vercel-adapter";
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,69 +31,102 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const db = getDatabase();
+    // Try Vercel Postgres first, fallback to SQLite
+    const isVercel = process.env.VERCEL === '1';
+    let result: any;
 
-    // Check if access code already exists
-    const existingCompany = db.prepare("SELECT id FROM companies WHERE access_code = ?").get(cleanAccessCode);
-    if (existingCompany) {
-      return NextResponse.json(
-        { error: "This access code is already taken. Please choose a different one." },
-        { status: 409 }
+    if (isVercel) {
+      // Use Vercel Postgres
+      console.log('Using Vercel Postgres database...');
+      
+      // Initialize schema if needed
+      await vercelDb.initializeSchema();
+      await vercelDb.seedDemoCompanies();
+      
+      // Check existing companies
+      const existing = await vercelDb.checkExistingCompany(cleanAccessCode, email);
+      
+      if (existing.codeExists) {
+        return NextResponse.json(
+          { error: "This access code is already taken. Please choose a different one." },
+          { status: 409 }
+        );
+      }
+
+      if (existing.emailExists) {
+        return NextResponse.json(
+          { error: "An account with this email already exists." },
+          { status: 409 }
+        );
+      }
+
+      // Create new trial company
+      result = await vercelDb.createTrialCompany({
+        accessCode: cleanAccessCode,
+        companyName,
+        email,
+        phone
+      });
+
+      console.log(`✅ Trial account created on Vercel: ${cleanAccessCode} - ${companyName} (${email})`);
+      
+    } else {
+      // Use SQLite for local development
+      console.log('Using SQLite database...');
+      
+      const db = getDatabase();
+
+      // Check if access code already exists
+      const existingCompany = db.prepare("SELECT id FROM companies WHERE access_code = ?").get(cleanAccessCode);
+      if (existingCompany) {
+        return NextResponse.json(
+          { error: "This access code is already taken. Please choose a different one." },
+          { status: 409 }
+        );
+      }
+
+      // Check if email already exists
+      const existingEmail = db.prepare("SELECT id FROM companies WHERE email = ?").get(email);
+      if (existingEmail) {
+        return NextResponse.json(
+          { error: "An account with this email already exists." },
+          { status: 409 }
+        );
+      }
+
+      // Create new trial company with quote limit
+      const insertStmt = db.prepare(`
+        INSERT INTO companies (
+          access_code, company_name, phone, email,
+          default_walls_rate, default_ceilings_rate, default_trim_rate,
+          default_walls_paint_cost, default_ceilings_paint_cost, default_trim_paint_cost,
+          default_labor_percentage, default_paint_coverage, default_sundries_percentage,
+          tax_rate, tax_on_materials_only, tax_label,
+          quote_limit, is_trial
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+
+      result = insertStmt.run(
+        cleanAccessCode,
+        companyName,
+        phone || null,
+        email,
+        3.00, 2.00, 1.92,
+        26.00, 25.00, 35.00,
+        30, 350, 12,
+        0, 0, 'Tax',
+        1, 1
       );
+
+      // Create subscription for the new company
+      try {
+        await subscriptionManager.createTrialSubscription(result.lastInsertRowid as number, 'plan_free');
+      } catch (error) {
+        console.error('Failed to create trial subscription:', error);
+      }
+
+      console.log(`✅ Trial account created: ${cleanAccessCode} - ${companyName} (${email})`);
     }
-
-    // Check if email already exists
-    const existingEmail = db.prepare("SELECT id FROM companies WHERE email = ?").get(email);
-    if (existingEmail) {
-      return NextResponse.json(
-        { error: "An account with this email already exists." },
-        { status: 409 }
-      );
-    }
-
-    // Create new trial company with quote limit
-    const insertStmt = db.prepare(`
-      INSERT INTO companies (
-        access_code, company_name, phone, email,
-        default_walls_rate, default_ceilings_rate, default_trim_rate,
-        default_walls_paint_cost, default_ceilings_paint_cost, default_trim_paint_cost,
-        default_labor_percentage, default_paint_coverage, default_sundries_percentage,
-        tax_rate, tax_on_materials_only, tax_label,
-        quote_limit, is_trial
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    const result = insertStmt.run(
-      cleanAccessCode,
-      companyName,
-      phone || null,
-      email,
-      3.00, // default walls rate
-      2.00, // default ceilings rate  
-      1.92, // default trim rate
-      26.00, // default walls paint cost
-      25.00, // default ceilings paint cost
-      35.00, // default trim paint cost
-      30, // default labor percentage
-      350, // default paint coverage
-      12, // default sundries percentage
-      0, // tax rate
-      0, // tax on materials only
-      'Tax', // tax label
-      1, // quote_limit (1 free quote for trial)
-      1  // is_trial (true)
-    );
-
-    // Create subscription for the new company
-    try {
-      await subscriptionManager.createTrialSubscription(result.lastInsertRowid as number, 'plan_free');
-    } catch (error) {
-      console.error('Failed to create trial subscription:', error);
-      // Don't fail the account creation if subscription creation fails
-    }
-
-    // Log the trial account creation
-    console.log(`✅ Trial account created: ${cleanAccessCode} - ${companyName} (${email})`);
 
     return NextResponse.json({
       success: true,
@@ -104,6 +138,21 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error("Trial signup error:", error);
+    
+    // More specific error handling for debugging
+    if (error instanceof Error) {
+      console.error("Error details:", error.message);
+      console.error("Error stack:", error.stack);
+      
+      // Check if it's a database connection issue
+      if (error.message.includes('database') || error.message.includes('SQLITE') || error.message.includes('better-sqlite3')) {
+        return NextResponse.json(
+          { error: "Database connection issue. This may be a temporary problem with the deployment. Please try again in a moment." },
+          { status: 503 }
+        );
+      }
+    }
+    
     return NextResponse.json(
       { error: "Failed to create trial account. Please try again." },
       { status: 500 }
