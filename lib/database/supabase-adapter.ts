@@ -222,6 +222,147 @@ export class SupabaseDatabaseAdapter {
 
     return data;
   }
+
+  // Paint products methods
+  async getPaintProducts(companyId: number) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    const { data, error } = await this.supabase
+      .from('company_paint_products')
+      .select('*')
+      .eq('user_id', companyId)
+      .eq('is_active', true)
+      .order('project_type, product_category, display_order');
+
+    if (error) {
+      throw error;
+    }
+
+    return data || [];
+  }
+
+  async savePaintProducts(companyId: number, products: any[]) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    // Delete existing products for this company
+    await this.supabase
+      .from('company_paint_products')
+      .delete()
+      .eq('user_id', companyId);
+
+    // Insert new products
+    if (products.length > 0) {
+      const { error } = await this.supabase
+        .from('company_paint_products')
+        .insert(products.map(product => ({
+          user_id: companyId,
+          project_type: product.projectType,
+          product_category: product.productCategory,
+          supplier: product.supplier,
+          product_name: product.productName,
+          product_line: product.productLine || null,
+          cost_per_gallon: product.costPerGallon,
+          display_order: product.displayOrder || 1,
+          sheen: product.sheen || null,
+          coverage_per_gallon: product.coveragePerGallon || 350
+        })));
+
+      if (error) {
+        throw error;
+      }
+    }
+
+    return { success: true };
+  }
+
+  async updatePaintProduct(productId: number, updates: any) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    const { data, error } = await this.supabase
+      .from('company_paint_products')
+      .update({
+        supplier: updates.supplier,
+        product_name: updates.productName,
+        product_line: updates.productLine,
+        cost_per_gallon: updates.costPerGallon,
+        sheen: updates.sheen,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', productId)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  }
+
+  async deletePaintProduct(productId: number) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    const { error } = await this.supabase
+      .from('company_paint_products')
+      .delete()
+      .eq('id', productId);
+
+    if (error) {
+      throw error;
+    }
+
+    return { success: true };
+  }
+
+  // Company preferences methods
+  async getCompanyPreferences(companyId: number) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    const { data, error } = await this.supabase
+      .from('company_preferences')
+      .select('*')
+      .eq('company_id', companyId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 is "not found"
+      throw error;
+    }
+
+    return data || null;
+  }
+
+  async saveCompanyPreferences(companyId: number, preferences: any) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    const { data, error } = await this.supabase
+      .from('company_preferences')
+      .upsert({
+        company_id: companyId,
+        default_markup: preferences.defaultMarkup || 20,
+        setup_completed: preferences.setupCompleted || false,
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  }
 }
 
 // Create a lazy-loaded instance
@@ -249,4 +390,12 @@ export const supabaseDb = {
   getAllCompanies: async () => getSupabaseDb().getAllCompanies(),
   createQuote: async (quoteData: any) => getSupabaseDb().createQuote(quoteData),
   getQuotesByCompany: async (companyId: number) => getSupabaseDb().getQuotesByCompany(companyId),
+  // Paint products methods
+  getPaintProducts: async (companyId: number) => getSupabaseDb().getPaintProducts(companyId),
+  savePaintProducts: async (companyId: number, products: any[]) => getSupabaseDb().savePaintProducts(companyId, products),
+  updatePaintProduct: async (productId: number, updates: any) => getSupabaseDb().updatePaintProduct(productId, updates),
+  deletePaintProduct: async (productId: number) => getSupabaseDb().deletePaintProduct(productId),
+  // Company preferences methods
+  getCompanyPreferences: async (companyId: number) => getSupabaseDb().getCompanyPreferences(companyId),
+  saveCompanyPreferences: async (companyId: number, preferences: any) => getSupabaseDb().saveCompanyPreferences(companyId, preferences),
 };

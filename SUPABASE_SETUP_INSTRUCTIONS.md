@@ -126,6 +126,44 @@ DROP POLICY IF EXISTS "Allow all for quotes" ON public.quotes;
 CREATE POLICY "Allow all for companies" ON public.companies FOR ALL USING (true);
 CREATE POLICY "Allow all for quotes" ON public.quotes FOR ALL USING (true);
 
+-- Company paint products table for paint catalog
+CREATE TABLE IF NOT EXISTS public.company_paint_products (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES public.companies(id) ON DELETE CASCADE,
+    project_type VARCHAR(50) NOT NULL CHECK (project_type IN ('interior', 'exterior')),
+    product_category VARCHAR(50) NOT NULL CHECK (product_category IN ('primer', 'ceiling_paint', 'wall_paint', 'trim_paint')),
+    supplier VARCHAR(255) NOT NULL,
+    product_name VARCHAR(255) NOT NULL,
+    product_line VARCHAR(255),
+    cost_per_gallon DECIMAL(10,2) NOT NULL,
+    display_order INTEGER DEFAULT 1 CHECK (display_order BETWEEN 1 AND 3),
+    coverage_per_gallon INTEGER DEFAULT 350,
+    sheen VARCHAR(50),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Indexes for paint products
+CREATE INDEX IF NOT EXISTS idx_company_paint_products_user_id ON public.company_paint_products(user_id);
+CREATE INDEX IF NOT EXISTS idx_company_paint_products_type_category ON public.company_paint_products(project_type, product_category);
+
+-- Company preferences table for setup completion tracking
+CREATE TABLE IF NOT EXISTS public.company_preferences (
+    id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES public.companies(id) ON DELETE CASCADE,
+    default_markup INTEGER DEFAULT 20,
+    setup_completed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- RLS for new tables
+ALTER TABLE public.company_paint_products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.company_preferences ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow all for company_paint_products" ON public.company_paint_products FOR ALL USING (true);
+CREATE POLICY "Allow all for company_preferences" ON public.company_preferences FOR ALL USING (true);
+
 -- Insert demo data
 INSERT INTO public.companies (access_code, company_name, phone, email) VALUES
     ('DEMO2024', 'Demo Painting Company', '(555) 123-4567', 'demo@paintingcompany.com'),
