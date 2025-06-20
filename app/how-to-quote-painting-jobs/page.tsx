@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { Calculator, CheckCircle, Clock, DollarSign, AlertTriangle, Lightbulb, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Header } from '@/components/shared/header';
+import { Footer } from '@/components/shared/footer';
 
 export const metadata: Metadata = {
   title: 'How to Quote Painting Jobs: Complete Guide for Contractors | ProPaint',
@@ -72,6 +74,7 @@ export default function HowToQuotePaintingJobsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Header />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-purple-600 to-purple-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -284,6 +287,7 @@ export default function HowToQuotePaintingJobsPage() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

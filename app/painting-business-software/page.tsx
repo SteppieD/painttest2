@@ -12,11 +12,12 @@ import {
   CheckCircle,
   Star,
   ArrowRight,
-  Palette,
   Clock,
   TrendingUp,
   Shield
 } from 'lucide-react';
+import { Header } from '@/components/shared/header';
+import { Footer } from '@/components/shared/footer';
 
 export const metadata: Metadata = {
   title: 'Complete Painting Business Software | Customer Management & Quotes | ProPaint Quote',
@@ -32,22 +33,7 @@ export const metadata: Metadata = {
 export default function PaintingBusinessSoftwarePage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <Palette className="w-8 h-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">ProPaint Quote</span>
-            </Link>
-            <nav className="hidden md:flex items-center gap-6">
-              <Link href="/painting-estimate-calculator" className="text-gray-600 hover:text-gray-900">Calculator</Link>
-              <Link href="/painting-quote-templates" className="text-gray-600 hover:text-gray-900">Templates</Link>
-              <Link href="/trial-signup" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">Start Free Trial</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -391,47 +377,7 @@ export default function PaintingBusinessSoftwarePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-4 bg-gray-900 text-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Palette className="w-6 h-6 text-blue-400" />
-                <span className="text-xl font-bold">ProPaint Quote</span>
-              </div>
-              <p className="text-gray-400">Complete business management software for painting contractors. Grow your business with professional tools.</p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Business Tools</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/painting-estimate-calculator" className="hover:text-white">Quote Calculator</Link></li>
-                <li><Link href="/painting-quote-templates" className="hover:text-white">Templates</Link></li>
-                <li><Link href="/trial-signup" className="hover:text-white">Free Trial</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Features</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/painting-estimating-software" className="hover:text-white">Estimating Software</Link></li>
-                <li><Link href="/mobile-painting-app" className="hover:text-white">Mobile App</Link></li>
-                <li><Link href="/commercial-painting-estimating" className="hover:text-white">Commercial Tools</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/about" className="hover:text-white">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
-                <li><Link href="/support" className="hover:text-white">Support</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 ProPaint Quote. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

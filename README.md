@@ -67,7 +67,7 @@ docker-compose up -d
 - `lib/professional-quote-calculator.ts` - Enhanced calculation engine
 - `CLAUDE.md` - Detailed project documentation and history
 
-## 🚀 **SEO & Lead Generation (NEW - June 15, 2025):**
+## 🚀 **SEO & Lead Generation (LATEST - June 18, 2025):**
 
 ### **SEO Landing Pages Created:**
 - **📱 Mobile Calculator** (`/painting-estimate-calculator-free`) - Targets app download searches
@@ -75,8 +75,14 @@ docker-compose up -d
 - **📄 Template Downloads** (`/painting-quote-templates-free`) - Free resources for lead capture
 - **🆓 Trial Signup** (`/trial-signup`) - Self-service account creation with 1-quote limit
 
+### **Case Study Pages (NEW - June 18, 2025):**
+- **💼 Software ROI Case Study** (`/painting-contractor-software-case-study`) - 278% ROI in 90 days
+- **📈 Revenue Growth Stories** (`/painting-contractor-increased-revenue-software`) - 340% revenue increases
+- **⏱️ Time Savings Success** (`/painting-estimate-software-success-story`) - 85% time reduction
+- **🏢 Small Business Growth** (`/small-painting-business-growth-software`) - $0 to $500K in 18 months
+
 ### **Organic Growth Strategy:**
-- **25+ Keywords Targeted** - Based on comprehensive keyword research
+- **35+ Keywords Targeted** - Based on comprehensive keyword research including case study terms
 - **Technical SEO Complete** - Robots.txt, sitemap, meta optimization
 - **Lead Generation Funnel** - SEO traffic → Free resources → Trial accounts → Conversions
 - **Expected Results** - 500+ monthly visitors, 50+ trial signups (3-6 months)

@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { FileText, Download, Eye, Star, Users, CheckCircle, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Header } from '@/components/shared/header';
+import { Footer } from '@/components/shared/footer';
 
 export const metadata: Metadata = {
   title: 'Free Painting Quote Templates - Professional Paint Job Estimates | ProPaint',
@@ -57,6 +59,7 @@ export default function PaintingQuoteTemplatesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Header />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-green-600 to-green-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -254,6 +257,7 @@ export default function PaintingQuoteTemplatesPage() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

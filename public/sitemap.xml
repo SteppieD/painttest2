@@ -79,6 +79,35 @@
     <priority>0.8</priority>
   </url>
   
+  <!-- Case Studies - High Value SEO Pages -->
+  <url>
+    <loc>https://paintquoteapp.com/painting-contractor-software-case-study</loc>
+    <lastmod>2024-06-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <url>
+    <loc>https://paintquoteapp.com/painting-contractor-increased-revenue-software</loc>
+    <lastmod>2024-06-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://paintquoteapp.com/painting-estimate-software-success-story</loc>
+    <lastmod>2024-06-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://paintquoteapp.com/small-painting-business-growth-software</loc>
+    <lastmod>2024-06-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
   <!-- Core app functionality pages -->
   <url>
     <loc>https://paintquoteapp.com/painting-estimate-calculator</loc>

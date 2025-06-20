@@ -7,85 +7,64 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
-import { CheckCircle, Palette, DollarSign, Rocket, ArrowRight, Star, Info } from "lucide-react";
+import { CheckCircle, Palette, DollarSign, Rocket, ArrowRight } from "lucide-react";
 
 interface PaintProduct {
   supplier: string;
   name: string;
-  tier: 'good' | 'better' | 'best';
-  popular?: boolean;
+  cost: number;
 }
 
 const POPULAR_PRODUCTS = {
   interior: {
     primer: [
-      { supplier: "Kilz", name: "Premium Primer", tier: 'good' as const, popular: true },
-      { supplier: "Zinsser", name: "Bulls Eye 1-2-3", tier: 'better' as const },
-      { supplier: "Sherwin-Williams", name: "ProBlock", tier: 'best' as const },
+      { supplier: "Kilz", name: "Premium Primer", cost: 25 },
+      { supplier: "Zinsser", name: "Bulls Eye 1-2-3", cost: 28 },
+      { supplier: "Sherwin-Williams", name: "ProBlock", cost: 32 },
     ],
     wall_paint: [
-      { supplier: "Sherwin-Williams", name: "ProClassic", tier: 'best' as const, popular: true },
-      { supplier: "Benjamin Moore", name: "Regal Select", tier: 'best' as const },
-      { supplier: "Behr", name: "Premium Plus Ultra", tier: 'better' as const },
+      { supplier: "Sherwin-Williams", name: "ProClassic", cost: 58 },
+      { supplier: "Benjamin Moore", name: "Regal Select", cost: 65 },
+      { supplier: "Behr", name: "Premium Plus Ultra", cost: 45 },
     ],
     ceiling_paint: [
-      { supplier: "Sherwin-Williams", name: "ProMar 200", tier: 'better' as const, popular: true },
-      { supplier: "Benjamin Moore", name: "Waterborne Ceiling", tier: 'best' as const },
-      { supplier: "Behr", name: "Premium Plus", tier: 'good' as const },
+      { supplier: "Sherwin-Williams", name: "ProMar 200", cost: 42 },
+      { supplier: "Benjamin Moore", name: "Waterborne Ceiling", cost: 55 },
+      { supplier: "Behr", name: "Premium Plus", cost: 38 },
     ],
     trim_paint: [
-      { supplier: "Benjamin Moore", name: "Advance", tier: 'best' as const, popular: true },
-      { supplier: "Sherwin-Williams", name: "ProClassic", tier: 'best' as const },
-      { supplier: "PPG", name: "Break-Through!", tier: 'best' as const },
+      { supplier: "Benjamin Moore", name: "Advance", cost: 75 },
+      { supplier: "Sherwin-Williams", name: "ProClassic", cost: 68 },
+      { supplier: "PPG", name: "Break-Through!", cost: 72 },
     ],
   },
   exterior: {
     primer: [
-      { supplier: "Kilz", name: "Adhesion Primer", tier: 'better' as const },
-      { supplier: "Zinsser", name: "Cover Stain", tier: 'better' as const, popular: true },
-      { supplier: "Benjamin Moore", name: "Fresh Start", tier: 'best' as const },
+      { supplier: "Kilz", name: "Adhesion Primer", cost: 35 },
+      { supplier: "Zinsser", name: "Cover Stain", cost: 38 },
+      { supplier: "Benjamin Moore", name: "Fresh Start", cost: 42 },
     ],
     wall_paint: [
-      { supplier: "Sherwin-Williams", name: "Duration", tier: 'best' as const, popular: true },
-      { supplier: "Benjamin Moore", name: "Aura Exterior", tier: 'best' as const },
-      { supplier: "Behr", name: "Marquee", tier: 'better' as const },
+      { supplier: "Sherwin-Williams", name: "Duration", cost: 78 },
+      { supplier: "Benjamin Moore", name: "Aura Exterior", cost: 85 },
+      { supplier: "Behr", name: "Marquee", cost: 65 },
     ],
     trim_paint: [
-      { supplier: "Benjamin Moore", name: "Advance Exterior", tier: 'best' as const },
-      { supplier: "Sherwin-Williams", name: "ProClassic", tier: 'best' as const, popular: true },
-      { supplier: "PPG", name: "Manor Hall", tier: 'better' as const },
+      { supplier: "Benjamin Moore", name: "Advance Exterior", cost: 82 },
+      { supplier: "Sherwin-Williams", name: "ProClassic", cost: 75 },
+      { supplier: "PPG", name: "Manor Hall", cost: 70 },
     ],
   },
 };
 
 const MARKUP_OPTIONS = [
-  { value: 10, label: "10%", description: "Competitive pricing for high-volume work", tier: "Conservative" },
-  { value: 20, label: "20%", description: "Industry standard for most contractors", tier: "Standard", recommended: true },
-  { value: 30, label: "30%", description: "Quality-focused pricing", tier: "Premium" },
-  { value: 40, label: "40%", description: "High-end residential & commercial", tier: "Luxury" },
+  { value: 10, label: "10% - Competitive pricing", description: "Lower profit, win more bids" },
+  { value: 20, label: "20% - Standard profit", description: "Recommended for most jobs", recommended: true },
+  { value: 30, label: "30% - Good profit margin", description: "Higher profit on quality jobs" },
+  { value: 40, label: "40% - Premium pricing", description: "Premium clients and complex work" },
 ];
 
-const getTierBadge = (tier: string) => {
-  const colors = {
-    good: "bg-green-100 text-green-800",
-    better: "bg-blue-100 text-blue-800", 
-    best: "bg-purple-100 text-purple-800"
-  };
-  
-  const labels = {
-    good: "Good",
-    better: "Better",
-    best: "Best"
-  };
-  
-  return (
-    <Badge className={`${colors[tier as keyof typeof colors]} ml-2`}>
-      {labels[tier as keyof typeof labels]}
-    </Badge>
-  );
-};
-
-export default function SetupPageImproved() {
+export default function SetupPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -140,6 +119,7 @@ export default function SetupPageImproved() {
     const productCategory = POPULAR_PRODUCTS[projectType];
     const products = productCategory[category as keyof typeof productCategory];
     
+    // Skip if products don't exist for this category
     if (!products) return null;
     
     const selectedKey = `${projectType}_${category}`;
@@ -155,34 +135,25 @@ export default function SetupPageImproved() {
             return (
               <Button
                 key={index}
-                type="button"
                 variant={isSelected ? "default" : "outline"}
                 className={`h-auto p-4 justify-start text-left ${
-                  isSelected ? "bg-blue-600 text-white hover:bg-blue-700" : ""
-                } ${product.popular ? "ring-1 ring-blue-300" : ""}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSelectedProducts(prev => ({
-                    ...prev,
-                    [selectedKey]: product
-                  }))
-                }}
+                  isSelected ? "bg-blue-600 text-white" : ""
+                }`}
+                onClick={() => setSelectedProducts(prev => ({
+                  ...prev,
+                  [selectedKey]: product
+                }))}
               >
                 <div className="flex justify-between items-center w-full">
-                  <div className="flex-1">
-                    <div className="font-medium flex items-center">
-                      {product.supplier}
-                      {product.popular && (
-                        <Star className="w-4 h-4 ml-2 fill-current text-yellow-500" />
-                      )}
-                    </div>
+                  <div>
+                    <div className="font-medium">{product.supplier}</div>
                     <div className="text-sm opacity-75">{product.name}</div>
                   </div>
-                  <div className="flex items-center">
-                    {getTierBadge(product.tier)}
-                    {isSelected && <CheckCircle className="w-5 h-5 ml-2" />}
+                  <div className="text-lg font-semibold">
+                    ${product.cost}/gal
                   </div>
                 </div>
+                {isSelected && <CheckCircle className="w-5 h-5 ml-2" />}
               </Button>
             );
           })}
@@ -196,24 +167,15 @@ export default function SetupPageImproved() {
     
     setIsLoading(true);
     try {
-      // For now, we'll save with default prices that contractors can update later
-      const defaultPrices = {
-        good: { primer: 25, wall_paint: 40, ceiling_paint: 35, trim_paint: 55 },
-        better: { primer: 30, wall_paint: 50, ceiling_paint: 45, trim_paint: 65 },
-        best: { primer: 40, wall_paint: 65, ceiling_paint: 55, trim_paint: 75 }
-      };
-
+      // Save paint products
       const products = Object.entries(selectedProducts).map(([key, product]) => {
-        const [projectType, ...categoryParts] = key.split('_');
-        const category = categoryParts.join('_');
-        const basePrice = defaultPrices[product.tier as keyof typeof defaultPrices][category as keyof typeof defaultPrices.good];
-        
+        const [projectType, category] = key.split('_');
         return {
           projectType,
           productCategory: category,
           supplier: product.supplier,
           productName: product.name,
-          costPerGallon: basePrice || 50, // Default fallback
+          costPerGallon: product.cost,
           displayOrder: 1,
         };
       });
@@ -240,7 +202,7 @@ export default function SetupPageImproved() {
 
       toast({
         title: "Setup Complete!",
-        description: "Your paint preferences have been saved. You can update prices anytime in Settings.",
+        description: "Your paint preferences have been saved. Ready to create quotes!",
       });
 
       // Redirect to dashboard
@@ -262,9 +224,10 @@ export default function SetupPageImproved() {
 
   const canProceedFromCurrentStep = () => {
     switch (currentStep) {
-      case 1: return true;
-      case 2: return projectTypes.length > 0;
+      case 1: return true; // Can always proceed from welcome
+      case 2: return projectTypes.length > 0; // Need at least one project type
       case 3: 
+        // Check if at least one product selected per category per project type
         const requiredSelections = projectTypes.flatMap(type => 
           type === 'interior' 
             ? ['primer', 'wall_paint', 'ceiling_paint', 'trim_paint'].map(cat => `${type}_${cat}`)
@@ -400,25 +363,18 @@ export default function SetupPageImproved() {
 
             {currentStep === 3 && (
               <div>
-                <h2 className="text-xl font-bold text-gray-900 mb-2">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">
                   Choose Your Go-To Paint Products
                 </h2>
-                <p className="text-gray-600 mb-2">
-                  Pick your preferred brand for each category - these will be your quick-select options.
+                <p className="text-gray-600 mb-6">
+                  Pick one product from each category - these will be your quick-select options when creating quotes.
                 </p>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 flex items-start gap-2">
-                  <Info className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div className="text-sm text-blue-800">
-                    <p className="font-medium mb-1">You'll set your actual prices later</p>
-                    <p>Just pick the brands you prefer to work with. You can update your pricing anytime in Settings.</p>
-                  </div>
-                </div>
                 
                 {projectTypes.map((projectType) => (
                   <div key={projectType} className="mb-8">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4 capitalize flex items-center gap-2">
                       {projectType} Projects
-                      <Badge variant="outline">{projectType === 'interior' ? '4 products' : '3 products'}</Badge>
+                      <Badge variant="outline">{projectType === 'interior' ? '4 categories' : '3 categories'}</Badge>
                     </h3>
                     
                     {renderProductSelection('primer', 'Primer', projectType as 'interior' | 'exterior')}
@@ -427,11 +383,6 @@ export default function SetupPageImproved() {
                     {renderProductSelection('trim_paint', 'Trim Paint', projectType as 'interior' | 'exterior')}
                   </div>
                 ))}
-                
-                <div className="text-xs text-gray-500 flex items-center gap-1">
-                  <Star className="w-3 h-3 fill-current text-yellow-500" />
-                  = Most popular choice among contractors
-                </div>
               </div>
             )}
 
@@ -447,19 +398,15 @@ export default function SetupPageImproved() {
                   {MARKUP_OPTIONS.map((option) => (
                     <Button
                       key={option.value}
-                      type="button"
                       variant={markupPercentage === option.value ? "default" : "outline"}
                       className={`w-full h-auto p-4 justify-between text-left relative ${
                         option.recommended ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
-                      } ${markupPercentage === option.value ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                      }`}
                       onClick={() => setMarkupPercentage(option.value)}
                     >
-                      <div className="flex-1">
+                      <div>
                         <div className="font-medium flex items-center gap-2">
-                          <span className="text-lg">{option.label}</span>
-                          <Badge variant="secondary" className="font-normal">
-                            {option.tier}
-                          </Badge>
+                          {option.label}
                           {option.recommended && (
                             <Badge className="bg-blue-600">Recommended</Badge>
                           )}
@@ -471,9 +418,6 @@ export default function SetupPageImproved() {
                       )}
                     </Button>
                   ))}
-                </div>
-                <div className="mt-4 text-sm text-gray-600">
-                  <p>💡 Tip: Most successful contractors use 20-30% markup to balance competitiveness with profitability.</p>
                 </div>
               </div>
             )}

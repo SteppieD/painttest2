@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Header } from '@/components/shared/header';
+import { Footer } from '@/components/shared/footer';
 
 export const metadata: Metadata = {
   title: 'About ProPaint Quote - Built by Painters, for Painters',
@@ -28,26 +30,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="border-b bg-white sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <Palette className="w-8 h-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">ProPaint Quote</span>
-            </Link>
-            <nav className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-600 hover:text-gray-900">Home</Link>
-              <Link href="/features" className="text-gray-600 hover:text-gray-900">Features</Link>
-              <Link href="/pricing" className="text-gray-600 hover:text-gray-900">Pricing</Link>
-              <Link href="/about" className="text-blue-600 font-medium">About</Link>
-              <Button asChild>
-                <Link href="/access-code">Start Free Trial</Link>
-              </Button>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="py-20 px-4">
@@ -209,30 +192,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-4 bg-gray-900 text-white">
-        <div className="container mx-auto max-w-6xl text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Palette className="w-6 h-6 text-blue-400" />
-            <span className="text-xl font-bold">ProPaint Quote</span>
-          </div>
-          <p className="text-gray-400 mb-8">
-            Professional painting quote software for contractors who want to win more jobs and increase profits.
-          </p>
-          <div className="flex flex-wrap justify-center gap-6 text-sm">
-            <Link href="/" className="hover:text-white">Home</Link>
-            <Link href="/features" className="hover:text-white">Features</Link>
-            <Link href="/pricing" className="hover:text-white">Pricing</Link>
-            <Link href="/about" className="hover:text-white">About</Link>
-            <Link href="/contact" className="hover:text-white">Contact</Link>
-            <Link href="/privacy" className="hover:text-white">Privacy</Link>
-            <Link href="/terms" className="hover:text-white">Terms</Link>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 ProPaint Quote. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

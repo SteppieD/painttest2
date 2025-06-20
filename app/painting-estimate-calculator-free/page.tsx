@@ -4,16 +4,16 @@ import {
   Calculator, 
   Download, 
   Smartphone,
-  ArrowRight,
   CheckCircle,
   Star,
-  Palette,
   Users,
   Clock,
   DollarSign
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Header } from '@/components/shared/header';
+import { Footer } from '@/components/shared/footer';
 
 export const metadata: Metadata = {
   title: 'Free Painting Estimate Calculator App - Download for iPhone & Android | ProPaint Quote',
@@ -34,22 +34,7 @@ export const metadata: Metadata = {
 export default function PaintingEstimateCalculatorFreePage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <Palette className="w-8 h-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">ProPaint Quote</span>
-            </Link>
-            <div className="flex items-center gap-4">
-              <Link href="/trial-signup">
-                <Button>Get Free App</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="py-16 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -297,47 +282,7 @@ export default function PaintingEstimateCalculatorFreePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-4 bg-gray-900 text-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Palette className="w-6 h-6 text-blue-400" />
-                <span className="text-xl font-bold">ProPaint Quote</span>
-              </div>
-              <p className="text-gray-400">Professional painting estimate calculator app for contractors who want accurate quotes and increased profits.</p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Download</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/trial-signup" className="hover:text-white">iPhone App</Link></li>
-                <li><Link href="/trial-signup" className="hover:text-white">Android App</Link></li>
-                <li><Link href="/painting-estimate-calculator" className="hover:text-white">Web Calculator</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/how-to-quote-painting-jobs" className="hover:text-white">How to Quote</Link></li>
-                <li><Link href="/painting-quote-templates" className="hover:text-white">Quote Templates</Link></li>
-                <li><Link href="/painting-estimating-software" className="hover:text-white">Estimating Software</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/about" className="hover:text-white">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
-                <li><Link href="/" className="hover:text-white">Home</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>© 2024 ProPaint Quote. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

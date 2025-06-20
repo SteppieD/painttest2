@@ -1,10 +1,6 @@
-'use client';
-
-import { useState } from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
-  Palette, 
   Calculator, 
   Clock, 
   CheckCircle, 
@@ -15,103 +11,17 @@ import {
   Shield,
   Smartphone,
   FileText,
-  BookOpen,
-  Menu,
-  X
+  BookOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Header } from '@/components/shared/header';
+import { Footer } from '@/components/shared/footer';
 
 export default function HomePage() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-  };
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Palette className="w-8 h-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">ProPaint Quote</span>
-            </div>
-            
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-6">
-              <Link href="/painting-estimate-calculator" className="text-gray-600 hover:text-gray-900">Calculator</Link>
-              <Link href="/painting-quote-templates" className="text-gray-600 hover:text-gray-900">Templates</Link>
-              <Link href="/how-to-quote-painting-jobs" className="text-gray-600 hover:text-gray-900">Guide</Link>
-              <Link href="/access-code" className="text-gray-600 hover:text-gray-900 text-sm">Sign In</Link>
-              <Button asChild className="bg-blue-600 hover:bg-blue-700">
-                <Link href="/trial-signup">Start Free Trial</Link>
-              </Button>
-            </nav>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={toggleMobileMenu}
-              className="md:hidden p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
-              aria-label="Toggle menu"
-            >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
-          </div>
-
-          {/* Mobile Navigation Menu */}
-          {isMobileMenuOpen && (
-            <div className="md:hidden mt-4 pb-4 border-t">
-              <nav className="flex flex-col space-y-4 pt-4">
-                <Link 
-                  href="/painting-estimate-calculator" 
-                  className="text-gray-600 hover:text-gray-900 py-2"
-                  onClick={closeMobileMenu}
-                >
-                  Calculator
-                </Link>
-                <Link 
-                  href="/painting-quote-templates" 
-                  className="text-gray-600 hover:text-gray-900 py-2"
-                  onClick={closeMobileMenu}
-                >
-                  Templates
-                </Link>
-                <Link 
-                  href="/how-to-quote-painting-jobs" 
-                  className="text-gray-600 hover:text-gray-900 py-2"
-                  onClick={closeMobileMenu}
-                >
-                  Guide
-                </Link>
-                <Link 
-                  href="/access-code" 
-                  className="text-gray-600 hover:text-gray-900 py-2"
-                  onClick={closeMobileMenu}
-                >
-                  Sign In
-                </Link>
-                <div className="pt-2">
-                  <Button asChild className="w-full bg-blue-600 hover:bg-blue-700">
-                    <Link href="/trial-signup" onClick={closeMobileMenu}>
-                      Start Free Trial
-                    </Link>
-                  </Button>
-                </div>
-              </nav>
-            </div>
-          )}
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -378,48 +288,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-4 bg-gray-900 text-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Palette className="w-6 h-6 text-blue-400" />
-                <span className="text-xl font-bold">ProPaint Quote</span>
-              </div>
-              <p className="text-gray-400">
-                Professional painting quote software for contractors who want to win more jobs and increase profits.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="#features" className="hover:text-white">Features</Link></li>
-                <li><Link href="#pricing" className="hover:text-white">Pricing</Link></li>
-                <li><Link href="/access-code" className="hover:text-white">Free Trial</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/about" className="hover:text-white">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
-                <li><Link href="/support" className="hover:text-white">Support</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/privacy" className="hover:text-white">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:text-white">Terms of Service</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 ProPaint Quote. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       {/* Structured Data */}
       <script

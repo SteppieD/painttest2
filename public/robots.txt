@@ -45,6 +45,12 @@ Allow: /house-painting-estimate-calculator
 Allow: /commercial-painting-estimating-software
 Allow: /mobile-painting-estimate-app
 
+# Allow case study pages
+Allow: /painting-contractor-software-case-study
+Allow: /painting-contractor-increased-revenue-software
+Allow: /painting-estimate-software-success-story
+Allow: /small-painting-business-growth-software
+
 # Sitemap location
 Sitemap: https://paintquoteapp.com/sitemap.xml
 
