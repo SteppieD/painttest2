@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbGet, dbRun } from "@/lib/database";
-
-// Initialize preferences table (will be handled by database adapter)
-console.log('Company preferences API initialized');
+import { supabaseDb } from "@/lib/database/supabase-adapter";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,26 +12,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if preferences already exist
-    const existing = dbGet(
-      "SELECT id FROM company_preferences WHERE company_id = ?",
-      [companyId]
-    );
-
-    if (existing) {
-      // Update existing preferences
-      dbRun(`
-        UPDATE company_preferences 
-        SET default_markup = ?, setup_completed = ?, updated_at = CURRENT_TIMESTAMP
-        WHERE company_id = ?
-      `, [defaultMarkup || 20, setupCompleted ? 1 : 0, companyId]);
-    } else {
-      // Create new preferences
-      dbRun(`
-        INSERT INTO company_preferences (company_id, default_markup, setup_completed)
-        VALUES (?, ?, ?)
-      `, [companyId, defaultMarkup || 20, setupCompleted ? 1 : 0]);
-    }
+    // Save or update preferences using Supabase
+    await supabaseDb.saveCompanyPreferences(companyId, {
+      defaultMarkup: defaultMarkup || 20,
+      setupCompleted: setupCompleted === true
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -58,9 +40,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const preferences = dbGet(`
-      SELECT * FROM company_preferences WHERE company_id = ?
-    `, [companyId]);
+    const preferences = await supabaseDb.getCompanyPreferences(companyId);
 
     return NextResponse.json({ 
       preferences: preferences || {
