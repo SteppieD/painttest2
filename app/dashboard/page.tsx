@@ -182,19 +182,21 @@ export default function DashboardPage() {
       // Check if company has completed setup
       const preferencesResponse = await fetch(`/api/companies/preferences?companyId=${companyId}`);
       const preferencesData = await preferencesResponse.json();
-      const setupCompleted = preferencesData.preferences?.setup_completed;
+      const setupCompleted = preferencesData.preferences?.setup_completed === true || preferencesData.preferences?.setup_completed === 1;
       
       // Check if they have any paint products
       const productsResponse = await fetch(`/api/paint-products?companyId=${companyId}`);
       const productsData = await productsResponse.json();
       const hasProducts = (productsData.products || []).length > 0;
       
-      // Need onboarding if setup is not completed or no products
-      setNeedsOnboarding(!setupCompleted || !hasProducts);
+      console.log('Setup status check:', { setupCompleted, hasProducts, preferences: preferencesData.preferences });
+      
+      // Need onboarding if setup is not completed AND no products
+      setNeedsOnboarding(!setupCompleted && !hasProducts);
     } catch (error) {
       console.error("Error checking onboarding status:", error);
-      // Don't block access on error, but suggest setup
-      setNeedsOnboarding(true);
+      // Don't block access on error, but don't suggest setup
+      setNeedsOnboarding(false);
     } finally {
       setIsCheckingOnboarding(false);
     }
