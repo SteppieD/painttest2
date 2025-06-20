@@ -6,16 +6,30 @@ export class SupabaseDatabaseAdapter {
 
   constructor() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     
+    // During build, these might not be available yet
     if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Missing Supabase environment variables');
+      console.log('Supabase environment variables not found, adapter will be initialized later');
+      return;
     }
     
-    this.supabase = createClient(supabaseUrl, supabaseKey);
+    // Clean the URL in case there's a leading = or other issue
+    const cleanUrl = supabaseUrl.replace(/^=+/, '').trim();
+    
+    try {
+      this.supabase = createClient(cleanUrl, supabaseKey);
+    } catch (error) {
+      console.error('Failed to create Supabase client:', error);
+    }
   }
 
   async initializeSchema() {
+    if (!this.supabase) {
+      console.log('Supabase client not initialized, skipping schema check');
+      return true;
+    }
+
     try {
       console.log('Checking Supabase PostgreSQL schema...');
 
@@ -41,6 +55,10 @@ export class SupabaseDatabaseAdapter {
     email: string;
     phone?: string;
   }) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
     const { data: result, error } = await this.supabase
       .from('companies')
       .insert({
@@ -74,6 +92,10 @@ export class SupabaseDatabaseAdapter {
   }
 
   async checkExistingCompany(accessCode: string, email: string) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
     const { data: codeCheck } = await this.supabase
       .from('companies')
       .select('id')
@@ -93,6 +115,11 @@ export class SupabaseDatabaseAdapter {
   }
 
   async seedDemoCompanies() {
+    if (!this.supabase) {
+      console.log('Supabase client not initialized, skipping demo seed');
+      return;
+    }
+
     try {
       const { count } = await this.supabase
         .from('companies')
@@ -180,4 +207,28 @@ export class SupabaseDatabaseAdapter {
   }
 }
 
-export const supabaseDb = new SupabaseDatabaseAdapter();
+// Create a lazy-loaded instance
+let supabaseDbInstance: SupabaseDatabaseAdapter | null = null;
+
+export const getSupabaseDb = () => {
+  if (!supabaseDbInstance) {
+    try {
+      supabaseDbInstance = new SupabaseDatabaseAdapter();
+    } catch (error) {
+      console.error('Failed to create Supabase adapter:', error);
+      throw error;
+    }
+  }
+  return supabaseDbInstance;
+};
+
+// For backward compatibility
+export const supabaseDb = {
+  initializeSchema: async () => getSupabaseDb().initializeSchema(),
+  createTrialCompany: async (data: any) => getSupabaseDb().createTrialCompany(data),
+  checkExistingCompany: async (accessCode: string, email: string) => getSupabaseDb().checkExistingCompany(accessCode, email),
+  seedDemoCompanies: async () => getSupabaseDb().seedDemoCompanies(),
+  getCompanyByAccessCode: async (accessCode: string) => getSupabaseDb().getCompanyByAccessCode(accessCode),
+  createQuote: async (quoteData: any) => getSupabaseDb().createQuote(quoteData),
+  getQuotesByCompany: async (companyId: number) => getSupabaseDb().getQuotesByCompany(companyId),
+};
