@@ -120,7 +120,7 @@ export default function SetupPageImproved() {
 
   const fetchCompanyData = async (code: string) => {
     try {
-      const response = await fetch('/api/access-code', {
+      const response = await fetch('/api/auth/access-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ accessCode: code }),
