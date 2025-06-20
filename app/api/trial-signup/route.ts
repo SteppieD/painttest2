@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/database/init";
 import { subscriptionManager } from "@/lib/subscription-manager";
 import { vercelDb } from "@/lib/database/vercel-adapter";
+import { supabaseDb } from "@/lib/database/supabase-adapter";
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,11 +32,53 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Try Vercel Postgres first, fallback to SQLite
+    // Database selection priority: Supabase > Vercel Postgres > SQLite
+    const hasSupabase = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY;
     const isVercel = process.env.VERCEL === '1';
     let result: any;
 
-    if (isVercel) {
+    if (hasSupabase) {
+      // Use Supabase (preferred for production)
+      console.log('Using Supabase PostgreSQL database...');
+      
+      try {
+        // Initialize schema if needed
+        await supabaseDb.initializeSchema();
+        await supabaseDb.seedDemoCompanies();
+        
+        // Check existing companies
+        const existing = await supabaseDb.checkExistingCompany(cleanAccessCode, email);
+        
+        if (existing.codeExists) {
+          return NextResponse.json(
+            { error: "This access code is already taken. Please choose a different one." },
+            { status: 409 }
+          );
+        }
+
+        if (existing.emailExists) {
+          return NextResponse.json(
+            { error: "An account with this email already exists." },
+            { status: 409 }
+          );
+        }
+
+        // Create new trial company
+        result = await supabaseDb.createTrialCompany({
+          accessCode: cleanAccessCode,
+          companyName,
+          email,
+          phone
+        });
+
+        console.log(`✅ Trial account created with Supabase: ${cleanAccessCode} - ${companyName} (${email})`);
+
+      } catch (supabaseError) {
+        console.error('Supabase error, falling back to next option:', supabaseError);
+        throw supabaseError;
+      }
+      
+    } else if (isVercel) {
       // Use Vercel Postgres
       console.log('Using Vercel Postgres database...');
       
