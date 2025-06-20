@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbGet, dbAll, dbRun } from "@/lib/database";
+import { supabaseDb } from "@/lib/database/supabase-adapter";
 
 
 export async function POST(req: NextRequest) {
@@ -16,49 +16,29 @@ export async function POST(req: NextRequest) {
 
     if (product.id) {
       // Update existing product
-      dbRun(`
-        UPDATE company_paint_products
-        SET supplier = ?,
-            product_name = ?,
-            product_line = ?,
-            cost_per_gallon = ?,
-            sheen = ?,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND user_id = ?
-      `, [
-        product.supplier,
-        product.productName,
-        product.productLine || null,
-        product.costPerGallon,
-        product.sheen || null,
-        product.id,
-        id
-      ]);
+      await supabaseDb.updatePaintProduct(product.id, {
+        supplier: product.supplier,
+        productName: product.productName,
+        productLine: product.productLine || null,
+        costPerGallon: product.costPerGallon,
+        sheen: product.sheen || null
+      });
     } else {
-      // Create new product
-      dbRun(`
-        INSERT INTO company_paint_products (
-          user_id,
-          project_type,
-          product_category,
-          supplier,
-          product_name,
-          product_line,
-          cost_per_gallon,
-          display_order,
-          sheen
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `, [
-        id,
-        product.projectType,
-        product.productCategory,
-        product.supplier,
-        product.productName,
-        product.productLine || null,
-        product.costPerGallon,
-        product.displayOrder,
-        product.sheen || null
-      ]);
+      // Create new product - add to existing products array
+      const existingProducts = await supabaseDb.getPaintProducts(id);
+      const newProductData = {
+        projectType: product.projectType,
+        productCategory: product.productCategory,
+        supplier: product.supplier,
+        productName: product.productName,
+        productLine: product.productLine || null,
+        costPerGallon: product.costPerGallon,
+        displayOrder: product.displayOrder,
+        sheen: product.sheen || null,
+        coveragePerGallon: 350
+      };
+      
+      await supabaseDb.savePaintProducts(id, [...existingProducts, newProductData]);
     }
 
     return NextResponse.json({ success: true });
@@ -83,10 +63,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    dbRun(
-      "UPDATE company_paint_products SET is_active = 0 WHERE id = ?",
-      [productId]
-    );
+    await supabaseDb.deletePaintProduct(productId);
 
     return NextResponse.json({ success: true });
   } catch (error) {

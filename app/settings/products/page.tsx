@@ -255,8 +255,8 @@ export default function ProductSettingsPage() {
   };
 
   const renderProductCard = (product: PaintProduct) => (
-    <Card key={product.id} className="mb-3">
-      <CardContent className="pt-4">
+    <Card key={product.id} className="mb-3 cursor-pointer hover:shadow-md transition-shadow">
+      <CardContent className="pt-4" onClick={() => startEditProduct(product)}>
         <div className="flex justify-between items-start">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
@@ -275,7 +275,7 @@ export default function ProductSettingsPage() {
               ${product.costPerGallon.toFixed(2)}/gal
             </p>
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
             <Button
               size="sm"
               variant="outline"
