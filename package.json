@@ -12,10 +12,6 @@
     "deploy:build": "npm run build",
     "deploy:start": "npm start"
   },
-  "engines": {
-    "node": "18.x",
-    "npm": ">=8.0.0"
-  },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
     "@hookform/resolvers": "^3.9.0",
