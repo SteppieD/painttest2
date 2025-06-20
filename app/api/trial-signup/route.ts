@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/database/init";
 import { subscriptionManager } from "@/lib/subscription-manager";
-import { vercelDb } from "@/lib/database/vercel-adapter";
-import { supabaseDb } from "@/lib/database/supabase-adapter";
+
+// Dynamic imports to prevent build issues
+const getSupabaseDb = async () => {
+  try {
+    const { supabaseDb } = await import("@/lib/database/supabase-adapter");
+    return supabaseDb;
+  } catch (error) {
+    console.error('Failed to import Supabase adapter:', error);
+    return null;
+  }
+};
 
 export async function POST(request: NextRequest) {
   console.log('Trial signup API called');
@@ -47,6 +56,11 @@ export async function POST(request: NextRequest) {
       console.log('Using Supabase PostgreSQL database...');
       
       try {
+        const supabaseDb = await getSupabaseDb();
+        if (!supabaseDb) {
+          throw new Error('Failed to load Supabase adapter');
+        }
+        
         // Initialize schema if needed
         await supabaseDb.initializeSchema();
         await supabaseDb.seedDemoCompanies();
@@ -82,41 +96,6 @@ export async function POST(request: NextRequest) {
         console.error('Supabase error, falling back to next option:', supabaseError);
         throw supabaseError;
       }
-      
-    } else if (isVercel) {
-      // Use Vercel Postgres
-      console.log('Using Vercel Postgres database...');
-      
-      // Initialize schema if needed
-      await vercelDb.initializeSchema();
-      await vercelDb.seedDemoCompanies();
-      
-      // Check existing companies
-      const existing = await vercelDb.checkExistingCompany(cleanAccessCode, email);
-      
-      if (existing.codeExists) {
-        return NextResponse.json(
-          { error: "This access code is already taken. Please choose a different one." },
-          { status: 409 }
-        );
-      }
-
-      if (existing.emailExists) {
-        return NextResponse.json(
-          { error: "An account with this email already exists." },
-          { status: 409 }
-        );
-      }
-
-      // Create new trial company
-      result = await vercelDb.createTrialCompany({
-        accessCode: cleanAccessCode,
-        companyName,
-        email,
-        phone
-      });
-
-      console.log(`✅ Trial account created on Vercel: ${cleanAccessCode} - ${companyName} (${email})`);
       
     } else {
       // Use SQLite for local development
