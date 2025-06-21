@@ -25,16 +25,7 @@ export function EnhancedMessageBubble({
   isLatest = false,
   onCopy 
 }: EnhancedMessageBubbleProps) {
-  const [copied, setCopied] = useState(false)
   const isUser = message.role === 'user'
-
-  const handleCopy = () => {
-    if (onCopy) {
-      onCopy()
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    }
-  }
 
   // Format message content with markdown support
   const formatContent = (content: string) => {
@@ -71,93 +62,49 @@ export function EnhancedMessageBubble({
   return (
     <div
       className={cn(
-        "flex gap-3 animate-in fade-in-50 slide-in-from-bottom-2 duration-300",
-        isUser ? "justify-end" : "justify-start",
-        isLatest && "mb-4"
+        "flex mb-1 px-4 fade-in",
+        isUser ? "justify-end" : "justify-start"
       )}
     >
-      {/* Avatar for assistant */}
-      {!isUser && (
-        <div className="flex-shrink-0 mt-1">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-            <Bot className="w-5 h-5 text-blue-600" />
-          </div>
-        </div>
-      )}
-
-      {/* Message bubble */}
+      {/* iMessage-style bubble */}
       <div
         className={cn(
-          "group relative max-w-[80%] md:max-w-[70%]",
-          isUser ? "order-1" : "order-2"
+          "relative max-w-[85%] group",
+          isUser ? "ml-12" : "mr-12"
         )}
       >
         <div
           className={cn(
-            "px-4 py-3 rounded-2xl shadow-sm",
+            "px-4 py-2 rounded-[18px] text-[16px] leading-[1.4]",
             isUser
-              ? "bg-blue-600 text-white rounded-br-md"
-              : "bg-white text-gray-900 border border-gray-200 rounded-bl-md"
+              ? "bg-[#007AFF] text-white" // iMessage blue
+              : "bg-[#E5E5EA] text-black" // iMessage gray
           )}
         >
-          <div className="text-sm leading-relaxed">
-            {formatContent(message.content)}
-          </div>
+          {formatContent(message.content)}
 
-          {/* Quote data preview */}
+          {/* Quote data preview - styled more casually */}
           {message.quoteData && message.quoteData.totalCost && (
             <div className={cn(
-              "mt-3 pt-3 border-t text-xs",
-              isUser ? "border-blue-500" : "border-gray-200"
+              "mt-2 pt-2 border-t border-opacity-20",
+              isUser ? "border-white" : "border-gray-400"
             )}>
-              <div className="font-semibold mb-1">Quote Preview:</div>
-              <div className="space-y-1">
-                <div>Total: ${message.quoteData.totalCost.toLocaleString()}</div>
-                {message.quoteData.timeEstimate && (
-                  <div>Timeline: {message.quoteData.timeEstimate}</div>
-                )}
-              </div>
+              <div className="font-medium">💰 ${message.quoteData.totalCost.toLocaleString()}</div>
+              {message.quoteData.timeEstimate && (
+                <div className="text-sm opacity-90">⏱️ {message.quoteData.timeEstimate}</div>
+              )}
             </div>
           )}
         </div>
 
-        {/* Timestamp and actions */}
+        {/* Timestamp - only show on hover/tap like iMessage */}
         <div className={cn(
-          "flex items-center gap-2 mt-1 text-xs",
-          isUser ? "justify-end" : "justify-start"
+          "text-[11px] text-gray-500 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200",
+          isUser ? "text-right" : "text-left"
         )}>
-          <span className="text-gray-500">
-            {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
-          </span>
-          
-          {/* Copy button (hidden on mobile, shown on hover on desktop) */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleCopy}
-            className={cn(
-              "h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity",
-              "hover:bg-gray-100 rounded-md",
-              copied && "opacity-100"
-            )}
-          >
-            {copied ? (
-              <Check className="h-3 w-3 text-green-600" />
-            ) : (
-              <Copy className="h-3 w-3 text-gray-500" />
-            )}
-          </Button>
+          {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
         </div>
       </div>
-
-      {/* Avatar for user */}
-      {isUser && (
-        <div className="flex-shrink-0 mt-1 order-2">
-          <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
-            <User className="w-5 h-5 text-white" />
-          </div>
-        </div>
-      )}
     </div>
   )
 }

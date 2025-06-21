@@ -748,7 +748,7 @@ What would you like to modify?`,
         
       case 'customer_name':
         setQuoteData(prev => ({ ...prev, customer_name: input.trim() }));
-        responseContent = `Perfect! Now I have ${input.trim()} at ${quoteData.address}.\n\nWhat type of painting work are we quoting?`;
+        responseContent = `Got it! ${input.trim()} at ${quoteData.address} 📍\n\nWhat kind of painting are we doing?`;
         // Show project type buttons
         setTimeout(() => {
           setButtonOptions([
@@ -766,7 +766,7 @@ What would you like to modify?`,
         setQuoteData(prev => ({ ...prev, project_type: projectType }));
         
         if (projectType === 'interior' || projectType === 'both') {
-          responseContent = `Perfect! For ${projectType} painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
+          responseContent = `Nice! ${projectType} it is 🏠\n\nWhat surfaces are we painting? Just tap what you need:`;
           // Show surface selection buttons for interior
           setTimeout(() => {
             setConversationStage('surface_selection'); // Set stage BEFORE showing buttons
@@ -781,7 +781,7 @@ What would you like to modify?`,
             setShowButtons(true);
           }, 500);
         } else {
-          responseContent = `Perfect! For exterior painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
+          responseContent = `Awesome! Exterior painting 🎨\n\nWhat parts of the outside are we painting?`;
           // Show surface selection buttons for exterior
           setTimeout(() => {
             setConversationStage('surface_selection'); // Set stage BEFORE showing buttons
@@ -817,25 +817,25 @@ What would you like to modify?`,
           const firstCategory = selectedSurfaces[0]; // Use selectedSurfaces directly since that's what gets queued
           
           // Start the new measurement-driven workflow
-          responseContent = `Perfect! You selected: **${surfaceList}**\n\nI'll collect measurements and paint selection for each surface category. Let's start with **${firstCategory}**.\n\n`;
+          responseContent = `Sweet! ${surfaceList} it is 👍\n\nLet's start with the ${firstCategory}. `;
           
           // Provide category-specific measurement instructions
           if (firstCategory === 'ceilings') {
-            responseContent += `For ceiling painting, I need the ceiling area.\n\nPlease provide:\n• **Ceiling area:** in square feet\n• Or **floor area:** (I can calculate ceiling area from floor area)\n\nExample: "ceiling area: 200 sq ft" or "floor area: 200 sq ft"`;
+            responseContent += `How many square feet of ceiling space?\n\n(You can tell me ceiling area or just the floor area and I'll figure it out!)`;
           } else if (firstCategory === 'walls') {
-            responseContent += `For wall painting, I need the wall dimensions.\n\nPlease provide:\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (to calculate wall area)\n\nExample: "120 linear feet, 9 foot ceilings"`;
+            responseContent += `What's the wall situation?\n\nJust need the linear feet around the room and ceiling height!\n\nLike "120 feet around, 9 foot ceilings"`;
           } else if (firstCategory === 'doors') {
-            responseContent += `For door painting, I need the door count.\n\nPlease provide:\n• **Number of doors** to be painted\n\nExample: "3 doors"`;
+            responseContent += `How many doors are we painting? 🚪`;
           } else if (firstCategory === 'windows') {
-            responseContent += `For window painting, I need the window count.\n\nPlease provide:\n• **Number of windows** to be painted\n\nExample: "5 windows"`;
+            responseContent += `How many windows? 🪟`;
           } else if (firstCategory === 'trim') {
-            responseContent += `For trim painting, I need to know about doors and windows (trim goes around them).\n\nPlease provide:\n• **Number of doors** and **windows** that have trim\n\nExample: "3 doors and 5 windows" or "2 doors, no windows"`;
+            responseContent += `How many doors and windows have trim around them?\n\nLike "3 doors and 5 windows" or whatever you've got!`;
           }
           
           nextStage = 'category_measurement_collection';
         } else {
           // Handle text input during surface selection
-          responseContent = `Please use the buttons above to select surfaces, then click "Continue to Dimensions" when ready.`;
+          responseContent = `Just tap the buttons above to pick what we're painting! 😊`;
           nextStage = 'surface_selection';
         }
         break;
