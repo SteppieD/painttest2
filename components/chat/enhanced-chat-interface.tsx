@@ -168,11 +168,11 @@ export function ChatInterface({
   ]
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-flat-gray-50">
       {/* Messages Area */}
       <div 
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-6 space-y-4"
+        className="flex-1 overflow-y-auto px-4 py-6 space-y-4 enhanced-scroll"
         style={{ 
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch' // Better iOS scrolling
@@ -180,9 +180,9 @@ export function ChatInterface({
       >
         {/* Welcome message with company branding */}
         <div className="text-center py-4 mb-4">
-          <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-sm text-gray-600">
+          <div className="inline-flex items-center gap-2 card-flat px-4 py-2 rounded-flat-full shadow-flat">
+            <div className="w-2 h-2 bg-business-success rounded-full animate-pulse"></div>
+            <span className="text-flat-body">
               Connected to {companyData.company_name}
             </span>
           </div>
@@ -213,7 +213,7 @@ export function ChatInterface({
                 variant="outline"
                 size="sm"
                 onClick={() => sendMessage(suggestion)}
-                className="text-xs hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 transition-colors"
+                className="btn-flat text-flat-caption hover:bg-business-primary/10 hover:text-business-primary hover:border-business-primary/30 transition-colors interactive-flat"
               >
                 {suggestion}
               </Button>
@@ -225,7 +225,7 @@ export function ChatInterface({
       </div>
 
       {/* Enhanced Input Area */}
-      <div className="bg-white border-t shadow-lg">
+      <div className="bg-white border-t border-flat-gray-200 shadow-flat">
         <ChatInput
           value={input}
           onChange={setInput}

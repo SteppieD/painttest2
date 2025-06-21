@@ -45,13 +45,13 @@ export function ProgressiveEstimateDisplay({
   };
 
   return (
-    <Card className="w-full max-w-sm bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
+    <Card className="card-flat w-full max-w-sm bg-white border-business-primary/20">
       <CardContent className="p-4">
         {/* Header */}
         <div className="flex items-center gap-2 mb-3">
-          <Calculator className="w-5 h-5 text-blue-600" />
-          <span className="font-semibold text-gray-900">Running Estimate</span>
-          <div className={`ml-auto px-2 py-1 rounded-full text-xs font-medium border ${getConfidenceColor(estimate.confidence)}`}>
+          <Calculator className="icon-flat text-business-primary" />
+          <span className="text-flat-subheading">Running Estimate</span>
+          <div className={`ml-auto px-3 py-1 rounded-flat text-flat-sm font-semibold border ${getConfidenceColor(estimate.confidence)}`}>
             <div className="flex items-center gap-1">
               {getConfidenceIcon(estimate.confidence)}
               {estimate.confidence}
@@ -61,34 +61,34 @@ export function ProgressiveEstimateDisplay({
 
         {/* Price Display */}
         <div 
-          className={`text-center mb-3 cursor-pointer transition-all duration-300 ${
+          className={`text-center mb-3 cursor-pointer transition-all duration-200 interactive-flat ${
             animatePrice ? 'scale-105' : 'scale-100'
           }`}
           onClick={onEstimateClick}
         >
           {estimate.confidence === 'high' ? (
-            <div className="text-2xl font-bold text-blue-700">
+            <div className="text-flat-2xl font-bold text-business-primary">
               ${estimate.estimatedPrice.toLocaleString()}
             </div>
           ) : (
-            <div className="text-lg font-bold text-blue-700">
+            <div className="text-flat-lg font-bold text-business-primary">
               ${estimate.suggestedRange.min.toLocaleString()} - ${estimate.suggestedRange.max.toLocaleString()}
             </div>
           )}
-          <div className="text-xs text-gray-600 mt-1">
-            {estimate.completeness}% complete • Click for details
+          <div className="text-flat-caption mt-1">
+            {estimate.completeness}% complete • Tap for details
           </div>
         </div>
 
         {/* Progress Bar */}
         <div className="mb-3">
           <div className="flex justify-between items-center mb-1">
-            <span className="text-xs text-gray-600">Estimate Accuracy</span>
-            <span className="text-xs font-medium text-gray-700">{estimate.completeness}%</span>
+            <span className="text-flat-caption">Estimate Accuracy</span>
+            <span className="text-flat-caption font-semibold">{estimate.completeness}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-flat-gray-200 rounded-flat-full h-2">
             <div 
-              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
+              className="bg-gradient-to-r from-business-primary to-business-primary-dark h-2 rounded-flat-full transition-all duration-300 ease-out"
               style={{ width: `${estimate.completeness}%` }}
             />
           </div>
@@ -97,27 +97,27 @@ export function ProgressiveEstimateDisplay({
         {/* Quick Breakdown Toggle */}
         <button
           onClick={() => setShowBreakdown(!showBreakdown)}
-          className="w-full text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+          className="btn-flat-primary w-full text-flat-sm"
         >
           {showBreakdown ? 'Hide' : 'Show'} Breakdown
         </button>
 
         {/* Breakdown Details */}
         {showBreakdown && (
-          <div className="mt-3 pt-3 border-t border-blue-200 space-y-2">
-            <div className="flex justify-between text-xs">
-              <span className="text-gray-600">Materials</span>
-              <span className="font-medium">${estimate.breakdown.materials.toLocaleString()}</span>
+          <div className="mt-3 pt-3 border-t border-flat-gray-200 space-y-2">
+            <div className="flex justify-between text-flat-sm">
+              <span className="text-flat-gray-600">Materials</span>
+              <span className="font-semibold">${estimate.breakdown.materials.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-gray-600">Labor</span>
-              <span className="font-medium">${estimate.breakdown.labor.toLocaleString()}</span>
+            <div className="flex justify-between text-flat-sm">
+              <span className="text-flat-gray-600">Labor</span>
+              <span className="font-semibold">${estimate.breakdown.labor.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-gray-600">Markup</span>
-              <span className="font-medium">${estimate.breakdown.markup.toLocaleString()}</span>
+            <div className="flex justify-between text-flat-sm">
+              <span className="text-flat-gray-600">Markup</span>
+              <span className="font-semibold">${estimate.breakdown.markup.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between text-xs font-semibold pt-1 border-t border-blue-200">
+            <div className="flex justify-between text-flat-sm font-bold pt-1 border-t border-flat-gray-200">
               <span>Total</span>
               <span>${estimate.breakdown.total.toLocaleString()}</span>
             </div>
@@ -126,9 +126,9 @@ export function ProgressiveEstimateDisplay({
 
         {/* Missing Data Hint */}
         {estimate.missingData.length > 0 && estimate.completeness < 80 && (
-          <div className="mt-3 text-xs text-gray-600">
-            <div className="font-medium mb-1">For better accuracy:</div>
-            <div className="text-gray-500">
+          <div className="mt-3 text-flat-caption">
+            <div className="font-semibold mb-1 text-business-warning">For better accuracy:</div>
+            <div className="text-flat-gray-500">
               {estimate.missingData.slice(0, 2).join(', ')}
               {estimate.missingData.length > 2 && ` +${estimate.missingData.length - 2} more`}
             </div>
@@ -155,21 +155,21 @@ export function FloatingEstimateWidget({
 
   return (
     <div 
-      className="fixed bottom-4 right-4 z-30 cursor-pointer transform transition-all duration-300 hover:scale-105"
+      className="fixed bottom-4 right-4 z-30 cursor-pointer transform transition-all duration-200 interactive-flat"
       onClick={onToggle}
     >
-      <Card className="bg-blue-600 text-white shadow-lg border-0">
+      <Card className="bg-business-primary text-white shadow-flat border-0">
         <CardContent className="p-3">
           <div className="flex items-center gap-2">
             <Calculator className="w-4 h-4" />
-            <div className="text-sm">
-              <div className="font-semibold">
+            <div className="text-flat-sm">
+              <div className="font-bold">
                 {estimate.confidence === 'high' 
                   ? `$${estimate.estimatedPrice.toLocaleString()}`
                   : `$${estimate.suggestedRange.min.toLocaleString()}-${estimate.suggestedRange.max.toLocaleString()}`
                 }
               </div>
-              <div className="text-xs opacity-90">
+              <div className="text-flat-xs opacity-90">
                 {estimate.completeness}% complete
               </div>
             </div>
