@@ -296,7 +296,8 @@ export class SupabaseDatabaseAdapter {
         cost_per_gallon: product.costPerGallon,
         display_order: product.displayOrder || 1,
         sheen: product.sheen || null,
-        coverage_per_gallon: product.coveragePerGallon || 350
+        coverage_per_gallon: product.coveragePerGallon || 350,
+        is_active: true
       })
       .select()
       .single();
@@ -422,6 +423,7 @@ export const supabaseDb = {
   // Paint products methods
   getPaintProducts: async (companyId: number) => getSupabaseDb().getPaintProducts(companyId),
   savePaintProducts: async (companyId: number, products: any[]) => getSupabaseDb().savePaintProducts(companyId, products),
+  addPaintProduct: async (companyId: number, product: any) => getSupabaseDb().addPaintProduct(companyId, product),
   updatePaintProduct: async (productId: number, updates: any) => getSupabaseDb().updatePaintProduct(productId, updates),
   deletePaintProduct: async (productId: number) => getSupabaseDb().deletePaintProduct(productId),
   // Company preferences methods
