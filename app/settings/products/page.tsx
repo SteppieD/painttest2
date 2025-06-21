@@ -240,11 +240,16 @@ export default function ProductSettingsPage() {
     category: string, 
     product: { supplier: string; name: string; cost: number }
   ) => {
+    console.log("🎨 Adding popular product:", { projectType, category, product });
+    
     const categoryProducts = products.filter(
       p => p.projectType === projectType && p.productCategory === category
     );
     
+    console.log("📊 Category products count:", categoryProducts.length);
+    
     if (categoryProducts.length >= 3) {
+      console.log("❌ Product limit reached");
       toast({
         title: "Limit reached",
         description: "You can only have up to 3 products per category.",
@@ -263,7 +268,14 @@ export default function ProductSettingsPage() {
       displayOrder: categoryProducts.length + 1,
     };
 
-    await saveProduct(newProduct);
+    console.log("💾 Saving new product:", newProduct);
+    
+    try {
+      await saveProduct(newProduct);
+      console.log("✅ Product save completed");
+    } catch (error) {
+      console.error("❌ Product save failed:", error);
+    }
   };
 
   const renderProductCard = (product: PaintProduct) => (

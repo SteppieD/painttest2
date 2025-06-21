@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log("Processing product save:", { id, productId: product.id, supplier: product.supplier });
+    console.log("Processing product save:", { id, productId: product.id, supplier: product.supplier, isNewProduct: !product.id });
 
     if (product.id) {
       // Update existing product
