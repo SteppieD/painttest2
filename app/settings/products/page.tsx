@@ -128,8 +128,18 @@ export default function ProductSettingsPage() {
   };
 
   const saveProduct = async (product: PaintProduct) => {
+    if (!companyData || !companyData.id) {
+      toast({
+        title: "Error",
+        description: "Company data not loaded. Please refresh the page.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
+      console.log("Saving product:", { companyId: companyData.id, product });
       const response = await fetch("/api/paint-products/single", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -148,13 +158,15 @@ export default function ProductSettingsPage() {
         setIsEditDialogOpen(false);
         setEditingProduct(null);
       } else {
-        throw new Error("Failed to save product");
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        throw new Error(errorData.error || `HTTP ${response.status}`);
       }
     } catch (error) {
       console.error("Error saving product:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
       toast({
         title: "Error",
-        description: "Failed to save product. Please try again.",
+        description: `Failed to save product: ${errorMessage}`,
         variant: "destructive",
       });
     } finally {
