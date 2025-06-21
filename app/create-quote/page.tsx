@@ -498,8 +498,13 @@ What would you like to modify?`,
     const estimate = calculateProgressiveEstimate(partialData, quoteData.rates);
     setCurrentEstimate(estimate);
     
-    // Show estimate once we have basic info
-    if (!showEstimate && (selectedSurfaces.length > 0 || quoteData.dimensions.floor_area)) {
+    // Show estimate only when we have meaningful data (at least project type + surfaces + some dimensions)
+    const hasProjectType = quoteData.project_type && quoteData.project_type !== '';
+    const hasSurfaces = selectedSurfaces.length > 0;
+    const hasDimensions = quoteData.dimensions.wall_linear_feet || quoteData.dimensions.floor_area || quoteData.dimensions.ceiling_area;
+    const hasMinimumData = hasProjectType && hasSurfaces && hasDimensions;
+    
+    if (!showEstimate && hasMinimumData && estimate.completeness >= 40) {
       setShowEstimate(true);
     }
   };

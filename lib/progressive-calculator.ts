@@ -260,10 +260,11 @@ function getIndustryAverage(data: PartialQuoteData) {
 function calculateCompleteness(data: PartialQuoteData): number {
   let score = 0;
   
-  if (data.customer_name) score += 5;
-  if (data.address) score += 5;
+  // Reduced scoring for basic info - we want more substantial data before estimating
+  if (data.customer_name) score += 2;
+  if (data.address) score += 2;
   if (data.project_type) score += 10;
-  if (data.selectedSurfaces?.length) score += 15;
+  if (data.selectedSurfaces?.length) score += 20;
   
   // Dimension scoring
   const dims = data.dimensions;
@@ -279,8 +280,8 @@ function calculateCompleteness(data: PartialQuoteData): number {
 }
 
 function getConfidenceLevel(completeness: number, data: PartialQuoteData): 'low' | 'medium' | 'high' {
-  if (completeness >= 80 && hasMinimalDimensions(data)) return 'high';
-  if (completeness >= 50 && hasSurfaceSelection(data)) return 'medium';
+  if (completeness >= 85 && hasMinimalDimensions(data)) return 'high';
+  if (completeness >= 65 && hasSurfaceSelection(data) && hasMinimalDimensions(data)) return 'medium';
   return 'low';
 }
 
