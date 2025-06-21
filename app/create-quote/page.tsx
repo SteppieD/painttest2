@@ -15,6 +15,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
+// Helper function to render markdown text
+const renderMarkdown = (text: string) => {
+  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+};
+
 import {
   calculateProfessionalQuote,
   DEFAULT_PAINT_PRODUCTS,
@@ -663,69 +668,114 @@ What would you like to modify?`,
   // For now, returning a placeholder to demonstrate the state management optimization
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-6">
-        <Card className="max-w-4xl mx-auto">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calculator className="w-6 h-6" />
-              Create Professional Quote
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {/* Messages Display */}
-              <div className="max-h-96 overflow-y-auto space-y-4">
-                {messages.map((message, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      "p-4 rounded-lg",
-                      message.role === "user"
-                        ? "bg-blue-50 border-l-4 border-blue-500 ml-8"
-                        : "bg-gray-50 border-l-4 border-gray-500 mr-8"
-                    )}
-                  >
-                    <div className="whitespace-pre-wrap">{message.content}</div>
-                  </div>
-                ))}
-                {isThinking && (
-                  <div className="bg-gray-50 border-l-4 border-gray-500 mr-8 p-4 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                      </div>
-                      <span className="text-gray-600">Thinking...</span>
-                    </div>
-                  </div>
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      {/* Header */}
+      <header className="bg-white border-b px-4 py-3 shadow-sm">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.push("/dashboard")}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Button>
+            <div>
+              <h1 className="font-semibold text-gray-900">Create Quote</h1>
+              <p className="text-sm text-gray-600">AI-Powered Quote Assistant</p>
+            </div>
+          </div>
+          {companyData && (
+            <div className="text-sm text-gray-600">
+              {companyData.company_name}
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Chat Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-4xl mx-auto p-4 space-y-4">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={cn(
+                  "flex gap-3",
+                  message.role === 'user' ? "justify-end" : "justify-start"
                 )}
-                {isLoading && (
-                  <div className="bg-gray-50 border-l-4 border-gray-500 mr-8 p-4 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Preparing response...</span>
-                    </div>
+              >
+                <div
+                  className={cn(
+                    "max-w-[80%] p-4 rounded-lg shadow-sm",
+                    message.role === 'user'
+                      ? "bg-blue-600 text-white rounded-br-sm"
+                      : "bg-white border rounded-bl-sm"
+                  )}
+                >
+                  <div className="whitespace-pre-wrap text-sm" dangerouslySetInnerHTML={{
+                    __html: renderMarkdown(message.content)
+                  }}>
                   </div>
-                )}
+                  <div className={cn(
+                    "text-xs mt-2",
+                    message.role === 'user' ? "text-blue-100" : "text-gray-500"
+                  )}>
+                    {new Date(message.timestamp).toLocaleTimeString()}
+                  </div>
+                </div>
               </div>
+            ))}
 
-              {/* Progressive Estimate Widget */}
-              {currentEstimate && (
+            {/* Thinking Animation */}
+            {isThinking && (
+              <div className="flex gap-3 justify-start">
+                <div className="max-w-[80%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    </div>
+                    <span className="text-gray-600 text-sm">Thinking...</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Loading Animation */}
+            {isLoading && (
+              <div className="flex gap-3 justify-start">
+                <div className="max-w-[80%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-gray-600 text-sm">Preparing response...</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Progressive Estimate Display */}
+            {currentEstimate && showEstimate && !isThinking && (
+              <div className="flex justify-center">
                 <ProgressiveEstimateDisplay estimate={currentEstimate} />
-              )}
+              </div>
+            )}
 
-              {/* Button Options */}
-              {showButtons && buttonOptions.length > 0 && (
-                <div className="border-t pt-4">
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {/* Button Options */}
+            {showButtons && buttonOptions.length > 0 && (
+              <div className="flex gap-3 justify-start">
+                <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
                     {buttonOptions.map((option) => (
                       <Button
                         key={option.id}
                         variant={option.selected ? "default" : "outline"}
                         onClick={() => handleButtonClick(option)}
-                        className="h-auto p-3 text-left"
+                        className="h-auto p-3 text-left justify-start"
+                        size="sm"
                       >
                         {option.label}
                       </Button>
@@ -737,38 +787,51 @@ What would you like to modify?`,
                         dispatch({ type: 'SET_INPUT_VALUE', payload: 'continue' });
                         setTimeout(() => handleSendMessage(), 100);
                       }}
-                      className="mt-3 w-full"
+                      className="w-full"
+                      size="sm"
                     >
-                      Continue with Selected Surfaces
+                      Continue with Selected Surfaces ({selectedSurfaces.length} selected)
                     </Button>
                   )}
                 </div>
-              )}
-
-              {/* Input Section */}
-              <div className="border-t pt-6">
-                <div className="flex gap-2">
-                  <Input
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="Describe your painting project or answer the questions above..."
-                    onKeyPress={(e) => e.key === 'Enter' && !isLoading && handleSendMessage()}
-                    disabled={isLoading}
-                    className="flex-1"
-                  />
-                  <Button
-                    onClick={handleSendMessage}
-                    disabled={isLoading || !inputValue.trim()}
-                    className="px-6"
-                  >
-                    <Send className="w-4 h-4" />
-                  </Button>
-                </div>
               </div>
+            )}
+          </div>
+        </div>
+
+        {/* Input Area */}
+        <div className="bg-white border-t">
+          <div className="max-w-4xl mx-auto p-4">
+            <div className="flex gap-2">
+              <Input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && !isLoading && !isThinking && handleSendMessage()}
+                placeholder="Type your response..."
+                disabled={isLoading || isThinking}
+                className="flex-1"
+              />
+              <Button
+                onClick={handleSendMessage}
+                disabled={!inputValue.trim() || isLoading || isThinking}
+                size="icon"
+                className="shrink-0"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
+
+      {/* Floating Estimate Widget */}
+      {currentEstimate && !showEstimate && (
+        <FloatingEstimateWidget
+          estimate={currentEstimate}
+          isVisible={true}
+          onToggle={() => dispatch({ type: 'SET_SHOW_ESTIMATE', payload: true })}
+        />
+      )}
     </div>
   );
 }
