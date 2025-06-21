@@ -274,6 +274,14 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
                 <Copy className="w-4 h-4 mr-2" />
                 Share
               </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => window.open(`/api/quotes/${params.id}/pdf`, '_blank')}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                PDF
+              </Button>
               <Button variant="outline" size="sm" onClick={() => window.print()}>
                 <Printer className="w-4 h-4 mr-2" />
                 Print

@@ -240,3 +240,27 @@ CREATE TRIGGER IF NOT EXISTS update_projects_updated_at
   BEGIN
     UPDATE projects SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
   END;
+
+-- Company branding table for professional quote customization
+CREATE TABLE IF NOT EXISTS company_branding (
+  id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+  company_id TEXT NOT NULL UNIQUE, -- Can reference access_codes.id or users.id
+  logo_url TEXT,
+  primary_color TEXT DEFAULT '#3182ce',
+  secondary_color TEXT DEFAULT '#2d3748',
+  accent_color TEXT DEFAULT '#38a169',
+  company_name TEXT NOT NULL,
+  company_tagline TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Index for company branding
+CREATE INDEX IF NOT EXISTS idx_company_branding_company_id ON company_branding(company_id);
+
+-- Trigger to update company branding timestamps
+CREATE TRIGGER IF NOT EXISTS update_company_branding_updated_at
+  AFTER UPDATE ON company_branding
+  BEGIN
+    UPDATE company_branding SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+  END;

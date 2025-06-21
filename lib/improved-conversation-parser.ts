@@ -141,8 +141,64 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
   
   const dimensions: Partial<ProjectDimensions> = { ...existingDimensions };
   
-  // Handle "X by Y" format (like "500 by 9" or "300 by 9")
-  if (lower.includes(' by ') || lower.includes(' x ')) {
+  // Parse specific ceiling area FIRST if provided (highest priority)
+  if (lower.includes('ceiling area') || lower.includes('ceiling sqft') || lower.includes('ceiling square') || lower.includes('total ceiling')) {
+    // First try to find explicit area with units
+    let match = input.match(/(\d+\.?\d*)\s*(?:sqft|square feet|sq ft|sf)/i);
+    if (match) {
+      dimensions.ceiling_area = Number(match[1]);
+      return dimensions; // Return early since we have what we need
+    } else {
+      // Check for mathematical expressions like "139x2" or "135*2" when ceiling area is mentioned
+      const mathMatch = input.match(/(\d+\.?\d*)\s*[x*×]\s*(\d+\.?\d*)/i);
+      if (mathMatch) {
+        const result = Number(mathMatch[1]) * Number(mathMatch[2]);
+        dimensions.ceiling_area = result;
+        return dimensions; // Return early since we have what we need
+      } else {
+        // Check for standalone numbers when ceiling area context is clear
+        const numberMatch = input.match(/(\d+\.?\d*)/);
+        if (numberMatch) {
+          const num = Number(numberMatch[1]);
+          // Only accept reasonable ceiling area values (50-5000 sq ft)
+          if (num >= 50 && num <= 5000) {
+            dimensions.ceiling_area = num;
+            return dimensions; // Return early since we have what we need
+          }
+        }
+      }
+    }
+  }
+  
+  // Handle room descriptions (like "2 bedrooms that are 15 x 9")
+  if (lower.includes('bedroom') || lower.includes('room') || lower.includes('area')) {
+    const roomMatch = input.match(/(\d+)\s*(?:bedrooms?|rooms?|areas?)\s*(?:that are|are|of|:)?\s*(\d+\.?\d*)\s*[x×*]\s*(\d+\.?\d*)/i);
+    if (roomMatch) {
+      const roomCount = Number(roomMatch[1]);
+      const length = Number(roomMatch[2]);
+      const width = Number(roomMatch[3]);
+      
+      // Calculate total floor area for all rooms
+      const totalFloorArea = roomCount * length * width;
+      
+      // If they're asking for ceiling area, use floor area
+      // Calculate perimeter for walls: (length + width) * 2 * number of rooms
+      const totalPerimeter = (length + width) * 2 * roomCount;
+      
+      dimensions.wall_linear_feet = totalPerimeter;
+      dimensions.ceiling_area = totalFloorArea;
+      
+      // Assume standard ceiling height if not provided
+      if (!dimensions.ceiling_height) {
+        dimensions.ceiling_height = 9;
+      }
+      
+      return dimensions;
+    }
+  }
+  
+  // Handle "X by Y" format (like "500 by 9" or "300 by 9") - but only if not already processed as room description
+  if ((lower.includes(' by ') || lower.includes(' x ')) && !dimensions.ceiling_area) {
     const match = input.match(/(\d+\.?\d*)\s*(?:by|x)\s*(\d+\.?\d*)/i);
     if (match) {
       const first = Number(match[1]);
@@ -241,14 +297,6 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
     }
   }
   
-  // Parse specific ceiling area if provided
-  if (lower.includes('ceiling area') || lower.includes('ceiling sqft') || lower.includes('ceiling square')) {
-    const match = input.match(/(\d+\.?\d*)\s*(?:sqft|square feet|sq ft|sf)/i);
-    if (match) {
-      dimensions.ceiling_area = Number(match[1]);
-      // User provided exact value
-    }
-  }
   
   // Parse doors and windows
   if (lower.includes('door')) {
