@@ -569,7 +569,7 @@ export default function DashboardPage() {
                   {quotes.length === 0 ? "No quotes yet" : "No quotes match your filters"}
                 </p>
                 {quotes.length === 0 && (
-                  <Button onClick={() => router.push("/create-quote-pro")} className="bg-green-600 hover:bg-green-700">
+                  <Button onClick={() => router.push("/create-quote")} className="bg-green-600 hover:bg-green-700">
                     <Calculator className="w-4 h-4 mr-2" />
                     Create Your First Professional Quote
                   </Button>

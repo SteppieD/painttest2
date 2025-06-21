@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbGet, dbAll, dbRun } from "../../../lib/database";
+import { supabaseDb } from "@/lib/database/supabase-adapter";
 
 
 export async function POST(req: NextRequest) {
@@ -14,35 +14,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Delete existing products for this company
-    dbRun("DELETE FROM company_paint_products WHERE user_id = ?", [id]);
-
-    // Insert new products
-    for (const product of products) {
-      dbRun(`
-        INSERT INTO company_paint_products (
-          user_id,
-          project_type,
-          product_category,
-          supplier,
-          product_name,
-          product_line,
-          cost_per_gallon,
-          display_order,
-          sheen
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `, [
-        id,
-        product.projectType,
-        product.productCategory,
-        product.supplier,
-        product.productName,
-        product.productLine || null,
-        product.costPerGallon,
-        product.displayOrder,
-        product.sheen || null
-      ]);
-    }
+    await supabaseDb.savePaintProducts(id, products);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -66,11 +38,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const products = dbAll(`
-      SELECT * FROM company_paint_products
-      WHERE user_id = ? AND is_active = 1
-      ORDER BY project_type, product_category, display_order
-    `, [companyId]);
+    const products = await supabaseDb.getPaintProducts(parseInt(companyId));
 
     // Transform snake_case to camelCase for frontend compatibility
     const transformedProducts = products.map((product: any) => ({
