@@ -68,11 +68,6 @@ import {
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
-// Helper function to render markdown text
-const renderMarkdown = (text: string) => {
-  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-};
-
 function CreateQuotePageOptimizedContent() {
   const router = useRouter();
   const { toast } = useToast();
