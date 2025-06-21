@@ -179,6 +179,118 @@
   transition: transform 0.1s ease-in-out;
 }
 
+/* Flat Design Utilities */
+@layer utilities {
+  /* Flat Design Button Styles */
+  .btn-flat {
+    @apply font-medium rounded-flat transition-all duration-200 ease-in-out;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply active:transform active:scale-95;
+  }
+  
+  .btn-flat-primary {
+    @apply btn-flat bg-business-action text-white;
+    @apply hover:bg-blue-700 focus:ring-blue-500;
+  }
+  
+  .btn-flat-primer {
+    @apply btn-flat bg-paint-primer text-paint-primer-foreground;
+    @apply hover:bg-paint-primer-dark focus:ring-paint-primer;
+  }
+  
+  .btn-flat-wall {
+    @apply btn-flat bg-paint-wall text-paint-wall-foreground;
+    @apply hover:bg-paint-wall-dark focus:ring-paint-wall;
+  }
+  
+  .btn-flat-ceiling {
+    @apply btn-flat bg-paint-ceiling text-paint-ceiling-foreground;
+    @apply hover:bg-paint-ceiling-dark focus:ring-paint-ceiling;
+  }
+  
+  .btn-flat-trim {
+    @apply btn-flat bg-paint-trim text-paint-trim-foreground;
+    @apply hover:bg-paint-trim-dark focus:ring-paint-trim;
+  }
+  
+  /* Flat Design Card Styles */
+  .card-flat {
+    @apply bg-white rounded-flat-lg border border-flat-gray-200;
+    @apply shadow-flat hover:shadow-flat-hover transition-shadow duration-200;
+  }
+  
+  .card-flat-primer {
+    @apply card-flat border-paint-primer-light;
+    @apply bg-gradient-to-br from-paint-primer/5 to-paint-primer/10;
+  }
+  
+  .card-flat-wall {
+    @apply card-flat border-paint-wall-light;
+    @apply bg-gradient-to-br from-paint-wall/5 to-paint-wall/10;
+  }
+  
+  .card-flat-ceiling {
+    @apply card-flat border-paint-ceiling-light;
+    @apply bg-gradient-to-br from-paint-ceiling/5 to-paint-ceiling/10;
+  }
+  
+  .card-flat-trim {
+    @apply card-flat border-paint-trim-light;
+    @apply bg-gradient-to-br from-paint-trim/5 to-paint-trim/10;
+  }
+  
+  /* Flat Design Typography */
+  .text-flat-heading {
+    @apply text-flat-2xl font-bold text-flat-gray-900;
+  }
+  
+  .text-flat-subheading {
+    @apply text-flat-lg font-semibold text-flat-gray-800;
+  }
+  
+  .text-flat-body {
+    @apply text-flat-base font-medium text-flat-gray-700;
+  }
+  
+  .text-flat-caption {
+    @apply text-flat-sm font-medium text-flat-gray-600;
+  }
+  
+  /* Flat Design Icons */
+  .icon-flat {
+    @apply w-5 h-5 flex-shrink-0;
+  }
+  
+  .icon-flat-lg {
+    @apply w-6 h-6 flex-shrink-0;
+  }
+  
+  /* Flat Design Interactive States */
+  .interactive-flat {
+    @apply cursor-pointer transition-all duration-200;
+    @apply hover:scale-105 active:scale-95;
+  }
+  
+  /* Flat Design Mobile Optimizations */
+  .mobile-flat-button {
+    @apply min-h-[48px] min-w-[48px] text-flat-base font-semibold;
+    @apply rounded-flat-lg touch-target;
+  }
+  
+  /* Flat Design Success/Error States */
+  .state-success {
+    @apply bg-business-success text-white;
+  }
+  
+  .state-warning {
+    @apply bg-business-warning text-white;
+  }
+  
+  .state-error {
+    @apply bg-business-error text-white;
+  }
+}
+
 /* Animation for typing indicator */
 .typing-dots {
   display: inline-block;

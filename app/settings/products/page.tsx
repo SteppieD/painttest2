@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PaintBucket, Plus, Trash2, Edit3, MessageSquare, Home, Building, Settings } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";
 
 interface PaintProduct {
   id: string;
@@ -294,29 +295,40 @@ export default function ProductSettingsPage() {
     setEditingInlineProduct(null);
   };
 
+  // Category styles mapping
+  const getCategoryStyle = (category: string) => {
+    const styles = {
+      primer: 'card-flat-primer',
+      wall_paint: 'card-flat-wall', 
+      ceiling_paint: 'card-flat-ceiling',
+      trim_paint: 'card-flat-trim',
+    };
+    return styles[category as keyof typeof styles] || 'card-flat';
+  };
+
   const renderProductCard = (product: PaintProduct) => (
-    <Card key={product.id} className="mb-3 hover:shadow-md transition-shadow">
-      <CardContent className="pt-4">
+    <Card key={product.id} className={cn("mb-4 transition-all duration-200", getCategoryStyle(product.productCategory))}>
+      <CardContent className="pt-5">
         <div className="flex justify-between items-start">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <h4 className="font-medium">{product.productName}</h4>
+            <div className="flex items-center gap-3 mb-2">
+              <h4 className="text-flat-lg font-bold text-flat-gray-900">{product.productName}</h4>
               {product.sheen && (
-                <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                <span className="text-flat-xs bg-flat-gray-100 px-3 py-1 rounded-flat font-semibold">
                   {product.sheen}
                 </span>
               )}
             </div>
-            <p className="text-sm text-gray-600">{product.supplier}</p>
+            <p className="text-flat-base font-semibold text-flat-gray-700">{product.supplier}</p>
             {product.productLine && (
-              <p className="text-xs text-gray-500">{product.productLine}</p>
+              <p className="text-flat-sm text-flat-gray-600 mt-1">{product.productLine}</p>
             )}
             
             {/* Inline price editing */}
             {editingInlineProduct === product.id ? (
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center gap-3 mt-3">
                 <div className="relative">
-                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-flat-gray-500 font-medium">$</span>
                   <Input
                     type="number"
                     step="0.01"
@@ -325,7 +337,7 @@ export default function ProductSettingsPage() {
                       ...inlineEditValues,
                       [product.id]: parseFloat(e.target.value) || 0
                     })}
-                    className="pl-7 pr-12 h-8 w-24"
+                    className="pl-8 pr-14 h-10 w-32 rounded-flat border-flat-gray-300 text-flat-base font-semibold"
                     autoFocus
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
@@ -333,13 +345,13 @@ export default function ProductSettingsPage() {
                       }
                     }}
                   />
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 text-sm">/gal</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-flat-gray-500 text-flat-sm font-medium">/gal</span>
                 </div>
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={() => saveInlineEdit(product)}
-                  className="h-8 px-2"
+                  className="h-10 px-3 btn-flat state-success"
                 >
                   ✓
                 </Button>
@@ -347,7 +359,7 @@ export default function ProductSettingsPage() {
                   size="sm"
                   variant="ghost"
                   onClick={() => setEditingInlineProduct(null)}
-                  className="h-8 px-2"
+                  className="h-10 px-3 btn-flat"
                 >
                   ✕
                 </Button>
@@ -355,20 +367,21 @@ export default function ProductSettingsPage() {
             ) : (
               <button
                 onClick={() => startInlineEdit(product.id, product.costPerGallon)}
-                className="text-lg font-semibold text-green-600 mt-1 hover:bg-green-50 px-2 py-1 rounded transition-colors"
+                className="text-flat-xl font-bold text-business-success mt-2 hover:bg-business-success/10 px-3 py-2 rounded-flat transition-all duration-200 interactive-flat"
               >
                 ${product.costPerGallon.toFixed(2)}/gal
               </button>
             )}
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             <Button
               size="sm"
               variant="outline"
               onClick={() => startEditProduct(product)}
               title="Edit all details"
+              className="btn-flat h-10 px-3"
             >
-              <Edit3 className="h-3 w-3" />
+              <Edit3 className="icon-flat" />
             </Button>
             <Button
               size="sm"
@@ -379,8 +392,9 @@ export default function ProductSettingsPage() {
                 }
               }}
               title="Delete product"
+              className="btn-flat state-error h-10 px-3"
             >
-              <Trash2 className="h-3 w-3" />
+              <Trash2 className="icon-flat" />
             </Button>
           </div>
         </div>
@@ -400,37 +414,42 @@ export default function ProductSettingsPage() {
 
     return (
       <div key={category.value} className="mb-6">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-lg font-semibold">{category.label}</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-flat-2xl font-bold text-flat-gray-900">{category.label}</h3>
           <Button
             size="sm"
             variant="outline"
             onClick={() => addNewProduct(projectType, category.value)}
             disabled={categoryProducts.length >= 3}
+            className="btn-flat-primary"
           >
-            <Plus className="h-4 w-4 mr-1" />
+            <Plus className="icon-flat mr-2" />
             Add Custom
           </Button>
         </div>
         
         {/* Popular Products Quick Add */}
         {categoryProducts.length === 0 && popularProducts.length > 0 && (
-          <div className="mb-4">
-            <p className="text-sm text-gray-600 mb-2">Quick add popular products:</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          <div className="mb-6">
+            <p className="text-flat-base text-flat-gray-700 mb-3 font-medium">Quick add popular products:</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {popularProducts.map((product: any, index: number) => (
                 <Button
                   key={index}
                   variant="outline"
                   size="sm"
-                  className="justify-start h-auto p-3 text-left"
+                  className={cn(
+                    "justify-start h-auto p-4 text-left mobile-flat-button",
+                    getCategoryStyle(category.value),
+                    "hover:shadow-flat-hover"
+                  )}
                   onClick={() => addPopularProduct(projectType, category.value, product)}
                   disabled={isLoading}
                 >
                   <div className="flex flex-col items-start w-full">
-                    <div className="font-medium text-xs">{product.supplier}</div>
-                    <div className="text-xs text-gray-600">{product.name}</div>
-                    <div className="text-xs font-semibold text-green-600">${product.cost}/gal</div>
+                    <div className="text-flat-base font-bold text-flat-gray-900">{product.supplier}</div>
+                    <div className="text-flat-sm text-flat-gray-700 mt-1">{product.name}</div>
+                    <div className="text-flat-base font-bold text-business-success mt-2">${product.cost}/gal</div>
                   </div>
                 </Button>
               ))}
@@ -439,12 +458,12 @@ export default function ProductSettingsPage() {
         )}
         
         {categoryProducts.length === 0 ? (
-          <Card className="border-dashed">
-            <CardContent className="py-6 text-center text-gray-500">
-              <PaintBucket className="h-6 w-6 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">No products added yet</p>
+          <Card className={cn("border-2 border-dashed", getCategoryStyle(category.value))}>
+            <CardContent className="py-8 text-center">
+              <PaintBucket className="h-8 w-8 mx-auto mb-3 text-flat-gray-400" />
+              <p className="text-flat-base text-flat-gray-700 font-medium">No products added yet</p>
               {popularProducts.length === 0 && (
-                <p className="text-xs mt-1">Click "Add Custom" to create your first product</p>
+                <p className="text-flat-sm text-flat-gray-600 mt-2">Click "Add Custom" to create your first product</p>
               )}
             </CardContent>
           </Card>
@@ -453,24 +472,28 @@ export default function ProductSettingsPage() {
             {categoryProducts.map(renderProductCard)}
             {/* Show remaining popular products if there's space */}
             {categoryProducts.length < 3 && popularProducts.length > 0 && (
-              <div className="mt-3">
-                <p className="text-sm text-gray-600 mb-2">Add more popular products:</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="mt-4">
+                <p className="text-flat-base text-flat-gray-700 mb-3 font-medium">Add more popular products:</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {popularProducts.slice(0, 3 - categoryProducts.length).map((product: any, index: number) => (
                     <Button
                       key={index}
                       variant="outline"
                       size="sm"
-                      className="justify-start h-auto p-2 text-left"
+                      className={cn(
+                        "justify-start h-auto p-3 text-left mobile-flat-button",
+                        getCategoryStyle(category.value),
+                        "hover:shadow-flat-hover"
+                      )}
                       onClick={() => addPopularProduct(projectType, category.value, product)}
                       disabled={isLoading}
                     >
                       <div className="flex justify-between items-center w-full">
                         <div>
-                          <div className="font-medium text-xs">{product.supplier}</div>
-                          <div className="text-xs text-gray-600">{product.name}</div>
+                          <div className="text-flat-sm font-bold text-flat-gray-900">{product.supplier}</div>
+                          <div className="text-flat-sm text-flat-gray-700">{product.name}</div>
                         </div>
-                        <div className="text-xs font-semibold text-green-600">${product.cost}/gal</div>
+                        <div className="text-flat-sm font-bold text-business-success">${product.cost}/gal</div>
                       </div>
                     </Button>
                   ))}
@@ -487,25 +510,26 @@ export default function ProductSettingsPage() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container max-w-6xl mx-auto px-4">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-10">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Paint Products</h1>
-              <p className="text-gray-600 mt-2">
+              <h1 className="text-flat-4xl font-bold text-flat-gray-900">Paint Products</h1>
+              <p className="text-flat-lg text-flat-gray-700 mt-3 font-medium">
                 Manage your paint products and pricing for quotes.
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <Button
                 onClick={() => router.push("/settings/products/chat")}
-                className="flex items-center gap-2"
+                className="btn-flat-primary"
               >
-                <MessageSquare className="h-4 w-4" />
+                <MessageSquare className="icon-flat mr-2" />
                 Update via Chat
               </Button>
               <Button
                 variant="outline"
                 onClick={() => router.push("/dashboard")}
+                className="btn-flat"
               >
                 Back to Dashboard
               </Button>
@@ -514,13 +538,13 @@ export default function ProductSettingsPage() {
         </div>
 
         {/* Products */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="h-5 w-5" />
+        <Card className="card-flat shadow-flat-lg">
+          <CardHeader className="pb-6">
+            <CardTitle className="flex items-center gap-3 text-flat-3xl font-bold text-flat-gray-900">
+              <Settings className="icon-flat-lg" />
               Your Product Catalog
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-flat-base text-flat-gray-700 font-medium mt-2">
               Add popular products with one click, or edit individual products. Use the chat interface for bulk updates.
             </CardDescription>
           </CardHeader>

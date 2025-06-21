@@ -37,6 +37,20 @@ const categoryIcons: { [key: string]: string } = {
   trim_paint: '🪟',
 };
 
+const categoryStyles: { [key: string]: string } = {
+  primer: 'card-flat-primer',
+  wall_paint: 'card-flat-wall',
+  ceiling_paint: 'card-flat-ceiling',
+  trim_paint: 'card-flat-trim',
+};
+
+const categoryColors: { [key: string]: string } = {
+  primer: 'bg-paint-primer text-paint-primer-foreground',
+  wall_paint: 'bg-paint-wall text-paint-wall-foreground',
+  ceiling_paint: 'bg-paint-ceiling text-paint-ceiling-foreground',
+  trim_paint: 'bg-paint-trim text-paint-trim-foreground',
+};
+
 export function FavoritePaintSelector({
   category,
   projectType,
@@ -90,16 +104,19 @@ export function FavoritePaintSelector({
 
   if (isLoading) {
     return (
-      <div className={cn("space-y-3", className)}>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-2xl">{categoryIcons[category] || '🎨'}</span>
-          <h4 className="font-medium text-gray-700">
+      <div className={cn("space-y-4", className)}>
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-3xl">{categoryIcons[category] || '🎨'}</span>
+          <h4 className="text-flat-lg text-flat-gray-800">
             Loading {categoryLabels[category] || category}...
           </h4>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-3">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-16 bg-gray-100 rounded-lg animate-pulse" />
+            <div 
+              key={i} 
+              className="h-20 bg-flat-gray-100 rounded-flat-lg animate-pulse shadow-flat" 
+            />
           ))}
         </div>
       </div>
@@ -108,17 +125,17 @@ export function FavoritePaintSelector({
 
   if (error) {
     return (
-      <div className={cn("space-y-3", className)}>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-2xl">⚠️</span>
-          <h4 className="font-medium text-red-700">Error loading paint products</h4>
+      <div className={cn("space-y-4", className)}>
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-3xl">⚠️</span>
+          <h4 className="text-flat-lg text-business-error">Error loading paint products</h4>
         </div>
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-flat-base text-flat-gray-600">{error}</p>
         <Button
           variant="outline"
           size="sm"
           onClick={loadFavorites}
-          className="text-red-600 border-red-300"
+          className="btn-flat state-error"
         >
           Try Again
         </Button>
@@ -128,28 +145,28 @@ export function FavoritePaintSelector({
 
   if (favorites.length === 0) {
     return (
-      <div className={cn("space-y-3", className)}>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-2xl">{categoryIcons[category] || '🎨'}</span>
-          <h4 className="font-medium text-gray-700">
+      <div className={cn("space-y-4", className)}>
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-3xl">{categoryIcons[category] || '🎨'}</span>
+          <h4 className="text-flat-lg text-flat-gray-800">
             {categoryLabels[category] || category}
           </h4>
         </div>
-        <div className="text-center p-6 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-          <Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-sm text-gray-600 mb-2">
+        <div className={cn("text-center p-8 border-2 border-dashed rounded-flat-xl", categoryStyles[category])}>
+          <Plus className="w-10 h-10 text-flat-gray-400 mx-auto mb-3" />
+          <p className="text-flat-base text-flat-gray-700 mb-2">
             No {categoryLabels[category]?.toLowerCase()} products set up yet
           </p>
-          <p className="text-xs text-gray-500 mb-3">
+          <p className="text-flat-sm text-flat-gray-600 mb-4">
             Add your favorite products in Settings to use them in quotes
           </p>
           <Button
             variant="outline"
             size="sm"
             onClick={() => window.open('/settings/products', '_blank')}
-            className="text-blue-600 border-blue-300"
+            className="btn-flat-primary"
           >
-            <Settings className="w-4 h-4 mr-1" />
+            <Settings className="icon-flat mr-2" />
             Set Up Products
           </Button>
         </div>
@@ -158,18 +175,18 @@ export function FavoritePaintSelector({
   }
 
   return (
-    <div className={cn("space-y-3", className)}>
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-2xl">{categoryIcons[category] || '🎨'}</span>
-        <h4 className="font-medium text-gray-700">
+    <div className={cn("space-y-4", className)}>
+      <div className="flex items-center gap-3 mb-4">
+        <span className="text-3xl">{categoryIcons[category] || '🎨'}</span>
+        <h4 className="text-flat-lg text-flat-gray-800">
           Choose {categoryLabels[category] || category}:
         </h4>
-        <Badge variant="outline" className="text-xs">
+        <Badge variant="outline" className="text-flat-xs font-semibold border-flat-gray-300">
           Your Favorites
         </Badge>
       </div>
       
-      <div className="space-y-2">
+      <div className="space-y-3">
         {favorites.map((product) => {
           const isSelected = selectedProduct?.id === product.id;
           const quality = getQualityBadge(product.costPerGallon);
@@ -177,32 +194,49 @@ export function FavoritePaintSelector({
           return (
             <Button
               key={product.id}
-              variant={isSelected ? "default" : "outline"}
+              variant="outline"
               className={cn(
-                "w-full h-auto p-4 justify-between text-left transition-all",
+                "w-full h-auto p-5 justify-between text-left transition-all duration-200",
+                "mobile-flat-button interactive-flat",
                 isSelected 
-                  ? "bg-blue-600 text-white border-blue-600 shadow-lg" 
-                  : "hover:bg-gray-50 hover:border-blue-300"
+                  ? cn(categoryColors[category], "shadow-flat-lg border-transparent scale-105") 
+                  : cn(categoryStyles[category], "hover:shadow-flat-hover")
               )}
               onClick={() => onProductSelect(product)}
             >
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-medium">{product.supplier}</span>
-                  <Badge className={cn("text-xs", quality.color)}>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className={cn(
+                    "text-flat-lg font-bold",
+                    isSelected ? "text-white" : "text-flat-gray-900"
+                  )}>
+                    {product.supplier}
+                  </span>
+                  <Badge className={cn(
+                    "text-flat-xs font-semibold",
+                    isSelected ? "bg-white/20 text-white" : quality.color
+                  )}>
                     {quality.label}
                   </Badge>
                 </div>
-                <div className="text-sm opacity-75">{product.productName}</div>
+                <div className={cn(
+                  "text-flat-base font-medium",
+                  isSelected ? "text-white/90" : "text-flat-gray-700"
+                )}>
+                  {product.productName}
+                </div>
               </div>
               
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <div className="text-right">
-                  <div className="text-lg font-semibold">
+                  <div className={cn(
+                    "text-flat-xl font-bold",
+                    isSelected ? "text-white" : "text-flat-gray-900"
+                  )}>
                     ${product.costPerGallon}/gal
                   </div>
                 </div>
-                {isSelected && <CheckCircle className="w-5 h-5 flex-shrink-0" />}
+                {isSelected && <CheckCircle className="icon-flat-lg text-white" />}
               </div>
             </Button>
           );
@@ -210,17 +244,17 @@ export function FavoritePaintSelector({
       </div>
       
       {favorites.length < 3 && (
-        <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-sm text-blue-700 mb-2">
+        <div className={cn("mt-4 p-4 rounded-flat-lg border-2", categoryStyles[category])}>
+          <p className="text-flat-base text-flat-gray-700 mb-3">
             💡 <strong>Tip:</strong> You can add up to 3 favorite products per category
           </p>
           <Button
             variant="outline"
             size="sm"
             onClick={() => window.open('/settings/products', '_blank')}
-            className="text-blue-600 border-blue-300"
+            className="btn-flat-primary"
           >
-            <Plus className="w-4 h-4 mr-1" />
+            <Plus className="icon-flat mr-2" />
             Add More Products
           </Button>
         </div>
