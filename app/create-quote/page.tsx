@@ -251,7 +251,7 @@ function CreateQuotePageOptimizedContent() {
     dispatch({ type: 'SET_SHOW_ESTIMATE', payload: shouldShow });
   }, [quoteData, selectedSurfaces, roomCount]);
 
-  // Handle sending user messages
+  // Handle sending user messages with full AI conversation logic
   const handleSendMessage = useCallback(async () => {
     if (!inputValue.trim() || isLoading || isThinking) return;
 
@@ -268,22 +268,184 @@ function CreateQuotePageOptimizedContent() {
     dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
     dispatch({ type: 'SET_INPUT_VALUE', payload: '' });
     
-    // Start AI processing (simplified for now)
-    dispatch({ type: 'SET_LOADING', payload: true });
+    // Start thinking phase
+    dispatch({ type: 'SET_THINKING', payload: true });
+
+    try {
+      // Process the response while thinking
+      const aiResponse = await processUserInput(inputValue, conversationStage);
+      
+      // Calculate thinking duration based on response length
+      const thinkingDuration = Math.min(Math.max(aiResponse.content.length * 20, 800), 2500);
+      
+      // Wait for thinking duration to complete
+      setTimeout(() => {
+        dispatch({ type: 'SET_THINKING', payload: false });
+        dispatch({ type: 'SET_LOADING', payload: true });
+        
+        // Small delay before showing the actual response for smooth transition
+        setTimeout(() => {
+          dispatch({ type: 'ADD_MESSAGE', payload: aiResponse });
+          dispatch({ type: 'SET_LOADING', payload: false });
+        }, 100);
+      }, thinkingDuration);
+      
+    } catch (error) {
+      console.error('Error processing input:', error);
+      
+      // Even for errors, show thinking briefly
+      setTimeout(() => {
+        dispatch({ type: 'SET_THINKING', payload: false });
+        dispatch({ type: 'SET_LOADING', payload: true });
+        
+        setTimeout(() => {
+          const errorMessage = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant' as const,
+            content: "I'm sorry, I encountered an error. Please try again or contact support.",
+            timestamp: new Date().toISOString()
+          };
+          dispatch({ type: 'ADD_MESSAGE', payload: errorMessage });
+          dispatch({ type: 'SET_LOADING', payload: false });
+        }, 100);
+      }, 500);
+    }
+  }, [inputValue, isLoading, isThinking, conversationStage]);
+
+  // Process user input and generate AI responses
+  const processUserInput = useCallback(async (input: string, stage: string) => {
+    let responseContent = '';
+    let nextStage = stage;
+
+    switch (stage) {
+      case 'customer_info':
+        const customerInfo = parseCustomerInfo(input, quoteData);
+        dispatch({ 
+          type: 'UPDATE_QUOTE_DATA', 
+          payload: { 
+            customer_name: customerInfo.customer_name || quoteData.customer_name,
+            address: customerInfo.address || quoteData.address
+          }
+        });
+        
+        const customerName = customerInfo.customer_name || quoteData.customer_name;
+        const address = customerInfo.address || quoteData.address;
+        
+        responseContent = generateFollowUpQuestion('customer_info', {
+          customer_name: customerName,
+          address: address
+        });
+        
+        if (customerName && address) {
+          nextStage = 'project_type';
+          // Show project type buttons
+          setTimeout(() => {
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: 'interior', label: 'Interior Only', value: 'interior', selected: false },
+              { id: 'exterior', label: 'Exterior Only', value: 'exterior', selected: false },
+              { id: 'both', label: 'Both Interior & Exterior', value: 'both', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+        } else {
+          nextStage = 'customer_info';
+        }
+        break;
+
+      case 'project_type':
+        const projectType = parseProjectType(input);
+        dispatch({ 
+          type: 'UPDATE_QUOTE_DATA', 
+          payload: { project_type: projectType }
+        });
+        
+        if (projectType === 'interior' || projectType === 'both') {
+          responseContent = `Perfect! For ${projectType} painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
+          setTimeout(() => {
+            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'surface_selection' });
+            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: 'walls', label: '🎨 Walls', value: 'walls', selected: false },
+              { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: false },
+              { id: 'trim', label: '🖼️ Trim & Baseboards', value: 'trim', selected: false },
+              { id: 'doors', label: '🚪 Doors', value: 'doors', selected: false },
+              { id: 'windows', label: '🪟 Window Frames', value: 'windows', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+        } else {
+          responseContent = `Perfect! For exterior painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
+          setTimeout(() => {
+            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'surface_selection' });
+            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: 'siding', label: '🏠 Siding', value: 'siding', selected: false },
+              { id: 'trim_ext', label: '🖼️ Exterior Trim', value: 'trim_ext', selected: false },
+              { id: 'doors_ext', label: '🚪 Front Door', value: 'doors_ext', selected: false },
+              { id: 'shutters', label: '🪟 Shutters', value: 'shutters', selected: false },
+              { id: 'deck', label: '🏗️ Deck/Porch', value: 'deck', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+        }
+        nextStage = 'surface_selection';
+        break;
+
+      case 'surface_selection':
+        if (input === 'continue' || input.toLowerCase().includes('continue')) {
+          if (selectedSurfaces.length === 0) {
+            responseContent = `Please select at least one surface to paint before continuing.\n\nUse the buttons above to choose which surfaces you want to include in the quote.`;
+            nextStage = 'surface_selection';
+            break;
+          }
+          
+          const surfaceList = selectedSurfaces.join(', ');
+          responseContent = `Perfect! You selected: **${surfaceList}**\n\nNow I need to collect dimensions for accurate paint calculations.\n\nPlease provide the measurements for your project.`;
+          nextStage = 'dimensions';
+        } else {
+          responseContent = `Please use the buttons above to select surfaces, then type "continue" when ready.`;
+          nextStage = 'surface_selection';
+        }
+        break;
+
+      default:
+        responseContent = `I'm here to help you create a professional painting quote. Let's start with your information.\n\nWhat's the customer name and property address for this quote?`;
+        nextStage = 'customer_info';
+        break;
+    }
+
+    dispatch({ type: 'SET_CONVERSATION_STAGE', payload: nextStage });
     
-    // TODO: Add actual AI conversation logic here
-    setTimeout(() => {
-      const aiMessage = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant' as const,
-        content: "I received your message. The full conversation logic will be implemented here.",
-        timestamp: new Date().toISOString()
-      };
-      dispatch({ type: 'ADD_MESSAGE', payload: aiMessage });
-      dispatch({ type: 'SET_LOADING', payload: false });
-    }, 1000);
-    
-  }, [inputValue, isLoading, isThinking]);
+    return {
+      id: (Date.now() + 1).toString(),
+      role: 'assistant' as const,
+      content: responseContent,
+      timestamp: new Date().toISOString()
+    };
+  }, [quoteData, selectedSurfaces]);
+
+  // Handle button clicks
+  const handleButtonClick = useCallback((option: any) => {
+    if (conversationStage === 'project_type') {
+      // Handle project type selection
+      dispatch({ type: 'SET_INPUT_VALUE', payload: option.value });
+      handleSendMessage();
+    } else if (conversationStage === 'surface_selection') {
+      // Handle surface selection (toggle)
+      const newSelected = selectedSurfaces.includes(option.value)
+        ? selectedSurfaces.filter(s => s !== option.value)
+        : [...selectedSurfaces, option.value];
+      
+      dispatch({ type: 'SET_SELECTED_SURFACES', payload: newSelected });
+      
+      // Update button options to reflect selection
+      const updatedOptions = buttonOptions.map(btn => ({
+        ...btn,
+        selected: newSelected.includes(btn.value)
+      }));
+      dispatch({ type: 'SET_BUTTON_OPTIONS', payload: updatedOptions });
+    }
+  }, [conversationStage, selectedSurfaces, buttonOptions, handleSendMessage]);
 
   // Optimized initialization function
   const initializeApp = useCallback(async () => {
@@ -361,6 +523,17 @@ function CreateQuotePageOptimizedContent() {
         description: `Loaded in ${Math.round(loadTime)}ms`,
         duration: 2000,
       });
+
+      // Add welcome message if no existing messages
+      if (messages.length === 0) {
+        const welcomeMessage = {
+          id: Date.now().toString(),
+          role: 'assistant' as const,
+          content: `👋 **Welcome to Professional Quote Builder!**\n\nI'm here to help you create accurate painting quotes quickly. Let's start by getting some basic information.\n\n**What's the customer name and property address for this quote?**\n\nExample: "John Smith, 123 Main Street, Anytown"`,
+          timestamp: new Date().toISOString()
+        };
+        dispatch({ type: 'ADD_MESSAGE', payload: welcomeMessage });
+      }
 
     } catch (error) {
       console.error('Failed to initialize app:', error);
@@ -516,11 +689,23 @@ What would you like to modify?`,
                     <div className="whitespace-pre-wrap">{message.content}</div>
                   </div>
                 ))}
+                {isThinking && (
+                  <div className="bg-gray-50 border-l-4 border-gray-500 mr-8 p-4 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                      </div>
+                      <span className="text-gray-600">Thinking...</span>
+                    </div>
+                  </div>
+                )}
                 {isLoading && (
                   <div className="bg-gray-50 border-l-4 border-gray-500 mr-8 p-4 rounded-lg">
                     <div className="flex items-center gap-2">
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Analyzing your request...</span>
+                      <span>Preparing response...</span>
                     </div>
                   </div>
                 )}
@@ -529,6 +714,35 @@ What would you like to modify?`,
               {/* Progressive Estimate Widget */}
               {currentEstimate && (
                 <ProgressiveEstimateDisplay estimate={currentEstimate} />
+              )}
+
+              {/* Button Options */}
+              {showButtons && buttonOptions.length > 0 && (
+                <div className="border-t pt-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {buttonOptions.map((option) => (
+                      <Button
+                        key={option.id}
+                        variant={option.selected ? "default" : "outline"}
+                        onClick={() => handleButtonClick(option)}
+                        className="h-auto p-3 text-left"
+                      >
+                        {option.label}
+                      </Button>
+                    ))}
+                  </div>
+                  {selectedSurfaces.length > 0 && conversationStage === 'surface_selection' && (
+                    <Button 
+                      onClick={() => {
+                        dispatch({ type: 'SET_INPUT_VALUE', payload: 'continue' });
+                        setTimeout(() => handleSendMessage(), 100);
+                      }}
+                      className="mt-3 w-full"
+                    >
+                      Continue with Selected Surfaces
+                    </Button>
+                  )}
+                </div>
               )}
 
               {/* Input Section */}
