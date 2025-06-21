@@ -127,21 +127,86 @@ export function FavoritePaintSelector({
   }
 
   if (favorites.length === 0) {
+    // Provide default paint options when no favorites are configured
+    const defaultPaints = [
+      {
+        id: 'default-1',
+        supplier: 'Sherwin-Williams',
+        productName: 'ProClassic Interior Acrylic',
+        costPerGallon: 58,
+        displayOrder: 1
+      },
+      {
+        id: 'default-2', 
+        supplier: 'Benjamin Moore',
+        productName: 'Advance Waterborne Alkyd',
+        costPerGallon: 65,
+        displayOrder: 2
+      },
+      {
+        id: 'default-3',
+        supplier: 'Behr',
+        productName: 'Premium Plus Ultra',
+        costPerGallon: 42,
+        displayOrder: 3
+      }
+    ];
+
     return (
       <div className={cn("space-y-3", className)}>
         <div className="flex items-center gap-2 mb-3">
           <span className="text-2xl">{categoryIcons[category] || '🎨'}</span>
           <h4 className="font-medium text-gray-700">
-            {categoryLabels[category] || category}
+            Choose {categoryLabels[category] || category}:
           </h4>
+          <Badge variant="outline" className="text-xs">
+            Popular Options
+          </Badge>
         </div>
-        <div className="text-center p-6 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-          <Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-sm text-gray-600 mb-2">
-            No {categoryLabels[category]?.toLowerCase()} products set up yet
-          </p>
-          <p className="text-xs text-gray-500 mb-3">
-            Add your favorite products in Settings to use them in quotes
+        
+        <div className="space-y-2">
+          {defaultPaints.map((product) => {
+            const isSelected = selectedProduct?.id === product.id;
+            const quality = getQualityBadge(product.costPerGallon);
+            
+            return (
+              <Button
+                key={product.id}
+                variant={isSelected ? "default" : "outline"}
+                className={cn(
+                  "w-full h-auto p-4 justify-between text-left transition-all",
+                  isSelected 
+                    ? "bg-blue-600 text-white border-blue-600 shadow-lg" 
+                    : "hover:bg-gray-50 hover:border-blue-300"
+                )}
+                onClick={() => onProductSelect(product)}
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-medium">{product.supplier}</span>
+                    <Badge className={cn("text-xs", quality.color)}>
+                      {quality.label}
+                    </Badge>
+                  </div>
+                  <div className="text-sm opacity-75">{product.productName}</div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <div className="text-lg font-semibold">
+                      ${product.costPerGallon}/gal
+                    </div>
+                  </div>
+                  {isSelected && <CheckCircle className="w-5 h-5 flex-shrink-0" />}
+                </div>
+              </Button>
+            );
+          })}
+        </div>
+        
+        <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <p className="text-sm text-blue-700 mb-2">
+            💡 <strong>Tip:</strong> Set up your favorite products for faster quoting
           </p>
           <Button
             variant="outline"
@@ -150,7 +215,7 @@ export function FavoritePaintSelector({
             className="text-blue-600 border-blue-300"
           >
             <Settings className="w-4 h-4 mr-1" />
-            Set Up Products
+            Customize Paint Products
           </Button>
         </div>
       </div>

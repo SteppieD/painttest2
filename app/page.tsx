@@ -46,6 +46,46 @@ export default function HomePage() {
               </Link>
             </p>
           </div>
+          
+          {/* Modern UX Preview Banner */}
+          <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="p-2 bg-green-100 rounded-full">
+                <Star className="w-6 h-6 text-green-600" />
+              </div>
+              <div className="text-center">
+                <h3 className="font-bold text-green-900">🚀 NEW: Apple & Google-Inspired Interface</h3>
+                <p className="text-sm text-green-700">Experience our revolutionary contractor-focused UX</p>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button 
+                size="lg" 
+                asChild 
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                <Link href="/dashboard-modern">
+                  <Zap className="w-4 h-4 mr-2" />
+                  Try Modern Interface
+                </Link>
+              </Button>
+              <div className="flex items-center gap-4 text-sm text-green-700">
+                <div className="flex items-center gap-1">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>30-second quotes</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Smart suggestions</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Mobile-first</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="flex items-center justify-center gap-8 text-sm text-gray-500">
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-500" />
@@ -147,6 +187,131 @@ export default function HomePage() {
                 </p>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Modern UX Features Section */}
+      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+              <Star className="w-4 h-4" />
+              NEW: Revolutionary Interface
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Apple & Google-Inspired Design for Contractors
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              We studied the best mobile interfaces and rebuilt our quote system from the ground up. 
+              Experience the difference modern UX makes in your daily workflow.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <Card className="border-0 shadow-lg bg-white">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-blue-100 rounded-lg">
+                    <Zap className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl">Express Quote Creation</CardTitle>
+                    <p className="text-sm text-gray-500">Skip the chat, get quotes fast</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Create professional quotes in 30 seconds using room templates. Perfect for repeat customers and standard configurations.
+                </p>
+                <div className="flex items-center gap-2 text-sm text-green-600">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>80% faster than traditional methods</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg bg-white">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-purple-100 rounded-lg">
+                    <TrendingUp className="w-8 h-8 text-purple-600" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl">Smart Learning System</CardTitle>
+                    <p className="text-sm text-gray-500">Learns your preferences</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  The system remembers your room sizes, paint choices, and pricing patterns to suggest smart defaults for new quotes.
+                </p>
+                <div className="flex items-center gap-2 text-sm text-green-600">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Gets smarter with every quote</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg bg-white">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-green-100 rounded-lg">
+                    <Smartphone className="w-8 h-8 text-green-600" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl">Touch-First Mobile Design</CardTitle>
+                    <p className="text-sm text-gray-500">Built for phones and tablets</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Every button, input, and interaction is optimized for mobile. Create quotes on-site with confidence.
+                </p>
+                <div className="flex items-center gap-2 text-sm text-green-600">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Apple 44pt touch standards</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg bg-white">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-orange-100 rounded-lg">
+                    <Palette className="w-8 h-8 text-orange-600" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl">Professional Client Presentation</CardTitle>
+                    <p className="text-sm text-gray-500">Impress every customer</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Quotes become beautiful, professional presentations with your branding, detailed breakdowns, and digital acceptance.
+                </p>
+                <div className="flex items-center gap-2 text-sm text-green-600">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Higher acceptance rates</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-4">
+              <Link href="/dashboard-modern">
+                <ArrowRight className="w-5 h-5 mr-2" />
+                Experience the Modern Interface
+              </Link>
+            </Button>
+            <p className="text-sm text-gray-500 mt-4">
+              No signup required - try it with demo access code: <strong>DEMO2024</strong>
+            </p>
           </div>
         </div>
       </section>

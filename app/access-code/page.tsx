@@ -66,7 +66,13 @@ export default function AccessCodePage() {
             `/success?newCompany=true&companyName=${encodeURIComponent(data.company.name)}&redirect=${encodeURIComponent(redirectTo)}`,
           );
         } else {
-          router.push(redirectTo);
+          // Check if user wants modern interface
+          const modernInterface = new URLSearchParams(window.location.search).get('modern');
+          if (modernInterface === 'true') {
+            router.push('/dashboard-modern');
+          } else {
+            router.push(redirectTo);
+          }
         }
       } else {
         if (data.error && data.error.includes("not found")) {
@@ -187,6 +193,62 @@ export default function AccessCodePage() {
           >
             {isLoading ? "Verifying..." : "Access Dashboard"}
           </button>
+
+          {/* Modern Interface Option */}
+          <div style={{ 
+            marginTop: "15px", 
+            padding: "12px", 
+            backgroundColor: "#e8f4fd", 
+            borderRadius: "6px",
+            border: "1px solid #b3d9ff"
+          }}>
+            <div style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              justifyContent: "center", 
+              gap: "8px", 
+              marginBottom: "8px" 
+            }}>
+              <span style={{ fontSize: "16px" }}>🚀</span>
+              <span style={{ fontSize: "14px", fontWeight: "bold", color: "#1a5490" }}>
+                NEW: Modern Interface
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (accessCode.trim()) {
+                  const form = new FormData();
+                  const submitEvent = new Event('submit');
+                  // Set flag to redirect to modern interface
+                  window.history.replaceState({}, '', `${window.location.pathname}?modern=true`);
+                  handleSubmit({ preventDefault: () => {} } as any);
+                }
+              }}
+              disabled={!accessCode.trim() || isLoading}
+              style={{
+                width: "100%",
+                padding: "10px",
+                backgroundColor: !accessCode.trim() || isLoading ? "#ccc" : "#10b981",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                fontSize: "14px",
+                fontWeight: "bold",
+                cursor: !accessCode.trim() || isLoading ? "not-allowed" : "pointer",
+              }}
+            >
+              Try Apple & Google-Inspired Interface
+            </button>
+            <p style={{ 
+              margin: "8px 0 0 0", 
+              fontSize: "11px", 
+              color: "#666", 
+              textAlign: "center" 
+            }}>
+              Experience 30-second quotes, smart suggestions, and mobile-first design
+            </p>
+          </div>
         </form>
 
         <div style={{ textAlign: "center" }}>

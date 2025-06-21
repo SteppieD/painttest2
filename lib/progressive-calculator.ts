@@ -110,9 +110,27 @@ function calculateFromDimensions(data: PartialQuoteData, rates: typeof DEFAULT_C
   const wallArea = dims.wall_linear_feet && dims.ceiling_height 
     ? dims.wall_linear_feet * dims.ceiling_height 
     : 0;
-  const ceilingArea = dims.ceiling_area || dims.floor_area || 0;
-  const doorArea = (dims.number_of_doors || 0) * 20; // Avg door area
-  const windowArea = (dims.number_of_windows || 0) * 12; // Avg window area
+  
+  // Estimate ceiling area if not provided
+  let ceilingArea = dims.ceiling_area || dims.floor_area;
+  if (!ceilingArea && dims.wall_linear_feet) {
+    // For commercial/large projects, use a more conservative approach
+    // Estimate based on typical room layouts where perimeter relates to floor area
+    // For residential: typical 200-400 linear feet relates to 1500-3000 sqft homes
+    // Use a scaling factor that grows more slowly for very large perimeters
+    if (dims.wall_linear_feet <= 200) {
+      // Small residential: use standard formula
+      const width = dims.wall_linear_feet / 4.6;
+      ceilingArea = Math.round(1.3 * width * width);
+    } else if (dims.wall_linear_feet <= 500) {
+      // Medium residential to small commercial
+      ceilingArea = Math.round(dims.wall_linear_feet * 8); // ~8 sqft ceiling per linear foot
+    } else {
+      // Large commercial: assume multiple floors or very large spaces
+      ceilingArea = Math.round(dims.wall_linear_feet * 5); // ~5 sqft ceiling per linear foot
+    }
+  }
+  ceilingArea = ceilingArea || 0;
 
   let materials = 0;
   let labor = 0;
@@ -300,8 +318,9 @@ function getMissingDataList(data: PartialQuoteData): string[] {
 
 function hasMinimalDimensions(data: PartialQuoteData): boolean {
   const dims = data.dimensions;
-  return !!(dims?.wall_linear_feet && dims?.ceiling_height && 
-            (dims?.floor_area || dims?.ceiling_area));
+  // Allow using dimensional calculation if we have wall linear feet and ceiling height
+  // even without explicit ceiling area - we can estimate it
+  return !!(dims?.wall_linear_feet && dims?.ceiling_height);
 }
 
 function hasSurfaceSelection(data: PartialQuoteData): boolean {

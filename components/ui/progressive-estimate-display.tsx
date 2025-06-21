@@ -155,7 +155,7 @@ export function FloatingEstimateWidget({
 
   return (
     <div 
-      className="fixed bottom-4 right-4 z-30 cursor-pointer transform transition-all duration-300 hover:scale-105"
+      className="fixed top-20 right-4 z-30 cursor-pointer transform transition-all duration-300 hover:scale-105"
       onClick={onToggle}
     >
       <Card className="bg-blue-600 text-white shadow-lg border-0">

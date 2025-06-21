@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Save, Send, Calculator, Loader2 } from "lucide-react";
+import { ArrowLeft, Save, Send, Calculator, Loader2, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -109,6 +109,7 @@ function CreateQuotePageContent() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [buttonOptions, setButtonOptions] = useState<{id: string, label: string, value: any, selected?: boolean}[]>([]);
@@ -349,6 +350,24 @@ function CreateQuotePageContent() {
   // Optimized batch initialization
   useEffect(() => {
     initializeApp();
+    
+    // Listen for fallback to brand selection when no favorites available
+    const handleUseBrandSelection = (event: any) => {
+      console.log('Falling back to brand selection');
+      setShowFavoritePaintSelector(false);
+      setUseFavoriteSelector(false);
+      // Trigger brand selection flow
+      setTimeout(() => {
+        setConversationStage('category_paint_selection');
+        handleSendMessage('continue'); // This will trigger the brand selection flow
+      }, 100);
+    };
+    
+    window.addEventListener('useBrandSelection', handleUseBrandSelection);
+    
+    return () => {
+      window.removeEventListener('useBrandSelection', handleUseBrandSelection);
+    };
   }, [router, editQuoteId]);
 
   const initializeApp = async () => {
@@ -1008,7 +1027,12 @@ What would you like to modify?`,
           dimensions: { ...prev.dimensions, ...wallDimensions }
         }));
         
-        if (wallDimensions.wall_linear_feet) {
+        // Check if we have both required dimensions
+        if (wallDimensions.wall_linear_feet && wallDimensions.ceiling_height) {
+          // Acknowledge successful parsing
+          const wallArea = wallDimensions.wall_linear_feet * wallDimensions.ceiling_height;
+          responseContent = `Perfect! I've got **${wallDimensions.wall_linear_feet} linear feet** of walls with **${wallDimensions.ceiling_height}-foot ceilings**. That's **${wallArea.toLocaleString()} square feet** of wall area to paint.\n\n`;
+          
           // Check if we need to ask about doors and windows
           const needsDoorsWindows = selectedSurfaces.some(surface => 
             ['doors', 'windows', 'trim'].includes(surface)
@@ -2409,7 +2433,7 @@ What would you like to modify?`,
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-white">
       {/* Header */}
       <header className="bg-white border-b shadow-sm relative z-20">
         <div className="px-4 py-3">
@@ -2447,34 +2471,51 @@ What would you like to modify?`,
 
       {/* Chat Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 flex flex-col">
+          <div className="space-y-2">
           {messages.map((message) => (
             <div
               key={message.id}
               className={cn(
-                "flex gap-3",
+                "flex gap-3 items-end",
                 message.role === 'user' ? "justify-end" : "justify-start"
               )}
             >
+              {/* AI Avatar - Left side */}
+              {message.role === 'assistant' && (
+                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 mb-1">
+                  <Palette className="w-4 h-4 text-white" />
+                </div>
+              )}
+              
               <div
                 className={cn(
-                  "max-w-[80%] p-4 rounded-lg shadow-sm",
+                  "max-w-[75%] p-3 rounded-[18px] shadow-sm relative",
                   message.role === 'user'
-                    ? "bg-blue-600 text-white rounded-br-sm"
-                    : "bg-white border rounded-bl-sm"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-100 border-0 text-gray-900"
                 )}
               >
-                <div className="whitespace-pre-wrap text-sm" dangerouslySetInnerHTML={{
+                <div className="whitespace-pre-wrap text-sm leading-relaxed" dangerouslySetInnerHTML={{
                   __html: renderMarkdown(message.content)
                 }}>
                 </div>
                 <div className={cn(
-                  "text-xs mt-2",
+                  "text-xs mt-1.5",
                   message.role === 'user' ? "text-blue-100" : "text-gray-500"
                 )}>
-                  {new Date(message.timestamp).toLocaleTimeString()}
+                  {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
               </div>
+
+              {/* User Avatar - Right side */}
+              {message.role === 'user' && (
+                <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center flex-shrink-0 mb-1">
+                  <span className="text-white text-sm font-medium">
+                    {quoteData.customer_name ? quoteData.customer_name.charAt(0).toUpperCase() : 'U'}
+                  </span>
+                </div>
+              )}
             </div>
           ))}
 
@@ -2500,25 +2541,32 @@ What would you like to modify?`,
           )}
           
           {isThinking && (
-            <div className="flex gap-3 justify-start">
-              <div className="bg-white border p-4 rounded-lg rounded-bl-sm shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                  </div>
-                  <span className="text-sm text-gray-500">Thinking...</span>
+            <div className="flex gap-3 justify-start items-end">
+              {/* AI Avatar */}
+              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 mb-1">
+                <Palette className="w-4 h-4 text-white" />
+              </div>
+              
+              <div className="bg-gray-100 p-4 rounded-[18px] shadow-sm">
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                 </div>
               </div>
             </div>
           )}
 
           {isLoading && !isThinking && (
-            <div className="flex gap-3 justify-start">
-              <div className="bg-white border p-4 rounded-lg rounded-bl-sm shadow-sm">
+            <div className="flex gap-3 justify-start items-end">
+              {/* AI Avatar */}
+              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 mb-1">
+                <Palette className="w-4 h-4 text-white" />
+              </div>
+              
+              <div className="bg-gray-100 p-3 rounded-[18px] shadow-sm">
                 <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
                   <span className="text-sm text-gray-500">Calculating...</span>
                 </div>
               </div>
@@ -2596,35 +2644,45 @@ What would you like to modify?`,
               </div>
             </div>
           )}
+          </div>
           
           <div ref={messagesEndRef} />
         </div>
 
         {/* Input Area */}
         <div className="bg-white border-t p-4">
-          <div className="flex gap-2">
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type your response..."
-              disabled={isLoading || isThinking}
-              className="flex-1"
-            />
-            <Button
-              onClick={handleSend}
-              disabled={!inputValue.trim() || isLoading || isThinking}
-              size="icon"
-              className="shrink-0"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
+          <div className="flex gap-3 items-end">
+            <div className="flex-1 relative">
+              <Input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={handleKeyPress}
+                onFocus={() => setIsInputFocused(true)}
+                onBlur={() => setIsInputFocused(false)}
+                placeholder="Message..."
+                disabled={isLoading || isThinking}
+                className="rounded-[20px] border-gray-300 px-4 py-2 pr-12 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
+              <Button
+                onClick={handleSend}
+                disabled={!inputValue.trim() || isLoading || isThinking}
+                size="icon"
+                className={cn(
+                  "absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full shrink-0 transition-colors",
+                  inputValue.trim() && !isLoading && !isThinking
+                    ? "bg-blue-500 hover:bg-blue-600 text-white"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                )}
+              >
+                <Send className="w-3.5 h-3.5" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Floating Estimate Widget */}
-      {currentEstimate && !showEstimate && (
+      {currentEstimate && !showEstimate && !isInputFocused && (
         <FloatingEstimateWidget
           estimate={currentEstimate}
           isVisible={true}

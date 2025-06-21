@@ -141,19 +141,44 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
   
   const dimensions: Partial<ProjectDimensions> = { ...existingDimensions };
   
-  // Parse linear feet
-  if (lower.includes('linear') || lower.includes('lnft') || lower.includes('perimeter')) {
-    const match = input.match(/(\d+\.?\d*)\s*(?:linear|lnft|perimeter)?/i);
-    if (match) dimensions.wall_linear_feet = Number(match[1]);
-  } else if (numbers.length > 0 && !dimensions.wall_linear_feet) {
-    // If a number is mentioned without context, assume it's linear feet if we're expecting it
-    dimensions.wall_linear_feet = numbers[0];
-  }
-  
-  // Parse ceiling height
-  if (lower.includes('ceiling') || lower.includes('height') || lower.includes('tall') || lower.includes('foot') || lower.includes('feet')) {
-    const match = input.match(/(\d+\.?\d*)\s*(?:foot|feet|ft|')/i);
-    if (match) dimensions.ceiling_height = Number(match[1]);
+  // Parse dimension formats: "X x Y", "X by Y", "X and Y", "X, Y"
+  const dimensionPattern = input.match(/(\d+\.?\d*)\s*(?:[x×]|by|and|,)\s*(\d+\.?\d*)/i);
+  if (dimensionPattern) {
+    const num1 = Number(dimensionPattern[1]);
+    const num2 = Number(dimensionPattern[2]);
+    
+    // Smart assignment: larger number is usually linear feet, smaller is ceiling height
+    if (num1 > num2 && num2 <= 20) {
+      // Typical case: "1230 by 7" (linear feet by ceiling height)
+      dimensions.wall_linear_feet = num1;
+      dimensions.ceiling_height = num2;
+    } else if (num2 > num1 && num1 <= 20) {
+      // Reverse case: "9 by 120" (ceiling height by linear feet)
+      dimensions.wall_linear_feet = num2;
+      dimensions.ceiling_height = num1;
+    } else {
+      // Default to order given
+      dimensions.wall_linear_feet = num1;
+      dimensions.ceiling_height = num2;
+    }
+  } else {
+    // Parse linear feet
+    if (lower.includes('linear') || lower.includes('lnft') || lower.includes('perimeter')) {
+      const match = input.match(/(\d+\.?\d*)\s*(?:linear|lnft|perimeter)?/i);
+      if (match) dimensions.wall_linear_feet = Number(match[1]);
+    } else if (numbers.length > 0 && !dimensions.wall_linear_feet) {
+      // If a number is mentioned without context, assume it's linear feet if we're expecting it
+      dimensions.wall_linear_feet = numbers[0];
+    }
+    
+    // Parse ceiling height
+    if (lower.includes('ceiling') || lower.includes('height') || lower.includes('tall') || lower.includes('foot') || lower.includes('feet')) {
+      const match = input.match(/(\d+\.?\d*)\s*(?:foot|feet|ft|')/i);
+      if (match) dimensions.ceiling_height = Number(match[1]);
+    } else if (!dimensions.ceiling_height && dimensions.wall_linear_feet && numbers.length === 1) {
+      // If we have linear feet but no ceiling height, and user provides just one number, assume it's ceiling height
+      dimensions.ceiling_height = numbers[0];
+    }
   }
   
   // Smart ceiling area estimation based on floor area
