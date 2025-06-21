@@ -1693,52 +1693,74 @@ What would you like to modify?`,
         const category = currentMeasurementCategory;
         
         if (category === 'ceilings') {
-          // For ceilings, we might already have room data or need ceiling area
-          const ceilingDimensions = parseDimensions(input, quoteData.project_type);
+          // For ceilings, use enhanced parsing to understand contractor language
+          const ceilingDimensions = parseDimensions(input, quoteData.project_type, quoteData.dimensions);
           
           setQuoteData(prev => ({
             ...prev,
             dimensions: { ...prev.dimensions, ...ceilingDimensions }
           }));
           
-          if (ceilingDimensions.ceiling_area || ceilingDimensions.floor_area) {
+          // Get current dimensions including what we just parsed
+          const currentDimensions = { ...quoteData.dimensions, ...ceilingDimensions };
+          
+          if (currentDimensions.ceiling_area || currentDimensions.floor_area) {
             markCategoryMeasured(category);
-            setCurrentPaintCategory(category); // Set for paint selection
-            responseContent = `Perfect! Ceiling measurements recorded for ${category}.\n\nNow let's select the paint for your ${category}.`;
+            setCurrentPaintCategory(category);
+            const area = currentDimensions.ceiling_area || currentDimensions.floor_area;
+            responseContent = `Perfect! Got ${area?.toLocaleString()} square feet of ceiling space 👍\n\nTime to pick paint for your ceilings!`;
             nextStage = 'category_paint_selection';
           } else {
-            responseContent = `I need the ceiling area for accurate coverage calculation.\n\nPlease provide: "ceiling area: X sq ft" or "floor area: X sq ft" (I can use floor area to calculate ceiling area).`;
+            // Give natural, helpful feedback based on what was provided
+            if (ceilingDimensions.wall_linear_feet && ceilingDimensions.ceiling_height) {
+              responseContent = `I can calculate the ceiling area from your room size. What's the floor area or should I estimate it from the wall measurements?`;
+            } else {
+              responseContent = `I need the ceiling area. You can tell me:\n\n• "1200 square feet" (total ceiling area)\n• "Floor area is 1200 sqft" (I'll use that for ceiling)\n• Just the room size and I'll calculate it!`;
+            }
             nextStage = 'category_measurement_collection';
           }
         } else if (category === 'walls') {
-          // For walls, we need linear footage and height
-          const wallDimensions = parseDimensions(input, quoteData.project_type);
+          // For walls, we need linear footage and height - but be flexible about parsing
+          const wallDimensions = parseDimensions(input, quoteData.project_type, quoteData.dimensions);
           
           setQuoteData(prev => ({
             ...prev,
             dimensions: { ...prev.dimensions, ...wallDimensions }
           }));
           
-          if (wallDimensions.wall_linear_feet && wallDimensions.ceiling_height) {
+          // Get current data including what we just parsed
+          const currentDimensions = { ...quoteData.dimensions, ...wallDimensions };
+          
+          // Check if we have what we need (either just got it or already had it)
+          if (currentDimensions.wall_linear_feet && currentDimensions.ceiling_height) {
             markCategoryMeasured(category);
             setCurrentPaintCategory(category); // Set for paint selection
-            responseContent = `Perfect! Wall measurements recorded.\n\nNow let's select the paint for your ${category}.`;
+            responseContent = `Got it! ${currentDimensions.wall_linear_feet} linear feet with ${currentDimensions.ceiling_height} foot ceilings 👍\n\nTime to pick paint for your walls!`;
             nextStage = 'category_paint_selection';
           } else {
-            const missing = [];
-            if (!wallDimensions.wall_linear_feet) missing.push('linear footage');
-            if (!wallDimensions.ceiling_height) missing.push('ceiling height');
-            responseContent = `I still need the ${missing.join(' and ')} for ${category}.\n\nExample: "120 linear feet, 9 foot ceilings"`;
+            // Be smarter about what we're missing and give helpful feedback
+            if (wallDimensions.wall_linear_feet && !currentDimensions.ceiling_height) {
+              responseContent = `Perfect! Got the ${wallDimensions.wall_linear_feet} linear feet. What's the ceiling height?`;
+            } else if (wallDimensions.ceiling_height && !currentDimensions.wall_linear_feet) {
+              responseContent = `Great! ${wallDimensions.ceiling_height} foot ceilings. How many linear feet of wall?`;
+            } else if (!currentDimensions.wall_linear_feet && !currentDimensions.ceiling_height) {
+              responseContent = `I need the wall measurements. Just tell me like "300 linear feet, 9 foot ceilings" or "300 by 9"`;
+            } else {
+              responseContent = `Just need the ceiling height! How tall are the ceilings?`;
+            }
             nextStage = 'category_measurement_collection';
           }
         } else if (['trim', 'doors', 'windows'].includes(category)) {
-          // For trim/doors/windows, we need counts
+          // For trim/doors/windows, use enhanced parsing to understand contractor language
           const doorWindowData = parseDoorsAndWindows(input);
           
-          // Convert the parsed data to the expected format
+          // Get current dimensions including what we might already have
+          const currentDimensions = { ...quoteData.dimensions };
+          
+          // Convert the parsed data to the expected format, preserving existing data
           const dimensionData = {
-            number_of_doors: doorWindowData.doors,
-            number_of_windows: doorWindowData.windows
+            number_of_doors: doorWindowData.doors !== undefined ? doorWindowData.doors : currentDimensions.number_of_doors,
+            number_of_windows: doorWindowData.windows !== undefined ? doorWindowData.windows : currentDimensions.number_of_windows
           };
           
           setQuoteData(prev => ({
@@ -1746,18 +1768,47 @@ What would you like to modify?`,
             dimensions: { ...prev.dimensions, ...dimensionData }
           }));
           
-          const hasNeededData = (category === 'doors' && doorWindowData.doors !== undefined && doorWindowData.doors > 0) ||
-                               (category === 'windows' && doorWindowData.windows !== undefined && doorWindowData.windows > 0) ||
-                               (category === 'trim' && (doorWindowData.doors > 0 || doorWindowData.windows > 0));
-          
-          if (hasNeededData) {
-            markCategoryMeasured(category);
-            setCurrentPaintCategory(category); // Set for paint selection
-            responseContent = `Perfect! ${category} count recorded.\n\nNow let's select the paint for your ${category}.`;
-            nextStage = 'category_paint_selection';
-          } else {
-            responseContent = `I need the count for ${category}.\n\nExample: "3 doors" or "5 windows" or "3 doors and 5 windows"`;
-            nextStage = 'category_measurement_collection';
+          // Check if we got what we need for this specific category
+          if (category === 'doors') {
+            if (dimensionData.number_of_doors !== undefined && dimensionData.number_of_doors >= 0) {
+              markCategoryMeasured(category);
+              setCurrentPaintCategory(category);
+              responseContent = `Got it! ${dimensionData.number_of_doors} doors to paint 🚪\n\nTime to pick paint for your doors!`;
+              nextStage = 'category_paint_selection';
+            } else {
+              responseContent = `How many doors are we painting? Just tell me like:\n\n• "3 doors"\n• "Just 2"\n• "No doors" or "0 doors"`;
+              nextStage = 'category_measurement_collection';
+            }
+          } else if (category === 'windows') {
+            if (dimensionData.number_of_windows !== undefined && dimensionData.number_of_windows >= 0) {
+              markCategoryMeasured(category);
+              setCurrentPaintCategory(category);
+              responseContent = `Perfect! ${dimensionData.number_of_windows} windows to paint 🪟\n\nTime to pick paint for your windows!`;
+              nextStage = 'category_paint_selection';
+            } else {
+              responseContent = `How many windows are we painting? Just tell me like:\n\n• "5 windows"\n• "Just 3"\n• "No windows" or "0 windows"`;
+              nextStage = 'category_measurement_collection';
+            }
+          } else if (category === 'trim') {
+            // For trim, we need both doors and windows count
+            const hasDoorCount = dimensionData.number_of_doors !== undefined;
+            const hasWindowCount = dimensionData.number_of_windows !== undefined;
+            
+            if (hasDoorCount && hasWindowCount) {
+              markCategoryMeasured(category);
+              setCurrentPaintCategory(category);
+              responseContent = `Perfect! ${dimensionData.number_of_doors} doors and ${dimensionData.number_of_windows} windows with trim 🖼️\n\nTime to pick paint for your trim!`;
+              nextStage = 'category_paint_selection';
+            } else if (hasDoorCount && !hasWindowCount) {
+              responseContent = `Got ${dimensionData.number_of_doors} doors! How many windows have trim around them?`;
+              nextStage = 'category_measurement_collection';
+            } else if (hasWindowCount && !hasDoorCount) {
+              responseContent = `Got ${dimensionData.number_of_windows} windows! How many doors have trim around them?`;
+              nextStage = 'category_measurement_collection';
+            } else {
+              responseContent = `For trim, I need to know how many doors and windows have trim around them.\n\nLike "3 doors and 5 windows" or "2 doors, no windows"`;
+              nextStage = 'category_measurement_collection';
+            }
           }
         }
         break;

@@ -141,19 +141,71 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
   
   const dimensions: Partial<ProjectDimensions> = { ...existingDimensions };
   
-  // Parse linear feet
-  if (lower.includes('linear') || lower.includes('lnft') || lower.includes('perimeter')) {
-    const match = input.match(/(\d+\.?\d*)\s*(?:linear|lnft|perimeter)?/i);
+  // Handle "X by Y" format (like "500 by 9" or "300 by 9")
+  if (lower.includes(' by ') || lower.includes(' x ')) {
+    const match = input.match(/(\d+\.?\d*)\s*(?:by|x)\s*(\d+\.?\d*)/i);
+    if (match) {
+      const first = Number(match[1]);
+      const second = Number(match[2]);
+      
+      // If one number is clearly height (8-12 range), assign accordingly
+      if (second >= 8 && second <= 15) {
+        dimensions.wall_linear_feet = first;
+        dimensions.ceiling_height = second;
+      } else if (first >= 8 && first <= 15) {
+        dimensions.wall_linear_feet = second;
+        dimensions.ceiling_height = first;
+      } else {
+        // Both are likely room dimensions, use first as linear feet
+        dimensions.wall_linear_feet = first;
+        dimensions.ceiling_height = second;
+      }
+    }
+  }
+  
+  // Parse linear feet (various ways contractors say it)
+  if (lower.includes('linear') || lower.includes('lnft') || lower.includes('perimeter') || 
+      lower.includes('around') || lower.includes('feet around')) {
+    const match = input.match(/(\d+\.?\d*)\s*(?:linear|lnft|perimeter|around|feet)/i);
     if (match) dimensions.wall_linear_feet = Number(match[1]);
-  } else if (numbers.length > 0 && !dimensions.wall_linear_feet) {
-    // If a number is mentioned without context, assume it's linear feet if we're expecting it
+  }
+  
+  // Parse ceiling height (many ways contractors say it)
+  if (lower.includes('ceiling') || lower.includes('height') || lower.includes('tall') || 
+      lower.includes('foot') || lower.includes('feet') || lower.includes('ft')) {
+    const heightMatch = input.match(/(?:ceiling|height|tall|is)\s*(\d+\.?\d*)\s*(?:foot|feet|ft|')?/i);
+    if (heightMatch) {
+      dimensions.ceiling_height = Number(heightMatch[1]);
+    } else {
+      // Look for standalone height numbers
+      const standaloneMatch = input.match(/(\d+\.?\d*)\s*(?:foot|feet|ft|')(?:\s|$)/i);
+      if (standaloneMatch) {
+        dimensions.ceiling_height = Number(standaloneMatch[1]);
+      }
+    }
+  }
+  
+  // If just a single number and we're missing ceiling height, and it's in typical height range
+  if (numbers.length === 1 && !dimensions.ceiling_height && numbers[0] >= 8 && numbers[0] <= 15) {
+    dimensions.ceiling_height = numbers[0];
+  }
+  
+  // If just a single number and we're missing linear feet, and it's outside height range
+  if (numbers.length === 1 && !dimensions.wall_linear_feet && (numbers[0] < 8 || numbers[0] > 15)) {
     dimensions.wall_linear_feet = numbers[0];
   }
   
-  // Parse ceiling height
-  if (lower.includes('ceiling') || lower.includes('height') || lower.includes('tall') || lower.includes('foot') || lower.includes('feet')) {
-    const match = input.match(/(\d+\.?\d*)\s*(?:foot|feet|ft|')/i);
-    if (match) dimensions.ceiling_height = Number(match[1]);
+  // Handle multiple numbers when both are provided
+  if (numbers.length >= 2 && !dimensions.wall_linear_feet && !dimensions.ceiling_height) {
+    // Sort by likely use - smaller number (8-15) is probably height
+    const sortedNumbers = [...numbers].sort((a, b) => a - b);
+    for (let num of sortedNumbers) {
+      if (num >= 8 && num <= 15 && !dimensions.ceiling_height) {
+        dimensions.ceiling_height = num;
+      } else if (!dimensions.wall_linear_feet) {
+        dimensions.wall_linear_feet = num;
+      }
+    }
   }
   
   // Smart ceiling area estimation based on floor area
