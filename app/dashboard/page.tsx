@@ -309,19 +309,20 @@ export default function DashboardPage() {
             <div className="flex items-center gap-3">
               <Button
                 onClick={() => router.push("/create-quote")}
-                className="bg-green-600 hover:bg-green-700"
+                className="btn-flat-primary mobile-flat-button"
               >
-                <Calculator className="w-4 h-4 mr-2" />
-                New Quote
+                <Calculator className="icon-flat mr-2" />
+                <span className="hidden sm:inline">New Quote</span>
+                <span className="sm:hidden">Quote</span>
               </Button>
               
               <Button
                 variant="ghost"
                 onClick={handleLogout}
-                className="text-gray-500 hover:text-gray-700"
+                className="btn-flat text-flat-gray-600 hover:text-flat-gray-800 mobile-flat-button"
               >
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
+                <LogOut className="icon-flat mr-2" />
+                <span className="hidden sm:inline">Logout</span>
               </Button>
             </div>
           </div>
@@ -329,33 +330,34 @@ export default function DashboardPage() {
       </div>
 
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        {/* Setup Completion Prompt */}
+        {/* Setup Completion Prompt - Flat Design */}
         {!isCheckingOnboarding && needsOnboarding && (
           <div className="mb-8">
-            <Card className="bg-gradient-to-r from-blue-50 to-green-50 border-2 border-blue-200">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Palette className="w-8 h-8 text-white" />
+            <Card className="card-flat bg-paint-primer/10 border-2 border-paint-primer shadow-flat-lg">
+              <CardContent className="p-6 sm:p-8 text-center">
+                <div className="w-20 h-20 bg-paint-primer rounded-flat-xl flex items-center justify-center mx-auto mb-5">
+                  <Palette className="w-10 h-10 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                <h2 className="text-flat-3xl font-bold text-flat-gray-900 mb-3">
                   Complete Your Setup
                 </h2>
-                <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                <p className="text-flat-lg text-flat-gray-700 mb-6 max-w-md mx-auto font-medium">
                   Set up your favorite paint products and pricing to create quotes quickly. 
                   This takes just 2 minutes and you'll be ready to start quoting!
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button 
                     onClick={() => router.push("/setup")}
-                    className="bg-blue-600 hover:bg-blue-700 px-8"
+                    className="btn-flat-primary mobile-flat-button px-8"
                     size="lg"
                   >
-                    <ArrowRight className="w-4 h-4 mr-2" />
+                    <ArrowRight className="icon-flat mr-2" />
                     Complete Setup
                   </Button>
                   <Button 
                     variant="outline"
                     onClick={() => setNeedsOnboarding(false)}
+                    className="btn-flat mobile-flat-button"
                     size="lg"
                   >
                     Skip for Now
@@ -366,25 +368,25 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Quick Settings Access - Optional */}
+        {/* Quick Settings Access - Flat Design */}
         {!isCheckingOnboarding && !needsOnboarding && (
           <div className="mb-6">
-            <Card className="bg-gradient-to-r from-gray-50 to-blue-50 border border-blue-100">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Palette className="w-5 h-5 text-blue-600" />
+            <Card className="card-flat bg-paint-wall/5 border border-paint-wall/20 shadow-flat">
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-paint-wall/10 rounded-flat-lg flex items-center justify-center">
+                      <Palette className="icon-flat-lg text-paint-wall" />
                     </div>
-                    <div>
-                      <h3 className="font-medium text-gray-900">Customize Your Products & Pricing</h3>
-                      <p className="text-sm text-gray-600">Set up paint products and costs for accurate quotes</p>
+                    <div className="flex-1">
+                      <h3 className="text-flat-lg font-bold text-flat-gray-900">Customize Your Products & Pricing</h3>
+                      <p className="text-flat-base text-flat-gray-700 font-medium">Set up paint products and costs for accurate quotes</p>
                     </div>
                   </div>
                   <Button 
                     variant="outline"
                     onClick={() => router.push("/settings/products")}
-                    className="flex items-center gap-2"
+                    className="btn-flat-wall mobile-flat-button flex items-center gap-2"
                   >
                     Settings
                   </Button>
@@ -394,22 +396,25 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Primary Action - Create Quote */}
+        {/* Primary Action - Create Quote - Mobile-First Flat Design */}
         <div className="mb-8">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-green-200 bg-green-50" onClick={() => router.push("/create-quote")}>
-            <CardContent className="p-8">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-green-600 rounded-lg flex items-center justify-center">
-                    <Calculator className="w-8 h-8 text-white" />
+          <Card 
+            className="cursor-pointer card-flat bg-business-success/10 border-2 border-business-success/30 hover:shadow-flat-lg transition-all duration-200 interactive-flat" 
+            onClick={() => router.push("/create-quote")}
+          >
+            <CardContent className="p-6 sm:p-8">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-5">
+                  <div className="w-20 h-20 bg-business-success rounded-flat-xl flex items-center justify-center shadow-flat">
+                    <Calculator className="w-10 h-10 text-white" />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-green-900">Create Professional Quote</h3>
-                    <p className="text-green-700">Room-by-room measurements • Industry pricing • Customer-ready output</p>
+                  <div className="flex-1">
+                    <h3 className="text-flat-2xl font-bold text-business-success mb-2">Create Professional Quote</h3>
+                    <p className="text-flat-lg font-medium text-flat-gray-700">Room-by-room measurements • Industry pricing • Customer-ready output</p>
                   </div>
                 </div>
-                <div className="text-green-600">
-                  <ArrowRight className="w-6 h-6" />
+                <div className="text-business-success">
+                  <ArrowRight className="icon-flat-lg" />
                 </div>
               </div>
             </CardContent>
@@ -471,74 +476,94 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Business Metrics - Contractor Focus */}
+        {/* Business Metrics - Flat Design Mobile-First */}
         <div className="mb-8">
-          <div className="bg-white rounded-lg border p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Business Performance</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{analytics.totalQuotes}</div>
-                <div className="text-sm text-gray-500">Total Quotes</div>
-                <div className="text-xs text-green-600 mt-1">
+          <div className="card-flat shadow-flat-lg p-6 sm:p-8">
+            <h2 className="text-flat-2xl font-bold text-flat-gray-900 mb-6">Business Performance</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              {/* Total Quotes Card */}
+              <div className="card-flat bg-paint-primer/5 border border-paint-primer/20 p-4 text-center">
+                <div className="w-12 h-12 bg-paint-primer rounded-flat-lg flex items-center justify-center mx-auto mb-3">
+                  <FileText className="icon-flat text-white" />
+                </div>
+                <div className="text-flat-3xl font-bold text-flat-gray-900 mb-1">{analytics.totalQuotes}</div>
+                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Total Quotes</div>
+                <div className="text-flat-sm font-medium text-business-success">
                   {analytics.acceptedQuotes} won ({analytics.totalQuotes > 0 ? Math.round((analytics.acceptedQuotes / analytics.totalQuotes) * 100) : 0}%)
                 </div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{formatCurrency(analytics.totalRevenue)}</div>
-                <div className="text-sm text-gray-500">Revenue Generated</div>
-                <div className="text-xs text-gray-500 mt-1">All time</div>
+
+              {/* Revenue Card */}
+              <div className="card-flat bg-business-success/5 border border-business-success/20 p-4 text-center">
+                <div className="w-12 h-12 bg-business-success rounded-flat-lg flex items-center justify-center mx-auto mb-3">
+                  <DollarSign className="icon-flat text-white" />
+                </div>
+                <div className="text-flat-3xl font-bold text-business-success mb-1">{formatCurrency(analytics.totalRevenue)}</div>
+                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Revenue Generated</div>
+                <div className="text-flat-sm font-medium text-flat-gray-600">All time</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{formatCurrency(analytics.averageQuote)}</div>
-                <div className="text-sm text-gray-500">Average Job Value</div>
-                <div className="text-xs text-gray-500 mt-1">Per quote</div>
+
+              {/* Average Quote Card */}
+              <div className="card-flat bg-paint-wall/5 border border-paint-wall/20 p-4 text-center">
+                <div className="w-12 h-12 bg-paint-wall rounded-flat-lg flex items-center justify-center mx-auto mb-3">
+                  <TrendingUp className="icon-flat text-white" />
+                </div>
+                <div className="text-flat-3xl font-bold text-paint-wall mb-1">{formatCurrency(analytics.averageQuote)}</div>
+                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Average Job Value</div>
+                <div className="text-flat-sm font-medium text-flat-gray-600">Per quote</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">{analytics.pendingQuotes}</div>
-                <div className="text-sm text-gray-500">Awaiting Response</div>
-                <div className="text-xs text-gray-500 mt-1">Follow up needed</div>
+
+              {/* Pending Quotes Card */}
+              <div className="card-flat bg-paint-trim/5 border border-paint-trim/20 p-4 text-center">
+                <div className="w-12 h-12 bg-paint-trim rounded-flat-lg flex items-center justify-center mx-auto mb-3">
+                  <Calendar className="icon-flat text-white" />
+                </div>
+                <div className="text-flat-3xl font-bold text-paint-trim mb-1">{analytics.pendingQuotes}</div>
+                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Awaiting Response</div>
+                <div className="text-flat-sm font-medium text-flat-gray-600">Follow up needed</div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Secondary Navigation */}
+        {/* Secondary Navigation - Mobile-First Flat Design */}
         <div className="mb-8">
-          <div className="flex flex-wrap gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Button
               variant="outline"
               onClick={() => router.push("/quotes")}
-              className="flex items-center gap-2"
+              className="btn-flat-primary mobile-flat-button flex items-center justify-center gap-2"
             >
-              <FileText className="w-4 h-4" />
-              View All Quotes
+              <FileText className="icon-flat" />
+              <span className="font-semibold">View All Quotes</span>
             </Button>
             <Button
               variant="outline"
               onClick={() => router.push("/insights")}
-              className="flex items-center gap-2"
+              className="btn-flat-wall mobile-flat-button flex items-center justify-center gap-2"
             >
-              <TrendingUp className="w-4 h-4" />
-              Analytics
+              <TrendingUp className="icon-flat" />
+              <span className="font-semibold">Analytics</span>
             </Button>
             <Button
               variant="outline"
               onClick={() => router.push("/settings")}
-              className="flex items-center gap-2"
+              className="btn-flat-ceiling mobile-flat-button flex items-center justify-center gap-2"
             >
-              Settings
+              <MessageSquare className="icon-flat" />
+              <span className="font-semibold">Settings</span>
             </Button>
           </div>
         </div>
 
-        {/* Quotes List */}
-        <Card>
-          <CardHeader>
+        {/* Quotes List - Flat Design */}
+        <Card className="card-flat shadow-flat-lg">
+          <CardHeader className="pb-4">
             <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <span>Recent Quotes ({filteredQuotes.length})</span>
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <span className="text-flat-2xl font-bold text-flat-gray-900">Recent Quotes ({filteredQuotes.length})</span>
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <div className="relative">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Search className="icon-flat absolute left-3 top-1/2 transform -translate-y-1/2 text-flat-gray-400" />
                   <Input
                     placeholder="Search quotes..."
                     value={searchTerm}
