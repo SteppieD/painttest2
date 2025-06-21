@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createDatabaseAdapter } from '@/lib/database/adapter';
+import { getDatabase } from '@/lib/database/init';
 
 // Get company branding
 export async function GET(
@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const db = createDatabaseAdapter();
+    const db = getDatabase();
     
     // Get existing branding data
     const branding = await db.query(
@@ -59,7 +59,7 @@ export async function PUT(
 ) {
   try {
     const data = await request.json();
-    const db = createDatabaseAdapter();
+    const db = getDatabase();
     
     const {
       logo_url,
