@@ -33,9 +33,11 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 - **Quote Editing Menu** - Comprehensive editing with customer info, dimensions, and paint selection options
 - **Real-time Updates** - Live price calculations and measurement explanations
 
-## Current Status (Updated Jun 18, 2025)
+## Current Status (Updated Jun 21, 2025)
 - **Setup Wizard**: ✅ 2-minute onboarding with favorite paint products selection
 - **Favorite Products System**: ✅ Quick-select from 3 pre-configured products per category
+- **Paint Product Management**: ✅ Fixed saving issue - products now persist properly
+- **Inline Price Editing**: ✅ Click-to-edit prices directly without opening dialogs
 - **Streamlined Quote Creation**: ✅ One-click paint selection using contractor favorites
 - **Smart Measurement Collection**: ✅ Surface-specific measurement logic implemented
 - **Enhanced Paint Selection**: ✅ Interactive brand/product selection with 12 products across 4 brands
@@ -169,7 +171,25 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 - **Database Integrity**: ✅ 12 quotes, $79,400+ revenue tracked across 3 companies
 - **Analytics Dashboard**: ✅ All dashboard pages now display correct data instead of zeros
 
-## Recent Bug Fixes (Jun 14, 2025)
+## Recent Bug Fixes (Jun 21, 2025)
+### **Paint Product Management Fix**
+**Problem**: Products weren't saving when clicking "Add" buttons
+- Clicking to add a popular product would delete all existing products
+- The `savePaintProducts` method was deleting ALL products before inserting new ones
+
+**Solution**: 
+- Added new `addPaintProduct` method to supabase adapter
+- Updated `/api/paint-products/single` to use the new method
+- Products now properly persist without affecting existing ones
+
+### **Inline Price Editing Enhancement**
+**Feature**: Quick price editing without dialogs
+- Click any product price to edit inline
+- Press Enter or click ✓ to save
+- Press Esc or click ✕ to cancel
+- Improves workflow efficiency for contractors updating prices
+
+## Previous Bug Fixes (Jun 14, 2025)
 ### **Dashboard Analytics Issue Resolution**
 **Problem**: All analytics dashboard pages showing zeros instead of actual data
 - `/insights` - Business metrics empty

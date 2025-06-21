@@ -278,9 +278,25 @@ export default function ProductSettingsPage() {
     }
   };
 
+  const [editingInlineProduct, setEditingInlineProduct] = useState<string | null>(null);
+  const [inlineEditValues, setInlineEditValues] = useState<{[key: string]: number}>({});
+
+  const startInlineEdit = (productId: string, currentCost: number) => {
+    setEditingInlineProduct(productId);
+    setInlineEditValues({ [productId]: currentCost });
+  };
+
+  const saveInlineEdit = async (product: PaintProduct) => {
+    const newCost = inlineEditValues[product.id];
+    if (newCost && newCost !== product.costPerGallon) {
+      await saveProduct({ ...product, costPerGallon: newCost });
+    }
+    setEditingInlineProduct(null);
+  };
+
   const renderProductCard = (product: PaintProduct) => (
-    <Card key={product.id} className="mb-3 cursor-pointer hover:shadow-md transition-shadow">
-      <CardContent className="pt-4" onClick={() => startEditProduct(product)}>
+    <Card key={product.id} className="mb-3 hover:shadow-md transition-shadow">
+      <CardContent className="pt-4">
         <div className="flex justify-between items-start">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
@@ -295,22 +311,74 @@ export default function ProductSettingsPage() {
             {product.productLine && (
               <p className="text-xs text-gray-500">{product.productLine}</p>
             )}
-            <p className="text-lg font-semibold text-green-600 mt-1">
-              ${product.costPerGallon.toFixed(2)}/gal
-            </p>
+            
+            {/* Inline price editing */}
+            {editingInlineProduct === product.id ? (
+              <div className="flex items-center gap-2 mt-1">
+                <div className="relative">
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={inlineEditValues[product.id] || product.costPerGallon}
+                    onChange={(e) => setInlineEditValues({
+                      ...inlineEditValues,
+                      [product.id]: parseFloat(e.target.value) || 0
+                    })}
+                    className="pl-7 pr-12 h-8 w-24"
+                    autoFocus
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        saveInlineEdit(product);
+                      }
+                    }}
+                  />
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 text-sm">/gal</span>
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => saveInlineEdit(product)}
+                  className="h-8 px-2"
+                >
+                  ✓
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setEditingInlineProduct(null)}
+                  className="h-8 px-2"
+                >
+                  ✕
+                </Button>
+              </div>
+            ) : (
+              <button
+                onClick={() => startInlineEdit(product.id, product.costPerGallon)}
+                className="text-lg font-semibold text-green-600 mt-1 hover:bg-green-50 px-2 py-1 rounded transition-colors"
+              >
+                ${product.costPerGallon.toFixed(2)}/gal
+              </button>
+            )}
           </div>
-          <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
+          <div className="flex gap-1">
             <Button
               size="sm"
               variant="outline"
               onClick={() => startEditProduct(product)}
+              title="Edit all details"
             >
               <Edit3 className="h-3 w-3" />
             </Button>
             <Button
               size="sm"
               variant="outline"
-              onClick={() => deleteProduct(product.id)}
+              onClick={() => {
+                if (confirm('Are you sure you want to delete this product?')) {
+                  deleteProduct(product.id);
+                }
+              }}
+              title="Delete product"
             >
               <Trash2 className="h-3 w-3" />
             </Button>

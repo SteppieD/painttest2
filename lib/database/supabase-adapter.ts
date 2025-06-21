@@ -279,6 +279,35 @@ export class SupabaseDatabaseAdapter {
     return { success: true };
   }
 
+  async addPaintProduct(companyId: number, product: any) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    const { data, error } = await this.supabase
+      .from('company_paint_products')
+      .insert({
+        user_id: companyId,
+        project_type: product.projectType,
+        product_category: product.productCategory,
+        supplier: product.supplier,
+        product_name: product.productName,
+        product_line: product.productLine || null,
+        cost_per_gallon: product.costPerGallon,
+        display_order: product.displayOrder || 1,
+        sheen: product.sheen || null,
+        coverage_per_gallon: product.coveragePerGallon || 350
+      })
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  }
+
   async updatePaintProduct(productId: number, updates: any) {
     if (!this.supabase) {
       throw new Error('Supabase client not initialized');
