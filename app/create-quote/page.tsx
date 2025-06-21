@@ -251,6 +251,40 @@ function CreateQuotePageOptimizedContent() {
     dispatch({ type: 'SET_SHOW_ESTIMATE', payload: shouldShow });
   }, [quoteData, selectedSurfaces, roomCount]);
 
+  // Handle sending user messages
+  const handleSendMessage = useCallback(async () => {
+    if (!inputValue.trim() || isLoading || isThinking) return;
+
+    dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+    dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [] });
+
+    const userMessage = {
+      id: Date.now().toString(),
+      role: 'user' as const,
+      content: inputValue,
+      timestamp: new Date().toISOString()
+    };
+
+    dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
+    dispatch({ type: 'SET_INPUT_VALUE', payload: '' });
+    
+    // Start AI processing (simplified for now)
+    dispatch({ type: 'SET_LOADING', payload: true });
+    
+    // TODO: Add actual AI conversation logic here
+    setTimeout(() => {
+      const aiMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant' as const,
+        content: "I received your message. The full conversation logic will be implemented here.",
+        timestamp: new Date().toISOString()
+      };
+      dispatch({ type: 'ADD_MESSAGE', payload: aiMessage });
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }, 1000);
+    
+  }, [inputValue, isLoading, isThinking]);
+
   // Optimized initialization function
   const initializeApp = useCallback(async () => {
     dispatch({ type: 'SET_INITIALIZING', payload: true });
@@ -462,23 +496,61 @@ What would you like to modify?`,
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calculator className="w-6 h-6" />
-              Quote Creation - Optimized with useReducer
+              Create Professional Quote
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <p>State management optimized: {Object.keys(state).length} properties in single state object</p>
-              <p>Messages: {messages.length}</p>
-              <p>Conversation Stage: {conversationStage}</p>
-              <p>Selected Surfaces: {selectedSurfaces.join(', ') || 'None'}</p>
+            <div className="space-y-6">
+              {/* Messages Display */}
+              <div className="max-h-96 overflow-y-auto space-y-4">
+                {messages.map((message, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      "p-4 rounded-lg",
+                      message.role === "user"
+                        ? "bg-blue-50 border-l-4 border-blue-500 ml-8"
+                        : "bg-gray-50 border-l-4 border-gray-500 mr-8"
+                    )}
+                  >
+                    <div className="whitespace-pre-wrap">{message.content}</div>
+                  </div>
+                ))}
+                {isLoading && (
+                  <div className="bg-gray-50 border-l-4 border-gray-500 mr-8 p-4 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Analyzing your request...</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Progressive Estimate Widget */}
               {currentEstimate && (
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <h3 className="font-semibold">Progressive Estimate</h3>
-                  <p>Price: ${currentEstimate.estimatedPrice.toLocaleString()}</p>
-                  <p>Confidence: {currentEstimate.confidence}</p>
-                  <p>Completeness: {currentEstimate.completeness}%</p>
-                </div>
+                <ProgressiveEstimateDisplay estimate={currentEstimate} />
               )}
+
+              {/* Input Section */}
+              <div className="border-t pt-6">
+                <div className="flex gap-2">
+                  <Input
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder="Describe your painting project or answer the questions above..."
+                    onKeyPress={(e) => e.key === 'Enter' && !isLoading && handleSendMessage()}
+                    disabled={isLoading}
+                    className="flex-1"
+                  />
+                  <Button
+                    onClick={handleSendMessage}
+                    disabled={isLoading || !inputValue.trim()}
+                    className="px-6"
+                  >
+                    <Send className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
