@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       paintActions: result.paintActions || [],
       contractorName: contractorContext.contactName,
       companyName: contractorContext.companyName,
-      model: 'claude-3.5-sonnet'
+      model: 'claude-sonnet-4'
     });
 
   } catch (error) {

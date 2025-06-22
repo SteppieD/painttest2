@@ -173,7 +173,7 @@ export class ProfessionalFriendAI {
         'X-Title': 'Professional Painting Quote Assistant'
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-3.5-sonnet',
+        model: 'anthropic/claude-sonnet-4',
         messages: [
           {
             role: 'user',
@@ -246,7 +246,7 @@ export class ProfessionalFriendAI {
           'X-Title': 'Professional Painting Quote Assistant'
         },
         body: JSON.stringify({
-          model: 'anthropic/claude-3.5-sonnet',
+          model: 'anthropic/claude-sonnet-4',
           messages: [
             {
               role: 'user',

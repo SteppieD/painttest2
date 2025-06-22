@@ -255,7 +255,7 @@ export class IntelligentQuoteAssistant {
           'X-Title': 'Intelligent Painting Quote Assistant'
         },
         body: JSON.stringify({
-          model: 'anthropic/claude-3.5-sonnet',
+          model: 'anthropic/claude-sonnet-4',
           messages: [
             {
               role: 'system',
@@ -524,7 +524,7 @@ Return {} if nothing relevant found.`;
           'X-Title': 'Intelligent Painting Quote Assistant'
         },
         body: JSON.stringify({
-          model: 'anthropic/claude-3.5-sonnet',
+          model: 'anthropic/claude-sonnet-4',
           messages: [
             {
               role: 'user',

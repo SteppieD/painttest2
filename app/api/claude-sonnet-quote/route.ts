@@ -56,7 +56,7 @@ Please respond naturally to help create their painting quote.`;
         'X-Title': 'Professional Painting Quote Assistant'
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-3.5-sonnet',
+        model: 'anthropic/claude-sonnet-4',
         messages: [
           {
             role: 'system',
@@ -138,7 +138,7 @@ Return empty object {} if nothing relevant found.`;
         'X-Title': 'Professional Painting Quote Assistant'
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-3.5-sonnet',
+        model: 'anthropic/claude-sonnet-4',
         messages: [
           {
             role: 'user',
