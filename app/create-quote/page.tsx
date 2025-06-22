@@ -1861,13 +1861,13 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
           // Store the paint details for this category
           dispatch({
             type: 'UPDATE_SELECTED_PAINT_PRODUCTS',
-            payload: { [currentMeasurementCategory]: paintDetails }
+            payload: { [state.currentMeasurementCategory]: paintDetails }
           });
           
           // Mark this category as paint selected
           dispatch({
             type: 'MARK_CATEGORY_PAINT_SELECTED',
-            payload: currentMeasurementCategory
+            payload: state.currentMeasurementCategory
           });
           
           // Find next category that needs measurements or paint selection
