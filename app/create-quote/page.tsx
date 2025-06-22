@@ -535,6 +535,116 @@ What would you like to modify?`,
 
   // Old sequential loading functions removed - now using batch loader
 
+  // AI Enhancement Toggle - set to true to enable Claude 3.5 Sonnet integration
+  const useIntelligentAI = true; // Enabled for conversational paint selection
+
+  const processWithIntelligentAI = async (input: string): Promise<Message> => {
+    try {
+      const response = await fetch('/api/intelligent-quote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userInput: input,
+          companyId: companyData?.id,
+          conversationHistory: messages.slice(-6).map(m => ({
+            role: m.role,
+            content: m.content
+          })),
+          extractedData: {
+            customer_name: quoteData.customer_name,
+            address: quoteData.address,
+            project_type: quoteData.project_type,
+            dimensions: quoteData.dimensions,
+            selected_surfaces: selectedSurfaces,
+            markup_percentage: quoteData.markup_percentage
+          },
+          stage: conversationStage
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success && data.response) {
+        // Handle paint actions (price updates, saving favorites)
+        if (data.paintActions && data.paintActions.length > 0) {
+          for (const action of data.paintActions) {
+            if (action.type === 'price_update' && action.status === 'success') {
+              console.log('Paint price updated successfully:', action.data);
+              // Optionally show a toast notification
+              toast({
+                title: "Price Updated",
+                description: `Updated ${action.data.product} to $${action.data.new_price}/gal`,
+              });
+            } else if (action.type === 'save_favorite' && action.status === 'success') {
+              console.log('New paint favorite saved:', action.data);
+              toast({
+                title: "Favorite Saved",
+                description: `Added ${action.data.brand} ${action.data.product} to your favorites`,
+              });
+            }
+          }
+        }
+
+        // Update extracted data if AI found new information
+        if (data.extractedData && Object.keys(data.extractedData).length > 0) {
+          // Merge AI-extracted data with current quote data
+          const updates: any = {};
+          
+          if (data.extractedData.customer_name) updates.customer_name = data.extractedData.customer_name;
+          if (data.extractedData.address) updates.address = data.extractedData.address;
+          if (data.extractedData.project_type) updates.project_type = data.extractedData.project_type;
+          
+          if (data.extractedData.wall_linear_feet || data.extractedData.ceiling_height || 
+              data.extractedData.number_of_doors !== undefined || data.extractedData.number_of_windows !== undefined) {
+            updates.dimensions = {
+              ...quoteData.dimensions,
+              ...(data.extractedData.wall_linear_feet && { wall_linear_feet: data.extractedData.wall_linear_feet }),
+              ...(data.extractedData.ceiling_height && { ceiling_height: data.extractedData.ceiling_height }),
+              ...(data.extractedData.number_of_doors !== undefined && { number_of_doors: data.extractedData.number_of_doors }),
+              ...(data.extractedData.number_of_windows !== undefined && { number_of_windows: data.extractedData.number_of_windows })
+            };
+          }
+
+          // Handle paint product selections
+          if (data.extractedData.selected_paint) {
+            const paintProduct = data.extractedData.selected_paint;
+            dispatch({ type: 'UPDATE_SELECTED_PAINT_PRODUCTS', payload: {
+              [paintProduct.category || 'wall_paint']: {
+                supplier: paintProduct.brand,
+                productName: paintProduct.product,
+                costPerGallon: paintProduct.cost
+              }
+            }});
+          }
+          
+          if (Object.keys(updates).length > 0) {
+            dispatch({ type: 'UPDATE_QUOTE_DATA', payload: updates });
+          }
+          
+          // Update selected surfaces if AI detected them
+          if (data.extractedData.surfaces && Array.isArray(data.extractedData.surfaces)) {
+            dispatch({ type: 'SET_SELECTED_SURFACES', payload: data.extractedData.surfaces });
+          }
+        }
+
+        return {
+          id: Date.now().toString(),
+          role: 'assistant',
+          content: data.response,
+          timestamp: new Date().toISOString()
+        };
+      } else {
+        throw new Error('AI response failed');
+      }
+    } catch (error) {
+      console.error('Intelligent AI error:', error);
+      // Fallback to hardcoded logic
+      return processUserInput(input, conversationStage);
+    }
+  };
+
   const handleButtonClick = async (buttonValue: any, buttonLabel: string) => {
     // Handle surface selection buttons silently (no AI response)
     if (conversationStage === 'surface_selection') {
