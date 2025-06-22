@@ -539,7 +539,7 @@ What would you like to modify?`,
           updatedSurfaces.push(buttonValue);
         }
         
-        dispatch({ type: 'SET_SELECTED_SURFACES', payload: updatedSurfaces });
+        setSelectedSurfaces(updatedSurfaces);
         
         // Update buttons with current selections - keep same label text but track selected state
         const surfaceButtons = quoteData.project_type === 'interior' || quoteData.project_type === 'both' ? [
@@ -742,7 +742,7 @@ What would you like to modify?`,
         break;
         
       case 'customer_name':
-        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { customer_name: input.trim() } });
+        setQuoteData(prev => ({ ...prev, customer_name: input.trim() }));
         responseContent = `Perfect! Now I have ${input.trim()} at ${quoteData.address}.\n\nWhat type of painting work are we quoting?`;
         // Show project type buttons
         setTimeout(() => {
@@ -758,7 +758,7 @@ What would you like to modify?`,
 
       case 'project_type':
         const projectType = parseProjectType(input);
-        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { project_type: projectType } });
+        setQuoteData(prev => ({ ...prev, project_type: projectType }));
         
         if (projectType === 'interior' || projectType === 'both') {
           responseContent = `Perfect! For ${projectType} painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
