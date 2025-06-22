@@ -707,8 +707,10 @@ What would you like to modify?`,
     setIsThinking(true);
 
     try {
-      // Process the response while thinking
-      const aiResponse = await processUserInput(buttonValue, conversationStage);
+      // Process the response while thinking - use AI if enabled
+      const aiResponse = useIntelligentAI 
+        ? await processWithIntelligentAI(buttonValue)
+        : await processUserInput(buttonValue, conversationStage);
       
       // Calculate thinking duration based on response length
       const thinkingDuration = calculateThinkingDuration(aiResponse.content.length);
@@ -773,8 +775,10 @@ What would you like to modify?`,
     setIsThinking(true);
 
     try {
-      // Process the response while thinking
-      const aiResponse = await processUserInput(inputValue, conversationStage);
+      // Process the response while thinking - use AI if enabled
+      const aiResponse = useIntelligentAI 
+        ? await processWithIntelligentAI(inputValue)
+        : await processUserInput(inputValue, conversationStage);
       
       // Calculate thinking duration based on response length
       const thinkingDuration = calculateThinkingDuration(aiResponse.content.length);
@@ -2682,12 +2686,6 @@ What would you like to modify?`,
                 <div className="whitespace-pre-wrap text-sm" dangerouslySetInnerHTML={{
                   __html: renderMarkdown(message.content)
                 }}>
-                </div>
-                <div className={cn(
-                  "text-xs mt-2",
-                  message.role === 'user' ? "text-blue-100" : "text-gray-500"
-                )}>
-                  {new Date(message.timestamp).toLocaleTimeString()}
                 </div>
               </div>
             </div>
