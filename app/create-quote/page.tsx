@@ -668,7 +668,7 @@ What would you like to modify?`,
   // Old sequential loading functions removed - now using batch loader
 
   // AI Enhancement Toggle - set to true to enable Claude 3.5 Sonnet integration
-  const useIntelligentAI = true; // Enabled for conversational paint selection
+  const useIntelligentAI = false; // Disabled for ultra-simple flow
 
   const processWithIntelligentAI = async (input: string): Promise<Message> => {
     try {
@@ -1097,7 +1097,7 @@ What would you like to modify?`,
         
         // If we got enough info, move to paint quality selection
         if (projectData.customerName && projectData.address && projectData.surfaces.length > 0) {
-          responseContent = `Perfect! I've got:\\n\\n**Customer:** ${projectData.customerName}\\n**Address:** ${projectData.address}\\n**Painting:** ${projectData.surfaces.join(', ')}\\n**Size:** ${projectData.sizeDescription || 'Estimated'}\\n\\nNow choose your paint quality:`;
+          responseContent = `Got it! ${projectData.customerName} at ${projectData.address}\\n${projectData.surfaces.join(' + ')} • ${projectData.sizeDescription || 'standard size'}\\n\\nPaint quality?`;
           
           // Show paint quality buttons
           setTimeout(() => {
@@ -1117,7 +1117,7 @@ What would you like to modify?`,
           if (!projectData.address) missing.push('address');
           if (!projectData.surfaces.length) missing.push('what to paint');
           
-          responseContent = `I need a bit more info: **${missing.join(', ')}**\\n\\nTry: \\"Customer name, address, what you're painting, size\\"`;
+          responseContent = `Need: ${missing.join(', ')}\\n\\nTry: "Customer, address, what to paint, size"`;
           nextStage = 'quick_project_input';
         }
         break;
@@ -1148,7 +1148,7 @@ What would you like to modify?`,
           }
         }});
         
-        responseContent = `Great! **${qualityName}** paint selected (\\$${pricePerGal}/gal)\\n\\nWhat's your markup?`;
+        responseContent = `${qualityName} paint - $${pricePerGal}/gal ✓\\n\\nMarkup?`;
         
         // Show markup buttons
         setTimeout(() => {
@@ -1173,7 +1173,7 @@ What would you like to modify?`,
         // Calculate rough quote (simplified version)
         const estimatedTotal = calculateQuickQuote(selectedSurfaces, markupValue);
         
-        responseContent = `## 🎯 **QUICK QUOTE**\\n\\n**${quoteData.customer_name}**\\n${quoteData.address}\\n\\n**Work:** ${selectedSurfaces.join(', ')}\\n**Markup:** ${markupValue}%\\n\\n### **Total: \\$${estimatedTotal.toLocaleString()}**\\n\\n*This is a quick estimate. For detailed breakdown, save the quote.*`;
+        responseContent = `**${quoteData.customer_name}** • ${quoteData.address}\\n${selectedSurfaces.join(' + ')} • ${markupValue}% markup\\n\\n## $${estimatedTotal.toLocaleString()}\\n\\nQuick estimate - save for details`;
         
         // Show final action buttons
         setTimeout(() => {
@@ -1191,25 +1191,27 @@ What would you like to modify?`,
       case 'quote_complete':
         // Handle final actions
         if (input.toLowerCase().includes('save') || input === 'save') {
-          responseContent = `Quote saved! ✅\\n\\nReady for your next project?`;
-          // Reset for new quote
+          responseContent = `Saved! ✅\\n\\nNext project?`;
+          // Reset for new quote with initial message
           setTimeout(() => {
             dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'quick_project_input' });
             dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
             dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
+            dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { customer_name: '', address: '' } });
           }, 1000);
           nextStage = 'quick_project_input';
         } else if (input.toLowerCase().includes('new') || input === 'new') {
-          responseContent = `Starting new quote...`;
+          responseContent = `New quote! 🎨\\n\\nCustomer, address, what to paint, size?`;
           // Reset for new quote
           setTimeout(() => {
             dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'quick_project_input' });
             dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
             dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
+            dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { customer_name: '', address: '' } });
           }, 500);
           nextStage = 'quick_project_input';
         } else {
-          responseContent = `Use the buttons above to save the quote or start a new one.`;
+          responseContent = `Use the buttons ☝️`;
           nextStage = 'quote_complete';
         }
         break;
@@ -3343,8 +3345,8 @@ What would you like to modify?`,
         <div className="bg-white border-t p-4">
           {conversationStage === 'quick_project_input' && (
             <div className="mb-3 text-center">
-              <p className="text-sm text-gray-600 mb-2">🎯 <strong>Ultra-Fast Quoting</strong></p>
-              <p className="text-xs text-gray-500">Just describe your project in one line</p>
+              <p className="text-sm text-gray-600 mb-2">🎯 <strong>Quick Quote</strong></p>
+              <p className="text-xs text-gray-500">One line, all the details</p>
             </div>
           )}
           <div className="flex gap-2">
@@ -3353,19 +3355,19 @@ What would you like to modify?`,
               onChange={(e) => dispatch({ type: 'SET_INPUT_VALUE', payload: e.target.value })}
               onKeyPress={handleKeyPress}
               placeholder={conversationStage === 'quick_project_input' 
-                ? "e.g. John Smith, 123 Main St, kitchen walls & cabinets, 12x10 room"
+                ? "John Smith, 123 Main St, kitchen walls & cabinets, 12x10"
                 : "Type your response..."
               }
               disabled={isLoading || isThinking}
-              className="flex-1 text-base h-12 px-4"
+              className={`flex-1 px-4 ${conversationStage === 'quick_project_input' ? 'text-base h-12' : 'h-10'}`}
             />
             <Button
               onClick={handleSend}
               disabled={!inputValue.trim() || isLoading || isThinking}
-              size="lg"
-              className="h-12 px-6"
+              size={conversationStage === 'quick_project_input' ? 'lg' : 'sm'}
+              className={conversationStage === 'quick_project_input' ? 'h-12 px-6' : 'h-10 px-4'}
             >
-              <Send className="w-5 h-5" />
+              <Send className={conversationStage === 'quick_project_input' ? 'w-5 h-5' : 'w-4 h-4'} />
             </Button>
           </div>
           {conversationStage === 'quick_project_input' && (
