@@ -86,6 +86,10 @@ import {
   generateWorkflowSteps,
   RoomCountSelector 
 } from "@/components/ui/smart-workflow-buttons";
+import {
+  CategorySummaryList,
+  type CategorySummaryButtonProps
+} from "@/components/ui/category-summary-buttons";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
 import { 
   quoteCreationReducer, 
@@ -781,6 +785,58 @@ What would you like to modify?`,
 
   const handleButtonClick = async (buttonValue: any, buttonLabel: string) => {
     // Handle quick flow button clicks
+    if (conversationStage === 'category_selection') {
+      // Handle category selection
+      const selectedCategories = [...state.selectedSurfaces];
+      
+      if (selectedCategories.includes(buttonValue)) {
+        // Remove category if already selected
+        const newSelected = selectedCategories.filter(cat => cat !== buttonValue);
+        dispatch({ type: 'SET_SELECTED_SURFACES', payload: newSelected });
+      } else {
+        // Add category if not selected
+        selectedCategories.push(buttonValue);
+        dispatch({ type: 'SET_SELECTED_SURFACES', payload: selectedCategories });
+      }
+      
+      // Update button selections
+      const updatedButtons = buttonOptions.map(btn => ({
+        ...btn,
+        selected: selectedCategories.includes(btn.value)
+      }));
+      
+      // Add continue button if categories are selected
+      if (selectedCategories.length > 0) {
+        updatedButtons.push({
+          id: 'continue', 
+          label: `Continue with ${selectedCategories.length} categories ➡️`, 
+          value: 'continue', 
+          selected: false
+        });
+      }
+      
+      dispatch({ type: 'SET_BUTTON_OPTIONS', payload: updatedButtons });
+      
+      // Handle continue button
+      if (buttonValue === 'continue' && selectedCategories.length > 0) {
+        const userMessage: Message = {
+          id: Date.now().toString(),
+          role: 'user',
+          content: `Selected: ${selectedCategories.map(cat => cat.charAt(0).toUpperCase() + cat.slice(1)).join(', ')}`,
+          timestamp: new Date().toISOString()
+        };
+        dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
+        dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+        
+        // Process the selection
+        const response = await processUserInput(selectedCategories.join(', '), conversationStage);
+        dispatch({ type: 'ADD_MESSAGE', payload: response });
+        return;
+      }
+      
+      return; // Don't process further if just selecting categories
+    }
+    
     if (conversationStage === 'paint_quality_quick') {
       // Handle edit prices button
       if (buttonValue === 'edit_prices') {
@@ -1110,45 +1166,356 @@ What would you like to modify?`,
     let nextStage = stage;
 
     switch (stage) {
-      case 'quick_project_input':
-        // Ultra-simple: Parse everything from one natural language input
+      case 'project_setup':
+        // Parse customer and project info (no surface details yet)
         const projectData = parseQuickProjectInput(input);
         
-        // Update quote data with extracted information
+        // Update quote data with customer information
         dispatch({ type: 'UPDATE_QUOTE_DATA', payload: {
           customer_name: projectData.customerName || '',
           address: projectData.address || '',
           project_type: projectData.projectType || 'interior'
         }});
         
-        dispatch({ type: 'SET_SELECTED_SURFACES', payload: projectData.surfaces || [] });
-        
-        // If we got enough info, move to paint quality selection
-        if (projectData.customerName && projectData.address && projectData.surfaces.length > 0) {
-          responseContent = `Got it! ${projectData.customerName} at ${projectData.address}\\n${projectData.surfaces.join(' + ')} • ${projectData.sizeDescription || 'standard size'}\\n\\nPaint quality?`;
+        // If we have customer name and address, move to category selection
+        if (projectData.customerName && projectData.address) {
+          responseContent = `Perfect! ${projectData.customerName} at ${projectData.address} ✅\n\n**Now, what surfaces are we painting?**\n\nSelect all that apply:`;
           
-          // Show paint quality buttons
+          // Show category selection buttons
           setTimeout(() => {
             dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: 'good', label: '💰 Good Paint ($45/gal)', value: 'good', selected: false },
-              { id: 'better', label: '⭐ Better Paint ($65/gal)', value: 'better', selected: true },
-              { id: 'best', label: '👑 Best Paint ($85/gal)', value: 'best', selected: false },
-              { id: 'edit_prices', label: '✏️ Edit Paint Prices', value: 'edit_prices', selected: false }
+              { id: 'walls', label: '🏠 Walls', value: 'walls', selected: false },
+              { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: false },
+              { id: 'doors', label: '🚪 Doors', value: 'doors', selected: false },
+              { id: 'trim', label: '📐 Trim/Baseboards', value: 'trim', selected: false },
+              { id: 'cabinets', label: '🗄️ Cabinets', value: 'cabinets', selected: false }
             ]});
             dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
           }, 500);
           
-          nextStage = 'paint_quality_quick';
+          nextStage = 'category_selection';
         } else {
-          // Need more info - ask specific clarifying questions
+          // Need more info - ask for missing details
           const missing = [];
           if (!projectData.customerName) missing.push('customer name');
           if (!projectData.address) missing.push('address');
-          if (!projectData.surfaces.length) missing.push('what to paint');
           
-          responseContent = `Need: ${missing.join(', ')}\\n\\nTry: "Customer, address, what to paint, size"`;
-          nextStage = 'quick_project_input';
+          responseContent = `I need: ${missing.join(' and ')}\n\nTry: "Customer name, address, project description"`;
+          nextStage = 'project_setup';
         }
+        break;
+
+      case 'category_selection':
+        // Handle category selection - could be multiple categories
+        responseContent = "Great! Let's start with measurements.";
+        
+        // Get the first category to process
+        const firstCategory = selectedSurfaces[0] || 'walls';
+        dispatch({ type: 'SET_CURRENT_CATEGORY', payload: firstCategory });
+        dispatch({ type: 'SET_CATEGORY_QUEUE', payload: selectedSurfaces.slice(1) });
+        
+        // Start with first category measurements
+        if (firstCategory === 'walls') {
+          responseContent = "🏠 **WALLS** - Let's get measurements\n\nTell me the **linear feet** and **ceiling height**\n\nExample: '120 linear feet, 9 foot ceilings'";
+          nextStage = 'category_measurement_walls';
+        } else if (firstCategory === 'ceilings') {
+          responseContent = "⬆️ **CEILINGS** - Room by room measurements\n\nTell me each room:\n\nExample: 'Living room 15x12, Kitchen 10x12, Bedroom 12x11'";
+          nextStage = 'category_measurement_ceilings';
+        } else if (firstCategory === 'doors') {
+          responseContent = "🚪 **DOORS** - How many doors?\n\nExample: '6 doors' or 'interior doors: 4, exterior doors: 2'";
+          nextStage = 'category_measurement_doors';
+        }
+        break;
+
+      case 'category_measurement_walls':
+        // Parse wall measurements
+        const wallLinearFeet = parseInt(input.match(/(\d+)\s*(?:linear\s*)?(?:feet|ft)/i)?.[1] || '0');
+        const wallHeight = parseInt(input.match(/(\d+)\s*(?:foot|ft|feet)\s*(?:ceiling|high|height)/i)?.[1] || '9');
+        
+        if (wallLinearFeet > 0) {
+          // Store wall measurements
+          dispatch({ type: 'UPDATE_CURRENT_CATEGORY_DATA', payload: {
+            id: 'walls',
+            name: 'Walls', 
+            type: 'walls',
+            measurements: { linearFeet: wallLinearFeet, height: wallHeight }
+          }});
+          
+          responseContent = `Got it! ${wallLinearFeet} LF × ${wallHeight}' height \u2705\n\n**Now pick your wall paint:**`;
+          
+          // Show paint product options for walls
+          setTimeout(() => {
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: 'sw_proclassic', label: 'Sherwin ProClassic - $58/gal', value: 'sw_proclassic', selected: true },
+              { id: 'bm_advance', label: 'Benjamin Moore Advance - $67/gal', value: 'bm_advance', selected: false },
+              { id: 'behr_ultra', label: 'Behr Ultra - $45/gal', value: 'behr_ultra', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+          
+          nextStage = 'category_product_walls';
+        } else {
+          responseContent = "I need the linear feet. Try: '120 linear feet, 9 foot ceilings'";
+          nextStage = 'category_measurement_walls';
+        }
+        break;
+
+      case 'category_product_walls':
+        // Handle wall paint selection and create summary button
+        const wallProduct = input.includes('proclassic') ? 'Sherwin ProClassic' : 
+                           input.includes('advance') ? 'Benjamin Moore Advance' : 'Behr Ultra';
+        const wallPrice = input.includes('proclassic') ? 58 : 
+                         input.includes('advance') ? 67 : 45;
+        
+        // Calculate wall paint cost
+        const wallArea = (currentCategoryData.measurements?.linearFeet || 0) * (currentCategoryData.measurements?.height || 9);
+        const wallGallons = Math.ceil(wallArea / 350); // 350 sq ft per gallon
+        const wallCost = wallGallons * wallPrice;
+        
+        // Complete the walls category
+        const wallsCategoryData = {
+          ...currentCategoryData,
+          product: { brand: wallProduct.split(' ')[0], name: wallProduct, pricePerGallon: wallPrice, coverage: 350 },
+          estimatedCost: wallCost,
+          estimatedGallons: wallGallons
+        };
+        
+        dispatch({ type: 'ADD_COMPLETED_CATEGORY', payload: wallsCategoryData });
+        dispatch({ type: 'ADD_CATEGORY_SUMMARY_BUTTON', payload: {
+          id: 'walls_summary',
+          categoryType: 'walls',
+          icon: '🏠',
+          title: `Walls: ${wallsCategoryData.measurements?.linearFeet} LF × ${wallsCategoryData.measurements?.height}'`,
+          subtitle: `${wallProduct} - ~$${wallCost} paint`,
+          cost: wallCost,
+          isCompleted: true
+        }});
+        
+        // Move to next category or finish
+        if (categoryQueue.length > 0) {
+          const nextCategory = categoryQueue[0];
+          dispatch({ type: 'SET_CURRENT_CATEGORY', payload: nextCategory });
+          dispatch({ type: 'SET_CATEGORY_QUEUE', payload: categoryQueue.slice(1) });
+          
+          responseContent = `🏠 Walls complete! \u2705\n\nNext: **${nextCategory.toUpperCase()}**`;
+          nextStage = `category_measurement_${nextCategory}`;
+        } else {
+          responseContent = "All categories complete! \u2705\n\n**Final step - markup percentage:**";
+          
+          setTimeout(() => {
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: '15', label: '15% markup', value: '15', selected: false },
+              { id: '20', label: '20% markup', value: '20', selected: true },
+              { id: '25', label: '25% markup', value: '25', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+          
+          nextStage = 'final_markup';
+        }
+        break;
+
+      case 'category_measurement_ceilings':
+        // Parse ceiling measurements room by room
+        const roomMatches = input.match(/(\w+(?:\s+\w+)*)\s+(\d+)\s*x\s*(\d+)/gi) || [];
+        
+        if (roomMatches.length > 0) {
+          const rooms = roomMatches.map(match => {
+            const parts = match.match(/(\w+(?:\s+\w+)*)\s+(\d+)\s*x\s*(\d+)/i);
+            const roomName = parts?.[1] || 'Room';
+            const width = parseInt(parts?.[2] || '0');
+            const length = parseInt(parts?.[3] || '0');
+            return { name: roomName, dimensions: `${width}x${length}`, area: width * length };
+          });
+          
+          const totalArea = rooms.reduce((sum, room) => sum + room.area, 0);
+          
+          dispatch({ type: 'UPDATE_CURRENT_CATEGORY_DATA', payload: {
+            id: 'ceilings',
+            name: 'Ceilings',
+            type: 'ceilings',
+            measurements: { rooms: rooms, area: totalArea }
+          }});
+          
+          const roomList = rooms.map(r => `${r.name} ${r.dimensions}`).join(', ');
+          responseContent = `Got it! ${rooms.length} rooms (${roomList}) = ${totalArea} sq ft \u2705\n\n**Ceiling paint:**`;
+          
+          setTimeout(() => {
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: 'behr_ceiling', label: 'Behr Ceiling Paint - $42/gal', value: 'behr_ceiling', selected: true },
+              { id: 'sw_enamel', label: 'Sherwin Enamel - $55/gal', value: 'sw_enamel', selected: false },
+              { id: 'kilz_ceiling', label: 'Kilz Ceiling - $38/gal', value: 'kilz_ceiling', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+          
+          nextStage = 'category_product_ceilings';
+        } else {
+          responseContent = "I need room dimensions. Try: 'Living room 15x12, Kitchen 10x12'";
+          nextStage = 'category_measurement_ceilings';
+        }
+        break;
+
+      case 'category_product_ceilings':
+        const ceilingProduct = input.includes('behr') ? 'Behr Ceiling Paint' :
+                              input.includes('sherwin') ? 'Sherwin Enamel' : 'Kilz Ceiling Paint';
+        const ceilingPrice = input.includes('behr') ? 42 :
+                            input.includes('sherwin') ? 55 : 38;
+        
+        const ceilingArea = currentCategoryData.measurements?.area || 0;
+        const ceilingGallons = Math.ceil(ceilingArea / 400); // 400 sq ft per gallon for ceilings
+        const ceilingCost = ceilingGallons * ceilingPrice;
+        
+        const ceilingsCategoryData = {
+          ...currentCategoryData,
+          product: { brand: ceilingProduct.split(' ')[0], name: ceilingProduct, pricePerGallon: ceilingPrice, coverage: 400 },
+          estimatedCost: ceilingCost,
+          estimatedGallons: ceilingGallons
+        };
+        
+        dispatch({ type: 'ADD_COMPLETED_CATEGORY', payload: ceilingsCategoryData });
+        
+        const roomDetails = ceilingsCategoryData.measurements?.rooms?.map(r => r.name).join(', ') || 'Multiple rooms';
+        dispatch({ type: 'ADD_CATEGORY_SUMMARY_BUTTON', payload: {
+          id: 'ceilings_summary',
+          categoryType: 'ceilings',
+          icon: '⬆️',
+          title: `Ceilings: ${roomDetails}`,
+          subtitle: `${ceilingProduct} - ~$${ceilingCost} paint`,
+          cost: ceilingCost,
+          isCompleted: true
+        }});
+        
+        // Continue to next category or finish
+        if (categoryQueue.length > 0) {
+          const nextCategory = categoryQueue[0];
+          dispatch({ type: 'SET_CURRENT_CATEGORY', payload: nextCategory });
+          dispatch({ type: 'SET_CATEGORY_QUEUE', payload: categoryQueue.slice(1) });
+          responseContent = `⬆️ Ceilings complete! \u2705\n\nNext: **${nextCategory.toUpperCase()}**`;
+          nextStage = `category_measurement_${nextCategory}`;
+        } else {
+          responseContent = "All categories complete! \u2705\n\n**Final step - markup percentage:**";
+          setTimeout(() => {
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: '15', label: '15% markup', value: '15', selected: false },
+              { id: '20', label: '20% markup', value: '20', selected: true },
+              { id: '25', label: '25% markup', value: '25', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+          nextStage = 'final_markup';
+        }
+        break;
+
+      case 'category_measurement_doors':
+        const doorCount = parseInt(input.match(/(\d+)\s*doors?/i)?.[1] || '0');
+        
+        if (doorCount > 0) {
+          dispatch({ type: 'UPDATE_CURRENT_CATEGORY_DATA', payload: {
+            id: 'doors',
+            name: 'Doors',
+            type: 'doors', 
+            measurements: { count: doorCount }
+          }});
+          
+          responseContent = `Got it! ${doorCount} doors \u2705\n\n**Door paint:**`;
+          
+          setTimeout(() => {
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: 'bm_advance', label: 'Benjamin Moore Advance - $67/gal', value: 'bm_advance', selected: true },
+              { id: 'sw_proclassic', label: 'Sherwin ProClassic - $58/gal', value: 'sw_proclassic', selected: false },
+              { id: 'behr_alkyd', label: 'Behr Alkyd - $52/gal', value: 'behr_alkyd', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+          
+          nextStage = 'category_product_doors';
+        } else {
+          responseContent = "How many doors? Try: '6 doors' or just '6'";
+          nextStage = 'category_measurement_doors';
+        }
+        break;
+
+      case 'category_product_doors':
+        const doorProduct = input.includes('advance') ? 'Benjamin Moore Advance' :
+                           input.includes('proclassic') ? 'Sherwin ProClassic' : 'Behr Alkyd';
+        const doorPrice = input.includes('advance') ? 67 :
+                         input.includes('proclassic') ? 58 : 52;
+        
+        const doorCount2 = currentCategoryData.measurements?.count || 0;
+        const doorGallons = Math.ceil(doorCount2 / 8); // ~8 doors per gallon
+        const doorCost2 = doorGallons * doorPrice;
+        
+        const doorsCategoryData = {
+          ...currentCategoryData,
+          product: { brand: doorProduct.split(' ')[0], name: doorProduct, pricePerGallon: doorPrice, coverage: 8 },
+          estimatedCost: doorCost2,
+          estimatedGallons: doorGallons
+        };
+        
+        dispatch({ type: 'ADD_COMPLETED_CATEGORY', payload: doorsCategoryData });
+        dispatch({ type: 'ADD_CATEGORY_SUMMARY_BUTTON', payload: {
+          id: 'doors_summary',
+          categoryType: 'doors',
+          icon: '🚪',
+          title: `Doors: ${doorCount2} doors`,
+          subtitle: `${doorProduct} - ~$${doorCost2} paint`,
+          cost: doorCost2,
+          isCompleted: true
+        }});
+        
+        // Continue to next category or finish
+        if (categoryQueue.length > 0) {
+          const nextCategory = categoryQueue[0];
+          dispatch({ type: 'SET_CURRENT_CATEGORY', payload: nextCategory });
+          dispatch({ type: 'SET_CATEGORY_QUEUE', payload: categoryQueue.slice(1) });
+          responseContent = `🚪 Doors complete! \u2705\n\nNext: **${nextCategory.toUpperCase()}**`;
+          nextStage = `category_measurement_${nextCategory}`;
+        } else {
+          responseContent = "All categories complete! \u2705\n\n**Final step - markup percentage:**";
+          setTimeout(() => {
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: '15', label: '15% markup', value: '15', selected: false },
+              { id: '20', label: '20% markup', value: '20', selected: true },
+              { id: '25', label: '25% markup', value: '25', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+          nextStage = 'final_markup';
+        }
+        break;
+
+      case 'final_markup':
+        // Handle markup selection and generate final quote
+        const markupPercentage = parseInt(input) || 20;
+        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { markup_percentage: markupPercentage } });
+        
+        // Calculate total from all completed categories
+        const totalPaintCost = completedCategories.reduce((sum, cat) => sum + cat.estimatedCost, 0);
+        const materialCost = totalPaintCost;
+        const laborCost = materialCost * 2; // Rough 2:1 labor to material ratio
+        const subtotal = materialCost + laborCost;
+        const markup = subtotal * (markupPercentage / 100);
+        const finalTotal = subtotal + markup;
+        
+        responseContent = `**Quote Complete!** \u2705\n\n` +
+          `Material: $${materialCost}\n` +
+          `Labor: $${laborCost}\n` +
+          `Markup (${markupPercentage}%): $${markup}\n` +
+          `**Total: $${Math.round(finalTotal)}**\n\n` +
+          `Ready to save this quote?`;
+        
+        // Show save buttons
+        setTimeout(() => {
+          dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+            { id: 'save_quote', label: '💾 Save Quote', value: 'save', selected: true },
+            { id: 'edit_quote', label: '✏️ Edit Quote', value: 'edit', selected: false },
+            { id: 'new_quote', label: '🆕 New Quote', value: 'new', selected: false }
+          ]});
+          dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+        }, 500);
+        
+        nextStage = 'quote_complete';
         break;
 
       case 'paint_quality_quick':
@@ -3154,6 +3521,20 @@ What would you like to modify?`,
             </div>
           ))}
 
+          {/* Category Summary Progress */}
+          {categorySummaryButtons.length > 0 && (
+            <div className="flex justify-start">
+              <div className="max-w-md">
+                <CategorySummaryList 
+                  categories={categorySummaryButtons}
+                  onCategoryClick={(category) => {
+                    // TODO: Allow editing of completed categories
+                    console.log('Category clicked:', category);
+                  }}
+                />
+              </div>
+            </div>
+          )}
           
           {isThinking && (
             <div className="flex gap-3 justify-start">

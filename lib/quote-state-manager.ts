@@ -40,6 +40,37 @@ export interface CategoryCompletionStatus {
   };
 }
 
+export interface CategoryData {
+  id: string;
+  name: string;
+  type: 'walls' | 'ceilings' | 'doors' | 'trim' | 'cabinets' | 'other';
+  measurements: {
+    linearFeet?: number;
+    height?: number;
+    rooms?: Array<{name: string, dimensions: string, area: number}>;
+    count?: number;
+    area?: number;
+  };
+  product: {
+    brand: string;
+    name: string;
+    pricePerGallon: number;
+    coverage: number; // sq ft per gallon
+  };
+  estimatedCost: number;
+  estimatedGallons: number;
+}
+
+export interface CategorySummaryButton {
+  id: string;
+  categoryType: 'walls' | 'ceilings' | 'doors' | 'trim' | 'cabinets' | 'other';
+  icon: string;
+  title: string;
+  subtitle: string;
+  cost: number;
+  isCompleted: boolean;
+}
+
 export interface QuoteCreationState {
   // Company data
   companyData: any;
@@ -110,6 +141,14 @@ export interface QuoteCreationState {
   showQuantitySelector: boolean;
   showCategoryReview: boolean;
   currentWorkflowStage: 'room_selection' | 'quantity_selection' | 'category_review' | 'final_review';
+  
+  // Category-driven quote flow
+  selectedCategories: string[];
+  currentCategory: string;
+  categoryQueue: string[];
+  completedCategories: CategoryData[];
+  currentCategoryData: Partial<CategoryData>;
+  categorySummaryButtons: CategorySummaryButton[];
 }
 
 // Action types for the reducer
@@ -170,6 +209,17 @@ export type QuoteCreationAction =
   | { type: 'SET_SHOW_QUANTITY_SELECTOR'; payload: boolean }
   | { type: 'SET_SHOW_CATEGORY_REVIEW'; payload: boolean }
   | { type: 'SET_CURRENT_WORKFLOW_STAGE'; payload: 'room_selection' | 'quantity_selection' | 'category_review' | 'final_review' }
+  // Category-driven quote flow actions
+  | { type: 'SET_SELECTED_CATEGORIES'; payload: string[] }
+  | { type: 'SET_CURRENT_CATEGORY'; payload: string }
+  | { type: 'SET_CATEGORY_QUEUE'; payload: string[] }
+  | { type: 'ADD_COMPLETED_CATEGORY'; payload: CategoryData }
+  | { type: 'SET_COMPLETED_CATEGORIES'; payload: CategoryData[] }
+  | { type: 'UPDATE_CURRENT_CATEGORY_DATA'; payload: Partial<CategoryData> }
+  | { type: 'SET_CURRENT_CATEGORY_DATA'; payload: Partial<CategoryData> }
+  | { type: 'ADD_CATEGORY_SUMMARY_BUTTON'; payload: CategorySummaryButton }
+  | { type: 'UPDATE_CATEGORY_SUMMARY_BUTTON'; payload: CategorySummaryButton }
+  | { type: 'SET_CATEGORY_SUMMARY_BUTTONS'; payload: CategorySummaryButton[] }
   | { type: 'RESET_STATE' };
 
 // Initial state
@@ -179,10 +229,10 @@ export const initialQuoteCreationState: QuoteCreationState = {
   messages: [{
     id: '1',
     role: 'assistant',
-    content: "Hey there! 👋 Let's get you a professional painting quote in under 2 minutes.\n\nJust tell me about your project in one message:\n\n**Customer name, address, what you're painting, and room size**\n\nExample: \"Sarah Johnson, 456 Oak St, living room walls and trim, 15x12\"\n\nI'll handle the rest! 🎨",
+    content: "Hey there! 👋 Let's create a professional painting quote step by step.\n\n**First, tell me about your project:**\n\nCustomer name, address, and basic project description\n\nExample: \"Sarah Johnson, 456 Oak St, interior painting for kitchen and living room\"\n\nI'll guide you through each surface category after! 🎨",
     timestamp: new Date().toISOString()
   }],
-  conversationStage: 'quick_project_input',
+  conversationStage: 'project_setup',
   inputValue: '',
   
   isLoading: false,
@@ -251,7 +301,15 @@ export const initialQuoteCreationState: QuoteCreationState = {
   showRoomTemplateSelector: false,
   showQuantitySelector: false,
   showCategoryReview: false,
-  currentWorkflowStage: 'room_selection'
+  currentWorkflowStage: 'room_selection',
+  
+  // Category-driven quote flow initial state
+  selectedCategories: [],
+  currentCategory: '',
+  categoryQueue: [],
+  completedCategories: [],
+  currentCategoryData: {},
+  categorySummaryButtons: []
 };
 
 // Reducer function
@@ -512,6 +570,72 @@ export function quoteCreationReducer(
       return {
         ...state,
         currentWorkflowStage: action.payload
+      };
+      
+    // Category-driven quote flow reducer cases
+    case 'SET_SELECTED_CATEGORIES':
+      return {
+        ...state,
+        selectedCategories: action.payload
+      };
+      
+    case 'SET_CURRENT_CATEGORY':
+      return {
+        ...state,
+        currentCategory: action.payload
+      };
+      
+    case 'SET_CATEGORY_QUEUE':
+      return {
+        ...state,
+        categoryQueue: action.payload
+      };
+      
+    case 'ADD_COMPLETED_CATEGORY':
+      return {
+        ...state,
+        completedCategories: [...state.completedCategories, action.payload]
+      };
+      
+    case 'SET_COMPLETED_CATEGORIES':
+      return {
+        ...state,
+        completedCategories: action.payload
+      };
+      
+    case 'UPDATE_CURRENT_CATEGORY_DATA':
+      return {
+        ...state,
+        currentCategoryData: {
+          ...state.currentCategoryData,
+          ...action.payload
+        }
+      };
+      
+    case 'SET_CURRENT_CATEGORY_DATA':
+      return {
+        ...state,
+        currentCategoryData: action.payload
+      };
+      
+    case 'ADD_CATEGORY_SUMMARY_BUTTON':
+      return {
+        ...state,
+        categorySummaryButtons: [...state.categorySummaryButtons, action.payload]
+      };
+      
+    case 'UPDATE_CATEGORY_SUMMARY_BUTTON':
+      return {
+        ...state,
+        categorySummaryButtons: state.categorySummaryButtons.map(button =>
+          button.id === action.payload.id ? action.payload : button
+        )
+      };
+      
+    case 'SET_CATEGORY_SUMMARY_BUTTONS':
+      return {
+        ...state,
+        categorySummaryButtons: action.payload
       };
       
     case 'RESET_STATE':
