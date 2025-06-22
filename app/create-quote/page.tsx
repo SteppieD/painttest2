@@ -570,6 +570,104 @@ What would you like to modify?`,
   // Old sequential loading functions removed - now using batch loader
 
   const handleButtonClick = async (buttonValue: any, buttonLabel: string) => {
+    console.log('Button clicked:', { buttonValue, buttonLabel, conversationStage });
+    
+    // Handle customer confirmation buttons
+    if (buttonValue === 'confirm_customer' || buttonLabel.includes('Confirm Customer')) {
+      setConversationStage('project_type');
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        role: 'user',
+        content: 'Customer information confirmed',
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, userMessage]);
+      
+      const aiResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `Perfect! Customer information confirmed.\n\nNow, what type of painting project are we quoting today?`,
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, aiResponse]);
+      
+      // Show project type buttons
+      setTimeout(() => {
+        setButtonOptions([
+          { id: 'interior', label: '🏠 Interior Only', value: 'interior', selected: false },
+          { id: 'exterior', label: '🏡 Exterior Only', value: 'exterior', selected: false },
+          { id: 'both', label: '🏠🏡 Both Interior & Exterior', value: 'both', selected: false }
+        ]);
+        setShowButtons(true);
+      }, 500);
+      return;
+    }
+    
+    // Handle edit details button
+    if (buttonValue === 'edit_details' || buttonLabel.includes('Edit Details')) {
+      setConversationStage('customer_info');
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        role: 'user',
+        content: 'Edit customer details',
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, userMessage]);
+      
+      const aiResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `Let's update the customer information. Please provide the customer's name and property address:`,
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, aiResponse]);
+      setShowButtons(false);
+      setButtonOptions([]);
+      return;
+    }
+    
+    // Handle project type buttons
+    if (['interior', 'exterior', 'both'].includes(buttonValue)) {
+      setQuoteData(prev => ({ ...prev, project_type: buttonValue }));
+      setConversationStage('surface_selection');
+      
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        role: 'user',
+        content: buttonLabel,
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, userMessage]);
+      
+      const aiResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `Excellent! ${buttonLabel} project selected.\n\nNow please select which surfaces you want to include in the quote:`,
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, aiResponse]);
+      
+      // Show surface selection buttons
+      setTimeout(() => {
+        const surfaceButtons = buttonValue === 'interior' || buttonValue === 'both' ? [
+          { id: 'walls', label: '🎨 Walls', value: 'walls', selected: false },
+          { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: false },
+          { id: 'trim', label: '🖼️ Trim & Baseboards', value: 'trim', selected: false },
+          { id: 'doors', label: '🚪 Doors', value: 'doors', selected: false },
+          { id: 'windows', label: '🪟 Window Frames', value: 'windows', selected: false }
+        ] : [
+          { id: 'siding', label: '🏠 Siding', value: 'siding', selected: false },
+          { id: 'trim_ext', label: '🖼️ Exterior Trim', value: 'trim_ext', selected: false },
+          { id: 'doors_ext', label: '🚪 Front Door', value: 'doors_ext', selected: false },
+          { id: 'shutters', label: '🪟 Shutters', value: 'shutters', selected: false },
+          { id: 'deck', label: '🏗️ Deck/Porch', value: 'deck', selected: false }
+        ];
+        setButtonOptions(surfaceButtons);
+        setShowButtons(true);
+      }, 500);
+      return;
+    }
+    
     // Handle surface selection buttons silently (no AI response)
     if (conversationStage === 'surface_selection') {
       // If it's the continue button, process normally (with AI response)
