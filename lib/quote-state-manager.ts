@@ -179,7 +179,7 @@ export const initialQuoteCreationState: QuoteCreationState = {
   messages: [{
     id: '1',
     role: 'assistant',
-    content: "Hey! Quick quote for you 👋\n\nJust tell me: customer, address, what you're painting, size\n\nLike: \"John Smith, 123 Main St, kitchen walls & cabinets, 12x10\"",
+    content: "Hey there! 👋 Let's get you a professional painting quote in under 2 minutes.\n\nJust tell me about your project in one message:\n\n**Customer name, address, what you're painting, and room size**\n\nExample: \"Sarah Johnson, 456 Oak St, living room walls and trim, 15x12\"\n\nI'll handle the rest! 🎨",
     timestamp: new Date().toISOString()
   }],
   conversationStage: 'quick_project_input',

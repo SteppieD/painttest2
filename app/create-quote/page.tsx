@@ -11,7 +11,9 @@ import { cn } from "@/lib/utils";
 
 // Helper function to render markdown text
 const renderMarkdown = (text: string) => {
-  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
 };
 import {
   ProjectDimensions,
@@ -780,6 +782,32 @@ What would you like to modify?`,
   const handleButtonClick = async (buttonValue: any, buttonLabel: string) => {
     // Handle quick flow button clicks
     if (conversationStage === 'paint_quality_quick') {
+      // Handle edit prices button
+      if (buttonValue === 'edit_prices') {
+        const userMessage: Message = {
+          id: Date.now().toString(),
+          role: 'user',
+          content: buttonLabel,
+          timestamp: new Date().toISOString()
+        };
+        dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
+        dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+        
+        // Show price editing message
+        const editResponse: Message = {
+          id: Date.now().toString(),
+          role: 'assistant',
+          content: "Sure! Tell me the new paint prices \ud83c\udfa8\n\nFormat: **Good $XX, Better $XX, Best $XX**\n\nExample: Good $40, Better $70, Best $90",
+          timestamp: new Date().toISOString()
+        };
+        
+        setTimeout(() => {
+          dispatch({ type: 'ADD_MESSAGE', payload: editResponse });
+          dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'edit_paint_prices' });
+        }, 500);
+        return;
+      }
+      
       // Handle paint quality selection
       const userMessage: Message = {
         id: Date.now().toString(),
@@ -1104,7 +1132,8 @@ What would you like to modify?`,
             dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
               { id: 'good', label: '💰 Good Paint ($45/gal)', value: 'good', selected: false },
               { id: 'better', label: '⭐ Better Paint ($65/gal)', value: 'better', selected: true },
-              { id: 'best', label: '👑 Best Paint ($85/gal)', value: 'best', selected: false }
+              { id: 'best', label: '👑 Best Paint ($85/gal)', value: 'best', selected: false },
+              { id: 'edit_prices', label: '✏️ Edit Paint Prices', value: 'edit_prices', selected: false }
             ]});
             dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
           }, 500);
@@ -1162,6 +1191,44 @@ What would you like to modify?`,
         }, 500);
         
         nextStage = 'markup_quick';
+        break;
+
+      case 'edit_paint_prices':
+        // Handle custom paint price input
+        const pricePattern = /(?:good|basic)\s*\$?(\d+)|(?:better|standard)\s*\$?(\d+)|(?:best|premium)\s*\$?(\d+)/gi;
+        const matches = [...input.matchAll(pricePattern)];
+        
+        if (matches.length >= 2) {
+          // Successfully parsed prices
+          let goodPrice = 45, betterPrice = 65, bestPrice = 85;
+          
+          matches.forEach(match => {
+            const price = parseInt(match[1] || match[2] || match[3]);
+            const category = match[0].toLowerCase();
+            if (category.includes('good') || category.includes('basic')) goodPrice = price;
+            else if (category.includes('better') || category.includes('standard')) betterPrice = price;
+            else if (category.includes('best') || category.includes('premium')) bestPrice = price;
+          });
+          
+          responseContent = `Updated! ✅\n\n💰 Good Paint: $${goodPrice}/gal\n⭐ Better Paint: $${betterPrice}/gal\n👑 Best Paint: $${bestPrice}/gal\n\nWhich quality?`;
+          
+          // Show updated paint quality buttons
+          setTimeout(() => {
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: 'good', label: `💰 Good Paint ($${goodPrice}/gal)`, value: 'good', selected: false },
+              { id: 'better', label: `⭐ Better Paint ($${betterPrice}/gal)`, value: 'better', selected: true },
+              { id: 'best', label: `👑 Best Paint ($${bestPrice}/gal)`, value: 'best', selected: false },
+              { id: 'edit_prices', label: '✏️ Edit Paint Prices', value: 'edit_prices', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+          
+          nextStage = 'paint_quality_quick';
+        } else {
+          // Invalid format, ask again
+          responseContent = "Try this format: **Good $45, Better $65, Best $85**\n\nOr just say the prices like: \"Good 40, Better 70, Best 90\"";
+          nextStage = 'edit_paint_prices';
+        }
         break;
 
       case 'markup_quick':
