@@ -738,6 +738,71 @@ What would you like to modify?`,
   };
 
   const processUserInput = async (input: string, stage: string): Promise<Message> => {
+    // Use intelligent AI processing instead of rigid switch-case
+    try {
+      const response = await fetch('/api/intelligent-quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userInput: input,
+          companyId: companyData?.id || 'DEMO2024',
+          conversationHistory: messages.map(m => ({ 
+            role: m.role, 
+            content: m.content 
+          })),
+          extractedData: {
+            customer_name: quoteData.customer_name,
+            address: quoteData.address,
+            project_type: quoteData.project_type,
+            dimensions: quoteData.dimensions,
+            selected_surfaces: selectedSurfaces
+          },
+          stage: conversationStage
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        // Update quote data with AI-extracted information
+        if (result.extractedData) {
+          const extracted = result.extractedData;
+          setQuoteData(prev => ({
+            ...prev,
+            ...extracted,
+            dimensions: { ...prev.dimensions, ...extracted.dimensions }
+          }));
+          
+          // Update other state based on extracted data
+          if (extracted.selected_surfaces) {
+            setSelectedSurfaces(extracted.selected_surfaces);
+          }
+        }
+        
+        // Update conversation stage if suggested
+        if (result.nextStage) {
+          setConversationStage(result.nextStage);
+        }
+        
+        return {
+          id: Date.now().toString(),
+          role: 'assistant',
+          content: result.response,
+          timestamp: new Date().toISOString()
+        };
+      } else {
+        // Fallback to basic processing if AI fails
+        return await processUserInputBasic(input, stage);
+      }
+    } catch (error) {
+      console.error('AI processing failed:', error);
+      // Fallback to basic processing
+      return await processUserInputBasic(input, stage);
+    }
+  };
+
+  // Fallback basic processing function
+  const processUserInputBasic = async (input: string, stage: string): Promise<Message> => {
     let responseContent = '';
     let nextStage = stage;
 
