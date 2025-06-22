@@ -41,8 +41,6 @@ import { PaintBrandSelector } from "@/components/ui/paint-brand-selector";
 import { PaintProductSelector } from "@/components/ui/paint-product-selector";
 import { FavoritePaintSelector } from "@/components/ui/favorite-paint-selector";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
-import { calculateProgressiveEstimate, generateEstimateMessage, type ProgressiveEstimate } from "@/lib/progressive-calculator";
-import { ProgressiveEstimateDisplay, FloatingEstimateWidget } from "@/components/ui/progressive-estimate-display";
 import { 
   quoteCreationReducer, 
   initialQuoteCreationState, 
@@ -497,41 +495,7 @@ What would you like to modify?`,
     dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'quote_review' });
   };
 
-  // Progressive estimation update function
-  const updateProgressiveEstimate = useCallback(() => {
-    const partialData = {
-      customer_name: quoteData.customer_name,
-      address: quoteData.address,
-      project_type: quoteData.project_type,
-      selectedSurfaces,
-      dimensions: quoteData.dimensions,
-      markup_percentage: quoteData.markup_percentage,
-      estimatedRoomCount: roomCount || undefined
-    };
 
-    const estimate = calculateProgressiveEstimate(partialData, quoteData.rates);
-    dispatch({ type: 'SET_CURRENT_ESTIMATE', payload: estimate });
-    
-    // Show estimate once we have basic info
-    if (!showEstimate && (selectedSurfaces.length > 0 || quoteData.dimensions.floor_area)) {
-      dispatch({ type: 'SET_SHOW_ESTIMATE', payload: true });
-    }
-  }, [quoteData, selectedSurfaces, roomCount, showEstimate]);
-
-  // Update estimate when relevant data changes
-  useEffect(() => {
-    if (!isInitializing && companyData) {
-      updateProgressiveEstimate();
-    }
-  }, [
-    selectedSurfaces,
-    quoteData.dimensions,
-    quoteData.project_type,
-    quoteData.markup_percentage,
-    roomCount,
-    isInitializing,
-    companyData
-  ]);
 
   // Old sequential loading functions removed - now using batch loader
 
@@ -2691,26 +2655,6 @@ What would you like to modify?`,
             </div>
           ))}
 
-          {/* Progressive Estimate Display */}
-          {currentEstimate && showEstimate && !isThinking && (
-            <div className="flex justify-center">
-              <ProgressiveEstimateDisplay
-                estimate={currentEstimate}
-                isVisible={true}
-                onEstimateClick={() => {
-                  // Add estimate details to chat
-                  const estimateMessage = generateEstimateMessage(currentEstimate);
-                  const newMessage: Message = {
-                    id: Date.now().toString(),
-                    role: 'assistant',
-                    content: `## Current Estimate\n\n${estimateMessage}\n\n*This estimate updates automatically as you provide more details.*`,
-                    timestamp: new Date().toISOString()
-                  };
-                  setMessages(prev => [...prev, newMessage]);
-                }}
-              />
-            </div>
-          )}
           
           {isThinking && (
             <div className="flex gap-3 justify-start">
@@ -2836,14 +2780,6 @@ What would you like to modify?`,
         </div>
       </div>
 
-      {/* Floating Estimate Widget */}
-      {currentEstimate && !showEstimate && (
-        <FloatingEstimateWidget
-          estimate={currentEstimate}
-          isVisible={true}
-          onToggle={() => setShowEstimate(true)}
-        />
-      )}
     </div>
   );
 }
