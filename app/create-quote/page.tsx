@@ -904,12 +904,12 @@ What would you like to modify?`,
       // Wait for thinking duration to complete
       setTimeout(() => {
         dispatch({ type: 'SET_THINKING', payload: false });
-        setIsLoading(true);
+        dispatch({ type: 'SET_LOADING', payload: true });
         
         // Small delay before showing the actual response for smooth transition
         setTimeout(() => {
           dispatch({ type: 'ADD_MESSAGE', payload: aiResponse });
-          setIsLoading(false);
+          dispatch({ type: 'SET_LOADING', payload: false });
         }, 100);
       }, thinkingDuration);
       
@@ -919,7 +919,7 @@ What would you like to modify?`,
       // Even for errors, show thinking briefly
       setTimeout(() => {
         dispatch({ type: 'SET_THINKING', payload: false });
-        setIsLoading(true);
+        dispatch({ type: 'SET_LOADING', payload: true });
         
         setTimeout(() => {
           const errorMessage: Message = {
@@ -929,7 +929,7 @@ What would you like to modify?`,
             timestamp: new Date().toISOString()
           };
           dispatch({ type: 'ADD_MESSAGE', payload: errorMessage });
-          setIsLoading(false);
+          dispatch({ type: 'SET_LOADING', payload: false });
         }, 100);
       }, 500);
     }
@@ -1046,12 +1046,12 @@ What would you like to modify?`,
       // Wait for thinking duration to complete
       setTimeout(() => {
         dispatch({ type: 'SET_THINKING', payload: false });
-        setIsLoading(true);
+        dispatch({ type: 'SET_LOADING', payload: true });
         
         // Small delay before showing the actual response for smooth transition
         setTimeout(() => {
           dispatch({ type: 'ADD_MESSAGE', payload: aiResponse });
-          setIsLoading(false);
+          dispatch({ type: 'SET_LOADING', payload: false });
         }, 100);
       }, thinkingDuration);
       
@@ -1061,7 +1061,7 @@ What would you like to modify?`,
       // Even for errors, show thinking briefly
       setTimeout(() => {
         dispatch({ type: 'SET_THINKING', payload: false });
-        setIsLoading(true);
+        dispatch({ type: 'SET_LOADING', payload: true });
         
         setTimeout(() => {
           const errorMessage: Message = {
@@ -1071,7 +1071,7 @@ What would you like to modify?`,
             timestamp: new Date().toISOString()
           };
           dispatch({ type: 'ADD_MESSAGE', payload: errorMessage });
-          setIsLoading(false);
+          dispatch({ type: 'SET_LOADING', payload: false });
         }, 100);
       }, 500);
     }
@@ -2789,7 +2789,7 @@ What would you like to modify?`,
             rates: quoteData.rates, // Keep company rates
             calculation: null
           });
-          setConversationStage('customer_info');
+          dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'customer_info' });
           responseContent = `Great! Let's create another quote. What's the customer's name and property address?`;
           return {
             id: (Date.now() + 1).toString(),
@@ -2827,7 +2827,7 @@ What would you like to modify?`,
         responseContent = "I'm not sure what you're looking for. Could you please clarify?";
     }
 
-    setConversationStage(nextStage);
+    dispatch({ type: 'SET_CONVERSATION_STAGE', payload: nextStage });
 
     return {
       id: (Date.now() + 1).toString(),
