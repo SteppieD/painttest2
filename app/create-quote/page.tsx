@@ -914,8 +914,171 @@ What would you like to modify?`,
         }
         break;
 
+      case 'surface_selection':
+        // Handle continue button for surface selection
+        if (input === 'continue' || input.includes('Continue')) {
+          if (selectedSurfaces.length === 0) {
+            responseContent = `Please select at least one surface to paint before continuing.`;
+            nextStage = 'surface_selection';
+          } else {
+            responseContent = generateMeasurementPrompt(selectedSurfaces, quoteData.dimensions || {});
+            nextStage = 'measurements';
+          }
+        } else {
+          // Handle surface selection through buttons (no text parsing needed)
+          responseContent = `Please select the surfaces you want to paint using the buttons above, then click Continue when ready.`;
+          nextStage = 'surface_selection';
+        }
+        break;
+
+      case 'measurements':
+        // Use AI to parse measurements for selected surfaces
+        const measurements = await parseWithAI(input, `Extract measurement data: ${selectedSurfaces.includes('walls') ? 'wall linear feet and ceiling height,' : ''} ${selectedSurfaces.includes('ceilings') ? 'ceiling area or floor area,' : ''} ${selectedSurfaces.includes('doors') ? 'number of doors,' : ''} ${selectedSurfaces.includes('windows') ? 'number of windows' : ''}`);
+        
+        if (measurements && Object.keys(measurements).length > 0) {
+          // Apply parsed measurements
+          setQuoteData(prev => ({
+            ...prev,
+            dimensions: { ...prev.dimensions, ...measurements }
+          }));
+          
+          const updatedDimensions = { ...quoteData.dimensions, ...measurements };
+          
+          // Check if we have enough measurements for selected surfaces
+          const hasRequiredMeasurements = checkRequiredMeasurements(selectedSurfaces, updatedDimensions);
+          
+          if (hasRequiredMeasurements) {
+            responseContent = `Perfect! I have all the measurements needed.\n\nNow let's select paint for your project. What paint quality would you prefer?`;
+            nextStage = 'paint_selection';
+            buttonsToShow = [
+              { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+              { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+              { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+            ];
+          } else {
+            responseContent = generateMeasurementPrompt(selectedSurfaces, updatedDimensions);
+            nextStage = 'measurements';
+          }
+        } else {
+          responseContent = generateMeasurementPrompt(selectedSurfaces, quoteData.dimensions || {});
+          nextStage = 'measurements';
+        }
+        break;
+
+      case 'paint_selection':
+        // Use AI to parse paint quality selection
+        const paintQuality = await parseWithAI(input, 'Determine paint quality level: good (budget), better (mid-range), or best (premium)');
+        
+        if (paintQuality.quality) {
+          const qualityLevel = paintQuality.quality === 'good' ? 0 : paintQuality.quality === 'better' ? 1 : 2;
+          setQuoteData(prev => ({
+            ...prev,
+            selected_products: {
+              ...prev.selected_products,
+              wall_paint_level: qualityLevel,
+              ceiling_paint_level: qualityLevel,
+              trim_paint_level: qualityLevel
+            }
+          }));
+          
+          responseContent = `Excellent! **${paintQuality.quality.charAt(0).toUpperCase() + paintQuality.quality.slice(1)}** quality paint selected.\n\nNow let's set your profit margin. What markup percentage would you like?`;
+          nextStage = 'markup_selection';
+          buttonsToShow = [
+            { id: '15', label: '15% - Competitive', value: '15', selected: false },
+            { id: '20', label: '20% - Standard (recommended)', value: '20', selected: true },
+            { id: '25', label: '25% - Good profit', value: '25', selected: false },
+            { id: '30', label: '30% - Premium', value: '30', selected: false }
+          ];
+        } else {
+          responseContent = `Please select your preferred paint quality:\n\n• **Good** - Budget-friendly option\n• **Better** - Professional grade\n• **Best** - Premium paint with maximum durability`;
+          nextStage = 'paint_selection';
+          buttonsToShow = [
+            { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+            { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+            { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+          ];
+        }
+        break;
+
+      case 'markup_selection':
+        // Use AI to parse markup percentage
+        const markup = await parseWithAI(input, 'Extract markup percentage from user input (e.g., 20%, 25%, thirty percent)');
+        
+        if (markup.percentage) {
+          setQuoteData(prev => ({ ...prev, markup_percentage: markup.percentage }));
+          
+          // Calculate final quote
+          const finalQuoteData = { ...quoteData, markup_percentage: markup.percentage };
+          const calculation = calculateProfessionalQuote(
+            finalQuoteData.dimensions as ProjectDimensions,
+            {
+              primer: {
+                name: DEFAULT_PAINT_PRODUCTS.primer_name,
+                spread_rate: DEFAULT_PAINT_PRODUCTS.primer_spread_rate,
+                cost: DEFAULT_PAINT_PRODUCTS.primer_cost_per_gallon
+              } as any,
+              wall_paint: DEFAULT_PAINT_PRODUCTS.wall_paints[finalQuoteData.selected_products.wall_paint_level],
+              ceiling_paint: DEFAULT_PAINT_PRODUCTS.ceiling_paints[finalQuoteData.selected_products.ceiling_paint_level],
+              trim_paint: DEFAULT_PAINT_PRODUCTS.trim_paints[finalQuoteData.selected_products.trim_paint_level]
+            },
+            finalQuoteData.rates,
+            markup.percentage,
+            false
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation }));
+          
+          responseContent = `🎉 **Professional Quote Complete!**\n\n**Customer:** ${finalQuoteData.customer_name}\n**Address:** ${finalQuoteData.address}\n\n**Total Quote:** $${calculation.final_price.toLocaleString()}\n• Materials: $${calculation.materials.total_material_cost.toLocaleString()}\n• Labor: $${calculation.labor.total_labor.toLocaleString()}\n• Your Profit: $${calculation.markup_amount.toLocaleString()} (${markup.percentage}%)\n\nReady to save this quote?`;
+          nextStage = 'quote_complete';
+          buttonsToShow = [
+            { id: 'save', label: '💾 Save Quote', value: 'save', selected: false },
+            { id: 'adjust', label: '📊 Adjust Quote', value: 'adjust', selected: false },
+            { id: 'new', label: '➕ New Quote', value: 'new', selected: false }
+          ];
+        } else {
+          responseContent = `Please specify your markup percentage. This is your profit margin on top of materials and labor costs.\n\nExample: "20%" or "25 percent"`;
+          nextStage = 'markup_selection';
+          buttonsToShow = [
+            { id: '15', label: '15% - Competitive', value: '15', selected: false },
+            { id: '20', label: '20% - Standard (recommended)', value: '20', selected: true },
+            { id: '25', label: '25% - Good profit', value: '25', selected: false },
+            { id: '30', label: '30% - Premium', value: '30', selected: false }
+          ];
+        }
+        break;
+
+      case 'quote_complete':
+        // Handle final actions
+        if (input.toLowerCase().includes('save')) {
+          try {
+            await saveQuote();
+            responseContent = `✅ **Quote Saved Successfully!**\n\nYour professional painting quote has been saved to your dashboard.\n\nWhat would you like to do next?`;
+            nextStage = 'complete';
+            buttonsToShow = [
+              { id: 'new_quote', label: '➕ Create Another Quote', value: 'new', selected: false },
+              { id: 'dashboard', label: '📊 View Dashboard', value: 'dashboard', selected: false }
+            ];
+          } catch (error) {
+            responseContent = `❌ **Save Failed**\n\nThere was an error saving your quote. Please try again.`;
+            nextStage = 'quote_complete';
+            buttonsToShow = [
+              { id: 'save_retry', label: '🔄 Try Save Again', value: 'save', selected: false },
+              { id: 'adjust', label: '📊 Adjust Quote', value: 'adjust', selected: false }
+            ];
+          }
+        } else {
+          responseContent = `Your quote is ready! What would you like to do?`;
+          nextStage = 'quote_complete';
+          buttonsToShow = [
+            { id: 'save', label: '💾 Save Quote', value: 'save', selected: false },
+            { id: 'adjust', label: '📊 Adjust Quote', value: 'adjust', selected: false },
+            { id: 'new', label: '➕ New Quote', value: 'new', selected: false }
+          ];
+        }
+        break;
+
       default:
-        // For other stages, fall back to the basic processing
+        // For any unhandled stages, fall back to basic processing
         return await processUserInputBasic(input, stage);
     }
 
@@ -963,10 +1126,65 @@ What would you like to modify?`,
       } else if (instruction.includes('interior, exterior, or both')) {
         const type = parseProjectType(input);
         return { type };
+      } else if (instruction.includes('markup percentage')) {
+        const match = input.match(/(\d+)%?/);
+        return match ? { percentage: Number(match[1]) } : {};
+      } else if (instruction.includes('paint quality')) {
+        const lower = input.toLowerCase();
+        if (lower.includes('good') || lower.includes('budget')) return { quality: 'good' };
+        if (lower.includes('better') || lower.includes('mid')) return { quality: 'better' };
+        if (lower.includes('best') || lower.includes('premium')) return { quality: 'best' };
+        return {};
+      } else if (instruction.includes('measurement data')) {
+        // Use existing dimension parser as fallback
+        return parseDimensions(input, quoteData.project_type || 'interior', quoteData.dimensions || {});
       }
       
       return {};
     }
+  };
+
+  // Helper function to check if we have required measurements for selected surfaces
+  const checkRequiredMeasurements = (surfaces: string[], dimensions: any): boolean => {
+    if (surfaces.includes('walls') && (!dimensions.wall_linear_feet || !dimensions.ceiling_height)) {
+      return false;
+    }
+    if (surfaces.includes('ceilings') && (!dimensions.ceiling_area && !dimensions.floor_area)) {
+      return false;
+    }
+    if ((surfaces.includes('doors') || surfaces.includes('windows')) && 
+        (dimensions.number_of_doors === undefined || dimensions.number_of_windows === undefined)) {
+      return false;
+    }
+    return true;
+  };
+
+  // Helper function to generate measurement prompts based on selected surfaces
+  const generateMeasurementPrompt = (surfaces: string[], dimensions: any): string => {
+    const needed = [];
+    
+    if (surfaces.includes('walls')) {
+      if (!dimensions.wall_linear_feet) needed.push('**Wall linear feet** (perimeter of walls to paint)');
+      if (!dimensions.ceiling_height) needed.push('**Ceiling height** (in feet)');
+    }
+    
+    if (surfaces.includes('ceilings') && !dimensions.ceiling_area && !dimensions.floor_area) {
+      needed.push('**Ceiling area** (square feet) or **floor area** if same as ceiling');
+    }
+    
+    if (surfaces.includes('doors') && dimensions.number_of_doors === undefined) {
+      needed.push('**Number of doors** to paint');
+    }
+    
+    if (surfaces.includes('windows') && dimensions.number_of_windows === undefined) {
+      needed.push('**Number of windows** to paint');
+    }
+    
+    if (needed.length === 0) {
+      return 'I have all the measurements needed. Let\'s proceed to paint selection.';
+    }
+    
+    return `I need the following measurements to calculate your quote:\n\n${needed.map(item => `• ${item}`).join('\n')}\n\nYou can provide them all together or one at a time.\n\nExample: "120 linear feet, 9 foot ceilings, 3 doors, 5 windows"`;
   };
 
   // Fallback basic processing function
