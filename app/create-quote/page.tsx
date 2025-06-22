@@ -686,12 +686,12 @@ What would you like to modify?`,
       
       // Wait for thinking duration to complete
       setTimeout(() => {
-        setIsThinking(false);
+        dispatch({ type: 'SET_THINKING', payload: false });
         setIsLoading(true);
         
         // Small delay before showing the actual response for smooth transition
         setTimeout(() => {
-          setMessages(prev => [...prev, aiResponse]);
+          dispatch({ type: 'ADD_MESSAGE', payload: aiResponse });
           setIsLoading(false);
         }, 100);
       }, thinkingDuration);
@@ -701,7 +701,7 @@ What would you like to modify?`,
       
       // Even for errors, show thinking briefly
       setTimeout(() => {
-        setIsThinking(false);
+        dispatch({ type: 'SET_THINKING', payload: false });
         setIsLoading(true);
         
         setTimeout(() => {
@@ -711,7 +711,7 @@ What would you like to modify?`,
             content: "I'm sorry, I encountered an error. Please try again or contact support.",
             timestamp: new Date().toISOString()
           };
-          setMessages(prev => [...prev, errorMessage]);
+          dispatch({ type: 'ADD_MESSAGE', payload: errorMessage });
           setIsLoading(false);
         }, 100);
       }, 500);
@@ -727,8 +727,8 @@ What would you like to modify?`,
   const handleSend = async () => {
     if (!inputValue.trim() || isLoading || isThinking) return;
 
-    setShowButtons(false);
-    setButtonOptions([]);
+    dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+    dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [] });
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -737,11 +737,11 @@ What would you like to modify?`,
       timestamp: new Date().toISOString()
     };
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
+    dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
+    dispatch({ type: 'SET_INPUT_VALUE', payload: '' });
     
     // Start thinking phase
-    setIsThinking(true);
+    dispatch({ type: 'SET_THINKING', payload: true });
 
     try {
       // Process the response while thinking - use AI if enabled
@@ -754,12 +754,12 @@ What would you like to modify?`,
       
       // Wait for thinking duration to complete
       setTimeout(() => {
-        setIsThinking(false);
+        dispatch({ type: 'SET_THINKING', payload: false });
         setIsLoading(true);
         
         // Small delay before showing the actual response for smooth transition
         setTimeout(() => {
-          setMessages(prev => [...prev, aiResponse]);
+          dispatch({ type: 'ADD_MESSAGE', payload: aiResponse });
           setIsLoading(false);
         }, 100);
       }, thinkingDuration);
@@ -769,7 +769,7 @@ What would you like to modify?`,
       
       // Even for errors, show thinking briefly
       setTimeout(() => {
-        setIsThinking(false);
+        dispatch({ type: 'SET_THINKING', payload: false });
         setIsLoading(true);
         
         setTimeout(() => {
@@ -779,7 +779,7 @@ What would you like to modify?`,
             content: "I'm sorry, I encountered an error. Please try again or contact support.",
             timestamp: new Date().toISOString()
           };
-          setMessages(prev => [...prev, errorMessage]);
+          dispatch({ type: 'ADD_MESSAGE', payload: errorMessage });
           setIsLoading(false);
         }, 100);
       }, 500);
@@ -2876,7 +2876,7 @@ What would you like to modify?`,
           <div className="flex gap-2">
             <Input
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={(e) => dispatch({ type: 'SET_INPUT_VALUE', payload: e.target.value })}
               onKeyPress={handleKeyPress}
               placeholder="Type your response..."
               disabled={isLoading || isThinking}
