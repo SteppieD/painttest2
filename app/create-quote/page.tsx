@@ -371,9 +371,9 @@ function CreateQuotePageContent() {
   }, [router, editQuoteId]);
 
   const initializeApp = async () => {
-    setIsInitializing(true);
-    setLoadingProgress(10);
-    setInitializationError(null);
+    dispatch({ type: 'SET_INITIALIZING', payload: true });
+    dispatch({ type: 'SET_LOADING_PROGRESS', payload: 10 });
+    dispatch({ type: 'SET_INITIALIZATION_ERROR', payload: null });
 
     try {
       // Check authentication
@@ -383,7 +383,7 @@ function CreateQuotePageContent() {
         return;
       }
 
-      setLoadingProgress(20);
+      dispatch({ type: 'SET_LOADING_PROGRESS', payload: 20 });
 
       const parsedCompany = JSON.parse(company);
       if (Date.now() - parsedCompany.loginTime > 24 * 60 * 60 * 1000) {
