@@ -908,6 +908,55 @@ What would you like to modify?`,
           }, 500);
         }
         
+        // Check if response contains button text and convert to actual buttons
+        if (result.response && (result.response.includes('[🏠') || result.response.includes('[✅') || result.response.includes('[✖'))) {
+          console.log('Found button text in response, converting to actual buttons');
+          
+          let buttonsToShow = [];
+          let cleanResponse = result.response;
+          
+          // Project type buttons
+          if (result.response.includes('[🏠 Interior Only]')) {
+            buttonsToShow.push(
+              { id: 'interior', label: '🏠 Interior Only', value: 'interior', selected: false },
+              { id: 'exterior', label: '🏡 Exterior Only', value: 'exterior', selected: false },
+              { id: 'both', label: '🏠🏡 Both Interior & Exterior', value: 'both', selected: false }
+            );
+            cleanResponse = cleanResponse
+              .replace(/\[🏠 Interior Only\]/g, '')
+              .replace(/\[🏡 Exterior Only\]/g, '')
+              .replace(/\[🏠🏡 Both Interior & Exterior\]/g, '');
+          }
+          
+          // Customer confirmation buttons
+          if (result.response.includes('[✅') || result.response.includes('[✖')) {
+            buttonsToShow.push(
+              { id: 'confirm_customer', label: '✅ Confirm Customer Info', value: 'confirm_customer', selected: false },
+              { id: 'edit_details', label: '✖️ Edit Details', value: 'edit_details', selected: false }
+            );
+            cleanResponse = cleanResponse
+              .replace(/\[✅.*?\]/g, '')
+              .replace(/\[✖.*?\]/g, '');
+          }
+          
+          // Clean up any remaining bracketed content and extra whitespace
+          cleanResponse = cleanResponse
+            .replace(/\[.*?\]/g, '')
+            .replace(/\n\s*\n/g, '\n')
+            .trim();
+          
+          // Update the response content to remove button text
+          result.response = cleanResponse;
+          
+          // Show actual buttons if any were found
+          if (buttonsToShow.length > 0) {
+            setTimeout(() => {
+              setButtonOptions(buttonsToShow);
+              setShowButtons(true);
+            }, 500);
+          }
+        }
+        
         return {
           id: Date.now().toString(),
           role: 'assistant',
