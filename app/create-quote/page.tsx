@@ -1739,16 +1739,26 @@ What would you like to modify?`,
           // For ceilings, we might already have room data or need ceiling area
           const ceilingDimensions = parseDimensions(input, quoteData.project_type);
           
-          setQuoteData(prev => ({
-            ...prev,
-            dimensions: { ...prev.dimensions, ...ceilingDimensions }
-          }));
+          dispatch({
+            type: 'UPDATE_QUOTE_DATA',
+            payload: { dimensions: { ...state.quoteData.dimensions, ...ceilingDimensions } }
+          });
           
           if (ceilingDimensions.ceiling_area || ceilingDimensions.floor_area) {
-            markCategoryMeasured(category);
-            setCurrentPaintCategory(category); // Set for paint selection
-            responseContent = `Perfect! Ceiling measurements recorded for ${category}.\n\nNow let's select the paint for your ${category}.`;
-            nextStage = 'category_paint_selection';
+            dispatch({ type: 'MARK_CATEGORY_MEASURED', payload: category });
+            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: category });
+            
+            responseContent = `Perfect! Ceiling measurements recorded.
+
+What paint do you want to use for the ${category}? Please tell me:
+
+• **Paint name/brand** (e.g., "Benjamin Moore Ceiling Paint")
+• **Color** (e.g., "Flat White", "Antique White")  
+• **Cost per gallon** (e.g., "$55")
+• **Coverage rate** (e.g., "350 sq ft per gallon")
+
+Example: "Benjamin Moore Ceiling Paint, Flat White, $55 per gallon, 350 sq ft coverage"`;
+            nextStage = 'category_paint_details';
           } else {
             responseContent = `I need the ceiling area for accurate coverage calculation.\n\nPlease provide: "ceiling area: X sq ft" or "floor area: X sq ft" (I can use floor area to calculate ceiling area).`;
             nextStage = 'category_measurement_collection';
@@ -1757,16 +1767,26 @@ What would you like to modify?`,
           // For walls, we need linear footage and height
           const wallDimensions = parseDimensions(input, quoteData.project_type);
           
-          setQuoteData(prev => ({
-            ...prev,
-            dimensions: { ...prev.dimensions, ...wallDimensions }
-          }));
+          dispatch({
+            type: 'UPDATE_QUOTE_DATA',
+            payload: { dimensions: { ...state.quoteData.dimensions, ...wallDimensions } }
+          });
           
           if (wallDimensions.wall_linear_feet && wallDimensions.ceiling_height) {
-            markCategoryMeasured(category);
-            setCurrentPaintCategory(category); // Set for paint selection
-            responseContent = `Perfect! Wall measurements recorded.\n\nNow let's select the paint for your ${category}.`;
-            nextStage = 'category_paint_selection';
+            dispatch({ type: 'MARK_CATEGORY_MEASURED', payload: category });
+            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: category });
+            
+            responseContent = `Perfect! Wall measurements recorded.
+
+What paint do you want to use for the ${category}? Please tell me:
+
+• **Paint name/brand** (e.g., "Sherwin Williams ProClassic")
+• **Color** (e.g., "White", "Eggshell White", "Custom Color")  
+• **Cost per gallon** (e.g., "$65")
+• **Coverage rate** (e.g., "400 sq ft per gallon")
+
+Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft coverage"`;
+            nextStage = 'category_paint_details';
           } else {
             const missing = [];
             if (!wallDimensions.wall_linear_feet) missing.push('linear footage');
@@ -1784,20 +1804,30 @@ What would you like to modify?`,
             number_of_windows: doorWindowData.windows
           };
           
-          setQuoteData(prev => ({
-            ...prev,
-            dimensions: { ...prev.dimensions, ...dimensionData }
-          }));
+          dispatch({
+            type: 'UPDATE_QUOTE_DATA',
+            payload: { dimensions: { ...state.quoteData.dimensions, ...dimensionData } }
+          });
           
           const hasNeededData = (category === 'doors' && doorWindowData.doors !== undefined && doorWindowData.doors > 0) ||
                                (category === 'windows' && doorWindowData.windows !== undefined && doorWindowData.windows > 0) ||
                                (category === 'trim' && (doorWindowData.doors > 0 || doorWindowData.windows > 0));
           
           if (hasNeededData) {
-            markCategoryMeasured(category);
-            setCurrentPaintCategory(category); // Set for paint selection
-            responseContent = `Perfect! ${category} count recorded.\n\nNow let's select the paint for your ${category}.`;
-            nextStage = 'category_paint_selection';
+            dispatch({ type: 'MARK_CATEGORY_MEASURED', payload: category });
+            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: category });
+            
+            responseContent = `Perfect! ${category} count recorded.
+
+What paint do you want to use for the ${category}? Please tell me:
+
+• **Paint name/brand** (e.g., "Sherwin Williams ProClassic")
+• **Color** (e.g., "Semi-Gloss White", "Satin Finish")  
+• **Cost per gallon** (e.g., "$70")
+• **Coverage rate** (e.g., "375 sq ft per gallon")
+
+Example: "Sherwin Williams ProClassic, Semi-Gloss White, $70 per gallon, 375 sq ft coverage"`;
+            nextStage = 'category_paint_details';
           } else {
             responseContent = `I need the count for ${category}.\n\nExample: "3 doors" or "5 windows" or "3 doors and 5 windows"`;
             nextStage = 'category_measurement_collection';
