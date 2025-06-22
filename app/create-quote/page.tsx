@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense, useReducer, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Save, Send, Calculator, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,9 +11,7 @@ import { cn } from "@/lib/utils";
 
 // Helper function to render markdown text
 const renderMarkdown = (text: string) => {
-  return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n/g, '<br>');
+  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 };
 import {
   ProjectDimensions,
@@ -42,179 +40,10 @@ import { Room, calculateRoomAreas, calculateTotalAreasFromRooms } from "@/lib/pr
 import { PaintBrandSelector } from "@/components/ui/paint-brand-selector";
 import { PaintProductSelector } from "@/components/ui/paint-product-selector";
 import { FavoritePaintSelector } from "@/components/ui/favorite-paint-selector";
-import { 
-  RoomConfirmationButton, 
-  SurfaceButton, 
-  AddRoomButton, 
-  ConfirmQuoteButton,
-  ButtonGroup 
-} from "@/components/ui/quote-confirmation-buttons";
-import { 
-  RoomTypeButton, 
-  RoomTypeGrid, 
-  CustomRoomButton,
-  ROOM_TEMPLATES 
-} from "@/components/ui/room-type-button";
-import { 
-  QuantityButton, 
-  QuantityGrid,
-  COMMON_QUANTITY_ITEMS,
-  TRIM_QUANTITY_ITEMS 
-} from "@/components/ui/quantity-button";
-import { 
-  CategorySummaryButton, 
-  CategoryGrid,
-  CategoryProgressBar,
-  QUOTE_CATEGORIES,
-  createCategorySummary 
-} from "@/components/ui/category-summary-button";
-import { 
-  QuoteReviewBoard,
-  createQuoteReviewData 
-} from "@/components/ui/quote-review-board";
-import { 
-  SmartSurfaceSelector,
-  SURFACE_OPTIONS,
-  needsRoomCount,
-  getMeasurementTypesForSurfaces,
-  getSurfaceCategories 
-} from "@/components/ui/smart-surface-selector";
-import { 
-  SmartWorkflowButtons,
-  SmartMeasurementFlow,
-  detectProjectScope,
-  generateWorkflowSteps,
-  RoomCountSelector 
-} from "@/components/ui/smart-workflow-buttons";
-import {
-  CategorySummaryList,
-  type CategorySummaryButtonProps
-} from "@/components/ui/category-summary-buttons";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
-import { 
-  quoteCreationReducer, 
-  initialQuoteCreationState, 
-  type QuoteCreationState,
-  type QuoteCreationAction 
-} from "@/lib/quote-state-manager";
-
-// Ultra-smart project input parser
-function parseQuickProjectInput(input: string) {
-  const text = input.toLowerCase().trim();
-  
-  // Extract customer name (usually first name or "name's")
-  let customerName = '';
-  const namePatterns = [
-    /^([a-z\s]+),/i, // "John Smith,"
-    /^([a-z\s]+)'s\s/i, // "Sarah's kitchen"
-    /for\s([a-z\s]+),/i, // "for John Smith,"
-    /([a-z\s]+)\sat\s/i, // "John Smith at"
-  ];
-  for (const pattern of namePatterns) {
-    const match = input.match(pattern);
-    if (match) {
-      customerName = match[1].trim();
-      break;
-    }
-  }
-  
-  // Extract address
-  let address = '';
-  const addressPatterns = [
-    /,\s*([^,]*(?:st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ln|lane|ct|court|way|pl|place|circle|pkwy|parkway)[^,]*)/i,
-    /at\s([^,]*(?:st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ln|lane|ct|court|way|pl|place|circle|pkwy|parkway)[^,]*)/i,
-    /(\d+\s[^,]+(?:st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ln|lane|ct|court|way|pl|place|circle|pkwy|parkway))/i,
-  ];
-  for (const pattern of addressPatterns) {
-    const match = input.match(pattern);
-    if (match) {
-      address = match[1].trim();
-      break;
-    }
-  }
-  
-  // Extract surfaces
-  const surfaces = [];
-  const surfaceMap = {
-    'walls': ['wall', 'walls'],
-    'ceilings': ['ceiling', 'ceilings'],
-    'trim': ['trim', 'baseboards', 'baseboard', 'molding', 'crown'],
-    'doors': ['door', 'doors'],
-    'windows': ['window', 'windows', 'window frame'],
-    'cabinets': ['cabinet', 'cabinets', 'kitchen cabinet'],
-    'siding': ['siding', 'exterior'],
-  };
-  
-  for (const [surface, keywords] of Object.entries(surfaceMap)) {
-    if (keywords.some(keyword => text.includes(keyword))) {
-      surfaces.push(surface);
-    }
-  }
-  
-  // Smart defaults for common room types
-  if (text.includes('kitchen') && !surfaces.includes('cabinets')) {
-    if (surfaces.includes('walls')) surfaces.push('cabinets');
-  }
-  if (text.includes('bedroom') || text.includes('living room')) {
-    if (!surfaces.length) surfaces.push('walls', 'ceilings');
-  }
-  
-  // Extract size information
-  let sizeDescription = '';
-  const sizePatterns = [
-    /(\d+\s*x\s*\d+)/i, // "12x14"
-    /(\d+\s*by\s*\d+)/i, // "12 by 14" 
-    /(\d+\s*sq\s*ft)/i, // "200 sq ft"
-    /(\d+\s*square\s*feet)/i, // "200 square feet"
-    /(\d+\s*linear\s*feet)/i, // "150 linear feet"
-    /(small|medium|large|huge)/i, // size descriptors
-  ];
-  for (const pattern of sizePatterns) {
-    const match = input.match(pattern);
-    if (match) {
-      sizeDescription = match[1];
-      break;
-    }
-  }
-  
-  // Determine project type
-  let projectType = 'interior';
-  if (text.includes('exterior') || text.includes('outside') || text.includes('siding')) {
-    projectType = 'exterior';
-  }
-  
-  return {
-    customerName,
-    address,
-    surfaces,
-    sizeDescription,
-    projectType,
-    originalInput: input
-  };
-}
-
-// Quick quote calculator (simplified)
-function calculateQuickQuote(surfaces: string[], markup: number): number {
-  const basePrices = {
-    'walls': 800,
-    'ceilings': 600, 
-    'trim': 400,
-    'doors': 200,
-    'windows': 150,
-    'cabinets': 1200,
-    'siding': 1500
-  };
-  
-  let total = 0;
-  surfaces.forEach(surface => {
-    total += basePrices[surface as keyof typeof basePrices] || 500;
-  });
-  
-  // Apply markup
-  total = total * (1 + markup / 100);
-  
-  return Math.round(total);
-}
+// Progressive calculator temporarily disabled
+// import { calculateProgressiveEstimate, generateEstimateMessage, type ProgressiveEstimate } from "@/lib/progressive-calculator";
+// import { ProgressiveEstimateDisplay, FloatingEstimateWidget } from "@/components/ui/progressive-estimate-display";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -250,59 +79,81 @@ function CreateQuotePageContent() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const editQuoteId = searchParams.get('edit');
 
-  // Main state using useReducer for optimal performance
-  const [state, dispatch] = useReducer(quoteCreationReducer, initialQuoteCreationState);
+  const [companyData, setCompanyData] = useState<any>(null);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      role: 'assistant',
+      content: "Hi! I'll help you create a professional painting quote using industry-standard calculations. Let's start with the basics.\n\nWhat's the customer's name and property address?",
+      timestamp: new Date().toISOString()
+    }
+  ]);
 
-  // Destructure state for easier access
-  const {
-    companyData,
-    messages,
-    conversationStage,
-    inputValue,
-    isLoading,
-    isThinking,
-    isInitializing,
-    initializationError,
-    loadingProgress,
-    isEditMode,
-    showButtons,
-    buttonOptions,
-    quoteData,
-    selectedSurfaces,
-    useRoomByRoom,
-    roomCount,
-    currentRoomIndex,
-    rooms,
-    currentRoomData,
-    editingRoomIndex,
-    pendingRoomConfirmation,
-    confirmedRooms,
-    showRoomConfirmation,
-    availableBrands,
-    topBrands,
-    otherBrands,
-    currentPaintCategory,
-    selectedPaintProducts,
-    paintSelectionQueue,
-    currentPaintCategoryIndex,
-    measurementQueue,
-    currentMeasurementCategory,
-    categoryCompletionStatus,
-    showPaintBrandSelector,
-    showPaintProductSelector,
-    selectedBrandForCategory,
-    availableProductsForCategory,
-    showFavoritePaintSelector,
-    useFavoriteSelector,
-    // Enhanced button-driven interface state
-    selectedRoomTemplates,
-    quantityItems,
-    categoryProgress,
-    showRoomTemplateSelector,
-    showQuantitySelector,
-    showCategoryReview,
-    currentWorkflowStage
-  } = state;
+  const [quoteData, setQuoteData] = useState<QuoteData>({
+    customer_name: '',
+    address: '',
+    project_type: 'interior',
+    dimensions: {},
+    selected_products: {
+      primer_level: 0,
+      wall_paint_level: 0,
+      ceiling_paint_level: 0,
+      trim_paint_level: 0,
+      include_floor_sealer: false
+    },
+    markup_percentage: 20, // Default 20% markup
+    rates: DEFAULT_CHARGE_RATES,
+    calculation: null
+  });
+
+  const [conversationStage, setConversationStage] = useState('customer_info');
+  const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [showButtons, setShowButtons] = useState(false);
+  const [buttonOptions, setButtonOptions] = useState<{id: string, label: string, value: any, selected?: boolean}[]>([]);
+  const [selectedSurfaces, setSelectedSurfaces] = useState<string[]>([]);
+  
+  // Room-by-room tracking
+  const [useRoomByRoom, setUseRoomByRoom] = useState(false);
+  const [roomCount, setRoomCount] = useState(0);
+  const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [currentRoomData, setCurrentRoomData] = useState<Partial<Room>>({});
+  const [editingRoomIndex, setEditingRoomIndex] = useState(-1);
+
+  // Paint selection tracking
+  const [availableBrands, setAvailableBrands] = useState<any[]>([]);
+  const [topBrands, setTopBrands] = useState<any[]>([]);
+  const [otherBrands, setOtherBrands] = useState<any[]>([]);
+  const [currentPaintCategory, setCurrentPaintCategory] = useState<string>('');
+  const [selectedPaintProducts, setSelectedPaintProducts] = useState<{[category: string]: any}>({});
+  const [paintSelectionQueue, setPaintSelectionQueue] = useState<string[]>([]);
+  const [currentPaintCategoryIndex, setCurrentPaintCategoryIndex] = useState(0);
+
+  // New measurement-driven workflow state
+  const [measurementQueue, setMeasurementQueue] = useState<string[]>([]);
+  const [currentMeasurementCategory, setCurrentMeasurementCategory] = useState<string>('');
+  const [categoryCompletionStatus, setCategoryCompletionStatus] = useState<{[category: string]: {measured: boolean, paintSelected: boolean}}>({});
+  const [showPaintBrandSelector, setShowPaintBrandSelector] = useState(false);
+  const [showPaintProductSelector, setShowPaintProductSelector] = useState(false);
+  const [selectedBrandForCategory, setSelectedBrandForCategory] = useState<string>('');
+  const [availableProductsForCategory, setAvailableProductsForCategory] = useState<any[]>([]);
+  
+  // Favorite paint selector state
+  const [showFavoritePaintSelector, setShowFavoritePaintSelector] = useState(false);
+  const [useFavoriteSelector, setUseFavoriteSelector] = useState(true); // Default to using favorites
+  
+  // Batch loading state
+  const [isInitializing, setIsInitializing] = useState(true);
+  const [initializationError, setInitializationError] = useState<string | null>(null);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+
+  // Progressive estimation state
+  // const [currentEstimate, setCurrentEstimate] = useState<ProgressiveEstimate | null>(null);
+  const [showEstimate, setShowEstimate] = useState(false);
+  const [estimateFloating, setEstimateFloating] = useState(false);
 
   // Helper function for brand icons
   const getBrandIcon = (brand: string): string => {
@@ -418,95 +269,57 @@ function CreateQuotePageContent() {
 
   const handleFavoriteProductSelect = (product: any) => {
     // Store the selected favorite product
-    dispatch({ type: 'UPDATE_SELECTED_PAINT_PRODUCTS', payload: {
-      [currentPaintCategory]: product
-    }});
+    setSelectedPaintProducts(prev => ({
+      ...prev,
+      [currentMeasurementCategory]: product
+    }));
     
-    // Hide the selector
-    dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: false });
+    // Mark category as paint selected
+    markCategoryPaintSelected(currentMeasurementCategory);
+    setShowFavoritePaintSelector(false);
     
-    // Create confirmation message
-    const confirmMessage: Message = {
-      id: Date.now().toString(),
-      role: 'assistant',
-      content: `Perfect! I've selected:\n**${product.supplier} ${product.productName}** at **$${product.costPerGallon}/gal** for ${currentPaintCategory}.`,
-      timestamp: new Date().toISOString()
-    };
-    dispatch({ type: 'ADD_MESSAGE', payload: confirmMessage });
-    
-    // Move to next paint category or finish
-    const nextIndex = currentPaintCategoryIndex + 1;
-    if (nextIndex < paintSelectionQueue.length) {
-      const nextCategory = paintSelectionQueue[nextIndex];
-      dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY_INDEX', payload: nextIndex });
-      dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: nextCategory });
+    // Move to next category or finish
+    const nextCategory = getNextCategoryForMeasurement();
+    if (nextCategory) {
+      setCurrentMeasurementCategory(nextCategory);
+      setConversationStage('category_measurement_collection');
       
-      // Show next category selection
-      setTimeout(() => {
-        const nextMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: `Now let's select paint for your ${nextCategory}.\n\nChoose from your favorite products below, or type your own custom paint product.`,
-          timestamp: new Date().toISOString()
-        };
-        dispatch({ type: 'ADD_MESSAGE', payload: nextMessage });
-        
-        // Show favorites and buttons for next category
-        dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: true });
-        dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-          { id: 'type_custom', label: '✏️ Type Custom Product', value: `type_custom_${nextCategory}`, selected: false },
-          { id: 'use_quality', label: '📊 Choose by Quality Level', value: `quality_selection_${nextCategory}`, selected: false }
-        ]});
-        dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-        dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'paint_selection_with_favorites' });
-      }, 800);
+      // Add a message about the selection and moving to next category
+      const confirmMessage: Message = {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: `Great choice! **${product.supplier} ${product.productName}** selected for ${currentMeasurementCategory}.\n\nNext: Let's measure **${nextCategory}**.`,
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, confirmMessage]);
     } else {
-      // All paint selections complete, move to markup
-      dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: false });
-      
-      setTimeout(() => {
-        const markupMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: `Excellent! All paint products selected.\n\nNow let's set your profit margin. What markup percentage would you like?`,
-          timestamp: new Date().toISOString()
-        };
-        dispatch({ type: 'ADD_MESSAGE', payload: markupMessage });
-        
-        dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-          { id: '10', label: '🎯 10% - Competitive pricing', value: '10%', selected: false },
-          { id: '20', label: '⚖️ 20% - Standard profit (recommended)', value: '20%', selected: false },
-          { id: '30', label: '📈 30% - Good profit margin', value: '30%', selected: false },
-          { id: '40', label: '💎 40% - Premium pricing', value: '40%', selected: false }
-        ]});
-        dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-        dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'markup_selection' });
-      }, 800);
+      // All categories complete
+      checkWorkflowCompletion();
     }
   };
 
   // Helper function to handle workflow completion when all categories are done
   const checkWorkflowCompletion = () => {
-    if (isWorkflowComplete(state)) {
-      const completionMessage = {
+    if (isWorkflowComplete()) {
+      const completionMessage: Message = {
         id: Date.now().toString(),
-        role: 'assistant' as const,
+        role: 'assistant',
         content: `🎉 **All surfaces complete!** \n\nMeasurements and paint selections are done. Now let's set your profit margin.\n\nWhat markup percentage would you like?`,
         timestamp: new Date().toISOString()
       };
-      dispatch({ type: 'ADD_MESSAGE', payload: completionMessage });
-      dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'markup_selection' });
+      setMessages(prev => [...prev, completionMessage]);
+      setConversationStage('markup_selection');
       
       // Show markup buttons
       setTimeout(() => {
-        dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+        setButtonOptions([
           { id: '15', label: '15%', value: '15', selected: false },
           { id: '20', label: '20%', value: '20', selected: true },
           { id: '25', label: '25%', value: '25', selected: false },
           { id: '30', label: '30%', value: '30', selected: false },
           { id: 'custom', label: 'Custom %', value: 'custom', selected: false }
-        ]});
-        dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+        ]);
+        setShowButtons(true);
       }, 500);
     }
   };
@@ -540,9 +353,9 @@ function CreateQuotePageContent() {
   }, [router, editQuoteId]);
 
   const initializeApp = async () => {
-    dispatch({ type: 'SET_INITIALIZING', payload: true });
-    dispatch({ type: 'SET_LOADING_PROGRESS', payload: 10 });
-    dispatch({ type: 'SET_INITIALIZATION_ERROR', payload: null });
+    setIsInitializing(true);
+    setLoadingProgress(10);
+    setInitializationError(null);
 
     try {
       // Check authentication
@@ -552,7 +365,7 @@ function CreateQuotePageContent() {
         return;
       }
 
-      dispatch({ type: 'SET_LOADING_PROGRESS', payload: 20 });
+      setLoadingProgress(20);
 
       const parsedCompany = JSON.parse(company);
       if (Date.now() - parsedCompany.loginTime > 24 * 60 * 60 * 1000) {
@@ -561,8 +374,8 @@ function CreateQuotePageContent() {
         return;
       }
 
-      dispatch({ type: 'SET_COMPANY_DATA', payload: parsedCompany });
-      dispatch({ type: 'SET_LOADING_PROGRESS', payload: 30 });
+      setCompanyData(parsedCompany);
+      setLoadingProgress(30);
 
       // Batch load all company data and edit quote data in parallel
       const { companyData, editData, loadTime } = await initializeQuoteCreation(
@@ -570,10 +383,11 @@ function CreateQuotePageContent() {
         editQuoteId
       );
 
-      dispatch({ type: 'SET_LOADING_PROGRESS', payload: 70 });
+      setLoadingProgress(70);
 
       // Apply company settings
-      dispatch({ type: 'UPDATE_QUOTE_DATA', payload: {
+      setQuoteData(prev => ({
+        ...prev,
         rates: {
           wall_rate_per_sqft: companyData.settings.wall_rate_per_sqft,
           ceiling_rate_per_sqft: companyData.settings.ceiling_rate_per_sqft,
@@ -583,25 +397,25 @@ function CreateQuotePageContent() {
           floor_sealer_rate_per_sqft: companyData.settings.floor_sealer_rate_per_sqft
         },
         markup_percentage: companyData.preferences.default_markup || 20
-      }});
+      }));
 
       // Apply paint brands
-      dispatch({ type: 'SET_AVAILABLE_BRANDS', payload: companyData.paintBrands.brands });
-      dispatch({ type: 'SET_TOP_BRANDS', payload: companyData.paintBrands.topBrands });
-      dispatch({ type: 'SET_OTHER_BRANDS', payload: companyData.paintBrands.otherBrands });
+      setAvailableBrands(companyData.paintBrands.brands);
+      setTopBrands(companyData.paintBrands.topBrands);
+      setOtherBrands(companyData.paintBrands.otherBrands);
 
       // Apply setup status
-      dispatch({ type: 'SET_USE_FAVORITE_SELECTOR', payload: companyData.setupStatus.canUseFavorites });
+      setUseFavoriteSelector(companyData.setupStatus.canUseFavorites);
 
-      dispatch({ type: 'SET_LOADING_PROGRESS', payload: 90 });
+      setLoadingProgress(90);
 
       // Handle edit mode if applicable
       if (editData && editData.isEdit && editData.quote) {
-        dispatch({ type: 'SET_EDIT_MODE', payload: true });
+        setIsEditMode(true);
         applyEditQuoteData(editData.quote);
       }
 
-      dispatch({ type: 'SET_LOADING_PROGRESS', payload: 100 });
+      setLoadingProgress(100);
 
       // Track performance improvement
       trackLoadingPerformance(loadTime, 'quote_creation_initialization');
@@ -614,7 +428,7 @@ function CreateQuotePageContent() {
 
     } catch (error) {
       console.error('Failed to initialize app:', error);
-      dispatch({ type: 'SET_INITIALIZATION_ERROR', payload: error instanceof Error ? error.message : 'Failed to load' });
+      setInitializationError(error instanceof Error ? error.message : 'Failed to load');
       
       toast({
         title: "Loading Error",
@@ -622,13 +436,14 @@ function CreateQuotePageContent() {
         variant: "destructive",
       });
     } finally {
-      dispatch({ type: 'SET_INITIALIZING', payload: false });
+      setIsInitializing(false);
     }
   };
 
   const applyEditQuoteData = (quote: any) => {
     // Update quote data with existing values
-    dispatch({ type: 'UPDATE_QUOTE_DATA', payload: {
+    setQuoteData(prev => ({
+      ...prev,
       customer_name: quote.customer_name || '',
       address: quote.address || '',
       project_type: quote.project_type || 'interior',
@@ -641,10 +456,10 @@ function CreateQuotePageContent() {
         number_of_windows: quote.number_of_windows || 0,
       },
       markup_percentage: quote.markup_percentage || 20,
-    }});
+    }));
     
     // Set initial message for edit mode
-    dispatch({ type: 'SET_MESSAGES', payload: [
+    setMessages([
       {
         id: '1',
         role: 'assistant',
@@ -663,259 +478,35 @@ Current details:
 What would you like to modify?`,
         timestamp: new Date().toISOString()
       }
-    ]});
+    ]);
     
     // Set conversation stage to allow modifications
-    dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'quote_review' });
+    setConversationStage('quote_review');
   };
 
+  // Progressive estimation update function
+  // const updateProgressiveEstimate = () => {
+  //   Progressive estimate disabled
+  // };
 
+  // Update estimate when relevant data changes
+  // useEffect(() => {
+  //   if (!isInitializing && companyData) {
+  //     updateProgressiveEstimate();
+  //   }
+  // }, [
+  //   selectedSurfaces,
+  //   quoteData.dimensions,
+  //   quoteData.project_type,
+  //   quoteData.markup_percentage,
+  //   roomCount,
+  //   isInitializing,
+  //   companyData
+  // ]);
 
   // Old sequential loading functions removed - now using batch loader
 
-  // AI Enhancement Toggle - set to true to enable Claude 3.5 Sonnet integration
-  const useIntelligentAI = false; // Disabled for ultra-simple flow
-
-  const processWithIntelligentAI = async (input: string): Promise<Message> => {
-    try {
-      const response = await fetch('/api/intelligent-quote', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userInput: input,
-          companyId: companyData?.id,
-          conversationHistory: messages.slice(-6).map(m => ({
-            role: m.role,
-            content: m.content
-          })),
-          extractedData: {
-            customer_name: quoteData.customer_name,
-            address: quoteData.address,
-            project_type: quoteData.project_type,
-            dimensions: quoteData.dimensions,
-            selected_surfaces: selectedSurfaces,
-            markup_percentage: quoteData.markup_percentage
-          },
-          stage: conversationStage
-        })
-      });
-
-      const data = await response.json();
-      
-      if (data.success && data.response) {
-        // Handle paint actions (price updates, saving favorites)
-        if (data.paintActions && data.paintActions.length > 0) {
-          for (const action of data.paintActions) {
-            if (action.type === 'price_update' && action.status === 'success') {
-              console.log('Paint price updated successfully:', action.data);
-              // Optionally show a toast notification
-              toast({
-                title: "Price Updated",
-                description: `Updated ${action.data.product} to $${action.data.new_price}/gal`,
-              });
-            } else if (action.type === 'save_favorite' && action.status === 'success') {
-              console.log('New paint favorite saved:', action.data);
-              toast({
-                title: "Favorite Saved",
-                description: `Added ${action.data.brand} ${action.data.product} to your favorites`,
-              });
-            }
-          }
-        }
-
-        // Update extracted data if AI found new information
-        if (data.extractedData && Object.keys(data.extractedData).length > 0) {
-          // Merge AI-extracted data with current quote data
-          const updates: any = {};
-          
-          if (data.extractedData.customer_name) updates.customer_name = data.extractedData.customer_name;
-          if (data.extractedData.address) updates.address = data.extractedData.address;
-          if (data.extractedData.project_type) updates.project_type = data.extractedData.project_type;
-          
-          if (data.extractedData.wall_linear_feet || data.extractedData.ceiling_height || 
-              data.extractedData.number_of_doors !== undefined || data.extractedData.number_of_windows !== undefined) {
-            updates.dimensions = {
-              ...quoteData.dimensions,
-              ...(data.extractedData.wall_linear_feet && { wall_linear_feet: data.extractedData.wall_linear_feet }),
-              ...(data.extractedData.ceiling_height && { ceiling_height: data.extractedData.ceiling_height }),
-              ...(data.extractedData.number_of_doors !== undefined && { number_of_doors: data.extractedData.number_of_doors }),
-              ...(data.extractedData.number_of_windows !== undefined && { number_of_windows: data.extractedData.number_of_windows })
-            };
-          }
-
-          // Handle paint product selections
-          if (data.extractedData.selected_paint) {
-            const paintProduct = data.extractedData.selected_paint;
-            dispatch({ type: 'UPDATE_SELECTED_PAINT_PRODUCTS', payload: {
-              [paintProduct.category || 'wall_paint']: {
-                supplier: paintProduct.brand,
-                productName: paintProduct.product,
-                costPerGallon: paintProduct.cost
-              }
-            }});
-          }
-          
-          if (Object.keys(updates).length > 0) {
-            dispatch({ type: 'UPDATE_QUOTE_DATA', payload: updates });
-          }
-          
-          // Update selected surfaces if AI detected them
-          if (data.extractedData.surfaces && Array.isArray(data.extractedData.surfaces)) {
-            dispatch({ type: 'SET_SELECTED_SURFACES', payload: data.extractedData.surfaces });
-          }
-        }
-
-        return {
-          id: Date.now().toString(),
-          role: 'assistant',
-          content: data.response,
-          timestamp: new Date().toISOString()
-        };
-      } else {
-        throw new Error('AI response failed');
-      }
-    } catch (error) {
-      console.error('Intelligent AI error:', error);
-      // Fallback to hardcoded logic
-      return processUserInput(input, conversationStage);
-    }
-  };
-
   const handleButtonClick = async (buttonValue: any, buttonLabel: string) => {
-    // Handle quick flow button clicks
-    if (conversationStage === 'category_selection') {
-      // Handle category selection
-      const selectedCategories = [...state.selectedSurfaces];
-      
-      if (selectedCategories.includes(buttonValue)) {
-        // Remove category if already selected
-        const newSelected = selectedCategories.filter(cat => cat !== buttonValue);
-        dispatch({ type: 'SET_SELECTED_SURFACES', payload: newSelected });
-      } else {
-        // Add category if not selected
-        selectedCategories.push(buttonValue);
-        dispatch({ type: 'SET_SELECTED_SURFACES', payload: selectedCategories });
-      }
-      
-      // Update button selections
-      const updatedButtons = buttonOptions.map(btn => ({
-        ...btn,
-        selected: selectedCategories.includes(btn.value)
-      }));
-      
-      // Add continue button if categories are selected
-      if (selectedCategories.length > 0) {
-        updatedButtons.push({
-          id: 'continue', 
-          label: `Continue with ${selectedCategories.length} categories ➡️`, 
-          value: 'continue', 
-          selected: false
-        });
-      }
-      
-      dispatch({ type: 'SET_BUTTON_OPTIONS', payload: updatedButtons });
-      
-      // Handle continue button
-      if (buttonValue === 'continue' && selectedCategories.length > 0) {
-        const userMessage: Message = {
-          id: Date.now().toString(),
-          role: 'user',
-          content: `Selected: ${selectedCategories.map(cat => cat.charAt(0).toUpperCase() + cat.slice(1)).join(', ')}`,
-          timestamp: new Date().toISOString()
-        };
-        dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
-        dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
-        
-        // Process the selection
-        const response = await processUserInput(selectedCategories.join(', '), conversationStage);
-        dispatch({ type: 'ADD_MESSAGE', payload: response });
-        return;
-      }
-      
-      return; // Don't process further if just selecting categories
-    }
-    
-    if (conversationStage === 'paint_quality_quick') {
-      // Handle edit prices button
-      if (buttonValue === 'edit_prices') {
-        const userMessage: Message = {
-          id: Date.now().toString(),
-          role: 'user',
-          content: buttonLabel,
-          timestamp: new Date().toISOString()
-        };
-        dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
-        dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
-        
-        // Show price editing message
-        const editResponse: Message = {
-          id: Date.now().toString(),
-          role: 'assistant',
-          content: "Sure! Tell me the new paint prices \ud83c\udfa8\n\nFormat: **Good $XX, Better $XX, Best $XX**\n\nExample: Good $40, Better $70, Best $90",
-          timestamp: new Date().toISOString()
-        };
-        
-        setTimeout(() => {
-          dispatch({ type: 'ADD_MESSAGE', payload: editResponse });
-          dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'edit_paint_prices' });
-        }, 500);
-        return;
-      }
-      
-      // Handle paint quality selection
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        role: 'user',
-        content: buttonLabel,
-        timestamp: new Date().toISOString()
-      };
-      dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
-      dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
-      
-      // Process the selection
-      const response = await processUserInput(buttonValue, conversationStage);
-      dispatch({ type: 'ADD_MESSAGE', payload: response });
-      dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'markup_quick' });
-      return;
-    }
-    
-    if (conversationStage === 'markup_quick') {
-      // Handle markup selection
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        role: 'user',
-        content: buttonLabel,
-        timestamp: new Date().toISOString()
-      };
-      dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
-      dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
-      
-      // Process the selection
-      const response = await processUserInput(buttonValue.toString(), conversationStage);
-      dispatch({ type: 'ADD_MESSAGE', payload: response });
-      dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'quote_complete' });
-      return;
-    }
-    
-    if (conversationStage === 'quote_complete') {
-      // Handle final actions
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        role: 'user',
-        content: buttonLabel,
-        timestamp: new Date().toISOString()
-      };
-      dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
-      dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
-      
-      // Process the selection
-      const response = await processUserInput(buttonValue, conversationStage);
-      dispatch({ type: 'ADD_MESSAGE', payload: response });
-      return;
-    }
-
     // Handle surface selection buttons silently (no AI response)
     if (conversationStage === 'surface_selection') {
       // If it's the continue button, process normally (with AI response)
@@ -933,7 +524,7 @@ What would you like to modify?`,
           updatedSurfaces.push(buttonValue);
         }
         
-        dispatch({ type: 'SET_SELECTED_SURFACES', payload: updatedSurfaces });
+        setSelectedSurfaces(updatedSurfaces);
         
         // Update buttons with current selections - keep same label text but track selected state
         const surfaceButtons = quoteData.project_type === 'interior' || quoteData.project_type === 'both' ? [
@@ -955,45 +546,43 @@ What would you like to modify?`,
           surfaceButtons.push({ id: 'continue', label: '➡️ Continue to Dimensions', value: 'continue', selected: false });
         }
         
-        dispatch({ type: 'SET_BUTTON_OPTIONS', payload: surfaceButtons });
+        setButtonOptions(surfaceButtons);
         return; // Exit early - no AI response needed for surface toggles
       }
     }
     
     // For all other buttons (including continue), process normally
-    dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
-    dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [] });
+    setShowButtons(false);
+    setButtonOptions([]);
     
-    const userMessage = {
+    const userMessage: Message = {
       id: Date.now().toString(),
-      role: 'user' as const,
+      role: 'user',
       content: buttonLabel,
       timestamp: new Date().toISOString()
     };
 
-    dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
+    setMessages(prev => [...prev, userMessage]);
     
     // Start thinking phase
-    dispatch({ type: 'SET_THINKING', payload: true });
+    setIsThinking(true);
 
     try {
-      // Process the response while thinking - use AI if enabled
-      const aiResponse = useIntelligentAI 
-        ? await processWithIntelligentAI(buttonValue)
-        : await processUserInput(buttonValue, conversationStage);
+      // Process the response while thinking
+      const aiResponse = await processUserInput(buttonValue, conversationStage);
       
       // Calculate thinking duration based on response length
       const thinkingDuration = calculateThinkingDuration(aiResponse.content.length);
       
       // Wait for thinking duration to complete
       setTimeout(() => {
-        dispatch({ type: 'SET_THINKING', payload: false });
-        dispatch({ type: 'SET_LOADING', payload: true });
+        setIsThinking(false);
+        setIsLoading(true);
         
         // Small delay before showing the actual response for smooth transition
         setTimeout(() => {
-          dispatch({ type: 'ADD_MESSAGE', payload: aiResponse });
-          dispatch({ type: 'SET_LOADING', payload: false });
+          setMessages(prev => [...prev, aiResponse]);
+          setIsLoading(false);
         }, 100);
       }, thinkingDuration);
       
@@ -1002,8 +591,8 @@ What would you like to modify?`,
       
       // Even for errors, show thinking briefly
       setTimeout(() => {
-        dispatch({ type: 'SET_THINKING', payload: false });
-        dispatch({ type: 'SET_LOADING', payload: true });
+        setIsThinking(false);
+        setIsLoading(true);
         
         setTimeout(() => {
           const errorMessage: Message = {
@@ -1012,85 +601,11 @@ What would you like to modify?`,
             content: "I'm sorry, I encountered an error. Please try again or contact support.",
             timestamp: new Date().toISOString()
           };
-          dispatch({ type: 'ADD_MESSAGE', payload: errorMessage });
-          dispatch({ type: 'SET_LOADING', payload: false });
+          setMessages(prev => [...prev, errorMessage]);
+          setIsLoading(false);
         }, 100);
       }, 500);
     }
-  };
-
-  // Smart Surface Selector Handlers
-  const handleSmartSurfaceToggle = (surfaceId: string) => {
-    const updatedSurfaces = [...selectedSurfaces];
-    
-    if (updatedSurfaces.includes(surfaceId)) {
-      const index = updatedSurfaces.indexOf(surfaceId);
-      updatedSurfaces.splice(index, 1);
-    } else {
-      updatedSurfaces.push(surfaceId);
-    }
-    
-    dispatch({ type: 'SET_SELECTED_SURFACES', payload: updatedSurfaces });
-  };
-
-  const handleSmartSurfaceContinue = async () => {
-    if (selectedSurfaces.length === 0) {
-      return;
-    }
-
-    // Detect project scope and requirements
-    const projectContext = detectProjectScope(selectedSurfaces);
-    
-    // Determine next steps based on project scope
-    let nextStage = '';
-    let responseContent = '';
-    
-    const measurementTypes = getMeasurementTypesForSurfaces(selectedSurfaces);
-    const surfaceList = selectedSurfaces.join(', ');
-    
-    if (needsRoomCount(selectedSurfaces)) {
-      // Need room count for ceilings
-      nextStage = 'smart_room_count';
-      responseContent = `Perfect! You selected: **${surfaceList}**\n\nSince you're painting ceilings, I need to know how many rooms we're working with. Use the room selector below to specify the number of rooms.`;
-    } else {
-      // Skip to measurement collection
-      nextStage = 'smart_measurement_flow';
-      responseContent = `Perfect! You selected: **${surfaceList}**\n\nBased on your selections, we need these measurement types: **${measurementTypes.join(', ')}**\n\nUse the measurement tools below to collect the dimensions we need.`;
-    }
-    
-    // Create and add assistant message
-    const assistantMessage: Message = {
-      id: Date.now().toString(),
-      role: 'assistant',
-      content: responseContent,
-      timestamp: new Date().toISOString()
-    };
-    
-    dispatch({ type: 'ADD_MESSAGE', payload: assistantMessage });
-    dispatch({ type: 'SET_CONVERSATION_STAGE', payload: nextStage });
-  };
-
-  const handleSmartRoomCountSelect = (count: number) => {
-    dispatch({ type: 'SET_ROOM_COUNT', payload: count });
-    
-    // Move to measurement flow
-    const measurementTypes = getMeasurementTypesForSurfaces(selectedSurfaces);
-    const surfaceList = selectedSurfaces.join(', ');
-    
-    const assistantMessage: Message = {
-      id: Date.now().toString(),
-      role: 'assistant', 
-      content: `Great! **${count} rooms** for: **${surfaceList}**\n\nNow let's collect the measurements we need: **${measurementTypes.join(', ')}**\n\nUse the measurement tools below.`,
-      timestamp: new Date().toISOString()
-    };
-    
-    dispatch({ type: 'ADD_MESSAGE', payload: assistantMessage });
-    dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'smart_measurement_flow' });
-  };
-
-  const handleMeasurementTypeSelect = (type: any) => {
-    // Handle measurement type selection
-    console.log('Selected measurement type:', type);
   };
 
   // Helper function to calculate thinking duration based on response length
@@ -1102,8 +617,8 @@ What would you like to modify?`,
   const handleSend = async () => {
     if (!inputValue.trim() || isLoading || isThinking) return;
 
-    dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
-    dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [] });
+    setShowButtons(false);
+    setButtonOptions([]);
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -1112,30 +627,28 @@ What would you like to modify?`,
       timestamp: new Date().toISOString()
     };
 
-    dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
-    dispatch({ type: 'SET_INPUT_VALUE', payload: '' });
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
     
     // Start thinking phase
-    dispatch({ type: 'SET_THINKING', payload: true });
+    setIsThinking(true);
 
     try {
-      // Process the response while thinking - use AI if enabled
-      const aiResponse = useIntelligentAI 
-        ? await processWithIntelligentAI(inputValue)
-        : await processUserInput(inputValue, conversationStage);
+      // Process the response while thinking
+      const aiResponse = await processUserInput(inputValue, conversationStage);
       
       // Calculate thinking duration based on response length
       const thinkingDuration = calculateThinkingDuration(aiResponse.content.length);
       
       // Wait for thinking duration to complete
       setTimeout(() => {
-        dispatch({ type: 'SET_THINKING', payload: false });
-        dispatch({ type: 'SET_LOADING', payload: true });
+        setIsThinking(false);
+        setIsLoading(true);
         
         // Small delay before showing the actual response for smooth transition
         setTimeout(() => {
-          dispatch({ type: 'ADD_MESSAGE', payload: aiResponse });
-          dispatch({ type: 'SET_LOADING', payload: false });
+          setMessages(prev => [...prev, aiResponse]);
+          setIsLoading(false);
         }, 100);
       }, thinkingDuration);
       
@@ -1144,8 +657,8 @@ What would you like to modify?`,
       
       // Even for errors, show thinking briefly
       setTimeout(() => {
-        dispatch({ type: 'SET_THINKING', payload: false });
-        dispatch({ type: 'SET_LOADING', payload: true });
+        setIsThinking(false);
+        setIsLoading(true);
         
         setTimeout(() => {
           const errorMessage: Message = {
@@ -1154,8 +667,8 @@ What would you like to modify?`,
             content: "I'm sorry, I encountered an error. Please try again or contact support.",
             timestamp: new Date().toISOString()
           };
-          dispatch({ type: 'ADD_MESSAGE', payload: errorMessage });
-          dispatch({ type: 'SET_LOADING', payload: false });
+          setMessages(prev => [...prev, errorMessage]);
+          setIsLoading(false);
         }, 100);
       }, 500);
     }
@@ -1166,496 +679,13 @@ What would you like to modify?`,
     let nextStage = stage;
 
     switch (stage) {
-      case 'project_setup':
-        // Parse customer and project info (no surface details yet)
-        const projectData = parseQuickProjectInput(input);
-        
-        // Update quote data with customer information
-        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: {
-          customer_name: projectData.customerName || '',
-          address: projectData.address || '',
-          project_type: projectData.projectType || 'interior'
-        }});
-        
-        // If we have customer name and address, move to category selection
-        if (projectData.customerName && projectData.address) {
-          responseContent = `Perfect! ${projectData.customerName} at ${projectData.address} ✅\n\n**Now, what surfaces are we painting?**\n\nSelect all that apply:`;
-          
-          // Show category selection buttons
-          setTimeout(() => {
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: 'walls', label: '🏠 Walls', value: 'walls', selected: false },
-              { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: false },
-              { id: 'doors', label: '🚪 Doors', value: 'doors', selected: false },
-              { id: 'trim', label: '📐 Trim/Baseboards', value: 'trim', selected: false },
-              { id: 'cabinets', label: '🗄️ Cabinets', value: 'cabinets', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-          }, 500);
-          
-          nextStage = 'category_selection';
-        } else {
-          // Need more info - ask for missing details
-          const missing = [];
-          if (!projectData.customerName) missing.push('customer name');
-          if (!projectData.address) missing.push('address');
-          
-          responseContent = `I need: ${missing.join(' and ')}\n\nTry: "Customer name, address, project description"`;
-          nextStage = 'project_setup';
-        }
-        break;
-
-      case 'category_selection':
-        // Handle category selection - could be multiple categories
-        responseContent = "Great! Let's start with measurements.";
-        
-        // Get the first category to process
-        const firstCategory = selectedSurfaces[0] || 'walls';
-        dispatch({ type: 'SET_CURRENT_CATEGORY', payload: firstCategory });
-        dispatch({ type: 'SET_CATEGORY_QUEUE', payload: selectedSurfaces.slice(1) });
-        
-        // Start with first category measurements
-        if (firstCategory === 'walls') {
-          responseContent = "🏠 **WALLS** - Let's get measurements\n\nTell me the **linear feet** and **ceiling height**\n\nExample: '120 linear feet, 9 foot ceilings'";
-          nextStage = 'category_measurement_walls';
-        } else if (firstCategory === 'ceilings') {
-          responseContent = "⬆️ **CEILINGS** - Room by room measurements\n\nTell me each room:\n\nExample: 'Living room 15x12, Kitchen 10x12, Bedroom 12x11'";
-          nextStage = 'category_measurement_ceilings';
-        } else if (firstCategory === 'doors') {
-          responseContent = "🚪 **DOORS** - How many doors?\n\nExample: '6 doors' or 'interior doors: 4, exterior doors: 2'";
-          nextStage = 'category_measurement_doors';
-        }
-        break;
-
-      case 'category_measurement_walls':
-        // Parse wall measurements
-        const wallLinearFeet = parseInt(input.match(/(\d+)\s*(?:linear\s*)?(?:feet|ft)/i)?.[1] || '0');
-        const wallHeight = parseInt(input.match(/(\d+)\s*(?:foot|ft|feet)\s*(?:ceiling|high|height)/i)?.[1] || '9');
-        
-        if (wallLinearFeet > 0) {
-          // Store wall measurements
-          dispatch({ type: 'UPDATE_CURRENT_CATEGORY_DATA', payload: {
-            id: 'walls',
-            name: 'Walls', 
-            type: 'walls',
-            measurements: { linearFeet: wallLinearFeet, height: wallHeight }
-          }});
-          
-          responseContent = `Got it! ${wallLinearFeet} LF × ${wallHeight}' height \u2705\n\n**Now pick your wall paint:**`;
-          
-          // Show paint product options for walls
-          setTimeout(() => {
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: 'sw_proclassic', label: 'Sherwin ProClassic - $58/gal', value: 'sw_proclassic', selected: true },
-              { id: 'bm_advance', label: 'Benjamin Moore Advance - $67/gal', value: 'bm_advance', selected: false },
-              { id: 'behr_ultra', label: 'Behr Ultra - $45/gal', value: 'behr_ultra', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-          }, 500);
-          
-          nextStage = 'category_product_walls';
-        } else {
-          responseContent = "I need the linear feet. Try: '120 linear feet, 9 foot ceilings'";
-          nextStage = 'category_measurement_walls';
-        }
-        break;
-
-      case 'category_product_walls':
-        // Handle wall paint selection and create summary button
-        const wallProduct = input.includes('proclassic') ? 'Sherwin ProClassic' : 
-                           input.includes('advance') ? 'Benjamin Moore Advance' : 'Behr Ultra';
-        const wallPrice = input.includes('proclassic') ? 58 : 
-                         input.includes('advance') ? 67 : 45;
-        
-        // Calculate wall paint cost
-        const wallArea = (currentCategoryData.measurements?.linearFeet || 0) * (currentCategoryData.measurements?.height || 9);
-        const wallGallons = Math.ceil(wallArea / 350); // 350 sq ft per gallon
-        const wallCost = wallGallons * wallPrice;
-        
-        // Complete the walls category
-        const wallsCategoryData = {
-          ...currentCategoryData,
-          product: { brand: wallProduct.split(' ')[0], name: wallProduct, pricePerGallon: wallPrice, coverage: 350 },
-          estimatedCost: wallCost,
-          estimatedGallons: wallGallons
-        };
-        
-        dispatch({ type: 'ADD_COMPLETED_CATEGORY', payload: wallsCategoryData });
-        dispatch({ type: 'ADD_CATEGORY_SUMMARY_BUTTON', payload: {
-          id: 'walls_summary',
-          categoryType: 'walls',
-          icon: '🏠',
-          title: `Walls: ${wallsCategoryData.measurements?.linearFeet} LF × ${wallsCategoryData.measurements?.height}'`,
-          subtitle: `${wallProduct} - ~$${wallCost} paint`,
-          cost: wallCost,
-          isCompleted: true
-        }});
-        
-        // Move to next category or finish
-        if (categoryQueue.length > 0) {
-          const nextCategory = categoryQueue[0];
-          dispatch({ type: 'SET_CURRENT_CATEGORY', payload: nextCategory });
-          dispatch({ type: 'SET_CATEGORY_QUEUE', payload: categoryQueue.slice(1) });
-          
-          responseContent = `🏠 Walls complete! \u2705\n\nNext: **${nextCategory.toUpperCase()}**`;
-          nextStage = `category_measurement_${nextCategory}`;
-        } else {
-          responseContent = "All categories complete! \u2705\n\n**Final step - markup percentage:**";
-          
-          setTimeout(() => {
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: '15', label: '15% markup', value: '15', selected: false },
-              { id: '20', label: '20% markup', value: '20', selected: true },
-              { id: '25', label: '25% markup', value: '25', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-          }, 500);
-          
-          nextStage = 'final_markup';
-        }
-        break;
-
-      case 'category_measurement_ceilings':
-        // Parse ceiling measurements room by room
-        const roomMatches = input.match(/(\w+(?:\s+\w+)*)\s+(\d+)\s*x\s*(\d+)/gi) || [];
-        
-        if (roomMatches.length > 0) {
-          const rooms = roomMatches.map(match => {
-            const parts = match.match(/(\w+(?:\s+\w+)*)\s+(\d+)\s*x\s*(\d+)/i);
-            const roomName = parts?.[1] || 'Room';
-            const width = parseInt(parts?.[2] || '0');
-            const length = parseInt(parts?.[3] || '0');
-            return { name: roomName, dimensions: `${width}x${length}`, area: width * length };
-          });
-          
-          const totalArea = rooms.reduce((sum, room) => sum + room.area, 0);
-          
-          dispatch({ type: 'UPDATE_CURRENT_CATEGORY_DATA', payload: {
-            id: 'ceilings',
-            name: 'Ceilings',
-            type: 'ceilings',
-            measurements: { rooms: rooms, area: totalArea }
-          }});
-          
-          const roomList = rooms.map(r => `${r.name} ${r.dimensions}`).join(', ');
-          responseContent = `Got it! ${rooms.length} rooms (${roomList}) = ${totalArea} sq ft \u2705\n\n**Ceiling paint:**`;
-          
-          setTimeout(() => {
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: 'behr_ceiling', label: 'Behr Ceiling Paint - $42/gal', value: 'behr_ceiling', selected: true },
-              { id: 'sw_enamel', label: 'Sherwin Enamel - $55/gal', value: 'sw_enamel', selected: false },
-              { id: 'kilz_ceiling', label: 'Kilz Ceiling - $38/gal', value: 'kilz_ceiling', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-          }, 500);
-          
-          nextStage = 'category_product_ceilings';
-        } else {
-          responseContent = "I need room dimensions. Try: 'Living room 15x12, Kitchen 10x12'";
-          nextStage = 'category_measurement_ceilings';
-        }
-        break;
-
-      case 'category_product_ceilings':
-        const ceilingProduct = input.includes('behr') ? 'Behr Ceiling Paint' :
-                              input.includes('sherwin') ? 'Sherwin Enamel' : 'Kilz Ceiling Paint';
-        const ceilingPrice = input.includes('behr') ? 42 :
-                            input.includes('sherwin') ? 55 : 38;
-        
-        const ceilingArea = currentCategoryData.measurements?.area || 0;
-        const ceilingGallons = Math.ceil(ceilingArea / 400); // 400 sq ft per gallon for ceilings
-        const ceilingCost = ceilingGallons * ceilingPrice;
-        
-        const ceilingsCategoryData = {
-          ...currentCategoryData,
-          product: { brand: ceilingProduct.split(' ')[0], name: ceilingProduct, pricePerGallon: ceilingPrice, coverage: 400 },
-          estimatedCost: ceilingCost,
-          estimatedGallons: ceilingGallons
-        };
-        
-        dispatch({ type: 'ADD_COMPLETED_CATEGORY', payload: ceilingsCategoryData });
-        
-        const roomDetails = ceilingsCategoryData.measurements?.rooms?.map(r => r.name).join(', ') || 'Multiple rooms';
-        dispatch({ type: 'ADD_CATEGORY_SUMMARY_BUTTON', payload: {
-          id: 'ceilings_summary',
-          categoryType: 'ceilings',
-          icon: '⬆️',
-          title: `Ceilings: ${roomDetails}`,
-          subtitle: `${ceilingProduct} - ~$${ceilingCost} paint`,
-          cost: ceilingCost,
-          isCompleted: true
-        }});
-        
-        // Continue to next category or finish
-        if (categoryQueue.length > 0) {
-          const nextCategory = categoryQueue[0];
-          dispatch({ type: 'SET_CURRENT_CATEGORY', payload: nextCategory });
-          dispatch({ type: 'SET_CATEGORY_QUEUE', payload: categoryQueue.slice(1) });
-          responseContent = `⬆️ Ceilings complete! \u2705\n\nNext: **${nextCategory.toUpperCase()}**`;
-          nextStage = `category_measurement_${nextCategory}`;
-        } else {
-          responseContent = "All categories complete! \u2705\n\n**Final step - markup percentage:**";
-          setTimeout(() => {
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: '15', label: '15% markup', value: '15', selected: false },
-              { id: '20', label: '20% markup', value: '20', selected: true },
-              { id: '25', label: '25% markup', value: '25', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-          }, 500);
-          nextStage = 'final_markup';
-        }
-        break;
-
-      case 'category_measurement_doors':
-        const doorCount = parseInt(input.match(/(\d+)\s*doors?/i)?.[1] || '0');
-        
-        if (doorCount > 0) {
-          dispatch({ type: 'UPDATE_CURRENT_CATEGORY_DATA', payload: {
-            id: 'doors',
-            name: 'Doors',
-            type: 'doors', 
-            measurements: { count: doorCount }
-          }});
-          
-          responseContent = `Got it! ${doorCount} doors \u2705\n\n**Door paint:**`;
-          
-          setTimeout(() => {
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: 'bm_advance', label: 'Benjamin Moore Advance - $67/gal', value: 'bm_advance', selected: true },
-              { id: 'sw_proclassic', label: 'Sherwin ProClassic - $58/gal', value: 'sw_proclassic', selected: false },
-              { id: 'behr_alkyd', label: 'Behr Alkyd - $52/gal', value: 'behr_alkyd', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-          }, 500);
-          
-          nextStage = 'category_product_doors';
-        } else {
-          responseContent = "How many doors? Try: '6 doors' or just '6'";
-          nextStage = 'category_measurement_doors';
-        }
-        break;
-
-      case 'category_product_doors':
-        const doorProduct = input.includes('advance') ? 'Benjamin Moore Advance' :
-                           input.includes('proclassic') ? 'Sherwin ProClassic' : 'Behr Alkyd';
-        const doorPrice = input.includes('advance') ? 67 :
-                         input.includes('proclassic') ? 58 : 52;
-        
-        const doorCount2 = currentCategoryData.measurements?.count || 0;
-        const doorGallons = Math.ceil(doorCount2 / 8); // ~8 doors per gallon
-        const doorCost2 = doorGallons * doorPrice;
-        
-        const doorsCategoryData = {
-          ...currentCategoryData,
-          product: { brand: doorProduct.split(' ')[0], name: doorProduct, pricePerGallon: doorPrice, coverage: 8 },
-          estimatedCost: doorCost2,
-          estimatedGallons: doorGallons
-        };
-        
-        dispatch({ type: 'ADD_COMPLETED_CATEGORY', payload: doorsCategoryData });
-        dispatch({ type: 'ADD_CATEGORY_SUMMARY_BUTTON', payload: {
-          id: 'doors_summary',
-          categoryType: 'doors',
-          icon: '🚪',
-          title: `Doors: ${doorCount2} doors`,
-          subtitle: `${doorProduct} - ~$${doorCost2} paint`,
-          cost: doorCost2,
-          isCompleted: true
-        }});
-        
-        // Continue to next category or finish
-        if (categoryQueue.length > 0) {
-          const nextCategory = categoryQueue[0];
-          dispatch({ type: 'SET_CURRENT_CATEGORY', payload: nextCategory });
-          dispatch({ type: 'SET_CATEGORY_QUEUE', payload: categoryQueue.slice(1) });
-          responseContent = `🚪 Doors complete! \u2705\n\nNext: **${nextCategory.toUpperCase()}**`;
-          nextStage = `category_measurement_${nextCategory}`;
-        } else {
-          responseContent = "All categories complete! \u2705\n\n**Final step - markup percentage:**";
-          setTimeout(() => {
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: '15', label: '15% markup', value: '15', selected: false },
-              { id: '20', label: '20% markup', value: '20', selected: true },
-              { id: '25', label: '25% markup', value: '25', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-          }, 500);
-          nextStage = 'final_markup';
-        }
-        break;
-
-      case 'final_markup':
-        // Handle markup selection and generate final quote
-        const markupPercentage = parseInt(input) || 20;
-        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { markup_percentage: markupPercentage } });
-        
-        // Calculate total from all completed categories
-        const totalPaintCost = completedCategories.reduce((sum, cat) => sum + cat.estimatedCost, 0);
-        const materialCost = totalPaintCost;
-        const laborCost = materialCost * 2; // Rough 2:1 labor to material ratio
-        const subtotal = materialCost + laborCost;
-        const markup = subtotal * (markupPercentage / 100);
-        const finalTotal = subtotal + markup;
-        
-        responseContent = `**Quote Complete!** \u2705\n\n` +
-          `Material: $${materialCost}\n` +
-          `Labor: $${laborCost}\n` +
-          `Markup (${markupPercentage}%): $${markup}\n` +
-          `**Total: $${Math.round(finalTotal)}**\n\n` +
-          `Ready to save this quote?`;
-        
-        // Show save buttons
-        setTimeout(() => {
-          dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-            { id: 'save_quote', label: '💾 Save Quote', value: 'save', selected: true },
-            { id: 'edit_quote', label: '✏️ Edit Quote', value: 'edit', selected: false },
-            { id: 'new_quote', label: '🆕 New Quote', value: 'new', selected: false }
-          ]});
-          dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-        }, 500);
-        
-        nextStage = 'quote_complete';
-        break;
-
-      case 'paint_quality_quick':
-        // Handle paint quality selection, then go to markup
-        const quality = input.toLowerCase();
-        let paintLevel = 1; // default to better
-        let pricePerGal = 65;
-        let qualityName = 'Better';
-        
-        if (quality.includes('good')) {
-          paintLevel = 0;
-          pricePerGal = 45;
-          qualityName = 'Good';
-        } else if (quality.includes('best')) {
-          paintLevel = 2;
-          pricePerGal = 85;
-          qualityName = 'Best';
-        }
-        
-        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: {
-          selected_products: {
-            ...quoteData.selected_products,
-            wall_paint_level: paintLevel,
-            ceiling_paint_level: paintLevel,
-            trim_paint_level: paintLevel
-          }
-        }});
-        
-        responseContent = `${qualityName} paint - $${pricePerGal}/gal ✓\\n\\nMarkup?`;
-        
-        // Show markup buttons
-        setTimeout(() => {
-          dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-            { id: '15', label: '15% Markup', value: 15, selected: false },
-            { id: '20', label: '20% Markup', value: 20, selected: true },
-            { id: '25', label: '25% Markup', value: 25, selected: false },
-            { id: '30', label: '30% Markup', value: 30, selected: false }
-          ]});
-          dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-        }, 500);
-        
-        nextStage = 'markup_quick';
-        break;
-
-      case 'edit_paint_prices':
-        // Handle custom paint price input
-        const pricePattern = /(?:good|basic)\s*\$?(\d+)|(?:better|standard)\s*\$?(\d+)|(?:best|premium)\s*\$?(\d+)/gi;
-        const matches = [...input.matchAll(pricePattern)];
-        
-        if (matches.length >= 2) {
-          // Successfully parsed prices
-          let goodPrice = 45, betterPrice = 65, bestPrice = 85;
-          
-          matches.forEach(match => {
-            const price = parseInt(match[1] || match[2] || match[3]);
-            const category = match[0].toLowerCase();
-            if (category.includes('good') || category.includes('basic')) goodPrice = price;
-            else if (category.includes('better') || category.includes('standard')) betterPrice = price;
-            else if (category.includes('best') || category.includes('premium')) bestPrice = price;
-          });
-          
-          responseContent = `Updated! ✅\n\n💰 Good Paint: $${goodPrice}/gal\n⭐ Better Paint: $${betterPrice}/gal\n👑 Best Paint: $${bestPrice}/gal\n\nWhich quality?`;
-          
-          // Show updated paint quality buttons
-          setTimeout(() => {
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: 'good', label: `💰 Good Paint ($${goodPrice}/gal)`, value: 'good', selected: false },
-              { id: 'better', label: `⭐ Better Paint ($${betterPrice}/gal)`, value: 'better', selected: true },
-              { id: 'best', label: `👑 Best Paint ($${bestPrice}/gal)`, value: 'best', selected: false },
-              { id: 'edit_prices', label: '✏️ Edit Paint Prices', value: 'edit_prices', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-          }, 500);
-          
-          nextStage = 'paint_quality_quick';
-        } else {
-          // Invalid format, ask again
-          responseContent = "Try this format: **Good $45, Better $65, Best $85**\n\nOr just say the prices like: \"Good 40, Better 70, Best 90\"";
-          nextStage = 'edit_paint_prices';
-        }
-        break;
-
-      case 'markup_quick':
-        // Generate final quote
-        const markupValue = parseMarkupPercentage(input);
-        
-        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { markup_percentage: markupValue } });
-        
-        // Calculate rough quote (simplified version)
-        const estimatedTotal = calculateQuickQuote(selectedSurfaces, markupValue);
-        
-        responseContent = `**${quoteData.customer_name}** • ${quoteData.address}\\n${selectedSurfaces.join(' + ')} • ${markupValue}% markup\\n\\n## $${estimatedTotal.toLocaleString()}\\n\\nQuick estimate - save for details`;
-        
-        // Show final action buttons
-        setTimeout(() => {
-          dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-            { id: 'save', label: '💾 Save Quote', value: 'save', selected: false },
-            { id: 'new', label: '➕ New Quote', value: 'new', selected: false },
-            { id: 'details', label: '🔍 Detailed Breakdown', value: 'details', selected: false }
-          ]});
-          dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-        }, 500);
-        
-        nextStage = 'quote_complete';
-        break;
-
-      case 'quote_complete':
-        // Handle final actions
-        if (input.toLowerCase().includes('save') || input === 'save') {
-          responseContent = `Saved! ✅\\n\\nNext project?`;
-          // Reset for new quote with initial message
-          setTimeout(() => {
-            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'quick_project_input' });
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
-            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
-            dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { customer_name: '', address: '' } });
-          }, 1000);
-          nextStage = 'quick_project_input';
-        } else if (input.toLowerCase().includes('new') || input === 'new') {
-          responseContent = `New quote! 🎨\\n\\nCustomer, address, what to paint, size?`;
-          // Reset for new quote
-          setTimeout(() => {
-            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'quick_project_input' });
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
-            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
-            dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { customer_name: '', address: '' } });
-          }, 500);
-          nextStage = 'quick_project_input';
-        } else {
-          responseContent = `Use the buttons ☝️`;
-          nextStage = 'quote_complete';
-        }
-        break;
-
       case 'customer_info':
         const customerInfo = parseCustomerInfo(input, quoteData);
-        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { 
-          customer_name: customerInfo.customer_name || quoteData.customer_name,
-          address: customerInfo.address || quoteData.address
-        }});
+        setQuoteData(prev => ({ 
+          ...prev, 
+          customer_name: customerInfo.customer_name || prev.customer_name,
+          address: customerInfo.address || prev.address
+        }));
         
         const customerName = customerInfo.customer_name || quoteData.customer_name;
         const address = customerInfo.address || quoteData.address;
@@ -1669,12 +699,12 @@ What would you like to modify?`,
           nextStage = 'project_type';
           // Show project type buttons immediately when asking project type question
           setTimeout(() => {
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+            setButtonOptions([
               { id: 'interior', label: 'Interior Only', value: 'interior', selected: false },
               { id: 'exterior', label: 'Exterior Only', value: 'exterior', selected: false },
               { id: 'both', label: 'Both Interior & Exterior', value: 'both', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+            ]);
+            setShowButtons(true);
           }, 500);
         } else {
           nextStage = 'customer_info';
@@ -1682,75 +712,73 @@ What would you like to modify?`,
         break;
 
       case 'address':
-        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { address: input.trim() } });
+        setQuoteData(prev => ({ ...prev, address: input.trim() }));
         responseContent = `Thanks! Now I have ${quoteData.customer_name} at ${input.trim()}.\n\nWhat type of painting work are we quoting?`;
         // Show project type buttons
         setTimeout(() => {
-          dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+          setButtonOptions([
             { id: 'interior', label: 'Interior Only', value: 'interior', selected: false },
             { id: 'exterior', label: 'Exterior Only', value: 'exterior', selected: false },
             { id: 'both', label: 'Both Interior & Exterior', value: 'both', selected: false }
-          ]});
-          dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          ]);
+          setShowButtons(true);
         }, 500);
         nextStage = 'project_type';
         break;
         
       case 'customer_name':
-        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { customer_name: input.trim() } });
+        setQuoteData(prev => ({ ...prev, customer_name: input.trim() }));
         responseContent = `Perfect! Now I have ${input.trim()} at ${quoteData.address}.\n\nWhat type of painting work are we quoting?`;
         // Show project type buttons
         setTimeout(() => {
-          dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+          setButtonOptions([
             { id: 'interior', label: 'Interior Only', value: 'interior', selected: false },
             { id: 'exterior', label: 'Exterior Only', value: 'exterior', selected: false },
             { id: 'both', label: 'Both Interior & Exterior', value: 'both', selected: false }
-          ]});
-          dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          ]);
+          setShowButtons(true);
         }, 500);
         nextStage = 'project_type';
         break;
 
       case 'project_type':
         const projectType = parseProjectType(input);
-        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { project_type: projectType } });
+        setQuoteData(prev => ({ ...prev, project_type: projectType }));
         
         if (projectType === 'interior' || projectType === 'both') {
-          responseContent = `Perfect! For ${projectType} painting, I'll help you select the right surfaces and determine what measurements we need.\n\nUse the smart surface selector below to choose what you want to paint.`;
+          responseContent = `Perfect! For ${projectType} painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
+          // Show surface selection buttons for interior
           setTimeout(() => {
-            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'surface_selection_smart' });
-            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+            setConversationStage('surface_selection'); // Set stage BEFORE showing buttons
+            setSelectedSurfaces([]); // Reset selected surfaces
+            setButtonOptions([
+              { id: 'walls', label: '🎨 Walls', value: 'walls', selected: false },
+              { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: false },
+              { id: 'trim', label: '🖼️ Trim & Baseboards', value: 'trim', selected: false },
+              { id: 'doors', label: '🚪 Doors', value: 'doors', selected: false },
+              { id: 'windows', label: '🪟 Window Frames', value: 'windows', selected: false }
+            ]);
+            setShowButtons(true);
           }, 500);
         } else {
-          responseContent = `Perfect! For exterior painting, I'll help you select the right surfaces and determine what measurements we need.\n\nUse the smart surface selector below to choose what you want to paint.`;
+          responseContent = `Perfect! For exterior painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
+          // Show surface selection buttons for exterior
           setTimeout(() => {
-            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'surface_selection_smart' });
-            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+            setConversationStage('surface_selection'); // Set stage BEFORE showing buttons
+            setSelectedSurfaces([]); // Reset selected surfaces
+            setButtonOptions([
+              { id: 'siding', label: '🏠 Siding', value: 'siding', selected: false },
+              { id: 'trim_ext', label: '🖼️ Exterior Trim', value: 'trim_ext', selected: false },
+              { id: 'doors_ext', label: '🚪 Front Door', value: 'doors_ext', selected: false },
+              { id: 'shutters', label: '🪟 Shutters', value: 'shutters', selected: false },
+              { id: 'deck', label: '🏗️ Deck/Porch', value: 'deck', selected: false }
+            ]);
+            setShowButtons(true);
           }, 500);
         }
-        nextStage = 'surface_selection_smart';
+        nextStage = 'surface_selection';
         break;
 
-      case 'surface_selection_smart':
-        // This stage is handled by the SmartSurfaceSelector component
-        // When surfaces are selected, it calls handleSmartSurfaceContinue
-        responseContent = `Please use the surface selector above to choose what you want to paint.`;
-        nextStage = 'surface_selection_smart';
-        break;
-
-      case 'smart_room_count':
-        // This stage is handled by the RoomCountSelector component
-        responseContent = `Please use the room count selector above.`;
-        nextStage = 'smart_room_count';
-        break;
-
-      case 'smart_measurement_flow':
-        // This stage is handled by the SmartMeasurementFlow component
-        responseContent = `Please use the measurement tools above to collect the dimensions we need.`;
-        nextStage = 'smart_measurement_flow';
-        break;
 
       case 'surface_selection':
         // Handle continue to dimensions (surface selection is now handled in handleButtonClick)
@@ -1986,57 +1014,63 @@ What would you like to modify?`,
             if (selectedSurfaces.includes('doors')) paintCategories.push('doors');
             if (selectedSurfaces.includes('windows')) paintCategories.push('windows');
             
-            dispatch({ type: 'SET_PAINT_SELECTION_QUEUE', payload: paintCategories });
-            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY_INDEX', payload: 0 });
+            setPaintSelectionQueue(paintCategories);
+            setCurrentPaintCategoryIndex(0);
             
             if (paintCategories.length > 0) {
               const firstCategory = paintCategories[0];
-              dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: firstCategory });
-              responseContent += `\n\nGreat! Now let's select paint for your ${firstCategory}.`;
+              setCurrentPaintCategory(firstCategory);
+              responseContent += `\n\nGreat! Now let's select paint for your ${firstCategory}.\n\nWhich paint brand do you prefer for ${firstCategory}?`;
               
-              // Check if user has favorite products set up
-              if (useFavoriteSelector && companyData) {
-                responseContent += `\n\nChoose from your favorite products below, or type your own custom paint product.`;
+              // Show brand selection buttons - prioritize top brands
+              setTimeout(() => {
+                const topBrandButtons = topBrands
+                  .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
+                  .map(brand => ({
+                    id: `brand_${brand.brand}`,
+                    label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                    value: `brand_${brand.brand}_${firstCategory}`,
+                    selected: false
+                  }));
                 
-                // Show the favorite paint selector component
-                dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: true });
-                dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: firstCategory });
-                
-                // Also show button options for alternatives
-                setTimeout(() => {
-                  dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-                    { 
-                      id: 'type_custom', 
-                      label: '✏️ Type Custom Product', 
-                      value: `type_custom_${firstCategory}`, 
-                      selected: false 
-                    },
-                    { 
-                      id: 'use_quality', 
-                      label: '📊 Choose by Quality Level', 
-                      value: `quality_selection_${firstCategory}`, 
-                      selected: false 
-                    }
-                  ]});
-                  dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-                }, 500);
-                
-                nextStage = 'paint_selection_with_favorites';
+                if (topBrandButtons.length > 0) {
+                  setButtonOptions(topBrandButtons);
+                  setShowButtons(true);
+                } else {
+                  // Fallback to all brands limited to 3
+                  const allBrandButtons = availableBrands
+                    .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
+                    .slice(0, 3)
+                    .map(brand => ({
+                      id: `brand_${brand.brand}`,
+                      label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                      value: `brand_${brand.brand}_${firstCategory}`,
+                      selected: false
+                    }));
+                  
+                  if (allBrandButtons.length > 0) {
+                    setButtonOptions(allBrandButtons);
+                    setShowButtons(true);
+                  } else {
+                    // Final fallback to generic paint quality
+                    setButtonOptions([
+                      { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+                      { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+                      { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+                    ]);
+                    setShowButtons(true);
+                  }
+                }
+              }, 500);
+              
+              // Check if we have brands available to determine next stage
+              const hasBrands = topBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0) ||
+                               availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
+              if (hasBrands) {
+                nextStage = 'paint_brand_selection';
               } else {
-                // No favorites set up, show quality selection buttons
-                responseContent += `\n\nWhat paint quality would you like for ${firstCategory}?`;
-                
-                setTimeout(() => {
-                  dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-                    { id: 'good', label: '💰 Good - Budget-friendly ($25-40/gal)', value: 'good', selected: false },
-                    { id: 'better', label: '⭐ Better - Mid-range quality ($40-60/gal)', value: 'better', selected: false },
-                    { id: 'best', label: '👑 Best - Premium quality ($60-80/gal)', value: 'best', selected: false },
-                    { id: 'type_custom', label: '✏️ Type Custom Product', value: `type_custom_${firstCategory}`, selected: false }
-                  ]});
-                  dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-                }, 500);
-                
                 nextStage = 'paint_quality';
+                responseContent += `\n\nPerfect! Now what paint quality would you like for ${firstCategory}?`;
               }
             }
           }
@@ -2221,57 +1255,63 @@ What would you like to modify?`,
           if (selectedSurfaces.includes('doors')) paintCategories.push('doors');
           if (selectedSurfaces.includes('windows')) paintCategories.push('windows');
           
-          dispatch({ type: 'SET_PAINT_SELECTION_QUEUE', payload: paintCategories });
-          dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY_INDEX', payload: 0 });
+          setPaintSelectionQueue(paintCategories);
+          setCurrentPaintCategoryIndex(0);
           
           if (paintCategories.length > 0) {
             const firstCategory = paintCategories[0];
-            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: firstCategory });
-            responseContent = `Great! Now let's select paint for your ${firstCategory}.`;
+            setCurrentPaintCategory(firstCategory);
+            responseContent = `Great! Now let's select paint for your ${firstCategory}.\n\nWhich paint brand do you prefer for ${firstCategory}?`;
             
-            // Check if user has favorite products set up
-            if (useFavoriteSelector && companyData) {
-              responseContent += `\n\nChoose from your favorite products below, or type your own custom paint product.`;
+            // Show brand selection buttons - prioritize top brands
+            setTimeout(() => {
+              const topBrandButtons = topBrands
+                .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
+                .map(brand => ({
+                  id: `brand_${brand.brand}`,
+                  label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                  value: `brand_${brand.brand}_${firstCategory}`,
+                  selected: false
+                }));
               
-              // Show the favorite paint selector component
-              dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: true });
-              dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: firstCategory });
-              
-              // Also show button options for alternatives
-              setTimeout(() => {
-                dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-                  { 
-                    id: 'type_custom', 
-                    label: '✏️ Type Custom Product', 
-                    value: `type_custom_${firstCategory}`, 
-                    selected: false 
-                  },
-                  { 
-                    id: 'use_quality', 
-                    label: '📊 Choose by Quality Level', 
-                    value: `quality_selection_${firstCategory}`, 
-                    selected: false 
-                  }
-                ]});
-                dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-              }, 500);
-              
-              nextStage = 'paint_selection_with_favorites';
+              if (topBrandButtons.length > 0) {
+                setButtonOptions(topBrandButtons);
+                setShowButtons(true);
+              } else {
+                // Fallback to all brands if no top brands available
+                const allBrandButtons = availableBrands
+                  .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
+                  .slice(0, 3) // Limit to 3 even for fallback
+                  .map(brand => ({
+                    id: `brand_${brand.brand}`,
+                    label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
+                    value: `brand_${brand.brand}_${firstCategory}`,
+                    selected: false
+                  }));
+                
+                if (allBrandButtons.length > 0) {
+                  setButtonOptions(allBrandButtons);
+                  setShowButtons(true);
+                } else {
+                  // Final fallback to generic paint quality
+                  setButtonOptions([
+                    { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
+                    { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
+                    { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
+                  ]);
+                  setShowButtons(true);
+                }
+              }
+            }, 500);
+            
+            // Check if we have brands available to determine next stage
+            const hasBrands = topBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0) ||
+                             availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
+            if (hasBrands) {
+              nextStage = 'paint_brand_selection';
             } else {
-              // No favorites set up, show quality selection buttons
-              responseContent += `\n\nWhat paint quality would you like for ${firstCategory}?`;
-              
-              setTimeout(() => {
-                dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-                  { id: 'good', label: '💰 Good - Budget-friendly ($25-40/gal)', value: 'good', selected: false },
-                  { id: 'better', label: '⭐ Better - Mid-range quality ($40-60/gal)', value: 'better', selected: false },
-                  { id: 'best', label: '👑 Best - Premium quality ($60-80/gal)', value: 'best', selected: false },
-                  { id: 'type_custom', label: '✏️ Type Custom Product', value: `type_custom_${firstCategory}`, selected: false }
-                ]});
-                dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-              }, 500);
-              
               nextStage = 'paint_quality';
+              responseContent = `Perfect! Now what paint quality would you like for ${firstCategory}?`;
             }
           } else {
             responseContent = `Perfect! Now what paint quality would you like?`;
@@ -2392,115 +1432,6 @@ What would you like to modify?`,
         }
         break;
         
-      case 'paint_selection_with_favorites':
-        // Handle button clicks for paint selection options
-        if (input.startsWith('type_custom_')) {
-          const category = input.replace('type_custom_', '');
-          dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: false });
-          dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
-          
-          responseContent = `Please type the paint product details for ${category}:\n\n**Format:** Brand Name - Product Name - $XX/gal\n**Example:** "Sherwin-Williams ProClassic $58/gal" or "Benjamin Moore Advance $75/gal"`;
-          nextStage = 'custom_paint_input';
-          dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: category });
-        } else if (input.startsWith('quality_selection_')) {
-          const category = input.replace('quality_selection_', '');
-          dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: false });
-          
-          responseContent = `What paint quality would you like for ${category}?`;
-          setTimeout(() => {
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: 'good', label: '💰 Good - Budget-friendly ($25-40/gal)', value: 'good', selected: false },
-              { id: 'better', label: '⭐ Better - Mid-range quality ($40-60/gal)', value: 'better', selected: false },
-              { id: 'best', label: '👑 Best - Premium quality ($60-80/gal)', value: 'best', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-          }, 500);
-          nextStage = 'paint_quality';
-        } else {
-          // Handle favorite product selection (this would come from the FavoritePaintSelector component)
-          responseContent = `Please select a paint product from your favorites above, or use one of the button options.`;
-          nextStage = 'paint_selection_with_favorites';
-        }
-        break;
-
-      case 'custom_paint_input':
-        // Parse custom paint input
-        const customPaintMatch = input.match(/(.+?)\s*-?\s*\$?(\d+(?:\.\d+)?)\s*(?:\/gal)?/i);
-        if (customPaintMatch) {
-          const productName = customPaintMatch[1].trim();
-          const price = parseFloat(customPaintMatch[2]);
-          const category = currentPaintCategory;
-          
-          // Store the custom paint selection
-          dispatch({ type: 'UPDATE_SELECTED_PAINT_PRODUCTS', payload: {
-            [category]: {
-              supplier: productName.split(' ')[0] || 'Custom',
-              name: productName,
-              costPerGallon: price,
-              custom: true
-            }
-          }});
-          
-          responseContent = `Perfect! I've recorded:\n**${productName}** at **$${price}/gal** for ${category}.`;
-          
-          // Move to next paint category or finish
-          const nextIndex = currentPaintCategoryIndex + 1;
-          if (nextIndex < paintSelectionQueue.length) {
-            const nextCategory = paintSelectionQueue[nextIndex];
-            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY_INDEX', payload: nextIndex });
-            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: nextCategory });
-            
-            responseContent += `\n\nNow let's select paint for your ${nextCategory}.`;
-            
-            if (useFavoriteSelector && companyData) {
-              responseContent += `\n\nChoose from your favorite products below, or type your own custom paint product.`;
-              dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: true });
-              
-              setTimeout(() => {
-                dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-                  { id: 'type_custom', label: '✏️ Type Custom Product', value: `type_custom_${nextCategory}`, selected: false },
-                  { id: 'use_quality', label: '📊 Choose by Quality Level', value: `quality_selection_${nextCategory}`, selected: false }
-                ]});
-                dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-              }, 500);
-              
-              nextStage = 'paint_selection_with_favorites';
-            } else {
-              // Move to quality selection for next category
-              responseContent += `\n\nWhat paint quality would you like for ${nextCategory}?`;
-              setTimeout(() => {
-                dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-                  { id: 'good', label: '💰 Good - Budget-friendly ($25-40/gal)', value: 'good', selected: false },
-                  { id: 'better', label: '⭐ Better - Mid-range quality ($40-60/gal)', value: 'better', selected: false },
-                  { id: 'best', label: '👑 Best - Premium quality ($60-80/gal)', value: 'best', selected: false },
-                  { id: 'type_custom', label: '✏️ Type Custom Product', value: `type_custom_${nextCategory}`, selected: false }
-                ]});
-                dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-              }, 500);
-              nextStage = 'paint_quality';
-            }
-          } else {
-            // All paint selections complete, move to markup
-            dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: false });
-            responseContent += `\n\nExcellent! Now let's set your profit margin. What markup percentage would you like?`;
-            
-            setTimeout(() => {
-              dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-                { id: '10', label: '🎯 10% - Competitive pricing', value: '10%', selected: false },
-                { id: '20', label: '⚖️ 20% - Standard profit (recommended)', value: '20%', selected: false },
-                { id: '30', label: '📈 30% - Good profit margin', value: '30%', selected: false },
-                { id: '40', label: '💎 40% - Premium pricing', value: '40%', selected: false }
-              ]});
-              dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
-            }, 500);
-            nextStage = 'markup_selection';
-          }
-        } else {
-          responseContent = `I couldn't understand that format. Please try again with:\n\n**Format:** Brand Name - Product Name - $XX/gal\n**Example:** "Sherwin-Williams ProClassic $58/gal"`;
-          nextStage = 'custom_paint_input';
-        }
-        break;
-
       case 'paint_quality':
         const paintQuality = parsePaintQuality(input);
         const updatedQuoteData = {
@@ -2629,8 +1560,8 @@ What would you like to modify?`,
           
           if (nextCategoryIndex < paintSelectionQueue.length) {
             const nextCategory = paintSelectionQueue[nextCategoryIndex];
-            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: nextCategory });
-            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY_INDEX', payload: nextCategoryIndex });
+            setCurrentPaintCategory(nextCategory);
+            setCurrentPaintCategoryIndex(nextCategoryIndex);
             
             responseContent = `Great! Now let's select paint for your ${nextCategory}.\n\nWhich paint brand do you prefer for ${nextCategory}?`;
             
@@ -3225,7 +2156,7 @@ What would you like to modify?`,
             rates: quoteData.rates, // Keep company rates
             calculation: null
           });
-          dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'customer_info' });
+          setConversationStage('customer_info');
           responseContent = `Great! Let's create another quote. What's the customer's name and property address?`;
           return {
             id: (Date.now() + 1).toString(),
@@ -3263,7 +2194,7 @@ What would you like to modify?`,
         responseContent = "I'm not sure what you're looking for. Could you please clarify?";
     }
 
-    dispatch({ type: 'SET_CONVERSATION_STAGE', payload: nextStage });
+    setConversationStage(nextStage);
 
     return {
       id: (Date.now() + 1).toString(),
@@ -3517,24 +2448,36 @@ What would you like to modify?`,
                   __html: renderMarkdown(message.content)
                 }}>
                 </div>
+                <div className={cn(
+                  "text-xs mt-2",
+                  message.role === 'user' ? "text-blue-100" : "text-gray-500"
+                )}>
+                  {new Date(message.timestamp).toLocaleTimeString()}
+                </div>
               </div>
             </div>
           ))}
 
-          {/* Category Summary Progress */}
-          {categorySummaryButtons.length > 0 && (
-            <div className="flex justify-start">
-              <div className="max-w-md">
-                <CategorySummaryList 
-                  categories={categorySummaryButtons}
-                  onCategoryClick={(category) => {
-                    // TODO: Allow editing of completed categories
-                    console.log('Category clicked:', category);
-                  }}
-                />
-              </div>
+          {/* Progressive Estimate Display - Disabled */}
+          {/* {currentEstimate && showEstimate && !isThinking && (
+            <div className="flex justify-center">
+              <ProgressiveEstimateDisplay
+                estimate={currentEstimate}
+                isVisible={true}
+                onEstimateClick={() => {
+                  // Add estimate details to chat
+                  const estimateMessage = generateEstimateMessage(currentEstimate);
+                  const newMessage: Message = {
+                    id: Date.now().toString(),
+                    role: 'assistant',
+                    content: `## Current Estimate\n\n${estimateMessage}\n\n*This estimate updates automatically as you provide more details.*`,
+                    timestamp: new Date().toISOString()
+                  };
+                  setMessages(prev => [...prev, newMessage]);
+                }}
+              />
             </div>
-          )}
+          )} */}
           
           {isThinking && (
             <div className="flex gap-3 justify-start">
@@ -3547,115 +2490,6 @@ What would you like to modify?`,
                   </div>
                   <span className="text-sm text-gray-500">Thinking...</span>
                 </div>
-              </div>
-            </div>
-          )}
-
-          {/* Room Confirmation Buttons */}
-          {showRoomConfirmation && pendingRoomConfirmation && (
-            <div className="flex gap-3 justify-start">
-              <div className="max-w-[80%]">
-                <RoomConfirmationButton
-                  room={{
-                    name: pendingRoomConfirmation.name || 'Room',
-                    dimensions: `${pendingRoomConfirmation.length || 0}x${pendingRoomConfirmation.width || 0}`,
-                    height: pendingRoomConfirmation.height || 9,
-                    surfaces: pendingRoomConfirmation.surfaces || []
-                  }}
-                  onConfirm={() => {
-                    if (pendingRoomConfirmation) {
-                      const confirmedRoom = {
-                        ...pendingRoomConfirmation,
-                        id: confirmedRooms.length + 1,
-                        name: pendingRoomConfirmation.name || 'Room',
-                        length: pendingRoomConfirmation.length || 0,
-                        width: pendingRoomConfirmation.width || 0,
-                        height: pendingRoomConfirmation.height || 9
-                      } as Room;
-                      
-                      dispatch({ type: 'CONFIRM_ROOM', payload: confirmedRoom });
-                      
-                      // Add confirmation message
-                      const confirmMessage = {
-                        id: Date.now().toString(),
-                        role: 'user' as const,
-                        content: `✅ Confirmed: ${confirmedRoom.name}`,
-                        timestamp: new Date().toISOString()
-                      };
-                      dispatch({ type: 'ADD_MESSAGE', payload: confirmMessage });
-                    }
-                  }}
-                  onEdit={() => {
-                    dispatch({ type: 'SET_PENDING_ROOM_CONFIRMATION', payload: null });
-                    dispatch({ type: 'SET_SHOW_ROOM_CONFIRMATION', payload: false });
-                    
-                    // Add edit message
-                    const editMessage = {
-                      id: Date.now().toString(),
-                      role: 'user' as const,
-                      content: `Let me edit the room details`,
-                      timestamp: new Date().toISOString()
-                    };
-                    dispatch({ type: 'ADD_MESSAGE', payload: editMessage });
-                  }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Confirmed Rooms Display */}
-          {confirmedRooms.length > 0 && (
-            <div className="flex gap-3 justify-start">
-              <div className="max-w-[80%]">
-                <ButtonGroup title="Confirmed Rooms">
-                  {confirmedRooms.map((room, index) => (
-                    <RoomConfirmationButton
-                      key={room.id || index}
-                      room={{
-                        name: room.name,
-                        dimensions: `${room.length}x${room.width}`,
-                        height: room.height,
-                        surfaces: room.surfaces || []
-                      }}
-                      isConfirmed={true}
-                      onConfirm={() => {}}
-                      onEdit={() => {
-                        // Handle room editing
-                        dispatch({ type: 'SET_EDITING_ROOM_INDEX', payload: index });
-                      }}
-                    />
-                  ))}
-                  
-                  <div className="mt-4 flex gap-2">
-                    <AddRoomButton 
-                      onClick={() => {
-                        // Add message to start new room
-                        const addRoomMessage = {
-                          id: Date.now().toString(),
-                          role: 'user' as const,
-                          content: 'Add another room',
-                          timestamp: new Date().toISOString()
-                        };
-                        dispatch({ type: 'ADD_MESSAGE', payload: addRoomMessage });
-                      }}
-                    />
-                    
-                    {confirmedRooms.length > 0 && (
-                      <ConfirmQuoteButton 
-                        onClick={() => {
-                          // Start final quote calculation
-                          const finalizeMessage = {
-                            id: Date.now().toString(),
-                            role: 'user' as const,
-                            content: 'Ready for final quote',
-                            timestamp: new Date().toISOString()
-                          };
-                          dispatch({ type: 'ADD_MESSAGE', payload: finalizeMessage });
-                        }}
-                      />
-                    )}
-                  </div>
-                </ButtonGroup>
               </div>
             </div>
           )}
@@ -3733,54 +2567,11 @@ What would you like to modify?`,
             <div className="flex gap-3 justify-start">
               <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
                 <FavoritePaintSelector
-                  category={currentPaintCategory}
+                  category={currentMeasurementCategory}
                   projectType={quoteData.project_type}
                   companyId={companyData.id}
                   onProductSelect={handleFavoriteProductSelect}
-                  selectedProduct={selectedPaintProducts[currentPaintCategory]}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Smart Surface Selector */}
-          {conversationStage === 'surface_selection_smart' && (
-            <div className="flex gap-3 justify-start">
-              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
-                <SmartSurfaceSelector
-                  selectedSurfaces={selectedSurfaces}
-                  onSurfaceToggle={handleSmartSurfaceToggle}
-                  onContinue={handleSmartSurfaceContinue}
-                  projectType={quoteData.project_type}
-                  showRecommendations={true}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Smart Room Count Selector */}
-          {conversationStage === 'smart_room_count' && (
-            <div className="flex gap-3 justify-start">
-              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
-                <RoomCountSelector
-                  onSelect={handleSmartRoomCountSelect}
-                  selectedCount={roomCount}
-                  context={detectProjectScope(selectedSurfaces)}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Smart Measurement Flow */}
-          {conversationStage === 'smart_measurement_flow' && (
-            <div className="flex gap-3 justify-start">
-              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
-                <SmartMeasurementFlow
-                  context={detectProjectScope(selectedSurfaces)}
-                  onMeasurementTypeSelect={handleMeasurementTypeSelect}
-                  onRoomCountSelect={handleSmartRoomCountSelect}
-                  selectedRoomCount={roomCount}
-                  completedMeasurements={[]}
+                  selectedProduct={selectedPaintProducts[currentMeasurementCategory]}
                 />
               </div>
             </div>
@@ -3789,43 +2580,37 @@ What would you like to modify?`,
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Area - Mobile Optimized */}
+        {/* Input Area */}
         <div className="bg-white border-t p-4">
-          {conversationStage === 'quick_project_input' && (
-            <div className="mb-3 text-center">
-              <p className="text-sm text-gray-600 mb-2">🎯 <strong>Quick Quote</strong></p>
-              <p className="text-xs text-gray-500">One line, all the details</p>
-            </div>
-          )}
           <div className="flex gap-2">
             <Input
               value={inputValue}
-              onChange={(e) => dispatch({ type: 'SET_INPUT_VALUE', payload: e.target.value })}
+              onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder={conversationStage === 'quick_project_input' 
-                ? "John Smith, 123 Main St, kitchen walls & cabinets, 12x10"
-                : "Type your response..."
-              }
+              placeholder="Type your response..."
               disabled={isLoading || isThinking}
-              className={`flex-1 px-4 ${conversationStage === 'quick_project_input' ? 'text-base h-12' : 'h-10'}`}
+              className="flex-1"
             />
             <Button
               onClick={handleSend}
               disabled={!inputValue.trim() || isLoading || isThinking}
-              size={conversationStage === 'quick_project_input' ? 'lg' : 'sm'}
-              className={conversationStage === 'quick_project_input' ? 'h-12 px-6' : 'h-10 px-4'}
+              size="icon"
+              className="shrink-0"
             >
-              <Send className={conversationStage === 'quick_project_input' ? 'w-5 h-5' : 'w-4 h-4'} />
+              <Send className="w-4 h-4" />
             </Button>
           </div>
-          {conversationStage === 'quick_project_input' && (
-            <div className="mt-2 text-xs text-gray-400 text-center">
-              💡 Tip: Include customer name, address, what to paint, and room size
-            </div>
-          )}
         </div>
       </div>
 
+      {/* Floating Estimate Widget - Disabled */}
+      {/* {currentEstimate && !showEstimate && (
+        <FloatingEstimateWidget
+          estimate={currentEstimate}
+          isVisible={true}
+          onToggle={() => setShowEstimate(true)}
+        />
+      )} */}
     </div>
   );
 }
