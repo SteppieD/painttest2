@@ -434,6 +434,8 @@ CONVERSATION RULES:
 • Smart unit detection: 1200 = sq ft area, 50 = linear feet, 9 = ceiling height
 • When rooms are similar: "Are the other 2 bedrooms the same size?" 
 • Use contractor's favorites for quick paint selection
+• Parse customer info carefully: "John and the address is 123 Main St" = Name: John, Address: 123 Main St
+• Ask for clarification if name/address parsing seems unclear
 
 CONTRACTOR CONTEXT:
 ${context.contactName} at ${context.companyName}
@@ -475,6 +477,11 @@ Remember: Collect everything systematically, confirm with UI buttons, calculate 
 
 User said: "${userInput}"
 Current data: ${JSON.stringify(existingData)}
+
+PARSING PATTERNS:
+• "John and the address is 123 Main St" → {"customer_name": "John", "address": "123 Main St"}
+• "Sarah, address 456 Oak Ave" → {"customer_name": "Sarah", "address": "456 Oak Ave"}
+• "Mike and address is downtown" → {"customer_name": "Mike", "address": "downtown"}
 
 Extract any mentioned:
 {
