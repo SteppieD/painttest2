@@ -132,13 +132,8 @@ function CreateQuotePageContent() {
     selectedBrandForCategory,
     availableProductsForCategory,
     showFavoritePaintSelector,
-    useFavoriteSelector,
-    currentEstimate,
-    showEstimate,
-    estimateFloating
+    useFavoriteSelector
   } = state;
-
-  // Progressive estimation state now managed in useReducer
 
   // Helper function for brand icons
   const getBrandIcon = (brand: string): string => {

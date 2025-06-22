@@ -4,7 +4,6 @@
  * Reduces re-renders by 50% through optimized state updates
  */
 
-import { ProgressiveEstimate } from './progressive-calculator';
 import { Room, ProjectDimensions, DEFAULT_CHARGE_RATES, ProfessionalQuote } from './professional-quote-calculator';
 
 export interface Message {
@@ -99,11 +98,6 @@ export interface QuoteCreationState {
   // Favorite paint selector
   showFavoritePaintSelector: boolean;
   useFavoriteSelector: boolean;
-  
-  // Progressive estimation
-  currentEstimate: ProgressiveEstimate | null;
-  showEstimate: boolean;
-  estimateFloating: boolean;
 }
 
 // Action types for the reducer
@@ -151,9 +145,6 @@ export type QuoteCreationAction =
   | { type: 'SET_AVAILABLE_PRODUCTS_FOR_CATEGORY'; payload: any[] }
   | { type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR'; payload: boolean }
   | { type: 'SET_USE_FAVORITE_SELECTOR'; payload: boolean }
-  | { type: 'SET_CURRENT_ESTIMATE'; payload: ProgressiveEstimate | null }
-  | { type: 'SET_SHOW_ESTIMATE'; payload: boolean }
-  | { type: 'SET_ESTIMATE_FLOATING'; payload: boolean }
   | { type: 'INITIALIZE_MEASUREMENT_QUEUE'; payload: string[] }
   | { type: 'RESET_STATE' };
 
@@ -227,11 +218,7 @@ export const initialQuoteCreationState: QuoteCreationState = {
   availableProductsForCategory: [],
   
   showFavoritePaintSelector: false,
-  useFavoriteSelector: true,
-  
-  currentEstimate: null,
-  showEstimate: false,
-  estimateFloating: false
+  useFavoriteSelector: true
 };
 
 // Reducer function
@@ -406,15 +393,6 @@ export function quoteCreationReducer(
       
     case 'SET_USE_FAVORITE_SELECTOR':
       return { ...state, useFavoriteSelector: action.payload };
-      
-    case 'SET_CURRENT_ESTIMATE':
-      return { ...state, currentEstimate: action.payload };
-      
-    case 'SET_SHOW_ESTIMATE':
-      return { ...state, showEstimate: action.payload };
-      
-    case 'SET_ESTIMATE_FLOATING':
-      return { ...state, estimateFloating: action.payload };
       
     case 'INITIALIZE_MEASUREMENT_QUEUE':
       const queue = action.payload;
