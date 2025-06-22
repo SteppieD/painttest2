@@ -318,26 +318,26 @@ function CreateQuotePageContent() {
 
   // Helper function to handle workflow completion when all categories are done
   const checkWorkflowCompletion = () => {
-    if (isWorkflowComplete()) {
-      const completionMessage: Message = {
+    if (isWorkflowComplete(state)) {
+      const completionMessage = {
         id: Date.now().toString(),
-        role: 'assistant',
+        role: 'assistant' as const,
         content: `🎉 **All surfaces complete!** \n\nMeasurements and paint selections are done. Now let's set your profit margin.\n\nWhat markup percentage would you like?`,
         timestamp: new Date().toISOString()
       };
-      setMessages(prev => [...prev, completionMessage]);
-      setConversationStage('markup_selection');
+      dispatch({ type: 'ADD_MESSAGE', payload: completionMessage });
+      dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'markup_selection' });
       
       // Show markup buttons
       setTimeout(() => {
-        setButtonOptions([
+        dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
           { id: '15', label: '15%', value: '15', selected: false },
           { id: '20', label: '20%', value: '20', selected: true },
           { id: '25', label: '25%', value: '25', selected: false },
           { id: '30', label: '30%', value: '30', selected: false },
           { id: 'custom', label: 'Custom %', value: 'custom', selected: false }
-        ]);
-        setShowButtons(true);
+        ]});
+        dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
       }, 500);
     }
   };
@@ -654,26 +654,26 @@ What would you like to modify?`,
           surfaceButtons.push({ id: 'continue', label: '➡️ Continue to Dimensions', value: 'continue', selected: false });
         }
         
-        setButtonOptions(surfaceButtons);
+        dispatch({ type: 'SET_BUTTON_OPTIONS', payload: surfaceButtons });
         return; // Exit early - no AI response needed for surface toggles
       }
     }
     
     // For all other buttons (including continue), process normally
-    setShowButtons(false);
-    setButtonOptions([]);
+    dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+    dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [] });
     
-    const userMessage: Message = {
+    const userMessage = {
       id: Date.now().toString(),
-      role: 'user',
+      role: 'user' as const,
       content: buttonLabel,
       timestamp: new Date().toISOString()
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
     
     // Start thinking phase
-    setIsThinking(true);
+    dispatch({ type: 'SET_THINKING', payload: true });
 
     try {
       // Process the response while thinking - use AI if enabled
