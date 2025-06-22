@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense, useReducer, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Save, Send, Calculator, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,12 @@ import { FavoritePaintSelector } from "@/components/ui/favorite-paint-selector";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
 import { calculateProgressiveEstimate, generateEstimateMessage, type ProgressiveEstimate } from "@/lib/progressive-calculator";
 import { ProgressiveEstimateDisplay, FloatingEstimateWidget } from "@/components/ui/progressive-estimate-display";
+import { 
+  quoteCreationReducer, 
+  initialQuoteCreationState, 
+  type QuoteCreationState,
+  type QuoteCreationAction 
+} from "@/lib/quote-state-manager";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -78,81 +84,53 @@ function CreateQuotePageContent() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const editQuoteId = searchParams.get('edit');
 
-  const [companyData, setCompanyData] = useState<any>(null);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: "Hi! I'll help you create a professional painting quote using industry-standard calculations. Let's start with the basics.\n\nWhat's the customer's name and property address?",
-      timestamp: new Date().toISOString()
-    }
-  ]);
+  // Main state using useReducer for optimal performance
+  const [state, dispatch] = useReducer(quoteCreationReducer, initialQuoteCreationState);
 
-  const [quoteData, setQuoteData] = useState<QuoteData>({
-    customer_name: '',
-    address: '',
-    project_type: 'interior',
-    dimensions: {},
-    selected_products: {
-      primer_level: 0,
-      wall_paint_level: 0,
-      ceiling_paint_level: 0,
-      trim_paint_level: 0,
-      include_floor_sealer: false
-    },
-    markup_percentage: 20, // Default 20% markup
-    rates: DEFAULT_CHARGE_RATES,
-    calculation: null
-  });
+  // Destructure state for easier access
+  const {
+    companyData,
+    messages,
+    conversationStage,
+    inputValue,
+    isLoading,
+    isThinking,
+    isInitializing,
+    initializationError,
+    loadingProgress,
+    isEditMode,
+    showButtons,
+    buttonOptions,
+    quoteData,
+    selectedSurfaces,
+    useRoomByRoom,
+    roomCount,
+    currentRoomIndex,
+    rooms,
+    currentRoomData,
+    editingRoomIndex,
+    availableBrands,
+    topBrands,
+    otherBrands,
+    currentPaintCategory,
+    selectedPaintProducts,
+    paintSelectionQueue,
+    currentPaintCategoryIndex,
+    measurementQueue,
+    currentMeasurementCategory,
+    categoryCompletionStatus,
+    showPaintBrandSelector,
+    showPaintProductSelector,
+    selectedBrandForCategory,
+    availableProductsForCategory,
+    showFavoritePaintSelector,
+    useFavoriteSelector,
+    currentEstimate,
+    showEstimate,
+    estimateFloating
+  } = state;
 
-  const [conversationStage, setConversationStage] = useState('customer_info');
-  const [inputValue, setInputValue] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isThinking, setIsThinking] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [showButtons, setShowButtons] = useState(false);
-  const [buttonOptions, setButtonOptions] = useState<{id: string, label: string, value: any, selected?: boolean}[]>([]);
-  const [selectedSurfaces, setSelectedSurfaces] = useState<string[]>([]);
-  
-  // Room-by-room tracking
-  const [useRoomByRoom, setUseRoomByRoom] = useState(false);
-  const [roomCount, setRoomCount] = useState(0);
-  const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const [currentRoomData, setCurrentRoomData] = useState<Partial<Room>>({});
-  const [editingRoomIndex, setEditingRoomIndex] = useState(-1);
-
-  // Paint selection tracking
-  const [availableBrands, setAvailableBrands] = useState<any[]>([]);
-  const [topBrands, setTopBrands] = useState<any[]>([]);
-  const [otherBrands, setOtherBrands] = useState<any[]>([]);
-  const [currentPaintCategory, setCurrentPaintCategory] = useState<string>('');
-  const [selectedPaintProducts, setSelectedPaintProducts] = useState<{[category: string]: any}>({});
-  const [paintSelectionQueue, setPaintSelectionQueue] = useState<string[]>([]);
-  const [currentPaintCategoryIndex, setCurrentPaintCategoryIndex] = useState(0);
-
-  // New measurement-driven workflow state
-  const [measurementQueue, setMeasurementQueue] = useState<string[]>([]);
-  const [currentMeasurementCategory, setCurrentMeasurementCategory] = useState<string>('');
-  const [categoryCompletionStatus, setCategoryCompletionStatus] = useState<{[category: string]: {measured: boolean, paintSelected: boolean}}>({});
-  const [showPaintBrandSelector, setShowPaintBrandSelector] = useState(false);
-  const [showPaintProductSelector, setShowPaintProductSelector] = useState(false);
-  const [selectedBrandForCategory, setSelectedBrandForCategory] = useState<string>('');
-  const [availableProductsForCategory, setAvailableProductsForCategory] = useState<any[]>([]);
-  
-  // Favorite paint selector state
-  const [showFavoritePaintSelector, setShowFavoritePaintSelector] = useState(false);
-  const [useFavoriteSelector, setUseFavoriteSelector] = useState(true); // Default to using favorites
-  
-  // Batch loading state
-  const [isInitializing, setIsInitializing] = useState(true);
-  const [initializationError, setInitializationError] = useState<string | null>(null);
-  const [loadingProgress, setLoadingProgress] = useState(0);
-
-  // Progressive estimation state
-  const [currentEstimate, setCurrentEstimate] = useState<ProgressiveEstimate | null>(null);
-  const [showEstimate, setShowEstimate] = useState(false);
-  const [estimateFloating, setEstimateFloating] = useState(false);
+  // Progressive estimation state now managed in useReducer
 
   // Helper function for brand icons
   const getBrandIcon = (brand: string): string => {
@@ -373,8 +351,8 @@ function CreateQuotePageContent() {
         return;
       }
 
-      setCompanyData(parsedCompany);
-      setLoadingProgress(30);
+      dispatch({ type: 'SET_COMPANY_DATA', payload: parsedCompany });
+      dispatch({ type: 'SET_LOADING_PROGRESS', payload: 30 });
 
       // Batch load all company data and edit quote data in parallel
       const { companyData, editData, loadTime } = await initializeQuoteCreation(
@@ -382,11 +360,10 @@ function CreateQuotePageContent() {
         editQuoteId
       );
 
-      setLoadingProgress(70);
+      dispatch({ type: 'SET_LOADING_PROGRESS', payload: 70 });
 
       // Apply company settings
-      setQuoteData(prev => ({
-        ...prev,
+      dispatch({ type: 'UPDATE_QUOTE_DATA', payload: {
         rates: {
           wall_rate_per_sqft: companyData.settings.wall_rate_per_sqft,
           ceiling_rate_per_sqft: companyData.settings.ceiling_rate_per_sqft,
@@ -396,25 +373,25 @@ function CreateQuotePageContent() {
           floor_sealer_rate_per_sqft: companyData.settings.floor_sealer_rate_per_sqft
         },
         markup_percentage: companyData.preferences.default_markup || 20
-      }));
+      }});
 
       // Apply paint brands
-      setAvailableBrands(companyData.paintBrands.brands);
-      setTopBrands(companyData.paintBrands.topBrands);
-      setOtherBrands(companyData.paintBrands.otherBrands);
+      dispatch({ type: 'SET_AVAILABLE_BRANDS', payload: companyData.paintBrands.brands });
+      dispatch({ type: 'SET_TOP_BRANDS', payload: companyData.paintBrands.topBrands });
+      dispatch({ type: 'SET_OTHER_BRANDS', payload: companyData.paintBrands.otherBrands });
 
       // Apply setup status
-      setUseFavoriteSelector(companyData.setupStatus.canUseFavorites);
+      dispatch({ type: 'SET_USE_FAVORITE_SELECTOR', payload: companyData.setupStatus.canUseFavorites });
 
-      setLoadingProgress(90);
+      dispatch({ type: 'SET_LOADING_PROGRESS', payload: 90 });
 
       // Handle edit mode if applicable
       if (editData && editData.isEdit && editData.quote) {
-        setIsEditMode(true);
+        dispatch({ type: 'SET_EDIT_MODE', payload: true });
         applyEditQuoteData(editData.quote);
       }
 
-      setLoadingProgress(100);
+      dispatch({ type: 'SET_LOADING_PROGRESS', payload: 100 });
 
       // Track performance improvement
       trackLoadingPerformance(loadTime, 'quote_creation_initialization');
@@ -427,7 +404,7 @@ function CreateQuotePageContent() {
 
     } catch (error) {
       console.error('Failed to initialize app:', error);
-      setInitializationError(error instanceof Error ? error.message : 'Failed to load');
+      dispatch({ type: 'SET_INITIALIZATION_ERROR', payload: error instanceof Error ? error.message : 'Failed to load' });
       
       toast({
         title: "Loading Error",
@@ -435,14 +412,13 @@ function CreateQuotePageContent() {
         variant: "destructive",
       });
     } finally {
-      setIsInitializing(false);
+      dispatch({ type: 'SET_INITIALIZING', payload: false });
     }
   };
 
   const applyEditQuoteData = (quote: any) => {
     // Update quote data with existing values
-    setQuoteData(prev => ({
-      ...prev,
+    dispatch({ type: 'UPDATE_QUOTE_DATA', payload: {
       customer_name: quote.customer_name || '',
       address: quote.address || '',
       project_type: quote.project_type || 'interior',
@@ -455,10 +431,10 @@ function CreateQuotePageContent() {
         number_of_windows: quote.number_of_windows || 0,
       },
       markup_percentage: quote.markup_percentage || 20,
-    }));
+    }});
     
     // Set initial message for edit mode
-    setMessages([
+    dispatch({ type: 'SET_MESSAGES', payload: [
       {
         id: '1',
         role: 'assistant',
@@ -477,14 +453,14 @@ Current details:
 What would you like to modify?`,
         timestamp: new Date().toISOString()
       }
-    ]);
+    ]});
     
     // Set conversation stage to allow modifications
-    setConversationStage('quote_review');
+    dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'quote_review' });
   };
 
   // Progressive estimation update function
-  const updateProgressiveEstimate = () => {
+  const updateProgressiveEstimate = useCallback(() => {
     const partialData = {
       customer_name: quoteData.customer_name,
       address: quoteData.address,
@@ -496,13 +472,13 @@ What would you like to modify?`,
     };
 
     const estimate = calculateProgressiveEstimate(partialData, quoteData.rates);
-    setCurrentEstimate(estimate);
+    dispatch({ type: 'SET_CURRENT_ESTIMATE', payload: estimate });
     
     // Show estimate once we have basic info
     if (!showEstimate && (selectedSurfaces.length > 0 || quoteData.dimensions.floor_area)) {
-      setShowEstimate(true);
+      dispatch({ type: 'SET_SHOW_ESTIMATE', payload: true });
     }
-  };
+  }, [quoteData, selectedSurfaces, roomCount, showEstimate]);
 
   // Update estimate when relevant data changes
   useEffect(() => {
@@ -696,11 +672,10 @@ What would you like to modify?`,
     switch (stage) {
       case 'customer_info':
         const customerInfo = parseCustomerInfo(input, quoteData);
-        setQuoteData(prev => ({ 
-          ...prev, 
-          customer_name: customerInfo.customer_name || prev.customer_name,
-          address: customerInfo.address || prev.address
-        }));
+        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { 
+          customer_name: customerInfo.customer_name || quoteData.customer_name,
+          address: customerInfo.address || quoteData.address
+        }});
         
         const customerName = customerInfo.customer_name || quoteData.customer_name;
         const address = customerInfo.address || quoteData.address;
@@ -714,12 +689,12 @@ What would you like to modify?`,
           nextStage = 'project_type';
           // Show project type buttons immediately when asking project type question
           setTimeout(() => {
-            setButtonOptions([
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
               { id: 'interior', label: 'Interior Only', value: 'interior', selected: false },
               { id: 'exterior', label: 'Exterior Only', value: 'exterior', selected: false },
               { id: 'both', label: 'Both Interior & Exterior', value: 'both', selected: false }
-            ]);
-            setShowButtons(true);
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
           }, 500);
         } else {
           nextStage = 'customer_info';
@@ -727,16 +702,16 @@ What would you like to modify?`,
         break;
 
       case 'address':
-        setQuoteData(prev => ({ ...prev, address: input.trim() }));
+        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { address: input.trim() } });
         responseContent = `Thanks! Now I have ${quoteData.customer_name} at ${input.trim()}.\n\nWhat type of painting work are we quoting?`;
         // Show project type buttons
         setTimeout(() => {
-          setButtonOptions([
+          dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
             { id: 'interior', label: 'Interior Only', value: 'interior', selected: false },
             { id: 'exterior', label: 'Exterior Only', value: 'exterior', selected: false },
             { id: 'both', label: 'Both Interior & Exterior', value: 'both', selected: false }
-          ]);
-          setShowButtons(true);
+          ]});
+          dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
         }, 500);
         nextStage = 'project_type';
         break;
@@ -746,12 +721,12 @@ What would you like to modify?`,
         responseContent = `Perfect! Now I have ${input.trim()} at ${quoteData.address}.\n\nWhat type of painting work are we quoting?`;
         // Show project type buttons
         setTimeout(() => {
-          setButtonOptions([
+          dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
             { id: 'interior', label: 'Interior Only', value: 'interior', selected: false },
             { id: 'exterior', label: 'Exterior Only', value: 'exterior', selected: false },
             { id: 'both', label: 'Both Interior & Exterior', value: 'both', selected: false }
-          ]);
-          setShowButtons(true);
+          ]});
+          dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
         }, 500);
         nextStage = 'project_type';
         break;
@@ -764,31 +739,31 @@ What would you like to modify?`,
           responseContent = `Perfect! For ${projectType} painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
           // Show surface selection buttons for interior
           setTimeout(() => {
-            setConversationStage('surface_selection'); // Set stage BEFORE showing buttons
-            setSelectedSurfaces([]); // Reset selected surfaces
-            setButtonOptions([
+            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'surface_selection' }); // Set stage BEFORE showing buttons
+            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] }); // Reset selected surfaces
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
               { id: 'walls', label: '🎨 Walls', value: 'walls', selected: false },
               { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: false },
               { id: 'trim', label: '🖼️ Trim & Baseboards', value: 'trim', selected: false },
               { id: 'doors', label: '🚪 Doors', value: 'doors', selected: false },
               { id: 'windows', label: '🪟 Window Frames', value: 'windows', selected: false }
-            ]);
-            setShowButtons(true);
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
           }, 500);
         } else {
           responseContent = `Perfect! For exterior painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
           // Show surface selection buttons for exterior
           setTimeout(() => {
-            setConversationStage('surface_selection'); // Set stage BEFORE showing buttons
-            setSelectedSurfaces([]); // Reset selected surfaces
-            setButtonOptions([
+            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'surface_selection' }); // Set stage BEFORE showing buttons
+            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] }); // Reset selected surfaces
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
               { id: 'siding', label: '🏠 Siding', value: 'siding', selected: false },
               { id: 'trim_ext', label: '🖼️ Exterior Trim', value: 'trim_ext', selected: false },
               { id: 'doors_ext', label: '🚪 Front Door', value: 'doors_ext', selected: false },
               { id: 'shutters', label: '🪟 Shutters', value: 'shutters', selected: false },
               { id: 'deck', label: '🏗️ Deck/Porch', value: 'deck', selected: false }
-            ]);
-            setShowButtons(true);
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
           }, 500);
         }
         nextStage = 'surface_selection';
