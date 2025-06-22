@@ -4,10 +4,17 @@
 This is a Next.js painting quote application with SQLite database, Google Gemini AI integration, and a comprehensive quoting system.
 
 ## Key Commands
-- `npm run dev` - Start development server on port 3001
+- `npm run dev` - Start development server on port 3001 (LOCAL TESTING ONLY)
 - `npm run build` - Build for production
 - `npm run lint` - Run ESLint
 - `npm start` - Start production server
+
+## DEPLOYMENT WORKFLOW - VERCEL AUTO-DEPLOY
+**IMPORTANT**: This project automatically deploys to Vercel when git is updated. 
+- **DO NOT run development servers** - changes are tested live on Vercel
+- **Workflow**: Make changes → Update git → Vercel auto-deploys → Test on live site
+- **Live URL**: Auto-deployed via Vercel when git commits are pushed
+- **Testing**: All testing happens on the live Vercel deployment, not local dev server
 
 ## User Flow Overview
 1. **Access Code Entry** (`/access-code`) - Enter company access code (DEMO2024, PAINTER001, CONTRACTOR123)
