@@ -1733,11 +1733,11 @@ What would you like to modify?`,
 
       case 'category_measurement_collection':
         // Collect measurements for the current category
-        const category = currentMeasurementCategory;
+        const category = state.currentMeasurementCategory;
         
         if (category === 'ceilings') {
           // For ceilings, we might already have room data or need ceiling area
-          const ceilingDimensions = parseDimensions(input, quoteData.project_type);
+          const ceilingDimensions = parseDimensions(input, state.quoteData.project_type);
           
           dispatch({
             type: 'UPDATE_QUOTE_DATA',
@@ -1765,7 +1765,7 @@ Example: "Benjamin Moore Ceiling Paint, Flat White, $55 per gallon, 350 sq ft co
           }
         } else if (category === 'walls') {
           // For walls, we need linear footage and height
-          const wallDimensions = parseDimensions(input, quoteData.project_type);
+          const wallDimensions = parseDimensions(input, state.quoteData.project_type);
           
           dispatch({
             type: 'UPDATE_QUOTE_DATA',
@@ -1855,7 +1855,7 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
         
       case 'category_paint_details':
         // Parse custom paint details from user input
-        const paintDetails = parsePaintDetails(input, currentMeasurementCategory);
+        const paintDetails = parsePaintDetails(input, state.currentMeasurementCategory);
         
         if (paintDetails.isValid) {
           // Store the paint details for this category
@@ -1884,7 +1884,7 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
             const needsMeasurements = !state.categoryCompletionStatus[nextCategory]?.measured;
             
             if (needsMeasurements) {
-              responseContent = `Great! **${currentMeasurementCategory}** paint recorded: ${paintDetails.name} - $${paintDetails.costPerGallon}/gal\n\nNow let's collect measurements for **${nextCategory}**.`;
+              responseContent = `Great! **${state.currentMeasurementCategory}** paint recorded: ${paintDetails.name} - $${paintDetails.costPerGallon}/gal\n\nNow let's collect measurements for **${nextCategory}**.`;
               
               // Provide category-specific measurement instructions
               if (nextCategory === 'ceilings') {
@@ -1906,7 +1906,7 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
                 type: 'SET_CURRENT_PAINT_CATEGORY',
                 payload: nextCategory
               });
-              responseContent = `Great! **${currentMeasurementCategory}** paint recorded: ${paintDetails.name} - $${paintDetails.costPerGallon}/gal\n\nNow let's select paint for **${nextCategory}**.
+              responseContent = `Great! **${state.currentMeasurementCategory}** paint recorded: ${paintDetails.name} - $${paintDetails.costPerGallon}/gal\n\nNow let's select paint for **${nextCategory}**.
 
 What paint do you want to use for the ${nextCategory}? Please tell me:
 
