@@ -1733,20 +1733,23 @@ What would you like to modify?`,
 
       case 'category_measurement_collection':
         // Collect measurements for the current category
-        const category = state.currentMeasurementCategory;
+        const category = currentMeasurementCategory;
         
         if (category === 'ceilings') {
           // For ceilings, we might already have room data or need ceiling area
-          const ceilingDimensions = parseDimensions(input, state.quoteData.project_type);
+          const ceilingDimensions = parseDimensions(input, quoteData.project_type);
           
-          dispatch({
-            type: 'UPDATE_QUOTE_DATA',
-            payload: { dimensions: { ...state.quoteData.dimensions, ...ceilingDimensions } }
-          });
+          setQuoteData(prev => ({
+            ...prev,
+            dimensions: { ...prev.dimensions, ...ceilingDimensions }
+          }));
           
           if (ceilingDimensions.ceiling_area || ceilingDimensions.floor_area) {
-            dispatch({ type: 'MARK_CATEGORY_MEASURED', payload: category });
-            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: category });
+            // Mark category as measured
+            setCategoryCompletionStatus(prev => ({
+              ...prev,
+              [category]: { ...prev[category], measured: true }
+            }));
             
             responseContent = `Perfect! Ceiling measurements recorded.
 
@@ -1765,16 +1768,19 @@ Example: "Benjamin Moore Ceiling Paint, Flat White, $55 per gallon, 350 sq ft co
           }
         } else if (category === 'walls') {
           // For walls, we need linear footage and height
-          const wallDimensions = parseDimensions(input, state.quoteData.project_type);
+          const wallDimensions = parseDimensions(input, quoteData.project_type);
           
-          dispatch({
-            type: 'UPDATE_QUOTE_DATA',
-            payload: { dimensions: { ...state.quoteData.dimensions, ...wallDimensions } }
-          });
+          setQuoteData(prev => ({
+            ...prev,
+            dimensions: { ...prev.dimensions, ...wallDimensions }
+          }));
           
           if (wallDimensions.wall_linear_feet && wallDimensions.ceiling_height) {
-            dispatch({ type: 'MARK_CATEGORY_MEASURED', payload: category });
-            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: category });
+            // Mark category as measured
+            setCategoryCompletionStatus(prev => ({
+              ...prev,
+              [category]: { ...prev[category], measured: true }
+            }));
             
             responseContent = `Perfect! Wall measurements recorded.
 
@@ -1804,18 +1810,21 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
             number_of_windows: doorWindowData.windows
           };
           
-          dispatch({
-            type: 'UPDATE_QUOTE_DATA',
-            payload: { dimensions: { ...state.quoteData.dimensions, ...dimensionData } }
-          });
+          setQuoteData(prev => ({
+            ...prev,
+            dimensions: { ...prev.dimensions, ...dimensionData }
+          }));
           
           const hasNeededData = (category === 'doors' && doorWindowData.doors !== undefined && doorWindowData.doors > 0) ||
                                (category === 'windows' && doorWindowData.windows !== undefined && doorWindowData.windows > 0) ||
                                (category === 'trim' && (doorWindowData.doors > 0 || doorWindowData.windows > 0));
           
           if (hasNeededData) {
-            dispatch({ type: 'MARK_CATEGORY_MEASURED', payload: category });
-            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: category });
+            // Mark category as measured
+            setCategoryCompletionStatus(prev => ({
+              ...prev,
+              [category]: { ...prev[category], measured: true }
+            }));
             
             responseContent = `Perfect! ${category} count recorded.
 
@@ -1855,36 +1864,33 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
         
       case 'category_paint_details':
         // Parse custom paint details from user input
-        const paintDetails = parsePaintDetails(input, state.currentMeasurementCategory);
+        const paintDetails = parsePaintDetails(input, currentMeasurementCategory);
         
         if (paintDetails.isValid) {
           // Store the paint details for this category
-          dispatch({
-            type: 'UPDATE_SELECTED_PAINT_PRODUCTS',
-            payload: { [state.currentMeasurementCategory]: paintDetails }
-          });
+          setSelectedPaintProducts(prev => ({
+            ...prev,
+            [currentMeasurementCategory]: paintDetails
+          }));
           
           // Mark this category as paint selected
-          dispatch({
-            type: 'MARK_CATEGORY_PAINT_SELECTED',
-            payload: state.currentMeasurementCategory
-          });
+          setCategoryCompletionStatus(prev => ({
+            ...prev,
+            [currentMeasurementCategory]: { ...prev[currentMeasurementCategory], paintSelected: true }
+          }));
           
           // Find next category that needs measurements or paint selection
-          const nextCategory = getNextCategoryForMeasurement(state) || getNextCategoryForPaintSelection(state);
+          const nextCategory = getNextCategoryForMeasurement() || getNextCategoryForPaintSelection();
           
           if (nextCategory) {
             // Move to next category
-            dispatch({
-              type: 'SET_CURRENT_MEASUREMENT_CATEGORY',
-              payload: nextCategory
-            });
+            setCurrentMeasurementCategory(nextCategory);
             
             // Check if next category needs measurements
-            const needsMeasurements = !state.categoryCompletionStatus[nextCategory]?.measured;
+            const needsMeasurements = !categoryCompletionStatus[nextCategory]?.measured;
             
             if (needsMeasurements) {
-              responseContent = `Great! **${state.currentMeasurementCategory}** paint recorded: ${paintDetails.name} - $${paintDetails.costPerGallon}/gal\n\nNow let's collect measurements for **${nextCategory}**.`;
+              responseContent = `Great! **${currentMeasurementCategory}** paint recorded: ${paintDetails.name} - $${paintDetails.costPerGallon}/gal\n\nNow let's collect measurements for **${nextCategory}**.`;
               
               // Provide category-specific measurement instructions
               if (nextCategory === 'ceilings') {
@@ -1902,11 +1908,8 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
               nextStage = 'category_measurement_collection';
             } else {
               // Next category needs paint selection
-              dispatch({
-                type: 'SET_CURRENT_PAINT_CATEGORY',
-                payload: nextCategory
-              });
-              responseContent = `Great! **${state.currentMeasurementCategory}** paint recorded: ${paintDetails.name} - $${paintDetails.costPerGallon}/gal\n\nNow let's select paint for **${nextCategory}**.
+              setCurrentMeasurementCategory(nextCategory);
+              responseContent = `Great! **${currentMeasurementCategory}** paint recorded: ${paintDetails.name} - $${paintDetails.costPerGallon}/gal\n\nNow let's select paint for **${nextCategory}**.
 
 What paint do you want to use for the ${nextCategory}? Please tell me:
 
@@ -1921,7 +1924,7 @@ Example: "Benjamin Moore Advance, Semi-Gloss White, $75 per gallon, 350 sq ft co
           } else {
             // All categories complete - proceed to markup
             responseContent = `Excellent! All surface measurements and paint selections complete.\n\n**Paint Summary:**\n`;
-            Object.entries(state.selectedPaintProducts).forEach(([category, paint]: [string, any]) => {
+            Object.entries(selectedPaintProducts).forEach(([category, paint]: [string, any]) => {
               responseContent += `• **${category.charAt(0).toUpperCase() + category.slice(1)}:** ${paint.name} - $${paint.costPerGallon}/gal\n`;
             });
             
