@@ -215,6 +215,120 @@ export class IntelligentQuoteAssistant {
   }
 
   /**
+   * Parse specific information from user input using targeted AI
+   */
+  async parseInformation(
+    userInput: string, 
+    instruction: string, 
+    contractorContext: ContractorContext
+  ): Promise<any> {
+    if (!this.openRouterApiKey) {
+      // Fallback parsing logic
+      if (instruction.includes('customer name and address')) {
+        const parseCustomerInfo = (input: string) => {
+          const trimmed = input.trim();
+          
+          // Try to detect name and address patterns
+          if (trimmed.includes(' and ') && (trimmed.includes('address') || trimmed.includes('at '))) {
+            const parts = trimmed.split(/\s+and\s+/i);
+            const name = parts[0].trim();
+            const addressPart = parts[1].replace(/^(the\s+)?(property\s+)?address\s+(is\s+)?/i, '').trim();
+            return { customer_name: name, address: addressPart };
+          }
+          
+          // Try "Name at Address" pattern
+          if (trimmed.includes(' at ')) {
+            const parts = trimmed.split(' at ');
+            return { customer_name: parts[0].trim(), address: parts[1].trim() };
+          }
+          
+          // Check if it looks like an address (has numbers and street words)
+          const addressKeywords = ['street', 'st', 'avenue', 'ave', 'road', 'rd', 'drive', 'dr', 'lane', 'ln'];
+          const hasAddress = addressKeywords.some(keyword => trimmed.toLowerCase().includes(keyword));
+          
+          if (hasAddress && /\d/.test(trimmed)) {
+            return { address: trimmed };
+          } else {
+            return { customer_name: trimmed };
+          }
+        };
+        
+        return parseCustomerInfo(userInput);
+      } else if (instruction.includes('interior, exterior, or both')) {
+        const lower = userInput.toLowerCase();
+        if (lower.includes('both') || (lower.includes('interior') && lower.includes('exterior'))) {
+          return { type: 'both' };
+        } else if (lower.includes('exterior') || lower.includes('outside')) {
+          return { type: 'exterior' };
+        } else if (lower.includes('interior') || lower.includes('inside')) {
+          return { type: 'interior' };
+        }
+        return {};
+      }
+      return {};
+    }
+
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.openRouterApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'anthropic/claude-3.5-sonnet',
+          messages: [
+            {
+              role: 'system',
+              content: `You are a data extraction assistant for a painting quote system. ${instruction}
+
+Your task: Extract ONLY the requested information and return it as a JSON object.
+
+Company Context:
+- Company: ${contractorContext.companyName}
+- Contact: ${contractorContext.contactName}
+
+Instructions:
+- Return ONLY valid JSON with the extracted data
+- Do not include explanations or additional text
+- If information is not found, return empty object {}
+
+Examples:
+For "Extract customer name and address":
+{"customer_name": "John Smith", "address": "123 Main Street"}
+
+For "Determine if this is interior, exterior, or both":
+{"type": "interior"}`
+            },
+            {
+              role: 'user',
+              content: userInput
+            }
+          ],
+          temperature: 0.1,
+          max_tokens: 200
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenRouter API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const content = data.choices[0]?.message?.content || '{}';
+      
+      try {
+        return JSON.parse(content);
+      } catch {
+        return {};
+      }
+    } catch (error) {
+      console.error('Parse AI error:', error);
+      return {};
+    }
+  }
+
+  /**
    * Generate intelligent response using Claude 3.5 Sonnet with full contractor context
    */
   async generateResponse(

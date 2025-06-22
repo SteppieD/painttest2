@@ -836,7 +836,110 @@ What would you like to modify?`,
   };
 
   const processUserInput = async (input: string, stage: string): Promise<Message> => {
-    // Use intelligent AI processing instead of rigid switch-case
+    // Use structured flow with smart AI parsing for responses
+    return await processUserInputStructured(input, stage);
+  };
+
+  // New structured approach: Fixed questions + Smart parsing
+  const processUserInputStructured = async (input: string, stage: string): Promise<Message> => {
+    console.log('Processing structured input:', { input, stage, conversationStage });
+    
+    let responseContent = '';
+    let nextStage = stage;
+    let buttonsToShow = [];
+
+    switch (conversationStage) {
+      case 'customer_info':
+        // Use AI to parse customer information
+        const customerInfo = await parseWithAI(input, 'Extract customer name and address from this input');
+        
+        if (customerInfo.customer_name && customerInfo.address) {
+          setQuoteData(prev => ({ 
+            ...prev, 
+            customer_name: customerInfo.customer_name,
+            address: customerInfo.address
+          }));
+          
+          responseContent = `Perfect! I have recorded:\n\n**Customer:** ${customerInfo.customer_name}\n**Address:** ${customerInfo.address}\n\nNow, what type of painting project are we quoting?`;
+          nextStage = 'project_type';
+          buttonsToShow = [
+            { id: 'interior', label: '🏠 Interior Only', value: 'interior', selected: false },
+            { id: 'exterior', label: '🏡 Exterior Only', value: 'exterior', selected: false },
+            { id: 'both', label: '🏠🏡 Both Interior & Exterior', value: 'both', selected: false }
+          ];
+        } else if (customerInfo.customer_name) {
+          setQuoteData(prev => ({ ...prev, customer_name: customerInfo.customer_name }));
+          responseContent = `Got it! Customer name: **${customerInfo.customer_name}**\n\nWhat's the property address?`;
+          nextStage = 'customer_info';
+        } else if (customerInfo.address) {
+          setQuoteData(prev => ({ ...prev, address: customerInfo.address }));
+          responseContent = `Got the address: **${customerInfo.address}**\n\nWhat's the customer's name?`;
+          nextStage = 'customer_info';
+        } else {
+          responseContent = `I need the customer's name and property address. You can provide both together or one at a time.\n\nExample: "John Smith at 123 Main Street" or just "John Smith"`;
+          nextStage = 'customer_info';
+        }
+        break;
+
+      case 'project_type':
+        const projectType = await parseWithAI(input, 'Determine if this is interior, exterior, or both types of painting');
+        
+        if (projectType.type) {
+          setQuoteData(prev => ({ ...prev, project_type: projectType.type }));
+          responseContent = `Excellent! **${projectType.type.charAt(0).toUpperCase() + projectType.type.slice(1)} painting** project selected.\n\nWhich surfaces do you want to include in the quote?`;
+          nextStage = 'surface_selection';
+          
+          // Show appropriate surface buttons
+          buttonsToShow = projectType.type === 'interior' || projectType.type === 'both' ? [
+            { id: 'walls', label: '🎨 Walls', value: 'walls', selected: false },
+            { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: false },
+            { id: 'trim', label: '🖼️ Trim & Baseboards', value: 'trim', selected: false },
+            { id: 'doors', label: '🚪 Doors', value: 'doors', selected: false },
+            { id: 'windows', label: '🪟 Window Frames', value: 'windows', selected: false }
+          ] : [
+            { id: 'siding', label: '🏠 Siding', value: 'siding', selected: false },
+            { id: 'trim_ext', label: '🖼️ Exterior Trim', value: 'trim_ext', selected: false },
+            { id: 'doors_ext', label: '🚪 Front Door', value: 'doors_ext', selected: false },
+            { id: 'shutters', label: '🪟 Shutters', value: 'shutters', selected: false },
+            { id: 'deck', label: '🏗️ Deck/Porch', value: 'deck', selected: false }
+          ];
+        } else {
+          responseContent = `Please specify the type of painting project:\n\n• **Interior** - Inside the home/building\n• **Exterior** - Outside surfaces\n• **Both** - Interior and exterior painting`;
+          nextStage = 'project_type';
+          buttonsToShow = [
+            { id: 'interior', label: '🏠 Interior Only', value: 'interior', selected: false },
+            { id: 'exterior', label: '🏡 Exterior Only', value: 'exterior', selected: false },
+            { id: 'both', label: '🏠🏡 Both Interior & Exterior', value: 'both', selected: false }
+          ];
+        }
+        break;
+
+      default:
+        // For other stages, fall back to the basic processing
+        return await processUserInputBasic(input, stage);
+    }
+
+    // Update conversation stage
+    setConversationStage(nextStage);
+    
+    // Show buttons if any were defined
+    if (buttonsToShow.length > 0) {
+      setTimeout(() => {
+        setButtonOptions(buttonsToShow);
+        setShowButtons(true);
+      }, 500);
+    }
+
+    return {
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: responseContent,
+      timestamp: new Date().toISOString()
+    };
+  };
+
+  // Helper function to use AI for parsing specific information
+  const parseWithAI = async (input: string, instruction: string): Promise<any> => {
     try {
       const response = await fetch('/api/intelligent-quote', {
         method: 'POST',
@@ -844,133 +947,25 @@ What would you like to modify?`,
         body: JSON.stringify({
           userInput: input,
           companyId: companyData?.id || 'DEMO2024',
-          conversationHistory: messages.map(m => ({ 
-            role: m.role, 
-            content: m.content 
-          })),
-          extractedData: {
-            customer_name: quoteData.customer_name,
-            address: quoteData.address,
-            project_type: quoteData.project_type,
-            dimensions: quoteData.dimensions,
-            selected_surfaces: selectedSurfaces
-          },
-          stage: conversationStage
+          instruction: instruction,
+          parseOnly: true
         })
       });
 
       const result = await response.json();
-      console.log('AI Response:', result);
-      
-      if (result.success) {
-        // Update quote data with AI-extracted information
-        if (result.extractedData) {
-          const extracted = result.extractedData;
-          setQuoteData(prev => ({
-            ...prev,
-            ...extracted,
-            dimensions: { ...prev.dimensions, ...extracted.dimensions }
-          }));
-          
-          // Update other state based on extracted data
-          if (extracted.selected_surfaces) {
-            setSelectedSurfaces(extracted.selected_surfaces);
-          }
-        }
-        
-        // Update conversation stage if suggested
-        if (result.nextStage) {
-          setConversationStage(result.nextStage);
-          
-          // Ensure buttons are shown for specific stages
-          if (result.nextStage === 'project_type') {
-            // Show project type buttons after customer info is collected
-            setTimeout(() => {
-              setButtonOptions([
-                { id: 'interior', label: '🏠 Interior Only', value: 'interior', selected: false },
-                { id: 'exterior', label: '🏡 Exterior Only', value: 'exterior', selected: false },
-                { id: 'both', label: '🏠🏡 Both Interior & Exterior', value: 'both', selected: false }
-              ]);
-              setShowButtons(true);
-            }, 500);
-          }
-        }
-        
-        // Also check if we have customer info and should show project type buttons
-        if (result.extractedData?.customer_name && result.extractedData?.address && !result.nextStage) {
-          setTimeout(() => {
-            setButtonOptions([
-              { id: 'interior', label: '🏠 Interior Only', value: 'interior', selected: false },
-              { id: 'exterior', label: '🏡 Exterior Only', value: 'exterior', selected: false },
-              { id: 'both', label: '🏠🏡 Both Interior & Exterior', value: 'both', selected: false }
-            ]);
-            setShowButtons(true);
-          }, 500);
-        }
-        
-        // Check if response contains button text and convert to actual buttons
-        if (result.response && (result.response.includes('[🏠') || result.response.includes('[✅') || result.response.includes('[✖'))) {
-          console.log('Found button text in response, converting to actual buttons');
-          
-          let buttonsToShow = [];
-          let cleanResponse = result.response;
-          
-          // Project type buttons
-          if (result.response.includes('[🏠 Interior Only]')) {
-            buttonsToShow.push(
-              { id: 'interior', label: '🏠 Interior Only', value: 'interior', selected: false },
-              { id: 'exterior', label: '🏡 Exterior Only', value: 'exterior', selected: false },
-              { id: 'both', label: '🏠🏡 Both Interior & Exterior', value: 'both', selected: false }
-            );
-            cleanResponse = cleanResponse
-              .replace(/\[🏠 Interior Only\]/g, '')
-              .replace(/\[🏡 Exterior Only\]/g, '')
-              .replace(/\[🏠🏡 Both Interior & Exterior\]/g, '');
-          }
-          
-          // Customer confirmation buttons
-          if (result.response.includes('[✅') || result.response.includes('[✖')) {
-            buttonsToShow.push(
-              { id: 'confirm_customer', label: '✅ Confirm Customer Info', value: 'confirm_customer', selected: false },
-              { id: 'edit_details', label: '✖️ Edit Details', value: 'edit_details', selected: false }
-            );
-            cleanResponse = cleanResponse
-              .replace(/\[✅.*?\]/g, '')
-              .replace(/\[✖.*?\]/g, '');
-          }
-          
-          // Clean up any remaining bracketed content and extra whitespace
-          cleanResponse = cleanResponse
-            .replace(/\[.*?\]/g, '')
-            .replace(/\n\s*\n/g, '\n')
-            .trim();
-          
-          // Update the response content to remove button text
-          result.response = cleanResponse;
-          
-          // Show actual buttons if any were found
-          if (buttonsToShow.length > 0) {
-            setTimeout(() => {
-              setButtonOptions(buttonsToShow);
-              setShowButtons(true);
-            }, 500);
-          }
-        }
-        
-        return {
-          id: Date.now().toString(),
-          role: 'assistant',
-          content: result.response,
-          timestamp: new Date().toISOString()
-        };
-      } else {
-        // Fallback to basic processing if AI fails
-        return await processUserInputBasic(input, stage);
-      }
+      return result.extractedData || {};
     } catch (error) {
-      console.error('AI processing failed:', error);
-      // Fallback to basic processing
-      return await processUserInputBasic(input, stage);
+      console.error('AI parsing failed:', error);
+      
+      // Fallback parsing logic
+      if (instruction.includes('customer name and address')) {
+        return parseCustomerInfo(input, quoteData);
+      } else if (instruction.includes('interior, exterior, or both')) {
+        const type = parseProjectType(input);
+        return { type };
+      }
+      
+      return {};
     }
   };
 
