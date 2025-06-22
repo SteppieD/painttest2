@@ -73,6 +73,11 @@ export interface QuoteCreationState {
   currentRoomData: Partial<Room>;
   editingRoomIndex: number;
   
+  // Button-driven room confirmation
+  pendingRoomConfirmation: Partial<Room> | null;
+  confirmedRooms: Room[];
+  showRoomConfirmation: boolean;
+  
   // Paint selection
   availableBrands: any[];
   topBrands: any[];
@@ -124,6 +129,10 @@ export type QuoteCreationAction =
   | { type: 'SET_ROOMS'; payload: Room[] }
   | { type: 'UPDATE_CURRENT_ROOM_DATA'; payload: Partial<Room> }
   | { type: 'SET_EDITING_ROOM_INDEX'; payload: number }
+  | { type: 'SET_PENDING_ROOM_CONFIRMATION'; payload: Partial<Room> | null }
+  | { type: 'CONFIRM_ROOM'; payload: Room }
+  | { type: 'SET_CONFIRMED_ROOMS'; payload: Room[] }
+  | { type: 'SET_SHOW_ROOM_CONFIRMATION'; payload: boolean }
   | { type: 'SET_AVAILABLE_BRANDS'; payload: any[] }
   | { type: 'SET_TOP_BRANDS'; payload: any[] }
   | { type: 'SET_OTHER_BRANDS'; payload: any[] }
@@ -196,6 +205,10 @@ export const initialQuoteCreationState: QuoteCreationState = {
   rooms: [],
   currentRoomData: {},
   editingRoomIndex: -1,
+  
+  pendingRoomConfirmation: null,
+  confirmedRooms: [],
+  showRoomConfirmation: false,
   
   availableBrands: [],
   topBrands: [],
@@ -295,6 +308,23 @@ export function quoteCreationReducer(
       
     case 'SET_EDITING_ROOM_INDEX':
       return { ...state, editingRoomIndex: action.payload };
+      
+    case 'SET_PENDING_ROOM_CONFIRMATION':
+      return { ...state, pendingRoomConfirmation: action.payload };
+      
+    case 'CONFIRM_ROOM':
+      return { 
+        ...state, 
+        confirmedRooms: [...state.confirmedRooms, action.payload],
+        pendingRoomConfirmation: null,
+        showRoomConfirmation: false
+      };
+      
+    case 'SET_CONFIRMED_ROOMS':
+      return { ...state, confirmedRooms: action.payload };
+      
+    case 'SET_SHOW_ROOM_CONFIRMATION':
+      return { ...state, showRoomConfirmation: action.payload };
       
     case 'SET_AVAILABLE_BRANDS':
       return { ...state, availableBrands: action.payload };

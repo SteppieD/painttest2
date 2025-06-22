@@ -40,6 +40,13 @@ import { Room, calculateRoomAreas, calculateTotalAreasFromRooms } from "@/lib/pr
 import { PaintBrandSelector } from "@/components/ui/paint-brand-selector";
 import { PaintProductSelector } from "@/components/ui/paint-product-selector";
 import { FavoritePaintSelector } from "@/components/ui/favorite-paint-selector";
+import { 
+  RoomConfirmationButton, 
+  SurfaceButton, 
+  AddRoomButton, 
+  ConfirmQuoteButton,
+  ButtonGroup 
+} from "@/components/ui/quote-confirmation-buttons";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
 import { 
   quoteCreationReducer, 
@@ -107,6 +114,9 @@ function CreateQuotePageContent() {
     rooms,
     currentRoomData,
     editingRoomIndex,
+    pendingRoomConfirmation,
+    confirmedRooms,
+    showRoomConfirmation,
     availableBrands,
     topBrands,
     otherBrands,
@@ -2667,6 +2677,115 @@ What would you like to modify?`,
                   </div>
                   <span className="text-sm text-gray-500">Thinking...</span>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Room Confirmation Buttons */}
+          {showRoomConfirmation && pendingRoomConfirmation && (
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[80%]">
+                <RoomConfirmationButton
+                  room={{
+                    name: pendingRoomConfirmation.name || 'Room',
+                    dimensions: `${pendingRoomConfirmation.length || 0}x${pendingRoomConfirmation.width || 0}`,
+                    height: pendingRoomConfirmation.height || 9,
+                    surfaces: pendingRoomConfirmation.surfaces || []
+                  }}
+                  onConfirm={() => {
+                    if (pendingRoomConfirmation) {
+                      const confirmedRoom = {
+                        ...pendingRoomConfirmation,
+                        id: confirmedRooms.length + 1,
+                        name: pendingRoomConfirmation.name || 'Room',
+                        length: pendingRoomConfirmation.length || 0,
+                        width: pendingRoomConfirmation.width || 0,
+                        height: pendingRoomConfirmation.height || 9
+                      } as Room;
+                      
+                      dispatch({ type: 'CONFIRM_ROOM', payload: confirmedRoom });
+                      
+                      // Add confirmation message
+                      const confirmMessage = {
+                        id: Date.now().toString(),
+                        role: 'user' as const,
+                        content: `✅ Confirmed: ${confirmedRoom.name}`,
+                        timestamp: new Date().toISOString()
+                      };
+                      dispatch({ type: 'ADD_MESSAGE', payload: confirmMessage });
+                    }
+                  }}
+                  onEdit={() => {
+                    dispatch({ type: 'SET_PENDING_ROOM_CONFIRMATION', payload: null });
+                    dispatch({ type: 'SET_SHOW_ROOM_CONFIRMATION', payload: false });
+                    
+                    // Add edit message
+                    const editMessage = {
+                      id: Date.now().toString(),
+                      role: 'user' as const,
+                      content: `Let me edit the room details`,
+                      timestamp: new Date().toISOString()
+                    };
+                    dispatch({ type: 'ADD_MESSAGE', payload: editMessage });
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Confirmed Rooms Display */}
+          {confirmedRooms.length > 0 && (
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[80%]">
+                <ButtonGroup title="Confirmed Rooms">
+                  {confirmedRooms.map((room, index) => (
+                    <RoomConfirmationButton
+                      key={room.id || index}
+                      room={{
+                        name: room.name,
+                        dimensions: `${room.length}x${room.width}`,
+                        height: room.height,
+                        surfaces: room.surfaces || []
+                      }}
+                      isConfirmed={true}
+                      onConfirm={() => {}}
+                      onEdit={() => {
+                        // Handle room editing
+                        dispatch({ type: 'SET_EDITING_ROOM_INDEX', payload: index });
+                      }}
+                    />
+                  ))}
+                  
+                  <div className="mt-4 flex gap-2">
+                    <AddRoomButton 
+                      onClick={() => {
+                        // Add message to start new room
+                        const addRoomMessage = {
+                          id: Date.now().toString(),
+                          role: 'user' as const,
+                          content: 'Add another room',
+                          timestamp: new Date().toISOString()
+                        };
+                        dispatch({ type: 'ADD_MESSAGE', payload: addRoomMessage });
+                      }}
+                    />
+                    
+                    {confirmedRooms.length > 0 && (
+                      <ConfirmQuoteButton 
+                        onClick={() => {
+                          // Start final quote calculation
+                          const finalizeMessage = {
+                            id: Date.now().toString(),
+                            role: 'user' as const,
+                            content: 'Ready for final quote',
+                            timestamp: new Date().toISOString()
+                          };
+                          dispatch({ type: 'ADD_MESSAGE', payload: finalizeMessage });
+                        }}
+                      />
+                    )}
+                  </div>
+                </ButtonGroup>
               </div>
             </div>
           )}
