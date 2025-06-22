@@ -5,6 +5,9 @@
  */
 
 import { Room, ProjectDimensions, DEFAULT_CHARGE_RATES, ProfessionalQuote } from './professional-quote-calculator';
+import { RoomTemplate } from '@/components/ui/room-type-button';
+import { QuantityItem } from '@/components/ui/quantity-button';
+import { CategorySummary } from '@/components/ui/category-summary-button';
 
 export interface Message {
   id: string;
@@ -98,6 +101,15 @@ export interface QuoteCreationState {
   // Favorite paint selector
   showFavoritePaintSelector: boolean;
   useFavoriteSelector: boolean;
+
+  // Enhanced button-driven interface
+  selectedRoomTemplates: RoomTemplate[];
+  quantityItems: QuantityItem[];
+  categoryProgress: CategorySummary[];
+  showRoomTemplateSelector: boolean;
+  showQuantitySelector: boolean;
+  showCategoryReview: boolean;
+  currentWorkflowStage: 'room_selection' | 'quantity_selection' | 'category_review' | 'final_review';
 }
 
 // Action types for the reducer
@@ -146,6 +158,18 @@ export type QuoteCreationAction =
   | { type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR'; payload: boolean }
   | { type: 'SET_USE_FAVORITE_SELECTOR'; payload: boolean }
   | { type: 'INITIALIZE_MEASUREMENT_QUEUE'; payload: string[] }
+  // Enhanced button-driven interface actions
+  | { type: 'ADD_ROOM_TEMPLATE'; payload: RoomTemplate }
+  | { type: 'REMOVE_ROOM_TEMPLATE'; payload: string }
+  | { type: 'SET_SELECTED_ROOM_TEMPLATES'; payload: RoomTemplate[] }
+  | { type: 'UPDATE_QUANTITY_ITEM'; payload: { id: string; quantity: number } }
+  | { type: 'SET_QUANTITY_ITEMS'; payload: QuantityItem[] }
+  | { type: 'UPDATE_CATEGORY_PROGRESS'; payload: CategorySummary }
+  | { type: 'SET_CATEGORY_PROGRESS'; payload: CategorySummary[] }
+  | { type: 'SET_SHOW_ROOM_TEMPLATE_SELECTOR'; payload: boolean }
+  | { type: 'SET_SHOW_QUANTITY_SELECTOR'; payload: boolean }
+  | { type: 'SET_SHOW_CATEGORY_REVIEW'; payload: boolean }
+  | { type: 'SET_CURRENT_WORKFLOW_STAGE'; payload: 'room_selection' | 'quantity_selection' | 'category_review' | 'final_review' }
   | { type: 'RESET_STATE' };
 
 // Initial state
@@ -218,7 +242,16 @@ export const initialQuoteCreationState: QuoteCreationState = {
   availableProductsForCategory: [],
   
   showFavoritePaintSelector: false,
-  useFavoriteSelector: true
+  useFavoriteSelector: true,
+
+  // Enhanced button-driven interface initial state
+  selectedRoomTemplates: [],
+  quantityItems: [],
+  categoryProgress: [],
+  showRoomTemplateSelector: false,
+  showQuantitySelector: false,
+  showCategoryReview: false,
+  currentWorkflowStage: 'room_selection'
 };
 
 // Reducer function
@@ -406,6 +439,79 @@ export function quoteCreationReducer(
         measurementQueue: queue,
         categoryCompletionStatus: status,
         currentMeasurementCategory: queue.length > 0 ? queue[0] : ''
+      };
+
+    // Enhanced button-driven interface reducer cases
+    case 'ADD_ROOM_TEMPLATE':
+      return {
+        ...state,
+        selectedRoomTemplates: [...state.selectedRoomTemplates, action.payload]
+      };
+
+    case 'REMOVE_ROOM_TEMPLATE':
+      return {
+        ...state,
+        selectedRoomTemplates: state.selectedRoomTemplates.filter(template => template.id !== action.payload)
+      };
+
+    case 'SET_SELECTED_ROOM_TEMPLATES':
+      return {
+        ...state,
+        selectedRoomTemplates: action.payload
+      };
+
+    case 'UPDATE_QUANTITY_ITEM':
+      return {
+        ...state,
+        quantityItems: state.quantityItems.map(item =>
+          item.id === action.payload.id
+            ? { ...item, quantity: action.payload.quantity }
+            : item
+        )
+      };
+
+    case 'SET_QUANTITY_ITEMS':
+      return {
+        ...state,
+        quantityItems: action.payload
+      };
+
+    case 'UPDATE_CATEGORY_PROGRESS':
+      return {
+        ...state,
+        categoryProgress: state.categoryProgress.map(category =>
+          category.id === action.payload.id ? action.payload : category
+        )
+      };
+
+    case 'SET_CATEGORY_PROGRESS':
+      return {
+        ...state,
+        categoryProgress: action.payload
+      };
+
+    case 'SET_SHOW_ROOM_TEMPLATE_SELECTOR':
+      return {
+        ...state,
+        showRoomTemplateSelector: action.payload
+      };
+
+    case 'SET_SHOW_QUANTITY_SELECTOR':
+      return {
+        ...state,
+        showQuantitySelector: action.payload
+      };
+
+    case 'SET_SHOW_CATEGORY_REVIEW':
+      return {
+        ...state,
+        showCategoryReview: action.payload
+      };
+
+    case 'SET_CURRENT_WORKFLOW_STAGE':
+      return {
+        ...state,
+        currentWorkflowStage: action.payload
       };
       
     case 'RESET_STATE':

@@ -47,6 +47,29 @@ import {
   ConfirmQuoteButton,
   ButtonGroup 
 } from "@/components/ui/quote-confirmation-buttons";
+import { 
+  RoomTypeButton, 
+  RoomTypeGrid, 
+  CustomRoomButton,
+  ROOM_TEMPLATES 
+} from "@/components/ui/room-type-button";
+import { 
+  QuantityButton, 
+  QuantityGrid,
+  COMMON_QUANTITY_ITEMS,
+  TRIM_QUANTITY_ITEMS 
+} from "@/components/ui/quantity-button";
+import { 
+  CategorySummaryButton, 
+  CategoryGrid,
+  CategoryProgressBar,
+  QUOTE_CATEGORIES,
+  createCategorySummary 
+} from "@/components/ui/category-summary-button";
+import { 
+  QuoteReviewBoard,
+  createQuoteReviewData 
+} from "@/components/ui/quote-review-board";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
 import { 
   quoteCreationReducer, 
@@ -132,7 +155,15 @@ function CreateQuotePageContent() {
     selectedBrandForCategory,
     availableProductsForCategory,
     showFavoritePaintSelector,
-    useFavoriteSelector
+    useFavoriteSelector,
+    // Enhanced button-driven interface state
+    selectedRoomTemplates,
+    quantityItems,
+    categoryProgress,
+    showRoomTemplateSelector,
+    showQuantitySelector,
+    showCategoryReview,
+    currentWorkflowStage
   } = state;
 
   // Helper function for brand icons
