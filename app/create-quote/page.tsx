@@ -860,6 +860,7 @@ What would you like to modify?`,
       });
 
       const result = await response.json();
+      console.log('AI Response:', result);
       
       if (result.success) {
         // Update quote data with AI-extracted information
@@ -880,6 +881,31 @@ What would you like to modify?`,
         // Update conversation stage if suggested
         if (result.nextStage) {
           setConversationStage(result.nextStage);
+          
+          // Ensure buttons are shown for specific stages
+          if (result.nextStage === 'project_type') {
+            // Show project type buttons after customer info is collected
+            setTimeout(() => {
+              setButtonOptions([
+                { id: 'interior', label: '🏠 Interior Only', value: 'interior', selected: false },
+                { id: 'exterior', label: '🏡 Exterior Only', value: 'exterior', selected: false },
+                { id: 'both', label: '🏠🏡 Both Interior & Exterior', value: 'both', selected: false }
+              ]);
+              setShowButtons(true);
+            }, 500);
+          }
+        }
+        
+        // Also check if we have customer info and should show project type buttons
+        if (result.extractedData?.customer_name && result.extractedData?.address && !result.nextStage) {
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'interior', label: '🏠 Interior Only', value: 'interior', selected: false },
+              { id: 'exterior', label: '🏡 Exterior Only', value: 'exterior', selected: false },
+              { id: 'both', label: '🏠🏡 Both Interior & Exterior', value: 'both', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
         }
         
         return {
