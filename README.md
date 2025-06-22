@@ -32,6 +32,16 @@ A comprehensive Next.js painting quote application with admin portal, customer m
 
 See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions for Railway, Vercel, and Render.
 
+### **⚠️ CRITICAL: Vercel Deployment Workflow**
+If using Vercel (auto-deploys from git), **ALWAYS** push to git before testing:
+```bash
+# After making any changes:
+npm run build                           # Verify no errors
+git add -A && git commit -m "Changes"   # Commit changes
+git push                               # REQUIRED - Vercel deploys from git
+# Then test on live Vercel URL
+```
+
 ### **💻 Local Development:**
 ```bash
 npm install

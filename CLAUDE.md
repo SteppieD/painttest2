@@ -10,11 +10,18 @@ This is a Next.js painting quote application with SQLite database, Google Gemini
 - `npm start` - Start production server
 
 ## DEPLOYMENT WORKFLOW - VERCEL AUTO-DEPLOY
-**IMPORTANT**: This project automatically deploys to Vercel when git is updated. 
-- **DO NOT run development servers** - changes are tested live on Vercel
-- **Workflow**: Make changes → Update git → Vercel auto-deploys → Test on live site
+**CRITICAL**: This project automatically deploys to Vercel when git is updated. 
+- **MANDATORY WORKFLOW**: Make changes → Build locally → Commit to git → Push to git → Vercel auto-deploys → Test on live site
+- **NEVER TEST WITHOUT GIT PUSH**: Changes only appear on Vercel after `git push` - always push before testing
+- **Required Commands After Every Change**:
+  ```bash
+  npm run build  # Verify no errors
+  git add -A && git commit -m "Description of changes"
+  git push       # REQUIRED - Vercel deploys from git
+  ```
 - **Live URL**: Auto-deployed via Vercel when git commits are pushed
 - **Testing**: All testing happens on the live Vercel deployment, not local dev server
+- **DO NOT run development servers** - changes are tested live on Vercel
 
 ## User Flow Overview
 1. **Access Code Entry** (`/access-code`) - Enter company access code (DEMO2024, PAINTER001, CONTRACTOR123)
