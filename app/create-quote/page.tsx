@@ -794,7 +794,7 @@ What would you like to modify?`,
           initializeMeasurementQueue(selectedSurfaces);
           
           const surfaceList = selectedSurfaces.join(', ');
-          const firstCategory = measurementQueue[0];
+          const firstCategory = selectedSurfaces[0]; // Use selectedSurfaces directly since measurementQueue isn't updated yet
           
           // Start the new measurement-driven workflow
           responseContent = `Perfect! You selected: **${surfaceList}**\n\nI'll collect measurements and paint selection for each surface category. Let's start with **${firstCategory}**.\n\n`;
