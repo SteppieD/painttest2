@@ -246,32 +246,70 @@ function CreateQuotePageContent() {
 
   const handleFavoriteProductSelect = (product: any) => {
     // Store the selected favorite product
-    setSelectedPaintProducts(prev => ({
-      ...prev,
-      [currentMeasurementCategory]: product
-    }));
+    dispatch({ type: 'UPDATE_SELECTED_PAINT_PRODUCTS', payload: {
+      [currentPaintCategory]: product
+    }});
     
-    // Mark category as paint selected
-    markCategoryPaintSelected(currentMeasurementCategory);
-    setShowFavoritePaintSelector(false);
+    // Hide the selector
+    dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: false });
     
-    // Move to next category or finish
-    const nextCategory = getNextCategoryForMeasurement();
-    if (nextCategory) {
-      setCurrentMeasurementCategory(nextCategory);
-      setConversationStage('category_measurement_collection');
+    // Create confirmation message
+    const confirmMessage: Message = {
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: `Perfect! I've selected:\n**${product.supplier} ${product.productName}** at **$${product.costPerGallon}/gal** for ${currentPaintCategory}.`,
+      timestamp: new Date().toISOString()
+    };
+    dispatch({ type: 'ADD_MESSAGE', payload: confirmMessage });
+    
+    // Move to next paint category or finish
+    const nextIndex = currentPaintCategoryIndex + 1;
+    if (nextIndex < paintSelectionQueue.length) {
+      const nextCategory = paintSelectionQueue[nextIndex];
+      dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY_INDEX', payload: nextIndex });
+      dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: nextCategory });
       
-      // Add a message about the selection and moving to next category
-      const confirmMessage: Message = {
-        id: Date.now().toString(),
-        role: 'assistant',
-        content: `Great choice! **${product.supplier} ${product.productName}** selected for ${currentMeasurementCategory}.\n\nNext: Let's measure **${nextCategory}**.`,
-        timestamp: new Date().toISOString()
-      };
-      setMessages(prev => [...prev, confirmMessage]);
+      // Show next category selection
+      setTimeout(() => {
+        const nextMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: `Now let's select paint for your ${nextCategory}.\n\nChoose from your favorite products below, or type your own custom paint product.`,
+          timestamp: new Date().toISOString()
+        };
+        dispatch({ type: 'ADD_MESSAGE', payload: nextMessage });
+        
+        // Show favorites and buttons for next category
+        dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: true });
+        dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+          { id: 'type_custom', label: '✏️ Type Custom Product', value: `type_custom_${nextCategory}`, selected: false },
+          { id: 'use_quality', label: '📊 Choose by Quality Level', value: `quality_selection_${nextCategory}`, selected: false }
+        ]});
+        dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+        dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'paint_selection_with_favorites' });
+      }, 800);
     } else {
-      // All categories complete
-      checkWorkflowCompletion();
+      // All paint selections complete, move to markup
+      dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: false });
+      
+      setTimeout(() => {
+        const markupMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: `Excellent! All paint products selected.\n\nNow let's set your profit margin. What markup percentage would you like?`,
+          timestamp: new Date().toISOString()
+        };
+        dispatch({ type: 'ADD_MESSAGE', payload: markupMessage });
+        
+        dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+          { id: '10', label: '🎯 10% - Competitive pricing', value: '10%', selected: false },
+          { id: '20', label: '⚖️ 20% - Standard profit (recommended)', value: '20%', selected: false },
+          { id: '30', label: '📈 30% - Good profit margin', value: '30%', selected: false },
+          { id: '40', label: '💎 40% - Premium pricing', value: '40%', selected: false }
+        ]});
+        dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+        dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'markup_selection' });
+      }, 800);
     }
   };
 
@@ -1004,63 +1042,57 @@ What would you like to modify?`,
             if (selectedSurfaces.includes('doors')) paintCategories.push('doors');
             if (selectedSurfaces.includes('windows')) paintCategories.push('windows');
             
-            setPaintSelectionQueue(paintCategories);
-            setCurrentPaintCategoryIndex(0);
+            dispatch({ type: 'SET_PAINT_SELECTION_QUEUE', payload: paintCategories });
+            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY_INDEX', payload: 0 });
             
             if (paintCategories.length > 0) {
               const firstCategory = paintCategories[0];
-              setCurrentPaintCategory(firstCategory);
-              responseContent += `\n\nGreat! Now let's select paint for your ${firstCategory}.\n\nWhich paint brand do you prefer for ${firstCategory}?`;
+              dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: firstCategory });
+              responseContent += `\n\nGreat! Now let's select paint for your ${firstCategory}.`;
               
-              // Show brand selection buttons - prioritize top brands
-              setTimeout(() => {
-                const topBrandButtons = topBrands
-                  .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
-                  .map(brand => ({
-                    id: `brand_${brand.brand}`,
-                    label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
-                    value: `brand_${brand.brand}_${firstCategory}`,
-                    selected: false
-                  }));
+              // Check if user has favorite products set up
+              if (useFavoriteSelector && companyData) {
+                responseContent += `\n\nChoose from your favorite products below, or type your own custom paint product.`;
                 
-                if (topBrandButtons.length > 0) {
-                  setButtonOptions(topBrandButtons);
-                  setShowButtons(true);
-                } else {
-                  // Fallback to all brands limited to 3
-                  const allBrandButtons = availableBrands
-                    .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
-                    .slice(0, 3)
-                    .map(brand => ({
-                      id: `brand_${brand.brand}`,
-                      label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
-                      value: `brand_${brand.brand}_${firstCategory}`,
-                      selected: false
-                    }));
-                  
-                  if (allBrandButtons.length > 0) {
-                    setButtonOptions(allBrandButtons);
-                    setShowButtons(true);
-                  } else {
-                    // Final fallback to generic paint quality
-                    setButtonOptions([
-                      { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
-                      { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
-                      { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
-                    ]);
-                    setShowButtons(true);
-                  }
-                }
-              }, 500);
-              
-              // Check if we have brands available to determine next stage
-              const hasBrands = topBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0) ||
-                               availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
-              if (hasBrands) {
-                nextStage = 'paint_brand_selection';
+                // Show the favorite paint selector component
+                dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: true });
+                dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: firstCategory });
+                
+                // Also show button options for alternatives
+                setTimeout(() => {
+                  dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+                    { 
+                      id: 'type_custom', 
+                      label: '✏️ Type Custom Product', 
+                      value: `type_custom_${firstCategory}`, 
+                      selected: false 
+                    },
+                    { 
+                      id: 'use_quality', 
+                      label: '📊 Choose by Quality Level', 
+                      value: `quality_selection_${firstCategory}`, 
+                      selected: false 
+                    }
+                  ]});
+                  dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+                }, 500);
+                
+                nextStage = 'paint_selection_with_favorites';
               } else {
+                // No favorites set up, show quality selection buttons
+                responseContent += `\n\nWhat paint quality would you like for ${firstCategory}?`;
+                
+                setTimeout(() => {
+                  dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+                    { id: 'good', label: '💰 Good - Budget-friendly ($25-40/gal)', value: 'good', selected: false },
+                    { id: 'better', label: '⭐ Better - Mid-range quality ($40-60/gal)', value: 'better', selected: false },
+                    { id: 'best', label: '👑 Best - Premium quality ($60-80/gal)', value: 'best', selected: false },
+                    { id: 'type_custom', label: '✏️ Type Custom Product', value: `type_custom_${firstCategory}`, selected: false }
+                  ]});
+                  dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+                }, 500);
+                
                 nextStage = 'paint_quality';
-                responseContent += `\n\nPerfect! Now what paint quality would you like for ${firstCategory}?`;
               }
             }
           }
@@ -1245,63 +1277,57 @@ What would you like to modify?`,
           if (selectedSurfaces.includes('doors')) paintCategories.push('doors');
           if (selectedSurfaces.includes('windows')) paintCategories.push('windows');
           
-          setPaintSelectionQueue(paintCategories);
-          setCurrentPaintCategoryIndex(0);
+          dispatch({ type: 'SET_PAINT_SELECTION_QUEUE', payload: paintCategories });
+          dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY_INDEX', payload: 0 });
           
           if (paintCategories.length > 0) {
             const firstCategory = paintCategories[0];
-            setCurrentPaintCategory(firstCategory);
-            responseContent = `Great! Now let's select paint for your ${firstCategory}.\n\nWhich paint brand do you prefer for ${firstCategory}?`;
+            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: firstCategory });
+            responseContent = `Great! Now let's select paint for your ${firstCategory}.`;
             
-            // Show brand selection buttons - prioritize top brands
-            setTimeout(() => {
-              const topBrandButtons = topBrands
-                .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
-                .map(brand => ({
-                  id: `brand_${brand.brand}`,
-                  label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
-                  value: `brand_${brand.brand}_${firstCategory}`,
-                  selected: false
-                }));
+            // Check if user has favorite products set up
+            if (useFavoriteSelector && companyData) {
+              responseContent += `\n\nChoose from your favorite products below, or type your own custom paint product.`;
               
-              if (topBrandButtons.length > 0) {
-                setButtonOptions(topBrandButtons);
-                setShowButtons(true);
-              } else {
-                // Fallback to all brands if no top brands available
-                const allBrandButtons = availableBrands
-                  .filter(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0)
-                  .slice(0, 3) // Limit to 3 even for fallback
-                  .map(brand => ({
-                    id: `brand_${brand.brand}`,
-                    label: `${getBrandIcon(brand.brand)} ${brand.brand}`,
-                    value: `brand_${brand.brand}_${firstCategory}`,
-                    selected: false
-                  }));
-                
-                if (allBrandButtons.length > 0) {
-                  setButtonOptions(allBrandButtons);
-                  setShowButtons(true);
-                } else {
-                  // Final fallback to generic paint quality
-                  setButtonOptions([
-                    { id: 'good', label: '💰 Good - Budget-friendly', value: 'good', selected: false },
-                    { id: 'better', label: '⭐ Better - Mid-range quality', value: 'better', selected: false },
-                    { id: 'best', label: '👑 Best - Premium quality', value: 'best', selected: false }
-                  ]);
-                  setShowButtons(true);
-                }
-              }
-            }, 500);
-            
-            // Check if we have brands available to determine next stage
-            const hasBrands = topBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0) ||
-                             availableBrands.some(brand => brand.products[firstCategory] && brand.products[firstCategory].length > 0);
-            if (hasBrands) {
-              nextStage = 'paint_brand_selection';
+              // Show the favorite paint selector component
+              dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: true });
+              dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: firstCategory });
+              
+              // Also show button options for alternatives
+              setTimeout(() => {
+                dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+                  { 
+                    id: 'type_custom', 
+                    label: '✏️ Type Custom Product', 
+                    value: `type_custom_${firstCategory}`, 
+                    selected: false 
+                  },
+                  { 
+                    id: 'use_quality', 
+                    label: '📊 Choose by Quality Level', 
+                    value: `quality_selection_${firstCategory}`, 
+                    selected: false 
+                  }
+                ]});
+                dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+              }, 500);
+              
+              nextStage = 'paint_selection_with_favorites';
             } else {
+              // No favorites set up, show quality selection buttons
+              responseContent += `\n\nWhat paint quality would you like for ${firstCategory}?`;
+              
+              setTimeout(() => {
+                dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+                  { id: 'good', label: '💰 Good - Budget-friendly ($25-40/gal)', value: 'good', selected: false },
+                  { id: 'better', label: '⭐ Better - Mid-range quality ($40-60/gal)', value: 'better', selected: false },
+                  { id: 'best', label: '👑 Best - Premium quality ($60-80/gal)', value: 'best', selected: false },
+                  { id: 'type_custom', label: '✏️ Type Custom Product', value: `type_custom_${firstCategory}`, selected: false }
+                ]});
+                dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+              }, 500);
+              
               nextStage = 'paint_quality';
-              responseContent = `Perfect! Now what paint quality would you like for ${firstCategory}?`;
             }
           } else {
             responseContent = `Perfect! Now what paint quality would you like?`;
@@ -1422,6 +1448,115 @@ What would you like to modify?`,
         }
         break;
         
+      case 'paint_selection_with_favorites':
+        // Handle button clicks for paint selection options
+        if (input.startsWith('type_custom_')) {
+          const category = input.replace('type_custom_', '');
+          dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: false });
+          dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+          
+          responseContent = `Please type the paint product details for ${category}:\n\n**Format:** Brand Name - Product Name - $XX/gal\n**Example:** "Sherwin-Williams ProClassic $58/gal" or "Benjamin Moore Advance $75/gal"`;
+          nextStage = 'custom_paint_input';
+          dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: category });
+        } else if (input.startsWith('quality_selection_')) {
+          const category = input.replace('quality_selection_', '');
+          dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: false });
+          
+          responseContent = `What paint quality would you like for ${category}?`;
+          setTimeout(() => {
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: 'good', label: '💰 Good - Budget-friendly ($25-40/gal)', value: 'good', selected: false },
+              { id: 'better', label: '⭐ Better - Mid-range quality ($40-60/gal)', value: 'better', selected: false },
+              { id: 'best', label: '👑 Best - Premium quality ($60-80/gal)', value: 'best', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+          nextStage = 'paint_quality';
+        } else {
+          // Handle favorite product selection (this would come from the FavoritePaintSelector component)
+          responseContent = `Please select a paint product from your favorites above, or use one of the button options.`;
+          nextStage = 'paint_selection_with_favorites';
+        }
+        break;
+
+      case 'custom_paint_input':
+        // Parse custom paint input
+        const customPaintMatch = input.match(/(.+?)\s*-?\s*\$?(\d+(?:\.\d+)?)\s*(?:\/gal)?/i);
+        if (customPaintMatch) {
+          const productName = customPaintMatch[1].trim();
+          const price = parseFloat(customPaintMatch[2]);
+          const category = currentPaintCategory;
+          
+          // Store the custom paint selection
+          dispatch({ type: 'UPDATE_SELECTED_PAINT_PRODUCTS', payload: {
+            [category]: {
+              supplier: productName.split(' ')[0] || 'Custom',
+              name: productName,
+              costPerGallon: price,
+              custom: true
+            }
+          }});
+          
+          responseContent = `Perfect! I've recorded:\n**${productName}** at **$${price}/gal** for ${category}.`;
+          
+          // Move to next paint category or finish
+          const nextIndex = currentPaintCategoryIndex + 1;
+          if (nextIndex < paintSelectionQueue.length) {
+            const nextCategory = paintSelectionQueue[nextIndex];
+            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY_INDEX', payload: nextIndex });
+            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: nextCategory });
+            
+            responseContent += `\n\nNow let's select paint for your ${nextCategory}.`;
+            
+            if (useFavoriteSelector && companyData) {
+              responseContent += `\n\nChoose from your favorite products below, or type your own custom paint product.`;
+              dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: true });
+              
+              setTimeout(() => {
+                dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+                  { id: 'type_custom', label: '✏️ Type Custom Product', value: `type_custom_${nextCategory}`, selected: false },
+                  { id: 'use_quality', label: '📊 Choose by Quality Level', value: `quality_selection_${nextCategory}`, selected: false }
+                ]});
+                dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+              }, 500);
+              
+              nextStage = 'paint_selection_with_favorites';
+            } else {
+              // Move to quality selection for next category
+              responseContent += `\n\nWhat paint quality would you like for ${nextCategory}?`;
+              setTimeout(() => {
+                dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+                  { id: 'good', label: '💰 Good - Budget-friendly ($25-40/gal)', value: 'good', selected: false },
+                  { id: 'better', label: '⭐ Better - Mid-range quality ($40-60/gal)', value: 'better', selected: false },
+                  { id: 'best', label: '👑 Best - Premium quality ($60-80/gal)', value: 'best', selected: false },
+                  { id: 'type_custom', label: '✏️ Type Custom Product', value: `type_custom_${nextCategory}`, selected: false }
+                ]});
+                dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+              }, 500);
+              nextStage = 'paint_quality';
+            }
+          } else {
+            // All paint selections complete, move to markup
+            dispatch({ type: 'SET_SHOW_FAVORITE_PAINT_SELECTOR', payload: false });
+            responseContent += `\n\nExcellent! Now let's set your profit margin. What markup percentage would you like?`;
+            
+            setTimeout(() => {
+              dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+                { id: '10', label: '🎯 10% - Competitive pricing', value: '10%', selected: false },
+                { id: '20', label: '⚖️ 20% - Standard profit (recommended)', value: '20%', selected: false },
+                { id: '30', label: '📈 30% - Good profit margin', value: '30%', selected: false },
+                { id: '40', label: '💎 40% - Premium pricing', value: '40%', selected: false }
+              ]});
+              dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+            }, 500);
+            nextStage = 'markup_selection';
+          }
+        } else {
+          responseContent = `I couldn't understand that format. Please try again with:\n\n**Format:** Brand Name - Product Name - $XX/gal\n**Example:** "Sherwin-Williams ProClassic $58/gal"`;
+          nextStage = 'custom_paint_input';
+        }
+        break;
+
       case 'paint_quality':
         const paintQuality = parsePaintQuality(input);
         const updatedQuoteData = {
@@ -1550,8 +1685,8 @@ What would you like to modify?`,
           
           if (nextCategoryIndex < paintSelectionQueue.length) {
             const nextCategory = paintSelectionQueue[nextCategoryIndex];
-            setCurrentPaintCategory(nextCategory);
-            setCurrentPaintCategoryIndex(nextCategoryIndex);
+            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY', payload: nextCategory });
+            dispatch({ type: 'SET_CURRENT_PAINT_CATEGORY_INDEX', payload: nextCategoryIndex });
             
             responseContent = `Great! Now let's select paint for your ${nextCategory}.\n\nWhich paint brand do you prefer for ${nextCategory}?`;
             
@@ -2557,11 +2692,11 @@ What would you like to modify?`,
             <div className="flex gap-3 justify-start">
               <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
                 <FavoritePaintSelector
-                  category={currentMeasurementCategory}
+                  category={currentPaintCategory}
                   projectType={quoteData.project_type}
                   companyId={companyData.id}
                   onProductSelect={handleFavoriteProductSelect}
-                  selectedProduct={selectedPaintProducts[currentMeasurementCategory]}
+                  selectedProduct={selectedPaintProducts[currentPaintCategory]}
                 />
               </div>
             </div>
