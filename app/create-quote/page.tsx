@@ -70,6 +70,20 @@ import {
   QuoteReviewBoard,
   createQuoteReviewData 
 } from "@/components/ui/quote-review-board";
+import { 
+  SmartSurfaceSelector,
+  SURFACE_OPTIONS,
+  needsRoomCount,
+  getMeasurementTypesForSurfaces,
+  getSurfaceCategories 
+} from "@/components/ui/smart-surface-selector";
+import { 
+  SmartWorkflowButtons,
+  SmartMeasurementFlow,
+  detectProjectScope,
+  generateWorkflowSteps,
+  RoomCountSelector 
+} from "@/components/ui/smart-workflow-buttons";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
 import { 
   quoteCreationReducer, 
@@ -77,6 +91,124 @@ import {
   type QuoteCreationState,
   type QuoteCreationAction 
 } from "@/lib/quote-state-manager";
+
+// Ultra-smart project input parser
+function parseQuickProjectInput(input: string) {
+  const text = input.toLowerCase().trim();
+  
+  // Extract customer name (usually first name or "name's")
+  let customerName = '';
+  const namePatterns = [
+    /^([a-z\s]+),/i, // "John Smith,"
+    /^([a-z\s]+)'s\s/i, // "Sarah's kitchen"
+    /for\s([a-z\s]+),/i, // "for John Smith,"
+    /([a-z\s]+)\sat\s/i, // "John Smith at"
+  ];
+  for (const pattern of namePatterns) {
+    const match = input.match(pattern);
+    if (match) {
+      customerName = match[1].trim();
+      break;
+    }
+  }
+  
+  // Extract address
+  let address = '';
+  const addressPatterns = [
+    /,\s*([^,]*(?:st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ln|lane|ct|court|way|pl|place|circle|pkwy|parkway)[^,]*)/i,
+    /at\s([^,]*(?:st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ln|lane|ct|court|way|pl|place|circle|pkwy|parkway)[^,]*)/i,
+    /(\d+\s[^,]+(?:st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ln|lane|ct|court|way|pl|place|circle|pkwy|parkway))/i,
+  ];
+  for (const pattern of addressPatterns) {
+    const match = input.match(pattern);
+    if (match) {
+      address = match[1].trim();
+      break;
+    }
+  }
+  
+  // Extract surfaces
+  const surfaces = [];
+  const surfaceMap = {
+    'walls': ['wall', 'walls'],
+    'ceilings': ['ceiling', 'ceilings'],
+    'trim': ['trim', 'baseboards', 'baseboard', 'molding', 'crown'],
+    'doors': ['door', 'doors'],
+    'windows': ['window', 'windows', 'window frame'],
+    'cabinets': ['cabinet', 'cabinets', 'kitchen cabinet'],
+    'siding': ['siding', 'exterior'],
+  };
+  
+  for (const [surface, keywords] of Object.entries(surfaceMap)) {
+    if (keywords.some(keyword => text.includes(keyword))) {
+      surfaces.push(surface);
+    }
+  }
+  
+  // Smart defaults for common room types
+  if (text.includes('kitchen') && !surfaces.includes('cabinets')) {
+    if (surfaces.includes('walls')) surfaces.push('cabinets');
+  }
+  if (text.includes('bedroom') || text.includes('living room')) {
+    if (!surfaces.length) surfaces.push('walls', 'ceilings');
+  }
+  
+  // Extract size information
+  let sizeDescription = '';
+  const sizePatterns = [
+    /(\d+\s*x\s*\d+)/i, // "12x14"
+    /(\d+\s*by\s*\d+)/i, // "12 by 14" 
+    /(\d+\s*sq\s*ft)/i, // "200 sq ft"
+    /(\d+\s*square\s*feet)/i, // "200 square feet"
+    /(\d+\s*linear\s*feet)/i, // "150 linear feet"
+    /(small|medium|large|huge)/i, // size descriptors
+  ];
+  for (const pattern of sizePatterns) {
+    const match = input.match(pattern);
+    if (match) {
+      sizeDescription = match[1];
+      break;
+    }
+  }
+  
+  // Determine project type
+  let projectType = 'interior';
+  if (text.includes('exterior') || text.includes('outside') || text.includes('siding')) {
+    projectType = 'exterior';
+  }
+  
+  return {
+    customerName,
+    address,
+    surfaces,
+    sizeDescription,
+    projectType,
+    originalInput: input
+  };
+}
+
+// Quick quote calculator (simplified)
+function calculateQuickQuote(surfaces: string[], markup: number): number {
+  const basePrices = {
+    'walls': 800,
+    'ceilings': 600, 
+    'trim': 400,
+    'doors': 200,
+    'windows': 150,
+    'cabinets': 1200,
+    'siding': 1500
+  };
+  
+  let total = 0;
+  surfaces.forEach(surface => {
+    total += basePrices[surface as keyof typeof basePrices] || 500;
+  });
+  
+  // Apply markup
+  total = total * (1 + markup / 100);
+  
+  return Math.round(total);
+}
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -646,6 +778,60 @@ What would you like to modify?`,
   };
 
   const handleButtonClick = async (buttonValue: any, buttonLabel: string) => {
+    // Handle quick flow button clicks
+    if (conversationStage === 'paint_quality_quick') {
+      // Handle paint quality selection
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        role: 'user',
+        content: buttonLabel,
+        timestamp: new Date().toISOString()
+      };
+      dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
+      dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+      
+      // Process the selection
+      const response = await processUserInput(buttonValue, conversationStage);
+      dispatch({ type: 'ADD_MESSAGE', payload: response });
+      dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'markup_quick' });
+      return;
+    }
+    
+    if (conversationStage === 'markup_quick') {
+      // Handle markup selection
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        role: 'user',
+        content: buttonLabel,
+        timestamp: new Date().toISOString()
+      };
+      dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
+      dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+      
+      // Process the selection
+      const response = await processUserInput(buttonValue.toString(), conversationStage);
+      dispatch({ type: 'ADD_MESSAGE', payload: response });
+      dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'quote_complete' });
+      return;
+    }
+    
+    if (conversationStage === 'quote_complete') {
+      // Handle final actions
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        role: 'user',
+        content: buttonLabel,
+        timestamp: new Date().toISOString()
+      };
+      dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
+      dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+      
+      // Process the selection
+      const response = await processUserInput(buttonValue, conversationStage);
+      dispatch({ type: 'ADD_MESSAGE', payload: response });
+      return;
+    }
+
     // Handle surface selection buttons silently (no AI response)
     if (conversationStage === 'surface_selection') {
       // If it's the continue button, process normally (with AI response)
@@ -749,6 +935,80 @@ What would you like to modify?`,
     }
   };
 
+  // Smart Surface Selector Handlers
+  const handleSmartSurfaceToggle = (surfaceId: string) => {
+    const updatedSurfaces = [...selectedSurfaces];
+    
+    if (updatedSurfaces.includes(surfaceId)) {
+      const index = updatedSurfaces.indexOf(surfaceId);
+      updatedSurfaces.splice(index, 1);
+    } else {
+      updatedSurfaces.push(surfaceId);
+    }
+    
+    dispatch({ type: 'SET_SELECTED_SURFACES', payload: updatedSurfaces });
+  };
+
+  const handleSmartSurfaceContinue = async () => {
+    if (selectedSurfaces.length === 0) {
+      return;
+    }
+
+    // Detect project scope and requirements
+    const projectContext = detectProjectScope(selectedSurfaces);
+    
+    // Determine next steps based on project scope
+    let nextStage = '';
+    let responseContent = '';
+    
+    const measurementTypes = getMeasurementTypesForSurfaces(selectedSurfaces);
+    const surfaceList = selectedSurfaces.join(', ');
+    
+    if (needsRoomCount(selectedSurfaces)) {
+      // Need room count for ceilings
+      nextStage = 'smart_room_count';
+      responseContent = `Perfect! You selected: **${surfaceList}**\n\nSince you're painting ceilings, I need to know how many rooms we're working with. Use the room selector below to specify the number of rooms.`;
+    } else {
+      // Skip to measurement collection
+      nextStage = 'smart_measurement_flow';
+      responseContent = `Perfect! You selected: **${surfaceList}**\n\nBased on your selections, we need these measurement types: **${measurementTypes.join(', ')}**\n\nUse the measurement tools below to collect the dimensions we need.`;
+    }
+    
+    // Create and add assistant message
+    const assistantMessage: Message = {
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: responseContent,
+      timestamp: new Date().toISOString()
+    };
+    
+    dispatch({ type: 'ADD_MESSAGE', payload: assistantMessage });
+    dispatch({ type: 'SET_CONVERSATION_STAGE', payload: nextStage });
+  };
+
+  const handleSmartRoomCountSelect = (count: number) => {
+    dispatch({ type: 'SET_ROOM_COUNT', payload: count });
+    
+    // Move to measurement flow
+    const measurementTypes = getMeasurementTypesForSurfaces(selectedSurfaces);
+    const surfaceList = selectedSurfaces.join(', ');
+    
+    const assistantMessage: Message = {
+      id: Date.now().toString(),
+      role: 'assistant', 
+      content: `Great! **${count} rooms** for: **${surfaceList}**\n\nNow let's collect the measurements we need: **${measurementTypes.join(', ')}**\n\nUse the measurement tools below.`,
+      timestamp: new Date().toISOString()
+    };
+    
+    dispatch({ type: 'ADD_MESSAGE', payload: assistantMessage });
+    dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'smart_measurement_flow' });
+  };
+
+  const handleMeasurementTypeSelect = (type: any) => {
+    // Handle measurement type selection
+    console.log('Selected measurement type:', type);
+  };
+
   // Helper function to calculate thinking duration based on response length
   const calculateThinkingDuration = (responseLength: number): number => {
     // Base time: 500ms, add 500ms for longer responses (>200 chars)
@@ -822,6 +1082,138 @@ What would you like to modify?`,
     let nextStage = stage;
 
     switch (stage) {
+      case 'quick_project_input':
+        // Ultra-simple: Parse everything from one natural language input
+        const projectData = parseQuickProjectInput(input);
+        
+        // Update quote data with extracted information
+        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: {
+          customer_name: projectData.customerName || '',
+          address: projectData.address || '',
+          project_type: projectData.projectType || 'interior'
+        }});
+        
+        dispatch({ type: 'SET_SELECTED_SURFACES', payload: projectData.surfaces || [] });
+        
+        // If we got enough info, move to paint quality selection
+        if (projectData.customerName && projectData.address && projectData.surfaces.length > 0) {
+          responseContent = `Perfect! I've got:\\n\\n**Customer:** ${projectData.customerName}\\n**Address:** ${projectData.address}\\n**Painting:** ${projectData.surfaces.join(', ')}\\n**Size:** ${projectData.sizeDescription || 'Estimated'}\\n\\nNow choose your paint quality:`;
+          
+          // Show paint quality buttons
+          setTimeout(() => {
+            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+              { id: 'good', label: '💰 Good Paint ($45/gal)', value: 'good', selected: false },
+              { id: 'better', label: '⭐ Better Paint ($65/gal)', value: 'better', selected: true },
+              { id: 'best', label: '👑 Best Paint ($85/gal)', value: 'best', selected: false }
+            ]});
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+          }, 500);
+          
+          nextStage = 'paint_quality_quick';
+        } else {
+          // Need more info - ask specific clarifying questions
+          const missing = [];
+          if (!projectData.customerName) missing.push('customer name');
+          if (!projectData.address) missing.push('address');
+          if (!projectData.surfaces.length) missing.push('what to paint');
+          
+          responseContent = `I need a bit more info: **${missing.join(', ')}**\\n\\nTry: \\"Customer name, address, what you're painting, size\\"`;
+          nextStage = 'quick_project_input';
+        }
+        break;
+
+      case 'paint_quality_quick':
+        // Handle paint quality selection, then go to markup
+        const quality = input.toLowerCase();
+        let paintLevel = 1; // default to better
+        let pricePerGal = 65;
+        let qualityName = 'Better';
+        
+        if (quality.includes('good')) {
+          paintLevel = 0;
+          pricePerGal = 45;
+          qualityName = 'Good';
+        } else if (quality.includes('best')) {
+          paintLevel = 2;
+          pricePerGal = 85;
+          qualityName = 'Best';
+        }
+        
+        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: {
+          selected_products: {
+            ...quoteData.selected_products,
+            wall_paint_level: paintLevel,
+            ceiling_paint_level: paintLevel,
+            trim_paint_level: paintLevel
+          }
+        }});
+        
+        responseContent = `Great! **${qualityName}** paint selected (\\$${pricePerGal}/gal)\\n\\nWhat's your markup?`;
+        
+        // Show markup buttons
+        setTimeout(() => {
+          dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+            { id: '15', label: '15% Markup', value: 15, selected: false },
+            { id: '20', label: '20% Markup', value: 20, selected: true },
+            { id: '25', label: '25% Markup', value: 25, selected: false },
+            { id: '30', label: '30% Markup', value: 30, selected: false }
+          ]});
+          dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+        }, 500);
+        
+        nextStage = 'markup_quick';
+        break;
+
+      case 'markup_quick':
+        // Generate final quote
+        const markupValue = parseMarkupPercentage(input);
+        
+        dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { markup_percentage: markupValue } });
+        
+        // Calculate rough quote (simplified version)
+        const estimatedTotal = calculateQuickQuote(selectedSurfaces, markupValue);
+        
+        responseContent = `## 🎯 **QUICK QUOTE**\\n\\n**${quoteData.customer_name}**\\n${quoteData.address}\\n\\n**Work:** ${selectedSurfaces.join(', ')}\\n**Markup:** ${markupValue}%\\n\\n### **Total: \\$${estimatedTotal.toLocaleString()}**\\n\\n*This is a quick estimate. For detailed breakdown, save the quote.*`;
+        
+        // Show final action buttons
+        setTimeout(() => {
+          dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
+            { id: 'save', label: '💾 Save Quote', value: 'save', selected: false },
+            { id: 'new', label: '➕ New Quote', value: 'new', selected: false },
+            { id: 'details', label: '🔍 Detailed Breakdown', value: 'details', selected: false }
+          ]});
+          dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+        }, 500);
+        
+        nextStage = 'quote_complete';
+        break;
+
+      case 'quote_complete':
+        // Handle final actions
+        if (input.toLowerCase().includes('save') || input === 'save') {
+          responseContent = `Quote saved! ✅\\n\\nReady for your next project?`;
+          // Reset for new quote
+          setTimeout(() => {
+            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'quick_project_input' });
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
+          }, 1000);
+          nextStage = 'quick_project_input';
+        } else if (input.toLowerCase().includes('new') || input === 'new') {
+          responseContent = `Starting new quote...`;
+          // Reset for new quote
+          setTimeout(() => {
+            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'quick_project_input' });
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
+            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
+          }, 500);
+          nextStage = 'quick_project_input';
+        } else {
+          responseContent = `Use the buttons above to save the quote or start a new one.`;
+          nextStage = 'quote_complete';
+        }
+        break;
+
       case 'customer_info':
         const customerInfo = parseCustomerInfo(input, quoteData);
         dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { 
@@ -888,39 +1280,41 @@ What would you like to modify?`,
         dispatch({ type: 'UPDATE_QUOTE_DATA', payload: { project_type: projectType } });
         
         if (projectType === 'interior' || projectType === 'both') {
-          responseContent = `Perfect! For ${projectType} painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
-          // Show surface selection buttons for interior
+          responseContent = `Perfect! For ${projectType} painting, I'll help you select the right surfaces and determine what measurements we need.\n\nUse the smart surface selector below to choose what you want to paint.`;
           setTimeout(() => {
-            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'surface_selection' }); // Set stage BEFORE showing buttons
-            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] }); // Reset selected surfaces
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: 'walls', label: '🎨 Walls', value: 'walls', selected: false },
-              { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: false },
-              { id: 'trim', label: '🖼️ Trim & Baseboards', value: 'trim', selected: false },
-              { id: 'doors', label: '🚪 Doors', value: 'doors', selected: false },
-              { id: 'windows', label: '🪟 Window Frames', value: 'windows', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'surface_selection_smart' });
+            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
           }, 500);
         } else {
-          responseContent = `Perfect! For exterior painting, please select which surfaces you want to include in your quote.\n\n**Click on the surfaces below to select them, then click Continue.**`;
-          // Show surface selection buttons for exterior
+          responseContent = `Perfect! For exterior painting, I'll help you select the right surfaces and determine what measurements we need.\n\nUse the smart surface selector below to choose what you want to paint.`;
           setTimeout(() => {
-            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'surface_selection' }); // Set stage BEFORE showing buttons
-            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] }); // Reset selected surfaces
-            dispatch({ type: 'SET_BUTTON_OPTIONS', payload: [
-              { id: 'siding', label: '🏠 Siding', value: 'siding', selected: false },
-              { id: 'trim_ext', label: '🖼️ Exterior Trim', value: 'trim_ext', selected: false },
-              { id: 'doors_ext', label: '🚪 Front Door', value: 'doors_ext', selected: false },
-              { id: 'shutters', label: '🪟 Shutters', value: 'shutters', selected: false },
-              { id: 'deck', label: '🏗️ Deck/Porch', value: 'deck', selected: false }
-            ]});
-            dispatch({ type: 'SET_SHOW_BUTTONS', payload: true });
+            dispatch({ type: 'SET_CONVERSATION_STAGE', payload: 'surface_selection_smart' });
+            dispatch({ type: 'SET_SELECTED_SURFACES', payload: [] });
+            dispatch({ type: 'SET_SHOW_BUTTONS', payload: false });
           }, 500);
         }
-        nextStage = 'surface_selection';
+        nextStage = 'surface_selection_smart';
         break;
 
+      case 'surface_selection_smart':
+        // This stage is handled by the SmartSurfaceSelector component
+        // When surfaces are selected, it calls handleSmartSurfaceContinue
+        responseContent = `Please use the surface selector above to choose what you want to paint.`;
+        nextStage = 'surface_selection_smart';
+        break;
+
+      case 'smart_room_count':
+        // This stage is handled by the RoomCountSelector component
+        responseContent = `Please use the room count selector above.`;
+        nextStage = 'smart_room_count';
+        break;
+
+      case 'smart_measurement_flow':
+        // This stage is handled by the SmartMeasurementFlow component
+        responseContent = `Please use the measurement tools above to collect the dimensions we need.`;
+        nextStage = 'smart_measurement_flow';
+        break;
 
       case 'surface_selection':
         // Handle continue to dimensions (surface selection is now handled in handleButtonClick)
@@ -2898,30 +3292,87 @@ What would you like to modify?`,
               </div>
             </div>
           )}
+
+          {/* Smart Surface Selector */}
+          {conversationStage === 'surface_selection_smart' && (
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+                <SmartSurfaceSelector
+                  selectedSurfaces={selectedSurfaces}
+                  onSurfaceToggle={handleSmartSurfaceToggle}
+                  onContinue={handleSmartSurfaceContinue}
+                  projectType={quoteData.project_type}
+                  showRecommendations={true}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Smart Room Count Selector */}
+          {conversationStage === 'smart_room_count' && (
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+                <RoomCountSelector
+                  onSelect={handleSmartRoomCountSelect}
+                  selectedCount={roomCount}
+                  context={detectProjectScope(selectedSurfaces)}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Smart Measurement Flow */}
+          {conversationStage === 'smart_measurement_flow' && (
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+                <SmartMeasurementFlow
+                  context={detectProjectScope(selectedSurfaces)}
+                  onMeasurementTypeSelect={handleMeasurementTypeSelect}
+                  onRoomCountSelect={handleSmartRoomCountSelect}
+                  selectedRoomCount={roomCount}
+                  completedMeasurements={[]}
+                />
+              </div>
+            </div>
+          )}
           
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Area */}
+        {/* Input Area - Mobile Optimized */}
         <div className="bg-white border-t p-4">
+          {conversationStage === 'quick_project_input' && (
+            <div className="mb-3 text-center">
+              <p className="text-sm text-gray-600 mb-2">🎯 <strong>Ultra-Fast Quoting</strong></p>
+              <p className="text-xs text-gray-500">Just describe your project in one line</p>
+            </div>
+          )}
           <div className="flex gap-2">
             <Input
               value={inputValue}
               onChange={(e) => dispatch({ type: 'SET_INPUT_VALUE', payload: e.target.value })}
               onKeyPress={handleKeyPress}
-              placeholder="Type your response..."
+              placeholder={conversationStage === 'quick_project_input' 
+                ? "e.g. John Smith, 123 Main St, kitchen walls & cabinets, 12x10 room"
+                : "Type your response..."
+              }
               disabled={isLoading || isThinking}
-              className="flex-1"
+              className="flex-1 text-base h-12 px-4"
             />
             <Button
               onClick={handleSend}
               disabled={!inputValue.trim() || isLoading || isThinking}
-              size="icon"
-              className="shrink-0"
+              size="lg"
+              className="h-12 px-6"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-5 h-5" />
             </Button>
           </div>
+          {conversationStage === 'quick_project_input' && (
+            <div className="mt-2 text-xs text-gray-400 text-center">
+              💡 Tip: Include customer name, address, what to paint, and room size
+            </div>
+          )}
         </div>
       </div>
 

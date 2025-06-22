@@ -179,10 +179,10 @@ export const initialQuoteCreationState: QuoteCreationState = {
   messages: [{
     id: '1',
     role: 'assistant',
-    content: "Hi! I'll help you create a professional painting quote using industry-standard calculations. Let's start with the basics.\n\nWhat's the customer's name and property address?",
+    content: "🎨 **Quick Quote Generator**\n\nDescribe your painting project in one line - I'll handle the rest!\n\n**Examples:**\n• \"John Smith, 123 Main St, living room walls & ceiling, 15x12 room\"\n• \"Sarah's kitchen, 456 Oak Ave, walls and cabinets, 200 sq ft\"\n• \"Exterior trim, Johnson house on Pine St, about 150 linear feet\"\n\n**What's your project?**",
     timestamp: new Date().toISOString()
   }],
-  conversationStage: 'customer_info',
+  conversationStage: 'quick_project_input',
   inputValue: '',
   
   isLoading: false,
