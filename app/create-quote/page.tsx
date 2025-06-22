@@ -48,6 +48,69 @@ import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialDa
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
 
+// Helper function to parse custom paint details from user input
+const parsePaintDetails = (input: string, category: string) => {
+  // Clean the input
+  const cleanInput = input.trim().toLowerCase();
+  
+  // Extract paint name/brand (everything before the first comma)
+  const parts = input.split(',').map(part => part.trim());
+  
+  let name = '';
+  let color = '';
+  let costPerGallon = 0;
+  let coverage = 400; // Default coverage
+  let isValid = false;
+  
+  try {
+    // Extract name (first part)
+    if (parts.length > 0) {
+      name = parts[0].trim();
+    }
+    
+    // Extract color (second part or look for color keywords)
+    if (parts.length > 1) {
+      color = parts[1].trim();
+    }
+    
+    // Extract cost per gallon (look for $XX or XX dollars)
+    const costMatch = input.match(/\$?(\d+(?:\.\d{2})?)\s*(?:per\s+gallon|\/gal|dollars?)/i);
+    if (costMatch) {
+      costPerGallon = parseFloat(costMatch[1]);
+    }
+    
+    // Extract coverage (look for XXX sq ft or XXX square feet)
+    const coverageMatch = input.match(/(\d+)\s*(?:sq\s*ft|square\s*feet)(?:\s+(?:per\s+gallon|coverage|\/gal))?/i);
+    if (coverageMatch) {
+      coverage = parseInt(coverageMatch[1]);
+    }
+    
+    // Validate that we have minimum required info
+    if (name && costPerGallon > 0) {
+      isValid = true;
+      // If no color specified, use a default
+      if (!color) {
+        color = 'White';
+      }
+    }
+  } catch (error) {
+    console.error('Error parsing paint details:', error);
+  }
+  
+  return {
+    name,
+    color,
+    costPerGallon,
+    coverage,
+    category,
+    isValid,
+    // Additional fields for compatibility
+    supplier: name.split(' ')[0] || 'Custom',
+    productName: name,
+    spreadRate: coverage
+  };
+};
+
 interface Message {
   id: string;
   role: 'user' | 'assistant';
@@ -1745,32 +1808,106 @@ What would you like to modify?`,
       case 'category_paint_selection':
         // Initialize paint selection for the current category
         if (!showPaintBrandSelector && !showPaintProductSelector && !showFavoritePaintSelector) {
-          // Use favorites if available, otherwise fall back to brand/product selection
-          if (useFavoriteSelector) {
-            setShowFavoritePaintSelector(true);
-            responseContent = `Perfect! Now choose your paint for **${currentMeasurementCategory}** from your favorites:`;
-          } else {
-            // Reset paint selection state for new category
-            setSelectedBrandForCategory('');
-            setAvailableProductsForCategory([]);
+          // Ask for custom paint details instead of using favorites or brand selection
+          responseContent = `Perfect! Now let's get the paint details for your **${currentMeasurementCategory}**.
+
+What paint do you want to use for the ${currentMeasurementCategory}? Please tell me:
+
+• **Paint name/brand** (e.g., "Sherwin Williams ProClassic")
+• **Color** (e.g., "White", "Eggshell White", "Custom Color")  
+• **Cost per gallon** (e.g., "$65")
+• **Coverage rate** (e.g., "400 sq ft per gallon")
+
+Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft coverage"`;
+          nextStage = 'category_paint_details';
+        }
+        break;
+        
+      case 'category_paint_details':
+        // Parse custom paint details from user input
+        const paintDetails = parsePaintDetails(input, currentMeasurementCategory);
+        
+        if (paintDetails.isValid) {
+          // Store the paint details for this category
+          dispatch({
+            type: 'UPDATE_SELECTED_PAINT_PRODUCTS',
+            payload: { [currentMeasurementCategory]: paintDetails }
+          });
+          
+          // Mark this category as paint selected
+          dispatch({
+            type: 'MARK_CATEGORY_PAINT_SELECTED',
+            payload: currentMeasurementCategory
+          });
+          
+          // Find next category that needs measurements or paint selection
+          const nextCategory = getNextCategoryForMeasurement(state) || getNextCategoryForPaintSelection(state);
+          
+          if (nextCategory) {
+            // Move to next category
+            dispatch({
+              type: 'SET_CURRENT_MEASUREMENT_CATEGORY',
+              payload: nextCategory
+            });
             
-            // Fetch available brands for this category
-            fetch(`/api/paint-products/brands?companyId=${companyData.id}`)
-              .then(response => response.json())
-              .then(data => {
-                if (data.success) {
-                  setAvailableBrands(data.brands || []);
-                  setTopBrands(data.topBrands || []);
-                  setOtherBrands(data.otherBrands || []);
-                  setShowPaintBrandSelector(true);
-                }
-              })
-              .catch(error => {
-                console.error('Error fetching brands:', error);
+            // Check if next category needs measurements
+            const needsMeasurements = !state.categoryCompletionStatus[nextCategory]?.measured;
+            
+            if (needsMeasurements) {
+              responseContent = `Great! **${currentMeasurementCategory}** paint recorded: ${paintDetails.name} - $${paintDetails.costPerGallon}/gal\n\nNow let's collect measurements for **${nextCategory}**.`;
+              
+              // Provide category-specific measurement instructions
+              if (nextCategory === 'ceilings') {
+                responseContent += `\n\nFor ceiling painting, I need the ceiling area.\n\nPlease provide:\n• **Ceiling area:** in square feet\n• Or **floor area:** (I can calculate ceiling area from floor area)\n\nExample: "ceiling area: 200 sq ft" or "floor area: 200 sq ft"`;
+              } else if (nextCategory === 'walls') {
+                responseContent += `\n\nFor wall painting, I need the wall dimensions.\n\nPlease provide:\n• **Wall linear footage** (perimeter of walls to be painted)\n• **Ceiling height** (to calculate wall area)\n\nExample: "120 linear feet, 9 foot ceilings"`;
+              } else if (nextCategory === 'doors') {
+                responseContent += `\n\nFor door painting, I need the door count.\n\nPlease provide:\n• **Number of doors** to be painted\n\nExample: "3 doors"`;
+              } else if (nextCategory === 'windows') {
+                responseContent += `\n\nFor window painting, I need the window count.\n\nPlease provide:\n• **Number of windows** to be painted\n\nExample: "5 windows"`;
+              } else if (nextCategory === 'trim') {
+                responseContent += `\n\nFor trim painting, I need to know about doors and windows (trim goes around them).\n\nPlease provide:\n• **Number of doors** and **windows** that have trim\n\nExample: "3 doors and 5 windows" or "2 doors, no windows"`;
+              }
+              
+              nextStage = 'category_measurement_collection';
+            } else {
+              // Next category needs paint selection
+              dispatch({
+                type: 'SET_CURRENT_PAINT_CATEGORY',
+                payload: nextCategory
               });
+              responseContent = `Great! **${currentMeasurementCategory}** paint recorded: ${paintDetails.name} - $${paintDetails.costPerGallon}/gal\n\nNow let's select paint for **${nextCategory}**.
+
+What paint do you want to use for the ${nextCategory}? Please tell me:
+
+• **Paint name/brand** (e.g., "Benjamin Moore Advance")
+• **Color** (e.g., "Semi-Gloss White")  
+• **Cost per gallon** (e.g., "$75")
+• **Coverage rate** (e.g., "350 sq ft per gallon")
+
+Example: "Benjamin Moore Advance, Semi-Gloss White, $75 per gallon, 350 sq ft coverage"`;
+              nextStage = 'category_paint_details';
+            }
+          } else {
+            // All categories complete - proceed to markup
+            responseContent = `Excellent! All surface measurements and paint selections complete.\n\n**Paint Summary:**\n`;
+            Object.entries(state.selectedPaintProducts).forEach(([category, paint]: [string, any]) => {
+              responseContent += `• **${category.charAt(0).toUpperCase() + category.slice(1)}:** ${paint.name} - $${paint.costPerGallon}/gal\n`;
+            });
             
-            responseContent = `Perfect! Now let's select paint for your **${currentMeasurementCategory}**.`;
+            responseContent += `\nWhat markup percentage would you like to add for profit?\n\nExample: "25%" or "30 percent"`;
+            nextStage = 'markup_selection';
           }
+        } else {
+          responseContent = `I need the complete paint details. Please provide:
+
+• **Paint name/brand** 
+• **Color**
+• **Cost per gallon** 
+• **Coverage rate** (sq ft per gallon)
+
+Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft coverage"`;
+          nextStage = 'category_paint_details';
         }
         break;
         
