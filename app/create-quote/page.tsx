@@ -919,10 +919,12 @@ What would you like to modify?`,
       };
 
       // Universal Quote Detection - Check if this message contains a quote
+      console.log('🔍 Checking universal quote detection for content:', aiResponse.content.substring(0, 100) + '...');
       const detectedQuote = detectAndExtractQuote(aiResponse.content);
+      console.log('🎯 Detection result:', detectedQuote);
       
       if (detectedQuote.isQuote) {
-        console.log('🎯 Universal Quote Detected:', detectedQuote);
+        console.log('✅ Universal Quote Detected:', detectedQuote);
         
         // Auto-save the quote if we have enough data
         if (detectedQuote.customerName && detectedQuote.totalCost && detectedQuote.totalCost > 100) {
@@ -3103,6 +3105,68 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
     };
   };
 
+  // Fallback function to create a quick quote from a message when auto-save fails
+  const createQuickQuoteFromMessage = async (messageContent: string): Promise<string | null> => {
+    if (!companyData) return null;
+    
+    try {
+      console.log('🔧 Creating fallback quote from message content');
+      
+      // Use the universal quote detector to extract data
+      const detectedQuote = detectAndExtractQuote(messageContent);
+      
+      if (!detectedQuote.isQuote) {
+        console.log('❌ Message not detected as quote');
+        return null;
+      }
+      
+      // Create a basic quote record
+      const quickQuoteData = {
+        customer_name: detectedQuote.customerName || 'Customer',
+        address: detectedQuote.address || 'Address from conversation',
+        project_type: detectedQuote.projectType || 'interior',
+        total_cost: detectedQuote.totalCost || 0,
+        final_price: detectedQuote.totalCost || 0,
+        total_revenue: detectedQuote.totalCost || 0,
+        walls_sqft: detectedQuote.sqft || 0,
+        room_count: detectedQuote.rooms || null,
+        notes: `Quick quote from conversation (${detectedQuote.confidence} confidence)`,
+        status: 'pending',
+        conversation_summary: JSON.stringify(messages)
+      };
+      
+      const response = await fetch('/api/quotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company_id: companyData.id,
+          ...quickQuoteData
+        })
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        const quoteId = result.quote?.id || result.quoteId;
+        console.log('✅ Fallback quote created:', quoteId);
+        
+        // Update the saved quote ID for future use
+        setSavedQuoteId(quoteId);
+        
+        toast({
+          title: "Quote Created!",
+          description: `Quote for ${quickQuoteData.customer_name} created successfully.`,
+        });
+        
+        return quoteId;
+      }
+      
+    } catch (error) {
+      console.error('Failed to create fallback quote:', error);
+    }
+    
+    return null;
+  };
+
   const saveQuote = async () => {
     if (!quoteData.calculation || !companyData) return;
 
@@ -3357,20 +3421,48 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
                   message.content.includes('total estimate:') ||
                   message.content.includes('project total:') ||
                   (message.content.toLowerCase().includes('$') && message.content.toLowerCase().includes('total') && message.content.length > 100)
-                ) && savedQuoteId && message.role === 'assistant' && (
+                ) && message.role === 'assistant' && (
                   <div className="mt-3 pt-3 border-t border-gray-200">
                     <div className="flex flex-col sm:flex-row gap-2">
                       <button
-                        onClick={() => {
-                          window.open(`/quotes/${savedQuoteId}`, '_blank');
+                        onClick={async () => {
+                          if (savedQuoteId) {
+                            window.open(`/quotes/${savedQuoteId}`, '_blank');
+                          } else {
+                            // Fallback: Create a quick quote from the message content
+                            const quoteId = await createQuickQuoteFromMessage(message.content);
+                            if (quoteId) {
+                              window.open(`/quotes/${quoteId}`, '_blank');
+                            } else {
+                              toast({
+                                title: "Quote Creation Failed",
+                                description: "Unable to create quote view. Please try again.",
+                                variant: "destructive",
+                              });
+                            }
+                          }
                         }}
                         className="neomorphism-button-enhanced text-sm px-4 py-2 rounded-lg flex items-center gap-2 text-blue-600 hover:text-blue-700"
                       >
                         📊 Internal Quote View
                       </button>
                       <button
-                        onClick={() => {
-                          window.open(`/quotes/${savedQuoteId}/customer`, '_blank');
+                        onClick={async () => {
+                          if (savedQuoteId) {
+                            window.open(`/quotes/${savedQuoteId}/customer`, '_blank');
+                          } else {
+                            // Fallback: Create a quick quote from the message content
+                            const quoteId = await createQuickQuoteFromMessage(message.content);
+                            if (quoteId) {
+                              window.open(`/quotes/${quoteId}/customer`, '_blank');
+                            } else {
+                              toast({
+                                title: "Quote Creation Failed",
+                                description: "Unable to create quote view. Please try again.",
+                                variant: "destructive",
+                              });
+                            }
+                          }
                         }}
                         className="neomorphism-button-enhanced text-sm px-4 py-2 rounded-lg flex items-center gap-2 text-green-600 hover:text-green-700"
                       >

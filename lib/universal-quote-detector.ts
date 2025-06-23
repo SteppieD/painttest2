@@ -174,7 +174,8 @@ function extractAIQuote(content: string): DetectedQuote {
   // Extract customer info - flexible patterns
   const customerPatterns = [
     /(?:customer|client):\s*([^\n,]+)/i,
-    /for\s+([^,\n]+?)(?:\s+at\s+|\s+living)/i,
+    /for\s+([A-Z][a-z]+)(?:\s+at\s+)/i, // "for Cici at"
+    /breakdown for\s+([A-Z][a-z]+)/i, // "breakdown for Cici"
     /quote for\s+([^,\n]+)/i,
     /^([A-Z][a-z]+\s+[A-Z][a-z]+)/m // Name pattern at start of line
   ];
