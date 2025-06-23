@@ -19,8 +19,9 @@ export async function GET(
     `, [params.id, params.id]);
 
     if (!quote) {
+      console.log(`❌ Quote ${params.id} not found in database`);
       return NextResponse.json(
-        { error: "Quote not found" },
+        { error: "Quote not found", id: params.id, suggestion: "Check localStorage for fallback quote data" },
         { status: 404 }
       );
     }

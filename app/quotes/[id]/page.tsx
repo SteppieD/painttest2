@@ -40,9 +40,39 @@ export default function QuotePage({ params }: { params: { id: string } }) {
       if (response.ok) {
         const data = await response.json();
         setQuote(data);
+        return;
       }
+      
+      // Fallback: Check localStorage for quote data
+      console.log('💾 Quote not found in database, checking localStorage...');
+      const fallbackQuoteData = localStorage.getItem(`quote_${params.id}`);
+      if (fallbackQuoteData) {
+        const quote = JSON.parse(fallbackQuoteData);
+        console.log('✅ Quote found in localStorage:', quote);
+        setQuote(quote);
+        
+        toast({
+          title: "Quote Loaded",
+          description: "Quote loaded from local storage (development mode)",
+          variant: "default",
+        });
+        return;
+      }
+      
+      console.log('❌ Quote not found in database or localStorage');
+      toast({
+        title: "Quote Not Found",
+        description: "The requested quote could not be found.",
+        variant: "destructive",
+      });
+      
     } catch (error) {
       console.error('Error loading quote:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load quote data.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }

@@ -3176,16 +3176,54 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
         const result = await response.json();
         const quoteId = result.quote?.id || result.quoteId;
         console.log('✅ Fallback quote created:', quoteId);
+        console.log('📊 Full API response:', result);
+        console.log('🎯 Quote data sent:', quoteData);
         
         // Update the saved quote ID for future use
         setSavedQuoteId(quoteId);
         
+        // Store quote data in localStorage as backup for development mode
+        try {
+          const fallbackQuoteData = {
+            id: quoteId,
+            quote_id: result.quoteId || `FALLBACK-${quoteId}`,
+            customer_name: quoteData.customerName,
+            address: quoteData.address,
+            project_type: quoteData.projectType,
+            total_cost: quoteData.totalCost,
+            final_price: quoteData.finalPrice,
+            total_revenue: quoteData.totalCost,
+            walls_sqft: quoteData.sqft,
+            room_count: quoteData.roomCount,
+            special_requests: quoteData.specialRequests,
+            status: 'pending',
+            created_at: new Date().toISOString(),
+            // Company info for display
+            company_name: companyData?.company_name || 'Demo Company',
+            company_phone: companyData?.phone || '(555) 123-4567',
+            company_email: companyData?.email || 'demo@example.com',
+            // Breakdown data
+            total_materials: quoteData.breakdown?.materials || 0,
+            projected_labor: quoteData.breakdown?.labor || 0,
+            markup_amount: quoteData.breakdown?.markup || 0
+          };
+          
+          localStorage.setItem(`quote_${quoteId}`, JSON.stringify(fallbackQuoteData));
+          console.log('💾 Quote stored in localStorage:', fallbackQuoteData);
+        } catch (error) {
+          console.warn('Failed to store quote in localStorage:', error);
+        }
+        
         toast({
           title: "Quote Created!",
-          description: `Quote for ${quoteData.customerName} created successfully.`,
+          description: `Quote for ${quoteData.customerName} created successfully. ID: ${quoteId}`,
         });
         
         return quoteId;
+      } else {
+        const errorData = await response.text();
+        console.error('❌ Quote creation failed:', response.status, errorData);
+        return null;
       }
       
     } catch (error) {

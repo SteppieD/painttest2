@@ -113,7 +113,21 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
             console.error('Error parsing room data:', e);
           }
         }
+        return;
       }
+      
+      // Fallback: Check localStorage for quote data
+      console.log('💾 Quote not found in database, checking localStorage...');
+      const fallbackQuoteData = localStorage.getItem(`quote_${params.id}`);
+      if (fallbackQuoteData) {
+        const quote = JSON.parse(fallbackQuoteData);
+        console.log('✅ Quote found in localStorage:', quote);
+        setQuote(quote);
+        return;
+      }
+      
+      console.log('❌ Quote not found in database or localStorage');
+      
     } catch (error) {
       console.error('Error loading quote:', error);
     } finally {
