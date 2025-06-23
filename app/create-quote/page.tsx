@@ -147,7 +147,7 @@ function CreateQuotePageContent() {
     {
       id: '1',
       role: 'assistant',
-      content: "Hi! I'll help you create a professional painting quote using industry-standard calculations. Let's start with the basics.\n\nWhat's the customer's name and property address?",
+      content: "Hey! Tell me about your painting project and I'll help you put together a quote.",
       timestamp: new Date().toISOString()
     }
   ]);
@@ -836,11 +836,118 @@ What would you like to modify?`,
   };
 
   const processUserInput = async (input: string, stage: string): Promise<Message> => {
-    // Use structured flow with smart AI parsing for responses
-    return await processUserInputStructured(input, stage);
+    // Use natural conversation approach
+    return await handleNaturalConversation(input);
   };
 
-  // New structured approach: Fixed questions + Smart parsing
+  // Natural conversation handler - like chatting with a contractor friend
+  const handleNaturalConversation = async (input: string): Promise<Message> => {
+    try {
+      // Use AI to extract all possible quote information and determine next steps
+      const response = await fetch('/api/intelligent-quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userInput: input,
+          companyId: companyData?.id || 'DEMO2024',
+          conversationHistory: messages,
+          extractedData: quoteData,
+          stage: 'natural_conversation',
+          instruction: 'Handle this as a natural conversation about creating a painting quote. Extract any information you can and ask the next logical question in a friendly, contractor-like tone.'
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.success && result.extractedData) {
+        // Update quote data with anything the AI extracted
+        setQuoteData(prev => ({
+          ...prev,
+          ...result.extractedData,
+          dimensions: { ...prev.dimensions, ...result.extractedData.dimensions }
+        }));
+        
+        // Handle markup buttons if AI suggests them
+        if (result.showMarkupButtons) {
+          setTimeout(() => {
+            setButtonOptions([
+              { id: '15', label: '15% - Competitive', value: '15', selected: false },
+              { id: '20', label: '20% - Standard', value: '20', selected: false },
+              { id: '25', label: '25% - Good profit', value: '25', selected: false },
+              { id: '30', label: '30% - Premium', value: '30', selected: false },
+              { id: 'custom', label: 'Custom %', value: 'custom', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+        }
+        
+        // If quote is complete, calculate it
+        if (result.quoteComplete) {
+          const calculation = calculateProfessionalQuote(
+            result.extractedData.dimensions,
+            result.extractedData.paint_products,
+            result.extractedData.rates,
+            result.extractedData.markup_percentage || 20,
+            false
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation }));
+        }
+      }
+      
+      return {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: result.response || "I'm here to help with your painting quote. What can you tell me about the project?",
+        timestamp: new Date().toISOString()
+      };
+      
+    } catch (error) {
+      console.error('Natural conversation error:', error);
+      
+      // Simple fallback for basic parsing
+      const fallbackResponse = await handleSimpleFallback(input);
+      return fallbackResponse;
+    }
+  };
+
+  // Simple fallback when AI fails
+  const handleSimpleFallback = async (input: string): Promise<Message> => {
+    let response = "";
+    
+    // Basic customer info extraction
+    if (!quoteData.customer_name || !quoteData.address) {
+      const customerInfo = parseCustomerInfo(input, quoteData);
+      if (customerInfo.customer_name || customerInfo.address) {
+        setQuoteData(prev => ({ 
+          ...prev, 
+          customer_name: customerInfo.customer_name || prev.customer_name,
+          address: customerInfo.address || prev.address
+        }));
+        
+        if (customerInfo.customer_name && customerInfo.address) {
+          response = `Perfect! Got ${customerInfo.customer_name} at ${customerInfo.address}. What type of painting project is this?`;
+        } else if (customerInfo.customer_name) {
+          response = `Got the customer name: ${customerInfo.customer_name}. What's the address?`;
+        } else {
+          response = `Got the address: ${customerInfo.address}. What's the customer's name?`;
+        }
+      } else {
+        response = "Let's start with the basics - who's the customer and what's the address?";
+      }
+    } else {
+      response = "I'm having trouble understanding. Can you tell me more about the painting project?";
+    }
+    
+    return {
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: response,
+      timestamp: new Date().toISOString()
+    };
+  };
+
+  // Old structured approach (keeping for now as backup)
   const processUserInputStructured = async (input: string, stage: string): Promise<Message> => {
     console.log('Processing structured input:', { input, stage, conversationStage });
     
