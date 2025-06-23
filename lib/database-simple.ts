@@ -10,6 +10,9 @@ const hasSupabase = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPAB
 // Use Supabase when available, otherwise skip database operations
 const shouldUseSupabase = hasSupabase;
 
+// In-memory storage for development mode
+const devQuotes = new Map<string, any>();
+
 // Legacy compatibility functions
 export const getCompanyByAccessCode = async (accessCode: string) => {
   if (shouldUseSupabase) {
@@ -45,12 +48,22 @@ export const createQuote = async (data: any) => {
       return await supabaseDb.createQuote(data);
     } catch (error) {
       console.log('Supabase create failed:', error);
-      return { lastID: Date.now(), changes: 1 };
+      // Fall through to development storage
     }
   }
   
-  // Return mock result
-  return { lastID: Date.now(), changes: 1 };
+  // Development mode - store in memory
+  const id = Date.now().toString();
+  const quoteRecord = {
+    id,
+    ...data,
+    created_at: new Date().toISOString()
+  };
+  
+  devQuotes.set(id, quoteRecord);
+  console.log(`📝 Dev quote stored with ID: ${id}`, quoteRecord);
+  
+  return { lastID: id, changes: 1 };
 };
 
 export const createCompany = async (data: {
@@ -90,8 +103,31 @@ export const dbGet = async (sql: string, params: any[] = []) => {
         const accessCode = params[0];
         return await supabaseDb.getCompanyByAccessCode(accessCode);
       }
+      
+      if (sql.includes('quotes') && sql.includes('WHERE')) {
+        const quoteId = params[0];
+        const quote = await supabaseDb.getQuoteById(quoteId);
+        return quote;
+      }
     } catch (error) {
-      console.log('Supabase query failed, using mock data');
+      console.log('Supabase query failed, using development storage');
+    }
+  }
+  
+  // Development mode - check in-memory storage
+  if (sql.includes('quotes') && sql.includes('WHERE')) {
+    const quoteId = params[0];
+    const quote = devQuotes.get(quoteId) || devQuotes.get(params[1]); // Check both id and quote_id
+    console.log(`📖 Dev quote retrieval for ID: ${quoteId}`, quote ? 'FOUND' : 'NOT FOUND');
+    
+    if (quote) {
+      // Add company info for compatibility
+      return {
+        ...quote,
+        company_name: "Demo Company",
+        company_phone: "(555) 123-4567",
+        company_email: "demo@example.com"
+      };
     }
   }
   
