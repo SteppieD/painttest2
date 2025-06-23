@@ -3166,7 +3166,7 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
             <div className="flex items-center gap-3">
               <button
                 onClick={() => router.push("/dashboard")}
-                className="neomorphism-button-enhanced w-10 h-10 p-0 flex items-center justify-center"
+                className="neomorphism-button-enhanced w-10 h-10 p-0 flex items-center justify-center text-gray-700 hover:text-blue-600 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
@@ -3201,7 +3201,7 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
             <div
               key={message.id}
               className={cn(
-                "flex gap-3 animate-neomorphism-fade-in",
+                "flex gap-3",
                 message.role === 'user' ? "justify-end" : "justify-start"
               )}
             >
@@ -3209,7 +3209,7 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
                 className={cn(
                   "max-w-[80%] p-4 rounded-2xl",
                   message.role === 'user'
-                    ? "neomorphism-glass bg-blue-600/90 text-white rounded-br-sm"
+                    ? "bg-blue-600 text-white rounded-br-sm shadow-lg border border-blue-500"
                     : "neomorphism-card-accessible rounded-bl-sm"
                 )}
               >
@@ -3223,6 +3223,20 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
                 )}>
                   {new Date(message.timestamp).toLocaleTimeString()}
                 </div>
+                
+                {/* Add quote link if this message contains a quote */}
+                {message.content.includes('TOTAL PROJECT COST:') && savedQuoteId && (
+                  <div className="mt-3 pt-3 border-t border-white/20">
+                    <button
+                      onClick={() => {
+                        window.open(`/quotes/${savedQuoteId}/customer`, '_blank');
+                      }}
+                      className="bg-white/20 hover:bg-white/30 text-white text-xs px-3 py-2 rounded-lg transition-colors border border-white/30"
+                    >
+                      📄 View Full Quote
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -3249,8 +3263,8 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
           )} */}
           
           {isThinking && (
-            <div className="flex gap-3 justify-start animate-neomorphism-fade-in">
-              <div className="neomorphism-card-accessible rounded-2xl rounded-bl-sm">
+            <div className="flex gap-3 justify-start">
+              <div className="neomorphism-card-accessible rounded-2xl rounded-bl-sm p-4">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
@@ -3264,8 +3278,8 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
           )}
 
           {isLoading && !isThinking && (
-            <div className="flex gap-3 justify-start animate-neomorphism-fade-in">
-              <div className="neomorphism-card-accessible rounded-2xl rounded-bl-sm">
+            <div className="flex gap-3 justify-start">
+              <div className="neomorphism-card-accessible rounded-2xl rounded-bl-sm p-4">
                 <div className="flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
                   <span className="text-sm text-gray-600">Calculating your quote...</span>
@@ -3276,8 +3290,8 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
 
           {/* Interactive Buttons */}
           {showButtons && buttonOptions.length > 0 && (
-            <div className="flex gap-3 justify-start animate-neomorphism-slide-up">
-              <div className="max-w-[80%] neomorphism-card-accessible rounded-2xl rounded-bl-sm">
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[80%] neomorphism-card-accessible rounded-2xl rounded-bl-sm p-4">
                 <p className="text-sm text-gray-600 mb-3">Choose an option:</p>
                 <div className="flex flex-wrap gap-3">
                   {buttonOptions.map((option) => (
@@ -3301,8 +3315,8 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
 
           {/* Paint Brand Selector */}
           {showPaintBrandSelector && (
-            <div className="flex gap-3 justify-start animate-neomorphism-slide-up">
-              <div className="max-w-[90%] neomorphism-card-accessible rounded-2xl rounded-bl-sm">
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[90%] neomorphism-card-accessible rounded-2xl rounded-bl-sm p-4">
                 <PaintBrandSelector
                   brands={availableBrands}
                   topBrands={topBrands}
@@ -3317,8 +3331,8 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
 
           {/* Paint Product Selector */}
           {showPaintProductSelector && (
-            <div className="flex gap-3 justify-start animate-neomorphism-slide-up">
-              <div className="max-w-[90%] neomorphism-card-accessible rounded-2xl rounded-bl-sm">
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[90%] neomorphism-card-accessible rounded-2xl rounded-bl-sm p-4">
                 <PaintProductSelector
                   products={availableProductsForCategory}
                   brand={selectedBrandForCategory}
@@ -3332,8 +3346,8 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
 
           {/* Favorite Paint Selector */}
           {showFavoritePaintSelector && companyData && (
-            <div className="flex gap-3 justify-start animate-neomorphism-slide-up">
-              <div className="max-w-[90%] neomorphism-card-accessible rounded-2xl rounded-bl-sm">
+            <div className="flex gap-3 justify-start">
+              <div className="max-w-[90%] neomorphism-card-accessible rounded-2xl rounded-bl-sm p-4">
                 <FavoritePaintSelector
                   category={currentMeasurementCategory}
                   projectType={quoteData.project_type}
