@@ -116,9 +116,28 @@ export const dbGet = async (sql: string, params: any[] = []) => {
   
   // Development mode - check in-memory storage
   if (sql.includes('quotes') && sql.includes('WHERE')) {
-    const quoteId = params[0];
-    const quote = devQuotes.get(quoteId) || devQuotes.get(params[1]); // Check both id and quote_id
-    console.log(`📖 Dev quote retrieval for ID: ${quoteId}`, quote ? 'FOUND' : 'NOT FOUND');
+    const lookupId = params[0];
+    const lookupId2 = params[1];
+    console.log(`📖 Dev quote retrieval for IDs: ${lookupId}, ${lookupId2}`);
+    
+    // Check both direct lookup and search through all quotes
+    let quote = devQuotes.get(lookupId) || devQuotes.get(lookupId2);
+    
+    if (!quote) {
+      // Search through all stored quotes by quote_id or id
+      console.log('🔍 Searching through all dev quotes...');
+      for (const [key, storedQuote] of devQuotes.entries()) {
+        console.log(`📋 Checking quote with key: ${key}, quote_id: ${storedQuote.quote_id}, id: ${storedQuote.id}`);
+        if (storedQuote.quote_id === lookupId || storedQuote.id === lookupId || 
+            storedQuote.quote_id === lookupId2 || storedQuote.id === lookupId2) {
+          quote = storedQuote;
+          console.log(`✅ Found matching quote with key: ${key}`);
+          break;
+        }
+      }
+    }
+    
+    console.log(`📖 Dev quote retrieval result:`, quote ? 'FOUND' : 'NOT FOUND');
     
     if (quote) {
       // Add company info for compatibility

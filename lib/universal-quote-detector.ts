@@ -117,7 +117,23 @@ function extractProfessionalQuote(content: string): DetectedQuote {
   const customerMatch = content.match(/\*\*Customer:\*\*\s*([^\n\*]+)/i) ||
                        content.match(/Customer:\s*([^\n\*]+)/i);
   if (customerMatch) {
-    data.customerName = customerMatch[1].trim();
+    const potentialName = customerMatch[1].trim();
+    
+    // Avoid extracting header text as customer names
+    const excludePatterns = [
+      /quote\s+summary/i,
+      /project\s+overview/i,
+      /estimate\s+breakdown/i,
+      /cost\s+breakdown/i,
+      /paint\s+summary/i,
+      /professional\s+painting/i
+    ];
+    
+    const isExcluded = excludePatterns.some(pattern => pattern.test(potentialName));
+    
+    if (!isExcluded && potentialName.length > 2) {
+      data.customerName = potentialName;
+    }
   }
   
   // Extract address
@@ -171,7 +187,7 @@ function extractProfessionalQuote(content: string): DetectedQuote {
 function extractAIQuote(content: string): DetectedQuote {
   const data: any = {};
   
-  // Extract customer info - flexible patterns
+  // Extract customer info - flexible patterns with exclusions
   const customerPatterns = [
     /(?:customer|client):\s*([^\n,]+)/i,
     /for\s+([A-Z][a-z]+)(?:\s+at\s+)/i, // "for Cici at"
@@ -180,11 +196,33 @@ function extractAIQuote(content: string): DetectedQuote {
     /^([A-Z][a-z]+\s+[A-Z][a-z]+)/m // Name pattern at start of line
   ];
   
+  // Exclusion patterns - avoid extracting these as customer names
+  const excludePatterns = [
+    /quote\s+summary/i,
+    /project\s+overview/i,
+    /estimate\s+breakdown/i,
+    /cost\s+breakdown/i,
+    /paint\s+summary/i,
+    /total\s+cost/i,
+    /final\s+price/i,
+    /your\s+quote/i,
+    /professional\s+painting/i
+  ];
+  
   for (const pattern of customerPatterns) {
     const match = content.match(pattern);
     if (match && match[1].trim().length > 2) {
-      data.customerName = match[1].trim();
-      break;
+      const potentialName = match[1].trim();
+      
+      // Check if this matches any exclusion patterns
+      const isExcluded = excludePatterns.some(excludePattern => 
+        excludePattern.test(potentialName)
+      );
+      
+      if (!isExcluded) {
+        data.customerName = potentialName;
+        break;
+      }
     }
   }
   

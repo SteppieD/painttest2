@@ -97,9 +97,11 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
 
   const loadQuote = async () => {
     try {
+      console.log('🔍 Loading customer quote with ID:', params.id);
       const response = await fetch(`/api/quotes/${params.id}`);
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ Customer quote loaded from database:', data);
         setQuote(data);
         
         // Parse room data if available
@@ -117,19 +119,70 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
       }
       
       // Fallback: Check localStorage for quote data
-      console.log('💾 Quote not found in database, checking localStorage...');
-      const fallbackQuoteData = localStorage.getItem(`quote_${params.id}`);
+      console.log('💾 Customer quote not found in database, checking localStorage...');
+      console.log('🔑 Looking for localStorage key:', `quote_${params.id}`);
+      
+      // Try multiple localStorage key formats
+      let fallbackQuoteData = localStorage.getItem(`quote_${params.id}`);
+      let keyUsed = `quote_${params.id}`;
+      
+      if (!fallbackQuoteData) {
+        // Try all localStorage keys that start with "quote_"
+        console.log('🔍 Checking all localStorage quote keys...');
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith('quote_')) {
+            console.log('📋 Found localStorage key:', key);
+            const data = localStorage.getItem(key);
+            if (data) {
+              try {
+                const parsed = JSON.parse(data);
+                // Check if this quote matches our ID (by quote_id or id)
+                if (parsed.quote_id === params.id || parsed.id === params.id) {
+                  fallbackQuoteData = data;
+                  keyUsed = key;
+                  console.log('✅ Found matching customer quote in localStorage with key:', key);
+                  break;
+                }
+              } catch (e) {
+                console.warn('Failed to parse localStorage data for key:', key);
+              }
+            }
+          }
+        }
+      }
+      
       if (fallbackQuoteData) {
         const quote = JSON.parse(fallbackQuoteData);
-        console.log('✅ Quote found in localStorage:', quote);
+        console.log('✅ Customer quote found in localStorage with key:', keyUsed);
+        console.log('📋 Customer quote data:', quote);
         setQuote(quote);
+        
+        // Parse room data if available
+        if (quote.room_data && typeof quote.room_data === 'string') {
+          try {
+            const roomData = JSON.parse(quote.room_data);
+            if (Array.isArray(roomData)) {
+              setRooms(roomData);
+            }
+          } catch (e) {
+            console.error('Error parsing room data:', e);
+          }
+        }
         return;
       }
       
-      console.log('❌ Quote not found in database or localStorage');
+      console.log('❌ Customer quote not found in database or localStorage');
+      console.log('🔍 Available localStorage keys:');
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('quote_')) {
+          console.log('  -', key);
+        }
+      }
       
     } catch (error) {
-      console.error('Error loading quote:', error);
+      console.error('Error loading customer quote:', error);
     } finally {
       setIsLoading(false);
     }
