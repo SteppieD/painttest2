@@ -34,7 +34,7 @@ export function Header() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
+    <header className="glass-nav border-b sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -63,36 +63,36 @@ export function Header() {
               </button>
               
               {isResourcesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
-                  <Link href="/painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                <div className="glass-dropdown absolute top-full left-0 mt-2 w-64 py-2 z-50">
+                  <Link href="/painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-white/50 transition-all duration-200">
                     <Calculator className="w-5 h-5 text-blue-600" />
                     <div>
                       <div className="font-medium text-gray-900">Free Calculator</div>
                       <div className="text-sm text-gray-500">Instant paint estimates</div>
                     </div>
                   </Link>
-                  <Link href="/painting-quote-templates" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                  <Link href="/painting-quote-templates" className="flex items-center gap-3 px-4 py-3 hover:bg-white/50 transition-all duration-200">
                     <FileText className="w-5 h-5 text-green-600" />
                     <div>
                       <div className="font-medium text-gray-900">Quote Templates</div>
                       <div className="text-sm text-gray-500">Professional templates</div>
                     </div>
                   </Link>
-                  <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                  <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-3 hover:bg-white/50 transition-all duration-200">
                     <BookOpen className="w-5 h-5 text-purple-600" />
                     <div>
                       <div className="font-medium text-gray-900">Quoting Guide</div>
                       <div className="text-sm text-gray-500">Expert strategies</div>
                     </div>
                   </Link>
-                  <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                  <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-3 hover:bg-white/50 transition-all duration-200">
                     <Smartphone className="w-5 h-5 text-indigo-600" />
                     <div>
                       <div className="font-medium text-gray-900">Mobile App</div>
                       <div className="text-sm text-gray-500">Quote on-site</div>
                     </div>
                   </Link>
-                  <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                  <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-3 hover:bg-white/50 transition-all duration-200">
                     <TrendingUp className="w-5 h-5 text-emerald-600" />
                     <div>
                       <div className="font-medium text-gray-900">Case Studies</div>

@@ -487,6 +487,390 @@
   }
 }
 
+/* Glassmorphism Design System */
+@layer utilities {
+  /* Core Glassmorphism Effects */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+    @apply shadow-lg shadow-black/5;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .glass-dark {
+    @apply bg-gray-900/70 backdrop-blur-md border border-white/10;
+    @apply shadow-lg shadow-black/20;
+    background: rgba(17, 24, 39, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Glassmorphism Intensity Variations */
+  .glass-subtle {
+    @apply bg-white/50 backdrop-blur-sm border border-white/10;
+    @apply shadow-md shadow-black/5;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .glass-strong {
+    @apply bg-white/80 backdrop-blur-lg border border-white/30;
+    @apply shadow-xl shadow-black/10;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .glass-frosted {
+    @apply bg-white/60 backdrop-blur-xl border border-white/25;
+    @apply shadow-2xl shadow-black/10;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  
+  /* Colored Glassmorphism */
+  .glass-blue {
+    @apply backdrop-blur-md border border-blue-500/20;
+    @apply shadow-lg shadow-blue-500/10;
+    background: rgba(59, 130, 246, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+  
+  .glass-green {
+    @apply backdrop-blur-md border border-green-500/20;
+    @apply shadow-lg shadow-green-500/10;
+    background: rgba(34, 197, 94, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+  }
+  
+  .glass-purple {
+    @apply backdrop-blur-md border border-purple-500/20;
+    @apply shadow-lg shadow-purple-500/10;
+    background: rgba(168, 85, 247, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+  }
+  
+  .glass-orange {
+    @apply backdrop-blur-md border border-orange-500/20;
+    @apply shadow-lg shadow-orange-500/10;
+    background: rgba(249, 115, 22, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+  }
+  
+  /* Interactive Glassmorphism States */
+  .glass-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .glass-hover:hover {
+    @apply bg-white/80 border-white/30 shadow-xl;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  .glass-interactive {
+    @apply glass-hover cursor-pointer;
+  }
+  
+  .glass-interactive:active {
+    transform: translateY(0) scale(0.98);
+  }
+  
+  /* Glassmorphism Navigation */
+  .glass-nav {
+    @apply glass backdrop-blur-lg;
+    @apply sticky top-0 z-50;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .glass-nav-dark {
+    @apply glass-dark backdrop-blur-lg;
+    @apply sticky top-0 z-50;
+    background: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Glassmorphism Cards */
+  .glass-card {
+    @apply glass rounded-xl p-6;
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .glass-card:hover {
+    @apply shadow-xl shadow-black/10;
+    transform: translateY(-4px);
+  }
+  
+  .glass-card-subtle {
+    @apply glass-subtle rounded-lg p-4;
+  }
+  
+  /* Glassmorphism Modals & Overlays */
+  .glass-modal {
+    @apply glass-strong rounded-2xl;
+    @apply shadow-2xl shadow-black/20;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+  
+  .glass-overlay {
+    @apply fixed inset-0 z-40;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  
+  .glass-sidebar {
+    @apply glass-strong;
+    @apply border-r border-white/20;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+  
+  /* Glassmorphism Buttons */
+  .glass-button {
+    @apply glass-subtle rounded-lg px-4 py-2;
+    @apply transition-all duration-200 ease-out;
+    @apply hover:glass-strong hover:shadow-lg;
+    @apply active:scale-95;
+  }
+  
+  .glass-button-primary {
+    @apply glass-blue text-blue-700 font-medium;
+    @apply hover:text-blue-800 hover:shadow-blue-500/20;
+  }
+  
+  .glass-button-success {
+    @apply glass-green text-green-700 font-medium;
+    @apply hover:text-green-800 hover:shadow-green-500/20;
+  }
+  
+  /* Glassmorphism Input Fields */
+  .glass-input {
+    @apply glass-subtle rounded-lg px-3 py-2;
+    @apply placeholder:text-gray-500;
+    @apply focus:glass-strong focus:outline-none focus:ring-2 focus:ring-blue-500/30;
+    @apply transition-all duration-200 ease-out;
+  }
+  
+  /* Glassmorphism Dropdowns */
+  .glass-dropdown {
+    @apply glass-strong rounded-xl;
+    @apply shadow-xl shadow-black/10;
+    @apply border border-white/30;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+  
+  /* Glassmorphism Toast Notifications */
+  .glass-toast {
+    @apply glass-strong rounded-lg;
+    @apply shadow-lg shadow-black/10;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+  
+  .glass-toast-success {
+    @apply glass-green text-green-800;
+    @apply border border-green-500/30;
+  }
+  
+  .glass-toast-error {
+    @apply backdrop-blur-md border border-red-500/20;
+    @apply shadow-lg shadow-red-500/10 text-red-800;
+    background: rgba(239, 68, 68, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+  
+  /* Glassmorphism Progress & Loading */
+  .glass-progress {
+    @apply glass-subtle rounded-full h-2;
+    overflow: hidden;
+  }
+  
+  .glass-progress-bar {
+    @apply h-full rounded-full;
+    @apply bg-gradient-to-r from-blue-500/60 to-blue-600/60;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  
+  .glass-spinner {
+    @apply glass-subtle rounded-full p-3;
+    @apply animate-pulse;
+  }
+  
+  /* Glassmorphism Floating Elements */
+  .glass-float {
+    @apply glass-strong rounded-2xl;
+    @apply shadow-2xl shadow-black/10;
+    @apply transform transition-all duration-300 ease-out;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+  
+  .glass-float:hover {
+    transform: translateY(-8px) scale(1.02);
+    @apply shadow-3xl shadow-black/15;
+  }
+  
+  /* Glassmorphism Badge & Tags */
+  .glass-badge {
+    @apply glass-subtle rounded-full px-3 py-1;
+    @apply text-sm font-medium;
+  }
+  
+  .glass-badge-primary {
+    @apply glass-blue text-blue-700;
+  }
+  
+  .glass-badge-success {
+    @apply glass-green text-green-700;
+  }
+  
+  .glass-badge-warning {
+    @apply glass-orange text-orange-700;
+  }
+  
+  /* Glassmorphism Mobile Optimizations */
+  .glass-mobile {
+    @apply glass;
+    /* Reduce blur on mobile for better performance */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  
+  .glass-mobile-nav {
+    @apply glass-nav;
+    backdrop-filter: blur(8px) saturate(150%);
+    -webkit-backdrop-filter: blur(8px) saturate(150%);
+  }
+  
+  /* Glassmorphism Chart & Dashboard Elements */
+  .glass-chart {
+    @apply glass-card;
+    @apply hover:shadow-xl hover:shadow-black/10;
+  }
+  
+  .glass-metric {
+    @apply glass-subtle rounded-lg p-4;
+    @apply hover:glass transition-all duration-300;
+  }
+  
+  /* Glassmorphism Animation Classes */
+  .glass-fade-in {
+    @apply opacity-0 animate-glass-fade-in;
+  }
+  
+  .glass-slide-up {
+    @apply transform translate-y-4 opacity-0 animate-glass-slide-up;
+  }
+  
+  .glass-scale-in {
+    @apply transform scale-95 opacity-0 animate-glass-scale-in;
+  }
+  
+  /* Browser Compatibility Fallbacks */
+  @supports not (backdrop-filter: blur(1px)) {
+    .glass {
+      @apply bg-white/90 border border-gray-200;
+    }
+    
+    .glass-dark {
+      @apply bg-gray-900/90 border border-gray-700;
+    }
+    
+    .glass-subtle {
+      @apply bg-white/80 border border-gray-100;
+    }
+    
+    .glass-strong {
+      @apply bg-white/95 border border-gray-300;
+    }
+  }
+}
+
+/* Glassmorphism Keyframe Animations */
+@keyframes glass-fade-in {
+  from { 
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  to { 
+    opacity: 1;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+@keyframes glass-slide-up {
+  from { 
+    opacity: 0;
+    transform: translateY(1rem);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+@keyframes glass-scale-in {
+  from { 
+    opacity: 0;
+    transform: scale(0.9);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+/* Animation Classes for Glassmorphism */
+.animate-glass-fade-in {
+  animation: glass-fade-in 0.4s ease-out forwards;
+}
+
+.animate-glass-slide-up {
+  animation: glass-slide-up 0.5s ease-out forwards;
+}
+
+.animate-glass-scale-in {
+  animation: glass-scale-in 0.4s ease-out forwards;
+}
+
 /* Print styles for customer quotes */
 @media print {
   body {
