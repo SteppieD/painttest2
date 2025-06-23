@@ -3145,31 +3145,30 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
         }
       }
 
-      // Create a comprehensive quote record
-      const quickQuoteData = {
-        customer_name: conversationCustomer || 'Customer',
+      // Create quote data in the format expected by the API
+      const quoteData = {
+        customerName: conversationCustomer || 'Customer',
         address: conversationAddress || 'Address from conversation',
-        project_type: detectedQuote.projectType || 'interior',
-        total_cost: detectedQuote.totalCost || 0,
-        final_price: detectedQuote.totalCost || 0,
-        total_revenue: detectedQuote.totalCost || 0,
-        walls_sqft: detectedQuote.sqft || 0,
-        room_count: detectedQuote.rooms || null,
-        notes: `Quick quote from conversation (${detectedQuote.confidence} confidence)`,
-        status: 'pending',
-        conversation_summary: JSON.stringify(messages),
-        // Add breakdown data if available
-        materials_cost: detectedQuote.breakdown?.materials || 0,
-        labor_cost: detectedQuote.breakdown?.labor || detectedQuote.totalCost || 0,
-        markup_amount: detectedQuote.breakdown?.markup || 0
+        projectType: detectedQuote.projectType || 'interior',
+        totalCost: detectedQuote.totalCost || 0,
+        finalPrice: detectedQuote.totalCost || 0,
+        sqft: detectedQuote.sqft || 0,
+        roomCount: detectedQuote.rooms || null,
+        specialRequests: `Quick quote from conversation (${detectedQuote.confidence} confidence)`,
+        breakdown: {
+          materials: detectedQuote.breakdown?.materials || 0,
+          labor: detectedQuote.breakdown?.labor || detectedQuote.totalCost || 0,
+          markup: detectedQuote.breakdown?.markup || 0
+        }
       };
       
       const response = await fetch('/api/quotes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          company_id: companyData.id,
-          ...quickQuoteData
+          quoteData,
+          companyId: companyData.id,
+          conversationHistory: messages
         })
       });
       
@@ -3183,7 +3182,7 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
         
         toast({
           title: "Quote Created!",
-          description: `Quote for ${quickQuoteData.customer_name} created successfully.`,
+          description: `Quote for ${quoteData.customerName} created successfully.`,
         });
         
         return quoteId;
