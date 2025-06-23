@@ -3202,11 +3202,9 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
                 <ArrowLeft className="w-5 h-5" />
               </button>
               
-              <div className="flex items-center gap-2">
-                <div className="neomorphism-accessible-subtle p-2 rounded-xl">
-                  <Calculator className="w-6 h-6 text-blue-600" />
-                </div>
-                <h1 className="text-lg font-semibold neomorphism-text">{isEditMode ? 'Edit Quote' : 'Create Quote'}</h1>
+              <div className="flex items-center gap-3">
+                <Calculator className="w-6 h-6 text-blue-600" />
+                <h1 className="text-xl font-semibold neomorphism-text">{isEditMode ? 'Edit Quote' : 'Create Quote'}</h1>
               </div>
             </div>
             
@@ -3244,12 +3242,12 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
                     : "neomorphism-card-accessible rounded-bl-sm"
                 )}
               >
-                <div className="whitespace-pre-wrap text-sm" dangerouslySetInnerHTML={{
+                <div className="whitespace-pre-wrap text-base" dangerouslySetInnerHTML={{
                   __html: renderMarkdown(message.content)
                 }}>
                 </div>
                 <div className={cn(
-                  "text-xs mt-2",
+                  "text-sm mt-2",
                   message.role === 'user' ? "text-blue-100" : "text-gray-500"
                 )}>
                   {new Date(message.timestamp).toLocaleTimeString()}
@@ -3262,7 +3260,7 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
                       onClick={() => {
                         window.open(`/quotes/${savedQuoteId}/customer`, '_blank');
                       }}
-                      className="neomorphism-button-enhanced text-xs px-4 py-2 rounded-lg flex items-center gap-2 text-blue-600 hover:text-blue-700"
+                      className="neomorphism-button-enhanced text-sm px-4 py-2 rounded-lg flex items-center gap-2 text-blue-600 hover:text-blue-700"
                     >
                       📄 View Full Quote
                     </button>
@@ -3302,7 +3300,7 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                   </div>
-                  <span className="text-sm text-gray-600">AI is thinking...</span>
+                  <span className="text-base text-gray-600">AI is thinking...</span>
                 </div>
               </div>
             </div>
@@ -3313,7 +3311,7 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
               <div className="neomorphism-card-accessible rounded-2xl rounded-bl-sm p-4">
                 <div className="flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
-                  <span className="text-sm text-gray-600">Calculating your quote...</span>
+                  <span className="text-base text-gray-600">Calculating your quote...</span>
                 </div>
               </div>
             </div>
@@ -3323,14 +3321,14 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
           {showButtons && buttonOptions.length > 0 && (
             <div className="flex gap-3 justify-start">
               <div className="max-w-[80%] neomorphism-card-accessible rounded-2xl rounded-bl-sm p-4">
-                <p className="text-sm text-gray-600 mb-3">Choose an option:</p>
+                <p className="text-base text-gray-600 mb-3">Choose an option:</p>
                 <div className="flex flex-wrap gap-3">
                   {buttonOptions.map((option) => (
                     <button
                       key={option.id}
                       onClick={() => handleButtonClick(option.value, option.label)}
                       className={cn(
-                        "text-sm transition-all px-4 py-2 rounded-xl",
+                        "text-base transition-all px-4 py-3 rounded-xl",
                         option.selected 
                           ? "neomorphism-button-primary-enhanced" 
                           : "neomorphism-button-enhanced"
@@ -3402,7 +3400,7 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
               onKeyPress={handleKeyPress}
               placeholder="Type your response..."
               disabled={isLoading || isThinking}
-              className="flex-1 neomorphism-input-enhanced"
+              className="flex-1 neomorphism-input-enhanced text-base"
             />
             <button
               onClick={handleSend}

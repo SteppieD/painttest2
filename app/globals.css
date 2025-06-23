@@ -1301,6 +1301,8 @@
       inset 4px 4px 8px rgba(209, 209, 212, 0.5),
       inset -4px -4px 8px rgba(255, 255, 255, 0.9);
     @apply transition-all duration-200;
+    font-size: 16px !important; /* Prevent iOS zoom */
+    line-height: 1.5;
   }
 
   .neomorphism-input-enhanced:focus {
