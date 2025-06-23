@@ -117,81 +117,135 @@ export default function ProductChatPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header */}
-      <div className="bg-white border-b px-4 py-3">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex flex-col">
+      {/* Header with Glassmorphism */}
+      <div className="glass-nav border-b sticky top-0 z-50 px-4 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => router.push("/settings/products")}
+              className="glass-button-primary hover:scale-105 transition-all duration-200"
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <div className="flex items-center gap-2">
-              <Settings className="h-5 w-5 text-blue-600" />
-              <h1 className="text-lg font-semibold">Update Products</h1>
+            <div className="flex items-center gap-3">
+              <div className="p-2 glass-subtle rounded-lg">
+                <Settings className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Product Updates</h1>
+                <p className="text-sm text-gray-600">AI-powered product management</p>
+              </div>
             </div>
           </div>
-          <div className="text-sm text-gray-600">
-            Chat interface for product updates
+          <div className="glass-badge-primary px-3 py-1 rounded-full">
+            <span className="text-sm font-medium">Chat Assistant</span>
           </div>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="max-w-4xl mx-auto space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 py-8 enhanced-scroll">
+        <div className="max-w-4xl mx-auto space-y-6">
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex ${
+              className={`flex animate-glass-slide-up ${
                 message.role === "user" ? "justify-end" : "justify-start"
               }`}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <Card
-                className={`max-w-[80%] p-4 ${
+              <div
+                className={`max-w-[75%] md:max-w-[60%] ${
                   message.role === "user"
-                    ? "bg-blue-50 border-blue-200"
-                    : "bg-white"
+                    ? "glass-blue rounded-2xl rounded-br-md p-4 shadow-lg"
+                    : "glass-card rounded-2xl rounded-bl-md p-5 shadow-lg hover:shadow-xl transition-all duration-300"
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-              </Card>
+                <div className={`flex items-start gap-3 ${message.role === "user" ? "flex-row-reverse" : ""}`}>
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                    message.role === "user" 
+                      ? "bg-blue-600 text-white" 
+                      : "bg-gradient-to-br from-purple-500 to-blue-600 text-white"
+                  }`}>
+                    {message.role === "user" ? (
+                      <span className="text-sm font-semibold">U</span>
+                    ) : (
+                      <span className="text-sm font-semibold">AI</span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm leading-relaxed whitespace-pre-wrap ${
+                      message.role === "user" 
+                        ? "text-blue-900 font-medium" 
+                        : "text-gray-800"
+                    }`}>
+                      {message.content}
+                    </p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="text-xs text-gray-500">
+                        {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                      {message.role === "assistant" && (
+                        <div className="flex items-center gap-1">
+                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                          <span className="text-xs text-green-600 font-medium">AI Assistant</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
           
           {/* Quick Actions */}
           {messages.length === 1 && (
-            <div className="flex justify-center">
-              <Card className="p-4 bg-gray-50">
-                <p className="text-sm text-gray-600 mb-3">Quick actions:</p>
-                <div className="flex flex-wrap gap-2">
+            <div className="flex justify-center animate-glass-fade-in" style={{ animationDelay: "0.5s" }}>
+              <div className="glass-card p-6 text-center max-w-2xl">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Quick Actions</h3>
+                  <p className="text-sm text-gray-600">Get started with these common product management tasks</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {quickActions.map((action, index) => (
                     <Button
                       key={index}
                       variant="outline"
                       size="sm"
                       onClick={() => setInput(action)}
-                      className="text-xs"
+                      className="glass-button text-sm font-medium h-auto p-3 hover:scale-105 transition-all duration-200 justify-start"
                     >
-                      {action}
+                      <span className="text-left">{action}</span>
                     </Button>
                   ))}
                 </div>
-              </Card>
+              </div>
             </div>
           )}
           
           {isLoading && (
-            <div className="flex justify-start">
-              <Card className="p-4 bg-white">
-                <div className="flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span className="text-sm text-gray-600">Processing...</span>
+            <div className="flex justify-start animate-glass-fade-in">
+              <div className="glass-card p-4 max-w-[60%]">
+                <div className="flex items-center gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center">
+                    <Loader2 className="h-4 w-4 animate-spin text-white" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-sm font-medium text-gray-800">AI Assistant</span>
+                      <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></div>
+                    </div>
+                    <div className="typing-dots">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
                 </div>
-              </Card>
+              </div>
             </div>
           )}
           <div ref={messagesEndRef} />
@@ -199,24 +253,44 @@ export default function ProductChatPage() {
       </div>
 
       {/* Input */}
-      <div className="bg-white border-t p-4">
+      <div className="glass-nav border-t p-6">
         <div className="max-w-4xl mx-auto">
-          <div className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type your request... (e.g., 'Increase all Benjamin Moore prices by 15%')"
-              disabled={isLoading}
-              className="flex-1"
-            />
-            <Button onClick={handleSend} disabled={isLoading || !input.trim()}>
-              <Send className="h-4 w-4" />
-            </Button>
+          <div className="glass-input-container relative">
+            <div className="flex gap-3 items-end">
+              <div className="flex-1 relative">
+                <Input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your request... (e.g., 'Increase all Benjamin Moore prices by 15%')"
+                  disabled={isLoading}
+                  className="glass-input text-base py-4 pr-12 rounded-2xl border-0 focus:ring-2 focus:ring-blue-500/30 focus:ring-offset-0"
+                />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <Button 
+                    onClick={handleSend} 
+                    disabled={isLoading || !input.trim()}
+                    size="sm"
+                    className="glass-button-primary rounded-full p-2 h-8 w-8 hover:scale-110 transition-all duration-200"
+                  >
+                    <Send className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
-            Try: "Update ProClassic to $45", "Add new primer", "Show ceiling paint prices"
-          </p>
+          <div className="mt-3 flex flex-wrap gap-2 items-center">
+            <span className="text-xs font-medium text-gray-600">Quick examples:</span>
+            {["Update ProClassic to $45", "Add new primer", "Show ceiling prices"].map((example, index) => (
+              <button
+                key={index}
+                onClick={() => setInput(example)}
+                className="text-xs px-2 py-1 glass-subtle rounded-full text-blue-700 hover:text-blue-800 hover:scale-105 transition-all duration-200"
+              >
+                "{example}"
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>
