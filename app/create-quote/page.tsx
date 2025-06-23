@@ -45,6 +45,8 @@ import { detectAndExtractQuote, extractLearningData, type DetectedQuote } from "
 import { saveLearningData } from "@/lib/learning-profile-system";
 import { extractQuoteDataFromConversation, hasQuoteWorthyContent } from "@/lib/simple-quote-extractor";
 import { ManualQuoteCreator } from "@/components/ui/manual-quote-creator";
+import { ProgressiveQuoteForm, ProgressiveQuoteData } from "@/components/ui/progressive-quote-form";
+import { AIQuoteAnalyzer } from "@/lib/ai-quote-analyzer";
 // Progressive calculator temporarily disabled
 // import { calculateProgressiveEstimate, generateEstimateMessage, type ProgressiveEstimate } from "@/lib/progressive-calculator";
 // import { ProgressiveEstimateDisplay, FloatingEstimateWidget } from "@/components/ui/progressive-estimate-display";
@@ -181,6 +183,10 @@ function CreateQuotePageContent() {
   // Manual quote creation state
   const [showManualQuoteCreator, setShowManualQuoteCreator] = useState(false);
   const [showCreateQuoteButton, setShowCreateQuoteButton] = useState(false);
+  
+  // Progressive AI quote analysis state
+  const [progressiveQuoteData, setProgressiveQuoteData] = useState<ProgressiveQuoteData>({});
+  const [quoteAnalyzer] = useState(() => new AIQuoteAnalyzer());
   const [isEditMode, setIsEditMode] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [buttonOptions, setButtonOptions] = useState<{id: string, label: string, value: any, selected?: boolean}[]>([]);
@@ -431,6 +437,32 @@ function CreateQuotePageContent() {
     if (messages.length > 2) { // Has some conversation
       const hasWorthyContent = hasQuoteWorthyContent(messages);
       setShowCreateQuoteButton(hasWorthyContent);
+    }
+  }, [messages]);
+
+  // Progressive quote analysis - analyze each new message
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      const updatedQuoteData = quoteAnalyzer.analyzeMessage(
+        {
+          role: lastMessage.role,
+          content: lastMessage.content,
+          timestamp: lastMessage.timestamp
+        },
+        messages.map(m => ({
+          role: m.role,
+          content: m.content,
+          timestamp: m.timestamp
+        }))
+      );
+      setProgressiveQuoteData(updatedQuoteData);
+      
+      // Auto-save quote when it's substantially complete (80%+ filled)
+      if (updatedQuoteData.completion_percentage && updatedQuoteData.completion_percentage >= 80 && 
+          updatedQuoteData.final_quote_amount && !savedQuoteId) {
+        handleAutoSaveQuote(updatedQuoteData);
+      }
     }
   }, [messages]);
 
@@ -792,6 +824,48 @@ What would you like to modify?`,
   const calculateThinkingDuration = (responseLength: number): number => {
     // Base time: 500ms, add 500ms for longer responses (>200 chars)
     return responseLength > 200 ? 1000 : 500;
+  };
+
+  // Auto-save quote when substantially complete
+  const handleAutoSaveQuote = async (quoteData: ProgressiveQuoteData) => {
+    if (!companyData?.id || !quoteData.final_quote_amount) return;
+    
+    try {
+      console.log('🔄 Auto-saving quote at', quoteData.completion_percentage + '% completion');
+      
+      const response = await fetch('/api/quotes/create-from-conversation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer_name: quoteData.customer_name || 'Auto-Generated Quote',
+          customer_email: '',
+          customer_phone: '',
+          address: quoteData.address || '',
+          project_type: quoteData.project_type || 'interior',
+          surfaces: quoteData.surfaces || ['walls'],
+          total_sqft: quoteData.total_sqft,
+          room_count: quoteData.room_count,
+          quote_amount: quoteData.final_quote_amount,
+          timeline: quoteData.timeline || '',
+          notes: `Auto-generated quote. Linear feet: ${quoteData.linear_feet}, Height: ${quoteData.ceiling_height}ft, Paint: ${quoteData.paint_brand} ${quoteData.paint_type} $${quoteData.cost_per_gallon}/gal, Labor: $${quoteData.labor_cost_per_sqft}/sqft, Markup: ${quoteData.markup_percentage}%`,
+          company_id: companyData.id,
+          conversation_data: messages
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setSavedQuoteId(result.quote_id);
+        console.log('✅ Quote auto-saved with ID:', result.quote_id);
+        
+        toast({
+          title: "Quote Auto-Generated!",
+          description: `Quote ${result.quote_id} created automatically. Click to view.`,
+        });
+      }
+    } catch (error) {
+      console.error('Auto-save failed:', error);
+    }
   };
 
   const handleSend = async () => {
@@ -3456,45 +3530,46 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
     );
   }
 
+  // Main application UI
   return (
     <div className="h-screen flex flex-col" style={{ background: '#f0f0f3' }}>
-      {/* Header */}
-      <header className="neomorphism-nav-enhanced relative z-20">
-        <div className="px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => router.push("/dashboard")}
-                className="neomorphism-button-enhanced w-10 h-10 p-0 flex items-center justify-center text-gray-700 hover:text-blue-600 transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              
+        {/* Header */}
+        <header className="neomorphism-nav-enhanced relative z-20">
+          <div className="px-4 py-3">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Calculator className="w-6 h-6 text-blue-600" />
-                <h1 className="text-xl font-semibold neomorphism-text">{isEditMode ? 'Edit Quote' : 'Create Quote'}</h1>
+                <button
+                  onClick={() => router.push("/dashboard")}
+                  className="neomorphism-button-enhanced w-10 h-10 p-0 flex items-center justify-center text-gray-700 hover:text-blue-600 transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                
+                <div className="flex items-center gap-3">
+                  <Calculator className="w-6 h-6 text-blue-600" />
+                  <h1 className="text-xl font-semibold neomorphism-text">{isEditMode ? 'Edit Quote' : 'Create Quote'}</h1>
+                </div>
               </div>
+              
+              {quoteData.calculation && (
+                <div className="neomorphism-accessible-subtle p-3 rounded-xl text-right">
+                  <div className="text-sm text-gray-600">Customer Price</div>
+                  <div className="text-lg font-bold text-green-600 neomorphism-text">
+                    ${quoteData.calculation.final_price.toLocaleString()}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    Profit: ${quoteData.calculation.markup_amount.toLocaleString()} ({quoteData.markup_percentage}%)
+                  </div>
+                </div>
+              )}
             </div>
-            
-            {quoteData.calculation && (
-              <div className="neomorphism-accessible-subtle p-3 rounded-xl text-right">
-                <div className="text-sm text-gray-600">Customer Price</div>
-                <div className="text-lg font-bold text-green-600 neomorphism-text">
-                  ${quoteData.calculation.final_price.toLocaleString()}
-                </div>
-                <div className="text-xs text-gray-500">
-                  Profit: ${quoteData.calculation.markup_amount.toLocaleString()} ({quoteData.markup_percentage}%)
-                </div>
-              </div>
-            )}
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Chat Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((message) => (
+        {/* Chat Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {messages.map((message) => (
             <div
               key={message.id}
               className={cn(
@@ -3737,6 +3812,30 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
           </div>
         </div>
       </div>
+
+      {/* Progressive Quote Progress - Hidden for now, will add as floating widget */}
+      {progressiveQuoteData.completion_percentage && progressiveQuoteData.completion_percentage > 50 && (
+        <div className="fixed top-20 right-4 z-30">
+          <div className="bg-white rounded-lg shadow-lg p-4 max-w-sm">
+            <div className="text-sm font-medium text-gray-700 mb-2">
+              Quote Progress: {progressiveQuoteData.completion_percentage}%
+            </div>
+            {progressiveQuoteData.final_quote_amount && (
+              <div className="text-lg font-bold text-green-600">
+                ${progressiveQuoteData.final_quote_amount.toLocaleString()}
+              </div>
+            )}
+            {progressiveQuoteData.final_quote_amount && (
+              <button
+                onClick={() => handleAutoSaveQuote(progressiveQuoteData)}
+                className="w-full mt-2 bg-blue-600 text-white py-1 px-3 rounded text-sm hover:bg-blue-700"
+              >
+                Save Quote
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Floating Estimate Widget - Disabled */}
       {/* {currentEstimate && !showEstimate && (
