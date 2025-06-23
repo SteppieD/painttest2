@@ -871,6 +871,377 @@
   animation: glass-scale-in 0.4s ease-out forwards;
 }
 
+/* Neumorphism Design System */
+@layer utilities {
+  /* Core Neumorphism Effects */
+  .neomorphism {
+    background: #f0f0f3;
+    border-radius: 20px;
+    box-shadow: 
+      20px 20px 60px #d1d1d4,
+      -20px -20px 60px #ffffff;
+  }
+  
+  .neomorphism-inset {
+    background: #f0f0f3;
+    border-radius: 20px;
+    box-shadow: 
+      inset 20px 20px 60px #d1d1d4,
+      inset -20px -20px 60px #ffffff;
+  }
+  
+  .neomorphism-subtle {
+    background: #f0f0f3;
+    border-radius: 15px;
+    box-shadow: 
+      10px 10px 30px #d1d1d4,
+      -10px -10px 30px #ffffff;
+  }
+  
+  .neomorphism-strong {
+    background: #f0f0f3;
+    border-radius: 25px;
+    box-shadow: 
+      30px 30px 80px #d1d1d4,
+      -30px -30px 80px #ffffff;
+  }
+  
+  .neomorphism-flat {
+    background: #f0f0f3;
+    border-radius: 12px;
+    box-shadow: 
+      5px 5px 15px #d1d1d4,
+      -5px -5px 15px #ffffff;
+  }
+  
+  /* Neumorphism Color Variants */
+  .neomorphism-blue {
+    background: linear-gradient(145deg, #e6f3ff, #cce7ff);
+    box-shadow: 
+      20px 20px 60px #b8d4f0,
+      -20px -20px 60px #ffffff;
+  }
+  
+  .neomorphism-purple {
+    background: linear-gradient(145deg, #f0e6ff, #e6ccff);
+    box-shadow: 
+      20px 20px 60px #d1b8f0,
+      -20px -20px 60px #ffffff;
+  }
+  
+  .neomorphism-green {
+    background: linear-gradient(145deg, #e6ffe6, #ccffcc);
+    box-shadow: 
+      20px 20px 60px #b8f0b8,
+      -20px -20px 60px #ffffff;
+  }
+  
+  .neomorphism-orange {
+    background: linear-gradient(145deg, #ffe6cc, #ffddaa);
+    box-shadow: 
+      20px 20px 60px #f0d1a8,
+      -20px -20px 60px #ffffff;
+  }
+  
+  /* Interactive Neumorphism States */
+  .neomorphism-interactive {
+    @apply neomorphism cursor-pointer transition-all duration-300 ease-out;
+  }
+  
+  .neomorphism-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      25px 25px 70px #d1d1d4,
+      -25px -25px 70px #ffffff;
+  }
+  
+  .neomorphism-interactive:active {
+    transform: translateY(1px);
+    box-shadow: 
+      inset 10px 10px 30px #d1d1d4,
+      inset -10px -10px 30px #ffffff;
+  }
+  
+  /* Neumorphism Buttons */
+  .neomorphism-button {
+    @apply neomorphism-subtle px-6 py-3 font-medium text-gray-700;
+    @apply transition-all duration-200 ease-out cursor-pointer;
+    @apply hover:shadow-lg active:shadow-inner;
+  }
+  
+  .neomorphism-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 
+      15px 15px 40px #d1d1d4,
+      -15px -15px 40px #ffffff;
+  }
+  
+  .neomorphism-button:active {
+    transform: translateY(0);
+    box-shadow: 
+      inset 8px 8px 20px #d1d1d4,
+      inset -8px -8px 20px #ffffff;
+  }
+  
+  .neomorphism-button-primary {
+    @apply neomorphism-blue text-blue-700 font-semibold;
+  }
+  
+  .neomorphism-button-success {
+    @apply neomorphism-green text-green-700 font-semibold;
+  }
+  
+  .neomorphism-button-warning {
+    @apply neomorphism-orange text-orange-700 font-semibold;
+  }
+  
+  /* Neumorphism Cards */
+  .neomorphism-card {
+    @apply neomorphism p-6 bg-gray-50;
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .neomorphism-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+      25px 25px 70px #d1d1d4,
+      -25px -25px 70px #ffffff;
+  }
+  
+  .neomorphism-card-flat {
+    @apply neomorphism-flat p-4 bg-gray-50;
+  }
+  
+  .neomorphism-card-strong {
+    @apply neomorphism-strong p-8 bg-gray-50;
+  }
+  
+  /* Neumorphism Input Fields */
+  .neomorphism-input {
+    @apply neomorphism-inset px-4 py-3 bg-gray-50;
+    @apply border-0 outline-none text-gray-700;
+    @apply focus:shadow-inner transition-all duration-200;
+  }
+  
+  .neomorphism-input:focus {
+    box-shadow: 
+      inset 15px 15px 40px #d1d1d4,
+      inset -15px -15px 40px #ffffff;
+  }
+  
+  /* Neumorphism Navigation */
+  .neomorphism-nav {
+    @apply neomorphism-flat bg-gray-50;
+    @apply sticky top-0 z-50;
+    border-bottom: 1px solid rgba(209, 209, 212, 0.3);
+  }
+  
+  /* Neumorphism Modals & Overlays */
+  .neomorphism-modal {
+    @apply neomorphism-strong bg-gray-50;
+    @apply rounded-3xl shadow-2xl;
+  }
+  
+  .neomorphism-overlay {
+    @apply fixed inset-0 z-40;
+    background: rgba(240, 240, 243, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  /* Neumorphism Progress & Loading */
+  .neomorphism-progress {
+    @apply neomorphism-inset rounded-full h-4;
+    overflow: hidden;
+  }
+  
+  .neomorphism-progress-bar {
+    @apply h-full rounded-full;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 
+      inset 0 2px 4px rgba(0,0,0,0.1),
+      0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* Neumorphism Floating Elements */
+  .neomorphism-float {
+    @apply neomorphism-strong;
+    @apply transform transition-all duration-300 ease-out;
+  }
+  
+  .neomorphism-float:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 
+      35px 35px 90px #d1d1d4,
+      -35px -35px 90px #ffffff;
+  }
+  
+  /* Neumorphism Badge & Tags */
+  .neomorphism-badge {
+    @apply neomorphism-flat px-3 py-1 text-sm font-medium;
+    @apply inline-flex items-center;
+  }
+  
+  .neomorphism-badge-primary {
+    @apply neomorphism-blue text-blue-700;
+  }
+  
+  .neomorphism-badge-success {
+    @apply neomorphism-green text-green-700;
+  }
+  
+  .neomorphism-badge-warning {
+    @apply neomorphism-orange text-orange-700;
+  }
+  
+  /* Neumorphism Toggle & Switches */
+  .neomorphism-toggle {
+    @apply neomorphism-inset w-12 h-6 rounded-full;
+    @apply relative cursor-pointer transition-all duration-300;
+  }
+  
+  .neomorphism-toggle::after {
+    content: '';
+    @apply absolute top-1 left-1 w-4 h-4 bg-white rounded-full;
+    @apply transition-all duration-300;
+    box-shadow: 
+      3px 3px 8px #d1d1d4,
+      -3px -3px 8px #ffffff;
+  }
+  
+  .neomorphism-toggle.active::after {
+    transform: translateX(24px);
+  }
+  
+  /* Neumorphism Chart & Dashboard Elements */
+  .neomorphism-chart {
+    @apply neomorphism-card;
+    @apply hover:shadow-xl transition-all duration-300;
+  }
+  
+  .neomorphism-metric {
+    @apply neomorphism-flat p-4;
+    @apply hover:neomorphism transition-all duration-300;
+  }
+  
+  /* Neumorphism Mobile Optimizations */
+  .neomorphism-mobile {
+    /* Reduced shadows for mobile performance */
+    box-shadow: 
+      8px 8px 25px #d1d1d4,
+      -8px -8px 25px #ffffff;
+  }
+  
+  .neomorphism-mobile-button {
+    @apply neomorphism-mobile px-4 py-2 rounded-xl;
+    @apply transition-all duration-200;
+  }
+  
+  /* Neumorphism Animation Classes */
+  .neomorphism-fade-in {
+    @apply opacity-0 animate-neomorphism-fade-in;
+  }
+  
+  .neomorphism-slide-up {
+    @apply transform translate-y-4 opacity-0 animate-neomorphism-slide-up;
+  }
+  
+  .neomorphism-scale-in {
+    @apply transform scale-95 opacity-0 animate-neomorphism-scale-in;
+  }
+  
+  /* Neumorphism Text & Typography */
+  .neomorphism-text {
+    text-shadow: 
+      1px 1px 2px #ffffff,
+      -1px -1px 2px #d1d1d4;
+  }
+  
+  .neomorphism-text-inset {
+    text-shadow: 
+      inset 1px 1px 2px #d1d1d4,
+      inset -1px -1px 2px #ffffff;
+  }
+  
+  /* Dark Mode Neumorphism Variants */
+  .dark .neomorphism {
+    background: #2d3748;
+    box-shadow: 
+      20px 20px 60px #1a202c,
+      -20px -20px 60px #404a5d;
+  }
+  
+  .dark .neomorphism-inset {
+    background: #2d3748;
+    box-shadow: 
+      inset 20px 20px 60px #1a202c,
+      inset -20px -20px 60px #404a5d;
+  }
+}
+
+/* Neumorphism Keyframe Animations */
+@keyframes neomorphism-fade-in {
+  from { 
+    opacity: 0;
+    box-shadow: 
+      10px 10px 30px #d1d1d4,
+      -10px -10px 30px #ffffff;
+  }
+  to { 
+    opacity: 1;
+    box-shadow: 
+      20px 20px 60px #d1d1d4,
+      -20px -20px 60px #ffffff;
+  }
+}
+
+@keyframes neomorphism-slide-up {
+  from { 
+    opacity: 0;
+    transform: translateY(1rem);
+    box-shadow: 
+      10px 10px 30px #d1d1d4,
+      -10px -10px 30px #ffffff;
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+    box-shadow: 
+      20px 20px 60px #d1d1d4,
+      -20px -20px 60px #ffffff;
+  }
+}
+
+@keyframes neomorphism-scale-in {
+  from { 
+    opacity: 0;
+    transform: scale(0.9);
+    box-shadow: 
+      10px 10px 30px #d1d1d4,
+      -10px -10px 30px #ffffff;
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 
+      20px 20px 60px #d1d1d4,
+      -20px -20px 60px #ffffff;
+  }
+}
+
+/* Animation Classes for Neumorphism */
+.animate-neomorphism-fade-in {
+  animation: neomorphism-fade-in 0.5s ease-out forwards;
+}
+
+.animate-neomorphism-slide-up {
+  animation: neomorphism-slide-up 0.6s ease-out forwards;
+}
+
+.animate-neomorphism-scale-in {
+  animation: neomorphism-scale-in 0.5s ease-out forwards;
+}
+
 /* Print styles for customer quotes */
 @media print {
   body {

@@ -272,15 +272,17 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" style={{ background: '#f0f0f3' }}>
       {/* Header */}
-      <div className="bg-white border-b shadow-sm">
+      <div className="neomorphism-nav border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <Palette className="w-8 h-8 text-blue-600" />
+          <div className="flex justify-between items-center h-20">
+            <div className="flex items-center gap-4">
+              <div className="neomorphism-flat p-3 rounded-2xl">
+                <Palette className="w-8 h-8 text-blue-600" />
+              </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">ProPaint Quote Assistant</h1>
+                <h1 className="text-xl font-bold text-gray-900 neomorphism-text">ProPaint Quote Assistant</h1>
                 <div className="flex items-center gap-2">
                   <p className="text-sm text-gray-500">{companyInfo?.company_name}</p>
                   {companyInfo?.access_code && (
@@ -295,7 +297,7 @@ export default function DashboardPage() {
                             navigator.clipboard.writeText(companyInfo.access_code);
                             alert('Access code copied to clipboard!');
                           }}
-                          className="h-6 w-6 p-0 hover:bg-gray-100"
+                          className="neomorphism-button h-6 w-6 p-0 rounded-lg"
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
@@ -396,29 +398,27 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Primary Action - Create Quote - Mobile-First Flat Design */}
+        {/* Primary Action - Create Quote - Neumorphism Design */}
         <div className="mb-8">
-          <Card 
-            className="cursor-pointer card-flat bg-business-success/10 border-2 border-business-success/30 hover:shadow-flat-lg transition-all duration-200 interactive-flat" 
+          <div 
+            className="neomorphism-interactive neomorphism-green p-8 cursor-pointer animate-neomorphism-scale-in" 
             onClick={() => router.push("/create-quote")}
           >
-            <CardContent className="p-6 sm:p-8">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-5">
-                  <div className="w-20 h-20 bg-business-success rounded-flat-xl flex items-center justify-center shadow-flat">
-                    <Calculator className="w-10 h-10 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-flat-2xl font-bold text-business-success mb-2">Create Professional Quote</h3>
-                    <p className="text-flat-lg font-medium text-flat-gray-700">Room-by-room measurements • Industry pricing • Customer-ready output</p>
-                  </div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-6">
+                <div className="neomorphism-strong w-24 h-24 flex items-center justify-center">
+                  <Calculator className="w-12 h-12 text-green-700" />
                 </div>
-                <div className="text-business-success">
-                  <ArrowRight className="icon-flat-lg" />
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-green-800 mb-2 neomorphism-text">Create Professional Quote</h3>
+                  <p className="text-lg font-medium text-gray-700">Room-by-room measurements • Industry pricing • Customer-ready output</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+              <div className="text-green-700">
+                <ArrowRight className="w-8 h-8" />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Trial Quota Warning */}
@@ -476,83 +476,83 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Business Metrics - Flat Design Mobile-First */}
+        {/* Business Metrics - Neumorphism Design */}
         <div className="mb-8">
-          <div className="card-flat shadow-flat-lg p-6 sm:p-8">
-            <h2 className="text-flat-2xl font-bold text-flat-gray-900 mb-6">Business Performance</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="neomorphism-card animate-neomorphism-fade-in">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 neomorphism-text">Business Performance</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Total Quotes Card */}
-              <div className="card-flat bg-paint-primer/5 border border-paint-primer/20 p-4 text-center">
-                <div className="w-12 h-12 bg-paint-primer rounded-flat-lg flex items-center justify-center mx-auto mb-3">
-                  <FileText className="icon-flat text-white" />
+              <div className="neomorphism-metric text-center neomorphism-interactive">
+                <div className="neomorphism-flat w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-8 h-8 text-blue-600" />
                 </div>
-                <div className="text-flat-3xl font-bold text-flat-gray-900 mb-1">{analytics.totalQuotes}</div>
-                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Total Quotes</div>
-                <div className="text-flat-sm font-medium text-business-success">
+                <div className="text-3xl font-bold text-gray-900 mb-2 neomorphism-text">{analytics.totalQuotes}</div>
+                <div className="text-base font-semibold text-gray-700 mb-2">Total Quotes</div>
+                <div className="neomorphism-badge-success">
                   {analytics.acceptedQuotes} won ({analytics.totalQuotes > 0 ? Math.round((analytics.acceptedQuotes / analytics.totalQuotes) * 100) : 0}%)
                 </div>
               </div>
 
               {/* Revenue Card */}
-              <div className="card-flat bg-business-success/5 border border-business-success/20 p-4 text-center">
-                <div className="w-12 h-12 bg-business-success rounded-flat-lg flex items-center justify-center mx-auto mb-3">
-                  <DollarSign className="icon-flat text-white" />
+              <div className="neomorphism-metric text-center neomorphism-interactive">
+                <div className="neomorphism-flat w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <DollarSign className="w-8 h-8 text-green-600" />
                 </div>
-                <div className="text-flat-3xl font-bold text-business-success mb-1">{formatCurrency(analytics.totalRevenue)}</div>
-                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Revenue Generated</div>
-                <div className="text-flat-sm font-medium text-flat-gray-600">All time</div>
+                <div className="text-3xl font-bold text-green-700 mb-2 neomorphism-text">{formatCurrency(analytics.totalRevenue)}</div>
+                <div className="text-base font-semibold text-gray-700 mb-2">Revenue Generated</div>
+                <div className="text-sm font-medium text-gray-600">All time</div>
               </div>
 
               {/* Average Quote Card */}
-              <div className="card-flat bg-paint-wall/5 border border-paint-wall/20 p-4 text-center">
-                <div className="w-12 h-12 bg-paint-wall rounded-flat-lg flex items-center justify-center mx-auto mb-3">
-                  <TrendingUp className="icon-flat text-white" />
+              <div className="neomorphism-metric text-center neomorphism-interactive">
+                <div className="neomorphism-flat w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="w-8 h-8 text-purple-600" />
                 </div>
-                <div className="text-flat-3xl font-bold text-paint-wall mb-1">{formatCurrency(analytics.averageQuote)}</div>
-                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Average Job Value</div>
-                <div className="text-flat-sm font-medium text-flat-gray-600">Per quote</div>
+                <div className="text-3xl font-bold text-purple-700 mb-2 neomorphism-text">{formatCurrency(analytics.averageQuote)}</div>
+                <div className="text-base font-semibold text-gray-700 mb-2">Average Job Value</div>
+                <div className="text-sm font-medium text-gray-600">Per quote</div>
               </div>
 
               {/* Pending Quotes Card */}
-              <div className="card-flat bg-paint-trim/5 border border-paint-trim/20 p-4 text-center">
-                <div className="w-12 h-12 bg-paint-trim rounded-flat-lg flex items-center justify-center mx-auto mb-3">
-                  <Calendar className="icon-flat text-white" />
+              <div className="neomorphism-metric text-center neomorphism-interactive">
+                <div className="neomorphism-flat w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <Calendar className="w-8 h-8 text-orange-600" />
                 </div>
-                <div className="text-flat-3xl font-bold text-paint-trim mb-1">{analytics.pendingQuotes}</div>
-                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Awaiting Response</div>
-                <div className="text-flat-sm font-medium text-flat-gray-600">Follow up needed</div>
+                <div className="text-3xl font-bold text-orange-700 mb-2 neomorphism-text">{analytics.pendingQuotes}</div>
+                <div className="text-base font-semibold text-gray-700 mb-2">Awaiting Response</div>
+                <div className="text-sm font-medium text-gray-600">Follow up needed</div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Secondary Navigation - Mobile-First Flat Design */}
+        {/* Secondary Navigation - Neumorphism Design */}
         <div className="mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <Button
-              variant="outline"
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <button
               onClick={() => router.push("/quotes")}
-              className="btn-flat-primary mobile-flat-button flex items-center justify-center gap-2"
+              className="neomorphism-button-primary flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
+              style={{ animationDelay: '0.1s' }}
             >
-              <FileText className="icon-flat" />
+              <FileText className="w-5 h-5" />
               <span className="font-semibold">View All Quotes</span>
-            </Button>
-            <Button
-              variant="outline"
+            </button>
+            <button
               onClick={() => router.push("/insights")}
-              className="btn-flat-wall mobile-flat-button flex items-center justify-center gap-2"
+              className="neomorphism-button-success flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
+              style={{ animationDelay: '0.2s' }}
             >
-              <TrendingUp className="icon-flat" />
+              <TrendingUp className="w-5 h-5" />
               <span className="font-semibold">Analytics</span>
-            </Button>
-            <Button
-              variant="outline"
+            </button>
+            <button
               onClick={() => router.push("/settings")}
-              className="btn-flat-ceiling mobile-flat-button flex items-center justify-center gap-2"
+              className="neomorphism-button-warning flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
+              style={{ animationDelay: '0.3s' }}
             >
-              <MessageSquare className="icon-flat" />
+              <MessageSquare className="w-5 h-5" />
               <span className="font-semibold">Settings</span>
-            </Button>
+            </button>
           </div>
         </div>
 
