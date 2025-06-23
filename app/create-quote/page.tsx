@@ -917,9 +917,25 @@ What would you like to modify?`,
       case 'surface_selection':
         // Handle continue button for surface selection
         if (input === 'continue' || input.includes('Continue')) {
+          console.log('Continue button clicked, selectedSurfaces:', selectedSurfaces);
           if (selectedSurfaces.length === 0) {
-            responseContent = `Please select at least one surface to paint before continuing.`;
+            responseContent = `Please select at least one surface to paint before continuing.\n\nClick on the surface buttons above to select them, then click Continue.`;
             nextStage = 'surface_selection';
+            // Re-show the surface selection buttons
+            const surfaceButtons = quoteData.project_type === 'interior' || quoteData.project_type === 'both' ? [
+              { id: 'walls', label: '🎨 Walls', value: 'walls', selected: false },
+              { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: false },
+              { id: 'trim', label: '🖼️ Trim & Baseboards', value: 'trim', selected: false },
+              { id: 'doors', label: '🚪 Doors', value: 'doors', selected: false },
+              { id: 'windows', label: '🪟 Window Frames', value: 'windows', selected: false }
+            ] : [
+              { id: 'siding', label: '🏠 Siding', value: 'siding', selected: false },
+              { id: 'trim_ext', label: '🖼️ Exterior Trim', value: 'trim_ext', selected: false },
+              { id: 'doors_ext', label: '🚪 Front Door', value: 'doors_ext', selected: false },
+              { id: 'shutters', label: '🪟 Shutters', value: 'shutters', selected: false },
+              { id: 'deck', label: '🏗️ Deck/Porch', value: 'deck', selected: false }
+            ];
+            buttonsToShow = surfaceButtons;
           } else {
             responseContent = generateMeasurementPrompt(selectedSurfaces, quoteData.dimensions || {});
             nextStage = 'measurements';
@@ -932,6 +948,26 @@ What would you like to modify?`,
         break;
 
       case 'measurements':
+        // Safety check: if no surfaces selected, go back to surface selection
+        if (selectedSurfaces.length === 0) {
+          responseContent = `I notice no surfaces were selected. Let's go back and select which surfaces you want to paint:`;
+          nextStage = 'surface_selection';
+          buttonsToShow = quoteData.project_type === 'interior' || quoteData.project_type === 'both' ? [
+            { id: 'walls', label: '🎨 Walls', value: 'walls', selected: false },
+            { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: false },
+            { id: 'trim', label: '🖼️ Trim & Baseboards', value: 'trim', selected: false },
+            { id: 'doors', label: '🚪 Doors', value: 'doors', selected: false },
+            { id: 'windows', label: '🪟 Window Frames', value: 'windows', selected: false }
+          ] : [
+            { id: 'siding', label: '🏠 Siding', value: 'siding', selected: false },
+            { id: 'trim_ext', label: '🖼️ Exterior Trim', value: 'trim_ext', selected: false },
+            { id: 'doors_ext', label: '🚪 Front Door', value: 'doors_ext', selected: false },
+            { id: 'shutters', label: '🪟 Shutters', value: 'shutters', selected: false },
+            { id: 'deck', label: '🏗️ Deck/Porch', value: 'deck', selected: false }
+          ];
+          break;
+        }
+
         // Use AI to parse measurements for selected surfaces
         const measurements = await parseWithAI(input, `Extract measurement data: ${selectedSurfaces.includes('walls') ? 'wall linear feet and ceiling height,' : ''} ${selectedSurfaces.includes('ceilings') ? 'ceiling area or floor area,' : ''} ${selectedSurfaces.includes('doors') ? 'number of doors,' : ''} ${selectedSurfaces.includes('windows') ? 'number of windows' : ''}`);
         
@@ -1161,6 +1197,11 @@ What would you like to modify?`,
 
   // Helper function to generate measurement prompts based on selected surfaces
   const generateMeasurementPrompt = (surfaces: string[], dimensions: any): string => {
+    // Safety check: if no surfaces selected, return a helpful message
+    if (!surfaces || surfaces.length === 0) {
+      return 'No surfaces were selected. Please go back and select which surfaces you want to paint.';
+    }
+
     const needed = [];
     
     if (surfaces.includes('walls')) {
