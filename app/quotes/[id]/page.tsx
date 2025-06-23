@@ -82,7 +82,15 @@ export default function QuotePage({ params }: { params: { id: string } }) {
       if (fallbackQuoteData) {
         const quote = JSON.parse(fallbackQuoteData);
         console.log('✅ Quote found in localStorage with key:', keyUsed);
-        console.log('📋 Quote data:', quote);
+        console.log('📋 Raw quote data:', quote);
+        console.log('📋 Quote fields check:');
+        console.log('  - customer_name:', quote.customer_name);
+        console.log('  - total_cost:', quote.total_cost);
+        console.log('  - final_price:', quote.final_price);
+        console.log('  - quote_amount:', quote.quote_amount);
+        console.log('  - created_at:', quote.created_at);
+        console.log('  - project_type:', quote.project_type);
+        console.log('  - address:', quote.address);
         setQuote(quote);
         
         toast({
@@ -230,8 +238,8 @@ export default function QuotePage({ params }: { params: { id: string } }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-semibold mb-2">Customer Information</h3>
-                <p className="text-lg font-medium">{quote.customer_name}</p>
-                <p className="text-gray-600">{quote.address}</p>
+                <p className="text-lg font-medium">{quote.customer_name || 'Customer Name'}</p>
+                <p className="text-gray-600">{quote.address || 'Address not specified'}</p>
                 {quote.customer_email && (
                   <p className="text-gray-600">{quote.customer_email}</p>
                 )}
@@ -243,13 +251,13 @@ export default function QuotePage({ params }: { params: { id: string } }) {
               <div>
                 <h3 className="font-semibold mb-2">Project Details</h3>
                 <p className="text-gray-600">
-                  {quote.project_type?.charAt(0).toUpperCase() + quote.project_type?.slice(1)} Painting
+                  {quote.project_type?.charAt(0).toUpperCase() + quote.project_type?.slice(1) || 'Interior'} Painting
                 </p>
                 <p className="text-2xl font-bold text-green-600 mt-2">
-                  ${quote.total_cost?.toLocaleString()}
+                  ${(quote.total_cost || quote.final_price || quote.quote_amount || 0).toLocaleString()}
                 </p>
                 <p className="text-sm text-gray-500">
-                  Created: {new Date(quote.created_at).toLocaleDateString()}
+                  Created: {quote.created_at ? new Date(quote.created_at).toLocaleDateString() : 'Today'}
                 </p>
                 <div className="mt-2">
                   <span className={`inline-flex px-2 py-1 text-xs rounded-full ${

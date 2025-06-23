@@ -7,7 +7,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const quote: any = dbGet(`
+    console.log(`🔍 API: Looking for quote with ID: ${params.id}`);
+    
+    const quote: any = await dbGet(`
       SELECT 
         q.*,
         c.company_name,
@@ -18,10 +20,13 @@ export async function GET(
       WHERE q.id = ? OR q.quote_id = ?
     `, [params.id, params.id]);
 
+    console.log(`📖 API: Database query result:`, quote ? 'FOUND' : 'NOT FOUND');
+
     if (!quote) {
       console.log(`❌ Quote ${params.id} not found in database`);
+      // Return 404 to trigger client-side localStorage fallback
       return NextResponse.json(
-        { error: "Quote not found", id: params.id, suggestion: "Check localStorage for fallback quote data" },
+        { error: "Quote not found", id: params.id, suggestion: "Client will check localStorage for fallback quote data" },
         { status: 404 }
       );
     }
