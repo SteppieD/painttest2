@@ -274,11 +274,11 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50" style={{ background: '#f0f0f3' }}>
       {/* Header */}
-      <div className="neomorphism-nav border-b">
+      <div className="neomorphism-nav-enhanced">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center gap-4">
-              <div className="neomorphism-flat p-3 rounded-2xl">
+              <div className="neomorphism-accessible-subtle p-3 rounded-2xl">
                 <Palette className="w-8 h-8 text-blue-600" />
               </div>
               <div>
@@ -290,17 +290,15 @@ export default function DashboardPage() {
                       <span className="text-sm text-gray-400">•</span>
                       <div className="flex items-center gap-1">
                         <span className="text-sm text-gray-500">Code: {companyInfo.access_code}</span>
-                        <Button
-                          size="sm"
-                          variant="ghost"
+                        <button
                           onClick={() => {
                             navigator.clipboard.writeText(companyInfo.access_code);
                             alert('Access code copied to clipboard!');
                           }}
-                          className="neomorphism-button h-6 w-6 p-0 rounded-lg"
+                          className="neomorphism-button-enhanced h-6 w-6 p-0 rounded-lg flex items-center justify-center"
                         >
                           <Copy className="h-3 w-3" />
-                        </Button>
+                        </button>
                       </div>
                     </>
                   )}
@@ -309,92 +307,85 @@ export default function DashboardPage() {
             </div>
             
             <div className="flex items-center gap-3">
-              <Button
+              <button
                 onClick={() => router.push("/create-quote")}
-                className="btn-flat-primary mobile-flat-button"
+                className="neomorphism-button-primary-enhanced flex items-center"
               >
-                <Calculator className="icon-flat mr-2" />
+                <Calculator className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">New Quote</span>
                 <span className="sm:hidden">Quote</span>
-              </Button>
+              </button>
               
-              <Button
-                variant="ghost"
+              <button
                 onClick={handleLogout}
-                className="btn-flat text-flat-gray-600 hover:text-flat-gray-800 mobile-flat-button"
+                className="neomorphism-button-enhanced flex items-center"
               >
-                <LogOut className="icon-flat mr-2" />
+                <LogOut className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">Logout</span>
-              </Button>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        {/* Setup Completion Prompt - Flat Design */}
+        {/* Setup Completion Prompt - Neumorphism Design */}
         {!isCheckingOnboarding && needsOnboarding && (
           <div className="mb-8">
-            <Card className="card-flat bg-paint-primer/10 border-2 border-paint-primer shadow-flat-lg">
-              <CardContent className="p-6 sm:p-8 text-center">
-                <div className="w-20 h-20 bg-paint-primer rounded-flat-xl flex items-center justify-center mx-auto mb-5">
-                  <Palette className="w-10 h-10 text-white" />
+            <div className="neomorphism-modal-enhanced animate-neomorphism-scale-in">
+              <div className="text-center">
+                <div className="neomorphism-accessible w-20 h-20 flex items-center justify-center mx-auto mb-5">
+                  <Palette className="w-10 h-10 text-blue-600" />
                 </div>
-                <h2 className="text-flat-3xl font-bold text-flat-gray-900 mb-3">
+                <h2 className="text-3xl font-bold text-gray-900 mb-3 neomorphism-text">
                   Complete Your Setup
                 </h2>
-                <p className="text-flat-lg text-flat-gray-700 mb-6 max-w-md mx-auto font-medium">
+                <p className="text-lg text-gray-700 mb-6 max-w-md mx-auto">
                   Set up your favorite paint products and pricing to create quotes quickly. 
                   This takes just 2 minutes and you'll be ready to start quoting!
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button 
+                  <button 
                     onClick={() => router.push("/setup")}
-                    className="btn-flat-primary mobile-flat-button px-8"
-                    size="lg"
+                    className="neomorphism-button-primary-enhanced px-8"
                   >
-                    <ArrowRight className="icon-flat mr-2" />
+                    <ArrowRight className="w-4 h-4 mr-2" />
                     Complete Setup
-                  </Button>
-                  <Button 
-                    variant="outline"
+                  </button>
+                  <button 
                     onClick={() => setNeedsOnboarding(false)}
-                    className="btn-flat mobile-flat-button"
-                    size="lg"
+                    className="neomorphism-button-enhanced"
                   >
                     Skip for Now
-                  </Button>
+                  </button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Quick Settings Access - Flat Design */}
+        {/* Quick Settings Access - Neumorphism Design */}
         {!isCheckingOnboarding && !needsOnboarding && (
           <div className="mb-6">
-            <Card className="card-flat bg-paint-wall/5 border border-paint-wall/20 shadow-flat">
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-paint-wall/10 rounded-flat-lg flex items-center justify-center">
-                      <Palette className="icon-flat-lg text-paint-wall" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-flat-lg font-bold text-flat-gray-900">Customize Your Products & Pricing</h3>
-                      <p className="text-flat-base text-flat-gray-700 font-medium">Set up paint products and costs for accurate quotes</p>
-                    </div>
+            <div className="neomorphism-card-accessible animate-neomorphism-fade-in">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="neomorphism-accessible-subtle w-12 h-12 flex items-center justify-center">
+                    <Palette className="w-6 h-6 text-purple-600" />
                   </div>
-                  <Button 
-                    variant="outline"
-                    onClick={() => router.push("/settings/products")}
-                    className="btn-flat-wall mobile-flat-button flex items-center gap-2"
-                  >
-                    Settings
-                  </Button>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-gray-900">Customize Your Products & Pricing</h3>
+                    <p className="text-base text-gray-700">Set up paint products and costs for accurate quotes</p>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
+                <button 
+                  onClick={() => router.push("/settings/products")}
+                  className="neomorphism-button-enhanced flex items-center gap-2"
+                >
+                  Settings
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
@@ -476,26 +467,26 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Business Metrics - Neumorphism Design */}
+        {/* Business Metrics - Enhanced Neumorphism Design */}
         <div className="mb-8">
-          <div className="neomorphism-card animate-neomorphism-fade-in">
+          <div className="neomorphism-card-accessible animate-neomorphism-fade-in">
             <h2 className="text-2xl font-bold text-gray-900 mb-8 neomorphism-text">Business Performance</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Total Quotes Card */}
-              <div className="neomorphism-metric text-center neomorphism-interactive">
-                <div className="neomorphism-flat w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <div className="neomorphism-metric-card text-center">
+                <div className="neomorphism-accessible-subtle w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <FileText className="w-8 h-8 text-blue-600" />
                 </div>
                 <div className="text-3xl font-bold text-gray-900 mb-2 neomorphism-text">{analytics.totalQuotes}</div>
                 <div className="text-base font-semibold text-gray-700 mb-2">Total Quotes</div>
-                <div className="neomorphism-badge-success">
+                <div className="neomorphism-badge-enhanced">
                   {analytics.acceptedQuotes} won ({analytics.totalQuotes > 0 ? Math.round((analytics.acceptedQuotes / analytics.totalQuotes) * 100) : 0}%)
                 </div>
               </div>
 
               {/* Revenue Card */}
-              <div className="neomorphism-metric text-center neomorphism-interactive">
-                <div className="neomorphism-flat w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <div className="neomorphism-metric-card text-center">
+                <div className="neomorphism-accessible-subtle w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <DollarSign className="w-8 h-8 text-green-600" />
                 </div>
                 <div className="text-3xl font-bold text-green-700 mb-2 neomorphism-text">{formatCurrency(analytics.totalRevenue)}</div>
@@ -504,8 +495,8 @@ export default function DashboardPage() {
               </div>
 
               {/* Average Quote Card */}
-              <div className="neomorphism-metric text-center neomorphism-interactive">
-                <div className="neomorphism-flat w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <div className="neomorphism-metric-card text-center">
+                <div className="neomorphism-accessible-subtle w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <TrendingUp className="w-8 h-8 text-purple-600" />
                 </div>
                 <div className="text-3xl font-bold text-purple-700 mb-2 neomorphism-text">{formatCurrency(analytics.averageQuote)}</div>
@@ -514,8 +505,8 @@ export default function DashboardPage() {
               </div>
 
               {/* Pending Quotes Card */}
-              <div className="neomorphism-metric text-center neomorphism-interactive">
-                <div className="neomorphism-flat w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <div className="neomorphism-metric-card text-center">
+                <div className="neomorphism-accessible-subtle w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <Calendar className="w-8 h-8 text-orange-600" />
                 </div>
                 <div className="text-3xl font-bold text-orange-700 mb-2 neomorphism-text">{analytics.pendingQuotes}</div>
@@ -526,55 +517,55 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Secondary Navigation - Neumorphism Design */}
+        {/* Secondary Navigation - Enhanced Neumorphism Design */}
         <div className="mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <button
               onClick={() => router.push("/quotes")}
-              className="neomorphism-button-primary flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
+              className="neomorphism-button-enhanced flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
               style={{ animationDelay: '0.1s' }}
             >
-              <FileText className="w-5 h-5" />
+              <FileText className="w-5 h-5 text-blue-600" />
               <span className="font-semibold">View All Quotes</span>
             </button>
             <button
               onClick={() => router.push("/insights")}
-              className="neomorphism-button-success flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
+              className="neomorphism-button-enhanced flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
               style={{ animationDelay: '0.2s' }}
             >
-              <TrendingUp className="w-5 h-5" />
+              <TrendingUp className="w-5 h-5 text-purple-600" />
               <span className="font-semibold">Analytics</span>
             </button>
             <button
               onClick={() => router.push("/settings")}
-              className="neomorphism-button-warning flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
+              className="neomorphism-button-enhanced flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
               style={{ animationDelay: '0.3s' }}
             >
-              <MessageSquare className="w-5 h-5" />
+              <MessageSquare className="w-5 h-5 text-orange-600" />
               <span className="font-semibold">Settings</span>
             </button>
           </div>
         </div>
 
-        {/* Quotes List - Flat Design */}
-        <Card className="card-flat shadow-flat-lg">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <span className="text-flat-2xl font-bold text-flat-gray-900">Recent Quotes ({filteredQuotes.length})</span>
+        {/* Quotes List - Enhanced Neumorphism Design */}
+        <div className="neomorphism-card-accessible animate-neomorphism-slide-up">
+          <div className="mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <h2 className="text-2xl font-bold text-gray-900">Recent Quotes ({filteredQuotes.length})</h2>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <div className="relative">
-                  <Search className="icon-flat absolute left-3 top-1/2 transform -translate-y-1/2 text-flat-gray-400" />
-                  <Input
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
                     placeholder="Search quotes..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-full sm:w-48"
+                    className="neomorphism-input-enhanced pl-10 w-full sm:w-48"
                   />
                 </div>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  className="neomorphism-input-enhanced"
                 >
                   <option value="all">All Status</option>
                   <option value="pending">Pending</option>
@@ -583,32 +574,42 @@ export default function DashboardPage() {
                   <option value="cancelled">Cancelled</option>
                 </select>
               </div>
-            </CardTitle>
-          </CardHeader>
+            </div>
+          </div>
           
-          <CardContent>
+          <div>
             {filteredQuotes.length === 0 ? (
               <div className="text-center py-8">
-                <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <div className="neomorphism-accessible-subtle w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-8 h-8 text-gray-400" />
+                </div>
                 <p className="text-gray-600 mb-4">
                   {quotes.length === 0 ? "No quotes yet" : "No quotes match your filters"}
                 </p>
                 {quotes.length === 0 && (
-                  <Button onClick={() => router.push("/create-quote")} className="bg-green-600 hover:bg-green-700">
+                  <button 
+                    onClick={() => router.push("/create-quote")} 
+                    className="neomorphism-button-primary-enhanced"
+                  >
                     <Calculator className="w-4 h-4 mr-2" />
                     Create Your First Professional Quote
-                  </Button>
+                  </button>
                 )}
               </div>
             ) : (
               <div className="space-y-4">
                 {filteredQuotes.map((quote) => (
-                  <div key={quote.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                  <div key={quote.id} className="neomorphism-accessible-subtle p-4 hover:neomorphism-accessible transition-all">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
                           <h3 className="font-semibold text-lg sm:text-base">{quote.customer_name}</h3>
-                          <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(quote.status)}`}>
+                          <span className={`neomorphism-badge-enhanced text-xs ${
+                            quote.status === 'accepted' ? 'text-green-700' :
+                            quote.status === 'completed' ? 'text-blue-700' :
+                            quote.status === 'cancelled' ? 'text-red-700' :
+                            'text-yellow-700'
+                          }`}>
                             {quote.status || 'pending'}
                           </span>
                         </div>
@@ -629,7 +630,7 @@ export default function DashboardPage() {
                           <select
                             value={quote.status || "pending"}
                             onChange={(e) => updateQuoteStatus(quote.id, e.target.value)}
-                            className="text-xs px-2 py-2 border rounded w-full sm:w-auto"
+                            className="neomorphism-input-enhanced text-sm"
                           >
                             <option value="pending">Pending</option>
                             <option value="accepted">Accepted</option>
@@ -638,9 +639,7 @@ export default function DashboardPage() {
                           </select>
                           
                           <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
+                            <button
                               onClick={() => {
                                 const customerUrl = `${window.location.origin}/quotes/${quote.quote_id}/customer`;
                                 navigator.clipboard.writeText(customerUrl);
@@ -653,21 +652,19 @@ export default function DashboardPage() {
                                 }, 1500);
                               }}
                               title="Copy customer quote link"
-                              className="flex-1 sm:flex-none"
+                              className="neomorphism-button-enhanced px-3 py-2"
                             >
-                              <Copy className="w-4 h-4 sm:mr-0 mr-2" />
-                              <span className="sm:hidden">Copy Link</span>
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
+                              <Copy className="w-4 h-4" />
+                              <span className="sm:hidden ml-2">Copy Link</span>
+                            </button>
+                            <button
                               onClick={() => router.push(`/quotes/${quote.id}`)}
                               title="View quote details"
-                              className="flex-1 sm:flex-none"
+                              className="neomorphism-button-enhanced px-3 py-2"
                             >
-                              <Eye className="w-4 h-4 sm:mr-0 mr-2" />
-                              <span className="sm:hidden">View</span>
-                            </Button>
+                              <Eye className="w-4 h-4" />
+                              <span className="sm:hidden ml-2">View</span>
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -676,8 +673,8 @@ export default function DashboardPage() {
                 ))}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1136,6 +1136,214 @@
     @apply neomorphism-mobile px-4 py-2 rounded-xl;
     @apply transition-all duration-200;
   }
+
+  /* Enhanced Neumorphism with Accessibility */
+  .neomorphism-accessible {
+    background: #f0f0f3;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    box-shadow: 
+      20px 20px 60px #d1d1d4,
+      -20px -20px 60px #ffffff;
+  }
+
+  .neomorphism-accessible-subtle {
+    background: #f0f0f3;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 15px;
+    box-shadow: 
+      10px 10px 30px #d1d1d4,
+      -10px -10px 30px #ffffff;
+  }
+
+  /* Enhanced Focus States */
+  .neomorphism-interactive:focus-visible,
+  .neomorphism-button:focus-visible,
+  .neomorphism-input:focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+  }
+
+  /* Hybrid Neumorphism + Glassmorphism */
+  .neomorphism-glass {
+    background: rgba(240, 240, 243, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    box-shadow: 
+      20px 20px 60px rgba(209, 209, 212, 0.5),
+      -20px -20px 60px rgba(255, 255, 255, 0.5);
+  }
+
+  .neomorphism-glass-subtle {
+    background: rgba(240, 240, 243, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    box-shadow: 
+      10px 10px 30px rgba(209, 209, 212, 0.4),
+      -10px -10px 30px rgba(255, 255, 255, 0.4);
+  }
+
+  /* Enhanced Button with Shimmer Effect */
+  .neomorphism-button-enhanced {
+    @apply neomorphism-accessible-subtle px-6 py-3 font-medium text-gray-700;
+    @apply transition-all duration-200 ease-out cursor-pointer;
+    @apply relative overflow-hidden;
+  }
+
+  .neomorphism-button-enhanced::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+
+  .neomorphism-button-enhanced:hover::before {
+    transform: translateX(100%);
+  }
+
+  .neomorphism-button-enhanced:hover {
+    transform: translateY(-1px);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 
+      15px 15px 40px #d1d1d4,
+      -15px -15px 40px #ffffff;
+  }
+
+  .neomorphism-button-enhanced:active {
+    transform: translateY(0);
+    box-shadow: 
+      inset 8px 8px 20px #d1d1d4,
+      inset -8px -8px 20px #ffffff;
+  }
+
+  /* Primary Action Buttons with Better Contrast */
+  .neomorphism-button-primary-enhanced {
+    @apply neomorphism-button-enhanced;
+    background: linear-gradient(145deg, #667eea, #5a6fd8);
+    color: white;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+  }
+
+  .neomorphism-button-primary-enhanced:hover {
+    background: linear-gradient(145deg, #5a6fd8, #667eea);
+    box-shadow: 
+      15px 15px 40px rgba(90, 111, 216, 0.3),
+      -15px -15px 40px rgba(255, 255, 255, 0.8);
+  }
+
+  /* Success Buttons */
+  .neomorphism-button-success-enhanced {
+    @apply neomorphism-button-enhanced;
+    background: linear-gradient(145deg, #48bb78, #38a169);
+    color: white;
+    border: 1px solid rgba(72, 187, 120, 0.3);
+  }
+
+  /* Accessible Cards */
+  .neomorphism-card-accessible {
+    @apply neomorphism-accessible p-6;
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .neomorphism-card-accessible:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 
+      25px 25px 70px #d1d1d4,
+      -25px -25px 70px #ffffff;
+  }
+
+  /* Dashboard Metric Cards */
+  .neomorphism-metric-card {
+    @apply neomorphism-accessible-subtle p-6;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:neomorphism-accessible;
+  }
+
+  /* Form Containers (not individual inputs) */
+  .neomorphism-form-container {
+    @apply neomorphism-glass p-8 rounded-2xl;
+    @apply border border-gray-200/50;
+  }
+
+  /* Navigation with Better Definition */
+  .neomorphism-nav-enhanced {
+    @apply neomorphism-glass-subtle;
+    @apply sticky top-0 z-50;
+    border-bottom: 1px solid rgba(209, 209, 212, 0.3);
+    box-shadow: 
+      0 10px 30px rgba(209, 209, 212, 0.3),
+      0 -5px 20px rgba(255, 255, 255, 0.8);
+  }
+
+  /* Modal with Hybrid Design */
+  .neomorphism-modal-enhanced {
+    @apply neomorphism-glass;
+    @apply rounded-3xl p-8;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 
+      30px 30px 80px rgba(209, 209, 212, 0.6),
+      -30px -30px 80px rgba(255, 255, 255, 0.6);
+  }
+
+  /* Accessible Input Fields */
+  .neomorphism-input-enhanced {
+    @apply px-4 py-3 rounded-xl;
+    background: #f8f8fa;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 
+      inset 4px 4px 8px rgba(209, 209, 212, 0.5),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.9);
+    @apply transition-all duration-200;
+  }
+
+  .neomorphism-input-enhanced:focus {
+    border-color: #667eea;
+    box-shadow: 
+      inset 6px 6px 12px rgba(209, 209, 212, 0.5),
+      inset -6px -6px 12px rgba(255, 255, 255, 0.9),
+      0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  /* Tabs with Clear Active States */
+  .neomorphism-tab {
+    @apply neomorphism-accessible-subtle px-6 py-3 rounded-t-xl;
+    @apply transition-all duration-200;
+    border-bottom: none;
+  }
+
+  .neomorphism-tab-active {
+    @apply neomorphism-accessible;
+    background: white;
+    border-bottom: 2px solid #667eea;
+    transform: translateY(-2px);
+  }
+
+  /* Badge with Better Visibility */
+  .neomorphism-badge-enhanced {
+    @apply neomorphism-accessible-subtle px-3 py-1 text-sm font-medium;
+    @apply inline-flex items-center;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  /* Loading States */
+  .neomorphism-skeleton {
+    @apply neomorphism-accessible-subtle rounded-xl;
+    background: linear-gradient(90deg, #f0f0f3 25%, #e0e0e3 50%, #f0f0f3 75%);
+    background-size: 200% 100%;
+    animation: neomorphism-loading 1.5s ease-in-out infinite;
+  }
+
+  @keyframes neomorphism-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
   
   /* Neumorphism Animation Classes */
   .neomorphism-fade-in {

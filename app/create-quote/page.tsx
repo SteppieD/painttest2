@@ -3158,31 +3158,31 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col" style={{ background: '#f0f0f3' }}>
       {/* Header */}
-      <header className="bg-white border-b shadow-sm relative z-20">
+      <header className="neomorphism-nav-enhanced relative z-20">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="icon"
+              <button
                 onClick={() => router.push("/dashboard")}
-                className="w-10 h-10 hover:bg-gray-100"
+                className="neomorphism-button-enhanced w-10 h-10 p-0 flex items-center justify-center"
               >
                 <ArrowLeft className="w-5 h-5" />
-              </Button>
+              </button>
               
               <div className="flex items-center gap-2">
-                <Calculator className="w-6 h-6 text-blue-600" />
-                <h1 className="text-lg font-semibold">{isEditMode ? 'Edit Quote' : 'Create Quote'}</h1>
+                <div className="neomorphism-accessible-subtle p-2 rounded-xl">
+                  <Calculator className="w-6 h-6 text-blue-600" />
+                </div>
+                <h1 className="text-lg font-semibold neomorphism-text">{isEditMode ? 'Edit Quote' : 'Create Quote'}</h1>
               </div>
             </div>
             
             {quoteData.calculation && (
-              <div className="text-right">
+              <div className="neomorphism-accessible-subtle p-3 rounded-xl text-right">
                 <div className="text-sm text-gray-600">Customer Price</div>
-                <div className="text-lg font-bold text-green-600">
+                <div className="text-lg font-bold text-green-600 neomorphism-text">
                   ${quoteData.calculation.final_price.toLocaleString()}
                 </div>
                 <div className="text-xs text-gray-500">
@@ -3201,16 +3201,16 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
             <div
               key={message.id}
               className={cn(
-                "flex gap-3",
+                "flex gap-3 animate-neomorphism-fade-in",
                 message.role === 'user' ? "justify-end" : "justify-start"
               )}
             >
               <div
                 className={cn(
-                  "max-w-[80%] p-4 rounded-lg shadow-sm",
+                  "max-w-[80%] p-4 rounded-2xl",
                   message.role === 'user'
-                    ? "bg-blue-600 text-white rounded-br-sm"
-                    : "bg-white border rounded-bl-sm"
+                    ? "neomorphism-glass bg-blue-600/90 text-white rounded-br-sm"
+                    : "neomorphism-card-accessible rounded-bl-sm"
                 )}
               >
                 <div className="whitespace-pre-wrap text-sm" dangerouslySetInnerHTML={{
@@ -3249,26 +3249,26 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
           )} */}
           
           {isThinking && (
-            <div className="flex gap-3 justify-start">
-              <div className="bg-white border p-4 rounded-lg rounded-bl-sm shadow-sm">
+            <div className="flex gap-3 justify-start animate-neomorphism-fade-in">
+              <div className="neomorphism-card-accessible rounded-2xl rounded-bl-sm">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                   </div>
-                  <span className="text-sm text-gray-500">Thinking...</span>
+                  <span className="text-sm text-gray-600">AI is thinking...</span>
                 </div>
               </div>
             </div>
           )}
 
           {isLoading && !isThinking && (
-            <div className="flex gap-3 justify-start">
-              <div className="bg-white border p-4 rounded-lg rounded-bl-sm shadow-sm">
+            <div className="flex gap-3 justify-start animate-neomorphism-fade-in">
+              <div className="neomorphism-card-accessible rounded-2xl rounded-bl-sm">
                 <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="text-sm text-gray-500">Calculating...</span>
+                  <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+                  <span className="text-sm text-gray-600">Calculating your quote...</span>
                 </div>
               </div>
             </div>
@@ -3276,24 +3276,23 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
 
           {/* Interactive Buttons */}
           {showButtons && buttonOptions.length > 0 && (
-            <div className="flex gap-3 justify-start">
-              <div className="max-w-[80%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+            <div className="flex gap-3 justify-start animate-neomorphism-slide-up">
+              <div className="max-w-[80%] neomorphism-card-accessible rounded-2xl rounded-bl-sm">
                 <p className="text-sm text-gray-600 mb-3">Choose an option:</p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3">
                   {buttonOptions.map((option) => (
-                    <Button
+                    <button
                       key={option.id}
                       onClick={() => handleButtonClick(option.value, option.label)}
-                      variant={option.selected ? "default" : "outline"}
                       className={cn(
-                        "text-sm transition-colors",
+                        "text-sm transition-all px-4 py-2 rounded-xl",
                         option.selected 
-                          ? "bg-blue-600 text-white hover:bg-blue-700 border-blue-600" 
-                          : "hover:bg-blue-50 hover:border-blue-300"
+                          ? "neomorphism-button-primary-enhanced" 
+                          : "neomorphism-button-enhanced"
                       )}
                     >
                       {option.label}
-                    </Button>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -3302,8 +3301,8 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
 
           {/* Paint Brand Selector */}
           {showPaintBrandSelector && (
-            <div className="flex gap-3 justify-start">
-              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+            <div className="flex gap-3 justify-start animate-neomorphism-slide-up">
+              <div className="max-w-[90%] neomorphism-card-accessible rounded-2xl rounded-bl-sm">
                 <PaintBrandSelector
                   brands={availableBrands}
                   topBrands={topBrands}
@@ -3318,8 +3317,8 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
 
           {/* Paint Product Selector */}
           {showPaintProductSelector && (
-            <div className="flex gap-3 justify-start">
-              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+            <div className="flex gap-3 justify-start animate-neomorphism-slide-up">
+              <div className="max-w-[90%] neomorphism-card-accessible rounded-2xl rounded-bl-sm">
                 <PaintProductSelector
                   products={availableProductsForCategory}
                   brand={selectedBrandForCategory}
@@ -3333,8 +3332,8 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
 
           {/* Favorite Paint Selector */}
           {showFavoritePaintSelector && companyData && (
-            <div className="flex gap-3 justify-start">
-              <div className="max-w-[90%] p-4 bg-white border rounded-lg rounded-bl-sm shadow-sm">
+            <div className="flex gap-3 justify-start animate-neomorphism-slide-up">
+              <div className="max-w-[90%] neomorphism-card-accessible rounded-2xl rounded-bl-sm">
                 <FavoritePaintSelector
                   category={currentMeasurementCategory}
                   projectType={quoteData.project_type}
@@ -3350,24 +3349,23 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
         </div>
 
         {/* Input Area */}
-        <div className="bg-white border-t p-4">
+        <div className="neomorphism-nav-enhanced p-4">
           <div className="flex gap-2">
-            <Input
+            <input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Type your response..."
               disabled={isLoading || isThinking}
-              className="flex-1"
+              className="flex-1 neomorphism-input-enhanced"
             />
-            <Button
+            <button
               onClick={handleSend}
               disabled={!inputValue.trim() || isLoading || isThinking}
-              size="icon"
-              className="shrink-0"
+              className="neomorphism-button-primary-enhanced px-4"
             >
               <Send className="w-4 h-4" />
-            </Button>
+            </button>
           </div>
         </div>
       </div>
