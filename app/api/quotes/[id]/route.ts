@@ -9,6 +9,15 @@ export async function GET(
   try {
     console.log(`🔍 API: Looking for quote with ID: ${params.id}`);
     
+    // First try the new quote creation API
+    const newQuoteResponse = await fetch(`${request.nextUrl.origin}/api/quotes/create-from-conversation?id=${params.id}`);
+    if (newQuoteResponse.ok) {
+      const quote = await newQuoteResponse.json();
+      console.log(`✅ Found quote in new system:`, quote.quote_id);
+      return NextResponse.json(quote);
+    }
+    
+    // Fallback to old database system
     const quote: any = await dbGet(`
       SELECT 
         q.*,
@@ -23,10 +32,9 @@ export async function GET(
     console.log(`📖 API: Database query result:`, quote ? 'FOUND' : 'NOT FOUND');
 
     if (!quote) {
-      console.log(`❌ Quote ${params.id} not found in database`);
-      // Return 404 to trigger client-side localStorage fallback
+      console.log(`❌ Quote ${params.id} not found in either system`);
       return NextResponse.json(
-        { error: "Quote not found", id: params.id, suggestion: "Client will check localStorage for fallback quote data" },
+        { error: "Quote not found", id: params.id },
         { status: 404 }
       );
     }

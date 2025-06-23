@@ -43,6 +43,8 @@ import { FavoritePaintSelector } from "@/components/ui/favorite-paint-selector";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
 import { detectAndExtractQuote, extractLearningData, type DetectedQuote } from "@/lib/universal-quote-detector";
 import { saveLearningData } from "@/lib/learning-profile-system";
+import { extractQuoteDataFromConversation, hasQuoteWorthyContent } from "@/lib/simple-quote-extractor";
+import { ManualQuoteCreator } from "@/components/ui/manual-quote-creator";
 // Progressive calculator temporarily disabled
 // import { calculateProgressiveEstimate, generateEstimateMessage, type ProgressiveEstimate } from "@/lib/progressive-calculator";
 // import { ProgressiveEstimateDisplay, FloatingEstimateWidget } from "@/components/ui/progressive-estimate-display";
@@ -175,6 +177,10 @@ function CreateQuotePageContent() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
+  
+  // Manual quote creation state
+  const [showManualQuoteCreator, setShowManualQuoteCreator] = useState(false);
+  const [showCreateQuoteButton, setShowCreateQuoteButton] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [buttonOptions, setButtonOptions] = useState<{id: string, label: string, value: any, selected?: boolean}[]>([]);
@@ -419,6 +425,14 @@ function CreateQuotePageContent() {
   useEffect(() => {
     initializeApp();
   }, [router, editQuoteId]);
+
+  // Check if we should show the "Create Quote" button
+  useEffect(() => {
+    if (messages.length > 2) { // Has some conversation
+      const hasWorthyContent = hasQuoteWorthyContent(messages);
+      setShowCreateQuoteButton(hasWorthyContent);
+    }
+  }, [messages]);
 
   const initializeApp = async () => {
     setIsInitializing(true);
@@ -3691,6 +3705,19 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
 
         {/* Input Area */}
         <div className="neomorphism-nav-enhanced p-4">
+          {/* Create Quote Button - Shows when conversation has quote-worthy content */}
+          {showCreateQuoteButton && (
+            <div className="mb-3">
+              <button
+                onClick={() => setShowManualQuoteCreator(true)}
+                className="w-full neomorphism-button-enhanced bg-green-50 text-green-700 hover:bg-green-100 py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-medium transition-colors"
+              >
+                <FileText className="w-5 h-5" />
+                Create Quote from Conversation
+              </button>
+            </div>
+          )}
+          
           <div className="flex gap-2">
             <input
               value={inputValue}
@@ -3719,6 +3746,26 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
           onToggle={() => setShowEstimate(true)}
         />
       )} */}
+
+      {/* Manual Quote Creator */}
+      {companyData && (
+        <ManualQuoteCreator
+          isOpen={showManualQuoteCreator}
+          onClose={() => setShowManualQuoteCreator(false)}
+          onQuoteCreated={(quoteId: string) => {
+            // Navigate to the quote view
+            window.open(`/quotes/${quoteId}`, '_blank');
+            // Show success message
+            toast({
+              title: "Quote Created Successfully!",
+              description: `Quote ${quoteId} has been created and opened in a new tab.`,
+            });
+          }}
+          extractedData={extractQuoteDataFromConversation(messages)}
+          companyId={companyData.id}
+          conversationData={messages}
+        />
+      )}
     </div>
   );
 }
