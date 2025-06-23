@@ -2591,11 +2591,21 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
             const quoteWithButtons = generateQuoteDisplayWithButtons(calculation, finalQuoteData.customer_name, finalQuoteData.address, finalQuoteData.dimensions.rooms);
             responseContent = quoteWithButtons.quoteText;
             
+            // Auto-save the quote and provide link
+            try {
+              const quoteId = await saveQuote();
+              setSavedQuoteId(quoteId);
+              responseContent += `\n\n**Quote ready to send!** 📋`;
+            } catch (error) {
+              console.error('Error auto-saving quote:', error);
+              // Continue without auto-save, user can manually save later
+            }
+            
             // Show room edit buttons along with standard quote buttons
             setTimeout(() => {
               const quoteButtons = [
                 ...quoteWithButtons.roomButtons,
-                { id: 'save', label: '💾 Save Quote', value: 'save', selected: false },
+                { id: 'save', label: '💾 Save Again', value: 'save', selected: false },
                 { id: 'adjust_markup', label: '📊 Adjust Markup', value: 'adjust_markup', selected: false },
                 { id: 'breakdown', label: '🔍 View Breakdown', value: 'breakdown', selected: false }
               ];
@@ -2604,6 +2614,27 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
             }, 500);
           } else {
             responseContent = generateQuoteDisplay(calculation, finalQuoteData.customer_name, finalQuoteData.address, finalQuoteData.dimensions.rooms);
+            
+            // Auto-save the quote and provide link
+            try {
+              const quoteId = await saveQuote();
+              setSavedQuoteId(quoteId);
+              responseContent += `\n\n**Quote ready to send!** 📋`;
+            } catch (error) {
+              console.error('Error auto-saving quote:', error);
+              // Continue without auto-save, user can manually save later
+            }
+            
+            // Show action buttons
+            setTimeout(() => {
+              setButtonOptions([
+                { id: 'save', label: '💾 Save Again', value: 'save', selected: false },
+                { id: 'adjust_markup', label: '📊 Adjust Markup', value: 'adjust_markup', selected: false },
+                { id: 'breakdown', label: '🔍 View Breakdown', value: 'breakdown', selected: false },
+                { id: 'edit_quote', label: '✏️ Edit Quote', value: 'edit quote', selected: false }
+              ]);
+              setShowButtons(true);
+            }, 500);
           }
           nextStage = 'quote_review';
         } else {
@@ -3225,13 +3256,13 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
                 </div>
                 
                 {/* Add quote link if this message contains a quote */}
-                {message.content.includes('TOTAL PROJECT COST:') && savedQuoteId && (
-                  <div className="mt-3 pt-3 border-t border-white/20">
+                {(message.content.includes('TOTAL PROJECT COST:') || message.content.includes('Quote ready to send!')) && savedQuoteId && message.role === 'assistant' && (
+                  <div className="mt-3 pt-3 border-t border-gray-200">
                     <button
                       onClick={() => {
                         window.open(`/quotes/${savedQuoteId}/customer`, '_blank');
                       }}
-                      className="bg-white/20 hover:bg-white/30 text-white text-xs px-3 py-2 rounded-lg transition-colors border border-white/30"
+                      className="neomorphism-button-enhanced text-xs px-4 py-2 rounded-lg flex items-center gap-2 text-blue-600 hover:text-blue-700"
                     >
                       📄 View Full Quote
                     </button>
