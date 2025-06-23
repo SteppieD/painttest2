@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, Send, Calculator, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -144,9 +144,18 @@ interface QuoteData {
 function CreateQuotePageContent() {
   const router = useRouter();
   const { toast } = useToast();
-  const searchParams = useSearchParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const editQuoteId = searchParams.get('edit');
+  
+  // Handle search params safely to avoid hydration issues
+  const [editQuoteId, setEditQuoteId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    // Only access search params on client side after hydration
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      setEditQuoteId(params.get('edit'));
+    }
+  }, []);
 
   const [companyData, setCompanyData] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([
