@@ -204,7 +204,7 @@ function extractAIQuote(content: string): DetectedQuote {
     }
   }
   
-  // Extract total cost - multiple patterns
+  // Extract total cost - multiple patterns with labor cost priority
   const costPatterns = [
     /total cost:\s*\$?([\d,]+)/i,
     /total estimate:\s*\$?([\d,]+)/i,
@@ -214,6 +214,11 @@ function extractAIQuote(content: string): DetectedQuote {
     /\$?([\d,]+)\s*total/i
   ];
   
+  // Also check for labor costs as potential total - look for the result after equals
+  const laborCostMatch = content.match(/labor:.*?=\s*\$?([\d,]+)/i) || 
+                         content.match(/labor.*:\s*\$?([\d,]+)/i);
+  
+  // Try to find explicit total first
   for (const pattern of costPatterns) {
     const match = content.match(pattern);
     if (match) {
@@ -225,9 +230,18 @@ function extractAIQuote(content: string): DetectedQuote {
     }
   }
   
+  // If no explicit total found but labor cost exists, use that
+  if (!data.totalCost && laborCostMatch) {
+    const laborCost = parseInt(laborCostMatch[1].replace(/,/g, ''));
+    if (laborCost > 100) {
+      data.totalCost = laborCost;
+    }
+  }
+  
   // Extract breakdown if available
   const materialsMatch = content.match(/materials?:\s*\$?([\d,]+)/i);
-  const laborMatch = content.match(/labor:\s*\$?([\d,]+)/i);
+  const laborMatch = content.match(/labor:.*?=\s*\$?([\d,]+)/i) || 
+                     content.match(/labor.*:\s*\$?([\d,]+)/i);
   const paintMatch = content.match(/paint:\s*\$?([\d,]+)/i);
   
   if (materialsMatch || laborMatch || paintMatch) {

@@ -3120,10 +3120,35 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
         return null;
       }
       
-      // Create a basic quote record
+      // Extract additional context from conversation if needed
+      let conversationAddress = detectedQuote.address;
+      let conversationCustomer = detectedQuote.customerName;
+      
+      if (!conversationAddress || !conversationCustomer) {
+        // Search through messages for missing context
+        const allMessageContent = messages.map(m => m.content).join(' ');
+        
+        // Extract address from conversation context
+        if (!conversationAddress) {
+          const addressMatch = allMessageContent.match(/(\d+[^,.\n]+(?:drive|street|road|avenue|ave|dr|st|rd))/i);
+          if (addressMatch) {
+            conversationAddress = addressMatch[1].trim();
+          }
+        }
+        
+        // Extract customer name from conversation context
+        if (!conversationCustomer) {
+          const customerMatch = allMessageContent.match(/(?:for|customer|client)?\s+([A-Z][a-z]+)(?:\s+at\s+)/i);
+          if (customerMatch) {
+            conversationCustomer = customerMatch[1].trim();
+          }
+        }
+      }
+
+      // Create a comprehensive quote record
       const quickQuoteData = {
-        customer_name: detectedQuote.customerName || 'Customer',
-        address: detectedQuote.address || 'Address from conversation',
+        customer_name: conversationCustomer || 'Customer',
+        address: conversationAddress || 'Address from conversation',
         project_type: detectedQuote.projectType || 'interior',
         total_cost: detectedQuote.totalCost || 0,
         final_price: detectedQuote.totalCost || 0,
@@ -3132,7 +3157,11 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
         room_count: detectedQuote.rooms || null,
         notes: `Quick quote from conversation (${detectedQuote.confidence} confidence)`,
         status: 'pending',
-        conversation_summary: JSON.stringify(messages)
+        conversation_summary: JSON.stringify(messages),
+        // Add breakdown data if available
+        materials_cost: detectedQuote.breakdown?.materials || 0,
+        labor_cost: detectedQuote.breakdown?.labor || detectedQuote.totalCost || 0,
+        markup_amount: detectedQuote.breakdown?.markup || 0
       };
       
       const response = await fetch('/api/quotes', {
