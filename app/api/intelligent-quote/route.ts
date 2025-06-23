@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
       nextStage: result.nextStage,
       confidence: result.confidence,
       paintActions: result.paintActions || [],
+      settingsSave: result.settingsSave || null,
       contractorName: contractorContext.contactName,
       companyName: contractorContext.companyName,
       model: 'claude-sonnet-4'

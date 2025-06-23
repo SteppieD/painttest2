@@ -34,6 +34,34 @@ interface CompanySettings {
   paint_multiplier: number;
   doors_per_gallon: number;
   windows_per_gallon: number;
+  
+  // Product-Specific Spread Rates (from AI conversations)
+  primer_spread_rate: number; // 200-300 sqft/gallon
+  wall_paint_spread_rate: number; // 350-400 sqft/gallon  
+  ceiling_paint_spread_rate: number; // 350 sqft/gallon
+  trim_doors_per_gallon: number; // 4-5 doors per gallon
+  trim_windows_per_gallon: number; // 2-3 windows per gallon
+  
+  // All-In Labor Rates (includes materials + labor from AI)
+  wall_allin_rate_per_sqft: number; // e.g., $1.50
+  ceiling_allin_rate_per_sqft: number; // e.g., $1.25
+  primer_allin_rate_per_sqft: number; // e.g., $0.45
+  door_allin_rate_each: number; // e.g., $150
+  window_allin_rate_each: number; // e.g., $100
+  
+  // Product Preferences (contractor's go-to products from AI)
+  preferred_primer_brand: string; // "Kilz"
+  preferred_primer_product: string; // "PVA Primer"
+  preferred_wall_paint_brand: string; // "Sherwin Williams"
+  preferred_wall_paint_product: string; // "ProClassic"
+  preferred_ceiling_paint_brand: string; // "Benjamin Moore"
+  preferred_ceiling_paint_product: string; // "Waterborne Ceiling"
+  preferred_trim_paint_brand: string; // "Sherwin Williams"
+  preferred_trim_paint_product: string; // "ProClassic Semi-Gloss"
+  
+  // AI Learning Settings
+  ai_learning_enabled: boolean; // Auto-save conversation data to settings
+  ai_ask_before_saving: boolean; // Ask before saving new preferences
 }
 
 interface PaintBrand {
@@ -536,6 +564,294 @@ export default function SettingsPage() {
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Product-Specific Spread Rates */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Settings className="w-5 h-5 text-green-600" />
+              Product Spread Rates (From AI Conversations)
+            </CardTitle>
+            <p className="text-sm text-gray-600">Coverage rates for specific product types learned from your conversations</p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="primer-spread-rate">Primer Spread Rate (sqft/gallon)</Label>
+                <Input
+                  id="primer-spread-rate"
+                  type="number"
+                  min="200"
+                  max="300"
+                  value={settings.primer_spread_rate || 250}
+                  onChange={(e) => updateSetting('primer_spread_rate', Number(e.target.value))}
+                />
+                <p className="text-xs text-gray-500 mt-1">Typical range: 200-300 sqft/gallon</p>
+              </div>
+              <div>
+                <Label htmlFor="wall-paint-spread-rate">Wall Paint Spread Rate (sqft/gallon)</Label>
+                <Input
+                  id="wall-paint-spread-rate"
+                  type="number"
+                  min="300"
+                  max="450"
+                  value={settings.wall_paint_spread_rate || 375}
+                  onChange={(e) => updateSetting('wall_paint_spread_rate', Number(e.target.value))}
+                />
+                <p className="text-xs text-gray-500 mt-1">Typical range: 350-400 sqft/gallon</p>
+              </div>
+              <div>
+                <Label htmlFor="ceiling-paint-spread-rate">Ceiling Paint Spread Rate (sqft/gallon)</Label>
+                <Input
+                  id="ceiling-paint-spread-rate"
+                  type="number"
+                  min="300"
+                  max="400"
+                  value={settings.ceiling_paint_spread_rate || 350}
+                  onChange={(e) => updateSetting('ceiling_paint_spread_rate', Number(e.target.value))}
+                />
+                <p className="text-xs text-gray-500 mt-1">Typical: 350 sqft/gallon</p>
+              </div>
+              <div>
+                <Label htmlFor="trim-doors-per-gallon">Trim: Doors per Gallon</Label>
+                <Input
+                  id="trim-doors-per-gallon"
+                  type="number"
+                  min="3"
+                  max="6"
+                  step="0.5"
+                  value={settings.trim_doors_per_gallon || 4.5}
+                  onChange={(e) => updateSetting('trim_doors_per_gallon', Number(e.target.value))}
+                />
+                <p className="text-xs text-gray-500 mt-1">Typical range: 4-5 doors/gallon</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* All-In Labor Rates */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Settings className="w-5 h-5 text-blue-600" />
+              All-In Labor Rates (Materials + Labor)
+            </CardTitle>
+            <p className="text-sm text-gray-600">Your rates that include both materials and labor costs</p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="wall-allin-rate">Walls (per sqft, 2 coats + paint)</Label>
+                <Input
+                  id="wall-allin-rate"
+                  type="number"
+                  min="0.50"
+                  max="5.00"
+                  step="0.05"
+                  value={settings.wall_allin_rate_per_sqft || 1.50}
+                  onChange={(e) => updateSetting('wall_allin_rate_per_sqft', Number(e.target.value))}
+                />
+                <p className="text-xs text-gray-500 mt-1">Example: $1.50/sqft</p>
+              </div>
+              <div>
+                <Label htmlFor="ceiling-allin-rate">Ceilings (per sqft, 2 coats + paint)</Label>
+                <Input
+                  id="ceiling-allin-rate"
+                  type="number"
+                  min="0.50"
+                  max="5.00"
+                  step="0.05"
+                  value={settings.ceiling_allin_rate_per_sqft || 1.25}
+                  onChange={(e) => updateSetting('ceiling_allin_rate_per_sqft', Number(e.target.value))}
+                />
+                <p className="text-xs text-gray-500 mt-1">Example: $1.25/sqft</p>
+              </div>
+              <div>
+                <Label htmlFor="primer-allin-rate">Primer (per sqft, 1 coat)</Label>
+                <Input
+                  id="primer-allin-rate"
+                  type="number"
+                  min="0.25"
+                  max="2.00"
+                  step="0.05"
+                  value={settings.primer_allin_rate_per_sqft || 0.45}
+                  onChange={(e) => updateSetting('primer_allin_rate_per_sqft', Number(e.target.value))}
+                />
+                <p className="text-xs text-gray-500 mt-1">Example: $0.45/sqft</p>
+              </div>
+              <div>
+                <Label htmlFor="door-allin-rate">Doors + Trim (each, 2 coats)</Label>
+                <Input
+                  id="door-allin-rate"
+                  type="number"
+                  min="50"
+                  max="400"
+                  step="5"
+                  value={settings.door_allin_rate_each || 150}
+                  onChange={(e) => updateSetting('door_allin_rate_each', Number(e.target.value))}
+                />
+                <p className="text-xs text-gray-500 mt-1">Example: $150/door</p>
+              </div>
+              <div>
+                <Label htmlFor="window-allin-rate">Windows (each, 2 coats)</Label>
+                <Input
+                  id="window-allin-rate"
+                  type="number"
+                  min="25"
+                  max="300"
+                  step="5"
+                  value={settings.window_allin_rate_each || 100}
+                  onChange={(e) => updateSetting('window_allin_rate_each', Number(e.target.value))}
+                />
+                <p className="text-xs text-gray-500 mt-1">Example: $100/window</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Product Preferences */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Palette className="w-5 h-5 text-purple-600" />
+              Your Preferred Products (From AI Learning)
+            </CardTitle>
+            <p className="text-sm text-gray-600">Your go-to products learned from conversations - used to pre-fill quotes</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <Label className="text-sm font-medium mb-3 block">Primer Preferences</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="preferred-primer-brand">Preferred Primer Brand</Label>
+                  <Input
+                    id="preferred-primer-brand"
+                    value={settings.preferred_primer_brand || ''}
+                    onChange={(e) => updateSetting('preferred_primer_brand', e.target.value)}
+                    placeholder="e.g., Kilz, Zinsser"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="preferred-primer-product">Preferred Primer Product</Label>
+                  <Input
+                    id="preferred-primer-product"
+                    value={settings.preferred_primer_product || ''}
+                    onChange={(e) => updateSetting('preferred_primer_product', e.target.value)}
+                    placeholder="e.g., PVA Primer"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium mb-3 block">Wall Paint Preferences</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="preferred-wall-brand">Preferred Wall Paint Brand</Label>
+                  <Input
+                    id="preferred-wall-brand"
+                    value={settings.preferred_wall_paint_brand || ''}
+                    onChange={(e) => updateSetting('preferred_wall_paint_brand', e.target.value)}
+                    placeholder="e.g., Sherwin Williams"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="preferred-wall-product">Preferred Wall Paint Product</Label>
+                  <Input
+                    id="preferred-wall-product"
+                    value={settings.preferred_wall_paint_product || ''}
+                    onChange={(e) => updateSetting('preferred_wall_paint_product', e.target.value)}
+                    placeholder="e.g., ProClassic"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium mb-3 block">Ceiling Paint Preferences</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="preferred-ceiling-brand">Preferred Ceiling Paint Brand</Label>
+                  <Input
+                    id="preferred-ceiling-brand"
+                    value={settings.preferred_ceiling_paint_brand || ''}
+                    onChange={(e) => updateSetting('preferred_ceiling_paint_brand', e.target.value)}
+                    placeholder="e.g., Benjamin Moore"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="preferred-ceiling-product">Preferred Ceiling Paint Product</Label>
+                  <Input
+                    id="preferred-ceiling-product"
+                    value={settings.preferred_ceiling_paint_product || ''}
+                    onChange={(e) => updateSetting('preferred_ceiling_paint_product', e.target.value)}
+                    placeholder="e.g., Waterborne Ceiling"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium mb-3 block">Trim Paint Preferences</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="preferred-trim-brand">Preferred Trim Paint Brand</Label>
+                  <Input
+                    id="preferred-trim-brand"
+                    value={settings.preferred_trim_paint_brand || ''}
+                    onChange={(e) => updateSetting('preferred_trim_paint_brand', e.target.value)}
+                    placeholder="e.g., Sherwin Williams"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="preferred-trim-product">Preferred Trim Paint Product</Label>
+                  <Input
+                    id="preferred-trim-product"
+                    value={settings.preferred_trim_paint_product || ''}
+                    onChange={(e) => updateSetting('preferred_trim_paint_product', e.target.value)}
+                    placeholder="e.g., ProClassic Semi-Gloss"
+                  />
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* AI Learning Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Settings className="w-5 h-5 text-orange-600" />
+              AI Learning Preferences
+            </CardTitle>
+            <p className="text-sm text-gray-600">Control how the AI learns and saves information from your conversations</p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="ai-learning-enabled"
+                checked={settings.ai_learning_enabled !== false}
+                onCheckedChange={(checked) => updateSetting('ai_learning_enabled', checked)}
+              />
+              <Label htmlFor="ai-learning-enabled">
+                Enable AI learning from conversations
+              </Label>
+            </div>
+            <p className="text-xs text-gray-500 ml-6">Allow AI to automatically detect and save new products, rates, and preferences from quote conversations</p>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="ai-ask-before-saving"
+                checked={settings.ai_ask_before_saving !== false}
+                onCheckedChange={(checked) => updateSetting('ai_ask_before_saving', checked)}
+              />
+              <Label htmlFor="ai-ask-before-saving">
+                Ask before saving new preferences
+              </Label>
+            </div>
+            <p className="text-xs text-gray-500 ml-6">AI will ask for confirmation before saving new products or changing existing preferences</p>
           </CardContent>
         </Card>
 

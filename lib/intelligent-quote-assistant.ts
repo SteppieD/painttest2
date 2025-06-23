@@ -398,10 +398,14 @@ For "Determine if this is interior, exterior, or both":
       // Handle paint-related actions
       const paintActions = await this.handlePaintActions(extractedData, context);
 
+      // Save conversation data to settings (if AI learning is enabled)
+      const settingsSave = await this.saveToSettings(extractedData, context);
+
       return {
         response: aiResponse,
         extractedData,
         paintActions,
+        settingsSave,
         confidence: 0.9
       };
 
@@ -416,6 +420,110 @@ For "Determine if this is interior, exterior, or both":
         extractedData: {},
         confidence: 0.3
       };
+    }
+  }
+
+  /**
+   * Save conversation data to contractor settings
+   */
+  private async saveToSettings(extractedData: any, context: ContractorContext): Promise<any> {
+    try {
+      // Check if AI learning is enabled first
+      const learningCheck = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/ai/save-preferences?companyId=${context.companyId}`);
+      
+      if (!learningCheck.ok) {
+        return { success: false, message: 'Could not check learning settings' };
+      }
+
+      const learningSettings = await learningCheck.json();
+      if (!learningSettings.learningEnabled) {
+        return { success: false, message: 'AI learning disabled' };
+      }
+
+      // Build preferences object from extracted data
+      const preferences: any = {};
+
+      // Extract spread rates
+      if (extractedData.paint_products?.primer?.spread_rate) {
+        preferences.primer_spread_rate = extractedData.paint_products.primer.spread_rate;
+      }
+      if (extractedData.paint_products?.wall?.spread_rate) {
+        preferences.wall_paint_spread_rate = extractedData.paint_products.wall.spread_rate;
+      }
+      if (extractedData.paint_products?.ceiling?.spread_rate) {
+        preferences.ceiling_paint_spread_rate = extractedData.paint_products.ceiling.spread_rate;
+      }
+
+      // Extract all-in labor rates
+      if (extractedData.rates?.wall_rate_per_sqft) {
+        preferences.wall_allin_rate_per_sqft = extractedData.rates.wall_rate_per_sqft;
+      }
+      if (extractedData.rates?.ceiling_rate_per_sqft) {
+        preferences.ceiling_allin_rate_per_sqft = extractedData.rates.ceiling_rate_per_sqft;
+      }
+      if (extractedData.rates?.primer_rate_per_sqft) {
+        preferences.primer_allin_rate_per_sqft = extractedData.rates.primer_rate_per_sqft;
+      }
+      if (extractedData.rates?.door_rate_each) {
+        preferences.door_allin_rate_each = extractedData.rates.door_rate_each;
+      }
+      if (extractedData.rates?.window_rate_each) {
+        preferences.window_allin_rate_each = extractedData.rates.window_rate_each;
+      }
+
+      // Extract product preferences
+      if (extractedData.paint_products?.primer?.brand) {
+        preferences.preferred_primer_brand = extractedData.paint_products.primer.brand;
+      }
+      if (extractedData.paint_products?.primer?.product) {
+        preferences.preferred_primer_product = extractedData.paint_products.primer.product;
+      }
+      if (extractedData.paint_products?.wall?.brand) {
+        preferences.preferred_wall_paint_brand = extractedData.paint_products.wall.brand;
+      }
+      if (extractedData.paint_products?.wall?.product) {
+        preferences.preferred_wall_paint_product = extractedData.paint_products.wall.product;
+      }
+      if (extractedData.paint_products?.ceiling?.brand) {
+        preferences.preferred_ceiling_paint_brand = extractedData.paint_products.ceiling.brand;
+      }
+      if (extractedData.paint_products?.ceiling?.product) {
+        preferences.preferred_ceiling_paint_product = extractedData.paint_products.ceiling.product;
+      }
+      if (extractedData.paint_products?.trim?.brand) {
+        preferences.preferred_trim_paint_brand = extractedData.paint_products.trim.brand;
+      }
+      if (extractedData.paint_products?.trim?.product) {
+        preferences.preferred_trim_paint_product = extractedData.paint_products.trim.product;
+      }
+
+      // Only save if we have something to save
+      if (Object.keys(preferences).length === 0) {
+        return { success: false, message: 'No preferences to save' };
+      }
+
+      // Save to settings
+      const saveResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/ai/save-preferences`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          companyId: context.companyId,
+          preferences,
+          askForConfirmation: learningSettings.askBeforeSaving,
+          source: 'ai_conversation'
+        })
+      });
+
+      if (saveResponse.ok) {
+        const result = await saveResponse.json();
+        return result;
+      } else {
+        return { success: false, message: 'Failed to save preferences' };
+      }
+
+    } catch (error) {
+      console.error('Save to settings error:', error);
+      return { success: false, message: 'Error saving preferences' };
     }
   }
 
@@ -532,57 +640,96 @@ For "Determine if this is interior, exterior, or both":
     return `You are a friendly painting contractor helping to create professional quotes through natural conversation.
 
 CONVERSATION STYLE:
-• Chat like a contractor friend helping with a quote
-• Natural, relaxed tone but stay professional
+• Chat like an experienced contractor friend
+• Natural, relaxed tone but stay professional  
 • Extract ANY information you can from each message
 • Ask the next logical question to move forward
 • One question at a time, don't overwhelm
 
-QUOTE INFORMATION TO COLLECT:
+QUOTE INFORMATION TO COLLECT (in this order):
 
 1. PROJECT BASICS:
    • Customer name and address
-   • Interior, exterior, or both
+   • Interior, exterior, or both project
 
-2. DIMENSIONS (collect naturally):
-   • Wall linear footage (LNFT) 
+2. DIMENSIONS (collect systematically):
+   • Wall linear footage (LNFT) - perimeter of walls to paint
    • Ceiling height (in feet)
-   • Ceiling area (sqft)
+   • Ceiling area or room area (sqft)
    • Number of doors and windows
 
-3. PAINT PRODUCTS (user supplies everything):
-   ASK FOR EACH:
-   • "What primer do you use and what's its spread rate?"
-   • "What wall paint - brand, product, cost per gallon, spread rate?"
-   • "Ceiling paint details?"
-   • "Trim/door/window paint?"
+3. PAINT PRODUCT PREFERENCES (contractor's go-to products):
+   PRIMER:
+   • "What drywall primer do you typically use?"
+   • "What's its spread rate?" (typical: 200-300 sqft/gallon)
+   
+   WALL PAINT:
+   • "What are your 3 go-to interior wall paints?"
+   • "What's the spread rate for each?" (typical: 350-400 sqft/gallon)
+   
+   CEILING PAINT:
+   • "What ceiling paint do you use?"
+   • "What's its spread rate?" (typical: 350 sqft/gallon)
+   
+   TRIM/DOORS/WINDOWS:
+   • "What trim paint do you use for doors and windows?"
+   • "Coverage rate?" (typical: 4-5 doors per gallon, 2-3 windows per gallon)
 
-4. LABOR RATES:
-   • "What do you charge per sqft for walls (2 coats)?"
-   • "Per sqft for ceilings (2 coats)?"
-   • "Per door? Per window?"
-   • "For primer application?"
+4. ALL-IN LABOR RATES (includes materials + labor):
+   • "What do you charge per sqft for walls (2 coats, including paint)?" (example: $1.50)
+   • "Per sqft for ceilings (2 coats, including paint)?" (example: $1.25)
+   • "Per door + trim (2 coats)?" (example: $150)
+   • "Per window?" (example: $100)
+   • "Primer application per sqft (1 coat)?" (example: $0.45)
 
 5. MARKUP: When ready, suggest markup buttons (15%, 20%, 25%, 30%, Custom)
 
-CALCULATION FORMULAS TO USE:
-• Wall SQFT = LNFT × ceiling height
-• 2-coat gallons = (SQFT ÷ spread rate) × 1.8
-• Primer (1 coat) = SQFT ÷ primer spread rate
-• Doors: Total doors ÷ 4.5 gallons per gallon
-• Windows: Total windows ÷ 2.5 windows per gallon
+EXACT CALCULATION FORMULAS:
+• PRIMER: LNFT × ceiling_height ÷ primer_spread_rate = gallons (1 coat)
+• WALLS: LNFT × ceiling_height ÷ wall_spread_rate × 1.8 = gallons (2 coats)
+• CEILINGS: ceiling_area ÷ ceiling_spread_rate × 1.8 = gallons (2 coats)
+• DOORS: door_count ÷ 4.5 = gallons (2 coats both sides, ~20 sqft per door)
+• WINDOWS: window_count ÷ 2.5 = gallons (2 coats, ~15 sqft per window)
 
 CONTRACTOR CONTEXT:
 Working with ${context.contactName} at ${context.companyName}
 Recent projects: ${recentProjectsContext}
 
-EXAMPLES OF NATURAL RESPONSES:
-• "Hey! Tell me about your painting project."
-• "Got it! What are the room dimensions?"
-• "Perfect! What primer do you typically use?"
-• "Nice! What's your go-to wall paint and its cost?"
+CONTRACTOR'S SAVED PREFERENCES (use these as defaults):
+• Preferred Primer: ${context.settings.preferred_primer_brand || 'Not set'} ${context.settings.preferred_primer_product || ''} (${context.settings.primer_spread_rate || 250} sqft/gal)
+• Preferred Wall Paint: ${context.settings.preferred_wall_paint_brand || 'Not set'} ${context.settings.preferred_wall_paint_product || ''} (${context.settings.wall_paint_spread_rate || 375} sqft/gal)
+• Preferred Ceiling Paint: ${context.settings.preferred_ceiling_paint_brand || 'Not set'} ${context.settings.preferred_ceiling_paint_product || ''} (${context.settings.ceiling_paint_spread_rate || 350} sqft/gal)
+• Preferred Trim Paint: ${context.settings.preferred_trim_paint_brand || 'Not set'} ${context.settings.preferred_trim_paint_product || ''}
 
-Remember: Extract everything you can from each message, then ask the next logical question. Keep it conversational and helpful!`;
+ALL-IN LABOR RATES (includes materials + labor):
+• Walls: $${context.settings.wall_allin_rate_per_sqft || 1.50}/sqft
+• Ceilings: $${context.settings.ceiling_allin_rate_per_sqft || 1.25}/sqft
+• Primer: $${context.settings.primer_allin_rate_per_sqft || 0.45}/sqft
+• Doors: $${context.settings.door_allin_rate_each || 150} each
+• Windows: $${context.settings.window_allin_rate_each || 100} each
+
+AI LEARNING: ${context.settings.ai_learning_enabled ? 'ENABLED - Save new preferences' : 'DISABLED - Do not save preferences'}
+
+CONVERSATION EXAMPLES:
+• "Hey! Tell me about your painting project."
+• "Got the basics! What are the wall linear feet and ceiling height?"
+• If no saved preferences: "What's your go-to primer and its spread rate?"
+• If saved preferences: "I see you usually use ${context.settings.preferred_primer_brand || 'Kilz'} ${context.settings.preferred_primer_product || 'PVA Primer'}. Use that for this quote?"
+• "What do you typically charge per sqft for walls, including paint?"
+
+SMART PREFERENCE USAGE:
+• When asking about products, mention their saved preferences first
+• If they give different info, ask: "Should I update your preferences to use [new product] instead of [saved product]?"
+• Pre-fill quotes with their standard rates and products
+• Learn and save new preferences when AI learning is enabled
+
+HELPFUL GUIDANCE:
+• Mention typical spread rates to help contractors estimate
+• Use real contractor terminology (LNFT, spread rate, etc.)
+• Ask for their actual go-to products, not generic brands
+• All-in pricing includes both materials and labor
+
+Remember: This is how contractors actually think - collect their standard products and rates, then apply to this specific job!`;
   }
 
   /**
