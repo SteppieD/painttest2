@@ -41,6 +41,8 @@ import { PaintBrandSelector } from "@/components/ui/paint-brand-selector";
 import { PaintProductSelector } from "@/components/ui/paint-product-selector";
 import { FavoritePaintSelector } from "@/components/ui/favorite-paint-selector";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
+import { detectAndExtractQuote, extractLearningData, type DetectedQuote } from "@/lib/universal-quote-detector";
+import { saveLearningData } from "@/lib/learning-profile-system";
 // Progressive calculator temporarily disabled
 // import { calculateProgressiveEstimate, generateEstimateMessage, type ProgressiveEstimate } from "@/lib/progressive-calculator";
 // import { ProgressiveEstimateDisplay, FloatingEstimateWidget } from "@/components/ui/progressive-estimate-display";
@@ -846,6 +848,16 @@ What would you like to modify?`,
   // Natural conversation handler - like chatting with a contractor friend
   const handleNaturalConversation = async (input: string): Promise<Message> => {
     try {
+      // Extract learning data from user input too
+      const userLearningData = extractLearningData(input);
+      if (Object.keys(userLearningData).length > 0 && companyData?.id) {
+        console.log('📚 User learning data extracted:', userLearningData);
+        try {
+          await saveLearningData(companyData.id, userLearningData);
+        } catch (error) {
+          console.error('Failed to save user learning data:', error);
+        }
+      }
       // Use AI to extract all possible quote information and determine next steps
       const response = await fetch('/api/intelligent-quote', {
         method: 'POST',
@@ -897,13 +909,89 @@ What would you like to modify?`,
           setQuoteData(prev => ({ ...prev, calculation }));
         }
       }
-      
-      return {
+
+      // Create the AI response message
+      const aiResponse = {
         id: Date.now().toString(),
-        role: 'assistant',
+        role: 'assistant' as const,
         content: result.response || "I'm here to help with your painting quote. What can you tell me about the project?",
         timestamp: new Date().toISOString()
       };
+
+      // Universal Quote Detection - Check if this message contains a quote
+      const detectedQuote = detectAndExtractQuote(aiResponse.content);
+      
+      if (detectedQuote.isQuote) {
+        console.log('🎯 Universal Quote Detected:', detectedQuote);
+        
+        // Auto-save the quote if we have enough data
+        if (detectedQuote.customerName && detectedQuote.totalCost && detectedQuote.totalCost > 100) {
+          try {
+            // Create a simple quote record from detected data
+            const simpleQuoteData = {
+              customer_name: detectedQuote.customerName,
+              address: detectedQuote.address || 'Address not specified',
+              project_type: detectedQuote.projectType || 'interior',
+              total_cost: detectedQuote.totalCost,
+              final_price: detectedQuote.totalCost,
+              total_revenue: detectedQuote.totalCost,
+              walls_sqft: detectedQuote.sqft || 0,
+              room_count: detectedQuote.rooms || null,
+              notes: `Universal quote detection (${detectedQuote.confidence} confidence)`,
+              status: 'pending',
+              conversation_summary: JSON.stringify([...messages, aiResponse])
+            };
+
+            const saveResponse = await fetch('/api/quotes', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                company_id: companyData?.id || 'DEMO2024',
+                ...simpleQuoteData
+              })
+            });
+
+            if (saveResponse.ok) {
+              const saveResult = await saveResponse.json();
+              setSavedQuoteId(saveResult.quote?.id || saveResult.quoteId);
+              console.log('✅ Quote auto-saved:', saveResult.quote?.id || saveResult.quoteId);
+              
+              // Enhance the AI response to include trigger phrases for button display
+              aiResponse.content += '\n\n**Quote ready to send!** 📋';
+              
+              toast({
+                title: "Quote Auto-Saved!",
+                description: `Quote for ${detectedQuote.customerName} saved successfully.`,
+              });
+            }
+          } catch (error) {
+            console.error('Auto-save failed:', error);
+            // Still add trigger phrase for button display
+            aiResponse.content += '\n\n**Quote ready to send!** 📋';
+          }
+        } else if (detectedQuote.confidence !== 'low') {
+          // For medium/high confidence quotes without enough data, still add trigger phrase
+          aiResponse.content += '\n\n**Quote ready to send!** 📋';
+        }
+
+        // Extract learning data for profile building
+        const learningData = extractLearningData(aiResponse.content);
+        if (Object.keys(learningData).length > 0) {
+          console.log('📚 Learning data extracted:', learningData);
+          
+          // Save learning data to company profile
+          if (companyData?.id) {
+            try {
+              await saveLearningData(companyData.id, learningData);
+            } catch (error) {
+              console.error('Failed to save learning data:', error);
+              // Don't break the flow if learning fails
+            }
+          }
+        }
+      }
+      
+      return aiResponse;
       
     } catch (error) {
       console.error('Natural conversation error:', error);
@@ -3262,8 +3350,14 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
                   {new Date(message.timestamp).toLocaleTimeString()}
                 </div>
                 
-                {/* Add quote links if this message contains a quote */}
-                {(message.content.includes('TOTAL PROJECT COST:') || message.content.includes('Quote ready to send!')) && savedQuoteId && message.role === 'assistant' && (
+                {/* Add quote links if this message contains a quote - Universal Detection */}
+                {(message.content.includes('TOTAL PROJECT COST:') || 
+                  message.content.includes('Quote ready to send!') ||
+                  message.content.includes('total cost:') ||
+                  message.content.includes('total estimate:') ||
+                  message.content.includes('project total:') ||
+                  (message.content.toLowerCase().includes('$') && message.content.toLowerCase().includes('total') && message.content.length > 100)
+                ) && savedQuoteId && message.role === 'assistant' && (
                   <div className="mt-3 pt-3 border-t border-gray-200">
                     <div className="flex flex-col sm:flex-row gap-2">
                       <button
