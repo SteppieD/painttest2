@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { QuoteCreationRequest, StandardQuote } from "@/types/quote";
 import { generateQuoteId } from "@/lib/utils";
+import { createQuote } from "@/lib/database";
 
-// Simple in-memory storage for development
+// Simple in-memory storage for development (fallback only)
 const quotes = new Map<string, StandardQuote>();
 
 export async function POST(request: NextRequest) {
@@ -50,17 +51,42 @@ export async function POST(request: NextRequest) {
       company_id: requestData.company_id
     };
 
-    // Store in memory (for development)
-    quotes.set(quoteId, quote);
+    // Save to database using the proper createQuote function
+    try {
+      console.log('💾 Saving quote to database:', quote);
+      const dbResult = await createQuote({
+        quote_id: quoteId,
+        customer_name: quote.customer_name,
+        customer_email: quote.customer_email,
+        customer_phone: quote.customer_phone,
+        address: quote.address,
+        project_type: quote.project_type,
+        surfaces: JSON.stringify(quote.surfaces), // Store as JSON string
+        total_sqft: quote.total_sqft,
+        room_count: quote.room_count,
+        quote_amount: quote.quote_amount,
+        timeline: quote.timeline,
+        notes: quote.notes,
+        status: quote.status,
+        company_id: quote.company_id,
+        conversation_data: JSON.stringify(requestData.conversation_data || []) // Store conversation
+      });
+      
+      console.log('✅ Quote saved to database with result:', dbResult);
+      
+    } catch (dbError) {
+      console.error('❌ Database save failed, storing in memory as fallback:', dbError);
+      // Fallback to memory storage if database fails
+      quotes.set(quoteId, quote);
+    }
     
-    // Also store in localStorage for client-side access
+    // Prepare storage data for response
     const storageData = {
       ...quote,
       conversation_data: requestData.conversation_data
     };
 
-    console.log('✅ Quote created successfully:', quote);
-    console.log('📦 Storing quote in memory with ID:', quoteId);
+    console.log('✅ Quote created successfully with ID:', quoteId);
 
     return NextResponse.json({
       success: true,
@@ -78,19 +104,42 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET endpoint to retrieve quotes (for development)
+// GET endpoint to retrieve quotes (checks database first, then memory)
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const quoteId = searchParams.get('id');
     
     if (quoteId) {
+      // First try database
+      try {
+        const { dbGet } = await import("@/lib/database");
+        const dbQuote = await dbGet(`
+          SELECT * FROM quotes 
+          WHERE quote_id = ? OR id = ?
+        `, [quoteId, quoteId]);
+        
+        if (dbQuote) {
+          console.log('📖 Retrieved quote from database:', quoteId);
+          // Parse JSON fields back to objects
+          const parsedQuote = {
+            ...dbQuote,
+            surfaces: dbQuote.surfaces ? JSON.parse(dbQuote.surfaces) : [],
+            conversation_data: dbQuote.conversation_data ? JSON.parse(dbQuote.conversation_data) : []
+          };
+          return NextResponse.json(parsedQuote);
+        }
+      } catch (dbError) {
+        console.log('Database retrieval failed, checking memory:', dbError);
+      }
+      
+      // Fallback to memory
       const quote = quotes.get(quoteId);
       if (quote) {
         console.log('📖 Retrieved quote from memory:', quoteId);
         return NextResponse.json(quote);
       } else {
-        console.log('❌ Quote not found in memory:', quoteId);
+        console.log('❌ Quote not found in database or memory:', quoteId);
         return NextResponse.json(
           { error: "Quote not found" },
           { status: 404 }
@@ -98,7 +147,7 @@ export async function GET(request: NextRequest) {
       }
     }
     
-    // Return all quotes if no ID specified
+    // Return all quotes if no ID specified (memory only for now)
     const allQuotes = Array.from(quotes.values());
     console.log('📖 Retrieved all quotes from memory:', allQuotes.length);
     return NextResponse.json({ quotes: allQuotes });
