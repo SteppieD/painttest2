@@ -929,8 +929,13 @@ What would you like to modify?`,
         // Auto-save the quote if we have enough data
         if (detectedQuote.customerName && detectedQuote.totalCost && detectedQuote.totalCost > 100) {
           try {
+            // Generate a unique quote ID
+            const { generateQuoteId } = await import('@/lib/utils');
+            const quoteId = generateQuoteId();
+            
             // Create a simple quote record from detected data
             const simpleQuoteData = {
+              quote_id: quoteId,
               customer_name: detectedQuote.customerName,
               address: detectedQuote.address || 'Address not specified',
               project_type: detectedQuote.projectType || 'interior',
@@ -955,8 +960,30 @@ What would you like to modify?`,
 
             if (saveResponse.ok) {
               const saveResult = await saveResponse.json();
-              setSavedQuoteId(saveResult.quote?.id || saveResult.quoteId);
-              console.log('✅ Quote auto-saved:', saveResult.quote?.id || saveResult.quoteId);
+              const quoteId = saveResult.quote?.id || saveResult.quoteId;
+              setSavedQuoteId(quoteId);
+              console.log('✅ Quote auto-saved:', quoteId);
+              
+              // Also save to localStorage for fallback retrieval (development mode)
+              const storageKey = `quote_${simpleQuoteData.quote_id}`;
+              const quoteForStorage = {
+                id: quoteId,
+                quote_id: simpleQuoteData.quote_id,
+                customer_name: detectedQuote.customerName,
+                total_cost: detectedQuote.totalCost,
+                final_price: detectedQuote.totalCost,
+                quote_amount: detectedQuote.totalCost,
+                address: detectedQuote.address || 'Address not specified',
+                project_type: detectedQuote.projectType || 'interior',
+                created_at: new Date().toISOString(),
+                status: 'pending',
+                notes: `Universal quote detection (${detectedQuote.confidence} confidence)`,
+                company_id: companyData?.id || 'DEMO2024',
+                company_name: companyData?.company_name || 'Demo Company'
+              };
+              
+              localStorage.setItem(storageKey, JSON.stringify(quoteForStorage));
+              console.log(`💾 Quote also saved to localStorage with key: ${storageKey}`, quoteForStorage);
               
               // Enhance the AI response to include trigger phrases for button display
               aiResponse.content += '\n\n**Quote ready to send!** 📋';

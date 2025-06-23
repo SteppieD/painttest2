@@ -31,6 +31,8 @@ export interface DetectedQuote {
  */
 export function detectAndExtractQuote(content: string): DetectedQuote {
   const lowerContent = content.toLowerCase();
+  console.log('🎯 Universal Quote Detection - Input content length:', content.length);
+  console.log('🎯 First 200 chars:', content.substring(0, 200));
   
   // High confidence indicators (professional calculator quotes)
   const highConfidenceIndicators = [
@@ -78,28 +80,42 @@ export function detectAndExtractQuote(content: string): DetectedQuote {
   ];
   
   // Check for high confidence
-  if (highConfidenceIndicators.some(indicator => lowerContent.includes(indicator))) {
-    return extractProfessionalQuote(content);
+  const foundHighIndicators = highConfidenceIndicators.filter(indicator => lowerContent.includes(indicator));
+  console.log('🎯 High confidence indicators found:', foundHighIndicators);
+  
+  if (foundHighIndicators.length > 0) {
+    const result = extractProfessionalQuote(content);
+    console.log('🎯 Professional quote extraction result:', result);
+    return result;
   }
   
   // Check for medium confidence (AI quotes)
   const mediumMatches = mediumConfidenceIndicators.filter(indicator => 
     lowerContent.includes(indicator)
   );
+  console.log('🎯 Medium confidence indicators found:', mediumMatches);
   
   if (mediumMatches.length >= 3) {
-    return extractAIQuote(content);
+    const result = extractAIQuote(content);
+    console.log('🎯 AI quote extraction result:', result);
+    return result;
   }
   
   // Check for low confidence (basic quotes)
   const lowMatches = lowConfidenceIndicators.filter(indicator => 
     lowerContent.includes(indicator)
   );
+  const hasCostMentioned = hasCostMention(content);
+  console.log('🎯 Low confidence indicators found:', lowMatches);
+  console.log('🎯 Has cost mention:', hasCostMentioned);
   
-  if (lowMatches.length >= 4 && hasCostMention(content)) {
-    return extractBasicQuote(content);
+  if (lowMatches.length >= 4 && hasCostMentioned) {
+    const result = extractBasicQuote(content);
+    console.log('🎯 Basic quote extraction result:', result);
+    return result;
   }
   
+  console.log('🎯 No quote detected - returning false');
   return {
     isQuote: false,
     confidence: 'low',
