@@ -197,6 +197,9 @@ function CreateQuotePageContent() {
 
   // New measurement-driven workflow state
   const [measurementQueue, setMeasurementQueue] = useState<string[]>([]);
+  
+  // Quote saving state
+  const [savedQuoteId, setSavedQuoteId] = useState<string | null>(null);
   const [currentMeasurementCategory, setCurrentMeasurementCategory] = useState<string>('');
   const [categoryCompletionStatus, setCategoryCompletionStatus] = useState<{[category: string]: {measured: boolean, paintSelected: boolean}}>({});
   const [showPaintBrandSelector, setShowPaintBrandSelector] = useState(false);
@@ -1171,12 +1174,20 @@ What would you like to modify?`,
           
           setQuoteData(prev => ({ ...prev, calculation }));
           
-          responseContent = `🎉 **Professional Quote Complete!**\n\n**Customer:** ${finalQuoteData.customer_name}\n**Address:** ${finalQuoteData.address}\n\n**Total Quote:** $${calculation.final_price.toLocaleString()}\n• Materials: $${calculation.materials.total_material_cost.toLocaleString()}\n• Labor: $${calculation.labor.total_labor.toLocaleString()}\n• Your Profit: $${calculation.markup_amount.toLocaleString()} (${markup.percentage}%)\n\nReady to save this quote?`;
-          nextStage = 'quote_complete';
+          // Auto-save the quote when it's generated
+          try {
+            const quoteId = await saveQuote();
+            setSavedQuoteId(quoteId);
+            responseContent = `🎉 **Professional Quote Complete!**\n\n**Customer:** ${finalQuoteData.customer_name}\n**Address:** ${finalQuoteData.address}\n\n**TOTAL PROJECT COST:** $${calculation.final_price.toLocaleString()}\n• Materials: $${calculation.materials.total_material_cost.toLocaleString()}\n• Labor: $${calculation.labor.total_labor.toLocaleString()}\n• Your Profit: $${calculation.markup_amount.toLocaleString()} (${markup.percentage}%)\n\n**Quote ready to send!** 📋`;
+          } catch (error) {
+            responseContent = `🎉 **Professional Quote Complete!**\n\n**Customer:** ${finalQuoteData.customer_name}\n**Address:** ${finalQuoteData.address}\n\n**TOTAL PROJECT COST:** $${calculation.final_price.toLocaleString()}\n• Materials: $${calculation.materials.total_material_cost.toLocaleString()}\n• Labor: $${calculation.labor.total_labor.toLocaleString()}\n• Your Profit: $${calculation.markup_amount.toLocaleString()} (${markup.percentage}%)\n\n**Quote ready to send!** 📋`;
+            console.error('Error auto-saving quote:', error);
+          }
+          
+          nextStage = 'complete';
           buttonsToShow = [
-            { id: 'save', label: '💾 Save Quote', value: 'save', selected: false },
-            { id: 'adjust', label: '📊 Adjust Quote', value: 'adjust', selected: false },
-            { id: 'new', label: '➕ New Quote', value: 'new', selected: false }
+            { id: 'new_quote', label: '➕ Create Another Quote', value: 'new', selected: false },
+            { id: 'dashboard', label: '📊 View Dashboard', value: 'dashboard', selected: false }
           ];
         } else {
           responseContent = `Please specify your markup percentage. This is your profit margin on top of materials and labor costs.\n\nExample: "20%" or "25 percent"`;
@@ -3004,8 +3015,6 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
     };
   };
 
-  const [savedQuoteId, setSavedQuoteId] = useState<string | null>(null);
-
   const saveQuote = async () => {
     if (!quoteData.calculation || !companyData) return;
 
@@ -3253,17 +3262,27 @@ Example: "Sherwin Williams ProClassic, Eggshell White, $65 per gallon, 400 sq ft
                   {new Date(message.timestamp).toLocaleTimeString()}
                 </div>
                 
-                {/* Add quote link if this message contains a quote */}
+                {/* Add quote links if this message contains a quote */}
                 {(message.content.includes('TOTAL PROJECT COST:') || message.content.includes('Quote ready to send!')) && savedQuoteId && message.role === 'assistant' && (
                   <div className="mt-3 pt-3 border-t border-gray-200">
-                    <button
-                      onClick={() => {
-                        window.open(`/quotes/${savedQuoteId}/customer`, '_blank');
-                      }}
-                      className="neomorphism-button-enhanced text-sm px-4 py-2 rounded-lg flex items-center gap-2 text-blue-600 hover:text-blue-700"
-                    >
-                      📄 View Full Quote
-                    </button>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <button
+                        onClick={() => {
+                          window.open(`/quotes/${savedQuoteId}`, '_blank');
+                        }}
+                        className="neomorphism-button-enhanced text-sm px-4 py-2 rounded-lg flex items-center gap-2 text-blue-600 hover:text-blue-700"
+                      >
+                        📊 Internal Quote View
+                      </button>
+                      <button
+                        onClick={() => {
+                          window.open(`/quotes/${savedQuoteId}/customer`, '_blank');
+                        }}
+                        className="neomorphism-button-enhanced text-sm px-4 py-2 rounded-lg flex items-center gap-2 text-green-600 hover:text-green-700"
+                      >
+                        📄 Customer Quote View
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
