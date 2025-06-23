@@ -241,6 +241,13 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
     }
   }
   
+  // Parse patterns like "X linear feet and Y foot ceilings" or "X linear feet, Y foot ceilings"
+  const linearAndCeilingMatch = input.match(/(\d+\.?\d*)\s*linear\s*feet\s*(?:and|,)\s*(\d+\.?\d*)\s*foot\s*ceiling/i);
+  if (linearAndCeilingMatch) {
+    dimensions.wall_linear_feet = Number(linearAndCeilingMatch[1]);
+    dimensions.ceiling_height = Number(linearAndCeilingMatch[2]);
+  }
+  
   // If just a single number and we're missing ceiling height, and it's in typical height range
   if (numbers.length === 1 && !dimensions.ceiling_height && numbers[0] >= 8 && numbers[0] <= 15) {
     dimensions.ceiling_height = numbers[0];
