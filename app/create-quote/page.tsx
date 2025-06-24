@@ -281,18 +281,112 @@ export default function CreateQuotePage() {
         const updatedAreasData = { ...quoteData, areas };
         setQuoteData(updatedAreasData);
         
-        // Calculate quote automatically using spreadsheet formulas
-        const calculation = calculateQuote(
-          areas, 
-          updatedAreasData.rates, 
-          updatedAreasData.paint_costs, 
-          updatedAreasData.labor_percentage
-        );
+        // Check if we have enough area data to calculate
+        const hasWallArea = areas.walls_sqft > 0;
+        const hasCeilingArea = areas.ceilings_sqft > 0;
+        const hasTrimArea = areas.trim_sqft > 0;
+        const hasAnyArea = hasWallArea || hasCeilingArea || hasTrimArea;
         
-        setQuoteData(prev => ({ ...prev, calculation }));
+        // Check for surface selection without measurements
+        const wallsOnlyNoMeasurement = /only\s+(?:doing\s+)?walls?/i.test(input) && !hasWallArea;
+        const ceilingsOnlyNoMeasurement = /only\s+(?:doing\s+)?ceilings?/i.test(input) && !hasCeilingArea;
+        const trimOnlyNoMeasurement = /only\s+(?:doing\s+)?(?:trim|doors?|windows?)/i.test(input) && !hasTrimArea;
         
-        responseContent = generateQuoteDisplay(calculation, areas, updatedAreasData.rates, updatedAreasData.paint_costs);
-        nextStage = 'quote_review';
+        if (wallsOnlyNoMeasurement) {
+          responseContent = `Perfect! We're painting walls only.\\n\\nWhat's the wall square footage? You can say:\\n• "1200 walls" or "1200 sqft walls"\\n• Or if you have room dimensions: "living room 12x14, bedroom 10x12" and I'll calculate the wall area`;
+          nextStage = 'wall_measurements';
+        } else if (ceilingsOnlyNoMeasurement) {
+          responseContent = `Got it! We're painting ceilings only.\\n\\nWhat's the ceiling square footage? You can say:\\n• "800 ceilings" or "800 sqft ceilings"\\n• Or room dimensions: "living room 12x14, bedroom 10x12" and I'll calculate ceiling area`;
+          nextStage = 'ceiling_measurements';
+        } else if (trimOnlyNoMeasurement) {
+          responseContent = `Perfect! We're painting trim only.\\n\\nWhat's the trim square footage? You can say:\\n• "300 trim" or "300 sqft trim"\\n• Or count items: "6 doors, 8 windows" and I'll estimate`;
+          nextStage = 'trim_measurements';
+        } else if (!hasAnyArea) {
+          responseContent = `I need the square footage measurements. Please provide:\\n\\n• **Specific measurements**: "1000 walls, 800 ceilings, 400 trim"\\n• **Total sqft**: "2200 total sqft" and I'll estimate breakdown\\n• **Room dimensions**: "living room 12x14, bedroom 10x12" and I'll calculate`;
+          nextStage = 'areas'; // Stay in same stage to retry
+        } else {
+          // We have measurements - calculate quote
+          const calculation = calculateQuote(
+            areas, 
+            updatedAreasData.rates, 
+            updatedAreasData.paint_costs, 
+            updatedAreasData.labor_percentage
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation }));
+          
+          responseContent = generateQuoteDisplay(calculation, areas, updatedAreasData.rates, updatedAreasData.paint_costs);
+          nextStage = 'quote_review';
+        }
+        break;
+
+      case 'wall_measurements':
+        const wallAreas = parseAreas(input, quoteData.project_type);
+        if (wallAreas.walls_sqft > 0) {
+          const finalAreas = { walls_sqft: wallAreas.walls_sqft, ceilings_sqft: 0, trim_sqft: 0 };
+          const wallQuoteData = { ...quoteData, areas: finalAreas };
+          setQuoteData(wallQuoteData);
+          
+          const wallCalculation = calculateQuote(
+            finalAreas, 
+            wallQuoteData.rates, 
+            wallQuoteData.paint_costs, 
+            wallQuoteData.labor_percentage
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation: wallCalculation }));
+          responseContent = generateQuoteDisplay(wallCalculation, finalAreas, wallQuoteData.rates, wallQuoteData.paint_costs);
+          nextStage = 'quote_review';
+        } else {
+          responseContent = `I need the wall square footage. Please say something like:\\n• "1200 walls"\\n• "1200 sqft"\\n• Room dimensions: "12x14 living room, 10x12 bedroom"`;
+          nextStage = 'wall_measurements'; // Stay in same stage
+        }
+        break;
+
+      case 'ceiling_measurements':
+        const ceilingAreas = parseAreas(input, quoteData.project_type);
+        if (ceilingAreas.ceilings_sqft > 0) {
+          const finalAreas = { walls_sqft: 0, ceilings_sqft: ceilingAreas.ceilings_sqft, trim_sqft: 0 };
+          const ceilingQuoteData = { ...quoteData, areas: finalAreas };
+          setQuoteData(ceilingQuoteData);
+          
+          const ceilingCalculation = calculateQuote(
+            finalAreas, 
+            ceilingQuoteData.rates, 
+            ceilingQuoteData.paint_costs, 
+            ceilingQuoteData.labor_percentage
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation: ceilingCalculation }));
+          responseContent = generateQuoteDisplay(ceilingCalculation, finalAreas, ceilingQuoteData.rates, ceilingQuoteData.paint_costs);
+          nextStage = 'quote_review';
+        } else {
+          responseContent = `I need the ceiling square footage. Please say something like:\\n• "800 ceilings"\\n• "800 sqft"\\n• Room dimensions: "12x14 living room"`;
+          nextStage = 'ceiling_measurements'; // Stay in same stage
+        }
+        break;
+
+      case 'trim_measurements':
+        const trimAreas = parseAreas(input, quoteData.project_type);
+        if (trimAreas.trim_sqft > 0) {
+          const finalAreas = { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: trimAreas.trim_sqft };
+          const trimQuoteData = { ...quoteData, areas: finalAreas };
+          setQuoteData(trimQuoteData);
+          
+          const trimCalculation = calculateQuote(
+            finalAreas, 
+            trimQuoteData.rates, 
+            trimQuoteData.paint_costs, 
+            trimQuoteData.labor_percentage
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation: trimCalculation }));
+          responseContent = generateQuoteDisplay(trimCalculation, finalAreas, trimQuoteData.rates, trimQuoteData.paint_costs);
+          nextStage = 'quote_review';
+        } else {
+          responseContent = `I need the trim square footage. Please say something like:\\n• "300 trim"\\n• "300 sqft"\\n• Item count: "6 doors, 8 windows"`;
+          nextStage = 'trim_measurements'; // Stay in same stage
+        }
         break;
 
       case 'quote_review':
