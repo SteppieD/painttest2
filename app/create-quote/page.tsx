@@ -76,6 +76,25 @@ interface Message {
   timestamp: string;
 }
 
+interface PaintProduct {
+  id: string;
+  projectType: "interior" | "exterior";
+  productCategory: string;
+  supplier: string;
+  productName: string;
+  productLine?: string;
+  costPerGallon: number;
+  displayOrder: number;
+  sheen?: string;
+  coveragePerGallon?: number;
+}
+
+interface SelectedProducts {
+  walls?: PaintProduct;
+  ceilings?: PaintProduct;
+  trim?: PaintProduct;
+}
+
 interface QuoteData {
   customer_name: string;
   address: string;
@@ -85,6 +104,8 @@ interface QuoteData {
   paint_costs: PaintCosts;
   labor_percentage: number;
   calculation: QuoteCalculation | null;
+  availableProducts?: PaintProduct[];
+  selectedProducts?: SelectedProducts;
 }
 
 export default function CreateQuotePage() {
@@ -110,7 +131,9 @@ export default function CreateQuotePage() {
     rates: { painting_rate: 2.50, priming_rate: 0.40, trim_rate: 1.92, door_rate: 100.00, window_rate: 25.00 },
     paint_costs: { walls_paint_cost: 26.00, ceilings_paint_cost: 25.00, trim_paint_cost: 35.00 },
     labor_percentage: 30,
-    calculation: null
+    calculation: null,
+    availableProducts: [],
+    selectedProducts: {}
   });
 
   const [conversationStage, setConversationStage] = useState('customer_info');
@@ -152,8 +175,14 @@ export default function CreateQuotePage() {
 
   const loadCompanyDefaults = async (companyId: string) => {
     try {
-      const response = await fetch(`/api/companies/settings?companyId=${companyId}`);
-      const settings = await response.json();
+      // Load both company settings and paint products in parallel
+      const [settingsResponse, productsResponse] = await Promise.all([
+        fetch(`/api/companies/settings?companyId=${companyId}`),
+        fetch(`/api/paint-products?companyId=${companyId}`)
+      ]);
+      
+      const settings = await settingsResponse.json();
+      const productsData = await productsResponse.json();
       
       setQuoteData(prev => ({
         ...prev,
@@ -169,7 +198,8 @@ export default function CreateQuotePage() {
           ceilings_paint_cost: settings.default_ceilings_paint_cost || 25.00,
           trim_paint_cost: settings.default_trim_paint_cost || 35.00
         },
-        labor_percentage: settings.default_labor_percentage || 30
+        labor_percentage: settings.default_labor_percentage || 30,
+        availableProducts: productsData.products || []
       }));
     } catch (error) {
       console.error('Failed to load company defaults:', error);
@@ -291,7 +321,7 @@ export default function CreateQuotePage() {
             setQuoteData(prev => ({ ...prev, calculation: finalCalculation }));
           }
           
-          responseContent = `Perfect! I parsed your complete project details:\n\n**Customer:** ${customerInfo.customer_name}\n**Address:** ${customerInfo.address}\n**Project:** ${parsedProjectType} painting\n**Areas:** ${parsedAreas.walls_sqft} sq ft walls${parsedAreas.ceilings_sqft > 0 ? `, ${parsedAreas.ceilings_sqft} sq ft ceilings` : ''}${parsedAreas.trim_sqft > 0 ? `, ${parsedAreas.trim_sqft} sq ft trim` : ''}\n\n${generateQuoteDisplay(finalCalculation, parsedAreas, updatedQuoteData.rates, updatedQuoteData.paint_costs)}`;
+          responseContent = `Perfect! I parsed your complete project details:\n\n**Customer:** ${customerInfo.customer_name}\n**Address:** ${customerInfo.address}\n**Project:** ${parsedProjectType} painting\n**Areas:** ${parsedAreas.walls_sqft} sq ft walls${parsedAreas.ceilings_sqft > 0 ? `, ${parsedAreas.ceilings_sqft} sq ft ceilings` : ''}${parsedAreas.trim_sqft > 0 ? `, ${parsedAreas.trim_sqft} sq ft trim` : ''}\n\n${generateEnhancedQuoteDisplay(finalCalculation, parsedAreas, updatedQuoteData.rates, updatedQuoteData.selectedProducts)}`;
           nextStage = 'quote_review';
         } else if (hasCustomer) {
           responseContent = `Perfect! I have ${customerInfo.customer_name} at ${customerInfo.address}.\n\nWhat type of painting work are we quoting?\n• Interior (walls, ceilings, trim)\n• Exterior\n• Both interior and exterior`;
@@ -351,9 +381,9 @@ export default function CreateQuotePage() {
           responseContent = `I need the square footage measurements. Please provide:\\n\\n• **Specific measurements**: "1000 walls, 800 ceilings, 400 trim"\\n• **Total sqft**: "2200 total sqft" and I'll estimate breakdown\\n• **Room dimensions**: "living room 12x14, bedroom 10x12" and I'll calculate`;
           nextStage = 'areas'; // Stay in same stage to retry
         } else {
-          // We have measurements - now confirm rates before calculating
-          responseContent = generateRateConfirmation(updatedAreasData.rates, areas);
-          nextStage = 'rate_confirmation';
+          // We have measurements - now select paint products
+          responseContent = generatePaintProductSelection(updatedAreasData);
+          nextStage = 'paint_product_selection';
         }
         break;
 
@@ -364,8 +394,8 @@ export default function CreateQuotePage() {
           const wallQuoteData = { ...quoteData, areas: finalAreas };
           setQuoteData(wallQuoteData);
           
-          responseContent = generateRateConfirmation(wallQuoteData.rates, finalAreas);
-          nextStage = 'rate_confirmation';
+          responseContent = generatePaintProductSelection(wallQuoteData);
+          nextStage = 'paint_product_selection';
         } else {
           responseContent = `I need the wall square footage. Please say something like:\\n• "1200 walls"\\n• "1200 sqft"\\n• Room dimensions: "12x14 living room, 10x12 bedroom"`;
           nextStage = 'wall_measurements'; // Stay in same stage
@@ -379,8 +409,8 @@ export default function CreateQuotePage() {
           const ceilingQuoteData = { ...quoteData, areas: finalAreas };
           setQuoteData(ceilingQuoteData);
           
-          responseContent = generateRateConfirmation(ceilingQuoteData.rates, finalAreas);
-          nextStage = 'rate_confirmation';
+          responseContent = generatePaintProductSelection(ceilingQuoteData);
+          nextStage = 'paint_product_selection';
         } else {
           responseContent = `I need the ceiling square footage. Please say something like:\\n• "800 ceilings"\\n• "800 sqft"\\n• Room dimensions: "12x14 living room"`;
           nextStage = 'ceiling_measurements'; // Stay in same stage
@@ -402,11 +432,45 @@ export default function CreateQuotePage() {
           );
           
           setQuoteData(prev => ({ ...prev, calculation: trimCalculation }));
-          responseContent = generateQuoteDisplay(trimCalculation, finalAreas, trimQuoteData.rates, trimQuoteData.paint_costs);
+          responseContent = generateEnhancedQuoteDisplay(trimCalculation, finalAreas, trimQuoteData.rates, trimQuoteData.selectedProducts);
           nextStage = 'quote_review';
         } else {
           responseContent = `I need the trim square footage. Please say something like:\\n• "300 trim"\\n• "300 sqft"\\n• Item count: "6 doors, 8 windows"`;
           nextStage = 'trim_measurements'; // Stay in same stage
+        }
+        break;
+
+      case 'paint_product_selection':
+        // Parse paint product selection from user input
+        const productSelection = parsePaintProductSelection(input, quoteData);
+        if (productSelection.selectedProducts) {
+          // Update quote data with selected products and calculated paint costs
+          const updatedQuoteData = {
+            ...quoteData,
+            selectedProducts: { ...quoteData.selectedProducts, ...productSelection.selectedProducts },
+            paint_costs: productSelection.paintCosts || quoteData.paint_costs
+          };
+          setQuoteData(updatedQuoteData);
+          
+          // Check if we have all required products selected
+          const neededSurfaces = getNeededSurfaces(updatedQuoteData.areas);
+          const hasAllProducts = neededSurfaces.every(surface => 
+            updatedQuoteData.selectedProducts?.[surface as keyof SelectedProducts]
+          );
+          
+          if (hasAllProducts) {
+            // All products selected - proceed to rate confirmation
+            responseContent = generateRateConfirmation(updatedQuoteData.rates, updatedQuoteData.areas);
+            nextStage = 'rate_confirmation';
+          } else {
+            // Still need more products - continue selection
+            responseContent = generatePaintProductSelection(updatedQuoteData);
+            nextStage = 'paint_product_selection';
+          }
+        } else {
+          // No valid selection found - ask again
+          responseContent = generatePaintProductSelection(quoteData);
+          nextStage = 'paint_product_selection';
         }
         break;
 
@@ -436,7 +500,7 @@ export default function CreateQuotePage() {
         
         // Add quote display after a brief delay
         setTimeout(() => {
-          const finalResponse = responseContent + "\n\n" + generateQuoteDisplay(calculation, updatedRatesData.areas, updatedRatesData.rates, updatedRatesData.paint_costs);
+          const finalResponse = responseContent + "\n\n" + generateEnhancedQuoteDisplay(calculation, updatedRatesData.areas, updatedRatesData.rates, updatedRatesData.selectedProducts);
           setMessages(prev => [...prev.slice(0, -1), {
             id: Date.now().toString(),
             role: 'assistant',
@@ -454,7 +518,7 @@ export default function CreateQuotePage() {
         if (lowerInput.includes('breakdown') || lowerInput.includes('how did you calculate') || lowerInput.includes('detail')) {
           responseContent = generateDetailedBreakdown(quoteData.calculation!, quoteData.areas, quoteData.rates, quoteData.paint_costs);
         } else if (lowerInput.includes('adjust') || lowerInput.includes('change') || lowerInput.includes('modify')) {
-          responseContent = `What would you like to adjust? I can modify:\n\n• **Square footage** (walls, ceilings, trim)\n• **Charge rates** (currently $${quoteData.rates.painting_rate}/sqft painting, $${quoteData.rates.trim_rate}/sqft trim)\n• **Labor percentage** (currently ${quoteData.labor_percentage}%)\n• **Paint costs**\n\nJust tell me what you'd like to change!`;
+          responseContent = `What would you like to adjust? I can modify:\n\n• **Square footage** (walls, ceilings, trim)\n• **Charge rates** (currently $${quoteData.rates.painting_rate}/sqft painting, $${quoteData.rates.trim_rate}/sqft trim)\n• **Labor percentage** (currently ${quoteData.labor_percentage}%)\n• **Paint products** - Change selected products\n• **Paint costs** - Adjust individual paint costs\n\nJust tell me what you'd like to change!`;
           nextStage = 'adjustments';
         } else if (lowerInput.includes('save') || lowerInput.includes('approve') || lowerInput.includes('finalize')) {
           const quoteId = await saveQuote();
@@ -565,10 +629,16 @@ export default function CreateQuotePage() {
           ceilings_sqft: quoteData.areas.ceilings_sqft,
           trim_sqft: quoteData.areas.trim_sqft,
           
-          // Charge rates
-          walls_rate: quoteData.rates.walls_rate,
-          ceilings_rate: quoteData.rates.ceilings_rate,
+          // Charge rates (unified system)
+          painting_rate: quoteData.rates.painting_rate,
+          priming_rate: quoteData.rates.priming_rate,
           trim_rate: quoteData.rates.trim_rate,
+          door_rate: quoteData.rates.door_rate,
+          window_rate: quoteData.rates.window_rate,
+          
+          // Legacy rates for backward compatibility
+          walls_rate: quoteData.rates.painting_rate,
+          ceilings_rate: quoteData.rates.painting_rate,
           
           // Paint costs
           walls_paint_cost: quoteData.paint_costs.walls_paint_cost,
@@ -581,6 +651,9 @@ export default function CreateQuotePage() {
           projected_labor: quoteData.calculation.labor.projected_labor,
           labor_percentage: quoteData.labor_percentage,
           projected_profit: quoteData.calculation.profit,
+          
+          // Selected paint products
+          selected_products: JSON.stringify(quoteData.selectedProducts || {}),
           
           // Legacy fields for compatibility
           quote_amount: quoteData.calculation.revenue.total,
@@ -619,29 +692,49 @@ export default function CreateQuotePage() {
     }
   };
 
-  // Helper function to generate rate confirmation display
+  // Helper function to generate rate confirmation display with selected products
   const generateRateConfirmation = (rates: ChargeRates, areas: ProjectAreas): string => {
-    let rateDisplay = "Based on your project, here are my pricing rates:\n\n";
+    // Use the imported function from spreadsheet calculator, but override here to include selected products
+    const quoteDataForDisplay = { ...quoteData, rates, areas };
     
-    if (areas.walls_sqft > 0) {
-      rateDisplay += `• **Walls:** $${rates.walls_rate.toFixed(2)} per square foot\n`;
+    let rateDisplay = "Perfect! Here are your selected products and rates:\n\n";
+    
+    // Show selected products and rates
+    const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
+    if (totalPaintingSqft > 0) {
+      const selectedWallProduct = quoteDataForDisplay.selectedProducts?.walls;
+      const selectedCeilingProduct = quoteDataForDisplay.selectedProducts?.ceilings;
+      
+      rateDisplay += `• **Painting** (walls & ceilings): $${rates.painting_rate.toFixed(2)}/sq ft\n`;
+      
+      if (selectedWallProduct) {
+        rateDisplay += `  - Walls: ${selectedWallProduct.supplier} ${selectedWallProduct.productName} ($${selectedWallProduct.costPerGallon}/gal)\n`;
+      }
+      if (selectedCeilingProduct) {
+        rateDisplay += `  - Ceilings: ${selectedCeilingProduct.supplier} ${selectedCeilingProduct.productName} ($${selectedCeilingProduct.costPerGallon}/gal)\n`;
+      }
     }
-    if (areas.ceilings_sqft > 0) {
-      rateDisplay += `• **Ceilings:** $${rates.ceilings_rate.toFixed(2)} per square foot\n`;
+    
+    if (areas.priming_sqft > 0) {
+      rateDisplay += `• **Priming**: $${rates.priming_rate.toFixed(2)}/sq ft\n`;
     }
     if (areas.trim_sqft > 0) {
-      rateDisplay += `• **Trim:** $${rates.trim_rate.toFixed(2)} per square foot\n`;
+      const selectedTrimProduct = quoteDataForDisplay.selectedProducts?.trim;
+      rateDisplay += `• **Trim**: $${rates.trim_rate.toFixed(2)}/sq ft\n`;
+      if (selectedTrimProduct) {
+        rateDisplay += `  - Product: ${selectedTrimProduct.supplier} ${selectedTrimProduct.productName} ($${selectedTrimProduct.costPerGallon}/gal)\n`;
+      }
     }
     if (areas.doors_count > 0) {
-      rateDisplay += `• **Doors:** $${rates.door_rate.toFixed(2)} per door\n`;
+      rateDisplay += `• **Doors**: $${rates.door_rate.toFixed(2)} each\n`;
     }
     if (areas.windows_count > 0) {
-      rateDisplay += `• **Windows:** $${rates.window_rate.toFixed(2)} per window\n`;
+      rateDisplay += `• **Windows**: $${rates.window_rate.toFixed(2)} each\n`;
     }
     
-    rateDisplay += "\n**Here are the rates that we have for each category, are there any here that you would like to change for this project?**\n\n";
+    rateDisplay += "\n**Are there any rates here that you would like to change for this project?**\n\n";
     rateDisplay += "You can say things like:\n";
-    rateDisplay += "• \"walls should be $3.50\"\n";
+    rateDisplay += "• \"painting to $3.50\" (adjusts combined painting rate)\n";
     rateDisplay += "• \"doors are complex, make them $120\"\n";
     rateDisplay += "• \"looks good\" to proceed with these rates";
     
@@ -661,17 +754,17 @@ export default function CreateQuotePage() {
       return { hasChanges: false, rates: {} };
     }
 
-    // Parse walls rate
-    const wallsMatch = input.match(/walls?\s+(?:should\s+be\s+|to\s+|at\s+)?\$?(\d+\.?\d*)/i);
-    if (wallsMatch) {
-      adjustments.walls_rate = parseFloat(wallsMatch[1]);
+    // Parse painting rate (walls and ceilings combined)
+    const paintingRateMatch = input.match(/(?:painting|walls?|ceilings?)\s+(?:should\s+be\s+|to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+    if (paintingRateMatch) {
+      adjustments.painting_rate = parseFloat(paintingRateMatch[1]);
       hasChanges = true;
     }
 
-    // Parse ceilings rate
-    const ceilingsMatch = input.match(/ceilings?\s+(?:should\s+be\s+|to\s+|at\s+)?\$?(\d+\.?\d*)/i);
-    if (ceilingsMatch) {
-      adjustments.ceilings_rate = parseFloat(ceilingsMatch[1]);
+    // Parse priming rate
+    const primingRateMatch = input.match(/prim(?:ing|er)\s+(?:should\s+be\s+|to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+    if (primingRateMatch) {
+      adjustments.priming_rate = parseFloat(primingRateMatch[1]);
       hasChanges = true;
     }
 
@@ -703,11 +796,12 @@ export default function CreateQuotePage() {
   const generateRateDisplay = (rates: ChargeRates, areas: ProjectAreas): string => {
     let display = "";
     
-    if (areas.walls_sqft > 0) {
-      display += `• Walls: $${rates.walls_rate.toFixed(2)}/sq ft\n`;
+    const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
+    if (totalPaintingSqft > 0) {
+      display += `• Painting: $${rates.painting_rate.toFixed(2)}/sq ft\n`;
     }
-    if (areas.ceilings_sqft > 0) {
-      display += `• Ceilings: $${rates.ceilings_rate.toFixed(2)}/sq ft\n`;
+    if (areas.priming_sqft > 0) {
+      display += `• Priming: $${rates.priming_rate.toFixed(2)}/sq ft\n`;
     }
     if (areas.trim_sqft > 0) {
       display += `• Trim: $${rates.trim_rate.toFixed(2)}/sq ft\n`;
@@ -720,6 +814,194 @@ export default function CreateQuotePage() {
     }
     
     return display;
+  };
+
+  // Helper function to determine which surfaces need paint products
+  const getNeededSurfaces = (areas: ProjectAreas): string[] => {
+    const surfaces: string[] = [];
+    if (areas.walls_sqft > 0) surfaces.push('walls');
+    if (areas.ceilings_sqft > 0) surfaces.push('ceilings');
+    if (areas.trim_sqft > 0) surfaces.push('trim');
+    return surfaces;
+  };
+
+  // Helper function to generate paint product selection prompt
+  const generatePaintProductSelection = (quoteData: QuoteData): string => {
+    const neededSurfaces = getNeededSurfaces(quoteData.areas);
+    const availableProducts = quoteData.availableProducts || [];
+    
+    // Find the first surface that doesn't have a product selected yet
+    const nextSurface = neededSurfaces.find(surface => 
+      !quoteData.selectedProducts?.[surface as keyof SelectedProducts]
+    );
+    
+    if (!nextSurface) {
+      return "All paint products selected! Let me show you the rates.";
+    }
+    
+    // Get products for this surface and project type
+    const surfaceProducts = availableProducts.filter(product => {
+      const projectType = quoteData.project_type === 'exterior' ? 'exterior' : 'interior';
+      const categoryMap: { [key: string]: string } = {
+        walls: 'wall_paint',
+        ceilings: 'ceiling_paint', 
+        trim: 'trim_paint'
+      };
+      
+      return product.projectType === projectType && 
+             product.productCategory === categoryMap[nextSurface];
+    });
+    
+    if (surfaceProducts.length === 0) {
+      return `I don't have any ${nextSurface} paint products configured for your company. Let's continue with standard rates for now. Say "continue" to proceed.`;
+    }
+    
+    // Show available products as buttons
+    let response = `Great! Now let's select your paint for **${nextSurface}**.\n\nI have these products available:\n\n`;
+    
+    surfaceProducts.forEach((product, index) => {
+      response += `**${index + 1}.** ${product.supplier} ${product.productName}`;
+      if (product.productLine) response += ` (${product.productLine})`;
+      response += ` - $${product.costPerGallon}/gallon`;
+      if (product.sheen) response += ` • ${product.sheen}`;
+      response += `\n`;
+    });
+    
+    response += `\nChoose by saying the number (1, 2, 3) or the product name. You can also say "custom" to enter a different product.`;
+    
+    return response;
+  };
+
+  // Helper function to parse paint product selection
+  const parsePaintProductSelection = (input: string, quoteData: QuoteData): {
+    selectedProducts?: Partial<SelectedProducts>;
+    paintCosts?: PaintCosts;
+  } => {
+    const neededSurfaces = getNeededSurfaces(quoteData.areas);
+    const availableProducts = quoteData.availableProducts || [];
+    
+    // Find the surface we're currently selecting for
+    const nextSurface = neededSurfaces.find(surface => 
+      !quoteData.selectedProducts?.[surface as keyof SelectedProducts]
+    );
+    
+    if (!nextSurface) return {};
+    
+    // Get products for this surface
+    const projectType = quoteData.project_type === 'exterior' ? 'exterior' : 'interior';
+    const categoryMap: { [key: string]: string } = {
+      walls: 'wall_paint',
+      ceilings: 'ceiling_paint',
+      trim: 'trim_paint'
+    };
+    
+    const surfaceProducts = availableProducts.filter(product => 
+      product.projectType === projectType && 
+      product.productCategory === categoryMap[nextSurface]
+    );
+    
+    let selectedProduct: PaintProduct | null = null;
+    
+    // Try to parse number selection (1, 2, 3)
+    const numberMatch = input.match(/^(\d+)$/);
+    if (numberMatch) {
+      const index = parseInt(numberMatch[1]) - 1;
+      if (index >= 0 && index < surfaceProducts.length) {
+        selectedProduct = surfaceProducts[index];
+      }
+    }
+    
+    // Try to parse product name selection
+    if (!selectedProduct) {
+      const lowerInput = input.toLowerCase();
+      selectedProduct = surfaceProducts.find(product => 
+        lowerInput.includes(product.productName.toLowerCase()) ||
+        lowerInput.includes(product.supplier.toLowerCase()) ||
+        (product.productLine && lowerInput.includes(product.productLine.toLowerCase()))
+      );
+    }
+    
+    if (selectedProduct) {
+      // Calculate updated paint costs
+      const paintCostMap: { [key: string]: keyof PaintCosts } = {
+        walls: 'walls_paint_cost',
+        ceilings: 'ceilings_paint_cost',
+        trim: 'trim_paint_cost'
+      };
+      
+      const updatedPaintCosts = {
+        ...quoteData.paint_costs,
+        [paintCostMap[nextSurface]]: selectedProduct.costPerGallon
+      };
+      
+      return {
+        selectedProducts: {
+          [nextSurface]: selectedProduct
+        } as Partial<SelectedProducts>,
+        paintCosts: updatedPaintCosts
+      };
+    }
+    
+    return {};
+  };
+
+  // Enhanced quote display that includes selected products
+  const generateEnhancedQuoteDisplay = (
+    calculation: QuoteCalculation,
+    areas: ProjectAreas,
+    rates: ChargeRates,
+    selectedProducts?: SelectedProducts
+  ): string => {
+    const revenueLines = [];
+    
+    // Combined painting line with product details
+    const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
+    if (totalPaintingSqft > 0) {
+      revenueLines.push(`- Painting: ${totalPaintingSqft} sqft × $${rates.painting_rate.toFixed(2)}/sqft = $${calculation.revenue.painting.toFixed(2)}`);
+      
+      // Add product details if selected
+      if (selectedProducts?.walls && areas.walls_sqft > 0) {
+        revenueLines.push(`  • Walls: ${selectedProducts.walls.supplier} ${selectedProducts.walls.productName} ($${selectedProducts.walls.costPerGallon}/gal)`);
+      }
+      if (selectedProducts?.ceilings && areas.ceilings_sqft > 0) {
+        revenueLines.push(`  • Ceilings: ${selectedProducts.ceilings.supplier} ${selectedProducts.ceilings.productName} ($${selectedProducts.ceilings.costPerGallon}/gal)`);
+      }
+    }
+    
+    if (areas.priming_sqft > 0) {
+      revenueLines.push(`- Priming: ${areas.priming_sqft} sqft × $${rates.priming_rate.toFixed(2)}/sqft = $${calculation.revenue.priming.toFixed(2)}`);
+    }
+    if (areas.trim_sqft > 0) {
+      revenueLines.push(`- Trim: ${areas.trim_sqft} sqft × $${rates.trim_rate.toFixed(2)}/sqft = $${calculation.revenue.trim.toFixed(2)}`);
+      
+      if (selectedProducts?.trim) {
+        revenueLines.push(`  • Product: ${selectedProducts.trim.supplier} ${selectedProducts.trim.productName} ($${selectedProducts.trim.costPerGallon}/gal)`);
+      }
+    }
+    if (areas.doors_count > 0) {
+      revenueLines.push(`- Doors: ${areas.doors_count} doors × $${rates.door_rate.toFixed(2)}/door = $${calculation.revenue.doors.toFixed(2)}`);
+    }
+    if (areas.windows_count > 0) {
+      revenueLines.push(`- Windows: ${areas.windows_count} windows × $${rates.window_rate.toFixed(2)}/window = $${calculation.revenue.windows.toFixed(2)}`);
+    }
+
+    return `Here's your quote calculation:
+
+💰 **REVENUE BREAKDOWN**
+${revenueLines.join('\n')}
+**Total Revenue: $${calculation.revenue.total.toFixed(2)}**
+
+🎨 **MATERIALS**
+- Total Materials Cost: $${calculation.materials.total.toFixed(2)}
+
+👷 **LABOR ESTIMATE**
+- Projected Labor (${calculation.labor.labor_percentage}%): $${calculation.labor.projected_labor.toFixed(2)}
+
+📊 **FINAL QUOTE**
+**Total Quote: $${calculation.revenue.total.toFixed(2)}**
+**Projected Profit: $${calculation.profit.toFixed(2)}**
+
+Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed calculations.`;
   };
 
   if (!companyData) {
