@@ -61,10 +61,19 @@ export class IntelligentQuoteParser {
   constructor() {
     this.apiKey = process.env.OPENROUTER_API_KEY || '';
     this.baseUrl = 'https://openrouter.ai/api/v1';
+    
+    if (!this.apiKey) {
+      console.warn('OPENROUTER_API_KEY not found. Parser will use mock mode.');
+    }
   }
 
   async parseQuoteInput(userInput: string): Promise<ParsingResult> {
     try {
+      // Check if we have API key, otherwise use mock mode
+      if (!this.apiKey) {
+        return this.mockParse(userInput);
+      }
+      
       // Stage 1: Primary extraction with Claude 3.5 Sonnet
       const primaryResult = await this.primaryExtraction(userInput);
       
@@ -253,6 +262,75 @@ Return ONLY the corrected JSON object.`;
       confidence_score: 0,
       missing_fields: [],
       assumptions_made: []
+    };
+  }
+
+  private mockParse(input: string): ParsingResult {
+    // Simple regex-based parsing for testing without API key
+    const data: ParsedQuoteData = this.getEmptyQuoteData();
+    
+    // Extract customer name
+    const nameMatch = input.match(/(?:for|customer:|name:)\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i);
+    if (nameMatch) data.customer_name = nameMatch[1];
+    
+    // Extract address
+    const addressMatch = input.match(/(?:at|address:)\s*(\d+\s+[^,.]+(?:Street|St|Avenue|Ave|Drive|Dr|Road|Rd|Lane|Ln|Boulevard|Blvd)[^,]*)/i);
+    if (addressMatch) data.property_address = addressMatch[1];
+    
+    // Extract square footage
+    const sqftMatch = input.match(/(\d+(?:,\d{3})*)\s*(?:sqft|sq\.?\s*ft|square\s*feet)/i);
+    if (sqftMatch) data.walls_sqft = parseInt(sqftMatch[1].replace(/,/g, ''));
+    
+    // Extract linear feet and height
+    const linearMatch = input.match(/(\d+)\s*(?:linear|lin\.?)\s*(?:feet|ft)/i);
+    if (linearMatch) data.linear_feet = parseInt(linearMatch[1]);
+    
+    const heightMatch = input.match(/(\d+)\s*(?:feet|ft|')\s*(?:tall|high|height|ceilings?)/i);
+    if (heightMatch) data.wall_height_ft = parseInt(heightMatch[1]);
+    
+    // Extract paint cost
+    const paintCostMatch = input.match(/\$(\d+(?:\.\d{2})?)\s*(?:per|a|\/)\s*gal/i);
+    if (paintCostMatch) data.paint_cost_per_gallon = parseFloat(paintCostMatch[1]);
+    
+    // Extract labor cost
+    const laborMatch = input.match(/(?:labor|labour).*?\$(\d+(?:\.\d{2})?)\s*(?:per|\/)\s*(?:sqft|sq\.?\s*ft)/i);
+    if (laborMatch) data.labor_cost_per_sqft = parseFloat(laborMatch[1]);
+    
+    // Extract primer cost
+    const primerCostMatch = input.match(/primer.*?\$(\d+(?:\.\d{2})?)\s*(?:per|\/)\s*(?:sqft|sq\.?\s*ft|square\s*foot)/i);
+    if (primerCostMatch) data.primer_cost_per_sqft = parseFloat(primerCostMatch[1]);
+    
+    // Extract markup
+    const markupMatch = input.match(/(\d+)\s*%\s*markup/i);
+    if (markupMatch) data.markup_percent = parseInt(markupMatch[1]);
+    
+    // Check inclusions
+    data.ceiling_included = /(?:including|include|with)\s*ceiling/i.test(input) || 
+                           !/(?:not|no|excluding|exclude|without)\s*(?:painting\s*)?ceiling/i.test(input);
+    data.primer_included = /primer\s*(?:is\s*)?(?:required|needed|included)/i.test(input);
+    data.doors_included = /(?:including|include|with)\s*doors?/i.test(input);
+    data.trim_included = /(?:including|include|with)\s*trim/i.test(input);
+    data.windows_included = /(?:including|include|with)\s*windows?/i.test(input);
+    
+    // Project type
+    if (/exterior/i.test(input)) data.project_type = 'exterior';
+    else if (/both|interior\s*and\s*exterior/i.test(input)) data.project_type = 'both';
+    
+    // Extract paint brand
+    const brandMatch = input.match(/(?:sherwin\s*williams?|benjamin\s*moore?|behr|kilz|zinsser)/i);
+    if (brandMatch) data.paint_brand = brandMatch[0];
+    
+    // Calculate derived fields
+    const enriched = this.enrichWithCalculations(data);
+    const final = this.assessQuality(enriched);
+    
+    return {
+      success: true,
+      data: final,
+      errors: [],
+      warnings: ['Using mock parser - results may be less accurate than with OpenRouter API'],
+      needs_clarification: final.missing_fields.length > 0,
+      clarification_questions: this.generateClarificationQuestions(final)
     };
   }
 }
