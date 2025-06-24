@@ -17,15 +17,24 @@ export async function GET(
       return NextResponse.json(quote);
     }
     
-    // Fallback to old database system
+    // Fallback to old database system with enhanced company data
     const quote: any = await dbGet(`
       SELECT 
         q.*,
         c.company_name,
         c.phone as company_phone,
-        c.email as company_email
+        c.email as company_email,
+        c.logo_url as company_logo_url,
+        cp.company_address,
+        cp.license_number,
+        cp.insurance_info,
+        cp.company_website,
+        cp.quote_header_text,
+        cp.quote_footer_text,
+        cp.payment_terms as default_payment_terms
       FROM quotes q
       LEFT JOIN companies c ON q.company_id = c.id
+      LEFT JOIN company_profiles cp ON cp.user_id = c.id
       WHERE q.id = ? OR q.quote_id = ?
     `, [params.id, params.id]);
 
