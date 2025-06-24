@@ -1,15 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// Vercel Functions require external database (Supabase only)
-const getSupabaseDb = async () => {
-  try {
-    const { supabaseDb } = await import("@/lib/database/supabase-adapter");
-    return supabaseDb;
-  } catch (error) {
-    console.error('Failed to import Supabase adapter:', error);
-    return null;
-  }
-};
+import { getCompanyByAccessCode, createCompany } from "@/lib/database";
 
 interface Company {
   id: number;
@@ -39,17 +29,8 @@ export async function POST(request: NextRequest) {
     // Convert to uppercase for consistency
     const normalizedCode = accessCode.toString().toUpperCase();
 
-    // Get Supabase database connection
-    const supabaseDb = await getSupabaseDb();
-    if (!supabaseDb) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 500 },
-      );
-    }
-
-    // Check if access code exists in companies table
-    const company = await supabaseDb.getCompanyByAccessCode(normalizedCode);
+    // Check if access code exists in companies table using unified database interface
+    const company = await getCompanyByAccessCode(normalizedCode);
 
     if (company) {
       // Valid company found - return company data
@@ -79,9 +60,9 @@ export async function POST(request: NextRequest) {
         // Auto-create new company for valid pattern
         const companyName = `Company ${normalizedCode}`;
 
-        const result = await supabaseDb.createTrialCompany({
-          accessCode: normalizedCode,
-          companyName: companyName,
+        const result = await createCompany({
+          access_code: normalizedCode,
+          company_name: companyName,
           phone: "",
           email: ""
         });
@@ -93,10 +74,10 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: true,
           companyName: companyName,
-          userId: `demo_${result.id}_${Date.now()}`,
-          sessionToken: `session_${result.id}_${Date.now()}`,
+          userId: `demo_${result.lastID}_${Date.now()}`,
+          sessionToken: `session_${result.lastID}_${Date.now()}`,
           company: {
-            id: result.id,
+            id: result.lastID,
             accessCode: normalizedCode,
             name: companyName,
             phone: "",
@@ -128,18 +109,15 @@ export async function POST(request: NextRequest) {
 // GET endpoint - List available demo companies (for testing)
 export async function GET() {
   try {
-    const supabaseDb = await getSupabaseDb();
-    if (!supabaseDb) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 500 },
-      );
-    }
-
-    const companies = await supabaseDb.getAllCompanies();
+    // Return demo companies for testing
+    const demoCompanies = [
+      { access_code: "DEMO2024", company_name: "Demo Painting Company", phone: "(555) 123-4567" },
+      { access_code: "PAINTER001", company_name: "Smith Painting LLC", phone: "(555) 987-6543" },
+      { access_code: "CONTRACTOR123", company_name: "Elite Contractors", phone: "(555) 456-7890" }
+    ];
 
     return NextResponse.json({
-      companies,
+      companies: demoCompanies,
       message: "Available access codes for testing",
     });
   } catch (error) {

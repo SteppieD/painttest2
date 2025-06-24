@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Eye, Edit3, Send, Link, Copy, CheckCircle, MessageSquare } from "lucide-react";
+import { ArrowLeft, Eye, Edit3, Send, Link, Copy, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -36,93 +36,13 @@ export default function QuotePage({ params }: { params: { id: string } }) {
 
   const loadQuote = async () => {
     try {
-      console.log('🔍 Loading quote with ID:', params.id);
       const response = await fetch(`/api/quotes/${params.id}`);
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Quote loaded from database:', data);
         setQuote(data);
-        return;
       }
-      
-      // Fallback: Check localStorage for quote data
-      console.log('💾 Quote not found in database, checking localStorage...');
-      console.log('🔑 Looking for localStorage key:', `quote_${params.id}`);
-      
-      // Try multiple localStorage key formats
-      let fallbackQuoteData = localStorage.getItem(`quote_${params.id}`);
-      let keyUsed = `quote_${params.id}`;
-      
-      if (!fallbackQuoteData) {
-        // Try all localStorage keys that start with "quote_"
-        console.log('🔍 Checking all localStorage quote keys...');
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key && key.startsWith('quote_')) {
-            console.log('📋 Found localStorage key:', key);
-            const data = localStorage.getItem(key);
-            if (data) {
-              try {
-                const parsed = JSON.parse(data);
-                // Check if this quote matches our ID (by quote_id or id)
-                if (parsed.quote_id === params.id || parsed.id === params.id) {
-                  fallbackQuoteData = data;
-                  keyUsed = key;
-                  console.log('✅ Found matching quote in localStorage with key:', key);
-                  break;
-                }
-              } catch (e) {
-                console.warn('Failed to parse localStorage data for key:', key);
-              }
-            }
-          }
-        }
-      }
-      
-      if (fallbackQuoteData) {
-        const quote = JSON.parse(fallbackQuoteData);
-        console.log('✅ Quote found in localStorage with key:', keyUsed);
-        console.log('📋 Raw quote data:', quote);
-        console.log('📋 Quote fields check:');
-        console.log('  - customer_name:', quote.customer_name);
-        console.log('  - total_cost:', quote.total_cost);
-        console.log('  - final_price:', quote.final_price);
-        console.log('  - quote_amount:', quote.quote_amount);
-        console.log('  - created_at:', quote.created_at);
-        console.log('  - project_type:', quote.project_type);
-        console.log('  - address:', quote.address);
-        setQuote(quote);
-        
-        toast({
-          title: "Quote Loaded",
-          description: "Quote loaded from local storage (development mode)",
-          variant: "default",
-        });
-        return;
-      }
-      
-      console.log('❌ Quote not found in database or localStorage');
-      console.log('🔍 Available localStorage keys:');
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('quote_')) {
-          console.log('  -', key);
-        }
-      }
-      
-      toast({
-        title: "Quote Not Found",
-        description: "The requested quote could not be found.",
-        variant: "destructive",
-      });
-      
     } catch (error) {
       console.error('Error loading quote:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load quote data.",
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }
@@ -238,8 +158,8 @@ export default function QuotePage({ params }: { params: { id: string } }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-semibold mb-2">Customer Information</h3>
-                <p className="text-lg font-medium">{quote.customer_name || 'Customer Name'}</p>
-                <p className="text-gray-600">{quote.address || 'Address not specified'}</p>
+                <p className="text-lg font-medium">{quote.customer_name}</p>
+                <p className="text-gray-600">{quote.address}</p>
                 {quote.customer_email && (
                   <p className="text-gray-600">{quote.customer_email}</p>
                 )}
@@ -251,13 +171,13 @@ export default function QuotePage({ params }: { params: { id: string } }) {
               <div>
                 <h3 className="font-semibold mb-2">Project Details</h3>
                 <p className="text-gray-600">
-                  {quote.project_type?.charAt(0).toUpperCase() + quote.project_type?.slice(1) || 'Interior'} Painting
+                  {quote.project_type?.charAt(0).toUpperCase() + quote.project_type?.slice(1)} Painting
                 </p>
                 <p className="text-2xl font-bold text-green-600 mt-2">
-                  ${(quote.total_cost || quote.final_price || quote.quote_amount || 0).toLocaleString()}
+                  ${quote.total_cost?.toLocaleString()}
                 </p>
                 <p className="text-sm text-gray-500">
-                  Created: {quote.created_at ? new Date(quote.created_at).toLocaleDateString() : 'Today'}
+                  Created: {new Date(quote.created_at).toLocaleDateString()}
                 </p>
                 <div className="mt-2">
                   <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
@@ -275,14 +195,14 @@ export default function QuotePage({ params }: { params: { id: string } }) {
         </Card>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card className="cursor-pointer hover:shadow-md transition-shadow" 
-                onClick={() => router.push(`/quotes/${quote.id}/edit`)}>
+                onClick={() => router.push(`/quotes/${quote.id}/review`)}>
             <CardContent className="p-6 text-center">
               <Edit3 className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Edit Quote</h3>
+              <h3 className="font-semibold mb-2">Review & Edit</h3>
               <p className="text-sm text-gray-600">
-                Update customer info, measurements, pricing, and details
+                View internal details, adjust markup, and analyze costs
               </p>
             </CardContent>
           </Card>
@@ -305,17 +225,6 @@ export default function QuotePage({ params }: { params: { id: string } }) {
               <h3 className="font-semibold mb-2">Share Quote</h3>
               <p className="text-sm text-gray-600">
                 Copy link to send to your customer
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card className="cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => router.push(`/create-quote?edit=${quote.id}`)}>
-            <CardContent className="p-6 text-center">
-              <MessageSquare className="w-8 h-8 text-indigo-600 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Edit in Chat</h3>
-              <p className="text-sm text-gray-600">
-                Modify quote details through conversation
               </p>
             </CardContent>
           </Card>

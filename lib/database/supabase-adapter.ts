@@ -165,17 +165,28 @@ export class SupabaseDatabaseAdapter {
   }
 
   async getCompanyByAccessCode(accessCode: string) {
-    const { data, error } = await this.supabase
-      .from('companies')
-      .select('*')
-      .eq('access_code', accessCode)
-      .single();
-
-    if (error) {
-      throw error;
+    if (!this.supabase) {
+      // Return null if Supabase client not initialized - fallback to demo logic
+      return null;
     }
 
-    return data;
+    try {
+      const { data, error } = await this.supabase
+        .from('companies')
+        .select('*')
+        .eq('access_code', accessCode)
+        .single();
+
+      if (error) {
+        console.log('Supabase access code lookup failed:', error.message);
+        return null; // Return null to trigger fallback
+      }
+
+      return data;
+    } catch (error) {
+      console.log('Supabase connection error during access code lookup:', error);
+      return null; // Return null to trigger fallback
+    }
   }
 
   async createQuote(quoteData: any) {
