@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Send, Calculator, Loader2 } from "lucide-react";
+import { ArrowLeft, Save, Send, Calculator, Loader2, FileText, Users, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
 import {
   ProjectAreas,
   ChargeRates,
@@ -25,6 +26,45 @@ import {
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
+
+// Message content renderer with markdown and link support
+const MessageContent: React.FC<{ content: string }> = ({ content }) => {
+  // Parse links in format [text](url)
+  const renderContent = (text: string) => {
+    const parts = text.split(/\[([^\]]+)\]\(([^)]+)\)/g);
+    
+    return parts.map((part, index) => {
+      // Every third part starting from index 1 is link text
+      // Every third part starting from index 2 is link URL
+      if (index % 3 === 1) {
+        const linkText = part;
+        const linkUrl = parts[index + 1];
+        return (
+          <a
+            key={index}
+            href={linkUrl}
+            className="text-blue-600 hover:text-blue-700 underline font-medium inline-flex items-center gap-1"
+            onClick={(e) => {
+              e.preventDefault();
+              window.open(linkUrl, '_blank');
+            }}
+          >
+            {linkText}
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        );
+      } else if (index % 3 === 2) {
+        // Skip URL parts as they're handled above
+        return null;
+      } else {
+        // Regular text with markdown
+        return <MarkdownRenderer key={index} content={part} className="inline" />;
+      }
+    });
+  };
+  
+  return <div className="whitespace-pre-wrap text-sm">{renderContent(content)}</div>;
+};
 
 interface Message {
   id: string;
@@ -73,6 +113,7 @@ export default function CreateQuotePage() {
   const [conversationStage, setConversationStage] = useState('customer_info');
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [savedQuoteId, setSavedQuoteId] = useState<string | null>(null);
 
   // Auto-scroll to bottom
   const scrollToBottom = () => {
@@ -398,8 +439,12 @@ export default function CreateQuotePage() {
           responseContent = `What would you like to adjust? I can modify:\n\n• **Square footage** (walls, ceilings, trim)\n• **Charge rates** (currently $${quoteData.rates.walls_rate}/sqft walls, $${quoteData.rates.ceilings_rate}/sqft ceilings, $${quoteData.rates.trim_rate}/sqft trim)\n• **Labor percentage** (currently ${quoteData.labor_percentage}%)\n• **Paint costs**\n\nJust tell me what you'd like to change!`;
           nextStage = 'adjustments';
         } else if (lowerInput.includes('save') || lowerInput.includes('approve') || lowerInput.includes('finalize')) {
-          await saveQuote();
-          responseContent = `✅ Quote saved successfully!\n\n**Final Details:**\n• Customer: ${quoteData.customer_name}\n• Total Quote: $${quoteData.calculation!.revenue.total.toFixed(2)}\n• Projected Profit: $${quoteData.calculation!.profit.toFixed(2)}\n\nWould you like to create another quote or return to the dashboard?`;
+          const quoteId = await saveQuote();
+          if (quoteId) {
+            responseContent = `✅ **Quote saved successfully!**\n\n**Final Details:**\n• Customer: ${quoteData.customer_name}\n• Total Quote: $${quoteData.calculation!.revenue.total.toFixed(2)}\n• Projected Profit: $${quoteData.calculation!.profit.toFixed(2)}\n\n**Quick Actions:**\n[Review Quote](/quotes/${quoteId}/review) | [Customer Version](/quotes/${quoteId}/customer) | [Download PDF](/api/quotes/${quoteId}/pdf)\n\nWould you like to create another quote or return to the dashboard?`;
+          } else {
+            responseContent = `✅ Quote saved!\n\nWould you like to create another quote or return to the dashboard?`;
+          }
           nextStage = 'complete';
         } else {
           responseContent = `Your quote total is **$${quoteData.calculation!.revenue.total.toFixed(2)}** with a projected profit of **$${quoteData.calculation!.profit.toFixed(2)}**.\n\nWhat would you like to do?\n• **"Save"** - Finalize this quote\n• **"Breakdown"** - See detailed calculations\n• **"Adjust"** - Modify pricing or measurements`;
@@ -455,6 +500,7 @@ export default function CreateQuotePage() {
             calculation: null
           });
           setConversationStage('customer_info');
+          setSavedQuoteId(null); // Reset saved quote ID
           responseContent = `Great! Let's create another quote. What's the customer's name and property address?`;
           return {
             id: (Date.now() + 1).toString(),
@@ -528,10 +574,13 @@ export default function CreateQuotePage() {
 
       if (response.ok) {
         const result = await response.json();
+        const quoteId = result.quoteId || result.quote?.id || result.id;
+        setSavedQuoteId(quoteId);
         toast({
           title: "Quote Saved!",
-          description: `Quote ${result.quoteId || result.quote?.id} saved successfully.`,
+          description: `Quote ${quoteId} saved successfully.`,
         });
+        return quoteId;
       } else {
         throw new Error('Failed to save quote');
       }
@@ -597,6 +646,54 @@ export default function CreateQuotePage() {
         </div>
       </header>
 
+      {/* Quick Actions Card - Shows after saving */}
+      {savedQuoteId && conversationStage === 'complete' && (
+        <div className="bg-green-50 border-b border-green-200 p-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <Save className="w-4 h-4 text-green-600" />
+                </div>
+                <div>
+                  <p className="font-medium text-green-900">Quote Saved Successfully!</p>
+                  <p className="text-sm text-green-700">Quote ID: {savedQuoteId}</p>
+                </div>
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push(`/quotes/${savedQuoteId}/review`)}
+                  className="flex items-center gap-2"
+                >
+                  <FileText className="w-4 h-4" />
+                  Review & Edit
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push(`/quotes/${savedQuoteId}/customer`)}
+                  className="flex items-center gap-2"
+                >
+                  <Users className="w-4 h-4" />
+                  Customer View
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.open(`/api/quotes/${savedQuoteId}/pdf`, '_blank')}
+                  className="flex items-center gap-2"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Download PDF
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Chat Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -616,9 +713,7 @@ export default function CreateQuotePage() {
                     : "bg-white border rounded-bl-sm"
                 )}
               >
-                <div className="whitespace-pre-wrap text-sm">
-                  {message.content}
-                </div>
+                <MessageContent content={message.content} />
                 <div className={cn(
                   "text-xs mt-2",
                   message.role === 'user' ? "text-blue-100" : "text-gray-500"
