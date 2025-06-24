@@ -32,7 +32,7 @@ export default function ProductChatPage() {
       setMessages([
         {
           role: "assistant",
-          content: `Hi! I'm here to help you update your paint products and pricing. 🎨\n\nYou can:\n• Update prices for specific products\n• Add new products to your catalog\n• Remove products you no longer use\n• Bulk update prices by percentage\n\nWhat would you like to do today?`,
+          content: `Hi! I'm here to help you update your paint products and pricing. 🎨\n\nYou can:\n• Update prices for specific products\n• Add new products to your catalog\n• Remove products you no longer use\n• Bulk update prices by percentage\n• Update spread rates/coverage per gallon\n\nExamples:\n- "Update ProClassic spread rate to 400 sq ft"\n- "Set all products to 350 sq ft per gallon"\n- "Add new primer with 300 sq ft coverage"\n\nWhat would you like to do today?`,
         },
       ]);
     } else {
@@ -112,8 +112,8 @@ export default function ProductChatPage() {
   const quickActions = [
     "Update all prices by 10%",
     "Show my current products",
+    "Update ProClassic spread rate to 400 sq ft",
     "Add new Sherwin-Williams product",
-    "Remove unused products",
   ];
 
   return (
@@ -281,7 +281,7 @@ export default function ProductChatPage() {
           </div>
           <div className="mt-3 flex flex-wrap gap-2 items-center">
             <span className="text-xs font-medium text-gray-600">Quick examples:</span>
-            {["Update ProClassic to $45", "Add new primer", "Show ceiling prices"].map((example, index) => (
+            {["Update ProClassic to $45", "Add primer with 300 sq ft coverage", "Update all spread rates to 400 sq ft"].map((example, index) => (
               <button
                 key={index}
                 onClick={() => setInput(example)}

@@ -31,21 +31,24 @@ ${JSON.stringify(products, null, 2)}
 
 You can help with:
 1. Price updates (individual or bulk)
-2. Adding new products
+2. Adding new products with details including spread rate/coverage
 3. Removing products
 4. Showing current inventory
 5. Bulk percentage increases/decreases
+6. Updating spread rates/coverage per gallon
 
 Guidelines:
 - Be specific about which products were updated
 - Confirm changes before applying them
 - Ask for clarification if the request is ambiguous
 - Use friendly, professional tone
-- Show current and new prices when updating
+- Show current and new values when updating
+- When users mention "spread rate", "coverage", or "sq ft per gallon", they're referring to coverage_per_gallon
 
 Parse the user's intent and determine if any database actions are needed.
 If updating prices, extract the specific products and new prices.
-If adding products, extract supplier, name, category, and price.
+If updating spread rates/coverage, extract the specific products and new coverage values.
+If adding products, extract supplier, name, category, price, and coverage per gallon (default 350 if not specified).
 If removing products, identify which ones to remove.
 
 Respond with the appropriate action and confirmation message.`;
@@ -92,10 +95,17 @@ function parseUpdateRequest(message: string, products: any[]) {
   // Price update patterns
   const percentageMatch = message.match(/(\d+)%/);
   const priceMatch = message.match(/\$?(\d+\.?\d*)/);
+  const coverageMatch = message.match(/(\d+)\s*(?:sq\s*ft|square\s*feet|sqft)/i);
+  
+  // Check if this is about spread rate/coverage
+  const isSpreadRateUpdate = lowerMessage.includes("spread rate") || 
+                           lowerMessage.includes("coverage") || 
+                           lowerMessage.includes("sq ft per gallon") ||
+                           lowerMessage.includes("square feet per gallon");
   
   if (lowerMessage.includes("increase") || lowerMessage.includes("raise")) {
     action = "price_increase";
-    if (percentageMatch) {
+    if (percentageMatch && !isSpreadRateUpdate) {
       const percentage = parseFloat(percentageMatch[1]);
       updatedProducts = products.map(p => ({
         ...p,
@@ -105,7 +115,7 @@ function parseUpdateRequest(message: string, products: any[]) {
     }
   } else if (lowerMessage.includes("decrease") || lowerMessage.includes("reduce") || lowerMessage.includes("lower")) {
     action = "price_decrease";
-    if (percentageMatch) {
+    if (percentageMatch && !isSpreadRateUpdate) {
       const percentage = parseFloat(percentageMatch[1]);
       updatedProducts = products.map(p => ({
         ...p,
@@ -113,7 +123,30 @@ function parseUpdateRequest(message: string, products: any[]) {
       }));
       success = true;
     }
-  } else if (lowerMessage.includes("update") && priceMatch) {
+  } else if (isSpreadRateUpdate && coverageMatch) {
+    action = "coverage_update";
+    const newCoverage = parseInt(coverageMatch[1]);
+    
+    // Try to match specific product
+    const productMatches = products.filter(p => 
+      lowerMessage.includes(p.product_name.toLowerCase()) ||
+      lowerMessage.includes(p.supplier.toLowerCase())
+    );
+    
+    if (productMatches.length > 0) {
+      updatedProducts = productMatches.map(p => ({
+        ...p,
+        coveragePerGallon: newCoverage,
+      }));
+    } else if (lowerMessage.includes("all")) {
+      // Update all products
+      updatedProducts = products.map(p => ({
+        ...p,
+        coveragePerGallon: newCoverage,
+      }));
+    }
+    success = updatedProducts.length > 0;
+  } else if (lowerMessage.includes("update") && priceMatch && !isSpreadRateUpdate) {
     action = "specific_price_update";
     const newPrice = parseFloat(priceMatch[1]);
     
@@ -142,10 +175,18 @@ async function applyProductUpdates(userId: string, products: any[], action: stri
   if (action === "show_products") return;
 
   for (const product of products) {
-    dbRun(`
-      UPDATE company_paint_products
-      SET cost_per_gallon = ?, updated_at = CURRENT_TIMESTAMP
-      WHERE id = ? AND user_id = ?
-    `, [product.costPerGallon, product.id, userId]);
+    if (action === "coverage_update") {
+      dbRun(`
+        UPDATE company_paint_products
+        SET coverage_per_gallon = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ? AND user_id = ?
+      `, [product.coveragePerGallon, product.id, userId]);
+    } else {
+      dbRun(`
+        UPDATE company_paint_products
+        SET cost_per_gallon = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ? AND user_id = ?
+      `, [product.costPerGallon, product.id, userId]);
+    }
   }
 }

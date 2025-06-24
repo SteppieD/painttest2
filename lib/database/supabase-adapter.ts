@@ -333,6 +333,7 @@ export class SupabaseDatabaseAdapter {
         product_line: updates.productLine,
         cost_per_gallon: updates.costPerGallon,
         sheen: updates.sheen,
+        coverage_per_gallon: updates.coveragePerGallon || 350,
         updated_at: new Date().toISOString()
       })
       .eq('id', productId)
