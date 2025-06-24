@@ -129,6 +129,9 @@ export default function CreateQuotePage() {
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // 🐛 DEBUG MODE - Set to true to see intelligent parser results in console
+  const DEBUG_PARSER = false;
+
   const [companyData, setCompanyData] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -332,8 +335,23 @@ export default function CreateQuotePage() {
                           updatedQuoteData.areas.ceilings_sqft > 0 || 
                           updatedQuoteData.areas.trim_sqft > 0;
           
-          if (hasCustomer && hasAreas && parsedData.labor_cost_per_sqft) {
-            // We have all information - calculate the quote immediately
+          // Debug output - shows what the intelligent parser extracted
+          if (DEBUG_PARSER) {
+            console.log('🧠 Intelligent Parser Results:', {
+              success: parsingResult.success,
+              confidence: parsedData.confidence_score,
+              parsedData: parsedData,
+              missingFields: parsedData.missing_fields,
+              clarificationQuestions: parsingResult.clarification_questions
+            });
+          }
+          
+          // Check what we have after parsing
+          const canCalculateQuote = hasCustomer && hasAreas && 
+                                   (parsedData.labor_cost_per_sqft || updatedQuoteData.rates.painting_rate > 0);
+          
+          if (canCalculateQuote) {
+            // We have sufficient information - calculate the quote immediately
             const calculation = calculateQuote(
               updatedQuoteData.areas,
               updatedQuoteData.rates,
@@ -344,7 +362,7 @@ export default function CreateQuotePage() {
             
             setQuoteData(prev => ({ ...prev, calculation }));
             
-            // Generate comprehensive quote display
+            // Generate comprehensive quote display using the parser's understanding
             responseContent = `Perfect! I've analyzed your complete project details:\n\n`;
             responseContent += `**Customer:** ${updatedQuoteData.customer_name}\n`;
             responseContent += `**Address:** ${updatedQuoteData.address}\n`;
@@ -384,22 +402,30 @@ export default function CreateQuotePage() {
             }
             
             nextStage = 'quote_review';
-          } else if (hasCustomer && !hasAreas) {
-            // Have customer but missing measurements
-            responseContent = `Great! I have ${updatedQuoteData.customer_name} at ${updatedQuoteData.address}.\n\n`;
-            if (parsedData.missing_fields.length > 0) {
-              responseContent += `I still need the following information:\n`;
-              parsedData.missing_fields.forEach(field => {
-                responseContent += `• ${field}\n`;
-              });
-            } else {
-              responseContent += `Please provide the square footage for the areas you want painted.`;
+          } else if (!parsingResult.needs_clarification && hasCustomer && hasAreas) {
+            // We have customer and areas but missing labor rate - ask only for that
+            responseContent = `Great! I have all the project details for ${updatedQuoteData.customer_name}.\n\n`;
+            responseContent += `I just need your labor rate per square foot to complete the quote. What's your standard rate? (e.g., "$2.50 per sqft" or "labor is $3.00")`;
+            nextStage = 'rate_input';
+          } else if (parsingResult.needs_clarification) {
+            // Use the intelligent parser's specific clarification questions
+            responseContent = `I've parsed most of your project details! Just need a few more pieces of information:\n\n`;
+            parsingResult.clarification_questions.forEach((question, index) => {
+              responseContent += `${index + 1}. ${question}\n`;
+            });
+            
+            if (parsedData.confidence_score > 60) {
+              responseContent += `\n💡 **What I understood so far:**\n`;
+              if (parsedData.customer_name) responseContent += `• Customer: ${parsedData.customer_name}\n`;
+              if (parsedData.property_address) responseContent += `• Address: ${parsedData.property_address}\n`;
+              if (parsedData.walls_sqft) responseContent += `• Wall area: ${parsedData.walls_sqft} sqft\n`;
+              if (parsedData.labor_cost_per_sqft) responseContent += `• Labor rate: $${parsedData.labor_cost_per_sqft}/sqft\n`;
             }
-            nextStage = 'areas';
+            
+            nextStage = 'clarification';
           } else {
-            // Missing critical information
-            responseContent = "I need a bit more information to create your quote. ";
-            responseContent += parsingResult.clarification_questions.join('\n');
+            // Fallback - something went wrong with parsing
+            responseContent = "I need a bit more information to create your quote. Could you provide the customer name, property address, and project details?";
             nextStage = 'customer_info';
           }
           
@@ -1028,6 +1054,152 @@ What would you like to change it to? Please specify the new rate like:
           };
         } else {
           responseContent = `Thanks for using our quote system! You can:\n• **"Another quote"** - Create a new quote\n• **"Dashboard"** - Return to main dashboard\n• **"Exit"** - Close this session`;
+        }
+        break;
+
+      case 'clarification':
+        // Handle clarification responses using intelligent parser
+        try {
+          const parser = new IntelligentQuoteParser();
+          const parsingResult = await parser.parseQuoteInput(input);
+          
+          if (parsingResult.success) {
+            const parsedData = parsingResult.data;
+            
+            // Update quote data with newly clarified information
+            let updatedQuoteData = { ...quoteData };
+            
+            // Update customer info
+            if (parsedData.customer_name && !updatedQuoteData.customer_name) {
+              updatedQuoteData.customer_name = parsedData.customer_name;
+            }
+            if (parsedData.property_address && !updatedQuoteData.address) {
+              updatedQuoteData.address = parsedData.property_address;
+            }
+            if (parsedData.project_type && !updatedQuoteData.project_type) {
+              updatedQuoteData.project_type = parsedData.project_type;
+            }
+            
+            // Update areas
+            if (parsedData.walls_sqft && !updatedQuoteData.areas.walls_sqft) {
+              updatedQuoteData.areas.walls_sqft = parsedData.walls_sqft;
+            }
+            if (parsedData.ceilings_sqft && !updatedQuoteData.areas.ceilings_sqft) {
+              updatedQuoteData.areas.ceilings_sqft = parsedData.ceilings_sqft;
+            }
+            if (parsedData.trim_sqft && !updatedQuoteData.areas.trim_sqft) {
+              updatedQuoteData.areas.trim_sqft = parsedData.trim_sqft;
+            }
+            
+            // Update rates
+            if (parsedData.labor_cost_per_sqft && !updatedQuoteData.rates.painting_rate) {
+              updatedQuoteData.rates.painting_rate = parsedData.labor_cost_per_sqft;
+            }
+            
+            setQuoteData(updatedQuoteData);
+            
+            // Check if we now have enough to calculate
+            const hasCustomer = updatedQuoteData.customer_name && updatedQuoteData.address;
+            const hasAreas = updatedQuoteData.areas.walls_sqft > 0 || 
+                            updatedQuoteData.areas.ceilings_sqft > 0 || 
+                            updatedQuoteData.areas.trim_sqft > 0;
+            const hasRate = updatedQuoteData.rates.painting_rate > 0;
+            
+            if (hasCustomer && hasAreas && hasRate) {
+              // Now we can calculate!
+              const calculation = calculateQuote(
+                updatedQuoteData.areas,
+                updatedQuoteData.rates,
+                updatedQuoteData.paint_costs,
+                updatedQuoteData.labor_percentage || 30
+              );
+              
+              setQuoteData(prev => ({ ...prev, calculation }));
+              
+              responseContent = `Perfect! Now I have all the information needed.\n\n${generateQuoteDisplay(calculation)}`;
+              nextStage = 'quote_review';
+            } else if (parsingResult.needs_clarification) {
+              // Still need more clarification
+              responseContent = `Thanks! I still need:\n\n`;
+              parsingResult.clarification_questions.forEach((question, index) => {
+                responseContent += `${index + 1}. ${question}\n`;
+              });
+              nextStage = 'clarification';
+            } else {
+              // Got the clarification but still missing something specific
+              if (!hasRate) {
+                responseContent = `Great! I just need your labor rate to complete the quote. What's your rate per square foot?`;
+                nextStage = 'rate_input';
+              } else {
+                responseContent = `I need a bit more information. Could you provide the missing details?`;
+                nextStage = 'clarification';
+              }
+            }
+          } else {
+            // Parsing failed, ask for clarification in a different way
+            responseContent = `I didn't quite catch that. Could you please provide the specific information I asked for?`;
+            nextStage = 'clarification';
+          }
+        } catch (error) {
+          console.error('Error in clarification stage:', error);
+          responseContent = `I'm having trouble understanding. Could you please rephrase your response?`;
+          nextStage = 'clarification';
+        }
+        break;
+
+      case 'rate_input':
+        // Handle labor rate input specifically
+        try {
+          const parser = new IntelligentQuoteParser();
+          const parsingResult = await parser.parseQuoteInput(input);
+          
+          if (parsingResult.success && parsingResult.data.labor_cost_per_sqft) {
+            // Got the labor rate!
+            let updatedQuoteData = { ...quoteData };
+            updatedQuoteData.rates.painting_rate = parsingResult.data.labor_cost_per_sqft;
+            setQuoteData(updatedQuoteData);
+            
+            // Now calculate the quote
+            const calculation = calculateQuote(
+              updatedQuoteData.areas,
+              updatedQuoteData.rates,
+              updatedQuoteData.paint_costs,
+              updatedQuoteData.labor_percentage || 30
+            );
+            
+            setQuoteData(prev => ({ ...prev, calculation }));
+            
+            responseContent = `Perfect! With your labor rate of $${parsingResult.data.labor_cost_per_sqft}/sqft:\n\n${generateQuoteDisplay(calculation)}`;
+            nextStage = 'quote_review';
+          } else {
+            // Try to parse rate with traditional methods
+            const rateMatch = input.match(/\$?(\d+\.?\d*)/);
+            if (rateMatch) {
+              const rate = parseFloat(rateMatch[1]);
+              let updatedQuoteData = { ...quoteData };
+              updatedQuoteData.rates.painting_rate = rate;
+              setQuoteData(updatedQuoteData);
+              
+              const calculation = calculateQuote(
+                updatedQuoteData.areas,
+                updatedQuoteData.rates,
+                updatedQuoteData.paint_costs,
+                updatedQuoteData.labor_percentage || 30
+              );
+              
+              setQuoteData(prev => ({ ...prev, calculation }));
+              
+              responseContent = `Great! With your labor rate of $${rate}/sqft:\n\n${generateQuoteDisplay(calculation)}`;
+              nextStage = 'quote_review';
+            } else {
+              responseContent = `I need a specific dollar amount for your labor rate. For example: "$2.50" or "$3.00 per sqft"`;
+              nextStage = 'rate_input';
+            }
+          }
+        } catch (error) {
+          console.error('Error parsing rate input:', error);
+          responseContent = `Please provide your labor rate as a dollar amount, like "$2.50" or "$3.00 per sqft"`;
+          nextStage = 'rate_input';
         }
         break;
 
