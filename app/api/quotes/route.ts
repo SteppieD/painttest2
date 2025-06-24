@@ -179,7 +179,7 @@ export async function GET(request: NextRequest) {
       params.push(status);
     }
 
-    const quotes = dbAll(`
+    const quotes = await dbAll(`
       SELECT 
         q.*,
         c.company_name,
@@ -191,8 +191,15 @@ export async function GET(request: NextRequest) {
       LIMIT ?
     `, [...params, limit]);
 
+    // Ensure quotes is an array before mapping
+    const quotesArray = Array.isArray(quotes) ? quotes : [];
+    
+    if (!Array.isArray(quotes)) {
+      console.warn('dbAll returned non-array:', typeof quotes, quotes);
+    }
+
     // Map quotes to the format expected by the quotes page
-    const mappedQuotes = (quotes as any[]).map((quote: any) => {
+    const mappedQuotes = quotesArray.map((quote: any) => {
         // Parse conversation summary for breakdown
         let breakdown = null;
         if (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') {
@@ -292,10 +299,11 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error("Error fetching quotes:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch quotes" },
-      { status: 500 }
-    );
+    // Return empty quotes array instead of error to prevent frontend crashes
+    return NextResponse.json({
+      quotes: [],
+      error: "Failed to fetch quotes, returning empty list"
+    });
   }
 }
 
