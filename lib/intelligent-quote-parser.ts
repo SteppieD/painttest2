@@ -148,10 +148,17 @@ Required JSON format:
   "project_scope_notes": string
 }
 
-Return ONLY the JSON object, no explanation.`;
+Return ONLY the raw JSON object. Do not include markdown formatting, code fences, or any explanation. Response must start with { and end with }`;
 
     const response = await this.callLLM('anthropic/claude-3.5-sonnet', prompt);
-    return JSON.parse(response);
+    
+    try {
+      return JSON.parse(response);
+    } catch (error) {
+      console.error('Failed to parse LLM response as JSON:', response);
+      console.error('Parse error:', error);
+      throw new Error(`Invalid JSON response from LLM: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   private async validateExtraction(originalInput: string, extracted: ParsedQuoteData): Promise<ParsedQuoteData> {
@@ -167,10 +174,18 @@ Your tasks:
 3. Flag inconsistencies or errors
 4. Return corrected JSON with same structure
 
-Return ONLY the corrected JSON object.`;
+Return ONLY the raw corrected JSON object. Do not include markdown formatting, code fences, or any explanation. Response must start with { and end with }`;
 
     const response = await this.callLLM('openai/gpt-4o', prompt);
-    return JSON.parse(response);
+    
+    try {
+      return JSON.parse(response);
+    } catch (error) {
+      console.error('Failed to parse validation response as JSON:', response);
+      console.error('Parse error:', error);
+      // Return original extraction if validation fails
+      return extracted;
+    }
   }
 
   private enrichWithCalculations(data: ParsedQuoteData): ParsedQuoteData {
@@ -254,7 +269,19 @@ Return ONLY the corrected JSON object.`;
       throw new Error('Invalid response from LLM API');
     }
     
-    return data.choices[0].message.content;
+    let content = data.choices[0].message.content;
+    
+    // Strip markdown code fences if present
+    content = content.trim();
+    if (content.startsWith('```')) {
+      // Remove opening fence with optional language identifier
+      content = content.replace(/^```[a-zA-Z]*\n?/, '');
+      // Remove closing fence
+      content = content.replace(/\n?```$/, '');
+      content = content.trim();
+    }
+    
+    return content;
   }
 
   private getEmptyQuoteData(): ParsedQuoteData {
