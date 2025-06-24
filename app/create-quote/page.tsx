@@ -21,7 +21,10 @@ import {
   parseAdjustments,
   parseCustomPricing,
   generateQuoteDisplay,
-  generateDetailedBreakdown
+  generateDetailedBreakdown,
+  generateRateConfirmation,
+  parseRateAdjustments,
+  generateRateDisplay
 } from "@/lib/spreadsheet-calculator";
 
 // Force dynamic rendering for this page
@@ -103,8 +106,8 @@ export default function CreateQuotePage() {
     customer_name: '',
     address: '',
     project_type: '',
-    areas: { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: 0 },
-    rates: { walls_rate: 3.00, ceilings_rate: 2.00, trim_rate: 1.92 },
+    areas: { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: 0, doors_count: 0, windows_count: 0, priming_sqft: 0 },
+    rates: { painting_rate: 2.50, priming_rate: 0.40, trim_rate: 1.92, door_rate: 100.00, window_rate: 25.00 },
     paint_costs: { walls_paint_cost: 26.00, ceilings_paint_cost: 25.00, trim_paint_cost: 35.00 },
     labor_percentage: 30,
     calculation: null
@@ -155,9 +158,11 @@ export default function CreateQuotePage() {
       setQuoteData(prev => ({
         ...prev,
         rates: {
-          walls_rate: settings.default_walls_rate || 3.00,
-          ceilings_rate: settings.default_ceilings_rate || 2.00,
-          trim_rate: settings.default_trim_rate || 1.92
+          painting_rate: settings.default_painting_rate || 2.50,
+          priming_rate: settings.default_priming_rate || 0.40,
+          trim_rate: settings.default_trim_rate || 1.92,
+          door_rate: settings.default_door_rate || 100.00,
+          window_rate: settings.default_window_rate || 25.00
         },
         paint_costs: {
           walls_paint_cost: settings.default_walls_paint_cost || 26.00,
@@ -346,38 +351,21 @@ export default function CreateQuotePage() {
           responseContent = `I need the square footage measurements. Please provide:\\n\\n• **Specific measurements**: "1000 walls, 800 ceilings, 400 trim"\\n• **Total sqft**: "2200 total sqft" and I'll estimate breakdown\\n• **Room dimensions**: "living room 12x14, bedroom 10x12" and I'll calculate`;
           nextStage = 'areas'; // Stay in same stage to retry
         } else {
-          // We have measurements - calculate quote
-          const calculation = calculateQuote(
-            areas, 
-            updatedAreasData.rates, 
-            updatedAreasData.paint_costs, 
-            updatedAreasData.labor_percentage
-          );
-          
-          setQuoteData(prev => ({ ...prev, calculation }));
-          
-          responseContent = generateQuoteDisplay(calculation, areas, updatedAreasData.rates, updatedAreasData.paint_costs);
-          nextStage = 'quote_review';
+          // We have measurements - now confirm rates before calculating
+          responseContent = generateRateConfirmation(updatedAreasData.rates, areas);
+          nextStage = 'rate_confirmation';
         }
         break;
 
       case 'wall_measurements':
         const wallAreas = parseAreas(input, quoteData.project_type);
         if (wallAreas.walls_sqft > 0) {
-          const finalAreas = { walls_sqft: wallAreas.walls_sqft, ceilings_sqft: 0, trim_sqft: 0 };
+          const finalAreas = { walls_sqft: wallAreas.walls_sqft, ceilings_sqft: 0, trim_sqft: 0, doors_count: 0, windows_count: 0, priming_sqft: 0 };
           const wallQuoteData = { ...quoteData, areas: finalAreas };
           setQuoteData(wallQuoteData);
           
-          const wallCalculation = calculateQuote(
-            finalAreas, 
-            wallQuoteData.rates, 
-            wallQuoteData.paint_costs, 
-            wallQuoteData.labor_percentage
-          );
-          
-          setQuoteData(prev => ({ ...prev, calculation: wallCalculation }));
-          responseContent = generateQuoteDisplay(wallCalculation, finalAreas, wallQuoteData.rates, wallQuoteData.paint_costs);
-          nextStage = 'quote_review';
+          responseContent = generateRateConfirmation(wallQuoteData.rates, finalAreas);
+          nextStage = 'rate_confirmation';
         } else {
           responseContent = `I need the wall square footage. Please say something like:\\n• "1200 walls"\\n• "1200 sqft"\\n• Room dimensions: "12x14 living room, 10x12 bedroom"`;
           nextStage = 'wall_measurements'; // Stay in same stage
@@ -387,20 +375,12 @@ export default function CreateQuotePage() {
       case 'ceiling_measurements':
         const ceilingAreas = parseAreas(input, quoteData.project_type);
         if (ceilingAreas.ceilings_sqft > 0) {
-          const finalAreas = { walls_sqft: 0, ceilings_sqft: ceilingAreas.ceilings_sqft, trim_sqft: 0 };
+          const finalAreas = { walls_sqft: 0, ceilings_sqft: ceilingAreas.ceilings_sqft, trim_sqft: 0, doors_count: 0, windows_count: 0, priming_sqft: 0 };
           const ceilingQuoteData = { ...quoteData, areas: finalAreas };
           setQuoteData(ceilingQuoteData);
           
-          const ceilingCalculation = calculateQuote(
-            finalAreas, 
-            ceilingQuoteData.rates, 
-            ceilingQuoteData.paint_costs, 
-            ceilingQuoteData.labor_percentage
-          );
-          
-          setQuoteData(prev => ({ ...prev, calculation: ceilingCalculation }));
-          responseContent = generateQuoteDisplay(ceilingCalculation, finalAreas, ceilingQuoteData.rates, ceilingQuoteData.paint_costs);
-          nextStage = 'quote_review';
+          responseContent = generateRateConfirmation(ceilingQuoteData.rates, finalAreas);
+          nextStage = 'rate_confirmation';
         } else {
           responseContent = `I need the ceiling square footage. Please say something like:\\n• "800 ceilings"\\n• "800 sqft"\\n• Room dimensions: "12x14 living room"`;
           nextStage = 'ceiling_measurements'; // Stay in same stage
@@ -410,7 +390,7 @@ export default function CreateQuotePage() {
       case 'trim_measurements':
         const trimAreas = parseAreas(input, quoteData.project_type);
         if (trimAreas.trim_sqft > 0) {
-          const finalAreas = { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: trimAreas.trim_sqft };
+          const finalAreas = { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: trimAreas.trim_sqft, doors_count: trimAreas.doors_count, windows_count: trimAreas.windows_count };
           const trimQuoteData = { ...quoteData, areas: finalAreas };
           setQuoteData(trimQuoteData);
           
@@ -430,13 +410,51 @@ export default function CreateQuotePage() {
         }
         break;
 
+      case 'rate_confirmation':
+        // Parse rate adjustments from user input
+        const rateAdjustments = parseRateAdjustments(input);
+        let updatedRatesData = { ...quoteData };
+        
+        // Apply rate adjustments if any
+        if (rateAdjustments.hasChanges) {
+          updatedRatesData.rates = { ...updatedRatesData.rates, ...rateAdjustments.rates };
+          setQuoteData(updatedRatesData);
+          responseContent = `✅ **Rates Updated:**\n\n${generateRateDisplay(updatedRatesData.rates, updatedRatesData.areas)}\n\nCalculating your quote with these rates...`;
+        } else {
+          responseContent = `Perfect! Using standard rates for calculation...`;
+        }
+        
+        // Calculate quote with confirmed rates
+        const calculation = calculateQuote(
+          updatedRatesData.areas, 
+          updatedRatesData.rates, 
+          updatedRatesData.paint_costs, 
+          updatedRatesData.labor_percentage
+        );
+        
+        setQuoteData(prev => ({ ...prev, calculation }));
+        
+        // Add quote display after a brief delay
+        setTimeout(() => {
+          const finalResponse = responseContent + "\n\n" + generateQuoteDisplay(calculation, updatedRatesData.areas, updatedRatesData.rates, updatedRatesData.paint_costs);
+          setMessages(prev => [...prev.slice(0, -1), {
+            id: Date.now().toString(),
+            role: 'assistant',
+            content: finalResponse,
+            timestamp: new Date().toISOString()
+          }]);
+        }, 1000);
+        
+        nextStage = 'quote_review';
+        break;
+
       case 'quote_review':
         const lowerInput = input.toLowerCase();
         
         if (lowerInput.includes('breakdown') || lowerInput.includes('how did you calculate') || lowerInput.includes('detail')) {
           responseContent = generateDetailedBreakdown(quoteData.calculation!, quoteData.areas, quoteData.rates, quoteData.paint_costs);
         } else if (lowerInput.includes('adjust') || lowerInput.includes('change') || lowerInput.includes('modify')) {
-          responseContent = `What would you like to adjust? I can modify:\n\n• **Square footage** (walls, ceilings, trim)\n• **Charge rates** (currently $${quoteData.rates.walls_rate}/sqft walls, $${quoteData.rates.ceilings_rate}/sqft ceilings, $${quoteData.rates.trim_rate}/sqft trim)\n• **Labor percentage** (currently ${quoteData.labor_percentage}%)\n• **Paint costs**\n\nJust tell me what you'd like to change!`;
+          responseContent = `What would you like to adjust? I can modify:\n\n• **Square footage** (walls, ceilings, trim)\n• **Charge rates** (currently $${quoteData.rates.painting_rate}/sqft painting, $${quoteData.rates.trim_rate}/sqft trim)\n• **Labor percentage** (currently ${quoteData.labor_percentage}%)\n• **Paint costs**\n\nJust tell me what you'd like to change!`;
           nextStage = 'adjustments';
         } else if (lowerInput.includes('save') || lowerInput.includes('approve') || lowerInput.includes('finalize')) {
           const quoteId = await saveQuote();
@@ -493,7 +511,7 @@ export default function CreateQuotePage() {
             customer_name: '',
             address: '',
             project_type: '',
-            areas: { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: 0 },
+            areas: { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: 0, doors_count: 0, windows_count: 0 },
             rates: quoteData.rates, // Keep company rates
             paint_costs: quoteData.paint_costs, // Keep company paint costs
             labor_percentage: quoteData.labor_percentage, // Keep company labor %
@@ -599,6 +617,109 @@ export default function CreateQuotePage() {
       e.preventDefault();
       handleSend();
     }
+  };
+
+  // Helper function to generate rate confirmation display
+  const generateRateConfirmation = (rates: ChargeRates, areas: ProjectAreas): string => {
+    let rateDisplay = "Based on your project, here are my pricing rates:\n\n";
+    
+    if (areas.walls_sqft > 0) {
+      rateDisplay += `• **Walls:** $${rates.walls_rate.toFixed(2)} per square foot\n`;
+    }
+    if (areas.ceilings_sqft > 0) {
+      rateDisplay += `• **Ceilings:** $${rates.ceilings_rate.toFixed(2)} per square foot\n`;
+    }
+    if (areas.trim_sqft > 0) {
+      rateDisplay += `• **Trim:** $${rates.trim_rate.toFixed(2)} per square foot\n`;
+    }
+    if (areas.doors_count > 0) {
+      rateDisplay += `• **Doors:** $${rates.door_rate.toFixed(2)} per door\n`;
+    }
+    if (areas.windows_count > 0) {
+      rateDisplay += `• **Windows:** $${rates.window_rate.toFixed(2)} per window\n`;
+    }
+    
+    rateDisplay += "\n**Here are the rates that we have for each category, are there any here that you would like to change for this project?**\n\n";
+    rateDisplay += "You can say things like:\n";
+    rateDisplay += "• \"walls should be $3.50\"\n";
+    rateDisplay += "• \"doors are complex, make them $120\"\n";
+    rateDisplay += "• \"looks good\" to proceed with these rates";
+    
+    return rateDisplay;
+  };
+
+  // Helper function to parse rate adjustments from user input
+  const parseRateAdjustments = (input: string): { hasChanges: boolean; rates: Partial<ChargeRates> } => {
+    const lowerInput = input.toLowerCase();
+    const adjustments: Partial<ChargeRates> = {};
+    let hasChanges = false;
+
+    // Check for "looks good", "proceed", "yes", etc.
+    if (lowerInput.includes('looks good') || lowerInput.includes('proceed') || 
+        lowerInput.includes('yes') || lowerInput.includes('correct') ||
+        lowerInput.includes('fine') || lowerInput.includes('okay')) {
+      return { hasChanges: false, rates: {} };
+    }
+
+    // Parse walls rate
+    const wallsMatch = input.match(/walls?\s+(?:should\s+be\s+|to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+    if (wallsMatch) {
+      adjustments.walls_rate = parseFloat(wallsMatch[1]);
+      hasChanges = true;
+    }
+
+    // Parse ceilings rate
+    const ceilingsMatch = input.match(/ceilings?\s+(?:should\s+be\s+|to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+    if (ceilingsMatch) {
+      adjustments.ceilings_rate = parseFloat(ceilingsMatch[1]);
+      hasChanges = true;
+    }
+
+    // Parse trim rate
+    const trimMatch = input.match(/trim\s+(?:should\s+be\s+|to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+    if (trimMatch) {
+      adjustments.trim_rate = parseFloat(trimMatch[1]);
+      hasChanges = true;
+    }
+
+    // Parse door rate
+    const doorMatch = input.match(/doors?\s+(?:should\s+be\s+|to\s+|at\s+|are\s+.*?,?\s*make\s+them\s+)?\$?(\d+\.?\d*)/i);
+    if (doorMatch) {
+      adjustments.door_rate = parseFloat(doorMatch[1]);
+      hasChanges = true;
+    }
+
+    // Parse window rate
+    const windowMatch = input.match(/windows?\s+(?:should\s+be\s+|to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+    if (windowMatch) {
+      adjustments.window_rate = parseFloat(windowMatch[1]);
+      hasChanges = true;
+    }
+
+    return { hasChanges, rates: adjustments };
+  };
+
+  // Helper function to display confirmed rates
+  const generateRateDisplay = (rates: ChargeRates, areas: ProjectAreas): string => {
+    let display = "";
+    
+    if (areas.walls_sqft > 0) {
+      display += `• Walls: $${rates.walls_rate.toFixed(2)}/sq ft\n`;
+    }
+    if (areas.ceilings_sqft > 0) {
+      display += `• Ceilings: $${rates.ceilings_rate.toFixed(2)}/sq ft\n`;
+    }
+    if (areas.trim_sqft > 0) {
+      display += `• Trim: $${rates.trim_rate.toFixed(2)}/sq ft\n`;
+    }
+    if (areas.doors_count > 0) {
+      display += `• Doors: $${rates.door_rate.toFixed(2)}/door\n`;
+    }
+    if (areas.windows_count > 0) {
+      display += `• Windows: $${rates.window_rate.toFixed(2)}/window\n`;
+    }
+    
+    return display;
   };
 
   if (!companyData) {
