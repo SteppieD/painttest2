@@ -529,12 +529,12 @@ export default function DashboardPage() {
               <span className="font-semibold">View All Quotes</span>
             </button>
             <button
-              onClick={() => router.push("/insights")}
+              onClick={() => router.push("/analytics")}
               className="neomorphism-button-enhanced flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
               style={{ animationDelay: '0.2s' }}
             >
               <TrendingUp className="w-5 h-5 text-purple-600" />
-              <span className="font-semibold">Analytics</span>
+              <span className="font-semibold">Business Intelligence</span>
             </button>
             <button
               onClick={() => router.push("/settings")}
