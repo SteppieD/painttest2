@@ -488,7 +488,7 @@ export const generateRateConfirmation = (rates: ChargeRates, areas: ProjectAreas
 };
 
 // Parse rate adjustments from user input
-export const parseRateAdjustments = (input: string): { hasChanges: boolean; rates: Partial<ChargeRates> } => {
+export const parseRateAdjustments = (input: string): { hasChanges: boolean; rates: Partial<ChargeRates>; needsRateInput?: boolean; rateType?: string } => {
   const lowerInput = input.toLowerCase();
   
   // Check for confirmation to proceed without changes
@@ -496,6 +496,28 @@ export const parseRateAdjustments = (input: string): { hasChanges: boolean; rate
       lowerInput.includes('proceed') || lowerInput.includes('no changes') ||
       lowerInput.includes('sounds good') || lowerInput.includes('that works')) {
     return { hasChanges: false, rates: {} };
+  }
+
+  // Check for rate adjustment questions without specific amounts
+  const rateQuestionPatterns = [
+    /(?:can\s+we\s+|let'?s\s+|i\s+want\s+to\s+)?(?:update|change|adjust|modify)\s+(?:the\s+)?(?:painting|walls?|ceilings?)\s+rate/i,
+    /(?:painting|walls?|ceilings?)\s+(?:rate\s+)?(?:update|change|adjust|modify)/i,
+    /(?:can\s+we\s+|let'?s\s+|i\s+want\s+to\s+)?(?:update|change|adjust|modify)\s+(?:the\s+)?rate/i,
+    /different\s+(?:painting\s+)?rate/i,
+    /new\s+(?:painting\s+)?rate/i
+  ];
+
+  for (const pattern of rateQuestionPatterns) {
+    if (pattern.test(input)) {
+      // Determine which rate type they're asking about
+      let rateType = 'painting'; // default
+      if (/trim/i.test(input)) rateType = 'trim';
+      else if (/priming|primer/i.test(input)) rateType = 'priming';
+      else if (/door/i.test(input)) rateType = 'door';
+      else if (/window/i.test(input)) rateType = 'window';
+      
+      return { hasChanges: false, rates: {}, needsRateInput: true, rateType };
+    }
   }
 
   const rates: Partial<ChargeRates> = {};

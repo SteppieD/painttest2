@@ -106,6 +106,21 @@ interface QuoteData {
   calculation: QuoteCalculation | null;
   availableProducts?: PaintProduct[];
   selectedProducts?: SelectedProducts;
+  paintDetails?: {
+    brand?: string;
+    productName?: string;
+    sheen?: string;
+    costPerGallon?: number;
+    spreadRate?: number;
+    needsConfirmation?: boolean;
+  };
+  confirmedPaintProduct?: {
+    brand: string;
+    productName: string;
+    sheen: string;
+    costPerGallon: number;
+    spreadRate: number;
+  };
 }
 
 export default function CreateQuotePage() {
@@ -321,7 +336,7 @@ export default function CreateQuotePage() {
             setQuoteData(prev => ({ ...prev, calculation: finalCalculation }));
           }
           
-          responseContent = `Perfect! I parsed your complete project details:\n\n**Customer:** ${customerInfo.customer_name}\n**Address:** ${customerInfo.address}\n**Project:** ${parsedProjectType} painting\n**Areas:** ${parsedAreas.walls_sqft} sq ft walls${parsedAreas.ceilings_sqft > 0 ? `, ${parsedAreas.ceilings_sqft} sq ft ceilings` : ''}${parsedAreas.trim_sqft > 0 ? `, ${parsedAreas.trim_sqft} sq ft trim` : ''}\n\n${generateEnhancedQuoteDisplay(finalCalculation, parsedAreas, updatedQuoteData.rates, updatedQuoteData.selectedProducts)}`;
+          responseContent = `Perfect! I parsed your complete project details:\n\n**Customer:** ${customerInfo.customer_name}\n**Address:** ${customerInfo.address}\n**Project:** ${parsedProjectType} painting\n**Areas:** ${parsedAreas.walls_sqft} sq ft walls${parsedAreas.ceilings_sqft > 0 ? `, ${parsedAreas.ceilings_sqft} sq ft ceilings` : ''}${parsedAreas.trim_sqft > 0 ? `, ${parsedAreas.trim_sqft} sq ft trim` : ''}\n\n${generateEnhancedQuoteDisplay(finalCalculation, parsedAreas, updatedQuoteData.rates, updatedQuoteData.selectedProducts, updatedQuoteData.confirmedPaintProduct)}`;
           nextStage = 'quote_review';
         } else if (hasCustomer) {
           responseContent = `Perfect! I have ${customerInfo.customer_name} at ${customerInfo.address}.\n\nWhat type of painting work are we quoting?\n• Interior (walls, ceilings, trim)\n• Exterior\n• Both interior and exterior`;
@@ -354,6 +369,7 @@ export default function CreateQuotePage() {
 
       case 'areas':
         const areas = parseAreas(input, quoteData.project_type);
+        const paintDetails = parsePaintProductDetails(input);
         const updatedAreasData = { ...quoteData, areas };
         setQuoteData(updatedAreasData);
         
@@ -380,6 +396,12 @@ export default function CreateQuotePage() {
         } else if (!hasAnyArea) {
           responseContent = `I need the square footage measurements. Please provide:\\n\\n• **Specific measurements**: "1000 walls, 800 ceilings, 400 trim"\\n• **Total sqft**: "2200 total sqft" and I'll estimate breakdown\\n• **Room dimensions**: "living room 12x14, bedroom 10x12" and I'll calculate`;
           nextStage = 'areas'; // Stay in same stage to retry
+        } else if (paintDetails.needsConfirmation) {
+          // We have measurements AND paint details - confirm paint details first
+          const paintDetailsData = { ...updatedAreasData, paintDetails };
+          setQuoteData(paintDetailsData);
+          responseContent = generatePaintProductConfirmation(paintDetails);
+          nextStage = 'paint_product_confirmation';
         } else {
           // We have measurements - now select paint products
           responseContent = generatePaintProductSelection(updatedAreasData);
@@ -432,7 +454,7 @@ export default function CreateQuotePage() {
           );
           
           setQuoteData(prev => ({ ...prev, calculation: trimCalculation }));
-          responseContent = generateEnhancedQuoteDisplay(trimCalculation, finalAreas, trimQuoteData.rates, trimQuoteData.selectedProducts);
+          responseContent = generateEnhancedQuoteDisplay(trimCalculation, finalAreas, trimQuoteData.rates, trimQuoteData.selectedProducts, trimQuoteData.confirmedPaintProduct);
           nextStage = 'quote_review';
         } else {
           responseContent = `I need the trim square footage. Please say something like:\\n• "300 trim"\\n• "300 sqft"\\n• Item count: "6 doors, 8 windows"`;
@@ -474,10 +496,87 @@ export default function CreateQuotePage() {
         }
         break;
 
+      case 'paint_product_confirmation':
+        const lowerConfirmationInput = input.toLowerCase();
+        
+        if (lowerConfirmationInput.includes('yes') || lowerConfirmationInput.includes('correct') || 
+            lowerConfirmationInput.includes('right') || lowerConfirmationInput.includes('good')) {
+          // User confirmed paint details - apply them and proceed
+          const confirmedDetails = quoteData.paintDetails;
+          let updatedPaintCosts = { ...quoteData.paint_costs };
+          
+          // Apply confirmed paint cost to all surfaces (can be made more specific later)
+          if (confirmedDetails.costPerGallon) {
+            updatedPaintCosts = {
+              walls_paint_cost: confirmedDetails.costPerGallon,
+              ceilings_paint_cost: confirmedDetails.costPerGallon,
+              trim_paint_cost: confirmedDetails.costPerGallon
+            };
+          }
+          
+          const updatedQuoteData = {
+            ...quoteData,
+            paint_costs: updatedPaintCosts,
+            confirmedPaintProduct: {
+              brand: confirmedDetails.brand || 'Custom',
+              productName: confirmedDetails.productName || 'Custom Paint',
+              sheen: confirmedDetails.sheen || 'Unknown',
+              costPerGallon: confirmedDetails.costPerGallon || 50,
+              spreadRate: confirmedDetails.spreadRate || 350
+            }
+          };
+          setQuoteData(updatedQuoteData);
+          
+          responseContent = `✅ **Paint Details Confirmed:**\n\n• Brand: ${confirmedDetails.brand || 'Custom'}\n• Product: ${confirmedDetails.productName || 'Custom Paint'}\n• Sheen: ${confirmedDetails.sheen || 'Unknown'}\n• Cost: $${confirmedDetails.costPerGallon || 50}/gallon\n\nNow let me show you the rates for this project:`;
+          nextStage = 'rate_confirmation';
+        } else if (lowerConfirmationInput.includes('no') || lowerConfirmationInput.includes('wrong') || 
+                   lowerConfirmationInput.includes('incorrect')) {
+          // User wants to correct details - go to paint product selection
+          responseContent = generatePaintProductSelection(quoteData);
+          nextStage = 'paint_product_selection';
+        } else {
+          // Try to parse corrections like "brand is Benjamin Moore" or "cost is $45"
+          const correctionDetails = parsePaintProductDetails(input);
+          if (correctionDetails.needsConfirmation) {
+            // Update the paint details with corrections
+            const updatedDetails = { ...quoteData.paintDetails, ...correctionDetails };
+            const correctedQuoteData = { ...quoteData, paintDetails: updatedDetails };
+            setQuoteData(correctedQuoteData);
+            responseContent = generatePaintProductConfirmation(updatedDetails);
+            nextStage = 'paint_product_confirmation';
+          } else {
+            responseContent = `I didn't understand that correction. Please say:\n• **"yes"** to confirm the details\n• **"no"** to start over\n• Or make specific corrections like: "brand is Benjamin Moore" or "cost is $45"`;
+            nextStage = 'paint_product_confirmation';
+          }
+        }
+        break;
+
       case 'rate_confirmation':
         // Parse rate adjustments from user input
         const rateAdjustments = parseRateAdjustments(input);
         let updatedRatesData = { ...quoteData };
+        
+        // Handle rate adjustment questions
+        if (rateAdjustments.needsRateInput) {
+          const rateType = rateAdjustments.rateType || 'painting';
+          const currentRate = rateType === 'painting' ? quoteData.rates.painting_rate :
+                             rateType === 'trim' ? quoteData.rates.trim_rate :
+                             rateType === 'priming' ? quoteData.rates.priming_rate :
+                             rateType === 'door' ? quoteData.rates.door_rate :
+                             quoteData.rates.window_rate;
+          
+          responseContent = `I can help you update the ${rateType} rate! 
+
+**Current ${rateType} rate:** $${currentRate?.toFixed(2)}${rateType === 'painting' ? '/sq ft' : rateType === 'trim' || rateType === 'priming' ? '/sq ft' : ' each'}
+
+What would you like to change it to? Please specify the new rate like:
+• "${rateType} to $3.50"
+• "$3.50 for ${rateType}"
+• "Change ${rateType} rate to $3.50"`;
+          
+          nextStage = 'rate_confirmation'; // Stay in same stage for the rate input
+          break;
+        }
         
         // Apply rate adjustments if any
         if (rateAdjustments.hasChanges) {
@@ -500,7 +599,7 @@ export default function CreateQuotePage() {
         
         // Add quote display after a brief delay
         setTimeout(() => {
-          const finalResponse = responseContent + "\n\n" + generateEnhancedQuoteDisplay(calculation, updatedRatesData.areas, updatedRatesData.rates, updatedRatesData.selectedProducts);
+          const finalResponse = responseContent + "\n\n" + generateEnhancedQuoteDisplay(calculation, updatedRatesData.areas, updatedRatesData.rates, updatedRatesData.selectedProducts, updatedRatesData.confirmedPaintProduct);
           setMessages(prev => [...prev.slice(0, -1), {
             id: Date.now().toString(),
             role: 'assistant',
@@ -529,7 +628,29 @@ export default function CreateQuotePage() {
           }
           nextStage = 'complete';
         } else {
-          responseContent = `Your quote total is **$${quoteData.calculation!.revenue.total.toFixed(2)}** with a projected profit of **$${quoteData.calculation!.profit.toFixed(2)}**.\n\nWhat would you like to do?\n• **"Save"** - Finalize this quote\n• **"Breakdown"** - See detailed calculations\n• **"Adjust"** - Modify pricing or measurements`;
+          // Check for rate adjustment questions in quote review
+          const rateAdjustmentCheck = parseRateAdjustments(input);
+          if (rateAdjustmentCheck.needsRateInput) {
+            const rateType = rateAdjustmentCheck.rateType || 'painting';
+            const currentRate = rateType === 'painting' ? quoteData.rates.painting_rate :
+                               rateType === 'trim' ? quoteData.rates.trim_rate :
+                               rateType === 'priming' ? quoteData.rates.priming_rate :
+                               rateType === 'door' ? quoteData.rates.door_rate :
+                               quoteData.rates.window_rate;
+            
+            responseContent = `I can help you update the ${rateType} rate! 
+
+**Current ${rateType} rate:** $${currentRate?.toFixed(2)}${rateType === 'painting' ? '/sq ft' : rateType === 'trim' || rateType === 'priming' ? '/sq ft' : ' each'}
+
+What would you like to change it to? Please specify the new rate like:
+• "${rateType} to $3.50"
+• "$3.50 for ${rateType}"
+• "Change ${rateType} rate to $3.50"`;
+            
+            nextStage = 'rate_adjustment_input';
+          } else {
+            responseContent = `Your quote total is **$${quoteData.calculation!.revenue.total.toFixed(2)}** with a projected profit of **$${quoteData.calculation!.profit.toFixed(2)}**.\n\nWhat would you like to do?\n• **"Save"** - Finalize this quote\n• **"Breakdown"** - See detailed calculations\n• **"Adjust"** - Modify pricing or measurements`;
+          }
         }
         break;
 
@@ -565,6 +686,36 @@ export default function CreateQuotePage() {
         
         responseContent = `✅ **Updated Quote:**\n\n• **Total Quote:** $${newCalculation.revenue.total.toFixed(2)}\n• **Projected Profit:** $${newCalculation.profit.toFixed(2)}\n\nDoes this look better? Say "save" to finalize or make more adjustments.`;
         nextStage = 'quote_review';
+        break;
+
+      case 'rate_adjustment_input':
+        // Parse the new rate from user input
+        const newRateAdjustments = parseRateAdjustments(input);
+        
+        if (newRateAdjustments.hasChanges) {
+          // Apply the rate change
+          const updatedQuoteData = {
+            ...quoteData,
+            rates: { ...quoteData.rates, ...newRateAdjustments.rates }
+          };
+          setQuoteData(updatedQuoteData);
+          
+          // Recalculate with new rates
+          const newCalculation = calculateQuote(
+            updatedQuoteData.areas, 
+            updatedQuoteData.rates, 
+            updatedQuoteData.paint_costs, 
+            updatedQuoteData.labor_percentage
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation: newCalculation }));
+          
+          responseContent = `✅ **Rate Updated Successfully!**\n\n${generateRateDisplay(updatedQuoteData.rates, updatedQuoteData.areas)}\n\n• **New Total Quote:** $${newCalculation.revenue.total.toFixed(2)}\n• **New Projected Profit:** $${newCalculation.profit.toFixed(2)}\n\nWould you like to save this quote or make more adjustments?`;
+          nextStage = 'quote_review';
+        } else {
+          responseContent = `I didn't catch the new rate. Please specify it like:\n• "painting to $3.50"\n• "$3.50 for painting"\n• "Change painting rate to $3.50"`;
+          nextStage = 'rate_adjustment_input'; // Stay in same stage
+        }
         break;
 
       case 'complete':
@@ -654,6 +805,9 @@ export default function CreateQuotePage() {
           
           // Selected paint products
           selected_products: JSON.stringify(quoteData.selectedProducts || {}),
+          
+          // Confirmed paint product details
+          confirmed_paint_product: JSON.stringify(quoteData.confirmedPaintProduct || {}),
           
           // Legacy fields for compatibility
           quote_amount: quoteData.calculation.revenue.total,
@@ -945,12 +1099,106 @@ export default function CreateQuotePage() {
     return {};
   };
 
+  // Parse paint product details from natural language input
+  const parsePaintProductDetails = (input: string): {
+    brand?: string;
+    productName?: string;
+    sheen?: string;
+    costPerGallon?: number;
+    spreadRate?: number;
+    needsConfirmation?: boolean;
+  } => {
+    const result: any = {};
+    let hasDetails = false;
+
+    // Parse cost per gallon: "$50 a gallon", "$45 per gallon", "$50/gallon"
+    const costMatch = input.match(/\$?(\d+(?:\.\d{2})?)\s*(?:a\s+|per\s+)?gallon/i);
+    if (costMatch) {
+      result.costPerGallon = parseFloat(costMatch[1]);
+      hasDetails = true;
+    }
+
+    // Parse spread rate: "350 square feet", "spread rate is 350"
+    const spreadRateMatch = input.match(/spread\s+rate\s+(?:is\s+)?(\d+)|(\d+)\s+square\s+feet(?:\s+coverage)?/i);
+    if (spreadRateMatch) {
+      result.spreadRate = parseInt(spreadRateMatch[1] || spreadRateMatch[2]);
+      hasDetails = true;
+    }
+
+    // Parse sheen/finish types
+    const sheenOptions = ['flat', 'matte', 'eggshell', 'satin', 'semi-gloss', 'semi gloss', 'gloss', 'high-gloss', 'high gloss'];
+    const sheenMatch = sheenOptions.find(sheen => 
+      input.toLowerCase().includes(sheen.toLowerCase())
+    );
+    if (sheenMatch) {
+      result.sheen = sheenMatch;
+      hasDetails = true;
+    }
+
+    // Parse brand names (common paint brands)
+    const brandPatterns = [
+      { pattern: /sherwin\s*williams?/i, brand: 'Sherwin Williams' },
+      { pattern: /benjamin\s*moore/i, brand: 'Benjamin Moore' },
+      { pattern: /behr/i, brand: 'Behr' },
+      { pattern: /kilz/i, brand: 'Kilz' },
+      { pattern: /zinsser/i, brand: 'Zinsser' },
+      { pattern: /dulux/i, brand: 'Dulux' },
+      { pattern: /ppg/i, brand: 'PPG' },
+      { pattern: /valspar/i, brand: 'Valspar' },
+      { pattern: /glidden/i, brand: 'Glidden' }
+    ];
+
+    const brandMatch = brandPatterns.find(bp => bp.pattern.test(input));
+    if (brandMatch) {
+      result.brand = brandMatch.brand;
+      hasDetails = true;
+    }
+
+    // Parse potential product names (look for capitalized words that aren't brands or sheen)
+    const productNameMatch = input.match(/([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/g);
+    if (productNameMatch) {
+      const excludeWords = ['Sherwin', 'Williams', 'Benjamin', 'Moore', 'Behr', 'Kilz', 'Zinsser', 'Dulux', 'PPG', 'Valspar', 'Glidden', 'Flat', 'Matte', 'Eggshell', 'Satin', 'Semi', 'Gloss', 'High'];
+      const potentialProduct = productNameMatch.find(match => 
+        !excludeWords.some(exclude => match.includes(exclude))
+      );
+      if (potentialProduct) {
+        result.productName = potentialProduct;
+        hasDetails = true;
+      }
+    }
+
+    if (hasDetails) {
+      result.needsConfirmation = true;
+    }
+
+    return result;
+  };
+
+  // Generate paint product confirmation message
+  const generatePaintProductConfirmation = (details: any): string => {
+    let confirmation = "I found these paint details in your message:\n\n";
+    
+    if (details.brand) confirmation += `• **Brand:** ${details.brand}\n`;
+    if (details.productName) confirmation += `• **Product:** ${details.productName}\n`;
+    if (details.sheen) confirmation += `• **Sheen:** ${details.sheen}\n`;
+    if (details.costPerGallon) confirmation += `• **Cost:** $${details.costPerGallon}/gallon\n`;
+    if (details.spreadRate) confirmation += `• **Coverage:** ${details.spreadRate} sq ft/gallon\n`;
+    
+    confirmation += "\nIs this correct? You can:\n";
+    confirmation += "• Say **\"yes\"** or **\"correct\"** to confirm\n";
+    confirmation += "• Say **\"no\"** to enter different details\n";
+    confirmation += "• Make corrections like: \"brand is Benjamin Moore\" or \"cost is $45\"";
+    
+    return confirmation;
+  };
+
   // Enhanced quote display that includes selected products
   const generateEnhancedQuoteDisplay = (
     calculation: QuoteCalculation,
     areas: ProjectAreas,
     rates: ChargeRates,
-    selectedProducts?: SelectedProducts
+    selectedProducts?: SelectedProducts,
+    confirmedPaintProduct?: any
   ): string => {
     const revenueLines = [];
     
@@ -960,10 +1208,12 @@ export default function CreateQuotePage() {
       revenueLines.push(`- Painting: ${totalPaintingSqft} sqft × $${rates.painting_rate.toFixed(2)}/sqft = $${calculation.revenue.painting.toFixed(2)}`);
       
       // Add product details if selected
-      if (selectedProducts?.walls && areas.walls_sqft > 0) {
+      if (confirmedPaintProduct) {
+        revenueLines.push(`  • Paint: ${confirmedPaintProduct.brand} ${confirmedPaintProduct.productName} - ${confirmedPaintProduct.sheen} ($${confirmedPaintProduct.costPerGallon}/gal)`);
+      } else if (selectedProducts?.walls && areas.walls_sqft > 0) {
         revenueLines.push(`  • Walls: ${selectedProducts.walls.supplier} ${selectedProducts.walls.productName} ($${selectedProducts.walls.costPerGallon}/gal)`);
       }
-      if (selectedProducts?.ceilings && areas.ceilings_sqft > 0) {
+      if (!confirmedPaintProduct && selectedProducts?.ceilings && areas.ceilings_sqft > 0) {
         revenueLines.push(`  • Ceilings: ${selectedProducts.ceilings.supplier} ${selectedProducts.ceilings.productName} ($${selectedProducts.ceilings.costPerGallon}/gal)`);
       }
     }
