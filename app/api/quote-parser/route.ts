@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { IntelligentQuoteParser, ModularQuoteCalculator } from '@/lib/intelligent-quote-parser';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,6 +14,9 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    console.log('API Key available:', !!process.env.OPENROUTER_API_KEY);
+    console.log('Parsing input:', input.substring(0, 100) + '...');
 
     const parser = new IntelligentQuoteParser();
     const calculator = new ModularQuoteCalculator();

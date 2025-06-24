@@ -231,7 +231,9 @@ Return ONLY the corrected JSON object.`;
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${this.apiKey}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'HTTP-Referer': process.env.VERCEL_URL || 'https://painttest2.vercel.app',
+        'X-Title': 'Painting Quote Parser'
       },
       body: JSON.stringify({
         model,
@@ -241,10 +243,17 @@ Return ONLY the corrected JSON object.`;
     });
 
     if (!response.ok) {
-      throw new Error(`LLM API error: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('OpenRouter API error:', response.status, errorText);
+      throw new Error(`LLM API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error('Unexpected API response:', data);
+      throw new Error('Invalid response from LLM API');
+    }
+    
     return data.choices[0].message.content;
   }
 
