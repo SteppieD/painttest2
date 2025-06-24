@@ -4,12 +4,17 @@ export interface ProjectAreas {
   walls_sqft: number;
   ceilings_sqft: number;
   trim_sqft: number;
+  doors_count: number;
+  windows_count: number;
+  priming_sqft: number;  // Square footage requiring primer
 }
 
 export interface ChargeRates {
-  walls_rate: number;
-  ceilings_rate: number;
+  painting_rate: number;  // Combined rate for walls & ceilings (2 coats, paint included)
+  priming_rate: number;   // Rate for primer application (1 coat, primer included)
   trim_rate: number;
+  door_rate: number;
+  window_rate: number;
 }
 
 export interface PaintCosts {
@@ -26,9 +31,11 @@ export interface MaterialsBreakdown {
 }
 
 export interface RevenueBreakdown {
-  walls: number;
-  ceilings: number;
+  painting: number;    // Combined walls & ceilings
+  priming: number;     // Primer application
   trim: number;
+  doors: number;
+  windows: number;
   total: number;
 }
 
@@ -47,15 +54,23 @@ export interface QuoteCalculation {
 
 // Revenue Calculation: SQFT × Charge Rate = Total Price
 export const calculateRevenue = (areas: ProjectAreas, rates: ChargeRates): RevenueBreakdown => {
-  const wallsRevenue = areas.walls_sqft * rates.walls_rate; // e.g., 1000 × $3.00 = $3,000
-  const ceilingsRevenue = areas.ceilings_sqft * rates.ceilings_rate; // e.g., 1000 × $2.00 = $2,000  
+  // Combined painting revenue (walls + ceilings) × unified painting rate
+  const paintingRevenue = (areas.walls_sqft + areas.ceilings_sqft) * rates.painting_rate; // e.g., 2000 × $2.50 = $5,000
+  
+  // Separate priming revenue if applicable
+  const primingRevenue = areas.priming_sqft * rates.priming_rate; // e.g., 1000 × $0.40 = $400
+  
   const trimRevenue = areas.trim_sqft * rates.trim_rate; // e.g., 520 × $1.92 = $1,000
+  const doorsRevenue = areas.doors_count * rates.door_rate; // e.g., 5 × $100.00 = $500
+  const windowsRevenue = areas.windows_count * rates.window_rate; // e.g., 8 × $25.00 = $200
   
   return {
-    walls: wallsRevenue,
-    ceilings: ceilingsRevenue,
+    painting: paintingRevenue,
+    priming: primingRevenue,
     trim: trimRevenue,
-    total: wallsRevenue + ceilingsRevenue + trimRevenue
+    doors: doorsRevenue,
+    windows: windowsRevenue,
+    total: paintingRevenue + primingRevenue + trimRevenue + doorsRevenue + windowsRevenue
   };
 };
 
@@ -174,6 +189,10 @@ export const parseAreas = (input: string, projectType: string = 'interior'): Pro
   const ceilingsMatch = input.match(/(\d+)\s*(?:sqft\s+)?(?:ceilings?|ceiling)/i);
   const trimMatch = input.match(/(\d+)\s*(?:sqft\s+)?(?:trim|doors?|door|windows?)/i);
   
+  // Parse doors and windows count
+  const doorsMatch = input.match(/(\d+)\s*doors?/i);
+  const windowsMatch = input.match(/(\d+)\s*windows?/i);
+  
   // Parse linear feet with height conversion: "500 linear feet... 9 feet tall"
   const linearFeetMatch = input.match(/(\d+)\s*linear\s*feet?/i);
   const heightMatch = input.match(/(\d+)\s*feet?\s*tall|ceilings?\s+are\s+(\d+)\s*feet?|height\s+(?:is\s+)?(\d+)/i);
@@ -181,6 +200,8 @@ export const parseAreas = (input: string, projectType: string = 'interior'): Pro
   let wallsSqft = 0;
   let ceilingsSqft = 0;
   let trimSqft = 0;
+  let doorsCount = 0;
+  let windowsCount = 0;
   
   // Handle linear feet conversion
   if (linearFeetMatch && heightMatch) {
@@ -194,6 +215,8 @@ export const parseAreas = (input: string, projectType: string = 'interior'): Pro
   if (wallsMatch) wallsSqft = parseInt(wallsMatch[1]);
   if (ceilingsMatch) ceilingsSqft = parseInt(ceilingsMatch[1]);
   if (trimMatch) trimSqft = parseInt(trimMatch[1]);
+  if (doorsMatch) doorsCount = parseInt(doorsMatch[1]);
+  if (windowsMatch) windowsCount = parseInt(windowsMatch[1]);
   
   // Check for explicit exclusions
   const excludeCeilings = /not\s+painting\s+(?:the\s+)?ceilings?|no\s+ceilings?/i.test(input);
@@ -220,14 +243,20 @@ export const parseAreas = (input: string, projectType: string = 'interior'): Pro
         return {
           walls_sqft: Math.round(total * 0.6),
           ceilings_sqft: excludeCeilings ? 0 : Math.round(total * 0.6), 
-          trim_sqft: excludeTrim ? 0 : Math.round(total * 0.3)
+          trim_sqft: excludeTrim ? 0 : Math.round(total * 0.3),
+          doors_count: doorsCount,
+          windows_count: windowsCount,
+          priming_sqft: 0
         };
       } else {
         // Exterior: mostly walls, no ceilings, some trim
         return {
           walls_sqft: Math.round(total * 0.8),
           ceilings_sqft: 0,
-          trim_sqft: excludeTrim ? 0 : Math.round(total * 0.2)
+          trim_sqft: excludeTrim ? 0 : Math.round(total * 0.2),
+          doors_count: doorsCount,
+          windows_count: windowsCount,
+          priming_sqft: 0
         };
       }
     }
@@ -236,7 +265,10 @@ export const parseAreas = (input: string, projectType: string = 'interior'): Pro
   return {
     walls_sqft: wallsSqft,
     ceilings_sqft: ceilingsSqft,
-    trim_sqft: trimSqft
+    trim_sqft: trimSqft,
+    doors_count: doorsCount,
+    windows_count: windowsCount,
+    priming_sqft: 0  // Default to 0, can be set during conversation if priming needed
   };
 };
 
@@ -250,15 +282,16 @@ export const parseAdjustments = (input: string): Partial<{
   const adjustments: any = {};
   const lower = input.toLowerCase();
 
-  // Rate adjustments
-  const wallsRateMatch = input.match(/walls?\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
-  if (wallsRateMatch) {
-    adjustments.rates = { ...adjustments.rates, walls_rate: parseFloat(wallsRateMatch[1]) };
+  // Rate adjustments - unified painting rate
+  const paintingRateMatch = input.match(/painting\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)|walls?\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)|ceilings?\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+  if (paintingRateMatch) {
+    const rate = parseFloat(paintingRateMatch[1] || paintingRateMatch[2] || paintingRateMatch[3]);
+    adjustments.rates = { ...adjustments.rates, painting_rate: rate };
   }
 
-  const ceilingsRateMatch = input.match(/ceilings?\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
-  if (ceilingsRateMatch) {
-    adjustments.rates = { ...adjustments.rates, ceilings_rate: parseFloat(ceilingsRateMatch[1]) };
+  const primingRateMatch = input.match(/prim(?:ing|er)\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+  if (primingRateMatch) {
+    adjustments.rates = { ...adjustments.rates, priming_rate: parseFloat(primingRateMatch[1]) };
   }
 
   const trimRateMatch = input.match(/trim\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
@@ -336,12 +369,31 @@ export const generateQuoteDisplay = (
   rates: ChargeRates, 
   paintCosts: PaintCosts
 ): string => {
+  const revenueLines = [];
+  
+  // Combined painting line (walls + ceilings)
+  const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
+  if (totalPaintingSqft > 0) {
+    revenueLines.push(`- Painting: ${totalPaintingSqft} sqft × ${formatCurrency(rates.painting_rate)}/sqft = ${formatCurrency(calc.revenue.painting)}`);
+  }
+  
+  if (areas.priming_sqft > 0) {
+    revenueLines.push(`- Priming: ${areas.priming_sqft} sqft × ${formatCurrency(rates.priming_rate)}/sqft = ${formatCurrency(calc.revenue.priming)}`);
+  }
+  if (areas.trim_sqft > 0) {
+    revenueLines.push(`- Trim: ${areas.trim_sqft} sqft × ${formatCurrency(rates.trim_rate)}/sqft = ${formatCurrency(calc.revenue.trim)}`);
+  }
+  if (areas.doors_count > 0) {
+    revenueLines.push(`- Doors: ${areas.doors_count} doors × ${formatCurrency(rates.door_rate)}/door = ${formatCurrency(calc.revenue.doors)}`);
+  }
+  if (areas.windows_count > 0) {
+    revenueLines.push(`- Windows: ${areas.windows_count} windows × ${formatCurrency(rates.window_rate)}/window = ${formatCurrency(calc.revenue.windows)}`);
+  }
+
   return `Here's your quote calculation:
 
 💰 **REVENUE BREAKDOWN**
-- Walls: ${areas.walls_sqft} sqft × ${formatCurrency(rates.walls_rate)}/sqft = ${formatCurrency(calc.revenue.walls)}
-- Ceilings: ${areas.ceilings_sqft} sqft × ${formatCurrency(rates.ceilings_rate)}/sqft = ${formatCurrency(calc.revenue.ceilings)}
-- Trim: ${areas.trim_sqft} sqft × ${formatCurrency(rates.trim_rate)}/sqft = ${formatCurrency(calc.revenue.trim)}
+${revenueLines.join('\n')}
 **Total Revenue: ${formatCurrency(calc.revenue.total)}**
 
 🎨 **MATERIALS**
@@ -363,12 +415,31 @@ export const generateDetailedBreakdown = (
   rates: ChargeRates, 
   paintCosts: PaintCosts
 ): string => {
+  const revenueLines = [];
+  
+  // Combined painting line (walls + ceilings)
+  const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
+  if (totalPaintingSqft > 0) {
+    revenueLines.push(`- Painting (${areas.walls_sqft} walls + ${areas.ceilings_sqft} ceilings): ${totalPaintingSqft} sqft × ${formatCurrency(rates.painting_rate)} = ${formatCurrency(calc.revenue.painting)}`);
+  }
+  
+  if (areas.priming_sqft > 0) {
+    revenueLines.push(`- Priming: ${areas.priming_sqft} sqft × ${formatCurrency(rates.priming_rate)} = ${formatCurrency(calc.revenue.priming)}`);
+  }
+  if (areas.trim_sqft > 0) {
+    revenueLines.push(`- Trim: ${areas.trim_sqft} sqft × ${formatCurrency(rates.trim_rate)} = ${formatCurrency(calc.revenue.trim)}`);
+  }
+  if (areas.doors_count > 0) {
+    revenueLines.push(`- Doors: ${areas.doors_count} doors × ${formatCurrency(rates.door_rate)} = ${formatCurrency(calc.revenue.doors)}`);
+  }
+  if (areas.windows_count > 0) {
+    revenueLines.push(`- Windows: ${areas.windows_count} windows × ${formatCurrency(rates.window_rate)} = ${formatCurrency(calc.revenue.windows)}`);
+  }
+
   return `📋 **DETAILED BREAKDOWN**
 
 **REVENUE CALCULATION:**
-- Walls: ${areas.walls_sqft} sqft × ${formatCurrency(rates.walls_rate)} = ${formatCurrency(calc.revenue.walls)}
-- Ceilings: ${areas.ceilings_sqft} sqft × ${formatCurrency(rates.ceilings_rate)} = ${formatCurrency(calc.revenue.ceilings)}
-- Trim: ${areas.trim_sqft} sqft × ${formatCurrency(rates.trim_rate)} = ${formatCurrency(calc.revenue.trim)}
+${revenueLines.join('\n')}
 **Sum: ${formatCurrency(calc.revenue.total)}**
 
 **MATERIALS COST:**
@@ -388,4 +459,108 @@ export const generateDetailedBreakdown = (
 **Projected Profit: ${formatCurrency(calc.profit)}**
 
 This calculation uses your current company rates. Want to adjust anything?`;
+};
+
+// Generate rate confirmation message
+export const generateRateConfirmation = (rates: ChargeRates, areas: ProjectAreas): string => {
+  const ratesDisplay = [];
+  
+  // Combined painting rate for walls and ceilings
+  const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
+  if (totalPaintingSqft > 0) {
+    ratesDisplay.push(`• **Painting** (walls & ceilings): ${formatCurrency(rates.painting_rate)}/sq ft (2 coats, paint included)`);
+  }
+  
+  if (areas.priming_sqft > 0) {
+    ratesDisplay.push(`• **Priming**: ${formatCurrency(rates.priming_rate)}/sq ft (primer included)`);
+  }
+  if (areas.trim_sqft > 0) {
+    ratesDisplay.push(`• **Trim**: ${formatCurrency(rates.trim_rate)}/sq ft`);
+  }
+  if (areas.doors_count > 0) {
+    ratesDisplay.push(`• **Doors**: ${formatCurrency(rates.door_rate)} each`);
+  }
+  if (areas.windows_count > 0) {
+    ratesDisplay.push(`• **Windows**: ${formatCurrency(rates.window_rate)} each`);
+  }
+
+  return `Perfect! I have your measurements. Here are the rates that we have for each category:\n\n${ratesDisplay.join('\n')}\n\nAre there any rates here that you would like to change for this project? If not, just say "looks good" or "calculate" to proceed.`;
+};
+
+// Parse rate adjustments from user input
+export const parseRateAdjustments = (input: string): { hasChanges: boolean; rates: Partial<ChargeRates> } => {
+  const lowerInput = input.toLowerCase();
+  
+  // Check for confirmation to proceed without changes
+  if (lowerInput.includes('looks good') || lowerInput.includes('calculate') || 
+      lowerInput.includes('proceed') || lowerInput.includes('no changes') ||
+      lowerInput.includes('sounds good') || lowerInput.includes('that works')) {
+    return { hasChanges: false, rates: {} };
+  }
+
+  const rates: Partial<ChargeRates> = {};
+  let hasChanges = false;
+
+  // Parse painting rate changes: "painting to $2.50", "walls to $3.00", "ceilings to $2.50"
+  const paintingRateMatch = input.match(/(?:painting|walls?|ceilings?)\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+  if (paintingRateMatch) {
+    rates.painting_rate = parseFloat(paintingRateMatch[1]);
+    hasChanges = true;
+  }
+
+  // Parse priming rate changes
+  const primingRateMatch = input.match(/prim(?:ing|er)\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+  if (primingRateMatch) {
+    rates.priming_rate = parseFloat(primingRateMatch[1]);
+    hasChanges = true;
+  }
+
+  // Parse trim rate changes
+  const trimRateMatch = input.match(/trim\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+  if (trimRateMatch) {
+    rates.trim_rate = parseFloat(trimRateMatch[1]);
+    hasChanges = true;
+  }
+
+  // Parse door rate changes
+  const doorRateMatch = input.match(/doors?\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+  if (doorRateMatch) {
+    rates.door_rate = parseFloat(doorRateMatch[1]);
+    hasChanges = true;
+  }
+
+  // Parse window rate changes
+  const windowRateMatch = input.match(/windows?\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+  if (windowRateMatch) {
+    rates.window_rate = parseFloat(windowRateMatch[1]);
+    hasChanges = true;
+  }
+
+  return { hasChanges, rates };
+};
+
+// Generate rate display for confirmation
+export const generateRateDisplay = (rates: ChargeRates, areas: ProjectAreas): string => {
+  const ratesDisplay = [];
+  
+  // Combined painting rate
+  const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
+  if (totalPaintingSqft > 0) {
+    ratesDisplay.push(`• Painting: ${formatCurrency(rates.painting_rate)}/sq ft`);
+  }
+  
+  if (areas.priming_sqft > 0) {
+    ratesDisplay.push(`• Priming: ${formatCurrency(rates.priming_rate)}/sq ft`);
+  }
+  if (areas.trim_sqft > 0) {
+    ratesDisplay.push(`• Trim: ${formatCurrency(rates.trim_rate)}/sq ft`);
+  }
+  if (areas.doors_count > 0) {
+    ratesDisplay.push(`• Doors: ${formatCurrency(rates.door_rate)} each`);
+  }
+  if (areas.windows_count > 0) {
+    ratesDisplay.push(`• Windows: ${formatCurrency(rates.window_rate)} each`);
+  }
+
+  return ratesDisplay.join('\n');
 };
