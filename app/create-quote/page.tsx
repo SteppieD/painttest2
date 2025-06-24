@@ -202,7 +202,7 @@ export default function CreateQuotePage() {
       setQuoteData(prev => ({
         ...prev,
         rates: {
-          painting_rate: settings.default_painting_rate || 2.50,
+          painting_rate: settings.default_painting_rate || settings.default_walls_rate || 2.50,
           priming_rate: settings.default_priming_rate || 0.40,
           trim_rate: settings.default_trim_rate || 1.92,
           door_rate: settings.default_door_rate || 100.00,
@@ -270,11 +270,11 @@ export default function CreateQuotePage() {
         if (customPricing.customRate) {
           // Apply custom rate to all surfaces if labor is included
           updatedQuoteData.rates = {
-            walls_rate: customPricing.customRate,
-            ceilings_rate: customPricing.customRate,
-            trim_rate: customPricing.customRate
+            ...updatedQuoteData.rates,
+            painting_rate: customPricing.customRate,  // Combined rate for walls & ceilings
+            trim_rate: customPricing.customRate       // Apply to trim as well if needed
           };
-          console.log(`Applied custom rate: $${customPricing.customRate}/sqft`);
+          console.log(`Applied custom rate: $${customPricing.customRate}/sqft to painting_rate`);
         }
         
         if (customPricing.customPaintCost) {
