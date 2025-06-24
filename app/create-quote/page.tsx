@@ -26,6 +26,7 @@ import {
   parseRateAdjustments,
   generateRateDisplay
 } from "@/lib/spreadsheet-calculator";
+import { IntelligentQuoteParser, ModularQuoteCalculator } from "@/lib/intelligent-quote-parser";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -258,92 +259,174 @@ export default function CreateQuotePage() {
 
     switch (stage) {
       case 'customer_info':
-        // Parse comprehensive contractor input - extract all available information
-        const customerInfo = parseCustomerInfo(input);
-        const parsedProjectType = parseProjectType(input);
-        const customPricing = parseCustomPricing(input);
-        const parsedAreas = parseAreas(input, parsedProjectType || 'interior');
+        // Use intelligent parser to extract all information
+        const parser = new IntelligentQuoteParser();
+        const calculator = new ModularQuoteCalculator();
         
-        // Apply custom pricing if provided
-        let updatedQuoteData = { ...quoteData };
-        
-        if (customPricing.customRate) {
-          // Apply custom rate to all surfaces if labor is included
-          updatedQuoteData.rates = {
-            ...updatedQuoteData.rates,
-            painting_rate: customPricing.customRate,  // Combined rate for walls & ceilings
-            trim_rate: customPricing.customRate       // Apply to trim as well if needed
-          };
-          console.log(`Applied custom rate: $${customPricing.customRate}/sqft to painting_rate`);
-        }
-        
-        if (customPricing.customPaintCost) {
-          // Apply custom paint cost to all surface types
-          updatedQuoteData.paint_costs = {
-            walls_paint_cost: customPricing.customPaintCost,
-            ceilings_paint_cost: customPricing.customPaintCost,
-            trim_paint_cost: customPricing.customPaintCost
-          };
-          console.log(`Applied custom paint cost: $${customPricing.customPaintCost}/gallon`);
-        }
-        
-        if (customPricing.laborIncluded) {
-          // If labor is included in the rate, set labor percentage to 0
-          updatedQuoteData.labor_percentage = 0;
-          console.log('Labor included in rate - set labor percentage to 0%');
-        }
-        
-        // Update all parsed information
-        updatedQuoteData = {
-          ...updatedQuoteData,
-          customer_name: customerInfo.customer_name,
-          address: customerInfo.address,
-          project_type: parsedProjectType || updatedQuoteData.project_type,
-          areas: parsedAreas.walls_sqft > 0 || parsedAreas.ceilings_sqft > 0 || parsedAreas.trim_sqft > 0 ? parsedAreas : updatedQuoteData.areas
-        };
-        
-        setQuoteData(updatedQuoteData);
-        
-        // Check if we have enough information to calculate the quote
-        const hasCustomer = customerInfo.customer_name && customerInfo.address;
-        const hasProject = parsedProjectType || updatedQuoteData.project_type;
-        const hasAreas = parsedAreas.walls_sqft > 0 || parsedAreas.ceilings_sqft > 0 || parsedAreas.trim_sqft > 0;
-        
-        if (hasCustomer && hasProject && hasAreas) {
-          // We have all information - calculate the quote immediately
-          const calculation = calculateQuote(
-            parsedAreas,
-            updatedQuoteData.rates,
-            updatedQuoteData.paint_costs,
-            updatedQuoteData.labor_percentage,
-            customPricing.coverage || 350
-          );
+        try {
+          const parsingResult = await parser.parseQuoteInput(input);
           
-          setQuoteData(prev => ({ ...prev, calculation }));
-          
-          // Apply markup if specified
-          let finalCalculation = calculation;
-          if (customPricing.customMarkup) {
-            const markupMultiplier = 1 + (customPricing.customMarkup / 100);
-            finalCalculation = {
-              ...calculation,
-              revenue: {
-                ...calculation.revenue,
-                total: calculation.revenue.total * markupMultiplier
-              }
-            };
-            finalCalculation.profit = finalCalculation.revenue.total - calculation.materials.total - calculation.labor.projected_labor;
-            setQuoteData(prev => ({ ...prev, calculation: finalCalculation }));
+          if (!parsingResult.success) {
+            // If parsing fails, provide helpful feedback
+            responseContent = "I had trouble understanding some details. Let me ask you a few questions:\n\n";
+            responseContent += parsingResult.clarification_questions.join('\n');
+            nextStage = 'customer_info'; // Stay in same stage
+            break;
           }
           
-          responseContent = `Perfect! I parsed your complete project details:\n\n**Customer:** ${customerInfo.customer_name}\n**Address:** ${customerInfo.address}\n**Project:** ${parsedProjectType} painting\n**Areas:** ${parsedAreas.walls_sqft} sq ft walls${parsedAreas.ceilings_sqft > 0 ? `, ${parsedAreas.ceilings_sqft} sq ft ceilings` : ''}${parsedAreas.trim_sqft > 0 ? `, ${parsedAreas.trim_sqft} sq ft trim` : ''}\n\n${generateEnhancedQuoteDisplay(finalCalculation, parsedAreas, updatedQuoteData.rates, updatedQuoteData.selectedProducts, updatedQuoteData.confirmedPaintProduct)}`;
-          nextStage = 'quote_review';
-        } else if (hasCustomer) {
-          responseContent = `Perfect! I have ${customerInfo.customer_name} at ${customerInfo.address}.\n\nWhat type of painting work are we quoting?\n• Interior (walls, ceilings, trim)\n• Exterior\n• Both interior and exterior`;
-          nextStage = 'project_type';
-        } else {
-          responseContent = `Great! I have the customer name as ${customerInfo.customer_name}. What's the property address?`;
-          nextStage = 'address';
+          const parsedData = parsingResult.data;
+          
+          // Update quote data with parsed information
+          let updatedQuoteData = { ...quoteData };
+          
+          // Customer information
+          if (parsedData.customer_name) {
+            updatedQuoteData.customer_name = parsedData.customer_name;
+          }
+          if (parsedData.property_address) {
+            updatedQuoteData.address = parsedData.property_address;
+          }
+          
+          // Project type
+          updatedQuoteData.project_type = parsedData.project_type;
+          
+          // Areas
+          updatedQuoteData.areas = {
+            walls_sqft: parsedData.walls_sqft || parsedData.calculated_wall_area_sqft || 0,
+            ceilings_sqft: parsedData.ceiling_included ? (parsedData.ceilings_sqft || 0) : 0,
+            trim_sqft: parsedData.trim_included ? (parsedData.trim_sqft || 0) : 0,
+            doors_count: parsedData.doors_included ? (parsedData.doors_count || 0) : 0,
+            windows_count: parsedData.windows_included ? (parsedData.windows_count || 0) : 0,
+            priming_sqft: parsedData.primer_included ? (parsedData.walls_sqft || parsedData.calculated_wall_area_sqft || 0) : 0
+          };
+          
+          // Rates
+          if (parsedData.labor_cost_per_sqft) {
+            updatedQuoteData.rates = {
+              ...updatedQuoteData.rates,
+              painting_rate: parsedData.labor_cost_per_sqft,
+              trim_rate: parsedData.labor_cost_per_sqft,
+              priming_rate: parsedData.primer_cost_per_sqft || updatedQuoteData.rates.priming_rate
+            };
+          }
+          
+          // Paint costs
+          if (parsedData.paint_cost_per_gallon) {
+            updatedQuoteData.paint_costs = {
+              walls_paint_cost: parsedData.paint_cost_per_gallon,
+              ceilings_paint_cost: parsedData.paint_cost_per_gallon,
+              trim_paint_cost: parsedData.paint_cost_per_gallon
+            };
+          }
+          
+          // Markup
+          if (parsedData.markup_percent !== undefined) {
+            updatedQuoteData.markup_percentage = parsedData.markup_percent;
+          }
+          
+          setQuoteData(updatedQuoteData);
+          
+          // Check if we have enough information to calculate
+          const hasCustomer = updatedQuoteData.customer_name && updatedQuoteData.address;
+          const hasAreas = updatedQuoteData.areas.walls_sqft > 0 || 
+                          updatedQuoteData.areas.ceilings_sqft > 0 || 
+                          updatedQuoteData.areas.trim_sqft > 0;
+          
+          if (hasCustomer && hasAreas && parsedData.labor_cost_per_sqft) {
+            // We have all information - calculate the quote immediately
+            const calculation = calculateQuote(
+              updatedQuoteData.areas,
+              updatedQuoteData.rates,
+              updatedQuoteData.paint_costs,
+              updatedQuoteData.labor_percentage || 30,
+              parsedData.spread_rate_sqft_per_gallon || 350
+            );
+            
+            setQuoteData(prev => ({ ...prev, calculation }));
+            
+            // Generate comprehensive quote display
+            responseContent = `Perfect! I've analyzed your complete project details:\n\n`;
+            responseContent += `**Customer:** ${updatedQuoteData.customer_name}\n`;
+            responseContent += `**Address:** ${updatedQuoteData.address}\n`;
+            responseContent += `**Project Type:** ${updatedQuoteData.project_type} painting\n\n`;
+            
+            responseContent += `**Scope of Work:**\n`;
+            if (updatedQuoteData.areas.walls_sqft > 0) {
+              responseContent += `• Walls: ${updatedQuoteData.areas.walls_sqft} sq ft\n`;
+            }
+            if (updatedQuoteData.areas.ceilings_sqft > 0) {
+              responseContent += `• Ceilings: ${updatedQuoteData.areas.ceilings_sqft} sq ft\n`;
+            }
+            if (updatedQuoteData.areas.trim_sqft > 0) {
+              responseContent += `• Trim: ${updatedQuoteData.areas.trim_sqft} sq ft\n`;
+            }
+            if (updatedQuoteData.areas.doors_count > 0) {
+              responseContent += `• Doors: ${updatedQuoteData.areas.doors_count} doors\n`;
+            }
+            if (updatedQuoteData.areas.windows_count > 0) {
+              responseContent += `• Windows: ${updatedQuoteData.areas.windows_count} windows\n`;
+            }
+            if (parsedData.primer_included) {
+              responseContent += `• Primer: Included\n`;
+            }
+            
+            if (parsedData.paint_brand || parsedData.paint_product) {
+              responseContent += `\n**Paint Specifications:**\n`;
+              if (parsedData.paint_brand) responseContent += `• Brand: ${parsedData.paint_brand}\n`;
+              if (parsedData.paint_product) responseContent += `• Product: ${parsedData.paint_product}\n`;
+              if (parsedData.paint_sheen) responseContent += `• Sheen: ${parsedData.paint_sheen}\n`;
+            }
+            
+            responseContent += `\n${generateQuoteDisplay(calculation)}`;
+            
+            if (parsedData.confidence_score < 80 && parsingResult.warnings.length > 0) {
+              responseContent += `\n\n⚠️ **Note:** ${parsingResult.warnings.join(' ')}`;
+            }
+            
+            nextStage = 'quote_review';
+          } else if (hasCustomer && !hasAreas) {
+            // Have customer but missing measurements
+            responseContent = `Great! I have ${updatedQuoteData.customer_name} at ${updatedQuoteData.address}.\n\n`;
+            if (parsedData.missing_fields.length > 0) {
+              responseContent += `I still need the following information:\n`;
+              parsedData.missing_fields.forEach(field => {
+                responseContent += `• ${field}\n`;
+              });
+            } else {
+              responseContent += `Please provide the square footage for the areas you want painted.`;
+            }
+            nextStage = 'areas';
+          } else {
+            // Missing critical information
+            responseContent = "I need a bit more information to create your quote. ";
+            responseContent += parsingResult.clarification_questions.join('\n');
+            nextStage = 'customer_info';
+          }
+          
+        } catch (error) {
+          console.error('Error parsing with intelligent parser:', error);
+          // Fall back to traditional parsing
+          const customerInfo = parseCustomerInfo(input);
+          const parsedProjectType = parseProjectType(input);
+          
+          if (customerInfo.customer_name) {
+            setQuoteData(prev => ({ 
+              ...prev, 
+              customer_name: customerInfo.customer_name,
+              address: customerInfo.address 
+            }));
+            
+            if (customerInfo.address) {
+              responseContent = `Great! I have ${customerInfo.customer_name} at ${customerInfo.address}.\n\nWhat type of painting work are we quoting?`;
+              nextStage = 'project_type';
+            } else {
+              responseContent = `Perfect! I have the customer name as ${customerInfo.customer_name}. What's the property address?`;
+              nextStage = 'address';
+            }
+          } else {
+            responseContent = "I'll help you create a professional painting quote. To get started, could you please provide the customer's name and property address?";
+            nextStage = 'customer_info';
+          }
         }
         break;
 
@@ -628,17 +711,70 @@ What would you like to change it to? Please specify the new rate like:
           }
           nextStage = 'complete';
         } else {
-          // Check for rate adjustment questions in quote review
-          const rateAdjustmentCheck = parseRateAdjustments(input);
-          if (rateAdjustmentCheck.needsRateInput) {
-            const rateType = rateAdjustmentCheck.rateType || 'painting';
-            const currentRate = rateType === 'painting' ? quoteData.rates.painting_rate :
-                               rateType === 'trim' ? quoteData.rates.trim_rate :
-                               rateType === 'priming' ? quoteData.rates.priming_rate :
-                               rateType === 'door' ? quoteData.rates.door_rate :
-                               quoteData.rates.window_rate;
+          // Try intelligent parsing for complex modifications
+          try {
+            const parser = new IntelligentQuoteParser();
+            const parsingResult = await parser.parseQuoteInput(input);
             
-            responseContent = `I can help you update the ${rateType} rate! 
+            if (parsingResult.success && 
+                (parsingResult.data.walls_sqft || parsingResult.data.labor_cost_per_sqft || 
+                 parsingResult.data.paint_cost_per_gallon || parsingResult.data.markup_percent)) {
+              
+              // Apply intelligent modifications to quote data
+              let needsRecalculation = false;
+              let modificationSummary = [];
+              
+              if (parsingResult.data.walls_sqft && parsingResult.data.walls_sqft !== quoteData.areas.walls_sqft) {
+                quoteData.areas.walls_sqft = parsingResult.data.walls_sqft;
+                modificationSummary.push(`Wall area updated to ${parsingResult.data.walls_sqft} sqft`);
+                needsRecalculation = true;
+              }
+              
+              if (parsingResult.data.labor_cost_per_sqft && parsingResult.data.labor_cost_per_sqft !== quoteData.rates.painting_rate) {
+                quoteData.rates.painting_rate = parsingResult.data.labor_cost_per_sqft;
+                modificationSummary.push(`Labor rate updated to $${parsingResult.data.labor_cost_per_sqft}/sqft`);
+                needsRecalculation = true;
+              }
+              
+              if (parsingResult.data.paint_cost_per_gallon) {
+                quoteData.paint_costs.walls_paint_cost = parsingResult.data.paint_cost_per_gallon;
+                quoteData.paint_costs.ceilings_paint_cost = parsingResult.data.paint_cost_per_gallon;
+                modificationSummary.push(`Paint cost updated to $${parsingResult.data.paint_cost_per_gallon}/gallon`);
+                needsRecalculation = true;
+              }
+              
+              if (parsingResult.data.markup_percent && parsingResult.data.markup_percent !== quoteData.labor_percentage) {
+                quoteData.labor_percentage = parsingResult.data.markup_percent;
+                modificationSummary.push(`Markup updated to ${parsingResult.data.markup_percent}%`);
+                needsRecalculation = true;
+              }
+              
+              if (needsRecalculation) {
+                setQuoteData({ ...quoteData });
+                
+                // Recalculate with new values
+                const newCalculation = calculateQuote(
+                  quoteData.areas, 
+                  quoteData.rates, 
+                  quoteData.paint_costs, 
+                  quoteData.labor_percentage
+                );
+                
+                setQuoteData(prev => ({ ...prev, calculation: newCalculation }));
+                
+                responseContent = `✅ **Quote Updated!**\n\n${modificationSummary.join('\n')}\n\n• **New Total:** $${newCalculation.revenue.total.toFixed(2)}\n• **New Profit:** $${newCalculation.profit.toFixed(2)}\n\nWould you like to save this updated quote or make more changes?`;
+              } else {
+                // Fall back to rate adjustment check
+                const rateAdjustmentCheck = parseRateAdjustments(input);
+                if (rateAdjustmentCheck.needsRateInput) {
+                  const rateType = rateAdjustmentCheck.rateType || 'painting';
+                  const currentRate = rateType === 'painting' ? quoteData.rates.painting_rate :
+                                     rateType === 'trim' ? quoteData.rates.trim_rate :
+                                     rateType === 'priming' ? quoteData.rates.priming_rate :
+                                     rateType === 'door' ? quoteData.rates.door_rate :
+                                     quoteData.rates.window_rate;
+                  
+                  responseContent = `I can help you update the ${rateType} rate! 
 
 **Current ${rateType} rate:** $${currentRate?.toFixed(2)}${rateType === 'painting' ? '/sq ft' : rateType === 'trim' || rateType === 'priming' ? '/sq ft' : ' each'}
 
@@ -646,46 +782,195 @@ What would you like to change it to? Please specify the new rate like:
 • "${rateType} to $3.50"
 • "$3.50 for ${rateType}"
 • "Change ${rateType} rate to $3.50"`;
-            
-            nextStage = 'rate_adjustment_input';
-          } else {
-            responseContent = `Your quote total is **$${quoteData.calculation!.revenue.total.toFixed(2)}** with a projected profit of **$${quoteData.calculation!.profit.toFixed(2)}**.\n\nWhat would you like to do?\n• **"Save"** - Finalize this quote\n• **"Breakdown"** - See detailed calculations\n• **"Adjust"** - Modify pricing or measurements`;
+                  
+                  nextStage = 'rate_adjustment_input';
+                } else {
+                  responseContent = `Your quote total is **$${quoteData.calculation!.revenue.total.toFixed(2)}** with a projected profit of **$${quoteData.calculation!.profit.toFixed(2)}**.\n\nWhat would you like to do?\n• **"Save"** - Finalize this quote\n• **"Breakdown"** - See detailed calculations\n• **"Adjust"** - Modify pricing or measurements`;
+                }
+              }
+            } else {
+              // Fall back to standard rate adjustment check
+              const rateAdjustmentCheck = parseRateAdjustments(input);
+              if (rateAdjustmentCheck.needsRateInput) {
+                const rateType = rateAdjustmentCheck.rateType || 'painting';
+                const currentRate = rateType === 'painting' ? quoteData.rates.painting_rate :
+                                   rateType === 'trim' ? quoteData.rates.trim_rate :
+                                   rateType === 'priming' ? quoteData.rates.priming_rate :
+                                   rateType === 'door' ? quoteData.rates.door_rate :
+                                   quoteData.rates.window_rate;
+                
+                responseContent = `I can help you update the ${rateType} rate! 
+
+**Current ${rateType} rate:** $${currentRate?.toFixed(2)}${rateType === 'painting' ? '/sq ft' : rateType === 'trim' || rateType === 'priming' ? '/sq ft' : ' each'}
+
+What would you like to change it to? Please specify the new rate like:
+• "${rateType} to $3.50"
+• "$3.50 for ${rateType}"
+• "Change ${rateType} rate to $3.50"`;
+                
+                nextStage = 'rate_adjustment_input';
+              } else {
+                responseContent = `Your quote total is **$${quoteData.calculation!.revenue.total.toFixed(2)}** with a projected profit of **$${quoteData.calculation!.profit.toFixed(2)}**.\n\nWhat would you like to do?\n• **"Save"** - Finalize this quote\n• **"Breakdown"** - See detailed calculations\n• **"Adjust"** - Modify pricing or measurements`;
+              }
+            }
+          } catch (error) {
+            console.error('Intelligent parsing failed in quote_review:', error);
+            // Fall back to standard rate adjustment check
+            const rateAdjustmentCheck = parseRateAdjustments(input);
+            if (rateAdjustmentCheck.needsRateInput) {
+              const rateType = rateAdjustmentCheck.rateType || 'painting';
+              const currentRate = rateType === 'painting' ? quoteData.rates.painting_rate :
+                                 rateType === 'trim' ? quoteData.rates.trim_rate :
+                                 rateType === 'priming' ? quoteData.rates.priming_rate :
+                                 rateType === 'door' ? quoteData.rates.door_rate :
+                                 quoteData.rates.window_rate;
+              
+              responseContent = `I can help you update the ${rateType} rate! 
+
+**Current ${rateType} rate:** $${currentRate?.toFixed(2)}${rateType === 'painting' ? '/sq ft' : rateType === 'trim' || rateType === 'priming' ? '/sq ft' : ' each'}
+
+What would you like to change it to? Please specify the new rate like:
+• "${rateType} to $3.50"
+• "$3.50 for ${rateType}"
+• "Change ${rateType} rate to $3.50"`;
+              
+              nextStage = 'rate_adjustment_input';
+            } else {
+              responseContent = `Your quote total is **$${quoteData.calculation!.revenue.total.toFixed(2)}** with a projected profit of **$${quoteData.calculation!.profit.toFixed(2)}**.\n\nWhat would you like to do?\n• **"Save"** - Finalize this quote\n• **"Breakdown"** - See detailed calculations\n• **"Adjust"** - Modify pricing or measurements`;
+            }
           }
         }
         break;
 
       case 'adjustments':
-        const adjustments = parseAdjustments(input);
-        let newQuoteData = { ...quoteData };
-        
-        // Apply adjustments
-        if (adjustments.rates) {
-          newQuoteData.rates = { ...newQuoteData.rates, ...adjustments.rates };
+        // Try intelligent parsing first for more natural language adjustments
+        try {
+          const parser = new IntelligentQuoteParser();
+          const parsingResult = await parser.parseQuoteInput(input);
+          
+          if (parsingResult.success && 
+              (parsingResult.data.walls_sqft || parsingResult.data.labor_cost_per_sqft || 
+               parsingResult.data.paint_cost_per_gallon || parsingResult.data.markup_percent)) {
+            
+            // Apply intelligent adjustments
+            let newQuoteData = { ...quoteData };
+            let modificationSummary = [];
+            
+            if (parsingResult.data.walls_sqft && parsingResult.data.walls_sqft !== quoteData.areas.walls_sqft) {
+              newQuoteData.areas.walls_sqft = parsingResult.data.walls_sqft;
+              modificationSummary.push(`Wall area: ${parsingResult.data.walls_sqft} sqft`);
+            }
+            
+            if (parsingResult.data.ceilings_sqft && parsingResult.data.ceilings_sqft !== quoteData.areas.ceilings_sqft) {
+              newQuoteData.areas.ceilings_sqft = parsingResult.data.ceilings_sqft;
+              modificationSummary.push(`Ceiling area: ${parsingResult.data.ceilings_sqft} sqft`);
+            }
+            
+            if (parsingResult.data.trim_sqft && parsingResult.data.trim_sqft !== quoteData.areas.trim_sqft) {
+              newQuoteData.areas.trim_sqft = parsingResult.data.trim_sqft;
+              modificationSummary.push(`Trim area: ${parsingResult.data.trim_sqft} sqft`);
+            }
+            
+            if (parsingResult.data.labor_cost_per_sqft && parsingResult.data.labor_cost_per_sqft !== quoteData.rates.painting_rate) {
+              newQuoteData.rates.painting_rate = parsingResult.data.labor_cost_per_sqft;
+              modificationSummary.push(`Labor rate: $${parsingResult.data.labor_cost_per_sqft}/sqft`);
+            }
+            
+            if (parsingResult.data.paint_cost_per_gallon) {
+              newQuoteData.paint_costs.walls_paint_cost = parsingResult.data.paint_cost_per_gallon;
+              newQuoteData.paint_costs.ceilings_paint_cost = parsingResult.data.paint_cost_per_gallon;
+              modificationSummary.push(`Paint cost: $${parsingResult.data.paint_cost_per_gallon}/gallon`);
+            }
+            
+            if (parsingResult.data.markup_percent && parsingResult.data.markup_percent !== quoteData.labor_percentage) {
+              newQuoteData.labor_percentage = parsingResult.data.markup_percent;
+              modificationSummary.push(`Markup: ${parsingResult.data.markup_percent}%`);
+            }
+            
+            setQuoteData(newQuoteData);
+            
+            // Recalculate with intelligent adjustments
+            const newCalculation = calculateQuote(
+              newQuoteData.areas, 
+              newQuoteData.rates, 
+              newQuoteData.paint_costs, 
+              newQuoteData.labor_percentage
+            );
+            
+            setQuoteData(prev => ({ ...prev, calculation: newCalculation }));
+            
+            responseContent = `✅ **Adjustments Applied:**\n\n${modificationSummary.join('\n')}\n\n• **Updated Total:** $${newCalculation.revenue.total.toFixed(2)}\n• **Updated Profit:** $${newCalculation.profit.toFixed(2)}\n\nDoes this look better? Say "save" to finalize or make more adjustments.`;
+            nextStage = 'quote_review';
+            
+          } else {
+            // Fall back to traditional parsing
+            const adjustments = parseAdjustments(input);
+            let newQuoteData = { ...quoteData };
+            
+            // Apply adjustments
+            if (adjustments.rates) {
+              newQuoteData.rates = { ...newQuoteData.rates, ...adjustments.rates };
+            }
+            if (adjustments.paintCosts) {
+              newQuoteData.paint_costs = { ...newQuoteData.paint_costs, ...adjustments.paintCosts };
+            }
+            if (adjustments.laborPercent) {
+              newQuoteData.labor_percentage = adjustments.laborPercent;
+            }
+            if (adjustments.areas) {
+              newQuoteData.areas = { ...newQuoteData.areas, ...adjustments.areas };
+            }
+            
+            setQuoteData(newQuoteData);
+            
+            // Recalculate with adjustments
+            const newCalculation = calculateQuote(
+              newQuoteData.areas, 
+              newQuoteData.rates, 
+              newQuoteData.paint_costs, 
+              newQuoteData.labor_percentage
+            );
+            
+            setQuoteData(prev => ({ ...prev, calculation: newCalculation }));
+            
+            responseContent = `✅ **Updated Quote:**\n\n• **Total Quote:** $${newCalculation.revenue.total.toFixed(2)}\n• **Projected Profit:** $${newCalculation.profit.toFixed(2)}\n\nDoes this look better? Say "save" to finalize or make more adjustments.`;
+            nextStage = 'quote_review';
+          }
+        } catch (error) {
+          console.error('Intelligent parsing failed in adjustments:', error);
+          // Fall back to traditional parsing
+          const adjustments = parseAdjustments(input);
+          let newQuoteData = { ...quoteData };
+          
+          // Apply adjustments
+          if (adjustments.rates) {
+            newQuoteData.rates = { ...newQuoteData.rates, ...adjustments.rates };
+          }
+          if (adjustments.paintCosts) {
+            newQuoteData.paint_costs = { ...newQuoteData.paint_costs, ...adjustments.paintCosts };
+          }
+          if (adjustments.laborPercent) {
+            newQuoteData.labor_percentage = adjustments.laborPercent;
+          }
+          if (adjustments.areas) {
+            newQuoteData.areas = { ...newQuoteData.areas, ...adjustments.areas };
+          }
+          
+          setQuoteData(newQuoteData);
+          
+          // Recalculate with adjustments
+          const newCalculation = calculateQuote(
+            newQuoteData.areas, 
+            newQuoteData.rates, 
+            newQuoteData.paint_costs, 
+            newQuoteData.labor_percentage
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation: newCalculation }));
+          
+          responseContent = `✅ **Updated Quote:**\n\n• **Total Quote:** $${newCalculation.revenue.total.toFixed(2)}\n• **Projected Profit:** $${newCalculation.profit.toFixed(2)}\n\nDoes this look better? Say "save" to finalize or make more adjustments.`;
+          nextStage = 'quote_review';
         }
-        if (adjustments.paintCosts) {
-          newQuoteData.paint_costs = { ...newQuoteData.paint_costs, ...adjustments.paintCosts };
-        }
-        if (adjustments.laborPercent) {
-          newQuoteData.labor_percentage = adjustments.laborPercent;
-        }
-        if (adjustments.areas) {
-          newQuoteData.areas = { ...newQuoteData.areas, ...adjustments.areas };
-        }
-        
-        setQuoteData(newQuoteData);
-        
-        // Recalculate with adjustments
-        const newCalculation = calculateQuote(
-          newQuoteData.areas, 
-          newQuoteData.rates, 
-          newQuoteData.paint_costs, 
-          newQuoteData.labor_percentage
-        );
-        
-        setQuoteData(prev => ({ ...prev, calculation: newCalculation }));
-        
-        responseContent = `✅ **Updated Quote:**\n\n• **Total Quote:** $${newCalculation.revenue.total.toFixed(2)}\n• **Projected Profit:** $${newCalculation.profit.toFixed(2)}\n\nDoes this look better? Say "save" to finalize or make more adjustments.`;
-        nextStage = 'quote_review';
         break;
 
       case 'rate_adjustment_input':
