@@ -125,19 +125,34 @@ export const calculateQuote = (
 
 // Helper functions for natural language parsing
 export const parseCustomerInfo = (input: string): { customer_name: string; address: string } => {
-  // Smart parsing for "John Smith, 123 Main St" or "John Smith and address is 123 Main St"
+  // Enhanced parsing for real contractor language
   const patterns = [
-    /^(.+?),\s*(.+)$/, // "Name, Address"
-    /^(.+?)\s+(?:and\s+)?(?:address\s+is\s+|at\s+)(.+)$/i, // "Name and address is Address"
-    /^(.+)$/ // Just name, will ask for address next
+    // "The project is for Cici at 9090 Hillside Drive"
+    /(?:project\s+is\s+)?for\s+(\w+)\s+at\s+(.+?)(?:\.|$)/i,
+    // "It's for Cici at 9090 Hillside Drive"
+    /it's\s+for\s+(\w+)\s+at\s+(.+?)(?:\.|$)/i,
+    // "Cici, 123 Main St" or "John Smith, 123 Main St"
+    /^([^,]+),\s*(.+)$/,
+    // "John Smith and address is 123 Main St" 
+    /^(.+?)\s+(?:and\s+)?(?:address\s+is\s+|at\s+)(.+)$/i,
+    // "Customer: John Smith Address: 123 Main St"
+    /customer:?\s*(.+?)\s+address:?\s*(.+)/i,
+    // Just name - will ask for address next
+    /^(.+)$/
   ];
   
   for (const pattern of patterns) {
     const match = input.match(pattern);
     if (match) {
+      const name = match[1]?.trim() || '';
+      const address = match[2]?.trim() || '';
+      
+      // Clean up common prefixes from extracted text
+      const cleanName = name.replace(/^(the\s+project\s+is\s+|customer\s+is\s+|this\s+is\s+)/i, '').trim();
+      
       return {
-        customer_name: match[1].trim(),
-        address: match[2]?.trim() || ''
+        customer_name: cleanName || input.trim(),
+        address: address
       };
     }
   }
@@ -154,38 +169,74 @@ export const parseProjectType = (input: string): string => {
 };
 
 export const parseAreas = (input: string, projectType: string = 'interior'): ProjectAreas => {
-  // Parse "1000 walls, 1000 ceilings, 520 trim" or similar patterns
-  const wallsMatch = input.match(/(\d+)\s*(?:walls?|wall)/i);
-  const ceilingsMatch = input.match(/(\d+)\s*(?:ceilings?|ceiling)/i);
-  const trimMatch = input.match(/(\d+)\s*(?:trim|doors?|door)/i);
+  // Enhanced parsing for real contractor language including linear feet
+  const wallsMatch = input.match(/(\d+)\s*(?:sqft\s+)?(?:walls?|wall)/i);
+  const ceilingsMatch = input.match(/(\d+)\s*(?:sqft\s+)?(?:ceilings?|ceiling)/i);
+  const trimMatch = input.match(/(\d+)\s*(?:sqft\s+)?(?:trim|doors?|door|windows?)/i);
   
-  // If no specific breakdown, try to parse total sqft and estimate
-  if (!wallsMatch && !ceilingsMatch && !trimMatch) {
-    const totalMatch = input.match(/(\d+)/);
+  // Parse linear feet with height conversion: "500 linear feet... 9 feet tall"
+  const linearFeetMatch = input.match(/(\d+)\s*linear\s*feet?/i);
+  const heightMatch = input.match(/(\d+)\s*feet?\s*tall|ceilings?\s+are\s+(\d+)\s*feet?|height\s+(?:is\s+)?(\d+)/i);
+  
+  let wallsSqft = 0;
+  let ceilingsSqft = 0;
+  let trimSqft = 0;
+  
+  // Handle linear feet conversion
+  if (linearFeetMatch && heightMatch) {
+    const linearFeet = parseInt(linearFeetMatch[1]);
+    const height = parseInt(heightMatch[1] || heightMatch[2] || heightMatch[3]);
+    wallsSqft = linearFeet * height;
+    console.log(`Linear feet conversion: ${linearFeet} LF × ${height} ft = ${wallsSqft} sq ft`);
+  }
+  
+  // Override with specific measurements if provided
+  if (wallsMatch) wallsSqft = parseInt(wallsMatch[1]);
+  if (ceilingsMatch) ceilingsSqft = parseInt(ceilingsMatch[1]);
+  if (trimMatch) trimSqft = parseInt(trimMatch[1]);
+  
+  // Check for explicit exclusions
+  const excludeCeilings = /not\s+painting\s+(?:the\s+)?ceilings?|no\s+ceilings?/i.test(input);
+  const excludeTrim = /not\s+painting\s+(?:doors?|trim|windows?)|no\s+(?:doors?|trim|windows?)/i.test(input);
+  const excludeWalls = /not\s+painting\s+(?:the\s+)?walls?|no\s+walls?/i.test(input);
+  
+  if (excludeCeilings) ceilingsSqft = 0;
+  if (excludeTrim) trimSqft = 0;
+  if (excludeWalls) wallsSqft = 0;
+  
+  // Special case: "We are only doing walls"
+  if (/only\s+(?:doing\s+)?walls?/i.test(input)) {
+    ceilingsSqft = 0;
+    trimSqft = 0;
+  }
+  
+  // If no specific breakdown and no linear feet, try to parse total sqft and estimate
+  if (!wallsMatch && !ceilingsMatch && !trimMatch && !linearFeetMatch) {
+    const totalMatch = input.match(/(\d+)\s*(?:sqft|square\s*feet?)/i);
     if (totalMatch) {
       const total = parseInt(totalMatch[1]);
       if (projectType === 'interior') {
         // Interior estimate: walls and ceilings roughly equal, trim 30% of walls
         return {
           walls_sqft: Math.round(total * 0.6),
-          ceilings_sqft: Math.round(total * 0.6), 
-          trim_sqft: Math.round(total * 0.3)
+          ceilings_sqft: excludeCeilings ? 0 : Math.round(total * 0.6), 
+          trim_sqft: excludeTrim ? 0 : Math.round(total * 0.3)
         };
       } else {
         // Exterior: mostly walls, no ceilings, some trim
         return {
           walls_sqft: Math.round(total * 0.8),
           ceilings_sqft: 0,
-          trim_sqft: Math.round(total * 0.2)
+          trim_sqft: excludeTrim ? 0 : Math.round(total * 0.2)
         };
       }
     }
   }
 
   return {
-    walls_sqft: wallsMatch ? parseInt(wallsMatch[1]) : 0,
-    ceilings_sqft: ceilingsMatch ? parseInt(ceilingsMatch[1]) : 0,
-    trim_sqft: trimMatch ? parseInt(trimMatch[1]) : 0
+    walls_sqft: wallsSqft,
+    ceilings_sqft: ceilingsSqft,
+    trim_sqft: trimSqft
   };
 };
 
@@ -228,6 +279,49 @@ export const parseAdjustments = (input: string): Partial<{
   }
 
   return adjustments;
+};
+
+// Parse custom rates and pricing from contractor input
+export const parseCustomPricing = (input: string): {
+  customRate?: number;
+  customMarkup?: number;
+  customPaintCost?: number;
+  laborIncluded?: boolean;
+  coverage?: number;
+} => {
+  const result: any = {};
+  
+  // Parse custom rate per square foot: "$1.50 per square foot", "$2.00/sqft", "at $1.50"
+  const rateMatch = input.match(/\$?([\d.]+)\s*(?:per\s*)?(?:sq\s*ft|square\s*foot|\/sqft)/i);
+  if (rateMatch) {
+    result.customRate = parseFloat(rateMatch[1]);
+  }
+  
+  // Parse markup percentage: "20% markup", "add 20%", "25 percent markup"
+  const markupMatch = input.match(/(?:add\s+)?(\d+)%?\s*(?:markup|percent)/i);
+  if (markupMatch) {
+    result.customMarkup = parseInt(markupMatch[1]);
+  }
+  
+  // Parse paint cost: "$50 a gallon", "$45 per gallon"
+  const paintCostMatch = input.match(/\$?([\d.]+)\s*(?:a\s+|per\s+)?gallon/i);
+  if (paintCostMatch) {
+    result.customPaintCost = parseFloat(paintCostMatch[1]);
+  }
+  
+  // Check if labor is included in the rate
+  const laborIncluded = /labor\s+(?:is\s+)?included/i.test(input);
+  if (laborIncluded) {
+    result.laborIncluded = true;
+  }
+  
+  // Parse coverage: "350 square feet" spread rate
+  const coverageMatch = input.match(/spread\s+rate\s+(?:is\s+)?(\d+)\s*(?:square\s*feet?|sqft)/i);
+  if (coverageMatch) {
+    result.coverage = parseInt(coverageMatch[1]);
+  }
+  
+  return result;
 };
 
 // Format currency consistently

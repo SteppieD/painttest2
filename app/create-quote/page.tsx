@@ -18,6 +18,7 @@ import {
   parseProjectType,
   parseAreas,
   parseAdjustments,
+  parseCustomPricing,
   generateQuoteDisplay,
   generateDetailedBreakdown
 } from "@/lib/spreadsheet-calculator";
@@ -166,14 +167,87 @@ export default function CreateQuotePage() {
 
     switch (stage) {
       case 'customer_info':
+        // Parse comprehensive contractor input - extract all available information
         const customerInfo = parseCustomerInfo(input);
-        setQuoteData(prev => ({ 
-          ...prev, 
-          customer_name: customerInfo.customer_name,
-          address: customerInfo.address
-        }));
+        const parsedProjectType = parseProjectType(input);
+        const customPricing = parseCustomPricing(input);
+        const parsedAreas = parseAreas(input, parsedProjectType || 'interior');
         
-        if (customerInfo.address) {
+        // Apply custom pricing if provided
+        let updatedQuoteData = { ...quoteData };
+        
+        if (customPricing.customRate) {
+          // Apply custom rate to all surfaces if labor is included
+          updatedQuoteData.rates = {
+            walls_rate: customPricing.customRate,
+            ceilings_rate: customPricing.customRate,
+            trim_rate: customPricing.customRate
+          };
+          console.log(`Applied custom rate: $${customPricing.customRate}/sqft`);
+        }
+        
+        if (customPricing.customPaintCost) {
+          // Apply custom paint cost to all surface types
+          updatedQuoteData.paint_costs = {
+            walls_paint_cost: customPricing.customPaintCost,
+            ceilings_paint_cost: customPricing.customPaintCost,
+            trim_paint_cost: customPricing.customPaintCost
+          };
+          console.log(`Applied custom paint cost: $${customPricing.customPaintCost}/gallon`);
+        }
+        
+        if (customPricing.laborIncluded) {
+          // If labor is included in the rate, set labor percentage to 0
+          updatedQuoteData.labor_percentage = 0;
+          console.log('Labor included in rate - set labor percentage to 0%');
+        }
+        
+        // Update all parsed information
+        updatedQuoteData = {
+          ...updatedQuoteData,
+          customer_name: customerInfo.customer_name,
+          address: customerInfo.address,
+          project_type: parsedProjectType || updatedQuoteData.project_type,
+          areas: parsedAreas.walls_sqft > 0 || parsedAreas.ceilings_sqft > 0 || parsedAreas.trim_sqft > 0 ? parsedAreas : updatedQuoteData.areas
+        };
+        
+        setQuoteData(updatedQuoteData);
+        
+        // Check if we have enough information to calculate the quote
+        const hasCustomer = customerInfo.customer_name && customerInfo.address;
+        const hasProject = parsedProjectType || updatedQuoteData.project_type;
+        const hasAreas = parsedAreas.walls_sqft > 0 || parsedAreas.ceilings_sqft > 0 || parsedAreas.trim_sqft > 0;
+        
+        if (hasCustomer && hasProject && hasAreas) {
+          // We have all information - calculate the quote immediately
+          const calculation = calculateQuote(
+            parsedAreas,
+            updatedQuoteData.rates,
+            updatedQuoteData.paint_costs,
+            updatedQuoteData.labor_percentage,
+            customPricing.coverage || 350
+          );
+          
+          setQuoteData(prev => ({ ...prev, calculation }));
+          
+          // Apply markup if specified
+          let finalCalculation = calculation;
+          if (customPricing.customMarkup) {
+            const markupMultiplier = 1 + (customPricing.customMarkup / 100);
+            finalCalculation = {
+              ...calculation,
+              revenue: {
+                ...calculation.revenue,
+                total: calculation.revenue.total * markupMultiplier
+              }
+            };
+            finalCalculation.profit = finalCalculation.revenue.total - calculation.materials.total - calculation.labor.projected_labor;
+            setQuoteData(prev => ({ ...prev, calculation: finalCalculation }));
+          }
+          
+          responseContent = `Perfect! I parsed your complete project details:\n\n**Customer:** ${customerInfo.customer_name}\n**Address:** ${customerInfo.address}\n**Project:** ${parsedProjectType} painting\n**Areas:** ${parsedAreas.walls_sqft} sq ft walls${parsedAreas.ceilings_sqft > 0 ? `, ${parsedAreas.ceilings_sqft} sq ft ceilings` : ''}${parsedAreas.trim_sqft > 0 ? `, ${parsedAreas.trim_sqft} sq ft trim` : ''}\n\n${generateQuoteDisplay(finalCalculation, parsedAreas, updatedQuoteData.rates, updatedQuoteData.paint_costs)}`;
+          nextStage = 'quote_review';
+        } else if (hasCustomer) {
           responseContent = `Perfect! I have ${customerInfo.customer_name} at ${customerInfo.address}.\n\nWhat type of painting work are we quoting?\n• Interior (walls, ceilings, trim)\n• Exterior\n• Both interior and exterior`;
           nextStage = 'project_type';
         } else {
@@ -204,20 +278,20 @@ export default function CreateQuotePage() {
 
       case 'areas':
         const areas = parseAreas(input, quoteData.project_type);
-        const updatedQuoteData = { ...quoteData, areas };
-        setQuoteData(updatedQuoteData);
+        const updatedAreasData = { ...quoteData, areas };
+        setQuoteData(updatedAreasData);
         
         // Calculate quote automatically using spreadsheet formulas
         const calculation = calculateQuote(
           areas, 
-          quoteData.rates, 
-          quoteData.paint_costs, 
-          quoteData.labor_percentage
+          updatedAreasData.rates, 
+          updatedAreasData.paint_costs, 
+          updatedAreasData.labor_percentage
         );
         
         setQuoteData(prev => ({ ...prev, calculation }));
         
-        responseContent = generateQuoteDisplay(calculation, areas, quoteData.rates, quoteData.paint_costs);
+        responseContent = generateQuoteDisplay(calculation, areas, updatedAreasData.rates, updatedAreasData.paint_costs);
         nextStage = 'quote_review';
         break;
 
