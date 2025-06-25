@@ -262,7 +262,7 @@ export default function CreateQuotePage() {
 
     switch (stage) {
       case 'customer_info':
-        // 🤖 PRIMARY: Use intelligent quote parser as main backend
+        // 🤖 PRIMARY: Use intelligent quote parser as main backend (DEMO APPROACH)
         try {
           const response = await fetch('/api/quote-parser', {
             method: 'POST',
@@ -270,29 +270,24 @@ export default function CreateQuotePage() {
             body: JSON.stringify({ input })
           });
           
-          if (!response.ok) {
-            throw new Error(`Parser API failed: ${response.status}`);
-          }
-          
-          const parsingResult = await response.json();
-          const parsedData = parsingResult.parsed_data || {};
+          const data = await response.json();
           
           // 🐛 DEBUG: Log parser results if debug mode enabled
           if (DEBUG_PARSER) {
             console.log('🧠 Intelligent Parser Results:', {
-              success: parsingResult.success,
-              confidence: parsingResult.confidence_score,
-              parsedData: parsedData,
-              needsClarification: parsingResult.needs_clarification,
-              clarificationQuestions: parsingResult.clarification_questions,
-              canCalculate: parsingResult.can_calculate
+              success: data.success,
+              confidence: data.confidence_score,
+              parsedData: data.parsed_data,
+              needsClarification: data.needs_clarification,
+              clarificationQuestions: data.clarification_questions,
+              canCalculate: data.can_calculate
             });
           }
           
-          if (!parsingResult.success) {
+          if (!data.success) {
             // Parser failed - ask clarification questions from the API
             responseContent = "I need more information to create your quote:\n\n";
-            responseContent += (parsingResult.clarification_questions || [
+            responseContent += (data.clarification_questions || [
               "What's the customer's name?",
               "What's the property address?", 
               "What's the project scope (walls, ceilings, trim)?"
@@ -302,6 +297,7 @@ export default function CreateQuotePage() {
           }
           
           // ✅ SUCCESS: Parser extracted data successfully
+          const parsedData = data.parsed_data || {};
           
           // Update quote data with ALL parsed information from API response
           let updatedQuoteData = { ...quoteData };
@@ -353,104 +349,63 @@ export default function CreateQuotePage() {
           
           setQuoteData(updatedQuoteData);
           
-          // 🤖 TRUST THE PARSER: Let AI intelligence drive the conversation
-          const confidence = parsingResult.confidence_score || 0;
+          // 🤖 TRUST THE PARSER: Let AI intelligence drive the conversation (DEMO APPROACH)
+          const confidence = data.confidence_score || 0;
           
-          // 🎯 PRIMARY DECISION: Trust parser when successful
-          if (parsingResult.success) {
-            // Parser succeeded - check if it needs clarification
+          // 🎯 SIMPLE SUCCESS LOGIC (EXACTLY LIKE DEMO)
+          if (confidence >= 70 && !data.needs_clarification) {
+            // High confidence and no clarification needed - show results immediately
+            responseContent = `Perfect! I've analyzed your complete project details with ${confidence}% confidence:\n\n`;
+            responseContent += `💡 **What I understood:**\n`;
+            if (parsedData.customer_name) responseContent += `• Customer: ${parsedData.customer_name}\n`;
+            if (parsedData.property_address) responseContent += `• Address: ${parsedData.property_address}\n`;
+            if (parsedData.walls_sqft || parsedData.calculated_wall_area_sqft) responseContent += `• Wall area: ${parsedData.walls_sqft || parsedData.calculated_wall_area_sqft} sqft\n`;
+            if (parsedData.ceilings_sqft) responseContent += `• Ceiling area: ${parsedData.ceilings_sqft} sqft\n`;
+            if (parsedData.trim_sqft) responseContent += `• Trim area: ${parsedData.trim_sqft} sqft\n`;
+            if (parsedData.labor_cost_per_sqft) responseContent += `• Labor rate: $${parsedData.labor_cost_per_sqft}/sqft\n`;
+            if (parsedData.paint_brand) responseContent += `• Paint: ${parsedData.paint_brand}\n`;
+            if (parsedData.markup_percent) responseContent += `• Markup: ${parsedData.markup_percent}%\n`;
             
-            if (!parsingResult.needs_clarification && confidence >= 70) {
-              // Parser says we have everything - calculate quote immediately
-              const calculation = calculateQuote(
-                updatedQuoteData.areas,
-                updatedQuoteData.rates,
-                updatedQuoteData.paint_costs,
-                updatedQuoteData.labor_percentage || 30,
-                parsedData.spread_rate_sqft_per_gallon || 350
-              );
-              
-              setQuoteData(prev => ({ ...prev, calculation }));
-              
-              // Generate comprehensive quote display using parser's understanding
-              responseContent = `Perfect! I've analyzed your complete project details:\n\n`;
-              responseContent += `**Customer:** ${updatedQuoteData.customer_name}\n`;
-              responseContent += `**Address:** ${updatedQuoteData.address}\n`;
-              responseContent += `**Project Type:** ${updatedQuoteData.project_type} painting\n\n`;
-              
-              responseContent += `**Scope of Work:**\n`;
-              if (updatedQuoteData.areas.walls_sqft > 0) {
-                responseContent += `• Walls: ${updatedQuoteData.areas.walls_sqft} sq ft\n`;
-              }
-              if (updatedQuoteData.areas.ceilings_sqft > 0) {
-                responseContent += `• Ceilings: ${updatedQuoteData.areas.ceilings_sqft} sq ft\n`;
-              }
-              if (updatedQuoteData.areas.trim_sqft > 0) {
-                responseContent += `• Trim: ${updatedQuoteData.areas.trim_sqft} sq ft\n`;
-              }
-              if (updatedQuoteData.areas.doors_count > 0) {
-                responseContent += `• Doors: ${updatedQuoteData.areas.doors_count} doors\n`;
-              }
-              if (updatedQuoteData.areas.windows_count > 0) {
-                responseContent += `• Windows: ${updatedQuoteData.areas.windows_count} windows\n`;
-              }
-              if (parsedData.primer_included) {
-                responseContent += `• Primer: Included\n`;
-              }
-              
-              if (parsedData.paint_brand || parsedData.paint_product) {
-                responseContent += `\n**Paint Specifications:**\n`;
-                if (parsedData.paint_brand) responseContent += `• Brand: ${parsedData.paint_brand}\n`;
-                if (parsedData.paint_product) responseContent += `• Product: ${parsedData.paint_product}\n`;
-                if (parsedData.paint_sheen) responseContent += `• Sheen: ${parsedData.paint_sheen}\n`;
-              }
-              
-              responseContent += `\n${generateQuoteDisplay(calculation)}`;
-              
-              if (parsedData.confidence_score < 80 && parsingResult.warnings?.length > 0) {
-                responseContent += `\n\n⚠️ **Note:** ${parsingResult.warnings.join(' ')}`;
-              }
-              
-              nextStage = 'quote_review';
+            if (data.can_calculate && data.quote_calculation) {
+              responseContent += `\n**QUOTE CALCULATED:**\n`;
+              responseContent += `• Materials: $${data.quote_calculation.materials_cost?.toFixed(2) || '0.00'}\n`;
+              responseContent += `• Labor: $${data.quote_calculation.labor_cost?.toFixed(2) || '0.00'}\n`;
+              responseContent += `• **Total: $${data.quote_calculation.total_cost?.toFixed(2) || '0.00'}**\n`;
             } else {
-              // Parser needs clarification OR low confidence - trust its questions completely
-              responseContent = `I've analyzed your project details! Just need a few more pieces of information:\n\n`;
-              
-              if (parsingResult.clarification_questions && parsingResult.clarification_questions.length > 0) {
-                parsingResult.clarification_questions.forEach((question, index) => {
-                  responseContent += `${index + 1}. ${question}\n`;
-                });
-              } else {
-                // Fallback questions if none provided
-                responseContent += "1. What's the customer's name?\n";
-                responseContent += "2. What's the property address?\n";
-                responseContent += "3. What surfaces need painting (walls, ceilings, trim)?\n";
-              }
-              
-              // Show what the parser understood to build confidence
-              if (confidence > 50) {
-                responseContent += `\n💡 **What I understood so far:**\n`;
-                if (parsedData.customer_name) responseContent += `• Customer: ${parsedData.customer_name}\n`;
-                if (parsedData.property_address) responseContent += `• Address: ${parsedData.property_address}\n`;
-                if (parsedData.walls_sqft || parsedData.calculated_wall_area_sqft) responseContent += `• Wall area: ${parsedData.walls_sqft || parsedData.calculated_wall_area_sqft} sqft\n`;
-                if (parsedData.ceilings_sqft) responseContent += `• Ceiling area: ${parsedData.ceilings_sqft} sqft\n`;
-                if (parsedData.labor_cost_per_sqft) responseContent += `• Labor rate: $${parsedData.labor_cost_per_sqft}/sqft\n`;
-                if (parsedData.paint_brand) responseContent += `• Paint: ${parsedData.paint_brand}\n`;
-                if (parsedData.markup_percent) responseContent += `• Markup: ${parsedData.markup_percent}%\n`;
-              }
-              
-              nextStage = 'clarification';
+              responseContent += `\n**Ready to calculate quote** - All information collected successfully!\n`;
             }
+            
+            nextStage = 'quote_review';
           } else {
-            // 🔄 FALLBACK: Only when parser fails completely 
-            responseContent = "I had trouble understanding your request. Could you please provide:\n\n";
-            responseContent += (parsingResult.clarification_questions || [
-              "Customer name and property address",
-              "Project scope (walls, ceilings, trim, etc.)",
-              "Square footage or room dimensions",
-              "Your labor rate per square foot"
-            ]).join('\n');
-            nextStage = 'customer_info';
+            // Needs clarification OR low confidence - show what was understood
+            responseContent = `I've analyzed your request (${confidence}% confidence). `;
+            
+            if (data.needs_clarification && data.clarification_questions?.length > 0) {
+              responseContent += `I need a few more details:\n\n`;
+              data.clarification_questions.forEach((question, index) => {
+                responseContent += `${index + 1}. ${question}\n`;
+              });
+            } else {
+              responseContent += `Please provide any missing information:\n\n`;
+              responseContent += "• Customer name and property address\n";
+              responseContent += "• Project scope (walls, ceilings, trim)\n";
+              responseContent += "• Square footage or room dimensions\n";
+              responseContent += "• Your labor rate per square foot\n";
+            }
+            
+            // Show what was understood so far (like demo)
+            if (confidence > 30) {
+              responseContent += `\n💡 **What I understood so far:**\n`;
+              if (parsedData.customer_name) responseContent += `• Customer: ${parsedData.customer_name}\n`;
+              if (parsedData.property_address) responseContent += `• Address: ${parsedData.property_address}\n`;
+              if (parsedData.walls_sqft || parsedData.calculated_wall_area_sqft) responseContent += `• Wall area: ${parsedData.walls_sqft || parsedData.calculated_wall_area_sqft} sqft\n`;
+              if (parsedData.ceilings_sqft) responseContent += `• Ceiling area: ${parsedData.ceilings_sqft} sqft\n`;
+              if (parsedData.labor_cost_per_sqft) responseContent += `• Labor rate: $${parsedData.labor_cost_per_sqft}/sqft\n`;
+              if (parsedData.paint_brand) responseContent += `• Paint: ${parsedData.paint_brand}\n`;
+              if (parsedData.markup_percent) responseContent += `• Markup: ${parsedData.markup_percent}%\n`;
+            }
+            
+            nextStage = 'clarification';
           }
           
         } catch (error) {
@@ -1065,7 +1020,7 @@ What would you like to change it to? Please specify the new rate like:
         break;
 
       case 'clarification':
-        // Handle clarification responses using intelligent parser API
+        // Handle clarification responses using intelligent parser API (DEMO APPROACH)
         try {
           const response = await fetch('/api/quote-parser', {
             method: 'POST',
@@ -1073,18 +1028,14 @@ What would you like to change it to? Please specify the new rate like:
             body: JSON.stringify({ input })
           });
           
-          if (!response.ok) {
-            throw new Error(`Parser API failed: ${response.status}`);
-          }
-          
-          const parsingResult = await response.json();
-          const parsedData = parsingResult.parsed_data || {};
+          const data = await response.json();
+          const parsedData = data.parsed_data || {};
           
           if (DEBUG_PARSER) {
-            console.log('🧠 Clarification Parser Results:', { parsedData, success: parsingResult.success });
+            console.log('🧠 Clarification Parser Results:', { parsedData, success: data.success });
           }
           
-          if (parsingResult.success) {
+          if (data.success) {
             
             // Update quote data with newly clarified information
             let updatedQuoteData = { ...quoteData };
@@ -1138,12 +1089,14 @@ What would you like to change it to? Please specify the new rate like:
               
               responseContent = `Perfect! Now I have all the information needed.\n\n${generateQuoteDisplay(calculation)}`;
               nextStage = 'quote_review';
-            } else if (parsingResult.needs_clarification) {
+            } else if (data.needs_clarification) {
               // Still need more clarification
               responseContent = `Thanks! I still need:\n\n`;
-              parsingResult.clarification_questions.forEach((question, index) => {
-                responseContent += `${index + 1}. ${question}\n`;
-              });
+              if (data.clarification_questions?.length > 0) {
+                data.clarification_questions.forEach((question, index) => {
+                  responseContent += `${index + 1}. ${question}\n`;
+                });
+              }
               nextStage = 'clarification';
             } else {
               // Got the clarification but still missing something specific
