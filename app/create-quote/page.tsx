@@ -147,7 +147,7 @@ export default function CreateQuotePage() {
     address: '',
     project_type: '',
     areas: { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: 0, doors_count: 0, windows_count: 0, priming_sqft: 0 },
-    rates: { painting_rate: 2.50, priming_rate: 0.40, trim_rate: 1.92, door_rate: 100.00, window_rate: 25.00 },
+    rates: { wall_rate: 1.50, ceiling_rate: 1.25, priming_rate: 0.45, trim_rate: 1.92, door_rate: 150.00, window_rate: 100.00 },
     paint_costs: { walls_paint_cost: 26.00, ceilings_paint_cost: 25.00, trim_paint_cost: 35.00 },
     labor_percentage: 30,
     calculation: null,
@@ -206,11 +206,12 @@ export default function CreateQuotePage() {
       setQuoteData(prev => ({
         ...prev,
         rates: {
-          painting_rate: settings.default_painting_rate || settings.default_walls_rate || 2.50,
-          priming_rate: settings.default_priming_rate || 0.40,
+          wall_rate: settings.default_walls_rate || 1.50,
+          ceiling_rate: settings.default_ceilings_rate || 1.25,
+          priming_rate: settings.default_priming_rate || 0.45,
           trim_rate: settings.default_trim_rate || 1.92,
-          door_rate: settings.default_door_rate || 100.00,
-          window_rate: settings.default_window_rate || 25.00
+          door_rate: settings.default_door_rate || 150.00,
+          window_rate: settings.default_window_rate || 100.00
         },
         paint_costs: {
           walls_paint_cost: settings.default_walls_paint_cost || 26.00,
@@ -327,7 +328,8 @@ export default function CreateQuotePage() {
           if (parsedData.labor_cost_per_sqft) {
             updatedQuoteData.rates = {
               ...updatedQuoteData.rates,
-              painting_rate: parsedData.labor_cost_per_sqft,
+              wall_rate: parsedData.labor_cost_per_sqft,
+              ceiling_rate: parsedData.labor_cost_per_sqft,
               trim_rate: parsedData.labor_cost_per_sqft,
               priming_rate: parsedData.primer_cost_per_sqft || updatedQuoteData.rates.priming_rate
             };
@@ -630,7 +632,8 @@ export default function CreateQuotePage() {
         // Handle rate adjustment questions
         if (rateAdjustments.needsRateInput) {
           const rateType = rateAdjustments.rateType || 'painting';
-          const currentRate = rateType === 'painting' ? quoteData.rates.painting_rate :
+          const currentRate = rateType === 'wall' ? quoteData.rates.wall_rate :
+                             rateType === 'ceiling' ? quoteData.rates.ceiling_rate :
                              rateType === 'trim' ? quoteData.rates.trim_rate :
                              rateType === 'priming' ? quoteData.rates.priming_rate :
                              rateType === 'door' ? quoteData.rates.door_rate :
@@ -688,7 +691,7 @@ What would you like to change it to? Please specify the new rate like:
         if (lowerInput.includes('breakdown') || lowerInput.includes('how did you calculate') || lowerInput.includes('detail')) {
           responseContent = generateDetailedBreakdown(quoteData.calculation!, quoteData.areas, quoteData.rates, quoteData.paint_costs);
         } else if (lowerInput.includes('adjust') || lowerInput.includes('change') || lowerInput.includes('modify')) {
-          responseContent = `What would you like to adjust? I can modify:\n\n• **Square footage** (walls, ceilings, trim)\n• **Charge rates** (currently $${quoteData.rates.painting_rate}/sqft painting, $${quoteData.rates.trim_rate}/sqft trim)\n• **Labor percentage** (currently ${quoteData.labor_percentage}%)\n• **Paint products** - Change selected products\n• **Paint costs** - Adjust individual paint costs\n\nJust tell me what you'd like to change!`;
+          responseContent = `What would you like to adjust? I can modify:\n\n• **Square footage** (walls, ceilings, trim)\n• **Charge rates** (currently $${quoteData.rates.wall_rate}/sqft walls, $${quoteData.rates.ceiling_rate}/sqft ceilings, $${quoteData.rates.trim_rate}/sqft trim)\n• **Labor percentage** (currently ${quoteData.labor_percentage}%)\n• **Paint products** - Change selected products\n• **Paint costs** - Adjust individual paint costs\n\nJust tell me what you'd like to change!`;
           nextStage = 'adjustments';
         } else if (lowerInput.includes('save') || lowerInput.includes('approve') || lowerInput.includes('finalize')) {
           const quoteId = await saveQuote();
@@ -718,9 +721,10 @@ What would you like to change it to? Please specify the new rate like:
                 needsRecalculation = true;
               }
               
-              if (parsingResult.data.labor_cost_per_sqft && parsingResult.data.labor_cost_per_sqft !== quoteData.rates.painting_rate) {
-                quoteData.rates.painting_rate = parsingResult.data.labor_cost_per_sqft;
-                modificationSummary.push(`Labor rate updated to $${parsingResult.data.labor_cost_per_sqft}/sqft`);
+              if (parsingResult.data.labor_cost_per_sqft && parsingResult.data.labor_cost_per_sqft !== quoteData.rates.wall_rate) {
+                quoteData.rates.wall_rate = parsingResult.data.labor_cost_per_sqft;
+                quoteData.rates.ceiling_rate = parsingResult.data.labor_cost_per_sqft;
+                modificationSummary.push(`Labor rates updated to $${parsingResult.data.labor_cost_per_sqft}/sqft`);
                 needsRecalculation = true;
               }
               
@@ -755,8 +759,9 @@ What would you like to change it to? Please specify the new rate like:
                 // Fall back to rate adjustment check
                 const rateAdjustmentCheck = parseRateAdjustments(input);
                 if (rateAdjustmentCheck.needsRateInput) {
-                  const rateType = rateAdjustmentCheck.rateType || 'painting';
-                  const currentRate = rateType === 'painting' ? quoteData.rates.painting_rate :
+                  const rateType = rateAdjustmentCheck.rateType || 'wall';
+                  const currentRate = rateType === 'wall' ? quoteData.rates.wall_rate :
+                                     rateType === 'ceiling' ? quoteData.rates.ceiling_rate :
                                      rateType === 'trim' ? quoteData.rates.trim_rate :
                                      rateType === 'priming' ? quoteData.rates.priming_rate :
                                      rateType === 'door' ? quoteData.rates.door_rate :
@@ -780,8 +785,9 @@ What would you like to change it to? Please specify the new rate like:
               // Fall back to standard rate adjustment check
               const rateAdjustmentCheck = parseRateAdjustments(input);
               if (rateAdjustmentCheck.needsRateInput) {
-                const rateType = rateAdjustmentCheck.rateType || 'painting';
-                const currentRate = rateType === 'painting' ? quoteData.rates.painting_rate :
+                const rateType = rateAdjustmentCheck.rateType || 'wall';
+                const currentRate = rateType === 'wall' ? quoteData.rates.wall_rate :
+                                   rateType === 'ceiling' ? quoteData.rates.ceiling_rate :
                                    rateType === 'trim' ? quoteData.rates.trim_rate :
                                    rateType === 'priming' ? quoteData.rates.priming_rate :
                                    rateType === 'door' ? quoteData.rates.door_rate :
@@ -806,8 +812,9 @@ What would you like to change it to? Please specify the new rate like:
             // Fall back to standard rate adjustment check
             const rateAdjustmentCheck = parseRateAdjustments(input);
             if (rateAdjustmentCheck.needsRateInput) {
-              const rateType = rateAdjustmentCheck.rateType || 'painting';
-              const currentRate = rateType === 'painting' ? quoteData.rates.painting_rate :
+              const rateType = rateAdjustmentCheck.rateType || 'wall';
+              const currentRate = rateType === 'wall' ? quoteData.rates.wall_rate :
+                                 rateType === 'ceiling' ? quoteData.rates.ceiling_rate :
                                  rateType === 'trim' ? quoteData.rates.trim_rate :
                                  rateType === 'priming' ? quoteData.rates.priming_rate :
                                  rateType === 'door' ? quoteData.rates.door_rate :
@@ -859,9 +866,10 @@ What would you like to change it to? Please specify the new rate like:
               modificationSummary.push(`Trim area: ${parsingResult.data.trim_sqft} sqft`);
             }
             
-            if (parsingResult.data.labor_cost_per_sqft && parsingResult.data.labor_cost_per_sqft !== quoteData.rates.painting_rate) {
-              newQuoteData.rates.painting_rate = parsingResult.data.labor_cost_per_sqft;
-              modificationSummary.push(`Labor rate: $${parsingResult.data.labor_cost_per_sqft}/sqft`);
+            if (parsingResult.data.labor_cost_per_sqft && parsingResult.data.labor_cost_per_sqft !== quoteData.rates.wall_rate) {
+              newQuoteData.rates.wall_rate = parsingResult.data.labor_cost_per_sqft;
+              newQuoteData.rates.ceiling_rate = parsingResult.data.labor_cost_per_sqft;
+              modificationSummary.push(`Labor rates: $${parsingResult.data.labor_cost_per_sqft}/sqft`);
             }
             
             if (parsingResult.data.paint_cost_per_gallon) {
@@ -1063,8 +1071,9 @@ What would you like to change it to? Please specify the new rate like:
             }
             
             // Update rates
-            if (parsedData.labor_cost_per_sqft && !updatedQuoteData.rates.painting_rate) {
-              updatedQuoteData.rates.painting_rate = parsedData.labor_cost_per_sqft;
+            if (parsedData.labor_cost_per_sqft && !updatedQuoteData.rates.wall_rate) {
+              updatedQuoteData.rates.wall_rate = parsedData.labor_cost_per_sqft;
+              updatedQuoteData.rates.ceiling_rate = parsedData.labor_cost_per_sqft;
             }
             
             setQuoteData(updatedQuoteData);
@@ -1074,7 +1083,7 @@ What would you like to change it to? Please specify the new rate like:
             const hasAreas = updatedQuoteData.areas.walls_sqft > 0 || 
                             updatedQuoteData.areas.ceilings_sqft > 0 || 
                             updatedQuoteData.areas.trim_sqft > 0;
-            const hasRate = updatedQuoteData.rates.painting_rate > 0;
+            const hasRate = updatedQuoteData.rates.wall_rate > 0 || updatedQuoteData.rates.ceiling_rate > 0;
             
             if (hasCustomer && hasAreas && hasRate) {
               // Now we can calculate!
@@ -1144,7 +1153,8 @@ What would you like to change it to? Please specify the new rate like:
           if (parsingResult.success && parsedData.labor_cost_per_sqft) {
             // Got the labor rate!
             let updatedQuoteData = { ...quoteData };
-            updatedQuoteData.rates.painting_rate = parsedData.labor_cost_per_sqft;
+            updatedQuoteData.rates.wall_rate = parsedData.labor_cost_per_sqft;
+            updatedQuoteData.rates.ceiling_rate = parsedData.labor_cost_per_sqft;
             setQuoteData(updatedQuoteData);
             
             // Now calculate the quote
@@ -1165,7 +1175,8 @@ What would you like to change it to? Please specify the new rate like:
             if (rateMatch) {
               const rate = parseFloat(rateMatch[1]);
               let updatedQuoteData = { ...quoteData };
-              updatedQuoteData.rates.painting_rate = rate;
+              updatedQuoteData.rates.wall_rate = rate;
+              updatedQuoteData.rates.ceiling_rate = rate;
               setQuoteData(updatedQuoteData);
               
               const calculation = calculateQuote(
@@ -1225,16 +1236,17 @@ What would you like to change it to? Please specify the new rate like:
           ceilings_sqft: quoteData.areas.ceilings_sqft,
           trim_sqft: quoteData.areas.trim_sqft,
           
-          // Charge rates (unified system)
-          painting_rate: quoteData.rates.painting_rate,
+          // Charge rates (new separated system)
+          wall_rate: quoteData.rates.wall_rate,
+          ceiling_rate: quoteData.rates.ceiling_rate,
           priming_rate: quoteData.rates.priming_rate,
           trim_rate: quoteData.rates.trim_rate,
           door_rate: quoteData.rates.door_rate,
           window_rate: quoteData.rates.window_rate,
           
           // Legacy rates for backward compatibility
-          walls_rate: quoteData.rates.painting_rate,
-          ceilings_rate: quoteData.rates.painting_rate,
+          walls_rate: quoteData.rates.wall_rate,
+          ceilings_rate: quoteData.rates.ceiling_rate,
           
           // Paint costs
           walls_paint_cost: quoteData.paint_costs.walls_paint_cost,
@@ -1304,7 +1316,12 @@ What would you like to change it to? Please specify the new rate like:
       const selectedWallProduct = quoteDataForDisplay.selectedProducts?.walls;
       const selectedCeilingProduct = quoteDataForDisplay.selectedProducts?.ceilings;
       
-      rateDisplay += `• **Painting** (walls & ceilings): $${rates.painting_rate.toFixed(2)}/sq ft\n`;
+      if (areas.walls_sqft > 0) {
+        rateDisplay += `• **Wall Painting**: $${rates.wall_rate.toFixed(2)}/sq ft\n`;
+      }
+      if (areas.ceilings_sqft > 0) {
+        rateDisplay += `• **Ceiling Painting**: $${rates.ceiling_rate.toFixed(2)}/sq ft\n`;
+      }
       
       if (selectedWallProduct) {
         rateDisplay += `  - Walls: ${selectedWallProduct.supplier} ${selectedWallProduct.productName} ($${selectedWallProduct.costPerGallon}/gal)\n`;
@@ -1353,10 +1370,17 @@ What would you like to change it to? Please specify the new rate like:
       return { hasChanges: false, rates: {} };
     }
 
-    // Parse painting rate (walls and ceilings combined)
-    const paintingRateMatch = input.match(/(?:painting|walls?|ceilings?)\s+(?:should\s+be\s+|to\s+|at\s+)?\$?(\d+\.?\d*)/i);
-    if (paintingRateMatch) {
-      adjustments.painting_rate = parseFloat(paintingRateMatch[1]);
+    // Parse wall rate
+    const wallRateMatch = input.match(/walls?\s+(?:should\s+be\s+|to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+    if (wallRateMatch) {
+      adjustments.wall_rate = parseFloat(wallRateMatch[1]);
+      hasChanges = true;
+    }
+
+    // Parse ceiling rate
+    const ceilingRateMatch = input.match(/ceilings?\s+(?:should\s+be\s+|to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+    if (ceilingRateMatch) {
+      adjustments.ceiling_rate = parseFloat(ceilingRateMatch[1]);
       hasChanges = true;
     }
 
@@ -1395,9 +1419,11 @@ What would you like to change it to? Please specify the new rate like:
   const generateRateDisplay = (rates: ChargeRates, areas: ProjectAreas): string => {
     let display = "";
     
-    const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
-    if (totalPaintingSqft > 0) {
-      display += `• Painting: $${rates.painting_rate.toFixed(2)}/sq ft\n`;
+    if (areas.walls_sqft > 0) {
+      display += `• Wall Painting: $${rates.wall_rate.toFixed(2)}/sq ft\n`;
+    }
+    if (areas.ceilings_sqft > 0) {
+      display += `• Ceiling Painting: $${rates.ceiling_rate.toFixed(2)}/sq ft\n`;
     }
     if (areas.priming_sqft > 0) {
       display += `• Priming: $${rates.priming_rate.toFixed(2)}/sq ft\n`;
@@ -1647,16 +1673,24 @@ What would you like to change it to? Please specify the new rate like:
   ): string => {
     const revenueLines = [];
     
-    // Combined painting line with product details
-    const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
-    if (totalPaintingSqft > 0) {
-      revenueLines.push(`- Painting: ${totalPaintingSqft} sqft × $${rates.painting_rate.toFixed(2)}/sqft = $${calculation.revenue.painting.toFixed(2)}`);
+    // Separate wall and ceiling painting lines with product details
+    if (areas.walls_sqft > 0) {
+      revenueLines.push(`- Wall Painting: ${areas.walls_sqft} sqft × $${rates.wall_rate.toFixed(2)}/sqft = $${calculation.revenue.walls.toFixed(2)}`);
       
-      // Add product details if selected
+      // Add wall product details if selected
       if (confirmedPaintProduct) {
         revenueLines.push(`  • Paint: ${confirmedPaintProduct.brand} ${confirmedPaintProduct.productName} - ${confirmedPaintProduct.sheen} ($${confirmedPaintProduct.costPerGallon}/gal)`);
-      } else if (selectedProducts?.walls && areas.walls_sqft > 0) {
+      } else if (selectedProducts?.walls) {
         revenueLines.push(`  • Walls: ${selectedProducts.walls.supplier} ${selectedProducts.walls.productName} ($${selectedProducts.walls.costPerGallon}/gal)`);
+      }
+    }
+    
+    if (areas.ceilings_sqft > 0) {
+      revenueLines.push(`- Ceiling Painting: ${areas.ceilings_sqft} sqft × $${rates.ceiling_rate.toFixed(2)}/sqft = $${calculation.revenue.ceilings.toFixed(2)}`);
+      
+      // Add ceiling product details if selected
+      if (selectedProducts?.ceilings) {
+        revenueLines.push(`  • Ceilings: ${selectedProducts.ceilings.supplier} ${selectedProducts.ceilings.productName} ($${selectedProducts.ceilings.costPerGallon}/gal)`);
       }
       if (!confirmedPaintProduct && selectedProducts?.ceilings && areas.ceilings_sqft > 0) {
         revenueLines.push(`  • Ceilings: ${selectedProducts.ceilings.supplier} ${selectedProducts.ceilings.productName} ($${selectedProducts.ceilings.costPerGallon}/gal)`);

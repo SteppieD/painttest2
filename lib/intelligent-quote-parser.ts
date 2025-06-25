@@ -30,9 +30,28 @@ interface ParsedQuoteData {
   paint_cost_per_gallon?: number;
   primer_cost_per_sqft?: number;
   
-  // Pricing
-  labor_cost_per_sqft?: number;
+  // Pricing - Enhanced for separate wall/ceiling rates
+  wall_labor_rate?: number;      // Rate for wall painting per sqft
+  ceiling_labor_rate?: number;   // Rate for ceiling painting per sqft
+  labor_cost_per_sqft?: number;  // Legacy combined rate for backward compatibility
   markup_percent?: number;
+  
+  // Product Changes Detection
+  product_changes?: {
+    walls?: { brand?: string; product?: string; cost?: number };
+    ceilings?: { brand?: string; product?: string; cost?: number };
+    trim?: { brand?: string; product?: string; cost?: number };
+  };
+  
+  // Rate Adjustments Detection
+  rate_adjustments?: {
+    wall_rate?: number;
+    ceiling_rate?: number;
+    trim_rate?: number;
+    door_rate?: number;
+    window_rate?: number;
+    priming_rate?: number;
+  };
   
   // Calculated Fields
   calculated_wall_area_sqft?: number;
@@ -108,19 +127,28 @@ export class IntelligentQuoteParser {
   }
 
   private async primaryExtraction(input: string): Promise<ParsedQuoteData> {
-    const prompt = `You are an expert at extracting structured information from painting project descriptions.
+    const prompt = `You are an expert at extracting structured information from painting project descriptions with enhanced capabilities for product changes and rate adjustments.
 
 CRITICAL RULES:
 1. Only extract explicitly stated information - never make assumptions
 2. If a value isn't clearly stated, leave it null/undefined
 3. Be extremely precise with numbers and measurements
 4. Distinguish between different types of measurements (linear feet vs square feet)
+5. Detect separate wall and ceiling labor rates when specified
+6. Identify product changes (brand switches, product upgrades, cost adjustments)
+7. Parse rate adjustments for specific surface types
+
+SPECIAL DETECTION PATTERNS:
+- Wall rates: "walls at $1.50", "wall painting $1.50/sqft", "$1.50 for walls"
+- Ceiling rates: "ceilings at $1.25", "ceiling rate $1.25", "$1.25 for ceilings"
+- Product changes: "switch to Sherwin Williams", "use Benjamin Moore instead", "change wall paint to ProClassic"
+- Rate adjustments: "increase door rate to $175", "trim should be $2.00", "priming at $0.50"
 
 Extract information from this input into the specified JSON structure:
 
 INPUT: "${input}"
 
-Required JSON format:
+ENHANCED JSON format with separate wall/ceiling rates:
 {
   "customer_name": string | null,
   "property_address": string | null,
@@ -142,8 +170,23 @@ Required JSON format:
   "spread_rate_sqft_per_gallon": number | null,
   "paint_cost_per_gallon": number | null,
   "primer_cost_per_sqft": number | null,
+  "wall_labor_rate": number | null,
+  "ceiling_labor_rate": number | null,
   "labor_cost_per_sqft": number | null,
   "markup_percent": number | null,
+  "product_changes": {
+    "walls": {"brand": string | null, "product": string | null, "cost": number | null},
+    "ceilings": {"brand": string | null, "product": string | null, "cost": number | null},
+    "trim": {"brand": string | null, "product": string | null, "cost": number | null}
+  } | null,
+  "rate_adjustments": {
+    "wall_rate": number | null,
+    "ceiling_rate": number | null,
+    "trim_rate": number | null,
+    "door_rate": number | null,
+    "window_rate": number | null,
+    "priming_rate": number | null
+  } | null,
   "project_type": "interior" | "exterior" | "both",
   "project_scope_notes": string
 }
@@ -328,7 +371,14 @@ Return ONLY the raw corrected JSON object. Do not include markdown formatting, c
     const paintCostMatch = input.match(/\$(\d+(?:\.\d{2})?)\s*(?:per|a|\/)\s*gal/i);
     if (paintCostMatch) data.paint_cost_per_gallon = parseFloat(paintCostMatch[1]);
     
-    // Extract labor cost
+    // Extract separate wall and ceiling labor rates
+    const wallRateMatch = input.match(/(?:walls?|wall\s+(?:painting|labor)).*?\$(\d+(?:\.\d{2})?)\s*(?:per|\/)?\s*(?:sqft|sq\.?\s*ft)?/i);
+    if (wallRateMatch) data.wall_labor_rate = parseFloat(wallRateMatch[1]);
+    
+    const ceilingRateMatch = input.match(/(?:ceilings?|ceiling\s+(?:painting|labor)).*?\$(\d+(?:\.\d{2})?)\s*(?:per|\/)?\s*(?:sqft|sq\.?\s*ft)?/i);
+    if (ceilingRateMatch) data.ceiling_labor_rate = parseFloat(ceilingRateMatch[1]);
+    
+    // Extract general labor cost (fallback)
     const laborMatch = input.match(/(?:labor|labour).*?\$(\d+(?:\.\d{2})?)\s*(?:per|\/)\s*(?:sqft|sq\.?\s*ft)/i);
     if (laborMatch) data.labor_cost_per_sqft = parseFloat(laborMatch[1]);
     
@@ -355,6 +405,43 @@ Return ONLY the raw corrected JSON object. Do not include markdown formatting, c
     // Extract paint brand
     const brandMatch = input.match(/(?:sherwin\s*williams?|benjamin\s*moore?|behr|kilz|zinsser)/i);
     if (brandMatch) data.paint_brand = brandMatch[0];
+    
+    // Enhanced: Detect product changes
+    const productChangePatterns = [
+      /(?:switch|change|use).*?(?:to|instead).*?(sherwin\s*williams?|benjamin\s*moore?|behr|kilz|zinsser)/i,
+      /(?:wall\s+paint).*?(?:to|instead).*?([a-z]+\s*[a-z]*)/i,
+      /(?:ceiling\s+paint).*?(?:to|instead).*?([a-z]+\s*[a-z]*)/i
+    ];
+    
+    for (const pattern of productChangePatterns) {
+      const match = input.match(pattern);
+      if (match) {
+        if (!data.product_changes) data.product_changes = {};
+        if (/wall/i.test(input)) {
+          data.product_changes.walls = { brand: match[1], product: null, cost: null };
+        } else if (/ceiling/i.test(input)) {
+          data.product_changes.ceilings = { brand: match[1], product: null, cost: null };
+        }
+      }
+    }
+    
+    // Enhanced: Detect rate adjustments
+    const rateAdjustmentPatterns = [
+      { pattern: /(?:wall\s+rate|walls?).*?\$(\d+(?:\.\d{2})?)/i, type: 'wall_rate' },
+      { pattern: /(?:ceiling\s+rate|ceilings?).*?\$(\d+(?:\.\d{2})?)/i, type: 'ceiling_rate' },
+      { pattern: /(?:trim\s+rate|trim).*?\$(\d+(?:\.\d{2})?)/i, type: 'trim_rate' },
+      { pattern: /(?:door\s+rate|doors?).*?\$(\d+(?:\.\d{2})?)/i, type: 'door_rate' },
+      { pattern: /(?:window\s+rate|windows?).*?\$(\d+(?:\.\d{2})?)/i, type: 'window_rate' },
+      { pattern: /(?:prim(?:ing|er)\s+rate|prim(?:ing|er)).*?\$(\d+(?:\.\d{2})?)/i, type: 'priming_rate' }
+    ];
+    
+    for (const { pattern, type } of rateAdjustmentPatterns) {
+      const match = input.match(pattern);
+      if (match) {
+        if (!data.rate_adjustments) data.rate_adjustments = {};
+        (data.rate_adjustments as any)[type] = parseFloat(match[1]);
+      }
+    }
     
     // Calculate derived fields
     const enriched = this.enrichWithCalculations(data);
@@ -393,11 +480,35 @@ export class ModularQuoteCalculator {
     const spreadRate = data.spread_rate_sqft_per_gallon || 350;
     const paintGallons = Math.ceil(totalPaintableArea / spreadRate);
     
-    // Calculate costs
+    // Calculate costs with enhanced rate structure
     const materialsCost = paintGallons * (data.paint_cost_per_gallon || 50);
     const primerCost = data.primer_included ? 
-      (totalPaintableArea * (data.primer_cost_per_sqft || 0.75)) : 0;
-    const laborCost = totalPaintableArea * (data.labor_cost_per_sqft || 2.50);
+      (totalPaintableArea * (data.primer_cost_per_sqft || 0.45)) : 0;
+    
+    // Enhanced labor cost calculation with separate wall/ceiling rates
+    let laborCost = 0;
+    if (data.wall_labor_rate && wallArea > 0) {
+      laborCost += wallArea * data.wall_labor_rate;
+    }
+    if (data.ceiling_labor_rate && ceilingArea > 0) {
+      laborCost += ceilingArea * data.ceiling_labor_rate;
+    }
+    if (trimArea > 0) {
+      const trimRate = data.rate_adjustments?.trim_rate || 1.92;
+      laborCost += trimArea * trimRate;
+    }
+    
+    // Fallback to combined rate if separate rates not available
+    if (laborCost === 0 && data.labor_cost_per_sqft) {
+      laborCost = totalPaintableArea * data.labor_cost_per_sqft;
+    }
+    
+    // Default fallback
+    if (laborCost === 0) {
+      const defaultWallRate = 1.50;
+      const defaultCeilingRate = 1.25;
+      laborCost = (wallArea * defaultWallRate) + (ceilingArea * defaultCeilingRate) + (trimArea * 1.92);
+    }
     const subtotal = materialsCost + primerCost + laborCost;
     const markupAmount = subtotal * ((data.markup_percent || 0) / 100);
     const finalQuote = subtotal + markupAmount;
@@ -416,10 +527,16 @@ export class ModularQuoteCalculator {
         trim_area: trimArea,
         total_paintable_area: totalPaintableArea,
         paint_cost_per_gallon: data.paint_cost_per_gallon || 50,
-        primer_cost_per_sqft: data.primer_cost_per_sqft || 0.75,
+        primer_cost_per_sqft: data.primer_cost_per_sqft || 0.45,
         primer_included: data.primer_included,
-        labor_rate: data.labor_cost_per_sqft || 2.50,
-        markup_percent: data.markup_percent || 0
+        // Enhanced rate breakdown
+        wall_labor_rate: data.wall_labor_rate || 1.50,
+        ceiling_labor_rate: data.ceiling_labor_rate || 1.25,
+        labor_rate: data.labor_cost_per_sqft || null, // Legacy fallback
+        markup_percent: data.markup_percent || 0,
+        // Product and rate changes detected
+        product_changes: data.product_changes || null,
+        rate_adjustments: data.rate_adjustments || null
       }
     };
   }
@@ -451,6 +568,47 @@ export function generateTestCases(): Array<{input: string, expectedFields: strin
     {
       input: "Interior repaint, 1800 sqft, needs primer, labor $2.25/sqft, primer cost $0.70 per square foot, 15% markup.",
       expectedFields: ['walls_sqft: 1800', 'primer_included: true', 'primer_cost_per_sqft: 0.70', 'labor_cost_per_sqft: 2.25', 'markup_percent: 15']
+    },
+    // Enhanced test cases for new features
+    {
+      input: "Mike Johnson, 555 Pine St. 1000 sqft walls at $1.60, 400 sqft ceilings at $1.30. Switch to Benjamin Moore for walls. Doors should be $175 each.",
+      expectedFields: ['customer_name: Mike Johnson', 'wall_labor_rate: 1.60', 'ceiling_labor_rate: 1.30', 'product_changes.walls.brand: Benjamin Moore', 'rate_adjustments.door_rate: 175']
+    },
+    {
+      input: "Update quote: change wall paint to Sherwin ProClassic, increase trim rate to $2.25, primer at $0.55 per sqft.",
+      expectedFields: ['product_changes.walls.product: ProClassic', 'rate_adjustments.trim_rate: 2.25', 'rate_adjustments.priming_rate: 0.55']
+    },
+    {
+      input: "Emma at 789 Oak Drive. 800 sqft walls, 300 sqft ceilings. Wall painting $1.75/sqft, ceiling painting $1.45/sqft. Use Behr Premium Plus for ceilings instead.",
+      expectedFields: ['customer_name: Emma', 'wall_labor_rate: 1.75', 'ceiling_labor_rate: 1.45', 'product_changes.ceilings.brand: Behr']
     }
   ];
+}
+
+// Enhanced parsing function for chat integration
+export async function parseQuoteEnhancements(input: string): Promise<{
+  productChanges?: any;
+  rateAdjustments?: any;
+  hasChanges: boolean;
+  confidence: number;
+}> {
+  const parser = new IntelligentQuoteParser();
+  const result = await parser.parseQuoteInput(input);
+  
+  if (result.success) {
+    const hasProductChanges = !!result.data.product_changes;
+    const hasRateAdjustments = !!result.data.rate_adjustments;
+    
+    return {
+      productChanges: result.data.product_changes,
+      rateAdjustments: result.data.rate_adjustments,
+      hasChanges: hasProductChanges || hasRateAdjustments,
+      confidence: result.data.confidence_score
+    };
+  }
+  
+  return {
+    hasChanges: false,
+    confidence: 0
+  };
 }

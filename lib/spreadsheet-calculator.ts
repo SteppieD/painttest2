@@ -10,8 +10,9 @@ export interface ProjectAreas {
 }
 
 export interface ChargeRates {
-  painting_rate: number;  // Combined rate for walls & ceilings (2 coats, paint included)
-  priming_rate: number;   // Rate for primer application (1 coat, primer included)
+  wall_rate: number;      // Rate for wall painting (2 coats, paint included)
+  ceiling_rate: number;   // Rate for ceiling painting (2 coats, paint included)
+  priming_rate: number;   // Rate for primer application (1 coat, primer included) - applied to walls + ceilings combined
   trim_rate: number;
   door_rate: number;
   window_rate: number;
@@ -23,6 +24,36 @@ export interface PaintCosts {
   trim_paint_cost: number;
 }
 
+export interface ContractorDefaults {
+  primer: {
+    product_name: string;
+    spread_rate: number; // sqft per gallon
+    cost_per_gallon: number;
+  };
+  wall_paint: {
+    product_name: string;
+    spread_rate: number;
+    cost_per_gallon: number;
+  };
+  ceiling_paint: {
+    product_name: string;
+    spread_rate: number;
+    cost_per_gallon: number;
+  };
+  trim_paint: {
+    product_name: string;
+    doors_windows_per_gallon: number; // doors OR windows per gallon
+    cost_per_gallon: number;
+  };
+  labor_rates: {
+    primer_rate: number;    // per sqft (walls + ceilings combined)
+    wall_rate: number;      // per sqft
+    ceiling_rate: number;   // per sqft
+    door_rate: number;      // per door
+    window_rate: number;    // per window
+  };
+}
+
 export interface MaterialsBreakdown {
   walls: { gallons: number; cost: number };
   ceilings: { gallons: number; cost: number };
@@ -31,8 +62,9 @@ export interface MaterialsBreakdown {
 }
 
 export interface RevenueBreakdown {
-  painting: number;    // Combined walls & ceilings
-  priming: number;     // Primer application
+  walls: number;       // Wall painting revenue
+  ceilings: number;    // Ceiling painting revenue
+  priming: number;     // Primer application (walls + ceilings combined)
   trim: number;
   doors: number;
   windows: number;
@@ -54,23 +86,25 @@ export interface QuoteCalculation {
 
 // Revenue Calculation: SQFT × Charge Rate = Total Price
 export const calculateRevenue = (areas: ProjectAreas, rates: ChargeRates): RevenueBreakdown => {
-  // Combined painting revenue (walls + ceilings) × unified painting rate
-  const paintingRevenue = (areas.walls_sqft + areas.ceilings_sqft) * rates.painting_rate; // e.g., 2000 × $2.50 = $5,000
+  // Separate wall and ceiling painting revenue
+  const wallsRevenue = areas.walls_sqft * rates.wall_rate; // e.g., 1200 × $1.50 = $1,800
+  const ceilingsRevenue = areas.ceilings_sqft * rates.ceiling_rate; // e.g., 400 × $1.25 = $500
   
-  // Separate priming revenue if applicable
-  const primingRevenue = areas.priming_sqft * rates.priming_rate; // e.g., 1000 × $0.40 = $400
+  // Primer revenue (walls + ceilings combined when primer is needed)
+  const primingRevenue = areas.priming_sqft * rates.priming_rate; // e.g., 1600 × $0.45 = $720
   
   const trimRevenue = areas.trim_sqft * rates.trim_rate; // e.g., 520 × $1.92 = $1,000
-  const doorsRevenue = areas.doors_count * rates.door_rate; // e.g., 5 × $100.00 = $500
-  const windowsRevenue = areas.windows_count * rates.window_rate; // e.g., 8 × $25.00 = $200
+  const doorsRevenue = areas.doors_count * rates.door_rate; // e.g., 6 × $150.00 = $900
+  const windowsRevenue = areas.windows_count * rates.window_rate; // e.g., 8 × $100.00 = $800
   
   return {
-    painting: paintingRevenue,
+    walls: wallsRevenue,
+    ceilings: ceilingsRevenue,
     priming: primingRevenue,
     trim: trimRevenue,
     doors: doorsRevenue,
     windows: windowsRevenue,
-    total: paintingRevenue + primingRevenue + trimRevenue + doorsRevenue + windowsRevenue
+    total: wallsRevenue + ceilingsRevenue + primingRevenue + trimRevenue + doorsRevenue + windowsRevenue
   };
 };
 
@@ -90,6 +124,55 @@ export const calculateMaterials = (areas: ProjectAreas, paintCosts: PaintCosts, 
     ceilings: { gallons: ceilingsGallons, cost: ceilingsMaterialCost },
     trim: { gallons: trimGallons, cost: trimMaterialCost },
     total: wallsMaterialCost + ceilingsMaterialCost + trimMaterialCost
+  };
+};
+
+// Enhanced Materials Calculation with Product-Specific Spread Rates and 2-Coat Logic
+export const calculateMaterialsEnhanced = (areas: ProjectAreas, contractorDefaults: ContractorDefaults): {
+  primer: { gallons: number; cost: number; product: string };
+  walls: { gallons: number; cost: number; product: string };
+  ceilings: { gallons: number; cost: number; product: string };
+  trim: { gallons: number; cost: number; product: string };
+  total_cost: number;
+} => {
+  // Primer calculation (1 coat on walls + ceilings combined)
+  const primerGallons = Math.ceil(areas.priming_sqft / contractorDefaults.primer.spread_rate);
+  const primerCost = primerGallons * contractorDefaults.primer.cost_per_gallon;
+  
+  // Wall painting (2 coats) - multiply by 1.8 for coverage
+  const wallsGallons = Math.ceil((areas.walls_sqft / contractorDefaults.wall_paint.spread_rate) * 1.8);
+  const wallsCost = wallsGallons * contractorDefaults.wall_paint.cost_per_gallon;
+  
+  // Ceiling painting (2 coats) - multiply by 1.8 for coverage
+  const ceilingsGallons = Math.ceil((areas.ceilings_sqft / contractorDefaults.ceiling_paint.spread_rate) * 1.8);
+  const ceilingsCost = ceilingsGallons * contractorDefaults.ceiling_paint.cost_per_gallon;
+  
+  // Trim calculation based on doors + windows count
+  const trimGallons = Math.ceil((areas.doors_count + areas.windows_count) / contractorDefaults.trim_paint.doors_windows_per_gallon);
+  const trimCost = trimGallons * contractorDefaults.trim_paint.cost_per_gallon;
+  
+  return {
+    primer: { 
+      gallons: primerGallons, 
+      cost: primerCost, 
+      product: contractorDefaults.primer.product_name 
+    },
+    walls: { 
+      gallons: wallsGallons, 
+      cost: wallsCost, 
+      product: contractorDefaults.wall_paint.product_name 
+    },
+    ceilings: { 
+      gallons: ceilingsGallons, 
+      cost: ceilingsCost, 
+      product: contractorDefaults.ceiling_paint.product_name 
+    },
+    trim: { 
+      gallons: trimGallons, 
+      cost: trimCost, 
+      product: contractorDefaults.trim_paint.product_name 
+    },
+    total_cost: primerCost + wallsCost + ceilingsCost + trimCost
   };
 };
 
@@ -282,11 +365,17 @@ export const parseAdjustments = (input: string): Partial<{
   const adjustments: any = {};
   const lower = input.toLowerCase();
 
-  // Rate adjustments - unified painting rate
-  const paintingRateMatch = input.match(/painting\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)|walls?\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)|ceilings?\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
-  if (paintingRateMatch) {
-    const rate = parseFloat(paintingRateMatch[1] || paintingRateMatch[2] || paintingRateMatch[3]);
-    adjustments.rates = { ...adjustments.rates, painting_rate: rate };
+  // Rate adjustments - separate wall and ceiling rates
+  const wallRateMatch = input.match(/walls?\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+  if (wallRateMatch) {
+    const rate = parseFloat(wallRateMatch[1]);
+    adjustments.rates = { ...adjustments.rates, wall_rate: rate };
+  }
+
+  const ceilingRateMatch = input.match(/ceilings?\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+  if (ceilingRateMatch) {
+    const rate = parseFloat(ceilingRateMatch[1]);
+    adjustments.rates = { ...adjustments.rates, ceiling_rate: rate };
   }
 
   const primingRateMatch = input.match(/prim(?:ing|er)\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
@@ -371,10 +460,12 @@ export const generateQuoteDisplay = (
 ): string => {
   const revenueLines = [];
   
-  // Combined painting line (walls + ceilings)
-  const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
-  if (totalPaintingSqft > 0) {
-    revenueLines.push(`- Painting: ${totalPaintingSqft} sqft × ${formatCurrency(rates.painting_rate)}/sqft = ${formatCurrency(calc.revenue.painting)}`);
+  // Separate wall and ceiling painting lines
+  if (areas.walls_sqft > 0) {
+    revenueLines.push(`- Wall Painting: ${areas.walls_sqft} sqft × ${formatCurrency(rates.wall_rate)}/sqft = ${formatCurrency(calc.revenue.walls)}`);
+  }
+  if (areas.ceilings_sqft > 0) {
+    revenueLines.push(`- Ceiling Painting: ${areas.ceilings_sqft} sqft × ${formatCurrency(rates.ceiling_rate)}/sqft = ${formatCurrency(calc.revenue.ceilings)}`);
   }
   
   if (areas.priming_sqft > 0) {
@@ -417,10 +508,12 @@ export const generateDetailedBreakdown = (
 ): string => {
   const revenueLines = [];
   
-  // Combined painting line (walls + ceilings)
-  const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
-  if (totalPaintingSqft > 0) {
-    revenueLines.push(`- Painting (${areas.walls_sqft} walls + ${areas.ceilings_sqft} ceilings): ${totalPaintingSqft} sqft × ${formatCurrency(rates.painting_rate)} = ${formatCurrency(calc.revenue.painting)}`);
+  // Separate wall and ceiling painting lines
+  if (areas.walls_sqft > 0) {
+    revenueLines.push(`- Wall Painting: ${areas.walls_sqft} sqft × ${formatCurrency(rates.wall_rate)} = ${formatCurrency(calc.revenue.walls)}`);
+  }
+  if (areas.ceilings_sqft > 0) {
+    revenueLines.push(`- Ceiling Painting: ${areas.ceilings_sqft} sqft × ${formatCurrency(rates.ceiling_rate)} = ${formatCurrency(calc.revenue.ceilings)}`);
   }
   
   if (areas.priming_sqft > 0) {
@@ -465,10 +558,12 @@ This calculation uses your current company rates. Want to adjust anything?`;
 export const generateRateConfirmation = (rates: ChargeRates, areas: ProjectAreas): string => {
   const ratesDisplay = [];
   
-  // Combined painting rate for walls and ceilings
-  const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
-  if (totalPaintingSqft > 0) {
-    ratesDisplay.push(`• **Painting** (walls & ceilings): ${formatCurrency(rates.painting_rate)}/sq ft (2 coats, paint included)`);
+  // Separate wall and ceiling rates
+  if (areas.walls_sqft > 0) {
+    ratesDisplay.push(`• **Wall Painting**: ${formatCurrency(rates.wall_rate)}/sq ft (2 coats, paint included)`);
+  }
+  if (areas.ceilings_sqft > 0) {
+    ratesDisplay.push(`• **Ceiling Painting**: ${formatCurrency(rates.ceiling_rate)}/sq ft (2 coats, paint included)`);
   }
   
   if (areas.priming_sqft > 0) {
@@ -523,10 +618,17 @@ export const parseRateAdjustments = (input: string): { hasChanges: boolean; rate
   const rates: Partial<ChargeRates> = {};
   let hasChanges = false;
 
-  // Parse painting rate changes: "painting to $2.50", "walls to $3.00", "ceilings to $2.50"
-  const paintingRateMatch = input.match(/(?:painting|walls?|ceilings?)\s+(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
-  if (paintingRateMatch) {
-    rates.painting_rate = parseFloat(paintingRateMatch[1]);
+  // Parse wall rate changes: "walls to $2.50", "wall rate to $3.00"
+  const wallRateMatch = input.match(/walls?\s+(?:rate\s+)?(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+  if (wallRateMatch) {
+    rates.wall_rate = parseFloat(wallRateMatch[1]);
+    hasChanges = true;
+  }
+
+  // Parse ceiling rate changes: "ceilings to $2.50", "ceiling rate to $2.00"
+  const ceilingRateMatch = input.match(/ceilings?\s+(?:rate\s+)?(?:to\s+|at\s+)?\$?(\d+\.?\d*)/i);
+  if (ceilingRateMatch) {
+    rates.ceiling_rate = parseFloat(ceilingRateMatch[1]);
     hasChanges = true;
   }
 
@@ -565,10 +667,12 @@ export const parseRateAdjustments = (input: string): { hasChanges: boolean; rate
 export const generateRateDisplay = (rates: ChargeRates, areas: ProjectAreas): string => {
   const ratesDisplay = [];
   
-  // Combined painting rate
-  const totalPaintingSqft = areas.walls_sqft + areas.ceilings_sqft;
-  if (totalPaintingSqft > 0) {
-    ratesDisplay.push(`• Painting: ${formatCurrency(rates.painting_rate)}/sq ft`);
+  // Separate wall and ceiling rates
+  if (areas.walls_sqft > 0) {
+    ratesDisplay.push(`• Wall Painting: ${formatCurrency(rates.wall_rate)}/sq ft`);
+  }
+  if (areas.ceilings_sqft > 0) {
+    ratesDisplay.push(`• Ceiling Painting: ${formatCurrency(rates.ceiling_rate)}/sq ft`);
   }
   
   if (areas.priming_sqft > 0) {

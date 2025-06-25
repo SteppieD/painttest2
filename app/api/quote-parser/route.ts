@@ -37,11 +37,14 @@ export async function POST(req: NextRequest) {
     let quoteCalculation = null;
     let canCalculate = false;
 
-    // Check if we have minimum required fields for calculation
+    // Enhanced calculation check for separate wall/ceiling rates
     const hasBasicInfo = parsingResult.data.walls_sqft || 
                         (parsingResult.data.linear_feet && parsingResult.data.wall_height_ft);
     
-    if (hasBasicInfo && parsingResult.data.labor_cost_per_sqft) {
+    const hasRates = parsingResult.data.labor_cost_per_sqft || 
+                    (parsingResult.data.wall_labor_rate || parsingResult.data.ceiling_labor_rate);
+    
+    if (hasBasicInfo && hasRates) {
       canCalculate = true;
       quoteCalculation = calculator.calculateQuote(parsingResult.data);
     }
@@ -56,7 +59,16 @@ export async function POST(req: NextRequest) {
       quote_calculation: quoteCalculation,
       confidence_score: parsingResult.data.confidence_score,
       missing_fields: parsingResult.data.missing_fields,
-      assumptions_made: parsingResult.data.assumptions_made
+      assumptions_made: parsingResult.data.assumptions_made,
+      // Enhanced parsing results
+      product_changes: parsingResult.data.product_changes || null,
+      rate_adjustments: parsingResult.data.rate_adjustments || null,
+      has_enhancements: !!(parsingResult.data.product_changes || parsingResult.data.rate_adjustments),
+      separate_rates: {
+        wall_rate: parsingResult.data.wall_labor_rate,
+        ceiling_rate: parsingResult.data.ceiling_labor_rate,
+        has_separate_rates: !!(parsingResult.data.wall_labor_rate || parsingResult.data.ceiling_labor_rate)
+      }
     });
 
   } catch (error) {
