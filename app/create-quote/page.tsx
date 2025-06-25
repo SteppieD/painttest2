@@ -130,7 +130,7 @@ export default function CreateQuotePage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // 🐛 DEBUG MODE - Set to true to see intelligent parser results in console
-  const DEBUG_PARSER = false;
+  const DEBUG_PARSER = true;
 
   const [companyData, setCompanyData] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([
@@ -262,24 +262,47 @@ export default function CreateQuotePage() {
 
     switch (stage) {
       case 'customer_info':
-        // Use intelligent parser to extract all information
-        const parser = new IntelligentQuoteParser();
-        const calculator = new ModularQuoteCalculator();
-        
+        // 🤖 PRIMARY: Use intelligent quote parser as main backend
         try {
-          const parsingResult = await parser.parseQuoteInput(input);
+          const response = await fetch('/api/quote-parser', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ input })
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Parser API failed: ${response.status}`);
+          }
+          
+          const parsingResult = await response.json();
+          const parsedData = parsingResult.parsed_data || {};
+          
+          // 🐛 DEBUG: Log parser results if debug mode enabled
+          if (DEBUG_PARSER) {
+            console.log('🧠 Intelligent Parser Results:', {
+              success: parsingResult.success,
+              confidence: parsedData.confidence_score,
+              parsedData: parsedData,
+              missingFields: parsedData.missing_fields,
+              clarificationQuestions: parsingResult.clarification_questions
+            });
+          }
           
           if (!parsingResult.success) {
-            // If parsing fails, provide helpful feedback
-            responseContent = "I had trouble understanding some details. Let me ask you a few questions:\n\n";
-            responseContent += parsingResult.clarification_questions.join('\n');
-            nextStage = 'customer_info'; // Stay in same stage
+            // Parser failed - ask clarification questions from the API
+            responseContent = "I need more information to create your quote:\n\n";
+            responseContent += (parsingResult.clarification_questions || [
+              "What's the customer's name?",
+              "What's the property address?", 
+              "What's the project scope (walls, ceilings, trim)?"
+            ]).join('\n');
+            nextStage = 'customer_info';
             break;
           }
           
-          const parsedData = parsingResult.data;
+          // ✅ SUCCESS: Parser extracted data successfully
           
-          // Update quote data with parsed information
+          // Update quote data with ALL parsed information from API response
           let updatedQuoteData = { ...quoteData };
           
           // Customer information
@@ -335,22 +358,13 @@ export default function CreateQuotePage() {
                           updatedQuoteData.areas.ceilings_sqft > 0 || 
                           updatedQuoteData.areas.trim_sqft > 0;
           
-          // Debug output - shows what the intelligent parser extracted
-          if (DEBUG_PARSER) {
-            console.log('🧠 Intelligent Parser Results:', {
-              success: parsingResult.success,
-              confidence: parsedData.confidence_score,
-              parsedData: parsedData,
-              missingFields: parsedData.missing_fields,
-              clarificationQuestions: parsingResult.clarification_questions
-            });
-          }
+          // ⚡ INTELLIGENT DECISION LOGIC: Respect parser confidence and needs_clarification
+          const hasRate = parsedData.labor_cost_per_sqft || updatedQuoteData.rates.painting_rate > 0;
+          const confidence = parsedData.confidence_score || 0;
           
-          // Check what we have after parsing
-          const canCalculateQuote = hasCustomer && hasAreas && 
-                                   (parsedData.labor_cost_per_sqft || updatedQuoteData.rates.painting_rate > 0);
-          
-          if (canCalculateQuote) {
+          // 🎯 PRIMARY PATH: High confidence and no clarification needed = immediate quote
+          if (parsingResult.success && !parsingResult.needs_clarification && 
+              confidence >= 70 && hasCustomer && hasAreas && hasRate) {
             // We have sufficient information - calculate the quote immediately
             const calculation = calculateQuote(
               updatedQuoteData.areas,
@@ -430,29 +444,12 @@ export default function CreateQuotePage() {
           }
           
         } catch (error) {
-          console.error('Error parsing with intelligent parser:', error);
-          // Fall back to traditional parsing
-          const customerInfo = parseCustomerInfo(input);
-          const parsedProjectType = parseProjectType(input);
+          console.error('🚨 Intelligent Parser API Failed:', error);
           
-          if (customerInfo.customer_name) {
-            setQuoteData(prev => ({ 
-              ...prev, 
-              customer_name: customerInfo.customer_name,
-              address: customerInfo.address 
-            }));
-            
-            if (customerInfo.address) {
-              responseContent = `Great! I have ${customerInfo.customer_name} at ${customerInfo.address}.\n\nWhat type of painting work are we quoting?`;
-              nextStage = 'project_type';
-            } else {
-              responseContent = `Perfect! I have the customer name as ${customerInfo.customer_name}. What's the property address?`;
-              nextStage = 'address';
-            }
-          } else {
-            responseContent = "I'll help you create a professional painting quote. To get started, could you please provide the customer's name and property address?";
-            nextStage = 'customer_info';
-          }
+          // 🔄 FALLBACK: Only use traditional parsing when API fails
+          responseContent = "I'm having trouble with my smart parser. Let me ask you step by step:\n\n";
+          responseContent += "What's the customer's name and property address?";
+          nextStage = 'customer_info';
         }
         break;
 
@@ -1058,13 +1055,26 @@ What would you like to change it to? Please specify the new rate like:
         break;
 
       case 'clarification':
-        // Handle clarification responses using intelligent parser
+        // Handle clarification responses using intelligent parser API
         try {
-          const parser = new IntelligentQuoteParser();
-          const parsingResult = await parser.parseQuoteInput(input);
+          const response = await fetch('/api/quote-parser', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ input })
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Parser API failed: ${response.status}`);
+          }
+          
+          const parsingResult = await response.json();
+          const parsedData = parsingResult.parsed_data || {};
+          
+          if (DEBUG_PARSER) {
+            console.log('🧠 Clarification Parser Results:', { parsedData, success: parsingResult.success });
+          }
           
           if (parsingResult.success) {
-            const parsedData = parsingResult.data;
             
             // Update quote data with newly clarified information
             let updatedQuoteData = { ...quoteData };
@@ -1150,13 +1160,28 @@ What would you like to change it to? Please specify the new rate like:
       case 'rate_input':
         // Handle labor rate input specifically
         try {
-          const parser = new IntelligentQuoteParser();
-          const parsingResult = await parser.parseQuoteInput(input);
+          // 🤖 Use intelligent parser API for rate extraction
+          const response = await fetch('/api/quote-parser', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ input })
+          });
           
-          if (parsingResult.success && parsingResult.data.labor_cost_per_sqft) {
+          if (!response.ok) {
+            throw new Error(`Parser API failed: ${response.status}`);
+          }
+          
+          const parsingResult = await response.json();
+          const parsedData = parsingResult.parsed_data || {};
+          
+          if (DEBUG_PARSER) {
+            console.log('🧠 Rate Parser Results:', { parsedData, success: parsingResult.success });
+          }
+          
+          if (parsingResult.success && parsedData.labor_cost_per_sqft) {
             // Got the labor rate!
             let updatedQuoteData = { ...quoteData };
-            updatedQuoteData.rates.painting_rate = parsingResult.data.labor_cost_per_sqft;
+            updatedQuoteData.rates.painting_rate = parsedData.labor_cost_per_sqft;
             setQuoteData(updatedQuoteData);
             
             // Now calculate the quote
@@ -1169,7 +1194,7 @@ What would you like to change it to? Please specify the new rate like:
             
             setQuoteData(prev => ({ ...prev, calculation }));
             
-            responseContent = `Perfect! With your labor rate of $${parsingResult.data.labor_cost_per_sqft}/sqft:\n\n${generateQuoteDisplay(calculation)}`;
+            responseContent = `Perfect! With your labor rate of $${parsedData.labor_cost_per_sqft}/sqft:\n\n${generateQuoteDisplay(calculation)}`;
             nextStage = 'quote_review';
           } else {
             // Try to parse rate with traditional methods

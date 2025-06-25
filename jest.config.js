@@ -15,7 +15,7 @@ const config = {
     'app/api/**/*.ts',
     '!**/*.d.ts',
   ],
-  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
+  // setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   testTimeout: 30000, // 30 seconds for API calls
   verbose: true,
   detectOpenHandles: true,
