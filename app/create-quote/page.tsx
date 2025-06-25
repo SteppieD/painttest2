@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
-import { IntelligentChatInterface } from "@/components/chat/intelligent-chat-interface";
+import { FixedChatInterface } from "@/components/chat/fixed-chat-interface";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -129,9 +129,8 @@ function CreateQuotePageContent() {
   }
 
   return (
-    <IntelligentChatInterface
+    <FixedChatInterface
       companyId={companyData?.companyData?.id || ''}
-      companyData={companyData?.companyData}
       onQuoteGenerated={(quoteData) => {
         toast({
           title: "Success!",
@@ -139,7 +138,6 @@ function CreateQuotePageContent() {
         });
       }}
       onBack={() => router.push("/dashboard")}
-      editQuoteId={editQuoteId}
     />
   );
 }
