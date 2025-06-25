@@ -480,45 +480,37 @@ export class ModularQuoteCalculator {
     const spreadRate = data.spread_rate_sqft_per_gallon || 350;
     const paintGallons = Math.ceil(totalPaintableArea / spreadRate);
     
-    // Calculate costs with enhanced rate structure
+    // Calculate materials cost only
     const materialsCost = paintGallons * (data.paint_cost_per_gallon || 50);
     const primerCost = data.primer_included ? 
       (totalPaintableArea * (data.primer_cost_per_sqft || 0.45)) : 0;
     
-    // Enhanced labor cost calculation with separate wall/ceiling rates
-    let laborCost = 0;
-    if (data.wall_labor_rate && wallArea > 0) {
-      laborCost += wallArea * data.wall_labor_rate;
-    }
-    if (data.ceiling_labor_rate && ceilingArea > 0) {
-      laborCost += ceilingArea * data.ceiling_labor_rate;
-    }
-    if (trimArea > 0) {
-      const trimRate = data.rate_adjustments?.trim_rate || 1.92;
-      laborCost += trimArea * trimRate;
-    }
+    // Total materials (paint + primer)
+    const totalMaterialsCost = materialsCost + primerCost;
     
-    // Fallback to combined rate if separate rates not available
-    if (laborCost === 0 && data.labor_cost_per_sqft) {
-      laborCost = totalPaintableArea * data.labor_cost_per_sqft;
-    }
+    // NEW CALCULATION MODEL: Labor = 30% of Total
+    // If Labor = 30% of Total, then:
+    // Total = Materials + Labor
+    // Labor = 0.30 × Total
+    // Total = Materials + (0.30 × Total)
+    // Total - (0.30 × Total) = Materials
+    // 0.70 × Total = Materials
+    // Total = Materials ÷ 0.70
     
-    // Default fallback
-    if (laborCost === 0) {
-      const defaultWallRate = 1.50;
-      const defaultCeilingRate = 1.25;
-      laborCost = (wallArea * defaultWallRate) + (ceilingArea * defaultCeilingRate) + (trimArea * 1.92);
-    }
-    const subtotal = materialsCost + primerCost + laborCost;
-    const markupAmount = subtotal * ((data.markup_percent || 0) / 100);
-    const finalQuote = subtotal + markupAmount;
+    const laborPercentage = 0.30; // 30% of total
+    const subtotalWithLabor = totalMaterialsCost / (1 - laborPercentage);
+    const laborCost = subtotalWithLabor * laborPercentage;
+    
+    // Apply markup to the subtotal (materials + labor)
+    const markupAmount = subtotalWithLabor * ((data.markup_percent || 0) / 100);
+    const finalQuote = subtotalWithLabor + markupAmount;
 
     return {
       paint_gallons_needed: paintGallons,
       materials_cost: materialsCost,
       primer_cost: primerCost,
       labor_cost: laborCost,
-      subtotal,
+      subtotal: subtotalWithLabor,
       markup_amount: markupAmount,
       final_quote: finalQuote,
       breakdown: {
@@ -529,10 +521,10 @@ export class ModularQuoteCalculator {
         paint_cost_per_gallon: data.paint_cost_per_gallon || 50,
         primer_cost_per_sqft: data.primer_cost_per_sqft || 0.45,
         primer_included: data.primer_included,
-        // Enhanced rate breakdown
-        wall_labor_rate: data.wall_labor_rate || 1.50,
-        ceiling_labor_rate: data.ceiling_labor_rate || 1.25,
-        labor_rate: data.labor_cost_per_sqft || null, // Legacy fallback
+        // NEW: Labor as percentage model
+        labor_percentage: laborPercentage * 100, // 30%
+        total_materials_cost: totalMaterialsCost,
+        labor_calculation_method: "30% of subtotal",
         markup_percent: data.markup_percent || 0,
         // Product and rate changes detected
         product_changes: data.product_changes || null,

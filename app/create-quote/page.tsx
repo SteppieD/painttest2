@@ -380,18 +380,13 @@ export default function CreateQuotePage() {
               // Parser says we have everything - use parser's quote calculation
               let calculation = null;
               
-              // 🎯 PRIMARY: Use parser's own calculation if available
+              // 🎯 PRIMARY: Use parser's own calculation (now with correct 30% labor model)
               if (parsingResult.quote_calculation && parsingResult.can_calculate) {
-                // Convert parser calculation to our expected format with 30% labor adjustment
                 const parserCalc = parsingResult.quote_calculation;
-                
-                // Calculate labor as 30% of total for internal reporting as requested
-                const laborPercentage = updatedQuoteData.labor_percentage || 30;
-                const adjustedLaborCost = parserCalc.final_quote * (laborPercentage / 100);
                 
                 calculation = {
                   total_materials: parserCalc.materials_cost + parserCalc.primer_cost,
-                  total_labor: adjustedLaborCost, // Now represents 30% of total
+                  total_labor: parserCalc.labor_cost, // Already calculated as 30% of subtotal
                   subtotal: parserCalc.subtotal,
                   markup_amount: parserCalc.markup_amount,
                   total_cost: parserCalc.final_quote,
@@ -399,7 +394,7 @@ export default function CreateQuotePage() {
                   detailed_breakdown: {
                     paint_cost: parserCalc.materials_cost,
                     primer_cost: parserCalc.primer_cost,
-                    labor_cost: adjustedLaborCost, // 30% of total
+                    labor_cost: parserCalc.labor_cost, // 30% of subtotal
                     markup_percentage: parsedData.markup_percent || 20,
                     breakdown: parserCalc.breakdown
                   }

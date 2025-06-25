@@ -1,0 +1,25 @@
+
+> painting-quote-app-replit@1.0.0 dev
+> next dev --hostname 0.0.0.0 --port 3001
+
+  ▲ Next.js 14.2.29
+  - Local:        http://localhost:3001
+  - Network:      http://0.0.0.0:3001
+
+ ✓ Starting...
+ ✓ Ready in 1097ms
+ ✓ Compiled /middleware in 213ms (72 modules)
+ ○ Compiling /create-quote ...
+ ✓ Compiled /create-quote in 2.5s (570 modules)
+ GET /create-quote 200 in 2637ms
+ ✓ Compiled in 321ms (293 modules)
+ ✓ Compiled /api/quote-parser in 82ms (57 modules)
+API Key available: false
+Parsing input: It's for Cici at 9090 Hillside Drive Lakewood, CA 90712. The job is 350 sq ft of walls using Sherwin...
+OPENROUTER_API_KEY not found. Parser will use mock mode.
+ POST /api/quote-parser 200 in 125ms
+API Key available: false
+Parsing input: It's for Cici at 9090 Hillside Drive Lakewood, CA 90712. The job is 350 sq ft of walls using Sherwin...
+OPENROUTER_API_KEY not found. Parser will use mock mode.
+ POST /api/quote-parser 200 in 9ms
+[?25h
