@@ -281,10 +281,11 @@ export default function CreateQuotePage() {
           if (DEBUG_PARSER) {
             console.log('🧠 Intelligent Parser Results:', {
               success: parsingResult.success,
-              confidence: parsedData.confidence_score,
+              confidence: parsingResult.confidence_score,
               parsedData: parsedData,
-              missingFields: parsedData.missing_fields,
-              clarificationQuestions: parsingResult.clarification_questions
+              needsClarification: parsingResult.needs_clarification,
+              clarificationQuestions: parsingResult.clarification_questions,
+              canCalculate: parsingResult.can_calculate
             });
           }
           
@@ -353,7 +354,7 @@ export default function CreateQuotePage() {
           setQuoteData(updatedQuoteData);
           
           // 🤖 TRUST THE PARSER: Let AI intelligence drive the conversation
-          const confidence = parsedData.confidence_score || 0;
+          const confidence = parsingResult.confidence_score || 0;
           
           // 🎯 PRIMARY DECISION: Trust parser when successful
           if (parsingResult.success) {
