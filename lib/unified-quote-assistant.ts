@@ -185,9 +185,9 @@ export class UnifiedQuoteAssistant {
     return {
       walls: !lower.includes('not painting the walls') && !lower.includes('no walls'),
       ceilings: !lower.includes('not painting the ceilings') && !lower.includes('no ceilings'),
-      trim: !lower.includes('not painting') || !lower.includes('trim'),
-      doors: !lower.includes('not painting') || !lower.includes('doors'),
-      windows: !lower.includes('not painting') || !lower.includes('windows')
+      trim: !(lower.includes('not painting') && lower.includes('trim')),
+      doors: !(lower.includes('not painting') && lower.includes('doors')),
+      windows: !(lower.includes('not painting') && lower.includes('windows'))
     };
   }
 

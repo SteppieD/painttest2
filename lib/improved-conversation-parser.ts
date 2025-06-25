@@ -59,6 +59,17 @@ const parseCustomerInfo = (input: string, existingData: Partial<ConversationData
     };
   }
   
+  // Handle "It's for Name at Address" pattern
+  if (lower.includes("it's for") && lower.includes(' at ') && /\d/.test(input)) {
+    const match = input.match(/it's for\s+([^.]+?)\s+at\s+([^.]+)/i);
+    if (match) {
+      return {
+        customer_name: match[1].trim(),
+        address: match[2].trim()
+      };
+    }
+  }
+  
   // Handle "Name at Address" pattern
   if (lower.includes(' at ') && /\d/.test(input)) {
     const parts = input.split(' at ');
@@ -226,17 +237,16 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
     if (match) dimensions.wall_linear_feet = Number(match[1]);
   }
   
-  // Parse ceiling height (many ways contractors say it)
-  if (lower.includes('ceiling') || lower.includes('height') || lower.includes('tall') || 
-      lower.includes('foot') || lower.includes('feet') || lower.includes('ft')) {
-    const heightMatch = input.match(/(?:ceiling|height|tall|is)\s*(\d+\.?\d*)\s*(?:foot|feet|ft|')?/i);
+  // Parse ceiling height (many ways contractors say it) - be more specific to avoid spread rate confusion
+  if (lower.includes('ceiling') && (lower.includes('height') || lower.includes('tall') || lower.includes('foot') || lower.includes('feet') || lower.includes('ft'))) {
+    const heightMatch = input.match(/ceilings?\s+(?:are|is)?\s*(\d+\.?\d*)\s*(?:foot|feet|ft|')/i);
     if (heightMatch) {
       dimensions.ceiling_height = Number(heightMatch[1]);
     } else {
-      // Look for standalone height numbers
-      const standaloneMatch = input.match(/(\d+\.?\d*)\s*(?:foot|feet|ft|')(?:\s|$)/i);
-      if (standaloneMatch) {
-        dimensions.ceiling_height = Number(standaloneMatch[1]);
+      // Try another pattern for ceiling height
+      const altMatch = input.match(/(\d+\.?\d*)\s*(?:foot|feet|ft|')\s+(?:ceiling|tall)/i);
+      if (altMatch) {
+        dimensions.ceiling_height = Number(altMatch[1]);
       }
     }
   }
@@ -251,14 +261,17 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
     dimensions.wall_linear_feet = numbers[0];
   }
   
-  // Handle multiple numbers when both are provided
+  // Handle multiple numbers when both are provided - but EXCLUDE spread rate numbers
   if (numbers.length >= 2 && !dimensions.wall_linear_feet && !dimensions.ceiling_height) {
+    // Filter out spread rate numbers (typically 300-400 sqft per gallon)
+    const filteredNumbers = numbers.filter(num => !(num >= 300 && num <= 450 && lower.includes('spread')));
+    
     // Sort by likely use - smaller number (8-15) is probably height
-    const sortedNumbers = [...numbers].sort((a, b) => a - b);
+    const sortedNumbers = [...filteredNumbers].sort((a, b) => a - b);
     for (let num of sortedNumbers) {
       if (num >= 8 && num <= 15 && !dimensions.ceiling_height) {
         dimensions.ceiling_height = num;
-      } else if (!dimensions.wall_linear_feet) {
+      } else if (!dimensions.wall_linear_feet && num >= 50) { // Linear feet should be at least 50
         dimensions.wall_linear_feet = num;
       }
     }
