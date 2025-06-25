@@ -276,19 +276,27 @@ export default function CreateQuotePage() {
           // 🐛 DEBUG: Log parser results if debug mode enabled
           if (DEBUG_PARSER) {
             console.log('🧠 Intelligent Parser Results:', {
-              success: data.success,
-              confidence: data.confidence_score,
-              parsedData: data.parsed_data,
-              needsClarification: data.needs_clarification,
-              clarificationQuestions: data.clarification_questions,
-              canCalculate: data.can_calculate
+              success: parsingResult.success,
+              confidence: parsedData.confidence_score,
+              needs_clarification: parsingResult.needs_clarification,
+              parsedData: parsedData,
+              missingFields: parsedData.missing_fields,
+              clarificationQuestions: parsingResult.clarification_questions,
+              fullParsingResult: parsingResult
+            });
+            console.log('🔍 Decision Logic Check:', {
+              condition1: parsingResult.success,
+              condition2: parsedData.confidence_score >= 70,
+              condition3: !parsingResult.needs_clarification,
+              willTrustParser: parsingResult.success && parsedData.confidence_score >= 70,
+              willCalculateQuote: parsingResult.success && parsedData.confidence_score >= 70 && !parsingResult.needs_clarification
             });
           }
           
-          if (!data.success) {
+          if (!parsingResult.success) {
             // Parser failed - ask clarification questions from the API
             responseContent = "I need more information to create your quote:\n\n";
-            responseContent += (data.clarification_questions || [
+            responseContent += (parsingResult.clarification_questions || [
               "What's the customer's name?",
               "What's the property address?", 
               "What's the project scope (walls, ceilings, trim)?"
@@ -368,11 +376,87 @@ export default function CreateQuotePage() {
             if (parsedData.paint_brand) responseContent += `• Paint: ${parsedData.paint_brand}\n`;
             if (parsedData.markup_percent) responseContent += `• Markup: ${parsedData.markup_percent}%\n`;
             
-            if (data.can_calculate && data.quote_calculation) {
-              responseContent += `\n**QUOTE CALCULATED:**\n`;
-              responseContent += `• Materials: $${data.quote_calculation.materials_cost?.toFixed(2) || '0.00'}\n`;
-              responseContent += `• Labor: $${data.quote_calculation.labor_cost?.toFixed(2) || '0.00'}\n`;
-              responseContent += `• **Total: $${data.quote_calculation.total_cost?.toFixed(2) || '0.00'}**\n`;
+            if (!parsingResult.needs_clarification) {
+              // Parser says we have everything - use parser's quote calculation
+              let calculation = null;
+              
+              // 🎯 PRIMARY: Use parser's own calculation if available
+              if (parsingResult.quote_calculation && parsingResult.can_calculate) {
+                // Convert parser calculation to our expected format with 30% labor adjustment
+                const parserCalc = parsingResult.quote_calculation;
+                
+                // Calculate labor as 30% of total for internal reporting as requested
+                const laborPercentage = updatedQuoteData.labor_percentage || 30;
+                const adjustedLaborCost = parserCalc.final_quote * (laborPercentage / 100);
+                
+                calculation = {
+                  total_materials: parserCalc.materials_cost + parserCalc.primer_cost,
+                  total_labor: adjustedLaborCost, // Now represents 30% of total
+                  subtotal: parserCalc.subtotal,
+                  markup_amount: parserCalc.markup_amount,
+                  total_cost: parserCalc.final_quote,
+                  paint_gallons: parserCalc.paint_gallons_needed,
+                  detailed_breakdown: {
+                    paint_cost: parserCalc.materials_cost,
+                    primer_cost: parserCalc.primer_cost,
+                    labor_cost: adjustedLaborCost, // 30% of total
+                    markup_percentage: parsedData.markup_percent || 20,
+                    breakdown: parserCalc.breakdown
+                  }
+                };
+              } else {
+                // Fallback to old calculator if parser didn't calculate
+                calculation = calculateQuote(
+                  updatedQuoteData.areas,
+                  updatedQuoteData.rates,
+                  updatedQuoteData.paint_costs,
+                  updatedQuoteData.labor_percentage || 30,
+                  parsedData.spread_rate_sqft_per_gallon || 350
+                );
+              }
+              
+              setQuoteData(prev => ({ ...prev, calculation }));
+              
+              // Generate comprehensive quote display using parser's understanding
+              responseContent = `Perfect! I've analyzed your complete project details:\n\n`;
+              responseContent += `**Customer:** ${updatedQuoteData.customer_name}\n`;
+              responseContent += `**Address:** ${updatedQuoteData.address}\n`;
+              responseContent += `**Project Type:** ${updatedQuoteData.project_type} painting\n\n`;
+              
+              responseContent += `**Scope of Work:**\n`;
+              if (updatedQuoteData.areas.walls_sqft > 0) {
+                responseContent += `• Walls: ${updatedQuoteData.areas.walls_sqft} sq ft\n`;
+              }
+              if (updatedQuoteData.areas.ceilings_sqft > 0) {
+                responseContent += `• Ceilings: ${updatedQuoteData.areas.ceilings_sqft} sq ft\n`;
+              }
+              if (updatedQuoteData.areas.trim_sqft > 0) {
+                responseContent += `• Trim: ${updatedQuoteData.areas.trim_sqft} sq ft\n`;
+              }
+              if (updatedQuoteData.areas.doors_count > 0) {
+                responseContent += `• Doors: ${updatedQuoteData.areas.doors_count} doors\n`;
+              }
+              if (updatedQuoteData.areas.windows_count > 0) {
+                responseContent += `• Windows: ${updatedQuoteData.areas.windows_count} windows\n`;
+              }
+              if (parsedData.primer_included) {
+                responseContent += `• Primer: Included\n`;
+              }
+              
+              if (parsedData.paint_brand || parsedData.paint_product) {
+                responseContent += `\n**Paint Specifications:**\n`;
+                if (parsedData.paint_brand) responseContent += `• Brand: ${parsedData.paint_brand}\n`;
+                if (parsedData.paint_product) responseContent += `• Product: ${parsedData.paint_product}\n`;
+                if (parsedData.paint_sheen) responseContent += `• Sheen: ${parsedData.paint_sheen}\n`;
+              }
+              
+              responseContent += `\n${generateQuoteDisplay(calculation)}`;
+              
+              if (parsedData.confidence_score < 80 && parsingResult.warnings?.length > 0) {
+                responseContent += `\n\n⚠️ **Note:** ${parsingResult.warnings.join(' ')}`;
+              }
+              
+              nextStage = 'quote_review';
             } else {
               responseContent += `\n**Ready to calculate quote** - All information collected successfully!\n`;
             }
@@ -382,9 +466,9 @@ export default function CreateQuotePage() {
             // Needs clarification OR low confidence - show what was understood
             responseContent = `I've analyzed your request (${confidence}% confidence). `;
             
-            if (data.needs_clarification && data.clarification_questions?.length > 0) {
+            if (parsingResult.needs_clarification && parsingResult.clarification_questions?.length > 0) {
               responseContent += `I need a few more details:\n\n`;
-              data.clarification_questions.forEach((question, index) => {
+              parsingResult.clarification_questions.forEach((question, index) => {
                 responseContent += `${index + 1}. ${question}\n`;
               });
             } else {
@@ -1036,14 +1120,14 @@ What would you like to change it to? Please specify the new rate like:
             body: JSON.stringify({ input })
           });
           
-          const data = await response.json();
-          const parsedData = data.parsed_data || {};
+          const parsingResult = await response.json();
+          const parsedData = parsingResult.parsed_data || {};
           
           if (DEBUG_PARSER) {
-            console.log('🧠 Clarification Parser Results:', { parsedData, success: data.success });
+            console.log('🧠 Clarification Parser Results:', { parsedData, success: parsingResult.success });
           }
           
-          if (data.success) {
+          if (parsingResult.success) {
             
             // Update quote data with newly clarified information
             let updatedQuoteData = { ...quoteData };
@@ -1098,11 +1182,11 @@ What would you like to change it to? Please specify the new rate like:
               
               responseContent = `Perfect! Now I have all the information needed.\n\n${generateQuoteDisplay(calculation)}`;
               nextStage = 'quote_review';
-            } else if (data.needs_clarification) {
+            } else if (parsingResult.needs_clarification) {
               // Still need more clarification
               responseContent = `Thanks! I still need:\n\n`;
-              if (data.clarification_questions?.length > 0) {
-                data.clarification_questions.forEach((question, index) => {
+              if (parsingResult.clarification_questions?.length > 0) {
+                parsingResult.clarification_questions.forEach((question, index) => {
                   responseContent += `${index + 1}. ${question}\n`;
                 });
               }
@@ -1253,12 +1337,14 @@ What would you like to change it to? Please specify the new rate like:
           ceilings_paint_cost: quoteData.paint_costs.ceilings_paint_cost,
           trim_paint_cost: quoteData.paint_costs.trim_paint_cost,
           
-          // Calculation results
-          total_revenue: quoteData.calculation.revenue.total,
-          total_materials: quoteData.calculation.materials.total,
-          projected_labor: quoteData.calculation.labor.projected_labor,
+          // Calculation results - handle both old and new formats
+          total_revenue: quoteData.calculation.total_cost || quoteData.calculation.revenue?.total || 0,
+          total_materials: quoteData.calculation.total_materials || quoteData.calculation.materials?.total || 0,
+          projected_labor: quoteData.calculation.total_labor || quoteData.calculation.labor?.projected_labor || 0,
           labor_percentage: quoteData.labor_percentage,
-          projected_profit: quoteData.calculation.profit,
+          projected_profit: quoteData.calculation.total_cost ? 
+            (quoteData.calculation.total_cost - quoteData.calculation.total_materials - quoteData.calculation.total_labor) :
+            (quoteData.calculation.profit || 0),
           
           // Selected paint products
           selected_products: JSON.stringify(quoteData.selectedProducts || {}),
@@ -1267,8 +1353,8 @@ What would you like to change it to? Please specify the new rate like:
           confirmed_paint_product: JSON.stringify(quoteData.confirmedPaintProduct || {}),
           
           // Legacy fields for compatibility
-          quote_amount: quoteData.calculation.revenue.total,
-          final_price: quoteData.calculation.revenue.total,
+          quote_amount: quoteData.calculation.total_cost || quoteData.calculation.revenue?.total || 0,
+          final_price: quoteData.calculation.total_cost || quoteData.calculation.revenue?.total || 0,
           notes: `${quoteData.project_type} - ${quoteData.areas.walls_sqft} walls, ${quoteData.areas.ceilings_sqft} ceilings, ${quoteData.areas.trim_sqft} trim`,
           conversation_summary: JSON.stringify(messages)
         })
@@ -1770,7 +1856,7 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
               <div className="text-right">
                 <div className="text-sm text-gray-600">Total Quote</div>
                 <div className="text-lg font-bold text-blue-600">
-                  ${quoteData.calculation.revenue.total.toFixed(2)}
+                  ${(quoteData.calculation.total_cost || quoteData.calculation.revenue?.total || 0).toFixed(2)}
                 </div>
               </div>
             )}
