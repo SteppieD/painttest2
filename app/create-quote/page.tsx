@@ -12,38 +12,68 @@ import { FixedChatInterface } from "@/components/chat/fixed-chat-interface";
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
 
+interface CompanyInfo {
+  id: string;
+  name: string;
+  accessCode: string;
+  loginTime: number;
+}
+
 function CreateQuotePageContent() {
   const router = useRouter();
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const editQuoteId = searchParams.get('edit');
 
+  // Authentication state
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+  
   // Loading states
   const [isInitializing, setIsInitializing] = useState(true);
   const [initializationError, setInitializationError] = useState<string | null>(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [companyData, setCompanyData] = useState<CompanyInitialData | null>(null);
 
+  // Check company authentication
+  useEffect(() => {
+    const companyData = localStorage.getItem("paintquote_company");
+    if (companyData) {
+      try {
+        const company = JSON.parse(companyData);
+        // Check if session is still valid (24 hours)
+        if (Date.now() - company.loginTime > 24 * 60 * 60 * 1000) {
+          localStorage.removeItem("paintquote_company");
+          router.push("/access-code");
+          return;
+        }
+        setCompanyInfo(company);
+        setIsAuthenticating(false);
+      } catch (e) {
+        router.push("/access-code");
+      }
+    } else {
+      router.push("/access-code");
+    }
+  }, [router]);
+
   // Initialize the quote creation system
   useEffect(() => {
+    if (!companyInfo) return; // Wait for authentication
     const initialize = async () => {
       try {
         const startTime = performance.now();
         setLoadingProgress(10);
 
-        // Initialize with progress tracking
-        const progressCallback = (progress: number) => {
-          setLoadingProgress(Math.min(progress, 90));
-        };
-
-        const data = await initializeQuoteCreation(progressCallback);
+        // Initialize with proper companyId
+        const data = await initializeQuoteCreation(companyInfo.id, editQuoteId);
         
-        setCompanyData(data);
+        setCompanyData(data.companyData);
         setLoadingProgress(95);
 
         // Track performance
         const endTime = performance.now();
-        await trackLoadingPerformance(endTime - startTime, !!data.companyData);
+        trackLoadingPerformance(endTime - startTime, 'Quote Creation Initialization');
 
         setLoadingProgress(100);
         
@@ -60,9 +90,9 @@ function CreateQuotePageContent() {
     };
 
     initialize();
-  }, []);
+  }, [companyInfo, editQuoteId]);
 
-  if (isInitializing) {
+  if (isAuthenticating || isInitializing) {
     return (
       <div className="h-screen flex flex-col bg-gray-50">
         <header className="bg-white border-b shadow-sm">
@@ -130,7 +160,7 @@ function CreateQuotePageContent() {
 
   return (
     <FixedChatInterface
-      companyId={companyData?.companyData?.id || ''}
+      companyId={companyInfo?.id || ''}
       onQuoteGenerated={(quoteData) => {
         toast({
           title: "Success!",
