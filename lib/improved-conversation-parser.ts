@@ -443,8 +443,25 @@ export const parsePaintQuality = (input: string) => {
 };
 
 export const parseMarkupPercentage = (input: string) => {
-  const match = input.match(/(\d+)%?/);
-  return match ? Number(match[1]) : 20;
+  // Look for explicit markup language
+  const markupMatch = input.match(/(?:markup|profit|margin)\s*(?:of|is|at)?\s*(\d+)%?/i);
+  if (markupMatch) {
+    return Number(markupMatch[1]);
+  }
+  
+  // Look for standalone percentage at end of input
+  const percentMatch = input.match(/(\d+)%\s*$/);
+  if (percentMatch) {
+    return Number(percentMatch[1]);
+  }
+  
+  // If labor is "included" in rate, no additional markup
+  if (input.toLowerCase().includes('labour is included') || input.toLowerCase().includes('labor is included')) {
+    return 0;
+  }
+  
+  // Default to 0% if no markup specified
+  return 0;
 };
 
 // Parse room count from user input

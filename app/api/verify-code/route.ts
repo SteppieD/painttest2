@@ -1,12 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Vercel Functions require external database (Supabase only)
-const getSupabaseDb = async () => {
+// Database adapter - use simple adapter for local development
+const getDatabase = async () => {
   try {
-    const { supabaseDb } = await import("@/lib/database/supabase-adapter");
-    return supabaseDb;
+    // Try Supabase first
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      const { supabaseDb } = await import("@/lib/database/supabase-adapter");
+      return supabaseDb;
+    } else {
+      // Fall back to simple database adapter for local development
+      const simpleDb = await import("@/lib/database-simple");
+      return {
+        getCompanyByAccessCode: simpleDb.getCompanyByAccessCode,
+        createTrialCompany: async (data: any) => {
+          const company = await simpleDb.createCompany({
+            access_code: data.accessCode,
+            company_name: data.companyName,
+            email: data.email,
+            phone: data.phone
+          });
+          return {
+            id: company.lastID,
+            access_code: data.accessCode,
+            company_name: data.companyName,
+            email: data.email,
+            phone: data.phone
+          };
+        },
+        getAllCompanies: async () => {
+          // Return demo companies for local development
+          return [
+            { id: 1, access_code: 'DEMO2024', company_name: 'Demo Company', email: 'demo@example.com', phone: '555-0123' },
+            { id: 2, access_code: 'PAINTER001', company_name: 'Painter Pro LLC', email: 'painter@example.com', phone: '555-0456' },
+            { id: 3, access_code: 'CONTRACTOR123', company_name: 'Best Contractors Inc', email: 'contractor@example.com', phone: '555-0789' }
+          ];
+        }
+      };
+    }
   } catch (error) {
-    console.error('Failed to import Supabase adapter:', error);
+    console.error('Failed to import database adapter:', error);
     return null;
   }
 };
@@ -35,9 +67,9 @@ export async function POST(request: NextRequest) {
     // Convert to uppercase for consistency
     const normalizedCode = accessCode.toString().toUpperCase();
 
-    // Get Supabase database connection
-    const supabaseDb = await getSupabaseDb();
-    if (!supabaseDb) {
+    // Get database connection
+    const db = await getDatabase();
+    if (!db) {
       return NextResponse.json(
         { error: "Database connection failed" },
         { status: 500 },
@@ -45,7 +77,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if access code exists in companies table
-    const company = await supabaseDb.getCompanyByAccessCode(normalizedCode);
+    const company = await db.getCompanyByAccessCode(normalizedCode);
 
     if (company) {
       // Valid company found
@@ -72,7 +104,7 @@ export async function POST(request: NextRequest) {
         // Auto-create new company for valid pattern
         const companyName = `Company ${normalizedCode}`;
 
-        const result = await supabaseDb.createTrialCompany({
+        const result = await db.createTrialCompany({
           accessCode: normalizedCode,
           companyName: companyName,
           phone: "",
@@ -118,15 +150,15 @@ export async function POST(request: NextRequest) {
 // GET endpoint to list available demo companies (for testing)
 export async function GET() {
   try {
-    const supabaseDb = await getSupabaseDb();
-    if (!supabaseDb) {
+    const db = await getDatabase();
+    if (!db) {
       return NextResponse.json(
         { error: "Database connection failed" },
         { status: 500 },
       );
     }
 
-    const companies = await supabaseDb.getAllCompanies();
+    const companies = await db.getAllCompanies();
 
     return NextResponse.json({
       companies,

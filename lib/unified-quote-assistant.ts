@@ -59,17 +59,33 @@ export class UnifiedQuoteAssistant {
    * Parse comprehensive quote information from a single message
    */
   async parseCompleteQuoteMessage(userInput: string): Promise<QuoteParsingResult> {
+    console.log('🔍 PARSING INPUT:', userInput);
+    
     // Use existing proven parsers first
     const customerInfo = parseCustomerInfo(userInput);
+    console.log('👤 Customer Info:', customerInfo);
+    
     const projectType = parseProjectType(userInput);
+    console.log('🏠 Project Type:', projectType);
+    
     const dimensions = parseDimensions(userInput, projectType);
+    console.log('📏 Dimensions:', dimensions);
+    
     const markupPercentage = parseMarkupPercentage(userInput);
+    console.log('💰 Markup Percentage:', markupPercentage);
     
     // Parse additional information
     const paintInfo = this.parsePaintInformation(userInput);
+    console.log('🎨 Paint Info:', paintInfo);
+    
     const laborRate = this.parseLaborRate(userInput);
+    console.log('👷 Labor Rate:', laborRate);
+    
     const surfaces = this.parseSurfaces(userInput);
+    console.log('🏗️ Surfaces:', surfaces);
+    
     const specialRequests = this.parseSpecialRequests(userInput);
+    console.log('📋 Special Requests:', specialRequests);
     
     // Determine completeness
     const missingFields = this.identifyMissingFields({
@@ -231,7 +247,7 @@ export class UnifiedQuoteAssistant {
   /**
    * Generate a professional quote from parsed data
    */
-  async generateQuoteFromParsedData(parsed: QuoteParsingResult, companyId: string): Promise<{
+  async generateQuoteFromParsedData(parsed: QuoteParsingResult, companyId: string, userInput: string = ''): Promise<{
     quote: ProfessionalQuote | null;
     response: string;
     success: boolean;
@@ -254,6 +270,7 @@ export class UnifiedQuoteAssistant {
         number_of_windows: parsed.surfaces.windows ? (parsed.dimensions.number_of_windows || 0) : 0,
         floor_area: parsed.dimensions.floor_area
       };
+      console.log('🏗️ Final Dimensions:', dimensions);
 
       // Build paint products
       const selectedProducts = {
@@ -275,8 +292,60 @@ export class UnifiedQuoteAssistant {
           cost_per_gallon: parsed.surfaces.trim ? (parsed.paintInfo.cost_per_gallon || 50) : 0
         }
       };
+      console.log('🎨 Selected Products:', selectedProducts);
 
-      // Build charge rates
+      // Build charge rates - check if labor is "included" in the rate
+      const laborIncluded = parsed.specialRequests.some(req => req.toLowerCase().includes('labor included')) ||
+                           userInput.toLowerCase().includes('labour is included') ||
+                           userInput.toLowerCase().includes('labor is included');
+      
+      console.log('🔧 Labor Included?', laborIncluded);
+      console.log('🔧 Parsed Labor Rate:', parsed.laborRate);
+      
+      // If labor is included, we need to handle this differently
+      if (laborIncluded && parsed.laborRate) {
+        // Calculate total using the all-inclusive rate
+        const wallSqft = dimensions.wall_linear_feet * dimensions.ceiling_height;
+        const totalCostWithLaborIncluded = wallSqft * parsed.laborRate;
+        
+        console.log('🧮 Wall Sqft:', wallSqft);
+        console.log('🧮 Total Cost (labor included):', totalCostWithLaborIncluded);
+        
+        // Return a simplified quote structure
+        const quote = {
+          project_info: dimensions,
+          materials: {
+            total_material_cost: 0, // Included in per-sqft rate
+            walls: { cost: 0, sqft_needed: wallSqft, gallons_needed: 0 },
+            ceilings: { cost: 0, sqft_needed: 0, gallons_needed: 0 },
+            trim_doors_windows: { cost: 0, doors_count: 0, windows_count: 0, gallons_needed: 0 },
+            primer: { cost: 0, sqft_needed: 0, gallons_needed: 0 }
+          },
+          labor: {
+            total_labor: 0, // Included in per-sqft rate
+            wall_labor: 0,
+            ceiling_labor: 0,
+            door_labor: 0,
+            window_labor: 0,
+            primer_labor: 0
+          },
+          overhead: 0,
+          total_cost: totalCostWithLaborIncluded,
+          markup_percentage: parsed.markupPercentage,
+          markup_amount: totalCostWithLaborIncluded * (parsed.markupPercentage / 100),
+          final_price: totalCostWithLaborIncluded * (1 + parsed.markupPercentage / 100),
+          profit_margin: parsed.markupPercentage,
+          breakdown_summary: `All-inclusive rate: $${parsed.laborRate}/sqft × ${wallSqft} sqft = $${totalCostWithLaborIncluded.toLocaleString()}`
+        };
+        
+        console.log('📊 Labor-Included Quote Result:', quote);
+        return {
+          quote,
+          response: this.generateLaborIncludedResponse(parsed, quote),
+          success: true
+        };
+      }
+      
       const rates = {
         ...DEFAULT_CHARGE_RATES,
         wall_rate_per_sqft: parsed.laborRate || DEFAULT_CHARGE_RATES.wall_rate_per_sqft,
@@ -285,6 +354,8 @@ export class UnifiedQuoteAssistant {
         window_rate_each: parsed.surfaces.windows ? DEFAULT_CHARGE_RATES.window_rate_each : 0,
         primer_rate_per_sqft: 0 // No primer if specified
       };
+      console.log('💼 Charge Rates:', rates);
+      console.log('💰 Markup Percentage for Calculation:', parsed.markupPercentage);
 
       // Calculate quote
       const quote = calculateProfessionalQuote(
@@ -294,6 +365,7 @@ export class UnifiedQuoteAssistant {
         parsed.markupPercentage,
         false // No floor sealer
       );
+      console.log('📊 Final Quote Result:', quote);
 
       // Generate response
       const paintBrand = parsed.paintInfo.brand || 'Quality paint';
@@ -354,7 +426,7 @@ Ready to save this quote?`;
       
       if (parsed.isComplete) {
         // We have everything we need - generate the quote
-        const quoteResult = await this.generateQuoteFromParsedData(parsed, companyId);
+        const quoteResult = await this.generateQuoteFromParsedData(parsed, companyId, userInput);
         
         return {
           response: quoteResult.response,
@@ -420,6 +492,32 @@ Ready to save this quote?`;
     }
     
     return parts.join(', ');
+  }
+
+  /**
+   * Generate response for labor-included quotes
+   */
+  private generateLaborIncludedResponse(parsed: QuoteParsingResult, quote: any): string {
+    const paintBrand = parsed.paintInfo.brand || 'Quality paint';
+    const paintProduct = parsed.paintInfo.product || 'interior paint';
+    
+    return `Perfect! Here's your quote for ${parsed.customerInfo.customer_name} at ${parsed.customerInfo.address}:
+
+**Project Details:**
+• ${parsed.dimensions.wall_linear_feet} linear feet of interior walls
+• ${parsed.dimensions.ceiling_height} foot ceiling height  
+• ${paintBrand} ${paintProduct} at $${parsed.paintInfo.cost_per_gallon}/gallon
+• NOT including ceilings
+• NOT including doors and trim
+• Labor included in per-sqft rate
+
+**All-Inclusive Quote:**
+• Wall Area: ${quote.materials.walls.sqft_needed.toLocaleString()} sqft
+• Rate: $${parsed.laborRate}/sqft (materials + labor included)
+• Total Project Cost: $${quote.final_price.toLocaleString()}
+${quote.markup_amount > 0 ? `• Markup: $${quote.markup_amount.toLocaleString()} (${quote.markup_percentage}%)` : ''}
+
+Ready to save this quote?`;
   }
 
   /**

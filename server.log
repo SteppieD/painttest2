@@ -1,0 +1,194 @@
+
+> painting-quote-app-replit@1.0.0 dev
+> next dev --hostname 0.0.0.0 --port 3001
+
+  ▲ Next.js 14.2.29
+  - Local:        http://localhost:3001
+  - Network:      http://0.0.0.0:3001
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 899ms
+ ✓ Compiled /middleware in 240ms (72 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 2.6s (635 modules)
+ HEAD / 200 in 2810ms
+ ✓ Compiled in 371ms (308 modules)
+ ✓ Compiled /api/unified-quote in 223ms (351 modules)
+🔍 PARSING INPUT: It's for Cici at 9090 Hillside Drive. We are not painting the ceilings. The project is a 500 linear feet of interior painting. $50 a gallon bucket eggshell shirwin williams. spread rate is 350 square feet per gallon. Ceilings are 9 feet tall. We are not painting doors, or trim or windows. No primer. labour is included in the cost per square foot at $1.50.
+👤 Customer Info: { customer_name: 'Cici', address: '9090 Hillside Drive' }
+🏠 Project Type: interior
+📏 Dimensions: { wall_linear_feet: 500, ceiling_height: 9 }
+💰 Markup Percentage: 0
+🎨 Paint Info: {
+  brand: undefined,
+  product: ' Eggshell',
+  cost_per_gallon: 50,
+  spread_rate: 350
+}
+👷 Labor Rate: 1.5
+🏗️ Surfaces: {
+  walls: true,
+  ceilings: false,
+  trim: false,
+  doors: false,
+  windows: false
+}
+📋 Special Requests: [ 'No primer required' ]
+🏗️ Final Dimensions: {
+  wall_linear_feet: 500,
+  ceiling_height: 9,
+  ceiling_area: 0,
+  number_of_doors: 0,
+  number_of_windows: 0,
+  floor_area: undefined
+}
+🎨 Selected Products: {
+  primer: { spread_rate: 400, cost: 0 },
+  wall_paint: { spread_rate: 350, cost_per_gallon: 50 },
+  ceiling_paint: { spread_rate: 350, cost_per_gallon: 0 },
+  trim_paint: {
+    doors_per_gallon: 4.5,
+    windows_per_gallon: 2.5,
+    cost_per_gallon: 0
+  }
+}
+Quote calculation error: ReferenceError: userInput is not defined
+    at UnifiedQuoteAssistant.generateQuoteFromParsedData (webpack-internal:///(rsc)/./lib/unified-quote-assistant.ts:203:119)
+    at UnifiedQuoteAssistant.processUserInput (webpack-internal:///(rsc)/./lib/unified-quote-assistant.ts:320:48)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async POST (webpack-internal:///(rsc)/./app/api/unified-quote/route.ts:20:24)
+    at async /Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1588:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sepg/painttest2/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sepg/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-server.js:355:24)
+    at async requestHandlerImpl (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13)
+ POST /api/unified-quote 200 in 288ms
+ ✓ Compiled in 32ms (59 modules)
+ ✓ Compiled in 29ms (59 modules)
+🔍 PARSING INPUT: It's for Cici at 9090 Hillside Drive. We are not painting the ceilings. The project is a 500 linear feet of interior painting. $50 a gallon bucket eggshell shirwin williams. spread rate is 350 square feet per gallon. Ceilings are 9 feet tall. We are not painting doors, or trim or windows. No primer. labour is included in the cost per square foot at $1.50.
+👤 Customer Info: { customer_name: 'Cici', address: '9090 Hillside Drive' }
+🏠 Project Type: interior
+📏 Dimensions: { wall_linear_feet: 500, ceiling_height: 9 }
+💰 Markup Percentage: 0
+🎨 Paint Info: {
+  brand: undefined,
+  product: ' Eggshell',
+  cost_per_gallon: 50,
+  spread_rate: 350
+}
+👷 Labor Rate: 1.5
+🏗️ Surfaces: {
+  walls: true,
+  ceilings: false,
+  trim: false,
+  doors: false,
+  windows: false
+}
+📋 Special Requests: [ 'No primer required' ]
+🏗️ Final Dimensions: {
+  wall_linear_feet: 500,
+  ceiling_height: 9,
+  ceiling_area: 0,
+  number_of_doors: 0,
+  number_of_windows: 0,
+  floor_area: undefined
+}
+🎨 Selected Products: {
+  primer: { spread_rate: 400, cost: 0 },
+  wall_paint: { spread_rate: 350, cost_per_gallon: 50 },
+  ceiling_paint: { spread_rate: 350, cost_per_gallon: 0 },
+  trim_paint: {
+    doors_per_gallon: 4.5,
+    windows_per_gallon: 2.5,
+    cost_per_gallon: 0
+  }
+}
+🔧 Labor Included? true
+🔧 Parsed Labor Rate: 1.5
+🧮 Wall Sqft: 4500
+🧮 Total Cost (labor included): 6750
+📊 Labor-Included Quote Result: {
+  project_info: {
+    wall_linear_feet: 500,
+    ceiling_height: 9,
+    ceiling_area: 0,
+    number_of_doors: 0,
+    number_of_windows: 0,
+    floor_area: undefined
+  },
+  materials: {
+    total_material_cost: 0,
+    walls: { cost: 0, sqft_needed: 4500, gallons_needed: 0 },
+    ceilings: { cost: 0, sqft_needed: 0, gallons_needed: 0 },
+    trim_doors_windows: { cost: 0, doors_count: 0, windows_count: 0, gallons_needed: 0 },
+    primer: { cost: 0, sqft_needed: 0, gallons_needed: 0 }
+  },
+  labor: {
+    total_labor: 0,
+    wall_labor: 0,
+    ceiling_labor: 0,
+    door_labor: 0,
+    window_labor: 0,
+    primer_labor: 0
+  },
+  overhead: 0,
+  total_cost: 6750,
+  markup_percentage: 0,
+  markup_amount: 0,
+  final_price: 6750,
+  profit_margin: 0,
+  breakdown_summary: 'All-inclusive rate: $1.5/sqft × 4500 sqft = $6,750'
+}
+ POST /api/unified-quote 200 in 30ms
+ ✓ Compiled /create-quote in 244ms (604 modules)
+ GET /create-quote 200 in 334ms
+ ✓ Compiled /access-code in 181ms (613 modules)
+ GET /icon-192x192.png 404 in 244ms
+ GET /manifest.json 404 in 241ms
+ GET /manifest.json 404 in 13ms
+ ✓ Compiled /api/verify-code in 300ms (406 modules)
+Supabase environment variables not found, adapter will be initialized later
+Access code verification error: TypeError: Cannot read properties of undefined (reading 'from')
+    at SupabaseDatabaseAdapter.getCompanyByAccessCode (webpack-internal:///(rsc)/./lib/database/supabase-adapter.ts:129:53)
+    at Object.getCompanyByAccessCode (webpack-internal:///(rsc)/./lib/database/supabase-adapter.ts:299:65)
+    at POST (webpack-internal:///(rsc)/./app/api/verify-code/route.ts:40:42)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1588:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/sepg/painttest2/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/sepg/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/sepg/painttest2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/sepg/painttest2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-server.js:355:24)
+    at async requestHandlerImpl (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/sepg/painttest2/node_modules/next/dist/server/lib/start-server.js:141:13)
+ POST /api/verify-code 500 in 362ms
+ ✓ Compiled in 314ms (726 modules)
+ ✓ Compiled in 233ms (726 modules)
+ ✓ Compiled in 223ms (726 modules)
+ ✓ Compiled in 227ms (726 modules)
+✅ Valid access code: DEMO2024 for Demo Company
+ POST /api/verify-code 200 in 46ms
