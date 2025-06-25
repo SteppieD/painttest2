@@ -249,7 +249,7 @@ export class UnifiedQuoteAssistant {
       const dimensions: ProjectDimensions = {
         wall_linear_feet: parsed.dimensions.wall_linear_feet || 0,
         ceiling_height: parsed.dimensions.ceiling_height || 9,
-        ceiling_area: parsed.dimensions.ceiling_area || 0,
+        ceiling_area: parsed.surfaces.ceilings ? (parsed.dimensions.ceiling_area || 0) : 0,
         number_of_doors: parsed.surfaces.doors ? (parsed.dimensions.number_of_doors || 0) : 0,
         number_of_windows: parsed.surfaces.windows ? (parsed.dimensions.number_of_windows || 0) : 0,
         floor_area: parsed.dimensions.floor_area
@@ -303,7 +303,7 @@ export class UnifiedQuoteAssistant {
 
 **Project Details:**
 • ${parsed.dimensions.wall_linear_feet} linear feet of interior walls
-• ${parsed.dimensions.ceiling_height} foot ceilings
+• ${parsed.dimensions.ceiling_height} foot ceiling height
 • ${paintBrand} ${paintProduct} at $${parsed.paintInfo.cost_per_gallon}/gallon
 • ${parsed.surfaces.ceilings ? 'Including' : 'NOT including'} ceilings
 • ${parsed.surfaces.doors ? 'Including' : 'NOT including'} doors and trim
