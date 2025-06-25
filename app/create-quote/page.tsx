@@ -355,11 +355,11 @@ export default function CreateQuotePage() {
           // 🤖 TRUST THE PARSER: Let AI intelligence drive the conversation
           const confidence = parsedData.confidence_score || 0;
           
-          // 🎯 PRIMARY DECISION: High confidence = trust parser completely
-          if (parsingResult.success && confidence >= 70) {
-            // Parser is confident - respect its decision about what's needed
+          // 🎯 PRIMARY DECISION: Trust parser when successful
+          if (parsingResult.success) {
+            // Parser succeeded - check if it needs clarification
             
-            if (!parsingResult.needs_clarification) {
+            if (!parsingResult.needs_clarification && confidence >= 70) {
               // Parser says we have everything - calculate quote immediately
               const calculation = calculateQuote(
                 updatedQuoteData.areas,
@@ -412,18 +412,27 @@ export default function CreateQuotePage() {
               
               nextStage = 'quote_review';
             } else {
-              // Parser needs clarification - trust its questions completely
+              // Parser needs clarification OR low confidence - trust its questions completely
               responseContent = `I've analyzed your project details! Just need a few more pieces of information:\n\n`;
-              parsingResult.clarification_questions.forEach((question, index) => {
-                responseContent += `${index + 1}. ${question}\n`;
-              });
+              
+              if (parsingResult.clarification_questions && parsingResult.clarification_questions.length > 0) {
+                parsingResult.clarification_questions.forEach((question, index) => {
+                  responseContent += `${index + 1}. ${question}\n`;
+                });
+              } else {
+                // Fallback questions if none provided
+                responseContent += "1. What's the customer's name?\n";
+                responseContent += "2. What's the property address?\n";
+                responseContent += "3. What surfaces need painting (walls, ceilings, trim)?\n";
+              }
               
               // Show what the parser understood to build confidence
-              if (confidence > 60) {
+              if (confidence > 50) {
                 responseContent += `\n💡 **What I understood so far:**\n`;
                 if (parsedData.customer_name) responseContent += `• Customer: ${parsedData.customer_name}\n`;
                 if (parsedData.property_address) responseContent += `• Address: ${parsedData.property_address}\n`;
-                if (parsedData.walls_sqft) responseContent += `• Wall area: ${parsedData.walls_sqft} sqft\n`;
+                if (parsedData.walls_sqft || parsedData.calculated_wall_area_sqft) responseContent += `• Wall area: ${parsedData.walls_sqft || parsedData.calculated_wall_area_sqft} sqft\n`;
+                if (parsedData.ceilings_sqft) responseContent += `• Ceiling area: ${parsedData.ceilings_sqft} sqft\n`;
                 if (parsedData.labor_cost_per_sqft) responseContent += `• Labor rate: $${parsedData.labor_cost_per_sqft}/sqft\n`;
                 if (parsedData.paint_brand) responseContent += `• Paint: ${parsedData.paint_brand}\n`;
                 if (parsedData.markup_percent) responseContent += `• Markup: ${parsedData.markup_percent}%\n`;
@@ -432,28 +441,14 @@ export default function CreateQuotePage() {
               nextStage = 'clarification';
             }
           } else {
-            // 🔄 FALLBACK: Only when parser fails completely (success: false or low confidence)
-            if (!parsingResult.success) {
-              responseContent = "I had trouble understanding your request. Could you please provide:\n\n";
-              responseContent += (parsingResult.clarification_questions || [
-                "Customer name and property address",
-                "Project scope (walls, ceilings, trim, etc.)",
-                "Square footage or room dimensions",
-                "Your labor rate per square foot"
-              ]).join('\n');
-            } else {
-              // Low confidence - ask for clarification but mention what was understood
-              responseContent = `I partially understood your request (${confidence}% confidence). To create an accurate quote, please clarify:\n\n`;
-              if (parsingResult.clarification_questions?.length > 0) {
-                parsingResult.clarification_questions.forEach((question, index) => {
-                  responseContent += `${index + 1}. ${question}\n`;
-                });
-              } else {
-                responseContent += "• Customer name and property address\n";
-                responseContent += "• Project details (walls, ceilings, trim)\n";
-                responseContent += "• Square footage or room dimensions\n";
-              }
-            }
+            // 🔄 FALLBACK: Only when parser fails completely 
+            responseContent = "I had trouble understanding your request. Could you please provide:\n\n";
+            responseContent += (parsingResult.clarification_questions || [
+              "Customer name and property address",
+              "Project scope (walls, ceilings, trim, etc.)",
+              "Square footage or room dimensions",
+              "Your labor rate per square foot"
+            ]).join('\n');
             nextStage = 'customer_info';
           }
           
