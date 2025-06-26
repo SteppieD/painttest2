@@ -716,6 +716,8 @@ What would you like to modify?`,
   const processUserInput = async (input: string, stage: string): Promise<Message> => {
     let responseContent = '';
     let nextStage = stage;
+    
+    console.log('🎯 processUserInput called with:', { input, stage });
 
     // Check if we should use comprehensive input processing
     const shouldUseComprehensive = (
@@ -886,6 +888,9 @@ What would you like to modify?`,
           
           nextStage = 'ready_for_paint_selection';
           
+          // Immediately update conversation stage for comprehensive parser flow
+          setConversationStage('ready_for_paint_selection');
+          
           // Show quote calculation button
           setTimeout(() => {
             setButtonOptions([
@@ -897,6 +902,9 @@ What would you like to modify?`,
           
         } else if (extracted.customer_name && extracted.address && extracted.project_type) {
           nextStage = 'surface_selection';
+          
+          // Immediately update conversation stage for comprehensive parser flow
+          setConversationStage('surface_selection');
           
           // Show surface selection buttons
           setTimeout(() => {
@@ -1493,8 +1501,10 @@ What would you like to modify?`,
         break;
         
       case 'ready_for_paint_selection':
+        console.log('🎯 In ready_for_paint_selection case with input:', input);
         // Handle calculate quote button from comprehensive parser
         if (input === 'calculate_quote') {
+          console.log('🧮 Processing calculate_quote...');
           // Calculate quote with current data
           if (quoteData.customer_name && quoteData.address && 
               quoteData.dimensions.wall_linear_feet && quoteData.dimensions.ceiling_height) {
@@ -2526,6 +2536,7 @@ Ready to save this quote?`;
         responseContent = "I'm not sure what you're looking for. Could you please clarify?";
     }
 
+    console.log('🔄 Setting conversation stage from', stage, 'to', nextStage);
     setConversationStage(nextStage);
 
     return {
