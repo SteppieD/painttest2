@@ -717,6 +717,182 @@ What would you like to modify?`,
     let responseContent = '';
     let nextStage = stage;
 
+    // Check if we should use LangChain for comprehensive input processing
+    const shouldUseLangChain = (
+      stage === 'customer_info' && (
+        // Multiple pieces of info in one message
+        (input.includes('at ') || input.includes(' and ')) && 
+        (/\d+.*linear.*feet/i.test(input) || /\d+.*foot|feet/i.test(input) || 
+         /interior|exterior/i.test(input) || /not.*paint|don't.*paint/i.test(input) ||
+         /gallon|\$/i.test(input) || /sherwin|benjamin|behr/i.test(input))
+      )
+    );
+
+    if (shouldUseLangChain) {
+      try {
+        const response = await fetch('/api/quote-assistant', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: input,
+            conversationHistory: messages.map(m => m.content),
+            existingQuoteData: {},
+            companyId: companyData.id
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const extracted = data.extractedInfo;
+
+          // Update quote data with extracted information
+          setQuoteData(prev => ({
+            ...prev,
+            customer_name: extracted.customer_name || prev.customer_name,
+            address: extracted.address || prev.address,
+            project_type: extracted.project_type || prev.project_type,
+            dimensions: {
+              ...prev.dimensions,
+              wall_linear_feet: extracted.dimensions.linear_feet || prev.dimensions.wall_linear_feet,
+              ceiling_height: extracted.dimensions.ceiling_height || prev.dimensions.ceiling_height,
+              ceiling_area: extracted.dimensions.total_area || prev.dimensions.ceiling_area,
+            }
+          }));
+
+          // Set selected surfaces based on extracted info
+          if (extracted.surfaces) {
+            const surfaces = [];
+            if (extracted.surfaces.walls) surfaces.push('walls');
+            if (extracted.surfaces.ceilings) surfaces.push('ceilings');
+            if (extracted.surfaces.trim) surfaces.push('trim');
+            if (extracted.surfaces.doors) surfaces.push('doors');
+            if (extracted.surfaces.windows) surfaces.push('windows');
+            
+            if (surfaces.length > 0) {
+              setSelectedSurfaces(surfaces);
+            }
+          }
+
+          // Use LangChain response and determine next stage
+          responseContent = data.response;
+          
+          if (data.canCalculateQuote && extracted.customer_name && extracted.address) {
+            nextStage = 'ready_for_paint_selection';
+            
+            // Show paint selection or quote calculation buttons
+            setTimeout(() => {
+              setButtonOptions([
+                { id: 'calculate', label: '📊 Calculate Quote Now', value: 'calculate_quote', selected: false },
+                { id: 'paint_select', label: '🎨 Select Paint Products', value: 'select_paint', selected: false }
+              ]);
+              setShowButtons(true);
+            }, 500);
+          } else if (extracted.customer_name && extracted.address && extracted.project_type) {
+            nextStage = 'surface_selection';
+            
+            // Show surface selection buttons
+            setTimeout(() => {
+              setButtonOptions([
+                { id: 'walls', label: '🧱 Walls', value: 'walls', selected: extracted.surfaces?.walls || false },
+                { id: 'ceilings', label: '⬆️ Ceilings', value: 'ceilings', selected: extracted.surfaces?.ceilings || false },
+                { id: 'trim', label: '🚪 Trim & Moldings', value: 'trim', selected: extracted.surfaces?.trim || false },
+                { id: 'doors', label: '🚪 Doors', value: 'doors', selected: extracted.surfaces?.doors || false },
+                { id: 'windows', label: '🪟 Windows', value: 'windows', selected: extracted.surfaces?.windows || false }
+              ]);
+              setShowButtons(true);
+            }, 500);
+          }
+
+          return {
+            id: Date.now().toString(),
+            role: 'assistant',
+            content: responseContent,
+            timestamp: new Date().toISOString()
+          };
+        }
+      } catch (error) {
+        console.error('LangChain processing failed, falling back to comprehensive parsing:', error);
+      }
+    }
+
+    // Fallback: Use comprehensive parser for complex inputs
+    try {
+      const { parseComprehensiveInput, generateComprehensiveResponse, shouldUseComprehensiveParsing } = await import('@/lib/comprehensive-parser');
+      
+      if (shouldUseComprehensiveParsing(input)) {
+      const extracted = parseComprehensiveInput(input);
+      
+      // Update quote data with extracted information
+      setQuoteData(prev => ({
+        ...prev,
+        customer_name: extracted.customer_name || prev.customer_name,
+        address: extracted.address || prev.address,
+        project_type: extracted.project_type || prev.project_type,
+        dimensions: {
+          ...prev.dimensions,
+          wall_linear_feet: extracted.dimensions.linear_feet || prev.dimensions.wall_linear_feet,
+          ceiling_height: extracted.dimensions.ceiling_height || prev.dimensions.ceiling_height,
+          ceiling_area: extracted.dimensions.total_area || prev.dimensions.ceiling_area,
+        }
+      }));
+
+      // Set selected surfaces based on extracted info
+      const surfaces = [];
+      if (extracted.surfaces.walls) surfaces.push('walls');
+      if (extracted.surfaces.ceilings) surfaces.push('ceilings');
+      if (extracted.surfaces.trim) surfaces.push('trim');
+      if (extracted.surfaces.doors) surfaces.push('doors');
+      if (extracted.surfaces.windows) surfaces.push('windows');
+      
+      if (surfaces.length > 0) {
+        setSelectedSurfaces(surfaces);
+      }
+
+      // Generate response using comprehensive parser
+      responseContent = generateComprehensiveResponse(extracted, input);
+      
+      // Determine next stage based on extracted information
+      if (extracted.confidence_level === 'high' && 
+          extracted.customer_name && 
+          extracted.address && 
+          extracted.dimensions.linear_feet && 
+          extracted.dimensions.ceiling_height) {
+        
+        nextStage = 'ready_for_paint_selection';
+        
+        // Show quote calculation button
+        setTimeout(() => {
+          setButtonOptions([
+            { id: 'calculate', label: '📊 Calculate Quote Now', value: 'calculate_quote', selected: false },
+            { id: 'paint_select', label: '🎨 Select Paint First', value: 'select_paint', selected: false }
+          ]);
+          setShowButtons(true);
+        }, 500);
+        
+      } else if (extracted.customer_name && extracted.address && extracted.project_type) {
+        nextStage = 'surface_selection';
+        
+        // Show surface selection buttons
+        setTimeout(() => {
+          setButtonOptions([
+            { id: 'continue_surfaces', label: '➡️ Continue to Surfaces', value: 'continue_surfaces', selected: false }
+          ]);
+          setShowButtons(true);
+        }, 500);
+      }
+
+      return {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: responseContent,
+        timestamp: new Date().toISOString()
+      };
+      }
+    } catch (error) {
+      console.error('Comprehensive parser error:', error);
+    }
+
+    // Traditional processing continues here
     switch (stage) {
       case 'customer_info':
         const customerInfo = parseCustomerInfo(input, quoteData);
@@ -1289,6 +1465,90 @@ What would you like to modify?`,
         break;
         
       case 'ready_for_paint_selection':
+        // Handle calculate quote button from comprehensive parser
+        if (input === 'calculate_quote') {
+          // Calculate quote with current data
+          if (quoteData.customer_name && quoteData.address && 
+              quoteData.dimensions.wall_linear_feet && quoteData.dimensions.ceiling_height) {
+            
+            try {
+              const dimensions = {
+                wall_linear_feet: quoteData.dimensions.wall_linear_feet,
+                ceiling_height: quoteData.dimensions.ceiling_height,
+                ceiling_area: quoteData.dimensions.ceiling_area || (quoteData.dimensions.wall_linear_feet * quoteData.dimensions.ceiling_height) / 4,
+                number_of_doors: 2, // Default
+                number_of_windows: 3, // Default
+              };
+
+              const calculation = calculateProfessionalQuote(
+                dimensions,
+                quoteData.project_type,
+                {
+                  primer_level: 0, // No primer as specified
+                  wall_paint_level: 1, // Mid-level paint
+                  ceiling_paint_level: 0, // Not painting ceilings
+                  trim_paint_level: 0, // Not painting trim
+                  include_floor_sealer: false,
+                },
+                quoteData.markup_percentage || 20
+              );
+
+              setQuoteData(prev => ({ ...prev, calculation }));
+
+              responseContent = `## Professional Quote for ${quoteData.customer_name}
+
+**Address:** ${quoteData.address}
+**Project:** ${quoteData.dimensions.wall_linear_feet} linear feet of interior wall painting
+
+### Cost Breakdown:
+• **Wall Area:** ${(quoteData.dimensions.wall_linear_feet * quoteData.dimensions.ceiling_height).toLocaleString()} sqft
+• **Materials:** $${calculation.materials.total_material_cost.toLocaleString()}
+• **Labor:** $${calculation.labor.total_labor.toLocaleString()}
+• **Your Cost:** $${calculation.total_cost.toLocaleString()}
+• **Customer Price:** $${calculation.final_price.toLocaleString()}
+• **Your Profit:** $${calculation.markup_amount.toLocaleString()} (${calculation.profit_margin.toFixed(1)}% margin)
+
+Ready to save this quote?`;
+
+              nextStage = 'quote_editing';
+              
+              setTimeout(() => {
+                setButtonOptions([
+                  { id: 'save', label: '💾 Save Quote', value: 'save_quote', selected: false },
+                  { id: 'edit', label: '✏️ Edit Details', value: 'edit_quote', selected: false }
+                ]);
+                setShowButtons(true);
+              }, 500);
+
+            } catch (error) {
+              console.error('Quote calculation error:', error);
+              responseContent = `I need a bit more information to calculate the quote accurately. Let me ask a few quick questions.`;
+              nextStage = 'dimensions';
+            }
+          } else {
+            responseContent = `I need the basic measurements to calculate your quote. What's the linear footage and ceiling height?`;
+            nextStage = 'dimensions';
+          }
+          break;
+        }
+        
+        // Handle paint selection button
+        if (input === 'select_paint') {
+          nextStage = 'paint_brand_selection';
+          responseContent = `Let's select paint for your walls. Which brand do you prefer?`;
+          
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'sherwin', label: '🎨 Sherwin Williams', value: 'brand_Sherwin Williams_walls', selected: false },
+              { id: 'benjamin', label: '🎨 Benjamin Moore', value: 'brand_Benjamin Moore_walls', selected: false },
+              { id: 'behr', label: '🎨 Behr', value: 'brand_Behr_walls', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+          break;
+        }
+        
+        // Original ready_for_paint_selection handler continues here
         // Handle the continue to paint selection button for ceiling-only projects
         if (input === 'continue_paint') {
           // Set up paint selection queue based on selected surfaces
