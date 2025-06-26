@@ -1,13 +1,187 @@
-# Painting Quote App - Project Instructions
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+# Professional Painting Quote Platform - Next.js Application
 
 ## Project Overview
-This is a Next.js painting quote application with SQLite database, Google Gemini AI integration, and a comprehensive quoting system featuring both traditional and revolutionary Apple/Google-inspired interfaces.
+This is a sophisticated Next.js painting quote application featuring a revolutionary dual-interface architecture, hybrid database strategy, and AI-powered quote generation with smart learning capabilities.
 
-## Key Commands
-- `npm run dev` - Start development server on port 3001
-- `npm run build` - Build for production
-- `npm run lint` - Run ESLint
+## Development Commands
+
+### Core Development
+- `npm run dev` - Start development server on localhost:3001
+- `npm run build` - Build for production (required before deployment)
+- `npm run lint` - Run ESLint and identify code quality issues
 - `npm start` - Start production server
+
+### Database Operations
+- Database auto-initializes SQLite on first run (`painting_quotes_app.db`)
+- Test endpoints: `/api/test-connection`, `/api/test-db`, `/api/test-supabase`
+- Reset database: Delete `.db` files to reinitialize with fresh schema
+
+### Testing Access Points
+- **Demo Access Codes**: `DEMO2024`, `PAINTER001`, `CONTRACTOR123`
+- **Admin Portal**: Login at `/admin` with admin@paintingapp.com / admin123
+- **Modern Interface**: Access via `/dashboard-modern` or access code modern option
+
+## Core Architecture Patterns
+
+### Dual Interface Strategy (Revolutionary Design)
+**Problem Solved**: Different user needs for quote creation speed vs comprehensiveness
+
+**Architecture**:
+- **Traditional Interface** (`/dashboard`, `/create-quote`): Conversational AI-driven workflow (5-10 min quotes)
+- **Modern Interface** (`/dashboard-modern`, `/components/ui/express-quote-creator.tsx`): Template-based express quotes (30 seconds)
+
+**Key Implementation**: Both interfaces feed into the same calculation engine (`/lib/professional-quote-calculator.ts`) but with different data collection strategies.
+
+### Hybrid Database Strategy (Multi-Environment Resilience)
+**Architecture Pattern**: Environment-aware database selection with graceful fallbacks
+
+**Implementation**:
+- **Development**: SQLite with better-sqlite3 (`painting_quotes_app.db`)
+- **Production**: Supabase PostgreSQL (`/lib/database/supabase-adapter.ts`)
+- **Fallback**: In-memory mock data (`/lib/database-simple.ts`)
+
+**Key Files**:
+- `/lib/database/init.ts` - SQLite initialization with schema execution
+- `/lib/database/schema.sql` - 242-line schema supporting 30+ tables
+- Auto-migration system with cross-database JSON compatibility
+
+### Progressive Quote Calculation Engine (Multi-Strategy Intelligence)
+**Problem Solved**: Accurate pricing with varying levels of input data
+
+**Calculation Strategies** (in order of accuracy):
+1. **Dimensional**: Actual room measurements (`/lib/progressive-calculator.ts`)
+2. **Surface-Based**: Room count + surface selection
+3. **Project Type**: Basic classification estimates
+4. **Industry Average**: Fallback pricing
+
+**Smart Learning Integration** (`/lib/smart-defaults.ts`):
+- Analyzes contractor quote history for pattern recognition
+- Suggests room dimensions, paint preferences, pricing based on frequency
+- Provides confidence levels (high/medium/low) for suggestions
+
+### State Management Optimization (Performance Innovation)
+**Achievement**: 50% reduction in component re-renders
+
+**Implementation** (`/lib/quote-state-manager.ts`):
+- Consolidated 25+ useState hooks into single useReducer pattern
+- Type-safe action system with comprehensive state modeling
+- Real-time progressive estimation integration
+- Optimistic updates for perceived performance
+
+### Multi-Tenant Access System (Company Isolation)
+**Architecture**: Dynamic company creation with session management
+
+**Flow**:
+1. Access code entry creates/retrieves company profile
+2. Setup wizard customizes paint products and pricing
+3. Company-scoped data isolation throughout application
+4. Session persistence with 24-hour expiration
+
+**Key Files**:
+- `/app/access-code/page.tsx` - Company resolution and session creation
+- `/app/setup/page.tsx` - 4-step progressive onboarding
+- `/api/companies/` - Company preference management
+
+## Critical Development Workflows
+
+### Working with the Quote Calculation System
+**Understanding the Flow**: Quote creation spans multiple files with different calculation strategies
+
+**Development Pattern**:
+1. **Data Collection**: Either traditional chat (`/app/create-quote/page.tsx`) or modern templates (`/components/ui/express-quote-creator.tsx`)
+2. **Progressive Calculation**: Real-time estimates via `/lib/progressive-calculator.ts` using available data
+3. **Smart Suggestions**: AI learning system (`/lib/smart-defaults.ts`) provides intelligent defaults
+4. **Final Calculation**: Unified engine (`/lib/professional-quote-calculator.ts`) processes all quote types
+5. **State Management**: Optimized with useReducer pattern (`/lib/quote-state-manager.ts`)
+
+**Testing Quote Calculations**:
+- Test both interfaces with identical project data to verify calculation consistency
+- Use different data completeness levels to test progressive estimation strategies
+- Verify smart suggestions improve over time with more quote history
+
+### Database Development Workflow
+**Multi-Environment Testing Pattern**:
+
+**SQLite Development**:
+1. Delete `.db` files to reset to fresh schema
+2. Run `npm run dev` to auto-initialize from `/lib/database/schema.sql`
+3. Use browser endpoints `/api/test-db` for connectivity verification
+4. Test with access codes to verify multi-tenant data isolation
+
+**Cross-Database Compatibility**:
+- JSON fields stored as TEXT in SQLite, native JSON in PostgreSQL
+- Foreign key constraints work differently across databases
+- Test migration scenarios with existing data
+
+### Modern UX Development Pattern
+**Design System Implementation**:
+- Use CSS custom properties from `/styles/design-system.css`
+- Follow 44pt minimum touch targets for mobile optimization
+- Implement progressive disclosure patterns for complex workflows
+
+**Component Development**:
+- Modern components inherit from design system tokens
+- Touch-first interaction patterns with gesture support
+- Performance optimization for 60fps animations
+
+### AI Integration Development
+**Conversation State Management**:
+- AI conversations maintain context across multiple API calls
+- Loop detection prevents infinite conversation cycles
+- Graceful error handling with fallback responses
+
+**Smart Learning Development**:
+- Pattern recognition improves with more quote data
+- Confidence scoring based on data frequency and recency
+- Suggestion quality improves over contractor usage time
+
+## Environment Configuration & Deployment
+
+### Environment-Aware Architecture
+**Production Detection**: Automatic environment detection drives database selection
+
+**Required Environment Variables**:
+```bash
+# AI Integration (Required)
+GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_key
+OPENROUTER_API_KEY=your_claude_key          # Optional fallback
+
+# Session Management (Required)
+NEXTAUTH_SECRET=your_secret_key
+NEXTAUTH_URL=your_domain
+
+# Production Database (Optional - triggers PostgreSQL mode)
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_key
+DATABASE_URL=alternative_postgres_url        # Alternative to Supabase
+```
+
+**Database Strategy by Environment**:
+- **Development** (`NODE_ENV=development`): SQLite auto-initialization
+- **Production** (`NODE_ENV=production` + database env vars): PostgreSQL with fallback
+- **Deployment** (no database env vars): Mock data mode for platforms without database
+
+### Performance Optimizations
+**Batch Loading** (`/lib/batch-loader.ts`):
+- Parallel API initialization reduces load time from 4s to 1.5s
+- Error recovery with graceful fallbacks
+- Professional loading UI with progress tracking
+
+**State Optimization**:
+- 50% fewer re-renders through useReducer consolidation
+- Progressive estimation provides real-time feedback
+- Optimistic updates improve perceived performance
+
+### Deployment Configurations
+**Supported Platforms**:
+- **Vercel**: Automatic deployment with PostgreSQL database
+- **Railway**: One-click deploy with database provisioning
+- **Docker**: Full containerization with volume persistence
+- **Local**: SQLite development with full feature parity
 
 ## 🚀 **LATEST MAJOR MILESTONE: Modern UX Implementation Complete (Jun 21, 2025)**
 
@@ -157,7 +331,10 @@ A complete UX overhaul implementing Apple Human Interface Guidelines and Google 
 - **State Management**: React Hook Form with Zod validation + useReducer for complex state
 
 ### **Backend:**
-- **Database**: SQLite with better-sqlite3, full admin tables
+- **Database**: Hybrid SQLite/PostgreSQL strategy
+  - **Development**: SQLite with better-sqlite3 (`painting_quotes_app.db`)
+  - **Production**: Supabase PostgreSQL (`lib/database/supabase-adapter.ts`)
+  - **Fallback**: In-memory mock data when external databases unavailable
 - **AI Integration**: Google Generative AI for quote assistance
 - **Admin System**: JWT-based authentication with session management
 - **APIs**: RESTful endpoints + new smart suggestions API
@@ -186,11 +363,35 @@ A complete UX overhaul implementing Apple Human Interface Guidelines and Google 
 - **Accessibility**: Follow WCAG guidelines with proper contrast and focus management
 
 ## Database Guidelines
-- **Database file**: `painting_quotes_app.db`
-- **Schema initialization**: Handled automatically via `/lib/database/init.ts`
-- **Query patterns**: Use prepared statements for all queries
-- **Error handling**: Handle database errors gracefully with proper error messages
-- **Smart learning**: New tables for storing contractor preferences and patterns
+
+### Database System
+- `lib/database/schema.sql` - Complete SQLite schema (266 lines, 30+ tables)
+- `lib/database/init.ts` - Current SQLite initialization with fallback strategy
+- `lib/database/supabase-adapter.ts` - Production PostgreSQL adapter
+- `painting_quotes_app.db` - Main SQLite database file (auto-created)
+
+### Testing Commands
+- No formal test suite configured (uses manual API endpoint testing)
+- Test specific features via browser endpoints:
+  - `/api/test-connection` - Database connectivity
+  - `/api/test-db` - Database operations
+  - `/api/test-supabase` - Supabase integration
+- Manual testing through the application interface required
+
+### Database Development Workflow
+When making database changes:
+- Test with fresh SQLite database (delete .db files to reset)
+- Verify schema migrations via `lib/database/run-migrations.ts`
+- Test multi-tenant data isolation with different company_id values
+- Validate both SQLite (dev) and PostgreSQL (production) compatibility
+
+### Environment Variables Required
+- `OPENROUTER_API_KEY` - For Claude Sonnet 4 integration
+- `GOOGLE_GENERATIVE_AI_KEY` - For Gemini fallback
+- `NEXTAUTH_SECRET` - For session management
+- `SUPABASE_URL` - Optional: Supabase PostgreSQL connection
+- `SUPABASE_ANON_KEY` - Optional: Supabase authentication
+- `DATABASE_URL` - Optional: Alternative PostgreSQL connection string
 
 ## Enhanced Quote Creation Logic
 

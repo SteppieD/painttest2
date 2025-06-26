@@ -4,6 +4,7 @@ import {
   Calculator, 
   Clock, 
   CheckCircle, 
+  CheckCircle2,
   Star,
   ArrowRight,
   Users,
@@ -11,7 +12,9 @@ import {
   Shield,
   Smartphone,
   FileText,
-  BookOpen
+  BookOpen,
+  Zap,
+  Palette
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
