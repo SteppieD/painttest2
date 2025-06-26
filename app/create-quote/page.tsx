@@ -717,8 +717,8 @@ What would you like to modify?`,
     let responseContent = '';
     let nextStage = stage;
 
-    // Check if we should use LangChain for comprehensive input processing
-    const shouldUseLangChain = (
+    // Check if we should use comprehensive input processing
+    const shouldUseComprehensive = (
       stage === 'customer_info' && (
         // Multiple pieces of info in one message
         (input.includes('at ') || input.includes(' and ')) && 
@@ -728,7 +728,8 @@ What would you like to modify?`,
       )
     );
 
-    if (shouldUseLangChain) {
+    if (shouldUseComprehensive) {
+      // Try LangChain first, but always fall back to comprehensive parser
       try {
         const response = await fetch('/api/quote-assistant', {
           method: 'POST',
@@ -744,6 +745,30 @@ What would you like to modify?`,
         if (response.ok) {
           const data = await response.json();
           const extracted = data.extractedInfo;
+          
+          // Check if LangChain actually extracted meaningful information
+          const hasMeaningfulExtraction = (
+            extracted.customer_name || 
+            extracted.address || 
+            extracted.project_type || 
+            extracted.dimensions.linear_feet || 
+            extracted.dimensions.ceiling_height ||
+            extracted.paint_specs.brand ||
+            extracted.paint_specs.finish ||
+            extracted.paint_specs.price_per_gallon
+          );
+          
+          // If LangChain failed to extract info or returned error response, fall back to comprehensive parser
+          if (!hasMeaningfulExtraction || 
+              data.response.includes("I'm having trouble") || 
+              data.response.includes("System error") ||
+              extracted.confidence_level === 'low') {
+            console.log('🔄 LangChain failed to extract meaningful data, using comprehensive parser fallback');
+            console.log('   - hasMeaningfulExtraction:', hasMeaningfulExtraction);
+            console.log('   - response includes trouble:', data.response.includes("I'm having trouble"));
+            console.log('   - confidence_level:', extracted.confidence_level);
+            throw new Error('LangChain extraction insufficient, falling back to comprehensive parser');
+          }
 
           // Update quote data with extracted information
           setQuoteData(prev => ({
@@ -811,86 +836,89 @@ What would you like to modify?`,
           };
         }
       } catch (error) {
-        console.error('LangChain processing failed, falling back to comprehensive parsing:', error);
+        console.error('🚨 LangChain processing failed, falling back to comprehensive parsing:', error);
       }
-    }
 
-    // Fallback: Use comprehensive parser for complex inputs
-    try {
-      const { parseComprehensiveInput, generateComprehensiveResponse, shouldUseComprehensiveParsing } = await import('@/lib/comprehensive-parser');
-      
-      if (shouldUseComprehensiveParsing(input)) {
-      const extracted = parseComprehensiveInput(input);
-      
-      // Update quote data with extracted information
-      setQuoteData(prev => ({
-        ...prev,
-        customer_name: extracted.customer_name || prev.customer_name,
-        address: extracted.address || prev.address,
-        project_type: extracted.project_type || prev.project_type,
-        dimensions: {
-          ...prev.dimensions,
-          wall_linear_feet: extracted.dimensions.linear_feet || prev.dimensions.wall_linear_feet,
-          ceiling_height: extracted.dimensions.ceiling_height || prev.dimensions.ceiling_height,
-          ceiling_area: extracted.dimensions.total_area || prev.dimensions.ceiling_area,
+      // Always use comprehensive parser as fallback for comprehensive inputs
+      try {
+        const { parseComprehensiveInput, generateComprehensiveResponse } = await import('@/lib/comprehensive-parser');
+        
+        console.log('🧠 Using comprehensive parser for input:', input);
+        
+        const extracted = parseComprehensiveInput(input);
+        console.log('Extracted data:', extracted);
+        
+        // Update quote data with extracted information
+        setQuoteData(prev => ({
+          ...prev,
+          customer_name: extracted.customer_name || prev.customer_name,
+          address: extracted.address || prev.address,
+          project_type: extracted.project_type || prev.project_type,
+          dimensions: {
+            ...prev.dimensions,
+            wall_linear_feet: extracted.dimensions.linear_feet || prev.dimensions.wall_linear_feet,
+            ceiling_height: extracted.dimensions.ceiling_height || prev.dimensions.ceiling_height,
+            ceiling_area: extracted.dimensions.total_area || prev.dimensions.ceiling_area,
+          }
+        }));
+
+        // Set selected surfaces based on extracted info
+        const surfaces = [];
+        if (extracted.surfaces.walls) surfaces.push('walls');
+        if (extracted.surfaces.ceilings) surfaces.push('ceilings');
+        if (extracted.surfaces.trim) surfaces.push('trim');
+        if (extracted.surfaces.doors) surfaces.push('doors');
+        if (extracted.surfaces.windows) surfaces.push('windows');
+        
+        if (surfaces.length > 0) {
+          setSelectedSurfaces(surfaces);
         }
-      }));
 
-      // Set selected surfaces based on extracted info
-      const surfaces = [];
-      if (extracted.surfaces.walls) surfaces.push('walls');
-      if (extracted.surfaces.ceilings) surfaces.push('ceilings');
-      if (extracted.surfaces.trim) surfaces.push('trim');
-      if (extracted.surfaces.doors) surfaces.push('doors');
-      if (extracted.surfaces.windows) surfaces.push('windows');
-      
-      if (surfaces.length > 0) {
-        setSelectedSurfaces(surfaces);
-      }
+        // Generate response using comprehensive parser
+        responseContent = generateComprehensiveResponse(extracted, input);
+        
+        // Determine next stage based on extracted information
+        if (extracted.confidence_level === 'high' && 
+            extracted.customer_name && 
+            extracted.address && 
+            extracted.dimensions.linear_feet && 
+            extracted.dimensions.ceiling_height) {
+          
+          nextStage = 'ready_for_paint_selection';
+          
+          // Show quote calculation button
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'calculate', label: '📊 Calculate Quote Now', value: 'calculate_quote', selected: false },
+              { id: 'paint_select', label: '🎨 Select Paint First', value: 'select_paint', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+          
+        } else if (extracted.customer_name && extracted.address && extracted.project_type) {
+          nextStage = 'surface_selection';
+          
+          // Show surface selection buttons
+          setTimeout(() => {
+            setButtonOptions([
+              { id: 'continue_surfaces', label: '➡️ Continue to Surfaces', value: 'continue_surfaces', selected: false }
+            ]);
+            setShowButtons(true);
+          }, 500);
+        }
 
-      // Generate response using comprehensive parser
-      responseContent = generateComprehensiveResponse(extracted, input);
-      
-      // Determine next stage based on extracted information
-      if (extracted.confidence_level === 'high' && 
-          extracted.customer_name && 
-          extracted.address && 
-          extracted.dimensions.linear_feet && 
-          extracted.dimensions.ceiling_height) {
+        return {
+          id: Date.now().toString(),
+          role: 'assistant',
+          content: responseContent,
+          timestamp: new Date().toISOString()
+        };
         
-        nextStage = 'ready_for_paint_selection';
-        
-        // Show quote calculation button
-        setTimeout(() => {
-          setButtonOptions([
-            { id: 'calculate', label: '📊 Calculate Quote Now', value: 'calculate_quote', selected: false },
-            { id: 'paint_select', label: '🎨 Select Paint First', value: 'select_paint', selected: false }
-          ]);
-          setShowButtons(true);
-        }, 500);
-        
-      } else if (extracted.customer_name && extracted.address && extracted.project_type) {
-        nextStage = 'surface_selection';
-        
-        // Show surface selection buttons
-        setTimeout(() => {
-          setButtonOptions([
-            { id: 'continue_surfaces', label: '➡️ Continue to Surfaces', value: 'continue_surfaces', selected: false }
-          ]);
-          setShowButtons(true);
-        }, 500);
+      } catch (error) {
+        console.error('Comprehensive parser error:', error);
       }
-
-      return {
-        id: Date.now().toString(),
-        role: 'assistant',
-        content: responseContent,
-        timestamp: new Date().toISOString()
-      };
-      }
-    } catch (error) {
-      console.error('Comprehensive parser error:', error);
     }
+
 
     // Traditional processing continues here
     switch (stage) {

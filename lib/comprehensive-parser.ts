@@ -292,17 +292,28 @@ export function generateComprehensiveResponse(extracted: ComprehensiveQuoteInfo,
     
     response += `Excellent! I have everything needed to calculate your quote. Let me prepare the professional estimate now.`;
     
-  } else if (extracted.confidence_level === 'medium') {
+  } else if (extracted.customer_name && extracted.address && extracted.project_type) {
+    // We have the basics - customer info and project type - move forward
     const missing = [];
-    if (!extracted.customer_name) missing.push('customer name');
-    if (!extracted.address) missing.push('property address');
     if (!extracted.dimensions.linear_feet) missing.push('linear feet of walls');
     if (!extracted.dimensions.ceiling_height) missing.push('ceiling height');
     
     if (missing.length > 0) {
-      response += `I just need a few more details:\n• ${missing.join('\n• ')}`;
+      response += `Great progress! I just need a couple more details to calculate your quote:\n• ${missing.join('\n• ')}`;
     } else {
-      response += `Great! Let me select the paint products and calculate your quote.`;
+      response += `Perfect! I have all the information needed. Let me prepare your professional quote now.`;
+    }
+    
+  } else if (extracted.confidence_level === 'medium' || extracted.extracted_count >= 3) {
+    const missing = [];
+    if (!extracted.customer_name) missing.push('customer name');
+    if (!extracted.address) missing.push('property address');
+    if (!extracted.project_type) missing.push('project type (interior/exterior)');
+    
+    if (missing.length > 0) {
+      response += `I captured several details from your message! I just need:\n• ${missing.join('\n• ')}`;
+    } else {
+      response += `Great! Let me move forward with your quote.`;
     }
     
   } else {
