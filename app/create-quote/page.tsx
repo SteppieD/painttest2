@@ -1519,19 +1519,34 @@ What would you like to modify?`,
               };
 
               const calculation = calculateProfessionalQuote(
-                dimensions,
-                quoteData.project_type,
+                dimensions as ProjectDimensions,
                 {
-                  primer_level: 0, // No primer as specified
+                  primer: {
+                    name: DEFAULT_PAINT_PRODUCTS.primer_name,
+                    spread_rate: DEFAULT_PAINT_PRODUCTS.primer_spread_rate,
+                    cost: DEFAULT_PAINT_PRODUCTS.primer_cost_per_gallon
+                  } as any,
+                  wall_paint: DEFAULT_PAINT_PRODUCTS.wall_paints[1], // Mid-level paint
+                  ceiling_paint: DEFAULT_PAINT_PRODUCTS.ceiling_paints[0], // Not painting ceilings
+                  trim_paint: DEFAULT_PAINT_PRODUCTS.trim_paints[0], // Not painting trim
+                  floor_sealer: DEFAULT_PAINT_PRODUCTS.floor_sealer
+                },
+                quoteData.rates,
+                quoteData.markup_percentage || 20,
+                false // No floor sealer
+              );
+
+              setQuoteData(prev => ({ 
+                ...prev, 
+                calculation,
+                selected_products: {
+                  primer_level: 0, // No primer as user specified
                   wall_paint_level: 1, // Mid-level paint
                   ceiling_paint_level: 0, // Not painting ceilings
                   trim_paint_level: 0, // Not painting trim
-                  include_floor_sealer: false,
-                },
-                quoteData.markup_percentage || 20
-              );
-
-              setQuoteData(prev => ({ ...prev, calculation }));
+                  include_floor_sealer: false
+                }
+              }));
 
               responseContent = `## Professional Quote for ${quoteData.customer_name}
 
