@@ -1548,7 +1548,7 @@ What would you like to modify?`,
 
 Ready to save this quote?`;
 
-              nextStage = 'quote_editing';
+              nextStage = 'quote_review';
               
               setTimeout(() => {
                 setButtonOptions([
@@ -2209,7 +2209,7 @@ Ready to save this quote?`;
         } else if (lowerInput.includes('adjust') || lowerInput.includes('change') || lowerInput.includes('modify')) {
           responseContent = `What would you like to adjust? I can modify:\n\n• **Markup** (currently ${quoteData.markup_percentage}%)\n• **Dimensions** (linear feet, ceiling height, doors, windows)\n• **Paint quality** (good, better, best)\n• **Rates** (currently $${quoteData.rates.wall_rate_per_sqft}/sqft walls, $${quoteData.rates.door_rate_each}/door, $${quoteData.rates.window_rate_each}/window)\n\nJust tell me what you'd like to change!`;
           nextStage = 'adjustments';
-        } else if (lowerInput.includes('save') || lowerInput.includes('approve') || lowerInput.includes('finalize')) {
+        } else if (lowerInput.includes('save') || lowerInput.includes('approve') || lowerInput.includes('finalize') || input === 'save_quote') {
           try {
             const quoteId = await saveQuote();
             responseContent = `✅ Quote saved successfully!\n\n**Final Details:**\n• Customer: ${quoteData.customer_name}\n• **Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}**\n• Your Cost: $${quoteData.calculation!.total_cost.toLocaleString()}\n• Your Profit: $${quoteData.calculation!.markup_amount.toLocaleString()}\n\nWhat would you like to do next?`;
