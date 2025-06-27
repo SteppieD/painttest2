@@ -1,5 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbGet, dbRun } from "@/lib/database";
+import { getDatabase } from "@/lib/database/init";
+
+// Use SQLite database directly for quote details
+const dbGet = (sql: string, params: any[] = []) => {
+  const db = getDatabase();
+  return db.prepare(sql).get(...params);
+};
+
+const dbRun = (sql: string, params: any[] = []) => {
+  const db = getDatabase();
+  return db.prepare(sql).run(...params);
+};
 
 // GET - Retrieve a specific quote
 export async function GET(
@@ -12,7 +23,8 @@ export async function GET(
         q.*,
         c.company_name,
         c.phone as company_phone,
-        c.email as company_email
+        c.email as company_email,
+        c.logo_url as company_logo_url
       FROM quotes q
       LEFT JOIN companies c ON q.company_id = c.id
       WHERE q.id = ? OR q.quote_id = ?

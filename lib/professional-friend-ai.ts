@@ -19,7 +19,8 @@
  */
 
 import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
-import { dbGet, dbAll, getPreparedStatements, dbUtils } from './database';
+import { dbGet, dbAll } from './database';
+import { getPreparedStatements, dbUtils } from './database/init';
 
 /**
  * ContractorContext contains business intelligence data for the contractor.

@@ -36,10 +36,16 @@ export default function QuotePage({ params }: { params: { id: string } }) {
 
   const loadQuote = async () => {
     try {
+      console.log('🔍 Loading quote with ID:', params.id);
       const response = await fetch(`/api/quotes/${params.id}`);
+      console.log('🔍 Quote API response status:', response.status);
       if (response.ok) {
         const data = await response.json();
+        console.log('🔍 Quote data received:', data);
         setQuote(data);
+        console.log('🔍 Quote state set successfully');
+      } else {
+        console.log('❌ Quote API response not ok:', response.status);
       }
     } catch (error) {
       console.error('Error loading quote:', error);
@@ -83,6 +89,8 @@ export default function QuotePage({ params }: { params: { id: string } }) {
     );
   }
 
+  console.log('🔍 Quote state check:', { quote, isLoading });
+  
   if (!quote) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">

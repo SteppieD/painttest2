@@ -5,6 +5,9 @@
 /* Import Modern Design System */
 @import '../styles/design-system.css';
 
+/* Import Apple Liquid Glass System */
+@import '../styles/liquid-glass.css';
+
 @layer base {
   :root {
     --background: 0 0% 100%;

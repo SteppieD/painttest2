@@ -1,7 +1,7 @@
 // Smart defaults and learning system for painting quotes
 // Learns from previous quotes to suggest defaults for new ones
 
-import { getDatabase } from './database';
+import { getDatabase } from './database/init';
 
 interface QuotePattern {
   roomType: string;

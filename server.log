@@ -1,0 +1,1038 @@
+
+> painting-quote-app-replit@1.0.0 dev
+> next dev --hostname 0.0.0.0 --port 3001
+
+  ▲ Next.js 14.2.29
+  - Local:        http://localhost:3001
+  - Network:      http://0.0.0.0:3001
+  - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Ready in 1056ms
+ ✓ Compiled /middleware in 193ms (72 modules)
+ ○ Compiling /quotes/[id]/customer ...
+ ✓ Compiled /quotes/[id]/customer in 2.2s (582 modules)
+ ✓ Compiled in 208ms (299 modules)
+ GET /quotes/16/customer 200 in 2543ms
+ ✓ Compiled / in 392ms (657 modules)
+ GET / 200 in 519ms
+ ✓ Compiled /_not-found in 91ms (660 modules)
+ GET /manifest.json 404 in 145ms
+ ✓ Compiled /access-code in 111ms (666 modules)
+ GET /manifest.json 404 in 22ms
+ ✓ Compiled /api/verify-code in 289ms (478 modules)
+✅ Valid access code: DEMO2024 for Demo Painting Company
+ POST /api/verify-code 200 in 800ms
+ ✓ Compiled /api/companies/preferences in 79ms (480 modules)
+ GET /api/companies/preferences?companyId=1 200 in 227ms
+ ✓ Compiled /dashboard in 366ms (815 modules)
+ ✓ Compiled /api/company-quota in 140ms (494 modules)
+ ✓ Compiled (498 modules)
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /api/quotes?company_id=1 200 in 286ms
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 291ms
+ GET /api/quotes?company_id=1 200 in 20ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 20ms
+ GET /manifest.json 404 in 51ms
+ GET /api/companies/preferences?companyId=1 200 in 487ms
+✓ Supabase schema verified
+ ✓ Compiled /api/paint-products in 83ms (500 modules)
+ GET /api/companies/preferences?companyId=1 200 in 115ms
+✓ Supabase database initialized
+ GET /api/paint-products?companyId=1 200 in 245ms
+ GET /api/paint-products?companyId=1 200 in 261ms
+ ✓ Compiled /create-quote in 307ms (874 modules)
+ ✓ Compiled /api/paint-products/brands in 85ms (527 modules)
+ ✓ Compiled (529 modules)
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+dbGet called - using mock data for deployment
+ GET /api/companies/settings?companyId=1 200 in 202ms
+Error fetching paint products by brand: TypeError: products.forEach is not a function
+    at GET (webpack-internal:///(rsc)/./app/api/paint-products/brands/route.ts:40:18)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57234
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:122:103
+    at NoopContextManager.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NextTracerImpl.trace (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:122:28)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:48896
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:40958)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:47472
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:38293)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:47434
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eT.execute (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46881)
+    at eT.handle (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58771)
+    at doRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1366:60)
+    at cacheEntry.responseCache.get.routeKind (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1588:34)
+    at ResponseCache.get (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/response-cache/index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1496:53)
+ GET /api/paint-products/brands?companyId=1 500 in 205ms
+dbGet called - using mock data for deployment
+ GET /api/companies/settings?companyId=1 200 in 12ms
+Error fetching paint products by brand: TypeError: products.forEach is not a function
+    at GET (webpack-internal:///(rsc)/./app/api/paint-products/brands/route.ts:40:18)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57234
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:122:103
+    at NoopContextManager.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NextTracerImpl.trace (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:122:28)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:48896
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:40958)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:47472
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:38293)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:47434
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eT.execute (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46881)
+    at eT.handle (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58771)
+    at doRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1366:60)
+    at cacheEntry.responseCache.get.routeKind (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1588:34)
+    at ResponseCache.get (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/response-cache/index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1496:53)
+ GET /api/paint-products/brands?companyId=1 500 in 17ms
+ GET /manifest.json 404 in 34ms
+ GET /api/paint-products?companyId=1 200 in 280ms
+✓ Supabase schema verified
+ GET /api/paint-products?companyId=1 200 in 101ms
+✓ Supabase database initialized
+ GET /api/companies/preferences?companyId=1 200 in 488ms
+ GET /api/companies/preferences?companyId=1 200 in 103ms
+ ○ Compiling /api/quote-assistant ...
+ ✓ Compiled /api/quote-assistant in 933ms (1001 modules)
+Error in LangChain quote extraction: AuthenticationError: 401 Incorrect API key provided: sk-or-v1*************************************************************a86c. You can find your API key at https://platform.openai.com/account/api-keys.
+
+Troubleshooting URL: https://js.langchain.com/docs/troubleshooting/errors/MODEL_AUTHENTICATION/
+
+    at APIError.generate (webpack-internal:///(rsc)/./node_modules/openai/core/error.mjs:64:20)
+    at OpenAI.makeStatusError (webpack-internal:///(rsc)/./node_modules/openai/client.mjs:195:71)
+    at OpenAI.makeRequest (webpack-internal:///(rsc)/./node_modules/openai/client.mjs:338:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async eval (webpack-internal:///(rsc)/./node_modules/@langchain/openai/dist/chat_models.js:2372:29)
+    at async RetryOperation.eval [as _fn] (webpack-internal:///(rsc)/./node_modules/p-retry/index.js:50:12) {
+  status: 401,
+  headers: Headers {
+    date: 'Fri, 27 Jun 2025 18:36:48 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '323',
+    connection: 'keep-alive',
+    vary: 'Origin',
+    'x-request-id': 'req_70e9dbd1f3de8a9c54ea30a0a4b0fed9',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    'cf-cache-status': 'DYNAMIC',
+    'set-cookie': '__cf_bm=_GVSxBYqyg8gb8XYLt6cI7BEeyxmrxwEVEUYBZ5oO9Y-1751049408-1.0.1.1-xcBFb.YsmTvTZTAMTpu4pN0F2S.KE7IJ6MPb9bTia95N7sLYpbL9JkSavwen2.FKI.l5rYHXKqSwCuhYn013l70wtqGL8Dm4yc9zQLNqV8U; path=/; expires=Fri, 27-Jun-25 19:06:48 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=aO5UCaAR3cYOYDcHmNLRa5Efva7h1dO8tJRc6EmDcuY-1751049408230-0.0.1.1-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None',
+    'x-content-type-options': 'nosniff',
+    server: 'cloudflare',
+    'cf-ray': '95670d509fda9396-YVR',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  requestID: 'req_70e9dbd1f3de8a9c54ea30a0a4b0fed9',
+  error: {
+    message: 'Incorrect API key provided: sk-or-v1*************************************************************a86c. You can find your API key at https://platform.openai.com/account/api-keys.',
+    type: 'invalid_request_error',
+    param: null,
+    code: 'invalid_api_key'
+  },
+  code: 'invalid_api_key',
+  param: null,
+  type: 'invalid_request_error',
+  lc_error_code: 'MODEL_AUTHENTICATION',
+  attemptNumber: 1,
+  retriesLeft: 6
+}
+Error generating response: AuthenticationError: 401 Incorrect API key provided: sk-or-v1*************************************************************a86c. You can find your API key at https://platform.openai.com/account/api-keys.
+
+Troubleshooting URL: https://js.langchain.com/docs/troubleshooting/errors/MODEL_AUTHENTICATION/
+
+    at APIError.generate (webpack-internal:///(rsc)/./node_modules/openai/core/error.mjs:64:20)
+    at OpenAI.makeStatusError (webpack-internal:///(rsc)/./node_modules/openai/client.mjs:195:71)
+    at OpenAI.makeRequest (webpack-internal:///(rsc)/./node_modules/openai/client.mjs:338:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async eval (webpack-internal:///(rsc)/./node_modules/@langchain/openai/dist/chat_models.js:2372:29)
+    at async RetryOperation.eval [as _fn] (webpack-internal:///(rsc)/./node_modules/p-retry/index.js:50:12) {
+  status: 401,
+  headers: Headers {
+    date: 'Fri, 27 Jun 2025 18:36:48 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '323',
+    connection: 'keep-alive',
+    vary: 'Origin',
+    'x-request-id': 'req_9dcb9917e67379cc264fa74980f09a2a',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    'cf-cache-status': 'DYNAMIC',
+    'set-cookie': '__cf_bm=jblo0OApirNna5vNOaqt3HddAARLdm4AHRDIiFz.gAY-1751049408-1.0.1.1-ojHZ7CHN4smPasvXD4GnNZH1NKqSixCrxFCu5xcv4BdtarJRzj8wPT0zjC2J3Fqc.YCwJS9A71g2XtKa78SfbFFXn3hE0g37IyXDvMREeto; path=/; expires=Fri, 27-Jun-25 19:06:48 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=8Z0MM0RbvDsHpTK.gvc0BDoduSQHBcd1CQxT2F3u4EU-1751049408366-0.0.1.1-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None',
+    'x-content-type-options': 'nosniff',
+    server: 'cloudflare',
+    'cf-ray': '95670d51ae092ee3-YVR',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  requestID: 'req_9dcb9917e67379cc264fa74980f09a2a',
+  error: {
+    message: 'Incorrect API key provided: sk-or-v1*************************************************************a86c. You can find your API key at https://platform.openai.com/account/api-keys.',
+    type: 'invalid_request_error',
+    param: null,
+    code: 'invalid_api_key'
+  },
+  code: 'invalid_api_key',
+  param: null,
+  type: 'invalid_request_error',
+  lc_error_code: 'MODEL_AUTHENTICATION',
+  attemptNumber: 1,
+  retriesLeft: 6
+}
+ POST /api/quote-assistant 200 in 1467ms
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+📊 Quote creation recorded for company 1, quote QUOTE-MCF5M0BY-631TCI
+✅ Quote created: QUOTE-MCF5M0BY-631TCI for company 1
+ POST /api/quotes 200 in 28ms
+ ✓ Compiled /quotes/[id] in 247ms (1364 modules)
+ ✓ Compiled /api/quotes/[id] in 263ms (1366 modules)
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /manifest.json 404 in 320ms
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /api/quotes/QUOTE-MCF5M0BY-631TCI 200 in 473ms
+ GET /api/quotes/QUOTE-MCF5M0BY-631TCI 200 in 10ms
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ ○ Compiling /quotes/[id]/edit ...
+ ✓ Compiled /quotes/[id]/edit in 539ms (1491 modules)
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /api/quotes/17 200 in 17ms
+ GET /manifest.json 404 in 62ms
+ GET /api/quotes/17 200 in 49ms
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /api/quotes/17 200 in 16ms
+ GET /manifest.json 404 in 26ms
+ GET /api/quotes/17 200 in 20ms
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ ✓ Compiled /quotes/[id]/customer in 182ms (1082 modules)
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /api/quotes/17 200 in 19ms
+ GET /manifest.json 404 in 50ms
+ GET /api/quotes/17 200 in 26ms
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ ✓ Compiled in 1234ms (825 modules)
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ ✓ Compiled in 296ms (427 modules)
+ ○ Compiling /_error ...
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ GET /quotes/16/customer 500 in 1732ms
+ ✓ Compiled /_error in 449ms (613 modules)
+ ✓ Compiled in 237ms (613 modules)
+ ⨯ ./app/dashboard/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/dashboard/page.tsx[0m:272:1]
+ [2m272[0m |   }
+ [2m273[0m | 
+ [2m274[0m |   return (
+ [2m275[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m276[0m |       {/* Header */}
+ [2m277[0m |       <div className="liquid-glass-header">
+ [2m278[0m |         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/dashboard/page.tsx
+ ⨯ ./app/dashboard/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/dashboard/page.tsx[0m:272:1]
+ [2m272[0m |   }
+ [2m273[0m | 
+ [2m274[0m |   return (
+ [2m275[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m276[0m |       {/* Header */}
+ [2m277[0m |       <div className="liquid-glass-header">
+ [2m278[0m |         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/dashboard/page.tsx
+ ⨯ ./app/dashboard/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/dashboard/page.tsx[0m:272:1]
+ [2m272[0m |   }
+ [2m273[0m | 
+ [2m274[0m |   return (
+ [2m275[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m276[0m |       {/* Header */}
+ [2m277[0m |       <div className="liquid-glass-header">
+ [2m278[0m |         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/dashboard/page.tsx
+ ✓ Compiled in 366ms (612 modules)
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ ○ Compiling /liquid-glass-demo ...
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ GET /liquid-glass-demo 500 in 1195ms
+ ✓ Compiled /_error in 542ms (619 modules)
+ ✓ Compiled in 184ms (619 modules)
+ ✓ Compiled in 200ms (619 modules)
+ ✓ Compiled in 236ms (619 modules)
+ ✓ Compiled in 221ms (619 modules)
+ ✓ Compiled in 218ms (619 modules)
+ ✓ Compiled in 188ms (619 modules)
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ GET /create-quote 500 in 332ms
+ ○ Compiling /_error ...
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ GET /_next/static/webpack/ba7ee4288e014a0c.webpack.hot-update.json 500 in 797ms
+ GET / 500 in 831ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /create-quote 500 in 15ms
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ GET /_next/static/webpack/ba7ee4288e014a0c.webpack.hot-update.json 500 in 459ms
+ GET /_next/static/webpack/ba7ee4288e014a0c.webpack.hot-update.json 500 in 458ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET / 500 in 92ms
+ GET /create-quote 500 in 109ms
+ ⨯ ./app/quotes/[id]/customer/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sepg/Desktop/painttest2/app/quotes/[id]/customer/page.tsx[0m:251:1]
+ [2m251[0m |   const finalPrice = quote.final_price || quote.total_cost || 0;
+ [2m252[0m | 
+ [2m253[0m |   return (
+ [2m254[0m |     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+     : [31;1m     ^^^[0m
+ [2m255[0m |       {/* Header */}
+ [2m256[0m |       <div className="liquid-glass-header">
+ [2m257[0m |         <div className="max-w-4xl mx-auto px-4 py-4">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/quotes/[id]/customer/page.tsx
+ GET /_next/static/webpack/ba7ee4288e014a0c.webpack.hot-update.json 500 in 447ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /_next/static/webpack/ba7ee4288e014a0c.webpack.hot-update.json 500 in 443ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET / 500 in 22ms
+ GET /create-quote 500 in 26ms
+ GET /_next/static/webpack/ba7ee4288e014a0c.webpack.hot-update.json 500 in 7ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled /_not-found in 449ms (1099 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /create-quote 200 in 247ms
+ GET / 200 in 292ms
+ GET /icon-192x192.png 404 in 20ms
+ GET /manifest.json 404 in 13ms
+ ✓ Compiled /api/paint-products/brands in 137ms (620 modules)
+ ✓ Compiled (626 modules)
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+Error fetching paint products by brand: TypeError: products.forEach is not a function
+    at GET (webpack-internal:///(rsc)/./app/api/paint-products/brands/route.ts:40:18)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57234
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:122:103
+    at NoopContextManager.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NextTracerImpl.trace (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:122:28)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:48896
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:40958)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:47472
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:38293)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:47434
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eT.execute (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46881)
+    at eT.handle (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58771)
+    at doRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1366:60)
+    at cacheEntry.responseCache.get.routeKind (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1588:34)
+    at ResponseCache.get (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/response-cache/index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1496:53)
+ GET /api/paint-products/brands?companyId=1 500 in 327ms
+dbGet called - using mock data for deployment
+ GET /api/companies/settings?companyId=1 200 in 331ms
+dbGet called - using mock data for deployment
+ GET /api/companies/settings?companyId=1 200 in 23ms
+Error fetching paint products by brand: TypeError: products.forEach is not a function
+    at GET (webpack-internal:///(rsc)/./app/api/paint-products/brands/route.ts:40:18)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57234
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:122:103
+    at NoopContextManager.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NextTracerImpl.trace (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:122:28)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:48896
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:40958)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:47472
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:38293)
+    at /Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:47434
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eT.execute (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46881)
+    at eT.handle (/Users/sepg/Desktop/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58771)
+    at doRender (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1366:60)
+    at cacheEntry.responseCache.get.routeKind (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1588:34)
+    at ResponseCache.get (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/response-cache/index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (/Users/sepg/Desktop/painttest2/node_modules/next/dist/server/base-server.js:1496:53)
+ GET /api/paint-products/brands?companyId=1 500 in 25ms
+ GET /manifest.json 404 in 45ms
+ GET /api/companies/preferences?companyId=1 200 in 696ms
+ GET /api/paint-products?companyId=1 200 in 722ms
+✓ Supabase schema verified
+ GET /api/companies/preferences?companyId=1 200 in 135ms
+✓ Supabase database initialized
+ GET /api/paint-products?companyId=1 200 in 286ms
+ GET / 200 in 48ms
+ ✓ Compiled /liquid-glass-demo in 158ms (629 modules)
+ GET /liquid-glass-demo 200 in 221ms
+ ✓ Compiled /access-code in 323ms (487 modules)
+ ✓ Compiled /_not-found in 194ms (1099 modules)
+ GET /manifest.json 404 in 252ms
+ ✓ Compiled /api/verify-code in 101ms (618 modules)
+✅ Valid access code: DEMO2024 for Demo Painting Company
+ POST /api/verify-code 200 in 310ms
+ ✓ Compiled /api/companies/preferences in 89ms (620 modules)
+ GET /api/companies/preferences?companyId=1 200 in 223ms
+ ✓ Compiled /dashboard in 319ms (628 modules)
+ GET /manifest.json 404 in 94ms
+ ✓ Compiled /api/company-quota in 167ms (633 modules)
+ ✓ Compiled (637 modules)
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /api/quotes?company_id=1 200 in 326ms
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 329ms
+ GET /api/quotes?company_id=1 200 in 28ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 28ms
+ GET /manifest.json 404 in 47ms
+ GET /api/companies/preferences?companyId=1 200 in 396ms
+✓ Supabase schema verified
+ GET /api/companies/preferences?companyId=1 200 in 116ms
+ ✓ Compiled /api/paint-products in 108ms (639 modules)
+ GET /api/paint-products?companyId=1 200 in 241ms
+✓ Supabase database initialized
+ GET /api/paint-products?companyId=1 200 in 116ms
+ ✓ Compiled in 245ms (625 modules)
+ ✓ Compiled in 166ms (625 modules)
+ ✓ Compiled in 272ms (625 modules)
+ ✓ Compiled in 625ms (1040 modules)
+ ✓ Compiled in 525ms (1040 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /dashboard 200 in 89ms
+ ✓ Compiled /api/company-quota in 72ms (449 modules)
+ ✓ Compiled (554 modules)
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 235ms
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /api/quotes?company_id=1 200 in 246ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 32ms
+ GET /api/quotes?company_id=1 200 in 34ms
+✓ Supabase schema verified
+ GET /api/companies/preferences?companyId=1 200 in 558ms
+ ✓ Compiled /_not-found in 321ms (1166 modules)
+✓ Supabase database initialized
+ GET /manifest.json 404 in 433ms
+ GET /api/companies/preferences?companyId=1 200 in 240ms
+ ✓ Compiled /api/paint-products in 238ms (557 modules)
+ GET /api/paint-products?companyId=1 200 in 422ms
+ GET /api/paint-products?companyId=1 200 in 111ms
+ ✓ Compiled in 175ms (627 modules)
+ GET /manifest.json 404 in 64ms
+ ✓ Compiled in 364ms (627 modules)
+ ✓ Compiled in 543ms (627 modules)

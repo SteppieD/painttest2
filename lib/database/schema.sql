@@ -42,6 +42,38 @@ CREATE TABLE IF NOT EXISTS access_code_sessions (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- Companies table for multi-tenant business management
+CREATE TABLE IF NOT EXISTS companies (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  access_code TEXT UNIQUE,
+  company_name TEXT NOT NULL,
+  phone TEXT,
+  email TEXT,
+  logo_url TEXT,
+  default_walls_rate DECIMAL(10,2) DEFAULT 3.00,
+  default_ceilings_rate DECIMAL(10,2) DEFAULT 2.00,
+  default_trim_rate DECIMAL(10,2) DEFAULT 1.92,
+  default_walls_paint_cost DECIMAL(10,2) DEFAULT 26.00,
+  default_ceilings_paint_cost DECIMAL(10,2) DEFAULT 25.00,
+  default_trim_paint_cost DECIMAL(10,2) DEFAULT 35.00,
+  default_labor_percentage INTEGER DEFAULT 30,
+  default_paint_coverage INTEGER DEFAULT 350,
+  default_sundries_percentage INTEGER DEFAULT 12,
+  tax_rate DECIMAL(10,2) DEFAULT 0,
+  tax_on_materials_only BOOLEAN DEFAULT FALSE,
+  tax_label TEXT DEFAULT 'Tax',
+  overhead_percentage DECIMAL(10,2) DEFAULT 10,
+  default_markup_percentage DECIMAL(10,2) DEFAULT 20,
+  ceiling_height DECIMAL(10,2) DEFAULT 9,
+  paint_multiplier DECIMAL(10,2) DEFAULT 1.8,
+  doors_per_gallon DECIMAL(10,2) DEFAULT 4.5,
+  windows_per_gallon DECIMAL(10,2) DEFAULT 2.5,
+  quote_limit INTEGER DEFAULT NULL,
+  is_trial BOOLEAN DEFAULT FALSE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- User profiles with business information
 CREATE TABLE IF NOT EXISTS profiles (
   id TEXT PRIMARY KEY,
@@ -129,8 +161,8 @@ CREATE TABLE IF NOT EXISTS room_details (
   FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
 
--- Main quotes table
-CREATE TABLE IF NOT EXISTS quotes (
+-- Modern quotes table
+CREATE TABLE IF NOT EXISTS modern_quotes (
   id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
   project_id TEXT NOT NULL,
   base_costs TEXT NOT NULL, -- JSON with detailed cost breakdown
@@ -154,6 +186,67 @@ CREATE TABLE IF NOT EXISTS quotes (
   rejected_at DATETIME,
   expires_at DATETIME,
   FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
+
+-- Main quotes table for customer quote system
+CREATE TABLE IF NOT EXISTS quotes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  company_id INTEGER NOT NULL,
+  quote_id TEXT UNIQUE NOT NULL,
+  customer_name TEXT NOT NULL,
+  customer_email TEXT,
+  customer_phone TEXT,
+  address TEXT,
+  project_type TEXT,
+  rooms TEXT,
+  paint_quality TEXT,
+  prep_work TEXT,
+  timeline TEXT,
+  special_requests TEXT,
+  walls_sqft INTEGER DEFAULT 0,
+  ceilings_sqft INTEGER DEFAULT 0,
+  trim_sqft INTEGER DEFAULT 0,
+  walls_rate DECIMAL(10,2) DEFAULT 3.00,
+  ceilings_rate DECIMAL(10,2) DEFAULT 2.00,
+  trim_rate DECIMAL(10,2) DEFAULT 1.92,
+  walls_paint_cost DECIMAL(10,2) DEFAULT 26.00,
+  ceilings_paint_cost DECIMAL(10,2) DEFAULT 25.00,
+  trim_paint_cost DECIMAL(10,2) DEFAULT 35.00,
+  total_revenue DECIMAL(12,2) DEFAULT 0,
+  total_materials DECIMAL(12,2) DEFAULT 0,
+  paint_cost DECIMAL(12,2) DEFAULT 0,
+  sundries_cost DECIMAL(12,2) DEFAULT 0,
+  sundries_percentage INTEGER DEFAULT 12,
+  projected_labor DECIMAL(12,2) DEFAULT 0,
+  labor_percentage INTEGER DEFAULT 30,
+  projected_profit DECIMAL(12,2) DEFAULT 0,
+  paint_coverage INTEGER DEFAULT 350,
+  tax_rate DECIMAL(10,2) DEFAULT 0,
+  tax_amount DECIMAL(12,2) DEFAULT 0,
+  subtotal DECIMAL(12,2) DEFAULT 0,
+  base_cost DECIMAL(12,2),
+  markup_percentage DECIMAL(10,2),
+  markup_amount DECIMAL(12,2),
+  final_price DECIMAL(12,2),
+  total_cost DECIMAL(12,2),
+  room_data TEXT,
+  room_count INTEGER,
+  status TEXT DEFAULT 'pending',
+  conversation_summary TEXT,
+  paint_brand TEXT,
+  paint_product TEXT,
+  paint_finish TEXT,
+  paint_color TEXT,
+  paint_color_hex TEXT,
+  wall_linear_feet DECIMAL(10,2),
+  ceiling_height DECIMAL(10,2),
+  number_of_doors INTEGER DEFAULT 0,
+  number_of_windows INTEGER DEFAULT 0,
+  ceiling_area DECIMAL(10,2),
+  payment_terms TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
 );
 
 -- Quote versioning for tracking changes
@@ -203,12 +296,18 @@ CREATE INDEX IF NOT EXISTS idx_paint_products_use_case ON paint_products(use_cas
 CREATE INDEX IF NOT EXISTS idx_projects_user_id ON projects(user_id);
 CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at);
 CREATE INDEX IF NOT EXISTS idx_room_details_project_id ON room_details(project_id);
-CREATE INDEX IF NOT EXISTS idx_quotes_project_id ON quotes(project_id);
+CREATE INDEX IF NOT EXISTS idx_modern_quotes_project_id ON modern_quotes(project_id);
+CREATE INDEX IF NOT EXISTS idx_modern_quotes_status ON modern_quotes(status);
+CREATE INDEX IF NOT EXISTS idx_modern_quotes_created_at ON modern_quotes(created_at);
+CREATE INDEX IF NOT EXISTS idx_quotes_company_id ON quotes(company_id);
+CREATE INDEX IF NOT EXISTS idx_quotes_quote_id ON quotes(quote_id);
 CREATE INDEX IF NOT EXISTS idx_quotes_status ON quotes(status);
 CREATE INDEX IF NOT EXISTS idx_quotes_created_at ON quotes(created_at);
 CREATE INDEX IF NOT EXISTS idx_quote_versions_quote_id ON quote_versions(quote_id);
 CREATE INDEX IF NOT EXISTS idx_quote_surfaces_quote_id ON quote_surfaces(quote_id);
 CREATE INDEX IF NOT EXISTS idx_quote_surfaces_surface_type ON quote_surfaces(surface_type);
+CREATE INDEX IF NOT EXISTS idx_companies_access_code ON companies(access_code);
+CREATE INDEX IF NOT EXISTS idx_companies_email ON companies(email);
 
 -- Triggers to update timestamps
 CREATE TRIGGER IF NOT EXISTS update_users_updated_at
@@ -240,3 +339,21 @@ CREATE TRIGGER IF NOT EXISTS update_projects_updated_at
   BEGIN
     UPDATE projects SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
   END;
+
+CREATE TRIGGER IF NOT EXISTS update_companies_updated_at
+  AFTER UPDATE ON companies
+  BEGIN
+    UPDATE companies SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+  END;
+
+CREATE TRIGGER IF NOT EXISTS update_quotes_updated_at
+  AFTER UPDATE ON quotes
+  BEGIN
+    UPDATE quotes SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+  END;
+
+-- Demo companies data
+INSERT OR IGNORE INTO companies (id, access_code, company_name, phone, email) VALUES
+(1, 'DEMO2024', 'Demo Painting Company', '(555) 123-4567', 'demo@paintingcompany.com'),
+(2, 'PAINTER001', 'Professional Painters Inc', '(555) 234-5678', 'info@profpainters.com'),
+(3, 'CONTRACTOR123', 'Elite Paint Contractors', '(555) 345-6789', 'contact@elitepaint.com');

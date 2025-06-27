@@ -1,7 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbGet, dbRun, dbAll, createQuote, updateQuote } from "@/lib/database";
+import { getDatabase } from "@/lib/database/init";
 import { generateQuoteId } from "@/lib/utils";
 import { subscriptionManager } from "@/lib/subscription-manager";
+
+// Use SQLite database directly for quotes
+const dbGet = (sql: string, params: any[] = []) => {
+  const db = getDatabase();
+  return db.prepare(sql).get(...params);
+};
+
+const dbAll = (sql: string, params: any[] = []) => {
+  const db = getDatabase();
+  return db.prepare(sql).all(...params);
+};
+
+const dbRun = (sql: string, params: any[] = []) => {
+  const db = getDatabase();
+  return db.prepare(sql).run(...params);
+};
+
+const createQuote = (data: any) => {
+  const db = getDatabase();
+  const insertSql = `
+    INSERT INTO quotes (
+      company_id, quote_id, customer_name, customer_email, customer_phone, address, 
+      project_type, rooms, room_data, room_count, paint_quality, prep_work, timeline, 
+      special_requests, base_cost, markup_percentage, final_price, walls_sqft, 
+      ceilings_sqft, trim_sqft, total_revenue, total_materials, projected_labor, 
+      conversation_summary, status
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  
+  return db.prepare(insertSql).run(
+    data.company_id, data.quote_id, data.customer_name, data.customer_email, 
+    data.customer_phone, data.address, data.project_type, data.rooms, 
+    data.room_data, data.room_count, data.paint_quality, data.prep_work, 
+    data.timeline, data.special_requests, data.base_cost, data.markup_percentage, 
+    data.final_price, data.walls_sqft, data.ceilings_sqft, data.trim_sqft, 
+    data.total_revenue, data.total_materials, data.projected_labor, 
+    data.conversation_summary, data.status
+  );
+};
+
+const updateQuote = (id: number, updates: any) => {
+  const db = getDatabase();
+  // Simple update for now - can be expanded based on needs
+  return db.prepare("UPDATE quotes SET final_price = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
+    .run(updates.final_price, id);
+};
 
 // POST - Create a new quote
 export async function POST(request: NextRequest) {
@@ -128,7 +174,7 @@ export async function POST(request: NextRequest) {
       status: 'pending'
     };
 
-    const result = createQuote(quote);
+    const result = await createQuote(quote);
 
     // Record quote creation in subscription system
     try {
@@ -140,12 +186,15 @@ export async function POST(request: NextRequest) {
 
     console.log(`✅ Quote created: ${quoteId} for company ${companyId}`);
 
+    // Handle different database return formats
+    const dbId = result?.id || result?.lastID || Date.now();
+
     return NextResponse.json({
       success: true,
       quoteId,
       quote: {
         ...quote,
-        id: result.lastID
+        id: dbId
       }
     });
 

@@ -272,17 +272,17 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       {/* Header */}
-      <div className="bg-white border-b shadow-sm">
+      <div className="liquid-glass-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
-              <Palette className="w-8 h-8 text-blue-600" />
+              <Palette className="w-8 h-8 text-white" />
               <div>
-                <h1 className="text-xl font-bold text-gray-900">ProPaint Quote Assistant</h1>
+                <h1 className="text-xl font-bold text-white">ProPaint Quote Assistant</h1>
                 <div className="flex items-center gap-2">
-                  <p className="text-sm text-gray-500">{companyInfo?.company_name}</p>
+                  <p className="text-sm text-gray-200">{companyInfo?.company_name}</p>
                   {companyInfo?.access_code && (
                     <>
                       <span className="text-sm text-gray-400">•</span>
@@ -307,13 +307,13 @@ export default function DashboardPage() {
             </div>
             
             <div className="flex items-center gap-3">
-              <Button
+              <button
                 onClick={() => router.push("/create-quote")}
-                className="bg-green-600 hover:bg-green-700"
+                className="liquid-glass-button liquid-glass-success"
               >
                 <Calculator className="w-4 h-4 mr-2" />
                 New Quote
-              </Button>
+              </button>
               
               <Button
                 variant="ghost"
@@ -332,37 +332,37 @@ export default function DashboardPage() {
         {/* Setup Completion Prompt */}
         {!isCheckingOnboarding && needsOnboarding && (
           <div className="mb-8">
-            <Card className="bg-gradient-to-r from-blue-50 to-green-50 border-2 border-blue-200">
-              <CardContent className="p-8 text-center">
+            <div className="liquid-glass-card">
+              <div className="p-8 text-center">
                 <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Palette className="w-8 h-8 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                <h2 className="text-2xl font-bold text-white mb-2">
                   Complete Your Setup
                 </h2>
-                <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                <p className="text-gray-200 mb-6 max-w-md mx-auto">
                   Set up your favorite paint products and pricing to create quotes quickly. 
                   This takes just 2 minutes and you'll be ready to start quoting!
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Button 
+                  <button 
                     onClick={() => router.push("/setup")}
-                    className="bg-blue-600 hover:bg-blue-700 px-8"
-                    size="lg"
+                    className="liquid-glass-button liquid-glass-info px-8"
+                    style={{ padding: '12px 32px', fontSize: '16px' }}
                   >
                     <ArrowRight className="w-4 h-4 mr-2" />
                     Complete Setup
-                  </Button>
-                  <Button 
-                    variant="outline"
+                  </button>
+                  <button 
                     onClick={() => setNeedsOnboarding(false)}
-                    size="lg"
+                    className="liquid-glass-button"
+                    style={{ padding: '12px 32px', fontSize: '16px' }}
                   >
                     Skip for Now
-                  </Button>
+                  </button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         )}
 
@@ -471,33 +471,57 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Business Metrics - Contractor Focus */}
+        {/* Business Metrics - Contractor Focus - CLICKABLE */}
         <div className="mb-8">
           <div className="bg-white rounded-lg border p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Business Performance</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{analytics.totalQuotes}</div>
+              <button 
+                onClick={() => {
+                  setSearchTerm("");
+                  setStatusFilter("all");
+                  document.getElementById("quotes-section")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="text-center p-4 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer group"
+              >
+                <div className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{analytics.totalQuotes}</div>
                 <div className="text-sm text-gray-500">Total Quotes</div>
                 <div className="text-xs text-green-600 mt-1">
                   {analytics.acceptedQuotes} won ({analytics.totalQuotes > 0 ? Math.round((analytics.acceptedQuotes / analytics.totalQuotes) * 100) : 0}%)
                 </div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{formatCurrency(analytics.totalRevenue)}</div>
+              </button>
+              <button 
+                onClick={() => {
+                  setSearchTerm("");
+                  setStatusFilter("accepted");
+                  document.getElementById("quotes-section")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="text-center p-4 hover:bg-green-50 rounded-lg transition-colors duration-200 cursor-pointer group"
+              >
+                <div className="text-2xl font-bold text-green-600 group-hover:text-green-700 transition-colors">{formatCurrency(analytics.totalRevenue)}</div>
                 <div className="text-sm text-gray-500">Revenue Generated</div>
                 <div className="text-xs text-gray-500 mt-1">All time</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{formatCurrency(analytics.averageQuote)}</div>
+              </button>
+              <button 
+                onClick={() => router.push("/insights")}
+                className="text-center p-4 hover:bg-blue-50 rounded-lg transition-colors duration-200 cursor-pointer group"
+              >
+                <div className="text-2xl font-bold text-blue-600 group-hover:text-blue-700 transition-colors">{formatCurrency(analytics.averageQuote)}</div>
                 <div className="text-sm text-gray-500">Average Job Value</div>
                 <div className="text-xs text-gray-500 mt-1">Per quote</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">{analytics.pendingQuotes}</div>
+              </button>
+              <button 
+                onClick={() => {
+                  setSearchTerm("");
+                  setStatusFilter("pending");
+                  document.getElementById("quotes-section")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="text-center p-4 hover:bg-orange-50 rounded-lg transition-colors duration-200 cursor-pointer group"
+              >
+                <div className="text-2xl font-bold text-orange-600 group-hover:text-orange-600 transition-colors">{analytics.pendingQuotes}</div>
                 <div className="text-sm text-gray-500">Awaiting Response</div>
                 <div className="text-xs text-gray-500 mt-1">Follow up needed</div>
-              </div>
+              </button>
             </div>
           </div>
         </div>
@@ -532,7 +556,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Quotes List */}
-        <Card>
+        <Card id="quotes-section">
           <CardHeader>
             <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <span>Recent Quotes ({filteredQuotes.length})</span>
@@ -578,11 +602,15 @@ export default function DashboardPage() {
             ) : (
               <div className="space-y-4">
                 {filteredQuotes.map((quote) => (
-                  <div key={quote.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                  <div 
+                    key={quote.id} 
+                    className="border rounded-lg p-4 hover:bg-gray-50 hover:shadow-md transition-all duration-200 cursor-pointer group"
+                    onClick={() => router.push(`/quotes/${quote.id}`)}
+                  >
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
-                          <h3 className="font-semibold text-lg sm:text-base">{quote.customer_name}</h3>
+                          <h3 className="font-semibold text-lg sm:text-base group-hover:text-blue-600 transition-colors">{quote.customer_name}</h3>
                           <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(quote.status)}`}>
                             {quote.status || 'pending'}
                           </span>
@@ -603,7 +631,11 @@ export default function DashboardPage() {
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                           <select
                             value={quote.status || "pending"}
-                            onChange={(e) => updateQuoteStatus(quote.id, e.target.value)}
+                            onChange={(e) => {
+                              e.stopPropagation(); // Prevent triggering the card click
+                              updateQuoteStatus(quote.id, e.target.value);
+                            }}
+                            onClick={(e) => e.stopPropagation()} // Prevent triggering the card click
                             className="text-xs px-2 py-2 border rounded w-full sm:w-auto"
                           >
                             <option value="pending">Pending</option>
@@ -616,11 +648,12 @@ export default function DashboardPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent triggering the card click
                                 const customerUrl = `${window.location.origin}/quotes/${quote.quote_id}/customer`;
                                 navigator.clipboard.writeText(customerUrl);
                                 // Show a simple visual feedback
-                                const button = event?.target as HTMLElement;
+                                const button = e.target as HTMLElement;
                                 const originalText = button.textContent;
                                 button.textContent = 'Copied!';
                                 setTimeout(() => {
@@ -636,7 +669,10 @@ export default function DashboardPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => router.push(`/quotes/${quote.id}`)}
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent triggering the card click
+                                router.push(`/quotes/${quote.id}`);
+                              }}
                               title="View quote details"
                               className="flex-1 sm:flex-none"
                             >

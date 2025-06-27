@@ -33,6 +33,8 @@ export default function RootLayout({
       <body className={inter.className}>
         {children}
         <Toaster />
+        {/* Apple Liquid Glass Enhancement Script */}
+        <script src="/js/liquid-glass-enhancements.js" defer></script>
       </body>
     </html>
   )

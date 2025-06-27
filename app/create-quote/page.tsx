@@ -359,7 +359,7 @@ function CreateQuotePageContent() {
       // Trigger brand selection flow
       setTimeout(() => {
         setConversationStage('category_paint_selection');
-        handleSendMessage('continue'); // This will trigger the brand selection flow
+        // handleSendMessage('continue'); // This will trigger the brand selection flow
       }, 100);
     };
     
@@ -504,6 +504,22 @@ What would you like to modify?`,
 
   // Progressive estimation update function
   const updateProgressiveEstimate = () => {
+    // Check for minimum data before calculating estimate
+    const hasProjectType = quoteData.project_type && quoteData.project_type !== '';
+    const hasSurfaces = selectedSurfaces.length > 0;
+    const hasDimensions = quoteData.dimensions.wall_linear_feet || 
+                         quoteData.dimensions.floor_area || 
+                         quoteData.dimensions.ceiling_area ||
+                         (quoteData.dimensions.rooms && quoteData.dimensions.rooms.length > 0);
+    const hasMinimumData = hasProjectType && hasSurfaces && hasDimensions;
+    
+    // Only calculate estimate if we have meaningful data
+    if (!hasMinimumData) {
+      setCurrentEstimate(null);
+      setShowEstimate(false);
+      return;
+    }
+
     const partialData = {
       customer_name: quoteData.customer_name,
       address: quoteData.address,
@@ -515,16 +531,16 @@ What would you like to modify?`,
     };
 
     const estimate = calculateProgressiveEstimate(partialData, quoteData.rates);
-    setCurrentEstimate(estimate);
     
-    // Show estimate only when we have meaningful data (at least project type + surfaces + some dimensions)
-    const hasProjectType = quoteData.project_type && quoteData.project_type !== '';
-    const hasSurfaces = selectedSurfaces.length > 0;
-    const hasDimensions = quoteData.dimensions.wall_linear_feet || quoteData.dimensions.floor_area || quoteData.dimensions.ceiling_area;
-    const hasMinimumData = hasProjectType && hasSurfaces && hasDimensions;
-    
-    if (!showEstimate && hasMinimumData && estimate.completeness >= 40) {
-      setShowEstimate(true);
+    // Only show estimate if completeness is meaningful (at least 40%)
+    if (estimate.completeness >= 40) {
+      setCurrentEstimate(estimate);
+      if (!showEstimate) {
+        setShowEstimate(true);
+      }
+    } else {
+      setCurrentEstimate(null);
+      setShowEstimate(false);
     }
   };
 
@@ -546,6 +562,8 @@ What would you like to modify?`,
   // Old sequential loading functions removed - now using batch loader
 
   const handleButtonClick = async (buttonValue: any, buttonLabel: string) => {
+    console.log('🎯 handleButtonClick called with:', { buttonValue, buttonLabel, conversationStage });
+    
     // Handle surface selection buttons silently (no AI response)
     if (conversationStage === 'surface_selection') {
       // If it's the continue button, process normally (with AI response)
@@ -2227,10 +2245,16 @@ Ready to save this quote?`;
         } else if (lowerInput.includes('save') || lowerInput.includes('approve') || lowerInput.includes('finalize') || input === 'save_quote') {
           try {
             const quoteId = await saveQuote();
+            
+            if (!quoteId) {
+              throw new Error('Failed to get quote ID after save');
+            }
+            
             responseContent = `✅ Quote saved successfully!\n\n**Final Details:**\n• Customer: ${quoteData.customer_name}\n• **Customer Price: $${quoteData.calculation!.final_price.toLocaleString()}**\n• Your Cost: $${quoteData.calculation!.total_cost.toLocaleString()}\n• Your Profit: $${quoteData.calculation!.markup_amount.toLocaleString()}\n\nWhat would you like to do next?`;
             
             // Show completion buttons including View Quote
             setTimeout(() => {
+              console.log('🔍 Creating View Quote button with ID:', quoteId);
               const completionButtons = [
                 { id: 'view_quote', label: '👁️ View Quote', value: `view_quote_${quoteId}`, selected: false },
                 { id: 'new_quote', label: '➕ Create Another Quote', value: 'another quote', selected: false },
@@ -2241,7 +2265,8 @@ Ready to save this quote?`;
             }, 500);
             nextStage = 'complete';
           } catch (error) {
-            responseContent = `❌ There was an error saving the quote. Please try again.`;
+            console.error('Save quote error:', error);
+            responseContent = `❌ There was an error saving the quote: ${error.message || 'Unknown error'}. Please try again.`;
             nextStage = 'quote_review';
           }
         } else if (lowerInput.includes('edit') || lowerInput.includes('edit quote')) {
@@ -2488,6 +2513,18 @@ Ready to save this quote?`;
         // Handle View Quote button (format: view_quote_{id})
         if (input.startsWith('view_quote_')) {
           const quoteId = input.replace('view_quote_', '');
+          console.log('🔍 View Quote clicked with input:', input);
+          console.log('🔍 Extracted quote ID:', quoteId);
+          
+          // Prevent navigation if quote ID is invalid
+          if (!quoteId || quoteId === 'undefined' || quoteId === 'null') {
+            console.log('❌ Invalid quote ID detected:', quoteId);
+            responseContent = '❌ Unable to view quote - it hasn\'t been saved yet. Please save the quote first.';
+            nextStage = 'quote_review';
+            break;
+          }
+          
+          console.log('🚀 Navigating to quote:', `/quotes/${quoteId}`);
           router.push(`/quotes/${quoteId}`);
           return {
             id: (Date.now() + 1).toString(),
@@ -2634,18 +2671,30 @@ Ready to save this quote?`;
 
       if (response.ok) {
         const result = await response.json();
+        console.log('Save quote response:', result);
+        
+        // Extract quote ID from various possible response formats
+        // For new quotes, use the generated quoteId. For edits, use the editQuoteId
+        const quoteId = result.quoteId || result.quote?.id || result.id || editQuoteId;
+        
+        if (!quoteId) {
+          throw new Error('No quote ID returned from save operation');
+        }
+        
         // Store the quote ID for the View Quote button
-        setSavedQuoteId(result.quote?.id || editQuoteId);
+        setSavedQuoteId(quoteId);
         
         toast({
           title: isEditMode ? "Quote Updated!" : "Quote Saved!",
           description: isEditMode 
             ? `Quote #${editQuoteId} has been updated successfully.`
-            : `Professional quote ${result.quoteId || result.quote?.id} saved successfully.`,
+            : `Professional quote #${quoteId} saved successfully.`,
         });
         
-        return result.quote?.id || editQuoteId; // Return the quote ID for immediate use
+        return quoteId; // Return the quote ID for immediate use
       } else {
+        const errorText = await response.text();
+        console.error('Save quote failed:', errorText);
         throw new Error('Failed to save quote');
       }
     } catch (error) {

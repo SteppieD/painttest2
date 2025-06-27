@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const companyId = searchParams.get('companyId') || '1';
 
     // Try to get paints from the new paints table
-    let paints = dbAll(`
+    let paints = await dbAll(`
       SELECT * FROM company_paints 
       WHERE company_id = ? 
       ORDER BY brand_name, product_name
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     if (!paints || paints.length === 0) {
       try {
         // Create table if it doesn't exist
-        dbRun(`
+        await dbRun(`
           CREATE TABLE IF NOT EXISTS company_paints (
             id TEXT PRIMARY KEY,
             company_id TEXT NOT NULL,
