@@ -278,16 +278,16 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
-              <Palette className="w-8 h-8 text-white" />
+              <Palette className="w-8 h-8 text-blue-600" />
               <div>
-                <h1 className="text-xl font-bold text-white">ProPaint Quote Assistant</h1>
+                <h1 className="text-xl font-bold text-gray-900">ProPaint Quote Assistant</h1>
                 <div className="flex items-center gap-2">
-                  <p className="text-sm text-gray-200">{companyInfo?.company_name}</p>
+                  <p className="text-sm text-gray-700">{companyInfo?.company_name}</p>
                   {companyInfo?.access_code && (
                     <>
-                      <span className="text-sm text-gray-400">•</span>
+                      <span className="text-sm text-gray-500">•</span>
                       <div className="flex items-center gap-1">
-                        <span className="text-sm text-gray-500">Code: {companyInfo.access_code}</span>
+                        <span className="text-sm text-gray-600">Code: {companyInfo.access_code}</span>
                         <Button
                           size="sm"
                           variant="ghost"
@@ -295,7 +295,7 @@ export default function DashboardPage() {
                             navigator.clipboard.writeText(companyInfo.access_code);
                             alert('Access code copied to clipboard!');
                           }}
-                          className="h-6 w-6 p-0 hover:bg-gray-100"
+                          className="h-6 w-6 p-0 hover:bg-gray-200 text-gray-600"
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
@@ -318,7 +318,7 @@ export default function DashboardPage() {
               <Button
                 variant="ghost"
                 onClick={handleLogout}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-700 hover:text-gray-900"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout

@@ -181,15 +181,17 @@
   animation: specular-shimmer 2s ease-in-out infinite;
 }
 
-/* Header Glass - For navigation and headers */
+/* Header Glass - For navigation and headers with enhanced contrast */
 .liquid-glass-header {
   background: linear-gradient(135deg, 
-    var(--glass-opacity-strong) 0%, 
-    var(--glass-opacity-light) 100%);
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(255, 255, 255, 0.85) 100%);
   backdrop-filter: blur(40px) saturate(200%);
   -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border-bottom: 1px solid var(--glass-border-light);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 122, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  /* Ensure proper text contrast */
+  color: #1f2937; /* Apple's dark gray for text */
 }
 
 /* Quote Presentation Glass - For customer-facing quotes */
@@ -505,6 +507,15 @@
     --contractor-apple-green: rgba(52, 199, 89, 0.12);
     --contractor-apple-gray: rgba(142, 142, 147, 0.12);
     --contractor-accent-pink: rgba(239, 43, 112, 0.12);
+  }
+  
+  /* Dark mode header with enhanced contrast */
+  .liquid-glass-header {
+    background: linear-gradient(135deg, 
+      rgba(30, 41, 59, 0.95) 0%,   /* Dark slate with opacity */
+      rgba(51, 65, 85, 0.85) 100%); /* Medium slate with opacity */
+    border-bottom: 1px solid rgba(0, 122, 255, 0.3);
+    color: #f8fafc; /* Light text for dark mode */
   }
   
   /* Dark mode gradient backgrounds */
