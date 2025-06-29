@@ -1,7 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbGet, dbRun, dbAll, createQuote, updateQuote } from "@/lib/database";
+import Database from 'better-sqlite3';
+import path from 'path';
 import { generateQuoteId } from "@/lib/utils";
 import { subscriptionManager } from "@/lib/subscription-manager";
+
+// Helper function to clean customer names during quote creation
+const cleanCustomerName = (name: string) => {
+  if (!name) return 'Customer';
+  
+  // Handle "It's for [Name]" pattern
+  const itsForMatch = name.match(/it'?s\s+for\s+([^.]+)/i);
+  if (itsForMatch) {
+    return itsForMatch[1].trim();
+  }
+  
+  // Handle "Customer: [Name]" pattern
+  const customerMatch = name.match(/customer:\s*([^,]+)/i);
+  if (customerMatch) {
+    return customerMatch[1].trim();
+  }
+  
+  // Handle "the customer's name is [Name]" or "customers name is [Name]" pattern
+  const customerNameIsMatch = name.match(/(?:the\s+)?customers?\s+name\s+is\s+([A-Z][a-z]+)(?:\s+and|$)/i);
+  if (customerNameIsMatch) {
+    return customerNameIsMatch[1].trim();
+  }
+  
+  // Handle "name is [Name]" pattern
+  const nameIsMatch = name.match(/name\s+is\s+([A-Z][a-z]+)/i);
+  if (nameIsMatch) {
+    return nameIsMatch[1].trim();
+  }
+  
+  // If it looks like raw conversation data, try to extract name
+  if (name.length > 50 || name.includes('.') || name.includes('painting')) {
+    // Look for name patterns in longer text
+    const nameMatch = name.match(/(?:for|customer|client)?\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/);
+    if (nameMatch) {
+      return nameMatch[1].trim();
+    }
+  }
+  
+  return name;
+};
 
 // POST - Create a new quote
 export async function POST(request: NextRequest) {
@@ -23,7 +64,7 @@ export async function POST(request: NextRequest) {
       
       // Map flat structure to nested quoteData
       quoteData = {
-        customerName: requestData.customer_name,
+        customerName: cleanCustomerName(requestData.customer_name),
         customerEmail: requestData.customer_email,
         customerPhone: requestData.customer_phone,
         address: requestData.address,
@@ -103,7 +144,7 @@ export async function POST(request: NextRequest) {
     const quote = {
       company_id: companyId,
       quote_id: quoteId,
-      customer_name: quoteData.customerName || "Unknown Customer",
+      customer_name: cleanCustomerName(quoteData.customerName) || "Unknown Customer",
       customer_email: quoteData.customerEmail || null,
       customer_phone: quoteData.customerPhone || null,
       address: quoteData.address || null,
@@ -118,6 +159,7 @@ export async function POST(request: NextRequest) {
       base_cost: quoteData.totalCost || 0,
       markup_percentage: quoteData.markupPercentage || 0,
       final_price: quoteData.finalPrice || quoteData.totalCost || 0,
+      quote_amount: quoteData.quote_amount || quoteData.finalPrice || quoteData.totalCost || 0,
       walls_sqft: quoteData.sqft || quoteData.dimensions?.wall_linear_feet * (quoteData.dimensions?.ceiling_height || 9) || 0,
       ceilings_sqft: quoteData.dimensions?.ceiling_area || 0,
       trim_sqft: 0,
@@ -128,7 +170,29 @@ export async function POST(request: NextRequest) {
       status: 'pending'
     };
 
-    const result = createQuote(quote);
+    // Connect directly to SQLite database and insert quote
+    const dbPath = path.join(process.cwd(), 'painting_quotes_app.db');
+    const db = new Database(dbPath);
+
+    const insertStmt = db.prepare(`
+      INSERT INTO quotes (
+        company_id, quote_id, customer_name, customer_email, customer_phone,
+        address, project_type, rooms, room_data, room_count, paint_quality,
+        prep_work, timeline, special_requests, base_cost, markup_percentage,
+        final_price, walls_sqft, ceilings_sqft, trim_sqft,
+        total_revenue, total_materials, projected_labor, conversation_summary, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    const result = insertStmt.run(
+      quote.company_id, quote.quote_id, quote.customer_name, quote.customer_email, quote.customer_phone,
+      quote.address, quote.project_type, quote.rooms, quote.room_data, quote.room_count, quote.paint_quality,
+      quote.prep_work, quote.timeline, quote.special_requests, quote.base_cost, quote.markup_percentage,
+      quote.final_price, quote.walls_sqft, quote.ceilings_sqft, quote.trim_sqft,
+      quote.total_revenue, quote.total_materials, quote.projected_labor, quote.conversation_summary, quote.status
+    );
+
+    db.close();
 
     // Record quote creation in subscription system
     try {
@@ -166,33 +230,60 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status');
     const limit = parseInt(searchParams.get('limit') || '50');
 
-    let whereClause = '1=1';
+    // Build safe WHERE clause with parameterized queries
+    let whereConditions: string[] = [];
     let params: any[] = [];
 
+    // Input validation and sanitization
     if (companyId) {
-      whereClause += ' AND company_id = ?';
-      params.push(companyId);
+      const sanitizedCompanyId = parseInt(companyId);
+      if (isNaN(sanitizedCompanyId) || sanitizedCompanyId <= 0) {
+        return NextResponse.json({ error: "Invalid company ID" }, { status: 400 });
+      }
+      whereConditions.push('q.company_id = ?');
+      params.push(sanitizedCompanyId);
     }
 
     if (status) {
-      whereClause += ' AND status = ?';
+      // Validate status against allowed values
+      const allowedStatuses = ['pending', 'accepted', 'rejected', 'completed', 'cancelled', 'draft'];
+      if (!allowedStatuses.includes(status)) {
+        return NextResponse.json({ error: "Invalid status value" }, { status: 400 });
+      }
+      whereConditions.push('q.status = ?');
       params.push(status);
     }
 
-    const quotes = dbAll(`
+    // Validate and sanitize limit
+    const sanitizedLimit = Math.min(Math.max(parseInt(searchParams.get('limit') || '50'), 1), 100);
+
+    // Construct safe WHERE clause
+    const whereClause = whereConditions.length > 0 ? whereConditions.join(' AND ') : '1=1';
+
+    // Connect directly to SQLite database for quotes retrieval
+    const dbPath = path.join(process.cwd(), 'painting_quotes_app.db');
+    const db = new Database(dbPath);
+
+    const quotes = db.prepare(`
       SELECT 
         q.*,
-        c.company_name,
-        c.access_code
+        c.company_name
       FROM quotes q
       LEFT JOIN companies c ON q.company_id = c.id
       WHERE ${whereClause}
       ORDER BY q.created_at DESC
       LIMIT ?
-    `, [...params, limit]);
+    `).all(...params, sanitizedLimit);
 
+    db.close();
+
+    console.log('📊 Retrieved', quotes?.length || 0, 'quotes from database');
+
+    // Ensure quotes is an array
+    const quotesArray = Array.isArray(quotes) ? quotes : [];
+    
     // Map quotes to the format expected by the quotes page
-    const mappedQuotes = (quotes as any[]).map((quote: any) => {
+    const mappedQuotes = quotesArray.map((quote: any) => {
         // Parse conversation summary for breakdown
         let breakdown = null;
         if (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') {
@@ -227,7 +318,7 @@ export async function GET(request: NextRequest) {
           customer_email: quote.customer_email || '',
           customer_phone: quote.customer_phone || '',
           address: quote.address || 'No address provided',
-          quote_amount: quote.final_price || quote.total_revenue || 0,
+          quote_amount: quote.quote_amount || quote.final_price || quote.total_revenue || 0,
           final_price: quote.final_price || quote.total_revenue || 0,
           notes: quote.special_requests || '',
           status: quote.status || 'pending',

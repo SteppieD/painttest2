@@ -16,24 +16,45 @@ export async function GET(request: NextRequest) {
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
     
-    let dateFilter = '';
-    switch (timeframe) {
+    // Build parameterized query for security
+    let whereConditions: string[] = [];
+    let params: any[] = [];
+    
+    // Validate and sanitize timeframe
+    const allowedTimeframes = ['30d', '90d', 'all'];
+    const sanitizedTimeframe = allowedTimeframes.includes(timeframe) ? timeframe : '30d';
+    
+    switch (sanitizedTimeframe) {
       case '30d':
         const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        dateFilter = `AND q.created_at >= '${thirtyDaysAgo.toISOString()}'`;
+        whereConditions.push('q.created_at >= ?');
+        params.push(thirtyDaysAgo.toISOString());
         break;
       case '90d':
         const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-        dateFilter = `AND q.created_at >= '${ninetyDaysAgo.toISOString()}'`;
+        whereConditions.push('q.created_at >= ?');
+        params.push(ninetyDaysAgo.toISOString());
         break;
       case 'all':
       default:
-        dateFilter = '';
+        // No date filter
+        break;
     }
     
-    const userFilter = userId ? `AND q.company_id = '${userId}'` : '';
+    // Validate and sanitize userId
+    if (userId) {
+      const sanitizedUserId = parseInt(userId);
+      if (isNaN(sanitizedUserId) || sanitizedUserId <= 0) {
+        return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+      }
+      whereConditions.push('q.company_id = ?');
+      params.push(sanitizedUserId);
+    }
     
-    // Get all quotes
+    // Build safe WHERE clause
+    const whereClause = whereConditions.length > 0 ? 'WHERE ' + whereConditions.join(' AND ') : '';
+    
+    // Get all quotes with parameterized query
     const allQuotes = dbAll(`
       SELECT 
         q.*,
@@ -41,9 +62,9 @@ export async function GET(request: NextRequest) {
         q.address as property_address,
         q.company_id as user_id
       FROM quotes q
-      WHERE 1=1 ${userFilter} ${dateFilter}
+      ${whereClause}
       ORDER BY q.created_at DESC
-    `) as any[];
+    `, params) as any[];
     
     // Calculate metrics
     const totalQuotes = allQuotes.length;
@@ -89,10 +110,15 @@ export async function GET(request: NextRequest) {
       .sort((a: any, b: any) => b.totalSpent - a.totalSpent)
       .slice(0, 5);
     
-    // Project type breakdown
+    // Project type breakdown with safe JSON parsing
     const projectTypes = allQuotes.reduce((acc: any, quote) => {
-      const details = JSON.parse(quote.details || '{}');
-      const type = details.project_type || 'interior';
+      let details = {};
+      try {
+        details = JSON.parse(quote.details || '{}');
+      } catch (e) {
+        console.warn('Failed to parse quote details:', e);
+      }
+      const type = (details as any)?.project_type || quote.project_type || 'interior';
       acc[type] = (acc[type] || 0) + 1;
       return acc;
     }, {});

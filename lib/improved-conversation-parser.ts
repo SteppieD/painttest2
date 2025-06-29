@@ -61,11 +61,25 @@ const parseCustomerInfo = (input: string, existingData: Partial<ConversationData
   
   // Handle "It's for Name at Address" pattern
   if (lower.includes("it's for") && lower.includes(' at ') && /\d/.test(input)) {
-    const match = input.match(/it's for\s+([^.]+?)\s+at\s+([^.]+)/i);
+    const match = input.match(/it'?s\s+for\s+([A-Za-z\s]+?)\s+at\s+([^.]+)/i);
+    if (match) {
+      const customerName = match[1].trim();
+      const address = match[2].trim();
+      console.log('🔍 PARSING: "It\'s for X at Y" - Customer:', customerName, 'Address:', address);
+      return {
+        customer_name: customerName,
+        address: address
+      };
+    }
+  }
+  
+  // Handle standalone "It's for Name" pattern (without address in same sentence)
+  if (lower.includes("it's for") && !lower.includes(' at ')) {
+    const match = input.match(/it's for\s+([^.]+?)(?:\.|$)/i);
     if (match) {
       return {
         customer_name: match[1].trim(),
-        address: match[2].trim()
+        address: existingData.address || ''
       };
     }
   }

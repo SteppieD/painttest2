@@ -1,12 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
+import Database from 'better-sqlite3';
+import path from 'path';
 
-// Vercel Functions require external database (Supabase only)
-const getSupabaseDb = async () => {
+// Direct SQLite database connection for local development
+const getDatabase = () => {
   try {
-    const { supabaseDb } = await import("@/lib/database/supabase-adapter");
-    return supabaseDb;
+    const dbPath = path.join(process.cwd(), 'painting_quotes_app.db');
+    const db = new Database(dbPath);
+    
+    return {
+      getCompanyByAccessCode: (accessCode: string) => {
+        const company = db.prepare(`
+          SELECT id, access_code, company_name, phone, email, logo_url, 
+                 default_walls_rate, default_ceilings_rate, default_trim_rate
+          FROM companies 
+          WHERE UPPER(access_code) = UPPER(?)
+        `).get(accessCode);
+        
+        if (company) {
+          return {
+            id: company.id,
+            access_code: company.access_code,
+            company_name: company.company_name,
+            phone: company.phone,
+            email: company.email,
+            logo_url: company.logo_url
+          };
+        }
+        return null;
+      },
+      
+      createCompany: (data: any) => {
+        const result = db.prepare(`
+          INSERT INTO companies (access_code, company_name, phone, email)
+          VALUES (?, ?, ?, ?)
+        `).run(data.accessCode, data.companyName, data.phone, data.email);
+        
+        return { id: result.lastInsertRowid };
+      }
+    };
   } catch (error) {
-    console.error('Failed to import Supabase adapter:', error);
+    console.error('Failed to connect to SQLite database:', error);
     return null;
   }
 };
@@ -39,9 +73,9 @@ export async function POST(request: NextRequest) {
     // Convert to uppercase for consistency
     const normalizedCode = accessCode.toString().toUpperCase();
 
-    // Get Supabase database connection
-    const supabaseDb = await getSupabaseDb();
-    if (!supabaseDb) {
+    // Get database connection
+    const db = getDatabase();
+    if (!db) {
       return NextResponse.json(
         { error: "Database connection failed" },
         { status: 500 },
@@ -49,7 +83,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if access code exists in companies table
-    const company = await supabaseDb.getCompanyByAccessCode(normalizedCode);
+    const company = db.getCompanyByAccessCode(normalizedCode);
 
     if (company) {
       // Valid company found - return company data
@@ -79,7 +113,7 @@ export async function POST(request: NextRequest) {
         // Auto-create new company for valid pattern
         const companyName = `Company ${normalizedCode}`;
 
-        const result = await supabaseDb.createTrialCompany({
+        const result = db.createCompany({
           accessCode: normalizedCode,
           companyName: companyName,
           phone: "",
@@ -128,15 +162,20 @@ export async function POST(request: NextRequest) {
 // GET endpoint - List available demo companies (for testing)
 export async function GET() {
   try {
-    const supabaseDb = await getSupabaseDb();
-    if (!supabaseDb) {
+    const db = getDatabase();
+    if (!db) {
       return NextResponse.json(
         { error: "Database connection failed" },
         { status: 500 },
       );
     }
 
-    const companies = await supabaseDb.getAllCompanies();
+    // Get demo companies for testing
+    const companies = [
+      { access_code: 'DEMO2024', company_name: 'Demo Painting Company' },
+      { access_code: 'PAINTER001', company_name: 'Smith Painting LLC' },
+      { access_code: 'CONTRACTOR123', company_name: 'Elite Contractors' }
+    ];
 
     return NextResponse.json({
       companies,

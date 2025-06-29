@@ -3,15 +3,17 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Send, Loader2, ArrowLeft, Save } from 'lucide-react'
+import { Send, Loader2, ArrowLeft, Save, Eye, Mail, Download, ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/components/ui/use-toast'
+import { useRouter } from 'next/navigation'
 
 interface Message {
   id: string
   role: 'user' | 'assistant'
   content: string
   timestamp: string
+  extractedData?: any
 }
 
 interface FixedChatInterfaceProps {
@@ -20,12 +22,54 @@ interface FixedChatInterfaceProps {
   onBack?: () => void
 }
 
+function QuoteActions({ extractedData }: { extractedData: any }) {
+  const router = useRouter()
+  
+  if (!extractedData?.showQuoteActions) return null
+
+  return (
+    <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+      <h4 className="font-semibold text-blue-900 mb-3">🎉 Quote Ready!</h4>
+      <div className="flex flex-wrap gap-2">
+        <Button 
+          onClick={() => router.push(extractedData.previewUrl)}
+          className="bg-blue-600 hover:bg-blue-700"
+        >
+          <Eye className="h-4 w-4 mr-2" />
+          Preview Quote
+        </Button>
+        <Button 
+          variant="outline"
+          onClick={() => router.push(extractedData.sendUrl)}
+        >
+          <Mail className="h-4 w-4 mr-2" />
+          Send to Client
+        </Button>
+        <Button 
+          variant="outline"
+          onClick={() => window.open(`/quotes/${extractedData.quoteId}/view`, '_blank')}
+        >
+          <ExternalLink className="h-4 w-4 mr-2" />
+          Public Link
+        </Button>
+        <Button 
+          variant="outline"
+          onClick={() => router.push('/create-quote')}
+        >
+          Create Another
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 export function FixedChatInterface({ 
   companyId,
   onQuoteGenerated,
   onBack
 }: FixedChatInterfaceProps) {
   const { toast } = useToast()
+  const router = useRouter()
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -88,7 +132,8 @@ export function FixedChatInterface({
         id: Date.now().toString(),
         role: 'assistant' as const,
         content: data.response,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        extractedData: data.extractedData || null
       }
     } catch (error) {
       console.error('Error processing message:', error)
@@ -196,8 +241,19 @@ export function FixedChatInterface({
         onQuoteGenerated(result)
       }
 
-      // Navigate to quote review
-      window.location.href = `/quotes/${result.quoteId}/review`
+      // Navigate to quote review - check multiple possible locations for quoteId
+      const quoteId = result.quoteId || result.extractedData?.quoteId || result.quote?.id;
+      
+      if (quoteId) {
+        console.log('Redirecting to quote review:', quoteId);
+        window.location.href = `/quotes/${quoteId}/review`;
+      } else {
+        console.error('No quote ID found in response:', result);
+        toast({
+          title: "Warning",
+          description: "Quote saved but couldn't redirect to review page."
+        });
+      }
     } catch (error) {
       console.error('Error saving quote:', error)
       toast({
@@ -269,6 +325,9 @@ export function FixedChatInterface({
                   <div className="mt-3 pt-3 border-t border-gray-200">
                     <div className="text-xs text-gray-500 mb-2">Quote is ready to save!</div>
                   </div>
+                )}
+                {message.role === 'assistant' && message.extractedData && (
+                  <QuoteActions extractedData={message.extractedData} />
                 )}
               </div>
             </div>

@@ -8,9 +8,16 @@ export class SupabaseDatabaseAdapter {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     
+    console.log('Supabase initialization:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseKey,
+      nodeEnv: process.env.NODE_ENV
+    });
+    
     // During build, these might not be available yet
     if (!supabaseUrl || !supabaseKey) {
-      console.log('Supabase environment variables not found, adapter will be initialized later');
+      console.warn('⚠️  Supabase environment variables not found. Database operations will fail.');
+      console.warn('Required variables: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY');
       return;
     }
     
@@ -19,8 +26,9 @@ export class SupabaseDatabaseAdapter {
     
     try {
       this.supabase = createClient(cleanUrl, supabaseKey);
+      console.log('✅ Supabase client initialized successfully');
     } catch (error) {
-      console.error('Failed to create Supabase client:', error);
+      console.error('❌ Failed to create Supabase client:', error);
     }
   }
 
@@ -165,6 +173,12 @@ export class SupabaseDatabaseAdapter {
   }
 
   async getCompanyByAccessCode(accessCode: string) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('🔍 Looking up company by access code:', accessCode);
+    
     const { data, error } = await this.supabase
       .from('companies')
       .select('*')
@@ -172,13 +186,21 @@ export class SupabaseDatabaseAdapter {
       .single();
 
     if (error) {
+      console.error('❌ Supabase getCompanyByAccessCode error:', error);
       throw error;
     }
 
+    console.log('✅ Company found:', data?.company_name);
     return data;
   }
 
   async createQuote(quoteData: any) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('💾 Creating quote in Supabase:', { customer: quoteData.customer_name, amount: quoteData.quote_amount });
+    
     const { data, error } = await this.supabase
       .from('quotes')
       .insert(quoteData)
@@ -186,9 +208,11 @@ export class SupabaseDatabaseAdapter {
       .single();
 
     if (error) {
+      console.error('❌ Supabase createQuote error:', error);
       throw error;
     }
 
+    console.log('✅ Quote created successfully in Supabase:', data);
     return data;
   }
 
@@ -393,6 +417,79 @@ export class SupabaseDatabaseAdapter {
 
     return data;
   }
+
+  // Setup-related methods
+  async deletePaintProductsByCompany(companyId: number) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    const { error } = await this.supabase
+      .from('paint_products')
+      .delete()
+      .eq('company_id', companyId);
+
+    if (error) {
+      throw error;
+    }
+
+    return { success: true };
+  }
+
+  async updateCompanySetup(companyId: number, setupData: any) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    // First, update the companies table
+    const companyUpdate: any = {};
+    if (setupData.default_markup !== undefined) {
+      companyUpdate.default_markup = setupData.default_markup;
+    }
+    if (setupData.setup_method !== undefined) {
+      companyUpdate.setup_method = setupData.setup_method;
+    }
+    if (setupData.setup_completed_at !== undefined) {
+      companyUpdate.setup_completed_at = setupData.setup_completed_at;
+    }
+    if (setupData.setup_skipped_at !== undefined) {
+      companyUpdate.setup_skipped_at = setupData.setup_skipped_at;
+    }
+
+    if (Object.keys(companyUpdate).length > 0) {
+      const { error: companyError } = await this.supabase
+        .from('companies')
+        .update(companyUpdate)
+        .eq('id', companyId);
+
+      if (companyError) {
+        throw companyError;
+      }
+    }
+
+    // Then, update company preferences
+    const preferencesUpdate: any = {
+      company_id: companyId,
+      updated_at: new Date().toISOString()
+    };
+
+    if (setupData.setup_completed !== undefined) {
+      preferencesUpdate.setup_completed = setupData.setup_completed;
+    }
+    if (setupData.default_markup !== undefined) {
+      preferencesUpdate.default_markup = setupData.default_markup;
+    }
+
+    const { error: prefsError } = await this.supabase
+      .from('company_preferences')
+      .upsert(preferencesUpdate);
+
+    if (prefsError) {
+      throw prefsError;
+    }
+
+    return { success: true };
+  }
 }
 
 // Create a lazy-loaded instance
@@ -429,4 +526,7 @@ export const supabaseDb = {
   // Company preferences methods
   getCompanyPreferences: async (companyId: number) => getSupabaseDb().getCompanyPreferences(companyId),
   saveCompanyPreferences: async (companyId: number, preferences: any) => getSupabaseDb().saveCompanyPreferences(companyId, preferences),
+  // Setup methods
+  deletePaintProductsByCompany: async (companyId: number) => getSupabaseDb().deletePaintProductsByCompany(companyId),
+  updateCompanySetup: async (companyId: number, setupData: any) => getSupabaseDb().updateCompanySetup(companyId, setupData),
 };

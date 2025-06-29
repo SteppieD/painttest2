@@ -166,6 +166,9 @@ function CreateQuotePageContent() {
           title: "Success!",
           description: "Quote has been created successfully."
         });
+        
+        // The FixedChatInterface already handles the redirect using window.location.href
+        // We don't need to do anything here
       }}
       onBack={() => router.push("/dashboard")}
     />

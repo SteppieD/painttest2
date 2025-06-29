@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbGet, dbRun } from "@/lib/database";
+import Database from 'better-sqlite3';
+import path from 'path';
 
 // GET - Retrieve a specific quote
 export async function GET(
@@ -7,7 +8,13 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const quote: any = dbGet(`
+    console.log('🔍 Fetching quote by ID:', params.id);
+
+    // Connect directly to SQLite database
+    const dbPath = path.join(process.cwd(), 'painting_quotes_app.db');
+    const db = new Database(dbPath);
+
+    const quote: any = db.prepare(`
       SELECT 
         q.*,
         c.company_name,
@@ -16,14 +23,21 @@ export async function GET(
       FROM quotes q
       LEFT JOIN companies c ON q.company_id = c.id
       WHERE q.id = ? OR q.quote_id = ?
-    `, [params.id, params.id]);
+    `).get(params.id, params.id);
+
+    db.close();
+
+    console.log('📊 Raw quote from database:', quote);
 
     if (!quote) {
+      console.log('❌ Quote not found for ID:', params.id);
       return NextResponse.json(
         { error: "Quote not found" },
         { status: 404 }
       );
     }
+
+    console.log('✅ Found quote:', { id: quote.id, customer: quote.customer_name });
 
     // Parse the breakdown if it's stored as JSON string
     if (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') {

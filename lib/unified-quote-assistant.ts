@@ -13,6 +13,16 @@ import {
   ConversationData 
 } from './improved-conversation-parser';
 import { 
+  conversationStateManager,
+  ConversationStateManager 
+} from './conversation-state';
+import { 
+  enhancedConversationStateManager,
+  EnhancedConversationStateManager 
+} from './conversation-state-enhanced';
+import { quoteCreationFallback } from './quote-creation-fallback';
+import { quoteSaver } from './quote-saver';
+import { 
   calculateProfessionalQuote, 
   ProjectDimensions, 
   DEFAULT_PAINT_PRODUCTS, 
@@ -296,8 +306,8 @@ export class UnifiedQuoteAssistant {
 
       // Build charge rates - check if labor is "included" in the rate
       const laborIncluded = parsed.specialRequests.some(req => req.toLowerCase().includes('labor included')) ||
-                           userInput.toLowerCase().includes('labour is included') ||
-                           userInput.toLowerCase().includes('labor is included');
+                           (userInput && userInput.toLowerCase().includes('labour is included')) ||
+                           (userInput && userInput.toLowerCase().includes('labor is included'));
       
       console.log('🔧 Labor Included?', laborIncluded);
       console.log('🔧 Parsed Labor Rate:', parsed.laborRate);
@@ -421,12 +431,209 @@ Ready to save this quote?`;
     success: boolean;
   }> {
     try {
-      // First, try to parse as complete quote information
+      // Generate session ID for enhanced conversation state
+      const sessionId = enhancedConversationStateManager.generateSessionId(companyId);
+      
+      // Check for conversation loops and stuck states
+      const loopCheck = enhancedConversationStateManager.checkForLoop(sessionId, userInput);
+      if (!loopCheck.shouldProcess) {
+        if (loopCheck.newStage) {
+          enhancedConversationStateManager.setState(sessionId, { stage: loopCheck.newStage });
+        }
+        return {
+          response: loopCheck.responseOverride || "Let's try a different approach.",
+          extractedData: { action: 'loop_recovery' },
+          confidence: 0.9,
+          success: true
+        };
+      }
+      
+      // Check for ambiguous responses
+      const ambiguousCheck = enhancedConversationStateManager.handleAmbiguousResponse(sessionId, userInput);
+      if (!ambiguousCheck.shouldProcess) {
+        if (ambiguousCheck.newStage) {
+          enhancedConversationStateManager.setState(sessionId, { stage: ambiguousCheck.newStage });
+        }
+        return {
+          response: ambiguousCheck.responseOverride || "Could you please clarify?",
+          extractedData: { action: 'clarification_needed' },
+          confidence: 0.8,
+          success: true
+        };
+      }
+      
+      const conversationState = enhancedConversationStateManager.getState(sessionId);
+      
+      console.log('💭 Conversation State:', conversationState);
+      console.log('🗣️ User Input:', userInput);
+      
+      // Check if user is responding to a quote that was just generated
+      if (conversationState && conversationState.stage === 'awaiting_confirmation') {
+        
+        if (enhancedConversationStateManager.isConfirmationResponse(userInput, conversationState)) {
+          // User confirmed - save the quote
+          console.log('✅ User confirmed quote saving');
+          
+          try {
+            // Clean customer name before saving
+            const cleanCustomerName = (name: string): string => {
+              if (!name) return 'Unknown';
+              
+              // Handle "It's for [Name]" or "its for [Name]" pattern
+              const itsForMatch = name.match(/it'?s\s+for\s+([^.]+)/i);
+              if (itsForMatch) {
+                return itsForMatch[1].trim();
+              }
+              
+              // Handle "Customer: [Name]" pattern
+              const customerMatch = name.match(/customer:\s*([^,]+)/i);
+              if (customerMatch) {
+                return customerMatch[1].trim();
+              }
+              
+              // Handle "the customers name is [Name]" or "customers name is [Name]"
+              const customerNameMatch = name.match(/(?:the\s+)?customers?\s+name\s+is\s+([A-Z][a-z]+)(?:\s+and|$)/i);
+              if (customerNameMatch) {
+                return customerNameMatch[1].trim();
+              }
+              
+              // Handle "name is [Name]"
+              const nameIsMatch = name.match(/name\s+is\s+([A-Z][a-z]+)/i);
+              if (nameIsMatch) {
+                return nameIsMatch[1].trim();
+              }
+              
+              // If it looks like raw conversation data, try to extract name
+              if (name.length > 50 || name.includes('.') || name.includes('painting')) {
+                // Look for name patterns in longer text
+                const nameMatch = name.match(/(?:for|customer|client)?\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/);
+                if (nameMatch) {
+                  return nameMatch[1].trim();
+                }
+              }
+              
+              return name;
+            };
+
+            const saveResult = await quoteSaver.saveQuote({
+              customer_name: cleanCustomerName(conversationState.customerInfo?.customer_name || 'Unknown'),
+              address: conversationState.customerInfo?.address || '',
+              quote_amount: conversationState.lastQuote?.final_price || 0,
+              project_type: 'interior', // Default for now
+              status: 'pending',
+              company_id: parseInt(companyId),
+              quote_details: conversationState.lastQuote
+            });
+            
+            if (saveResult.success) {
+              enhancedConversationStateManager.setState(sessionId, { stage: 'quote_saved' });
+              
+              return {
+                response: `🎉 **Quote Saved Successfully!**\n\n**Quote ID:** ${saveResult.quoteId}\n**Customer:** ${conversationState.customerInfo?.customer_name}\n**Total:** $${conversationState.lastQuote?.final_price?.toLocaleString()}\n\n**What's Next?**\n• **Preview Quote** - View the professional client-facing quote\n• **Send to Client** - Email or text the quote directly\n• **Download PDF** - Get a printable version\n• **Create Another** - Start a new quote\n\nReady to preview and send this quote to your client?`,
+                extractedData: { 
+                  action: 'quote_saved', 
+                  quoteId: saveResult.quoteId,
+                  showQuoteActions: true,
+                  previewUrl: `/quotes/${saveResult.quoteId}/preview`,
+                  sendUrl: `/quotes/${saveResult.quoteId}/send`
+                },
+                quote: conversationState.lastQuote,
+                confidence: 0.95,
+                success: true
+              };
+            } else {
+              return {
+                response: `I generated the quote successfully, but had trouble saving it to the database. Error: ${saveResult.error}\n\nThe quote details are:\n\n${conversationState.lastQuoteSummary}\n\nPlease try again or contact support.`,
+                extractedData: { action: 'save_failed', error: saveResult.error },
+                quote: conversationState.lastQuote,
+                confidence: 0.8,
+                success: false
+              };
+            }
+          } catch (error) {
+            console.error('❌ Error saving quote:', error);
+            return {
+              response: `I generated the quote successfully, but encountered an error saving it. Please try again or contact support.\n\nQuote details:\n\n${conversationState.lastQuoteSummary}`,
+              extractedData: { action: 'save_error' },
+              quote: conversationState.lastQuote,
+              confidence: 0.7,
+              success: false
+            };
+          }
+        }
+        
+        if (enhancedConversationStateManager.isRejectionResponse(userInput)) {
+          // User wants to edit or cancel
+          console.log('❌ User rejected quote, returning to editing');
+          
+          enhancedConversationStateManager.setState(sessionId, { stage: 'gathering_info' });
+          
+          return {
+            response: "No problem! What would you like to change about the quote? You can provide updated information or tell me what needs to be different.",
+            extractedData: { action: 'edit_quote' },
+            confidence: 0.9,
+            success: true
+          };
+        }
+      }
+      
+      // Try enhanced quote creation with fallback
+      try {
+        const fallbackResult = await quoteCreationFallback.createQuoteWithFallback(
+          userInput, 
+          companyId, 
+          conversationHistory
+        );
+        
+        if (fallbackResult.success && fallbackResult.quote) {
+          // Save conversation state with generated quote
+          enhancedConversationStateManager.setState(sessionId, {
+            stage: 'awaiting_confirmation',
+            lastQuote: fallbackResult.quote,
+            lastQuoteSummary: fallbackResult.response,
+            customerInfo: {
+              customer_name: fallbackResult.quote.project_info?.customer_name || 'Unknown',
+              address: fallbackResult.quote.project_info?.address || ''
+            }
+          });
+          
+          return {
+            response: fallbackResult.response + "\n\nWould you like me to save this quote?",
+            extractedData: { action: 'quote_generated', method: fallbackResult.method },
+            quote: fallbackResult.quote,
+            confidence: fallbackResult.method === 'ai' ? 0.95 : 0.85,
+            success: true
+          };
+        } else {
+          return {
+            response: fallbackResult.response,
+            extractedData: { action: 'incomplete_data', method: fallbackResult.method },
+            confidence: 0.7,
+            success: true
+          };
+        }
+      } catch (fallbackError) {
+        console.warn('Fallback system failed, trying original parser:', fallbackError);
+      }
+      
+      // Fallback to original parsing if all else fails
       const parsed = await this.parseCompleteQuoteMessage(userInput);
       
       if (parsed.isComplete) {
         // We have everything we need - generate the quote
         const quoteResult = await this.generateQuoteFromParsedData(parsed, companyId, userInput);
+        
+        if (quoteResult.success && quoteResult.quote) {
+          // Save conversation state with generated quote
+          enhancedConversationStateManager.setState(sessionId, {
+            stage: 'awaiting_confirmation',
+            lastQuote: quoteResult.quote,
+            lastQuoteSummary: quoteResult.response,
+            customerInfo: parsed.customerInfo
+          });
+          
+          console.log('💾 Saved quote to conversation state, awaiting confirmation');
+        }
         
         return {
           response: quoteResult.response,
@@ -439,6 +646,14 @@ Ready to save this quote?`;
       
       // If not complete, but we have significant information, acknowledge and ask for missing pieces
       if (parsed.customerInfo.customer_name || parsed.dimensions.wall_linear_feet) {
+        enhancedConversationStateManager.setState(sessionId, { 
+          stage: 'gathering_info',
+          collectedData: {
+            customerInfo: parsed.customerInfo,
+            measurements: parsed.dimensions
+          }
+        });
+        
         return {
           response: `Great! I have: ${this.summarizeExtractedInfo(parsed)}.\n\nI still need: ${parsed.missingFields.join(', ')}. Can you provide these details?`,
           extractedData: parsed,
@@ -447,7 +662,21 @@ Ready to save this quote?`;
         };
       }
       
-      // If we don't have much information, use Claude to generate a natural response
+      // If we don't have much information, check conversation health and respond appropriately
+      const health = enhancedConversationStateManager.getConversationHealth(sessionId);
+      
+      if (!health.isHealthy) {
+        console.log('🏥 Conversation health issues detected:', health.issues);
+        const recoveryResponse = enhancedConversationStateManager.recoverConversation(sessionId);
+        return {
+          response: recoveryResponse,
+          extractedData: { action: 'conversation_recovery' },
+          confidence: 0.8,
+          success: true
+        };
+      }
+      
+      enhancedConversationStateManager.setState(sessionId, { stage: 'gathering_info' });
       return await this.generateNaturalResponse(userInput, companyId, conversationHistory);
       
     } catch (error) {
@@ -552,7 +781,7 @@ Ready to save this quote?`;
           'X-Title': 'Painting Quote Assistant'
         },
         body: JSON.stringify({
-          model: 'anthropic/claude-sonnet-4',
+          model: 'anthropic/claude-3-5-sonnet-20241022',
           messages: [
             {
               role: 'system',
