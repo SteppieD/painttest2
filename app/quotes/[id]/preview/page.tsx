@@ -364,7 +364,7 @@ export default function QuotePreviewPage() {
                 <p className="text-blue-100">Professional Estimate</p>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold">${quote.quote_amount.toLocaleString()}</div>
+                <div className="text-3xl font-bold">${(quote.quote_amount || quote.final_price || quote.total_revenue || quote.total_cost || 0).toLocaleString()}</div>
                 <Badge variant="secondary" className="mt-2">
                   {quote.status.charAt(0).toUpperCase() + quote.status.slice(1)}
                 </Badge>
@@ -513,7 +513,7 @@ export default function QuotePreviewPage() {
                     
                     <div className="flex justify-between items-center py-3 text-xl font-bold bg-blue-50 px-4 rounded-lg">
                       <span className="text-blue-900">Total Investment</span>
-                      <span className="text-blue-600">${quote.quote_amount.toLocaleString()}</span>
+                      <span className="text-blue-600">${(quote.quote_amount || quote.final_price || quote.total_revenue || quote.total_cost || 0).toLocaleString()}</span>
                     </div>
                     
                     <div className="text-sm text-gray-600 text-center mt-3">
