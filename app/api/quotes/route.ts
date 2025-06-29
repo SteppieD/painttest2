@@ -422,24 +422,27 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const result = updateQuote(id, updates);
-
-    if (result.changes === 0) {
-      return NextResponse.json(
-        { error: "Quote not found" },
-        { status: 404 }
-      );
-    }
+    // Import supabaseDb here to avoid circular dependency
+    const { supabaseDb } = await import("@/lib/database/supabase-adapter");
+    const result = await supabaseDb.updateQuote(id, updates);
 
     console.log(`✅ Quote updated: ${id}`);
 
     return NextResponse.json({
       success: true,
-      changes: result.changes
+      quote: result
     });
 
   } catch (error) {
     console.error("Error updating quote:", error);
+    
+    if (error.message && error.message.includes('not found')) {
+      return NextResponse.json(
+        { error: "Quote not found" },
+        { status: 404 }
+      );
+    }
+    
     return NextResponse.json(
       { error: "Failed to update quote" },
       { status: 500 }
@@ -460,24 +463,27 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const result = dbRun("DELETE FROM quotes WHERE id = ?", [id]);
-
-    if (result.changes === 0) {
-      return NextResponse.json(
-        { error: "Quote not found" },
-        { status: 404 }
-      );
-    }
+    // Import supabaseDb here to avoid circular dependency
+    const { supabaseDb } = await import("@/lib/database/supabase-adapter");
+    const result = await supabaseDb.deleteQuote(id);
 
     console.log(`✅ Quote deleted: ${id}`);
 
     return NextResponse.json({
       success: true,
-      changes: result.changes
+      message: "Quote deleted successfully"
     });
 
   } catch (error) {
     console.error("Error deleting quote:", error);
+    
+    if (error.message && error.message.includes('not found')) {
+      return NextResponse.json(
+        { error: "Quote not found" },
+        { status: 404 }
+      );
+    }
+    
     return NextResponse.json(
       { error: "Failed to delete quote" },
       { status: 500 }

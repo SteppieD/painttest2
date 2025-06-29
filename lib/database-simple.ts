@@ -313,6 +313,27 @@ export const updateQuote = (id: string, data: any) => {
   return dbRun('UPDATE quotes SET updated_at = ? WHERE id = ?', [new Date().toISOString(), id]);
 };
 
+export const getQuotesByCompany = async (companyId: number) => {
+  if (shouldUseSupabase) {
+    try {
+      console.log('🔍 Getting quotes by company from Supabase:', companyId);
+      return await supabaseDb.getQuotesByCompany(companyId);
+    } catch (error) {
+      console.error('❌ Supabase getQuotesByCompany failed:', error);
+      // In production, throw the error instead of using fallback
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error(`Failed to fetch quotes: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }
+  } else if (process.env.NODE_ENV === 'production') {
+    throw new Error('Database not configured for production.');
+  }
+  
+  // Local fallback for development
+  console.log('📝 Using local quotes data for development');
+  return localQuotes.filter(quote => quote.company_id === companyId);
+};
+
 // Initialize function for compatibility
 export const initializeDatabase = async () => {
   if (shouldUseSupabase) {

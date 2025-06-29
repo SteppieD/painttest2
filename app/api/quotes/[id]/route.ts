@@ -107,139 +107,27 @@ export async function PATCH(
 ) {
   try {
     const updates = await request.json();
+    console.log('🔄 Updating quote via API:', { id: params.id, updates: Object.keys(updates) });
     
-    // Build update query dynamically based on provided fields
-    const updateFields = [];
-    const updateValues = [];
-    
-    // Basic quote info
-    if (updates.customer_name !== undefined) {
-      updateFields.push('customer_name = ?');
-      updateValues.push(updates.customer_name);
-    }
-    if (updates.address !== undefined) {
-      updateFields.push('address = ?');
-      updateValues.push(updates.address);
-    }
-    if (updates.project_type !== undefined) {
-      updateFields.push('project_type = ?');
-      updateValues.push(updates.project_type);
-    }
-    
-    // Contact info
-    if (updates.customer_email !== undefined) {
-      updateFields.push('customer_email = ?');
-      updateValues.push(updates.customer_email);
-    }
-    if (updates.customer_phone !== undefined) {
-      updateFields.push('customer_phone = ?');
-      updateValues.push(updates.customer_phone);
-    }
-    
-    // Dimensions and measurements
-    if (updates.walls_sqft !== undefined) {
-      updateFields.push('walls_sqft = ?');
-      updateValues.push(updates.walls_sqft);
-    }
-    if (updates.ceilings_sqft !== undefined) {
-      updateFields.push('ceilings_sqft = ?');
-      updateValues.push(updates.ceilings_sqft);
-    }
-    if (updates.trim_sqft !== undefined) {
-      updateFields.push('trim_sqft = ?');
-      updateValues.push(updates.trim_sqft);
-    }
-    if (updates.wall_linear_feet !== undefined) {
-      updateFields.push('wall_linear_feet = ?');
-      updateValues.push(updates.wall_linear_feet);
-    }
-    if (updates.ceiling_height !== undefined) {
-      updateFields.push('ceiling_height = ?');
-      updateValues.push(updates.ceiling_height);
-    }
-    if (updates.ceiling_area !== undefined) {
-      updateFields.push('ceiling_area = ?');
-      updateValues.push(updates.ceiling_area);
-    }
-    if (updates.number_of_doors !== undefined) {
-      updateFields.push('number_of_doors = ?');
-      updateValues.push(updates.number_of_doors);
-    }
-    if (updates.number_of_windows !== undefined) {
-      updateFields.push('number_of_windows = ?');
-      updateValues.push(updates.number_of_windows);
-    }
-    
-    // Project details
-    if (updates.paint_quality !== undefined) {
-      updateFields.push('paint_quality = ?');
-      updateValues.push(updates.paint_quality);
-    }
-    if (updates.prep_work !== undefined) {
-      updateFields.push('prep_work = ?');
-      updateValues.push(updates.prep_work);
-    }
-    if (updates.special_requests !== undefined) {
-      updateFields.push('special_requests = ?');
-      updateValues.push(updates.special_requests);
-    }
-    if (updates.timeline !== undefined) {
-      updateFields.push('timeline = ?');
-      updateValues.push(updates.timeline);
-    }
-    if (updates.room_data !== undefined) {
-      updateFields.push('room_data = ?');
-      updateValues.push(updates.room_data);
-    }
-    if (updates.room_count !== undefined) {
-      updateFields.push('room_count = ?');
-      updateValues.push(updates.room_count);
-    }
-    
-    // Financial
-    if (updates.markup_percentage !== undefined) {
-      updateFields.push('markup_percentage = ?');
-      updateValues.push(updates.markup_percentage);
-    }
-    if (updates.total_cost !== undefined) {
-      updateFields.push('total_cost = ?');
-      updateValues.push(updates.total_cost);
-    }
-    if (updates.final_price !== undefined) {
-      updateFields.push('final_price = ?');
-      updateValues.push(updates.final_price);
-    }
-    if (updates.quote_amount !== undefined) {
-      updateFields.push('quote_amount = ?');
-      updateValues.push(updates.quote_amount);
-    }
-    
-    // Always update timestamp
-    updateFields.push('updated_at = CURRENT_TIMESTAMP');
-    
-    // Add the ID parameters at the end
-    updateValues.push(params.id, params.id);
-    
-    const result = dbRun(`
-      UPDATE quotes 
-      SET ${updateFields.join(', ')}
-      WHERE id = ? OR quote_id = ?
-    `, updateValues);
+    // Use Supabase adapter to update the quote
+    const updatedQuote = await supabaseDb.updateQuote(params.id, updates);
 
-    if (result.changes === 0) {
+    return NextResponse.json({
+      success: true,
+      message: "Quote updated successfully",
+      quote: updatedQuote
+    });
+
+  } catch (error) {
+    console.error("Error updating quote:", error);
+    
+    if (error.message && error.message.includes('not found')) {
       return NextResponse.json(
         { error: "Quote not found" },
         { status: 404 }
       );
     }
-
-    return NextResponse.json({
-      success: true,
-      message: "Quote updated successfully"
-    });
-
-  } catch (error) {
-    console.error("Error updating quote:", error);
+    
     return NextResponse.json(
       { error: "Failed to update quote" },
       { status: 500 }

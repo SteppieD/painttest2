@@ -288,6 +288,80 @@ export class SupabaseDatabaseAdapter {
     return data;
   }
 
+  async updateQuote(idOrQuoteId: string | number, updates: any) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('🔄 Updating quote in Supabase:', { id: idOrQuoteId, updates: Object.keys(updates) });
+
+    // Try to determine if we have an ID or quote_id
+    let query;
+    if (typeof idOrQuoteId === 'number' || !isNaN(parseInt(idOrQuoteId as string))) {
+      // It's a numeric ID
+      query = this.supabase
+        .from('quotes')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', parseInt(idOrQuoteId as string));
+    } else {
+      // It's a quote_id string
+      query = this.supabase
+        .from('quotes')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('quote_id', idOrQuoteId);
+    }
+
+    const { data, error } = await query.select().single();
+
+    if (error) {
+      console.error('❌ Supabase updateQuote error:', error);
+      throw error;
+    }
+
+    console.log('✅ Quote updated successfully in Supabase');
+    return data;
+  }
+
+  async deleteQuote(idOrQuoteId: string | number) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('🗑️ Deleting quote from Supabase:', idOrQuoteId);
+
+    // Try to determine if we have an ID or quote_id
+    let query;
+    if (typeof idOrQuoteId === 'number' || !isNaN(parseInt(idOrQuoteId as string))) {
+      // It's a numeric ID
+      query = this.supabase
+        .from('quotes')
+        .delete()
+        .eq('id', parseInt(idOrQuoteId as string));
+    } else {
+      // It's a quote_id string
+      query = this.supabase
+        .from('quotes')
+        .delete()
+        .eq('quote_id', idOrQuoteId);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('❌ Supabase deleteQuote error:', error);
+      throw error;
+    }
+
+    console.log('✅ Quote deleted successfully from Supabase');
+    return { success: true };
+  }
+
   async getAllCompanies() {
     if (!this.supabase) {
       throw new Error('Supabase client not initialized');
@@ -575,6 +649,10 @@ export const supabaseDb = {
   getAllCompanies: async () => getSupabaseDb().getAllCompanies(),
   createQuote: async (quoteData: any) => getSupabaseDb().createQuote(quoteData),
   getQuotesByCompany: async (companyId: number) => getSupabaseDb().getQuotesByCompany(companyId),
+  getQuoteById: async (id: number) => getSupabaseDb().getQuoteById(id),
+  getQuoteByQuoteId: async (quoteId: string) => getSupabaseDb().getQuoteByQuoteId(quoteId),
+  updateQuote: async (idOrQuoteId: string | number, updates: any) => getSupabaseDb().updateQuote(idOrQuoteId, updates),
+  deleteQuote: async (idOrQuoteId: string | number) => getSupabaseDb().deleteQuote(idOrQuoteId),
   // Paint products methods
   getPaintProducts: async (companyId: number) => getSupabaseDb().getPaintProducts(companyId),
   savePaintProducts: async (companyId: number, products: any[]) => getSupabaseDb().savePaintProducts(companyId, products),
