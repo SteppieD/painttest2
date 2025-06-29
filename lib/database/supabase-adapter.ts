@@ -230,6 +230,64 @@ export class SupabaseDatabaseAdapter {
     return data;
   }
 
+  async getQuoteById(id: number) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('🔍 Getting quote by ID from Supabase:', id);
+    
+    const { data, error } = await this.supabase
+      .from('quotes')
+      .select(`
+        *,
+        companies (
+          company_name,
+          phone,
+          email
+        )
+      `)
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('❌ Supabase getQuoteById error:', error);
+      throw error;
+    }
+
+    console.log('✅ Quote found by ID:', data?.customer_name);
+    return data;
+  }
+
+  async getQuoteByQuoteId(quoteId: string) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('🔍 Getting quote by quote_id from Supabase:', quoteId);
+    
+    const { data, error } = await this.supabase
+      .from('quotes')
+      .select(`
+        *,
+        companies (
+          company_name,
+          phone,
+          email
+        )
+      `)
+      .eq('quote_id', quoteId)
+      .single();
+
+    if (error) {
+      console.error('❌ Supabase getQuoteByQuoteId error:', error);
+      throw error;
+    }
+
+    console.log('✅ Quote found by quote_id:', data?.customer_name);
+    return data;
+  }
+
   async getAllCompanies() {
     if (!this.supabase) {
       throw new Error('Supabase client not initialized');

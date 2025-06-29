@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import Database from 'better-sqlite3';
-import path from 'path';
+import { supabaseDb } from "@/lib/database/supabase-adapter";
 
 // GET - Retrieve a specific quote
 export async function GET(
@@ -10,22 +9,30 @@ export async function GET(
   try {
     console.log('🔍 Fetching quote by ID:', params.id);
 
-    // Connect directly to SQLite database
-    const dbPath = path.join(process.cwd(), 'painting_quotes_app.db');
-    const db = new Database(dbPath);
-
-    const quote: any = db.prepare(`
-      SELECT 
-        q.*,
-        c.company_name,
-        c.phone as company_phone,
-        c.email as company_email
-      FROM quotes q
-      LEFT JOIN companies c ON q.company_id = c.id
-      WHERE q.id = ? OR q.quote_id = ?
-    `).get(params.id, params.id);
-
-    db.close();
+    // Retrieve quote using Supabase database adapter
+    let quote: any = null;
+    
+    try {
+      // Try to get quote by ID first
+      if (!isNaN(parseInt(params.id))) {
+        quote = await supabaseDb.getQuoteById(parseInt(params.id));
+      } else {
+        // If not a number, try to get by quote_id
+        quote = await supabaseDb.getQuoteByQuoteId(params.id);
+      }
+    } catch (error) {
+      console.error('Error fetching quote from Supabase:', error);
+      // Try the other method if first fails
+      try {
+        if (isNaN(parseInt(params.id))) {
+          quote = await supabaseDb.getQuoteById(parseInt(params.id));
+        } else {
+          quote = await supabaseDb.getQuoteByQuoteId(params.id);
+        }
+      } catch (secondError) {
+        console.error('Both quote lookup methods failed:', secondError);
+      }
+    }
 
     console.log('📊 Raw quote from database:', quote);
 
