@@ -82,6 +82,7 @@ export function FixedChatInterface({
   const [isLoading, setIsLoading] = useState(false)
   const [isThinking, setIsThinking] = useState(false)
   const [currentQuote, setCurrentQuote] = useState<any>(null)
+  const [customerName, setCustomerName] = useState<string>('')
   
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -128,6 +129,31 @@ export function FixedChatInterface({
         setCurrentQuote(data.quote)
       }
 
+      // Extract customer name from response for header display
+      if (data.response) {
+        // Try different patterns to extract customer name
+        const patterns = [
+          /Customer Name:\s*([^\n\r]+)/,
+          /- Customer Name:\s*([^\n\r]+)/,
+          /Customer:\s*([^\n\r]+)/,
+          /It's for\s+([^,\n\r]+)/i,
+          /Quote for\s+([^,\n\r]+)/i,
+          /Information Collected:[\s\S]*?Customer Name:\s*([^\n\r]+)/
+        ];
+        
+        for (const pattern of patterns) {
+          const match = data.response.match(pattern);
+          if (match) {
+            setCustomerName(match[1].trim());
+            break;
+          }
+        }
+      }
+      
+      if (data.quote?.project_info?.customer_name) {
+        setCustomerName(data.quote.project_info.customer_name);
+      }
+
       return {
         id: Date.now().toString(),
         role: 'assistant' as const,
@@ -160,6 +186,27 @@ export function FixedChatInterface({
     setMessages(prev => [...prev, userMessage])
     setInput('')
     setIsThinking(true)
+
+    // Try to extract customer name from user input immediately
+    if (!customerName) {
+      const userPatterns = [
+        /It's for\s+([^,\.\n\r]+)/i,
+        /Customer:\s*([^,\.\n\r]+)/i,
+        /Name:\s*([^,\.\n\r]+)/i,
+        /for\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/
+      ];
+      
+      for (const pattern of userPatterns) {
+        const match = textToSend.match(pattern);
+        if (match) {
+          const extractedName = match[1].trim();
+          if (extractedName.length > 1 && extractedName.length < 50) {
+            setCustomerName(extractedName);
+            break;
+          }
+        }
+      }
+    }
 
     try {
       // Simulate thinking delay for better UX
@@ -277,7 +324,12 @@ export function FixedChatInterface({
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             )}
-            <h1 className="text-lg font-semibold flex-1">Create Quote</h1>
+            <div className="flex-1">
+              <h1 className="text-lg font-semibold">Create Quote</h1>
+              {customerName && (
+                <p className="text-sm text-gray-600">for {customerName}</p>
+              )}
+            </div>
             {currentQuote && (
               <Button 
                 variant="default" 
@@ -321,9 +373,27 @@ export function FixedChatInterface({
                 <div className="whitespace-pre-wrap text-sm">
                   {message.content}
                 </div>
-                {message.role === 'assistant' && message.content.includes('Customer Price:') && (
-                  <div className="mt-3 pt-3 border-t border-gray-200">
-                    <div className="text-xs text-gray-500 mb-2">Quote is ready to save!</div>
+                {message.role === 'assistant' && (message.content.includes('Total Quote:') || message.content.includes('Customer Price:')) && (
+                  <div className="mt-4 pt-3 border-t border-gray-200">
+                    <div className="text-xs text-gray-500 mb-3">Quote is ready!</div>
+                    <div className="flex gap-2">
+                      <Button 
+                        size="sm"
+                        onClick={saveQuote}
+                        disabled={isLoading}
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        <Save className="h-4 w-4 mr-1" />
+                        Save Quote
+                      </Button>
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        onClick={() => inputRef.current?.focus()}
+                      >
+                        Continue Editing
+                      </Button>
+                    </div>
                   </div>
                 )}
                 {message.role === 'assistant' && message.extractedData && (
@@ -374,28 +444,6 @@ export function FixedChatInterface({
               ) : (
                 <Send className="h-4 w-4" />
               )}
-            </Button>
-          </div>
-          
-          {/* Sample Input Suggestions */}
-          <div className="mt-2 flex flex-wrap gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setInput("It's for Sarah Johnson at 456 Oak Avenue. Interior painting, 280 linear feet, 9 foot ceilings, $52 per gallon Benjamin Moore Advance satin, no doors or trim, 22% markup.")}
-              disabled={isLoading || isThinking}
-              className="text-xs"
-            >
-              Try Sample Quote
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setInput("Customer: Mike Chen, Address: 789 Pine Street")}
-              disabled={isLoading || isThinking}
-              className="text-xs"
-            >
-              Start Simple
             </Button>
           </div>
         </div>
