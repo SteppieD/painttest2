@@ -38,6 +38,7 @@ export async function GET(request: NextRequest) {
     try {
       demoCompanies = await supabaseDb.getCompanyByAccessCode('DEMO2024');
     } catch (error) {
+      console.error('Full Supabase error object:', error);
       companyError = error instanceof Error ? error.message : 'Unknown error';
     }
     

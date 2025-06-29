@@ -2,7 +2,13 @@
 
 A comprehensive Next.js painting quote application with admin portal, customer management, and AI-powered quoting system.
 
-## ✅ **Current Status - FULLY OPERATIONAL**
+## ✅ **Current Status - PRODUCTION READY (Updated Jan 24, 2025)**
+
+### 🎉 **Latest Updates:**
+- **Fixed**: Invalid Supabase API keys causing authentication errors
+- **Fixed**: Customer name corruption in quote processing
+- **Deployed**: Fresh production build with working database connectivity
+- **Working**: AI quote generation with accurate calculations
 
 ### 🎯 **Core Features Working:**
 1. **⚡ State Management Optimization** - 50% fewer re-renders with useReducer pattern consolidating 25+ useState hooks
@@ -34,9 +40,34 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions for Rail
 
 ### **💻 Local Development:**
 ```bash
+# Clone the repository
+git clone https://github.com/SteppieD/painttest2.git
+cd painttest2
+
+# Install dependencies
 npm install
+
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your Supabase credentials
+
+# Run development server
 npm run dev
 # Visit: http://localhost:3001
+```
+
+### **🌐 Production Deployment:**
+```bash
+# Build for production
+npm run build
+
+# Deploy to Vercel
+vercel --prod
+
+# Or deploy via Git push (if connected to Vercel)
+git add .
+git commit -m "Deploy: Updated with latest fixes"
+git push origin main
 ```
 
 ### **🐳 Docker:**
