@@ -32,6 +32,21 @@ export class QuoteSaver {
       // Generate quote_id if not provided
       const quote_id = quoteData.quote_id || this.generateQuoteId();
       
+      // Extract details from quote_details if available
+      const details = quoteData.quote_details || {};
+      const projectInfo = details.project_info || {};
+      const measurements = projectInfo.measurements || {};
+      
+      // Extract square footage from measurements
+      let walls_sqft = 0;
+      let ceilings_sqft = 0;
+      
+      if (measurements.linear_feet && projectInfo.ceiling_height) {
+        walls_sqft = measurements.linear_feet * (projectInfo.ceiling_height || 9);
+      } else if (measurements.sqft) {
+        walls_sqft = measurements.sqft;
+      }
+      
       const quoteToSave = {
         quote_id,
         customer_name: quoteData.customer_name,
@@ -40,7 +55,18 @@ export class QuoteSaver {
         project_type: quoteData.project_type,
         status: quoteData.status || 'pending',
         company_id: quoteData.company_id,
-        quote_details: JSON.stringify(quoteData.quote_details),
+        // Map quote details to actual database columns
+        walls_sqft: walls_sqft || 0,
+        ceilings_sqft: ceilings_sqft || 0,
+        trim_sqft: 0, // Not painting trim
+        paint_quality: 'standard',
+        // Store the full details as JSON in special_requests
+        special_requests: JSON.stringify({
+          original_quote: quoteData.quote_details,
+          linear_feet: measurements.linear_feet,
+          ceiling_height: projectInfo.ceiling_height,
+          paint_details: details.materials
+        }),
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
