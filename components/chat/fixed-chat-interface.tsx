@@ -74,7 +74,7 @@ export function FixedChatInterface({
     {
       id: '1',
       role: 'assistant',
-      content: `Hi! I'm your painting quote assistant. I can process complete project information in one message.\n\n**For example, try saying:** "It's for John Smith at 123 Main Street. Interior painting, 300 linear feet, 9 foot ceilings, $45/gallon Sherwin Williams eggshell, no trim or doors, 25% markup."\n\n**Or start simple:** Just tell me the customer's name and address!`,
+      content: `Hey there! 👋 I'm your quote buddy - think of me as your helpful guide for creating painting quotes quickly and accurately.\n\nYou can tell me everything at once, like:\n"It's for John Smith at 123 Main Street. Interior painting, 300 linear feet, 9 foot ceilings, $45/gallon Sherwin Williams eggshell, no trim or doors, 25% markup."\n\nOr we can take it step by step - just start with the customer's name and address, and I'll guide you through the rest! 😊\n\nWhat project are we quoting today?`,
       timestamp: new Date().toISOString()
     }
   ])

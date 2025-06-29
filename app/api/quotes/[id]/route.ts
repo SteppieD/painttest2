@@ -83,6 +83,30 @@ export async function GET(
       }
     }
 
+    // Parse special_requests to get quote_details
+    if (quote.special_requests && typeof quote.special_requests === 'string') {
+      try {
+        const specialRequests = JSON.parse(quote.special_requests);
+        // If special_requests contains original_quote, use it as quote_details
+        if (specialRequests.original_quote) {
+          quote.quote_details = specialRequests.original_quote;
+        } else {
+          // Otherwise use the whole special_requests as quote_details
+          quote.quote_details = specialRequests;
+        }
+      } catch (e) {
+        console.error('Error parsing special_requests:', e);
+        // Fallback: create quote_details from available data
+        quote.quote_details = {
+          walls_sqft: quote.walls_sqft || 0,
+          ceilings_sqft: quote.ceilings_sqft || 0,
+          trim_sqft: quote.trim_sqft || 0,
+          paint_quality: quote.paint_quality || 'standard',
+          total_cost: quote.final_price || quote.total_revenue || quote.quote_amount
+        };
+      }
+    }
+
     // Ensure we have the necessary fields
     quote.total_cost = quote.final_price || quote.total_revenue || quote.quote_amount;
     quote.sqft = (quote.walls_sqft || 0) + (quote.ceilings_sqft || 0) + (quote.trim_sqft || 0);
