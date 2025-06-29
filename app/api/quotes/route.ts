@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import Database from 'better-sqlite3';
-import path from 'path';
+import { createQuote, getQuotesByCompany } from "@/lib/database-simple";
 import { generateQuoteId } from "@/lib/utils";
 import { subscriptionManager } from "@/lib/subscription-manager";
 
@@ -170,29 +169,42 @@ export async function POST(request: NextRequest) {
       status: 'pending'
     };
 
-    // Connect directly to SQLite database and insert quote
-    const dbPath = path.join(process.cwd(), 'painting_quotes_app.db');
-    const db = new Database(dbPath);
+    // Save quote using Supabase database adapter
+    console.log('💾 Saving quote via Supabase adapter:', {
+      customer: quote.customer_name,
+      amount: quote.total_revenue,
+      company_id: quote.company_id
+    });
 
-    const insertStmt = db.prepare(`
-      INSERT INTO quotes (
-        company_id, quote_id, customer_name, customer_email, customer_phone,
-        address, project_type, rooms, room_data, room_count, paint_quality,
-        prep_work, timeline, special_requests, base_cost, markup_percentage,
-        final_price, walls_sqft, ceilings_sqft, trim_sqft,
-        total_revenue, total_materials, projected_labor, conversation_summary, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    const result = insertStmt.run(
-      quote.company_id, quote.quote_id, quote.customer_name, quote.customer_email, quote.customer_phone,
-      quote.address, quote.project_type, quote.rooms, quote.room_data, quote.room_count, quote.paint_quality,
-      quote.prep_work, quote.timeline, quote.special_requests, quote.base_cost, quote.markup_percentage,
-      quote.final_price, quote.walls_sqft, quote.ceilings_sqft, quote.trim_sqft,
-      quote.total_revenue, quote.total_materials, quote.projected_labor, quote.conversation_summary, quote.status
-    );
-
-    db.close();
+    const result = await createQuote({
+      company_id: quote.company_id,
+      quote_id: quote.quote_id,
+      customer_name: quote.customer_name,
+      customer_email: quote.customer_email,
+      customer_phone: quote.customer_phone,
+      address: quote.address,
+      project_type: quote.project_type,
+      rooms: quote.rooms,
+      room_data: quote.room_data,
+      room_count: quote.room_count,
+      paint_quality: quote.paint_quality,
+      prep_work: quote.prep_work,
+      timeline: quote.timeline,
+      special_requests: quote.special_requests,
+      base_cost: quote.base_cost,
+      markup_percentage: quote.markup_percentage,
+      final_price: quote.final_price,
+      walls_sqft: quote.walls_sqft,
+      ceilings_sqft: quote.ceilings_sqft,
+      trim_sqft: quote.trim_sqft,
+      total_revenue: quote.total_revenue,
+      total_materials: quote.total_materials,
+      projected_labor: quote.projected_labor,
+      conversation_summary: quote.conversation_summary,
+      status: quote.status,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    });
 
     // Record quote creation in subscription system
     try {
@@ -204,14 +216,18 @@ export async function POST(request: NextRequest) {
 
     console.log(`✅ Quote created: ${quoteId} for company ${companyId}`);
 
-    return NextResponse.json({
+    const responseData = {
       success: true,
       quoteId,
       quote: {
         ...quote,
-        id: result.lastID
+        id: result?.lastID || result?.id || quoteId
       }
-    });
+    };
+
+    console.log('📤 Returning quote response:', responseData);
+
+    return NextResponse.json(responseData);
 
   } catch (error) {
     console.error("Error creating quote:", error);
@@ -260,22 +276,26 @@ export async function GET(request: NextRequest) {
     // Construct safe WHERE clause
     const whereClause = whereConditions.length > 0 ? whereConditions.join(' AND ') : '1=1';
 
-    // Connect directly to SQLite database for quotes retrieval
-    const dbPath = path.join(process.cwd(), 'painting_quotes_app.db');
-    const db = new Database(dbPath);
+    // Retrieve quotes using Supabase database adapter
+    console.log('🔍 Retrieving quotes via Supabase adapter for company:', companyId);
+    
+    let quotes = [];
+    if (companyId) {
+      quotes = await getQuotesByCompany(parseInt(companyId));
+    } else {
+      // If no company ID, we can't retrieve quotes (security measure)
+      return NextResponse.json({ error: "Company ID is required" }, { status: 400 });
+    }
 
-    const quotes = db.prepare(`
-      SELECT 
-        q.*,
-        c.company_name
-      FROM quotes q
-      LEFT JOIN companies c ON q.company_id = c.id
-      WHERE ${whereClause}
-      ORDER BY q.created_at DESC
-      LIMIT ?
-    `).all(...params, sanitizedLimit);
+    // Filter by status if provided
+    if (status && quotes) {
+      quotes = quotes.filter((quote: any) => quote.status === status);
+    }
 
-    db.close();
+    // Limit results
+    if (quotes && quotes.length > sanitizedLimit) {
+      quotes = quotes.slice(0, sanitizedLimit);
+    }
 
     console.log('📊 Retrieved', quotes?.length || 0, 'quotes from database');
 

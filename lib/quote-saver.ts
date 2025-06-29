@@ -29,17 +29,25 @@ export class QuoteSaver {
         nodeEnv: process.env.NODE_ENV
       });
 
-      const result = await createQuote({
+      // Generate quote_id if not provided
+      const quote_id = quoteData.quote_id || this.generateQuoteId();
+      
+      const quoteToSave = {
+        quote_id,
         customer_name: quoteData.customer_name,
         address: quoteData.address,
-        quote_amount: quoteData.quote_amount,
+        total_revenue: quoteData.quote_amount, // Map quote_amount to total_revenue
         project_type: quoteData.project_type,
-        status: quoteData.status,
+        status: quoteData.status || 'pending',
         company_id: quoteData.company_id,
         quote_details: JSON.stringify(quoteData.quote_details),
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
-      });
+      };
+      
+      console.log('📋 Saving quote with data:', quoteToSave);
+      
+      const result = await createQuote(quoteToSave);
 
       console.log('📋 Database response:', result);
 
@@ -57,10 +65,21 @@ export class QuoteSaver {
         };
       }
     } catch (error) {
-      console.error('❌ Quote save error:', error);
+      console.error('❌ Quote save error (detailed):', {
+        error,
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        type: typeof error,
+        quoteData: {
+          customer: quoteData.customer_name,
+          amount: quoteData.quote_amount,
+          company_id: quoteData.company_id
+        }
+      });
+      
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error saving quote'
+        error: `Quote save failed: ${error instanceof Error ? error.message : JSON.stringify(error)}`
       };
     }
   }
