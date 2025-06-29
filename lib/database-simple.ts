@@ -110,10 +110,17 @@ export const createQuote = async (data: any) => {
       };
     } catch (error) {
       console.error('❌ Supabase create failed:', error);
-      console.error('🔧 Check environment variables: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY');
+      console.error('🔧 Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint,
+        data: error
+      });
       // Don't fall back to local storage in production - this masks the real issue
       if (process.env.NODE_ENV === 'production') {
-        throw new Error(`Database connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+        throw new Error(`Supabase error: ${errorMessage}`);
       }
       // In development, fall through to local storage
     }

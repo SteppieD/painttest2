@@ -515,8 +515,17 @@ Ready to save this quote?`;
               return name;
             };
 
+            const rawCustomerName = conversationState.customerInfo?.customer_name || 'Unknown';
+            const cleanedName = rawCustomerName === 'Unknown' ? 'Unknown' : cleanCustomerName(rawCustomerName);
+            
+            console.log('🔍 Customer name processing:', {
+              raw: rawCustomerName,
+              cleaned: cleanedName,
+              conversationState: conversationState.customerInfo
+            });
+            
             const saveResult = await quoteSaver.saveQuote({
-              customer_name: cleanCustomerName(conversationState.customerInfo?.customer_name || 'Unknown'),
+              customer_name: cleanedName,
               address: conversationState.customerInfo?.address || '',
               quote_amount: conversationState.lastQuote?.final_price || 0,
               project_type: 'interior', // Default for now
