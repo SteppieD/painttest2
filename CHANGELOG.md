@@ -5,6 +5,33 @@ All notable changes to the Professional Painting Quote Platform will be document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-06-30
+
+### 🎉 Major UX Enhancements
+- **Enhanced**: Chat interface with smart customer name detection and header display
+- **Added**: "Save Quote" and "Continue Editing" action buttons when quotes are ready
+- **Removed**: Cluttering sample buttons ("Try Sample Quote", "Start Simple") for cleaner interface
+- **Fixed**: Markdown formatting artifacts in chat responses (removed ** symbols)
+- **Improved**: Conversational tone throughout the application
+
+### 🔧 Critical Bug Fixes
+- **Fixed**: Client-side errors in quote preview pages when `quote_amount` is null
+- **Added**: Robust fallback logic for missing quote amount data
+- **Enhanced**: Quote preview to use `total_cost`, `total_revenue`, or `final_price` as alternatives
+- **Resolved**: Application crashes when viewing quotes with incomplete data
+
+### ✅ Technical Improvements
+- **Enhanced**: Customer name extraction with multiple regex patterns
+- **Added**: Real-time customer name detection from user input
+- **Improved**: Quote completion detection for better action button timing
+- **Optimized**: Database schema compatibility with proper null handling
+
+### 📊 Production Stability
+- **Deployed**: All fixes verified working at https://painttest2.vercel.app
+- **Tested**: Complete quote creation and preview flow
+- **Verified**: Customer name display and action button functionality
+- **Confirmed**: All database operations stable with Supabase
+
 ## [1.2.0] - 2025-01-24
 
 ### 🎉 Major Fixes
