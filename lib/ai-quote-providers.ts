@@ -76,10 +76,17 @@ abstract class BaseAIProvider implements AIQuoteProvider {
 }
 
 /**
- * Gemini AI Provider (using existing Google Generative AI)
+ * OpenRouter AI Provider (replacing Gemini with OpenRouter)
+ * Uses OpenRouter API to access various AI models
  */
 export class GeminiQuoteProvider extends BaseAIProvider {
-  name: 'gemini' = 'gemini';
+  name: 'gemini' = 'gemini'; // Keep name for compatibility
+  private openRouterApiKey: string;
+
+  constructor() {
+    super();
+    this.openRouterApiKey = process.env.OPENROUTER_API_KEY || '';
+  }
 
   async processMessage(
     message: string, 
@@ -89,34 +96,32 @@ export class GeminiQuoteProvider extends BaseAIProvider {
     updatedQuote: Partial<UnifiedQuoteData>;
     nextStep?: string;
     isComplete: boolean;
+    cost?: number;
+    withinBudget?: boolean;
   }> {
     try {
-      // Import Google AI
-      const { GoogleGenerativeAI } = await import('@google/generative-ai');
+      // Use cost-optimized AI call
+      const { makeCostOptimizedAICall, getSessionCostSummary } = await import('./cost-optimized-ai');
       
-      if (!process.env.GOOGLE_API_KEY) {
-        throw new Error('Google API key not configured');
+      const result = await makeCostOptimizedAICall(
+        message,
+        context.sessionId,
+        150 // Limit response to 150 tokens (~$0.002)
+      );
+
+      if (!result.withinBudget) {
+        return {
+          response: result.response,
+          updatedQuote: context.partialQuote,
+          nextStep: context.currentStep,
+          isComplete: false,
+          cost: result.cost,
+          withinBudget: false
+        };
       }
 
-      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-      const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash",
-        generationConfig: {
-          temperature: context.temperature || 0.7,
-          maxOutputTokens: context.maxTokens || 1000,
-        }
-      });
-
-      // Build conversation prompt
-      const conversationPrompt = this.buildConversationPrompt(message, context);
-      
-      // Get AI response
-      const result = await model.generateContent(conversationPrompt);
-      const response = result.response;
-      const aiResponse = response.text();
-
-      // Extract quote data from the response
-      const updatedQuote = this.extractQuoteDataFromResponse(aiResponse, context.partialQuote);
+      // Extract quote data from the response (simplified)
+      const updatedQuote = this.extractQuoteDataFromResponse(result.response, context.partialQuote);
       
       // Determine if quote is complete
       const missingInfo = this.getMissingInfo(updatedQuote);
@@ -125,20 +130,35 @@ export class GeminiQuoteProvider extends BaseAIProvider {
       // Determine next step
       const nextStep = isComplete ? 'review' : this.getCurrentStep(updatedQuote);
 
+      const costSummary = getSessionCostSummary(context.sessionId);
+      
+      // Add cost info and UX guidance based on usage
+      let responseWithCost = result.response;
+      
+      if (result.shouldSuggestManual) {
+        responseWithCost += `\n\n⚠️ We're approaching the conversation limit (${result.apiCallsRemaining} messages remaining). You can continue the conversation or switch to manual quote creation for unlimited edits.`;
+      } else if (result.shouldWarn) {
+        responseWithCost += `\n\n💡 Quote progress: ${costSummary.percentUsed.toFixed(0)}% budget used, ${result.apiCallsRemaining} messages remaining.`;
+      }
+
       return {
-        response: aiResponse,
+        response: responseWithCost,
         updatedQuote,
         nextStep,
-        isComplete
+        isComplete,
+        cost: result.cost,
+        withinBudget: result.withinBudget
       };
 
     } catch (error) {
-      console.error('Gemini processing error:', error);
+      console.error('Cost-optimized AI processing error:', error);
       return {
-        response: "I'm having trouble processing that request. Could you please rephrase your quote details?",
+        response: "I'm having trouble processing that request. Please try manual quote creation for the most reliable results.",
         updatedQuote: context.partialQuote,
         nextStep: context.currentStep,
-        isComplete: false
+        isComplete: false,
+        cost: 0,
+        withinBudget: true
       };
     }
   }

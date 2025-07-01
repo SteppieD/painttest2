@@ -3,10 +3,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Send, Loader2, ArrowLeft, Save, Eye, Mail, Download, ExternalLink } from 'lucide-react'
+import { Send, Loader2, ArrowLeft, Save, Eye, Mail, Download, ExternalLink, HelpCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
+import { QuoteTrainingModal } from './quote-training-modal'
 
 interface Message {
   id: string
@@ -74,7 +75,7 @@ export function FixedChatInterface({
     {
       id: '1',
       role: 'assistant',
-      content: `Hey there! 👋 I'm your quote buddy - think of me as your helpful guide for creating painting quotes quickly and accurately.\n\nYou can tell me everything at once, like:\n"It's for John Smith at 123 Main Street. Interior painting, 300 linear feet, 9 foot ceilings, $45/gallon Sherwin Williams eggshell, no trim or doors, 25% markup."\n\nOr we can take it step by step - just start with the customer's name and address, and I'll guide you through the rest! 😊\n\nWhat project are we quoting today?`,
+      content: `Hi! I'm here to help you create quotes quickly. 💨\n\n**Pro tip**: Include all details in one message for instant quotes! Tell me the customer name, project type, and measurements.\n\nNeed examples? Click the help button (?) in the top-right corner.\n\nWhat project are we quoting today?`,
       timestamp: new Date().toISOString()
     }
   ])
@@ -83,6 +84,7 @@ export function FixedChatInterface({
   const [isThinking, setIsThinking] = useState(false)
   const [currentQuote, setCurrentQuote] = useState<any>(null)
   const [customerName, setCustomerName] = useState<string>('')
+  const [showTrainingModal, setShowTrainingModal] = useState(false)
   
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -100,6 +102,15 @@ export function FixedChatInterface({
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
+
+  // Check if user is first-time and show training modal
+  useEffect(() => {
+    const hasSeenTraining = localStorage.getItem(`paintquote_training_${companyId}`)
+    if (!hasSeenTraining) {
+      setShowTrainingModal(true)
+      localStorage.setItem(`paintquote_training_${companyId}`, 'true')
+    }
+  }, [companyId])
 
   const processMessage = async (userInput: string) => {
     try {
@@ -235,6 +246,14 @@ export function FixedChatInterface({
     }
   }
 
+  const handleUseExample = (example: string) => {
+    setInput(example)
+    // Auto-focus the input so user can modify if needed
+    setTimeout(() => {
+      inputRef.current?.focus()
+    }, 100)
+  }
+
   const saveQuote = async () => {
     if (!currentQuote) {
       toast({
@@ -330,23 +349,33 @@ export function FixedChatInterface({
                 <p className="text-sm text-gray-600">for {customerName}</p>
               )}
             </div>
-            {currentQuote && (
+            <div className="flex items-center gap-2">
+              {currentQuote && (
+                <Button 
+                  variant="default" 
+                  size="sm"
+                  onClick={saveQuote}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Quote
+                    </>
+                  )}
+                </Button>
+              )}
               <Button 
-                variant="default" 
-                size="sm"
-                onClick={saveQuote}
-                disabled={isLoading}
+                variant="ghost" 
+                size="icon"
+                onClick={() => setShowTrainingModal(true)}
+                title="Show training examples"
               >
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <>
-                    <Save className="h-4 w-4 mr-2" />
-                    Save Quote
-                  </>
-                )}
+                <HelpCircle className="h-4 w-4" />
               </Button>
-            )}
+            </div>
           </div>
         </div>
       </header>
@@ -448,6 +477,13 @@ export function FixedChatInterface({
           </div>
         </div>
       </div>
+
+      {/* Training Modal */}
+      <QuoteTrainingModal
+        isOpen={showTrainingModal}
+        onClose={() => setShowTrainingModal(false)}
+        onUseExample={handleUseExample}
+      />
     </div>
   )
 }

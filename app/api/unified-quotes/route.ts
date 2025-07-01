@@ -317,6 +317,21 @@ async function processAIMessage(request: NextRequest): Promise<NextResponse> {
     const body = await request.json();
     const validatedData = AIProcessSchema.parse(body);
     
+    // Rate limiting to prevent excessive API calls
+    const { rateLimiter } = await import('@/lib/rate-limiter');
+    const clientKey = `ai_${validatedData.sessionId}_${validatedData.companyId}`;
+    
+    if (!rateLimiter.isAllowed(clientKey, 20, 60000)) { // 20 requests per minute
+      return createApiResponse(
+        { 
+          error: 'Rate limit exceeded', 
+          message: 'Too many AI requests. Please wait a moment and try again.',
+          remaining: rateLimiter.getRemaining(clientKey, 20)
+        },
+        { success: false, status: 429 }
+      );
+    }
+    
     // Import AI providers
     const { getAIProvider, conversationManager } = await import('@/lib/ai-quote-providers');
     
