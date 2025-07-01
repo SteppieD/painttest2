@@ -56,6 +56,12 @@ export function Header() {
             >
               For Contractors
             </Link>
+            <Link 
+              href="/locations" 
+              className={`${isActive('/locations') || pathname.startsWith('/locations/') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}`}
+            >
+              Locations
+            </Link>
             
             {/* Resources Dropdown */}
             <div 
@@ -197,6 +203,13 @@ export function Header() {
                 onClick={closeMobileMenu}
               >
                 For Contractors
+              </Link>
+              <Link 
+                href="/locations" 
+                className={`${isActive('/locations') || pathname.startsWith('/locations/') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'} py-2`}
+                onClick={closeMobileMenu}
+              >
+                Locations
               </Link>
               
               {/* Mobile Resources Section */}
