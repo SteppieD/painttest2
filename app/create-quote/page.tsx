@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { initializeQuoteCreation, trackLoadingPerformance, type CompanyInitialData } from "@/lib/batch-loader";
 import { FixedChatInterface } from "@/components/chat/fixed-chat-interface";
+import { trackQuoteStarted, trackPageView } from "@/lib/analytics/tracking";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -80,6 +81,9 @@ function CreateQuotePageContent() {
         // Small delay to show completion
         setTimeout(() => {
           setIsInitializing(false);
+          // Track quote creation started
+          trackQuoteStarted('ai_chat');
+          trackPageView('/create-quote', 'Create Quote - AI Chat');
         }, 200);
 
       } catch (error) {

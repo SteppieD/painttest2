@@ -5,6 +5,7 @@
  */
 
 import { createQuote } from './database-simple';
+import { trackQuoteSaved, trackQuoteCalculated } from './analytics/tracking';
 
 export interface QuoteData {
   customer_name: string;
@@ -79,6 +80,20 @@ export class QuoteSaver {
 
       if (result && result.lastID) {
         console.log('✅ Quote saved successfully with ID:', result.lastID);
+        
+        // Track quote saved event
+        trackQuoteSaved(
+          result.lastID.toString(),
+          quoteData.quote_amount,
+          quoteData.customer_name
+        );
+        
+        // Track quote calculation
+        trackQuoteCalculated(
+          quoteData.quote_amount,
+          quoteData.project_type
+        );
+        
         return {
           success: true,
           quoteId: result.lastID.toString()

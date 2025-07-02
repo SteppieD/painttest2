@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { trackAccessCodeUsed, trackPageView } from "@/lib/analytics/tracking";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -33,6 +34,9 @@ export default function AccessCodePage() {
       const data = await response.json();
 
       if (response.ok && data.success) {
+        // Track access code usage
+        trackAccessCodeUsed(accessCode.trim());
+        
         // Store company info in localStorage for session management
         localStorage.setItem(
           "paintquote_company",

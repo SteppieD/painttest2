@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { QuotaCounter } from "@/components/ui/quota-counter";
+import { trackDashboardViewed, trackPageView, trackFeatureUsed } from "@/lib/analytics/tracking";
 
 interface Quote {
   id: number;
@@ -111,10 +112,16 @@ export default function DashboardPage() {
       if (data.quotes && Array.isArray(data.quotes)) {
         setQuotes(data.quotes);
         calculateAnalytics(data.quotes);
+        // Track dashboard view
+        trackDashboardViewed(companyId.toString(), data.quotes.length);
+        trackPageView('/dashboard', 'Company Dashboard');
       } else if (Array.isArray(data)) {
         // Fallback for direct array response
         setQuotes(data);
         calculateAnalytics(data);
+        // Track dashboard view
+        trackDashboardViewed(companyId.toString(), data.length);
+        trackPageView('/dashboard', 'Company Dashboard');
       }
     } catch (error) {
       console.error("Error loading quotes:", error);
@@ -316,7 +323,10 @@ export default function DashboardPage() {
                 />
               )}
               <Button
-                onClick={() => router.push("/create-quote")}
+                onClick={() => {
+                  trackFeatureUsed('create_quote_button', { from: 'dashboard' });
+                  router.push("/create-quote");
+                }}
                 className="btn-flat-primary mobile-flat-button"
               >
                 <Calculator className="icon-flat mr-2" />

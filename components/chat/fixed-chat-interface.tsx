@@ -9,6 +9,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { QuoteTrainingModal } from './quote-training-modal'
 import { QuotaCounter } from '@/components/ui/quota-counter'
+import { trackChatMessage, trackChatQuoteReady, trackQuoteSaved, trackQuoteCalculated } from '@/lib/analytics/tracking'
 
 interface Message {
   id: string
@@ -198,6 +199,9 @@ export function FixedChatInterface({
     setMessages(prev => [...prev, userMessage])
     setInput('')
     setIsThinking(true)
+    
+    // Track user message
+    trackChatMessage('user', textToSend.length)
 
     // Try to extract customer name from user input immediately
     if (!customerName) {
@@ -228,6 +232,14 @@ export function FixedChatInterface({
       
       setIsThinking(false)
       setMessages(prev => [...prev, aiResponse])
+      
+      // Track AI response
+      trackChatMessage('assistant', aiResponse.content.length)
+      
+      // Check if quote is ready
+      if (aiResponse.extractedData?.showQuoteActions) {
+        trackChatQuoteReady(messages.length + 2) // +2 for user and assistant messages
+      }
 
     } catch (error) {
       console.error('Error sending message:', error)

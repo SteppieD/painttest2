@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
 import { CheckCircle, Palette, DollarSign, Rocket, ArrowRight, Star, Info, Clock, AlertCircle } from "lucide-react";
+import { trackSetupStarted, trackSetupCompleted, trackPageView } from "@/lib/analytics/tracking";
 
 interface SetupChoice {
   id: string;
@@ -143,6 +144,11 @@ function SetupWizardContent() {
       });
 
       if (response.ok) {
+        const data = await response.json();
+        
+        // Track setup completion
+        trackSetupCompleted('quick', data.company_name || 'Unknown Company');
+        
         toast({
           title: "Setup Complete!",
           description: "Your account is ready with industry-standard defaults. You can update preferences anytime in Settings.",
@@ -233,7 +239,10 @@ function SetupWizardContent() {
                     ? 'border-blue-200 bg-blue-50 ring-2 ring-blue-100' 
                     : 'border-gray-200 hover:border-blue-300'
                 } ${selectedPath === path.id ? 'ring-2 ring-blue-500' : ''}`}
-                onClick={() => setSelectedPath(path.id)}
+                onClick={() => {
+                  setSelectedPath(path.id);
+                  trackSetupStarted(path.id);
+                }}
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">

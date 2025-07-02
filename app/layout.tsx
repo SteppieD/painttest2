@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
+import AnalyticsProvider from '@/components/analytics/AnalyticsProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -64,8 +65,10 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={inter.className}>
-        {children}
-        <Toaster />
+        <AnalyticsProvider gtmId="GTM-563BQKRH" ga4Id="G-984BZ3LDZE">
+          {children}
+          <Toaster />
+        </AnalyticsProvider>
       </body>
     </html>
   )
