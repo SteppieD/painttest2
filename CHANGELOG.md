@@ -5,6 +5,46 @@ All notable changes to the Professional Painting Quote Platform will be document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2025-01-02
+
+### 🎯 Freemium Quota System Implementation
+
+#### Core Features
+- **QuotaCounter Component**: Real-time quota display with 3 variants (header, badge, full)
+- **Quota Check API**: Real-time validation endpoint for subscription limits (`/api/check-quota`)
+- **Quote Watermark System**: Professional branding for free tier quotes
+- **Setup Wizard Integration**: Bonus quote rewards (6 quotes) for completing onboarding
+
+#### User Interface Enhancements
+- **Dashboard Header**: Persistent quota counter on all dashboard pages
+- **Chat Interface**: Real-time quota display during quote creation
+- **Mobile Optimization**: Responsive quota counters for all screen sizes
+- **Progressive Visual Warnings**: Color-coded usage states (green → yellow → red)
+
+#### Backend Integration
+- **Subscription Manager Integration**: Seamless quota enforcement before final generation
+- **Database Schema**: Setup wizard tables with automated bonus quote triggers
+- **API Endpoints**: New quota checking and setup completion endpoints
+- **Real-time Updates**: 30-second auto-refresh for current usage tracking
+
+#### Business Logic
+- **4 Quotes/Month Free Tier**: Standard freemium limit with 6-quote setup bonus
+- **Quota Enforcement**: Prevents final quote generation when limits exceeded
+- **Professional Watermarking**: Subtle upgrade motivation on free quotes
+- **Conversion Optimization**: Strategic friction points for upgrade prompts
+
+#### Technical Implementation
+- `components/ui/quota-counter.tsx` - Reusable quota display component
+- `components/ui/quote-watermark.tsx` - Professional watermark system  
+- `components/setup/setup-wizard.tsx` - Complete setup flow with bonus rewards
+- `app/api/check-quota/route.ts` - Real-time quota validation
+- `lib/database/migrations/setup-wizard-schema.sql` - Complete setup wizard schema
+
+#### Documentation
+- **Comprehensive Implementation Guide**: `docs/FREEMIUM_QUOTA_SYSTEM.md`
+- **Architecture Documentation**: Component usage patterns and integration points
+- **Business Strategy**: Freemium psychology and conversion optimization
+
 ## [1.3.0] - 2025-06-30
 
 ### 🎉 Major UX Enhancements

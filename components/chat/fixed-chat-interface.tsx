@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { QuoteTrainingModal } from './quote-training-modal'
+import { QuotaCounter } from '@/components/ui/quota-counter'
 
 interface Message {
   id: string
@@ -350,6 +351,11 @@ export function FixedChatInterface({
               )}
             </div>
             <div className="flex items-center gap-2">
+              <QuotaCounter 
+                companyId={companyId}
+                variant="header"
+                className="hidden sm:flex"
+              />
               {currentQuote && (
                 <Button 
                   variant="default" 
@@ -379,6 +385,15 @@ export function FixedChatInterface({
           </div>
         </div>
       </header>
+
+      {/* Mobile Quota Counter */}
+      <div className="sm:hidden px-4 py-2 bg-gray-50 border-b">
+        <QuotaCounter 
+          companyId={companyId}
+          variant="badge"
+          className="w-full justify-center"
+        />
+      </div>
 
       {/* Chat Area */}
       <div className="flex-1 flex flex-col overflow-hidden">

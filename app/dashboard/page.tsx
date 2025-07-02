@@ -24,6 +24,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { QuotaCounter } from "@/components/ui/quota-counter";
 
 interface Quote {
   id: number;
@@ -307,6 +308,13 @@ export default function DashboardPage() {
             </div>
             
             <div className="flex items-center gap-3">
+              {companyInfo && (
+                <QuotaCounter 
+                  companyId={companyInfo.id}
+                  variant="header"
+                  className="hidden lg:flex"
+                />
+              )}
               <Button
                 onClick={() => router.push("/create-quote")}
                 className="btn-flat-primary mobile-flat-button"
@@ -421,58 +429,14 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* Trial Quota Warning */}
-        {quotaInfo.isTrial && quotaInfo.quotesAllowed && (
+        {/* Quota Counter */}
+        {companyInfo && (
           <div className="mb-6">
-            <Card className={`border-2 ${
-              quotaInfo.quotesUsed >= quotaInfo.quotesAllowed 
-                ? 'border-red-200 bg-red-50' 
-                : quotaInfo.quotesUsed >= quotaInfo.quotesAllowed * 0.8 
-                ? 'border-yellow-200 bg-yellow-50' 
-                : 'border-blue-200 bg-blue-50'
-            }`}>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      quotaInfo.quotesUsed >= quotaInfo.quotesAllowed 
-                        ? 'bg-red-100' 
-                        : quotaInfo.quotesUsed >= quotaInfo.quotesAllowed * 0.8 
-                        ? 'bg-yellow-100' 
-                        : 'bg-blue-100'
-                    }`}>
-                      <FileText className={`w-5 h-5 ${
-                        quotaInfo.quotesUsed >= quotaInfo.quotesAllowed 
-                          ? 'text-red-600' 
-                          : quotaInfo.quotesUsed >= quotaInfo.quotesAllowed * 0.8 
-                          ? 'text-yellow-600' 
-                          : 'text-blue-600'
-                      }`} />
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-gray-900">
-                        Trial Account - {quotaInfo.quotesUsed} of {quotaInfo.quotesAllowed} quotes used
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        {quotaInfo.quotesUsed >= quotaInfo.quotesAllowed 
-                          ? "Quote limit reached. Upgrade to create more quotes."
-                          : `${quotaInfo.quotesAllowed - quotaInfo.quotesUsed} quotes remaining in your trial.`
-                        }
-                      </p>
-                    </div>
-                  </div>
-                  {quotaInfo.quotesUsed >= quotaInfo.quotesAllowed && (
-                    <Button 
-                      variant="default"
-                      className="bg-blue-600 hover:bg-blue-700"
-                      onClick={() => window.open('mailto:sales@propaintquote.com?subject=Upgrade Request', '_blank')}
-                    >
-                      Upgrade Now
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <QuotaCounter 
+              companyId={companyInfo.id}
+              variant="full"
+              showUpgrade={true}
+            />
           </div>
         )}
 

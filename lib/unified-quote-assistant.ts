@@ -22,6 +22,7 @@ import {
 } from './conversation-state-enhanced';
 import { quoteCreationFallback } from './quote-creation-fallback';
 import { quoteSaver } from './quote-saver';
+import { subscriptionManager } from './subscription-manager';
 import { 
   calculateProfessionalQuote, 
   ProjectDimensions, 
@@ -586,6 +587,23 @@ Ready to save this quote?`;
         }
       }
       
+      // Check quota before generating final quotes
+      const quotaCheck = await subscriptionManager.canCreateQuote(parseInt(companyId));
+      
+      if (!quotaCheck.allowed && (userInput.includes('save') || userInput.includes('final') || userInput.includes('generate'))) {
+        return {
+          response: `🚫 **Quote Limit Reached**\n\n${quotaCheck.reason}\n\nTo continue creating quotes, please upgrade your plan or contact sales@propaintquote.com.\n\n**Current Plan:** ${quotaCheck.planName}\n**Quotes Remaining:** ${quotaCheck.quotesRemaining || 0}`,
+          extractedData: { 
+            action: 'quota_exceeded',
+            quotesRemaining: quotaCheck.quotesRemaining,
+            planName: quotaCheck.planName,
+            upgradeRequired: true
+          },
+          confidence: 0.95,
+          success: false
+        };
+      }
+
       // Try enhanced quote creation with fallback
       try {
         const fallbackResult = await quoteCreationFallback.createQuoteWithFallback(
