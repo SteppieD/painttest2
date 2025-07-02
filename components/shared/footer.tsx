@@ -96,14 +96,10 @@ export function Footer() {
 
         {/* Contact Info */}
         <div className="border-t border-gray-800 pt-8 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2">
               <Mail className="w-5 h-5 text-blue-400" />
-              <span className="text-gray-400">support@propaintquote.com</span>
-            </div>
-            <div className="flex items-center justify-center md:justify-start gap-2">
-              <Phone className="w-5 h-5 text-green-400" />
-              <span className="text-gray-400">1-800-PAINTER (724-6837)</span>
+              <span className="text-gray-400">hello@paintquoteapp.com</span>
             </div>
             <div className="flex items-center justify-center md:justify-start gap-2">
               <MapPin className="w-5 h-5 text-purple-400" />
@@ -123,6 +119,7 @@ export function Footer() {
               <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
               <Link href="/security" className="hover:text-white transition-colors">Security</Link>
+              <Link href="/sitemap.xml" className="hover:text-white transition-colors">Sitemap</Link>
             </div>
           </div>
         </div>
