@@ -6,7 +6,6 @@ import {
   TrendingUp,
   Shield,
   Mail,
-  Phone,
   MapPin
 } from 'lucide-react';
 
