@@ -1036,3 +1036,206 @@ dbGet called - using mock data for deployment
  GET /manifest.json 404 in 64ms
  ✓ Compiled in 364ms (627 modules)
  ✓ Compiled in 543ms (627 modules)
+ GET /dashboard 200 in 45ms
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /api/quotes?company_id=1 200 in 36ms
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 42ms
+ GET /api/quotes?company_id=1 200 in 27ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 30ms
+ GET /manifest.json 404 in 24ms
+ GET /api/companies/preferences?companyId=1 200 in 302ms
+✓ Supabase schema verified
+✓ Supabase database initialized
+ GET /api/paint-products?companyId=1 200 in 201ms
+ GET /api/companies/preferences?companyId=1 200 in 287ms
+ GET /api/paint-products?companyId=1 200 in 146ms
+ ✓ Compiled in 678ms (1040 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /dashboard 200 in 165ms
+ ✓ Compiled /api/companies/preferences in 76ms (449 modules)
+ ✓ Compiled (554 modules)
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 237ms
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /api/quotes?company_id=1 200 in 252ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 32ms
+ GET /api/quotes?company_id=1 200 in 40ms
+✓ Supabase schema verified
+ GET /api/companies/preferences?companyId=1 200 in 421ms
+ ✓ Compiled /_not-found in 130ms (1166 modules)
+ GET /manifest.json 404 in 231ms
+✓ Supabase database initialized
+ GET /api/companies/preferences?companyId=1 200 in 240ms
+ ✓ Compiled /api/paint-products in 172ms (557 modules)
+ GET /api/paint-products?companyId=1 200 in 385ms
+ GET /api/paint-products?companyId=1 200 in 128ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ✓ Compiled in 301ms (1184 modules)
+ ✓ Compiled in 0ms (557 modules)
+ ✓ Compiled in 0ms (557 modules)
+ ✓ Compiled in 0ms (557 modules)
+ GET /dashboard 200 in 408ms
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /api/quotes?company_id=1 200 in 32ms
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 45ms
+ GET /api/quotes?company_id=1 200 in 48ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 28ms
+ GET /manifest.json 404 in 26ms
+ GET /api/companies/preferences?companyId=1 200 in 168ms
+✓ Supabase schema verified
+✓ Supabase database initialized
+ GET /api/paint-products?companyId=1 200 in 132ms
+ GET /api/companies/preferences?companyId=1 200 in 159ms
+ GET /api/paint-products?companyId=1 200 in 158ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ✓ Compiled in 296ms (1184 modules)
+ ✓ Compiled in 0ms (557 modules)
+ ✓ Compiled in 1ms (557 modules)
+ ✓ Compiled in 0ms (557 modules)
+ GET /dashboard 200 in 496ms
+Starting SQLite schema initialization...
+Schema execution warning: no such table: main.access_code_sessions
+Schema execution warning: no such table: main.access_codes
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: no such table: main.room_details
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.modern_quotes
+Schema execution warning: no such table: main.quote_versions
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: no such table: main.quote_surfaces
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.profiles
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: no such table: main.paint_products
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+Schema execution warning: incomplete input
+Schema execution warning: cannot commit - no transaction is active
+✓ SQLite schema initialization completed
+✓ SQLite database initialized successfully
+ GET /api/quotes?company_id=1 200 in 34ms
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 45ms
+ GET /api/quotes?company_id=1 200 in 48ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 35ms
+ GET /manifest.json 404 in 24ms
+✓ Supabase schema verified
+ GET /api/companies/preferences?companyId=1 200 in 183ms
+✓ Supabase database initialized
+ GET /api/companies/preferences?companyId=1 200 in 126ms
+ GET /api/paint-products?companyId=1 200 in 149ms
+ GET /api/paint-products?companyId=1 200 in 164ms
+ ✓ Compiled in 219ms (627 modules)
+ GET /manifest.json 404 in 64ms
+ ✓ Compiled in 184ms (627 modules)
+ GET / 200 in 123ms
+ GET /manifest.json 404 in 25ms
+ GET /icon-192x192.png 404 in 17ms
+ GET /manifest.json 404 in 19ms
+ GET /access-code? 200 in 58ms
+ GET /manifest.json 404 in 18ms
+ GET /dashboard 200 in 42ms
+ GET /manifest.json 404 in 22ms
+ GET /manifest.json 404 in 13ms
+ GET /access-code 200 in 43ms
+ GET /manifest.json 404 in 16ms
+[?25h
