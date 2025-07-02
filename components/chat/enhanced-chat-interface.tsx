@@ -35,7 +35,7 @@ export function ChatInterface({
     {
       id: '1',
       role: 'assistant',
-      content: "Hi! I'm your AI painting quote assistant. I'll help you create an accurate estimate for your painting project. To get started, could you tell me:\n\n• What type of project is this (interior, exterior, or both)?\n• What space are you looking to paint?\n• Do you have room dimensions or total square footage?",
+      content: "Hey! 👋 Ready to get you a painting quote! What are we painting today?",
       timestamp: new Date()
     }
   ])
@@ -161,32 +161,23 @@ export function ChatInterface({
 
   // Quick reply suggestions
   const suggestions = [
-    "Interior painting",
-    "3 bedrooms, 2 bathrooms",
-    "About 2,000 sq ft",
-    "Need it done within 2 weeks",
+    "Just my living room",
+    "Whole house interior",
+    "Kitchen & bathroom",
+    "Just need a bedroom done",
   ]
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-white">
       {/* Messages Area */}
       <div 
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-6 space-y-4"
+        className="flex-1 overflow-y-auto py-4 enhanced-scroll"
         style={{ 
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch' // Better iOS scrolling
         }}
       >
-        {/* Welcome message with company branding */}
-        <div className="text-center py-4 mb-4">
-          <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-sm text-gray-600">
-              Connected to {companyData.company_name}
-            </span>
-          </div>
-        </div>
 
         {/* Messages */}
         {messages.map((message, index) => (
@@ -204,19 +195,17 @@ export function ChatInterface({
         {/* Typing Indicator */}
         {isLoading && <TypingIndicator />}
         
-        {/* Quick Suggestions */}
+        {/* Quick Suggestions - styled like iOS quick replies */}
         {showSuggestions && messages.length === 1 && (
-          <div className="flex flex-wrap gap-2 justify-center py-2">
+          <div className="flex flex-wrap gap-2 px-4 py-2">
             {suggestions.map((suggestion, index) => (
-              <Button
+              <button
                 key={index}
-                variant="outline"
-                size="sm"
                 onClick={() => sendMessage(suggestion)}
-                className="text-xs hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 transition-colors"
+                className="px-3 py-2 bg-[#E5E5EA] text-black rounded-full text-sm hover:bg-[#D1D1D6] transition-colors"
               >
                 {suggestion}
-              </Button>
+              </button>
             ))}
           </div>
         )}
@@ -224,20 +213,31 @@ export function ChatInterface({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Enhanced Input Area */}
-      <div className="bg-white border-t shadow-lg">
-        <ChatInput
-          value={input}
-          onChange={setInput}
-          onSend={sendMessage}
-          onKeyPress={handleKeyPress}
-          onVoiceInput={handleVoiceInput}
-          onImageUpload={handleImageUpload}
-          isLoading={isLoading}
-          isRecording={isRecording}
-          isMobile={isMobile}
-          inputRef={inputRef}
-        />
+      {/* iMessage-style Input Area */}
+      <div className="bg-[#F8F8F8] border-t border-[#C6C6C8] p-2">
+        <div className="flex items-end gap-2 max-w-none">
+          <div className="flex-1 bg-white rounded-full border border-[#C6C6C8] px-4 py-2 min-h-[36px] flex items-center">
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="iMessage"
+              className="flex-1 outline-none text-[16px] bg-transparent placeholder-gray-500"
+              disabled={isLoading}
+            />
+          </div>
+          {input.trim() && (
+            <button
+              onClick={() => sendMessage()}
+              disabled={isLoading}
+              className="w-8 h-8 bg-[#007AFF] rounded-full flex items-center justify-center text-white font-semibold text-sm disabled:opacity-50"
+            >
+              ↑
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )

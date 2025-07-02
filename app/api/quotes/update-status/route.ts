@@ -13,21 +13,30 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Valid status values
-    const validStatuses = ["pending", "accepted", "completed", "cancelled"];
+    // Valid status values - expanded list
+    const validStatuses = ["pending", "accepted", "rejected", "completed", "cancelled", "draft"];
     if (!validStatuses.includes(status)) {
       return NextResponse.json(
-        { error: "Invalid status value" },
+        { error: `Invalid status value. Allowed values: ${validStatuses.join(', ')}` },
         { status: 400 },
       );
     }
 
-    // Update quote status with timestamp
+    // Validate quoteId format (should be numeric or proper quote ID format)
+    const sanitizedQuoteId = typeof quoteId === 'string' ? quoteId.trim() : String(quoteId);
+    if (!sanitizedQuoteId || sanitizedQuoteId.length === 0) {
+      return NextResponse.json(
+        { error: "Invalid quote ID format" },
+        { status: 400 }
+      );
+    }
+
+    // Update quote status with timestamp using sanitized ID
     const result = dbRun(`
       UPDATE quotes 
       SET status = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
-    `, [status, quoteId]);
+    `, [status, sanitizedQuoteId]);
 
     if (result.changes === 0) {
       return NextResponse.json({ error: "Quote not found" }, { status: 404 });

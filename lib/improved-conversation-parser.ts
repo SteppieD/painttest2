@@ -59,6 +59,31 @@ const parseCustomerInfo = (input: string, existingData: Partial<ConversationData
     };
   }
   
+  // Handle "It's for Name at Address" pattern
+  if (lower.includes("it's for") && lower.includes(' at ') && /\d/.test(input)) {
+    const match = input.match(/it'?s\s+for\s+([A-Za-z\s]+?)\s+at\s+([^.]+)/i);
+    if (match) {
+      const customerName = match[1].trim();
+      const address = match[2].trim();
+      console.log('🔍 PARSING: "It\'s for X at Y" - Customer:', customerName, 'Address:', address);
+      return {
+        customer_name: customerName,
+        address: address
+      };
+    }
+  }
+  
+  // Handle standalone "It's for Name" pattern (without address in same sentence)
+  if (lower.includes("it's for") && !lower.includes(' at ')) {
+    const match = input.match(/it's for\s+([^.]+?)(?:\.|$)/i);
+    if (match) {
+      return {
+        customer_name: match[1].trim(),
+        address: existingData.address || ''
+      };
+    }
+  }
+  
   // Handle "Name at Address" pattern
   if (lower.includes(' at ') && /\d/.test(input)) {
     const parts = input.split(' at ');
@@ -141,43 +166,128 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
   
   const dimensions: Partial<ProjectDimensions> = { ...existingDimensions };
   
-  // Parse dimension formats: "X x Y", "X by Y", "X and Y", "X, Y"
-  const dimensionPattern = input.match(/(\d+\.?\d*)\s*(?:[x×]|by|and|,)\s*(\d+\.?\d*)/i);
-  if (dimensionPattern) {
-    const num1 = Number(dimensionPattern[1]);
-    const num2 = Number(dimensionPattern[2]);
-    
-    // Smart assignment: larger number is usually linear feet, smaller is ceiling height
-    if (num1 > num2 && num2 <= 20) {
-      // Typical case: "1230 by 7" (linear feet by ceiling height)
-      dimensions.wall_linear_feet = num1;
-      dimensions.ceiling_height = num2;
-    } else if (num2 > num1 && num1 <= 20) {
-      // Reverse case: "9 by 120" (ceiling height by linear feet)
-      dimensions.wall_linear_feet = num2;
-      dimensions.ceiling_height = num1;
+  // Parse specific ceiling area FIRST if provided (highest priority)
+  if (lower.includes('ceiling area') || lower.includes('ceiling sqft') || lower.includes('ceiling square') || lower.includes('total ceiling')) {
+    // First try to find explicit area with units
+    let match = input.match(/(\d+\.?\d*)\s*(?:sqft|square feet|sq ft|sf)/i);
+    if (match) {
+      dimensions.ceiling_area = Number(match[1]);
+      return dimensions; // Return early since we have what we need
     } else {
-      // Default to order given
-      dimensions.wall_linear_feet = num1;
-      dimensions.ceiling_height = num2;
+      // Check for mathematical expressions like "139x2" or "135*2" when ceiling area is mentioned
+      const mathMatch = input.match(/(\d+\.?\d*)\s*[x*×]\s*(\d+\.?\d*)/i);
+      if (mathMatch) {
+        const result = Number(mathMatch[1]) * Number(mathMatch[2]);
+        dimensions.ceiling_area = result;
+        return dimensions; // Return early since we have what we need
+      } else {
+        // Check for standalone numbers when ceiling area context is clear
+        const numberMatch = input.match(/(\d+\.?\d*)/);
+        if (numberMatch) {
+          const num = Number(numberMatch[1]);
+          // Only accept reasonable ceiling area values (50-5000 sq ft)
+          if (num >= 50 && num <= 5000) {
+            dimensions.ceiling_area = num;
+            return dimensions; // Return early since we have what we need
+          }
+        }
+      }
     }
-  } else {
-    // Parse linear feet
-    if (lower.includes('linear') || lower.includes('lnft') || lower.includes('perimeter')) {
-      const match = input.match(/(\d+\.?\d*)\s*(?:linear|lnft|perimeter)?/i);
-      if (match) dimensions.wall_linear_feet = Number(match[1]);
-    } else if (numbers.length > 0 && !dimensions.wall_linear_feet) {
-      // If a number is mentioned without context, assume it's linear feet if we're expecting it
-      dimensions.wall_linear_feet = numbers[0];
+  }
+  
+  // Handle room descriptions (like "2 bedrooms that are 15 x 9")
+  if (lower.includes('bedroom') || lower.includes('room') || lower.includes('area')) {
+    const roomMatch = input.match(/(\d+)\s*(?:bedrooms?|rooms?|areas?)\s*(?:that are|are|of|:)?\s*(\d+\.?\d*)\s*[x×*]\s*(\d+\.?\d*)/i);
+    if (roomMatch) {
+      const roomCount = Number(roomMatch[1]);
+      const length = Number(roomMatch[2]);
+      const width = Number(roomMatch[3]);
+      
+      // Calculate total floor area for all rooms
+      const totalFloorArea = roomCount * length * width;
+      
+      // If they're asking for ceiling area, use floor area
+      // Calculate perimeter for walls: (length + width) * 2 * number of rooms
+      const totalPerimeter = (length + width) * 2 * roomCount;
+      
+      dimensions.wall_linear_feet = totalPerimeter;
+      dimensions.ceiling_area = totalFloorArea;
+      
+      // Assume standard ceiling height if not provided
+      if (!dimensions.ceiling_height) {
+        dimensions.ceiling_height = 9;
+      }
+      
+      return dimensions;
     }
+  }
+  
+  // Handle "X by Y" format (like "500 by 9" or "300 by 9") - but only if not already processed as room description
+  if ((lower.includes(' by ') || lower.includes(' x ')) && !dimensions.ceiling_area) {
+    const match = input.match(/(\d+\.?\d*)\s*(?:by|x)\s*(\d+\.?\d*)/i);
+    if (match) {
+      const first = Number(match[1]);
+      const second = Number(match[2]);
+      
+      // If one number is clearly height (8-12 range), assign accordingly
+      if (second >= 8 && second <= 15) {
+        dimensions.wall_linear_feet = first;
+        dimensions.ceiling_height = second;
+      } else if (first >= 8 && first <= 15) {
+        dimensions.wall_linear_feet = second;
+        dimensions.ceiling_height = first;
+      } else {
+        // Both are likely room dimensions, use first as linear feet
+        dimensions.wall_linear_feet = first;
+        dimensions.ceiling_height = second;
+      }
+    }
+  }
+  
+  // Parse linear feet (various ways contractors say it)
+  if (lower.includes('linear') || lower.includes('lnft') || lower.includes('perimeter') || 
+      lower.includes('around') || lower.includes('feet around')) {
+    const match = input.match(/(\d+\.?\d*)\s*(?:linear|lnft|perimeter|around|feet)/i);
+    if (match) dimensions.wall_linear_feet = Number(match[1]);
+  }
+  
+  // Parse ceiling height (many ways contractors say it) - be more specific to avoid spread rate confusion
+  if (lower.includes('ceiling') && (lower.includes('height') || lower.includes('tall') || lower.includes('foot') || lower.includes('feet') || lower.includes('ft'))) {
+    const heightMatch = input.match(/ceilings?\s+(?:are|is)?\s*(\d+\.?\d*)\s*(?:foot|feet|ft|')/i);
+    if (heightMatch) {
+      dimensions.ceiling_height = Number(heightMatch[1]);
+    } else {
+      // Try another pattern for ceiling height
+      const altMatch = input.match(/(\d+\.?\d*)\s*(?:foot|feet|ft|')\s+(?:ceiling|tall)/i);
+      if (altMatch) {
+        dimensions.ceiling_height = Number(altMatch[1]);
+      }
+    }
+  }
+  
+  // If just a single number and we're missing ceiling height, and it's in typical height range
+  if (numbers.length === 1 && !dimensions.ceiling_height && numbers[0] >= 8 && numbers[0] <= 15) {
+    dimensions.ceiling_height = numbers[0];
+  }
+  
+  // If just a single number and we're missing linear feet, and it's outside height range
+  if (numbers.length === 1 && !dimensions.wall_linear_feet && (numbers[0] < 8 || numbers[0] > 15)) {
+    dimensions.wall_linear_feet = numbers[0];
+  }
+  
+  // Handle multiple numbers when both are provided - but EXCLUDE spread rate numbers
+  if (numbers.length >= 2 && !dimensions.wall_linear_feet && !dimensions.ceiling_height) {
+    // Filter out spread rate numbers (typically 300-400 sqft per gallon)
+    const filteredNumbers = numbers.filter(num => !(num >= 300 && num <= 450 && lower.includes('spread')));
     
-    // Parse ceiling height
-    if (lower.includes('ceiling') || lower.includes('height') || lower.includes('tall') || lower.includes('foot') || lower.includes('feet')) {
-      const match = input.match(/(\d+\.?\d*)\s*(?:foot|feet|ft|')/i);
-      if (match) dimensions.ceiling_height = Number(match[1]);
-    } else if (!dimensions.ceiling_height && dimensions.wall_linear_feet && numbers.length === 1) {
-      // If we have linear feet but no ceiling height, and user provides just one number, assume it's ceiling height
-      dimensions.ceiling_height = numbers[0];
+    // Sort by likely use - smaller number (8-15) is probably height
+    const sortedNumbers = [...filteredNumbers].sort((a, b) => a - b);
+    for (let num of sortedNumbers) {
+      if (num >= 8 && num <= 15 && !dimensions.ceiling_height) {
+        dimensions.ceiling_height = num;
+      } else if (!dimensions.wall_linear_feet && num >= 50) { // Linear feet should be at least 50
+        dimensions.wall_linear_feet = num;
+      }
     }
   }
   
@@ -214,14 +324,6 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
     }
   }
   
-  // Parse specific ceiling area if provided
-  if (lower.includes('ceiling area') || lower.includes('ceiling sqft') || lower.includes('ceiling square')) {
-    const match = input.match(/(\d+\.?\d*)\s*(?:sqft|square feet|sq ft|sf)/i);
-    if (match) {
-      dimensions.ceiling_area = Number(match[1]);
-      // User provided exact value
-    }
-  }
   
   // Parse doors and windows
   if (lower.includes('door')) {
@@ -355,8 +457,25 @@ export const parsePaintQuality = (input: string) => {
 };
 
 export const parseMarkupPercentage = (input: string) => {
-  const match = input.match(/(\d+)%?/);
-  return match ? Number(match[1]) : 20;
+  // Look for explicit markup language
+  const markupMatch = input.match(/(?:markup|profit|margin)\s*(?:of|is|at)?\s*(\d+)%?/i);
+  if (markupMatch) {
+    return Number(markupMatch[1]);
+  }
+  
+  // Look for standalone percentage at end of input
+  const percentMatch = input.match(/(\d+)%\s*$/);
+  if (percentMatch) {
+    return Number(percentMatch[1]);
+  }
+  
+  // If labor is "included" in rate, no additional markup
+  if (input.toLowerCase().includes('labour is included') || input.toLowerCase().includes('labor is included')) {
+    return 0;
+  }
+  
+  // Default to 0% if no markup specified
+  return 0;
 };
 
 // Parse room count from user input

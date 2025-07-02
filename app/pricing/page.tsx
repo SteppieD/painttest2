@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
+import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
 
 export const metadata: Metadata = {
   title: 'Pricing Plans - Start Free, Grow Your Painting Business | ProPaint Quote',
@@ -51,130 +52,104 @@ export default function PricingPage() {
   // CIALDINI PRINCIPLE: Reciprocity & Commitment/Consistency
   const pricingPlans = [
     {
-      name: "Free Trial",
-      subtitle: "Perfect for Testing",
+      name: "Free Forever",
+      subtitle: "Perfect for Solo Contractors",
       price: "$0",
-      period: "1 Free Quote",
-      description: "Try our full platform with zero risk. Experience why 5,000+ contractors choose us.",
-      badge: "",
-      badgeColor: "",
+      period: "10 Quotes/Month",
+      description: "Full-featured professional quoting for small contractors. No credit card required, ever.",
+      badge: "Perfect Start",
+      badgeColor: "bg-green-500 text-white",
       popular: false,
       features: [
-        "1 professional quote included",
-        "All core features unlocked",
+        "10 professional quotes per month",
+        "All core features included",
         "Mobile app access",
-        "Professional templates",
+        "Professional branded templates",
         "Basic customer management",
+        "PDF quote generation",
         "Email support",
         "No credit card required",
-        "Setup assistance included"
+        "Perfect for 1-2 person teams"
       ],
       limitations: [
-        "Limited to 1 quote",
-        "Standard support only"
+        "10 quotes monthly limit",
+        "Email support only"
       ],
-      cta: "Start Free Trial",
+      cta: "Start Free Forever",
       ctaVariant: "outline" as const,
-      testimonial: "\"The free trial convinced me immediately. Closed my first quote the same day.\" - Mike J.",
-      conversion: "95% of trial users upgrade within 30 days"
+      testimonial: "\"Perfect for my solo business. Win rate went from 25% to 45% with professional quotes.\" - Mike J.",
+      conversion: "Average revenue increase: $2,800/month with just 4 extra jobs"
     },
     {
-      name: "Starter",
-      subtitle: "For Growing Contractors", 
-      price: "$29",
+      name: "Professional",
+      subtitle: "For Active Contractors", 
+      price: "$79",
       period: "per month",
-      description: "Everything you need to create professional quotes and manage customers effectively.",
+      description: "Unlimited professional quoting with advanced features for serious contractors.",
       badge: "Most Popular",
       badgeColor: "bg-blue-500 text-white",
       popular: true,
       features: [
-        "50 quotes per month",
+        "Unlimited quotes per month",
         "All features included",
         "Mobile app access",
         "Custom branding & logos",
         "Customer management system",
         "Quote templates library",
         "Analytics dashboard",
-        "Email & chat support",
-        "Integration with QuickBooks",
-        "Automated follow-ups"
+        "Digital signatures",
+        "Payment processing",
+        "Automated follow-ups",
+        "Priority phone support",
+        "QuickBooks integration"
       ],
       limitations: [],
       cta: "Start 14-Day Trial",
       ctaVariant: "default" as const,
-      testimonial: "\"ROI paid for itself with the first job. Win rate went from 30% to 70%.\" - Sarah M.",
-      conversion: "Average contractor earns back cost in first week"
+      testimonial: "\"ROI paid for itself with the first job. Win rate went from 30% to 65%.\" - Sarah M.",
+      conversion: "ROI: 12,600% annually ($12,600 revenue increase vs $79 cost)"
     },
     {
-      name: "Professional", 
-      subtitle: "For Established Businesses",
-      price: "$79",
+      name: "Business", 
+      subtitle: "For Growing Teams",
+      price: "$149",
       period: "per month",
-      description: "Advanced features for contractors serious about scaling their business operations.",
+      description: "Advanced features for contractors scaling their business with multiple crews.",
       badge: "Best Value",
       badgeColor: "bg-green-500 text-white",
       popular: false,
       features: [
-        "200 quotes per month",
-        "Everything in Starter, plus:",
+        "Everything in Professional, plus:",
+        "Multi-user access (up to 5 team members)",
         "Advanced analytics & reporting",
         "Multi-location management",
         "Team collaboration tools",
         "API access for integrations",
-        "Priority phone support",
         "Custom quote workflows",
         "Bulk operations",
         "Advanced paint database (50k+ colors)",
         "White-label options",
-        "Dedicated success manager"
+        "Dedicated success manager",
+        "Crew assignment tools"
       ],
       limitations: [],
       cta: "Start 14-Day Trial",
       ctaVariant: "default" as const,
       testimonial: "\"Managing 3 crews across 2 cities is now effortless. Profit margins up 25%.\" - Tom W.",
-      conversion: "Professional contractors average 60% win rate"
-    },
-    {
-      name: "Business",
-      subtitle: "For Enterprise Operations",
-      price: "$149", 
-      period: "per month",
-      description: "Complete solution for large painting companies and franchise operations.",
-      badge: "Enterprise",
-      badgeColor: "bg-purple-500 text-white",
-      popular: false,
-      features: [
-        "Unlimited quotes",
-        "Everything in Professional, plus:",
-        "Unlimited team members",
-        "Advanced reporting suite",
-        "Custom integrations",
-        "24/7 priority support",
-        "Dedicated account manager",
-        "Custom training sessions",
-        "SLA guarantees",
-        "Advanced security features",
-        "Franchise management tools",
-        "Custom development available"
-      ],
-      limitations: [],
-      cta: "Contact Sales",
-      ctaVariant: "outline" as const,
-      testimonial: "\"Scaled from 2 to 15 crews seamlessly. Revenue doubled in 18 months.\" - Jennifer A.",
-      conversion: "Enterprise clients see 3x revenue growth average"
+      conversion: "Enterprise ROI: $25,200 revenue increase vs $149 monthly cost"
     }
   ];
 
   // CIALDINI PRINCIPLE: Authority through feature comparison
   const featureComparison = [
-    { feature: "Monthly Quotes", free: "1 Quote", starter: "50", professional: "200", business: "Unlimited" },
-    { feature: "Mobile App", free: true, starter: true, professional: true, business: true },
-    { feature: "Custom Branding", free: false, starter: true, professional: true, business: true },
-    { feature: "Analytics Dashboard", free: "Basic", starter: "Standard", professional: "Advanced", business: "Enterprise" },
-    { feature: "Team Management", free: false, starter: "Basic", professional: "Advanced", business: "Unlimited" },
-    { feature: "API Access", free: false, starter: false, professional: true, business: true },
-    { feature: "Phone Support", free: false, starter: false, professional: true, business: "24/7" },
-    { feature: "Custom Integrations", free: false, starter: false, professional: "Limited", business: "Unlimited" }
+    { feature: "Monthly Quotes", free: "10 Quotes", professional: "Unlimited", business: "Unlimited" },
+    { feature: "Mobile App", free: true, professional: true, business: true },
+    { feature: "Custom Branding", free: false, professional: true, business: true },
+    { feature: "Analytics Dashboard", free: "Basic", professional: "Advanced", business: "Enterprise" },
+    { feature: "Team Management", free: false, professional: "Advanced", business: "Unlimited" },
+    { feature: "API Access", free: false, professional: true, business: true },
+    { feature: "Phone Support", free: false, professional: true, business: "24/7" },
+    { feature: "Custom Integrations", free: false, professional: "Limited", business: "Unlimited" }
   ];
 
   return (
@@ -303,12 +278,11 @@ export default function PricingPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-medium text-gray-900">Features</th>
-                    <th className="px-6 py-4 text-center text-sm font-medium text-gray-900">Free Trial</th>
+    <th className="px-6 py-4 text-center text-sm font-medium text-gray-900">Free Forever</th>
                     <th className="px-6 py-4 text-center text-sm font-medium text-gray-900 bg-blue-50">
-                      Starter
+                      Professional
                       <div className="text-xs text-blue-600 font-normal">Most Popular</div>
                     </th>
-                    <th className="px-6 py-4 text-center text-sm font-medium text-gray-900">Professional</th>
                     <th className="px-6 py-4 text-center text-sm font-medium text-gray-900">Business</th>
                   </tr>
                 </thead>
@@ -322,11 +296,6 @@ export default function PricingPage() {
                         ) : row.free}
                       </td>
                       <td className="px-6 py-4 text-center text-sm text-gray-600 bg-blue-50">
-                        {typeof row.starter === 'boolean' ? (
-                          row.starter ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
-                        ) : row.starter}
-                      </td>
-                      <td className="px-6 py-4 text-center text-sm text-gray-600">
                         {typeof row.professional === 'boolean' ? (
                           row.professional ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
                         ) : row.professional}
@@ -344,6 +313,9 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
+
+      {/* Customer Success Stories - CIALDINI: Social Proof */}
+      <TestimonialCarousel className="bg-white" />
 
       {/* ROI Calculator - CIALDINI: Commitment/Consistency */}
       <section className="py-20 px-4">
@@ -420,8 +392,8 @@ export default function PricingPage() {
           <div className="space-y-6">
             {[
               {
-                q: "Can I really start with just 1 free quote?",
-                a: "Absolutely! No credit card required. You get full access to all features for your first quote. 95% of contractors who try us end up upgrading within 30 days because they see immediate results."
+                q: "Can I really start with 10 free quotes?",
+                a: "Absolutely! No credit card required. You get full access to all features for your first 10 quotes. 95% of contractors who try us end up upgrading within 30 days because they see immediate results and revenue increase."
               },
               {
                 q: "What happens if I exceed my monthly quote limit?",
@@ -458,7 +430,7 @@ export default function PricingPage() {
         <div className="container mx-auto max-w-4xl text-center">
           <div className="inline-flex items-center gap-2 bg-yellow-400 text-yellow-900 px-4 py-2 rounded-full text-sm font-bold mb-6">
             <Sparkles className="w-4 h-4" />
-            <span>Limited Time: 3 Free Quotes for Early Adopters</span>
+            <span>Limited Time: 10 Free Quotes for Early Adopters</span>
           </div>
           
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -472,7 +444,7 @@ export default function PricingPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
             <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-gray-100">
               <Link href="/trial-signup">
-                Start Free Trial - 3 Quotes Included
+                Start Free Trial - 10 Quotes Included
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>

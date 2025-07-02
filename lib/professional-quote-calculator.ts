@@ -274,14 +274,16 @@ export const calculateProfessionalQuote = (
     // Traditional calculation
     wallSqft = calculateWallArea(dimensions.wall_linear_feet, dimensions.ceiling_height);
     
-    // Auto-calculate ceiling area if missing
-    if (!dimensions.ceiling_area && dimensions.wall_linear_feet) {
+    // Only auto-calculate ceiling area if explicitly missing (undefined), not if explicitly set to 0
+    if (dimensions.ceiling_area === undefined && dimensions.wall_linear_feet) {
       // Estimate ceiling area from perimeter (assuming typical rectangular home with 1.3:1 ratio)
       const perimeter = dimensions.wall_linear_feet;
       // Formula: if perimeter = 2(l + w) and l = 1.3w, then perimeter = 2(1.3w + w) = 4.6w
       // So w = perimeter/4.6, l = 1.3 × perimeter/4.6
       // Area = w × l = (perimeter/4.6) × (1.3 × perimeter/4.6) = 1.3 × (perimeter/4.6)²
-      ceilingSqft = Math.round(1.3 * Math.pow(perimeter / 4.6, 2));
+      const estimatedArea = Math.round(1.3 * Math.pow(perimeter / 4.6, 2));
+      // Add safety check for unrealistic ceiling areas
+      ceilingSqft = estimatedArea > 10000 ? 0 : estimatedArea;
     } else {
       ceilingSqft = dimensions.ceiling_area || 0;
     }

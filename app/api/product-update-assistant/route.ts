@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { dbGet, dbAll, dbRun } from "../../../lib/database";
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || "");
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,14 +12,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const openRouterApiKey = process.env.OPENROUTER_API_KEY;
+    
+    if (!openRouterApiKey) {
+      return NextResponse.json(
+        { error: "OpenRouter API key not configured" },
+        { status: 500 }
+      );
+    }
+
     // Get current products
     const products = dbAll(`
       SELECT * FROM company_paint_products
       WHERE user_id = ? AND is_active = TRUE
       ORDER BY project_type, product_category, display_order
     `, [userId]);
-
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const systemPrompt = `You are a paint product management assistant. Help users update their paint product catalog.
 
@@ -50,15 +54,45 @@ If removing products, identify which ones to remove.
 
 Respond with the appropriate action and confirmation message.`;
 
-    const chat = model.startChat({
-      history: conversationHistory.map((msg: any) => ({
-        role: msg.role === "assistant" ? "model" : "user",
-        parts: [{ text: msg.content }],
+    // Build messages for OpenRouter
+    const messages = [
+      {
+        role: 'system',
+        content: systemPrompt
+      },
+      ...conversationHistory.map((msg: any) => ({
+        role: msg.role === "assistant" ? "assistant" : "user",
+        content: msg.content
       })),
+      {
+        role: 'user',
+        content: message
+      }
+    ];
+
+    // Call OpenRouter API
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openRouterApiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001',
+        'X-Title': 'Paint Product Update Assistant'
+      },
+      body: JSON.stringify({
+        model: 'anthropic/claude-3-5-sonnet-20241022',
+        messages,
+        temperature: 0.7,
+        max_tokens: 500
+      })
     });
 
-    const result = await chat.sendMessage(`${systemPrompt}\n\nUser request: ${message}`);
-    const response = await result.response.text();
+    if (!response.ok) {
+      throw new Error(`OpenRouter API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const aiResponse = data.choices[0]?.message?.content || "I can help you update your paint products. What would you like to do?";
 
     // Parse the response for database actions
     const { action, updatedProducts, success } = parseUpdateRequest(message, products);
@@ -69,7 +103,7 @@ Respond with the appropriate action and confirmation message.`;
     }
 
     return NextResponse.json({
-      response: response.trim(),
+      response: aiResponse.trim(),
       success,
       action,
       message: action ? `Updated ${updatedProducts.length} product(s)` : undefined,

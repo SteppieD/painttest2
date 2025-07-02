@@ -1,52 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDatabase } from "@/lib/database/init";
+import { createQuote, getQuotesByCompany } from "@/lib/database-simple";
 import { generateQuoteId } from "@/lib/utils";
 import { subscriptionManager } from "@/lib/subscription-manager";
 
-// Use SQLite database directly for quotes
-const dbGet = (sql: string, params: any[] = []) => {
-  const db = getDatabase();
-  return db.prepare(sql).get(...params);
-};
-
-const dbAll = (sql: string, params: any[] = []) => {
-  const db = getDatabase();
-  return db.prepare(sql).all(...params);
-};
-
-const dbRun = (sql: string, params: any[] = []) => {
-  const db = getDatabase();
-  return db.prepare(sql).run(...params);
-};
-
-const createQuote = (data: any) => {
-  const db = getDatabase();
-  const insertSql = `
-    INSERT INTO quotes (
-      company_id, quote_id, customer_name, customer_email, customer_phone, address, 
-      project_type, rooms, room_data, room_count, paint_quality, prep_work, timeline, 
-      special_requests, base_cost, markup_percentage, final_price, walls_sqft, 
-      ceilings_sqft, trim_sqft, total_revenue, total_materials, projected_labor, 
-      conversation_summary, status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+// Helper function to clean customer names during quote creation
+const cleanCustomerName = (name: string) => {
+  if (!name) return 'Customer';
   
-  return db.prepare(insertSql).run(
-    data.company_id, data.quote_id, data.customer_name, data.customer_email, 
-    data.customer_phone, data.address, data.project_type, data.rooms, 
-    data.room_data, data.room_count, data.paint_quality, data.prep_work, 
-    data.timeline, data.special_requests, data.base_cost, data.markup_percentage, 
-    data.final_price, data.walls_sqft, data.ceilings_sqft, data.trim_sqft, 
-    data.total_revenue, data.total_materials, data.projected_labor, 
-    data.conversation_summary, data.status
-  );
-};
-
-const updateQuote = (id: number, updates: any) => {
-  const db = getDatabase();
-  // Simple update for now - can be expanded based on needs
-  return db.prepare("UPDATE quotes SET final_price = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
-    .run(updates.final_price, id);
+  // Handle "It's for [Name]" pattern
+  const itsForMatch = name.match(/it'?s\s+for\s+([^.]+)/i);
+  if (itsForMatch) {
+    return itsForMatch[1].trim();
+  }
+  
+  // Handle "Customer: [Name]" pattern
+  const customerMatch = name.match(/customer:\s*([^,]+)/i);
+  if (customerMatch) {
+    return customerMatch[1].trim();
+  }
+  
+  // Handle "the customer's name is [Name]" or "customers name is [Name]" pattern
+  const customerNameIsMatch = name.match(/(?:the\s+)?customers?\s+name\s+is\s+([A-Z][a-z]+)(?:\s+and|$)/i);
+  if (customerNameIsMatch) {
+    return customerNameIsMatch[1].trim();
+  }
+  
+  // Handle "name is [Name]" pattern
+  const nameIsMatch = name.match(/name\s+is\s+([A-Z][a-z]+)/i);
+  if (nameIsMatch) {
+    return nameIsMatch[1].trim();
+  }
+  
+  // If it looks like raw conversation data, try to extract name
+  if (name.length > 50 || name.includes('.') || name.includes('painting')) {
+    // Look for name patterns in longer text
+    const nameMatch = name.match(/(?:for|customer|client)?\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/);
+    if (nameMatch) {
+      return nameMatch[1].trim();
+    }
+  }
+  
+  return name;
 };
 
 // POST - Create a new quote
@@ -69,7 +63,7 @@ export async function POST(request: NextRequest) {
       
       // Map flat structure to nested quoteData
       quoteData = {
-        customerName: requestData.customer_name,
+        customerName: cleanCustomerName(requestData.customer_name),
         customerEmail: requestData.customer_email,
         customerPhone: requestData.customer_phone,
         address: requestData.address,
@@ -149,7 +143,7 @@ export async function POST(request: NextRequest) {
     const quote = {
       company_id: companyId,
       quote_id: quoteId,
-      customer_name: quoteData.customerName || "Unknown Customer",
+      customer_name: cleanCustomerName(quoteData.customerName) || "Unknown Customer",
       customer_email: quoteData.customerEmail || null,
       customer_phone: quoteData.customerPhone || null,
       address: quoteData.address || null,
@@ -164,6 +158,7 @@ export async function POST(request: NextRequest) {
       base_cost: quoteData.totalCost || 0,
       markup_percentage: quoteData.markupPercentage || 0,
       final_price: quoteData.finalPrice || quoteData.totalCost || 0,
+      quote_amount: quoteData.quote_amount || quoteData.finalPrice || quoteData.totalCost || 0,
       walls_sqft: quoteData.sqft || quoteData.dimensions?.wall_linear_feet * (quoteData.dimensions?.ceiling_height || 9) || 0,
       ceilings_sqft: quoteData.dimensions?.ceiling_area || 0,
       trim_sqft: 0,
@@ -174,7 +169,42 @@ export async function POST(request: NextRequest) {
       status: 'pending'
     };
 
-    const result = await createQuote(quote);
+    // Save quote using Supabase database adapter
+    console.log('💾 Saving quote via Supabase adapter:', {
+      customer: quote.customer_name,
+      amount: quote.total_revenue,
+      company_id: quote.company_id
+    });
+
+    const result = await createQuote({
+      company_id: quote.company_id,
+      quote_id: quote.quote_id,
+      customer_name: quote.customer_name,
+      customer_email: quote.customer_email,
+      customer_phone: quote.customer_phone,
+      address: quote.address,
+      project_type: quote.project_type,
+      rooms: quote.rooms,
+      room_data: quote.room_data,
+      room_count: quote.room_count,
+      paint_quality: quote.paint_quality,
+      prep_work: quote.prep_work,
+      timeline: quote.timeline,
+      special_requests: quote.special_requests,
+      base_cost: quote.base_cost,
+      markup_percentage: quote.markup_percentage,
+      final_price: quote.final_price,
+      walls_sqft: quote.walls_sqft,
+      ceilings_sqft: quote.ceilings_sqft,
+      trim_sqft: quote.trim_sqft,
+      total_revenue: quote.total_revenue,
+      total_materials: quote.total_materials,
+      projected_labor: quote.projected_labor,
+      conversation_summary: quote.conversation_summary,
+      status: quote.status,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    });
 
     // Record quote creation in subscription system
     try {
@@ -186,17 +216,18 @@ export async function POST(request: NextRequest) {
 
     console.log(`✅ Quote created: ${quoteId} for company ${companyId}`);
 
-    // Handle different database return formats
-    const dbId = result?.id || result?.lastID || Date.now();
-
-    return NextResponse.json({
+    const responseData = {
       success: true,
       quoteId,
       quote: {
         ...quote,
-        id: dbId
+        id: result?.lastID || result?.id || quoteId
       }
-    });
+    };
+
+    console.log('📤 Returning quote response:', responseData);
+
+    return NextResponse.json(responseData);
 
   } catch (error) {
     console.error("Error creating quote:", error);
@@ -215,33 +246,64 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status');
     const limit = parseInt(searchParams.get('limit') || '50');
 
-    let whereClause = '1=1';
+    // Build safe WHERE clause with parameterized queries
+    let whereConditions: string[] = [];
     let params: any[] = [];
 
+    // Input validation and sanitization
     if (companyId) {
-      whereClause += ' AND company_id = ?';
-      params.push(companyId);
+      const sanitizedCompanyId = parseInt(companyId);
+      if (isNaN(sanitizedCompanyId) || sanitizedCompanyId <= 0) {
+        return NextResponse.json({ error: "Invalid company ID" }, { status: 400 });
+      }
+      whereConditions.push('q.company_id = ?');
+      params.push(sanitizedCompanyId);
     }
 
     if (status) {
-      whereClause += ' AND status = ?';
+      // Validate status against allowed values
+      const allowedStatuses = ['pending', 'accepted', 'rejected', 'completed', 'cancelled', 'draft'];
+      if (!allowedStatuses.includes(status)) {
+        return NextResponse.json({ error: "Invalid status value" }, { status: 400 });
+      }
+      whereConditions.push('q.status = ?');
       params.push(status);
     }
 
-    const quotes = dbAll(`
-      SELECT 
-        q.*,
-        c.company_name,
-        c.access_code
-      FROM quotes q
-      LEFT JOIN companies c ON q.company_id = c.id
-      WHERE ${whereClause}
-      ORDER BY q.created_at DESC
-      LIMIT ?
-    `, [...params, limit]);
+    // Validate and sanitize limit
+    const sanitizedLimit = Math.min(Math.max(parseInt(searchParams.get('limit') || '50'), 1), 100);
 
+    // Construct safe WHERE clause
+    const whereClause = whereConditions.length > 0 ? whereConditions.join(' AND ') : '1=1';
+
+    // Retrieve quotes using Supabase database adapter
+    console.log('🔍 Retrieving quotes via Supabase adapter for company:', companyId);
+    
+    let quotes = [];
+    if (companyId) {
+      quotes = await getQuotesByCompany(parseInt(companyId));
+    } else {
+      // If no company ID, we can't retrieve quotes (security measure)
+      return NextResponse.json({ error: "Company ID is required" }, { status: 400 });
+    }
+
+    // Filter by status if provided
+    if (status && quotes) {
+      quotes = quotes.filter((quote: any) => quote.status === status);
+    }
+
+    // Limit results
+    if (quotes && quotes.length > sanitizedLimit) {
+      quotes = quotes.slice(0, sanitizedLimit);
+    }
+
+    console.log('📊 Retrieved', quotes?.length || 0, 'quotes from database');
+
+    // Ensure quotes is an array
+    const quotesArray = Array.isArray(quotes) ? quotes : [];
+    
     // Map quotes to the format expected by the quotes page
-    const mappedQuotes = (quotes as any[]).map((quote: any) => {
+    const mappedQuotes = quotesArray.map((quote: any) => {
         // Parse conversation summary for breakdown
         let breakdown = null;
         if (quote && quote.conversation_summary && typeof quote.conversation_summary === 'string' && quote.conversation_summary.trim() !== '') {
@@ -276,7 +338,7 @@ export async function GET(request: NextRequest) {
           customer_email: quote.customer_email || '',
           customer_phone: quote.customer_phone || '',
           address: quote.address || 'No address provided',
-          quote_amount: quote.final_price || quote.total_revenue || 0,
+          quote_amount: quote.quote_amount || quote.final_price || quote.total_revenue || 0,
           final_price: quote.final_price || quote.total_revenue || 0,
           notes: quote.special_requests || '',
           status: quote.status || 'pending',
@@ -360,24 +422,27 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const result = updateQuote(id, updates);
-
-    if (result.changes === 0) {
-      return NextResponse.json(
-        { error: "Quote not found" },
-        { status: 404 }
-      );
-    }
+    // Import supabaseDb here to avoid circular dependency
+    const { supabaseDb } = await import("@/lib/database/supabase-adapter");
+    const result = await supabaseDb.updateQuote(id, updates);
 
     console.log(`✅ Quote updated: ${id}`);
 
     return NextResponse.json({
       success: true,
-      changes: result.changes
+      quote: result
     });
 
   } catch (error) {
     console.error("Error updating quote:", error);
+    
+    if (error.message && error.message.includes('not found')) {
+      return NextResponse.json(
+        { error: "Quote not found" },
+        { status: 404 }
+      );
+    }
+    
     return NextResponse.json(
       { error: "Failed to update quote" },
       { status: 500 }
@@ -398,24 +463,27 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const result = dbRun("DELETE FROM quotes WHERE id = ?", [id]);
-
-    if (result.changes === 0) {
-      return NextResponse.json(
-        { error: "Quote not found" },
-        { status: 404 }
-      );
-    }
+    // Import supabaseDb here to avoid circular dependency
+    const { supabaseDb } = await import("@/lib/database/supabase-adapter");
+    const result = await supabaseDb.deleteQuote(id);
 
     console.log(`✅ Quote deleted: ${id}`);
 
     return NextResponse.json({
       success: true,
-      changes: result.changes
+      message: "Quote deleted successfully"
     });
 
   } catch (error) {
     console.error("Error deleting quote:", error);
+    
+    if (error.message && error.message.includes('not found')) {
+      return NextResponse.json(
+        { error: "Quote not found" },
+        { status: 404 }
+      );
+    }
+    
     return NextResponse.json(
       { error: "Failed to delete quote" },
       { status: 500 }

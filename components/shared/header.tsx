@@ -50,6 +50,18 @@ export function Header() {
             >
               Features
             </Link>
+            <Link 
+              href="/painting-contractors" 
+              className={`${isActive('/painting-contractors') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}`}
+            >
+              For Contractors
+            </Link>
+            <Link 
+              href="/locations" 
+              className={`${isActive('/locations') || pathname.startsWith('/locations/') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}`}
+            >
+              Locations
+            </Link>
             
             {/* Resources Dropdown */}
             <div 
@@ -71,11 +83,39 @@ export function Header() {
                       <div className="text-sm text-gray-500">Instant paint estimates</div>
                     </div>
                   </Link>
-                  <Link href="/painting-quote-templates" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                  <Link href="/paint-estimate-templates" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
                     <FileText className="w-5 h-5 text-green-600" />
                     <div>
                       <div className="font-medium text-gray-900">Quote Templates</div>
                       <div className="text-sm text-gray-500">Professional templates</div>
+                    </div>
+                  </Link>
+                  <Link href="/interior-painting-quote-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Calculator className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Interior Calculator</div>
+                      <div className="text-sm text-gray-500">Room-by-room quotes</div>
+                    </div>
+                  </Link>
+                  <Link href="/exterior-painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Calculator className="w-5 h-5 text-emerald-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Exterior Calculator</div>
+                      <div className="text-sm text-gray-500">House exterior estimates</div>
+                    </div>
+                  </Link>
+                  <Link href="/house-painting-cost-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Calculator className="w-5 h-5 text-orange-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">House Cost Calculator</div>
+                      <div className="text-sm text-gray-500">Complete house pricing</div>
+                    </div>
+                  </Link>
+                  <Link href="/paint-contractor-app" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Smartphone className="w-5 h-5 text-violet-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Contractor App</div>
+                      <div className="text-sm text-gray-500">Mobile painting quotes</div>
                     </div>
                   </Link>
                   <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
@@ -157,6 +197,20 @@ export function Header() {
               >
                 Features
               </Link>
+              <Link 
+                href="/painting-contractors" 
+                className={`${isActive('/painting-contractors') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'} py-2`}
+                onClick={closeMobileMenu}
+              >
+                For Contractors
+              </Link>
+              <Link 
+                href="/locations" 
+                className={`${isActive('/locations') || pathname.startsWith('/locations/') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'} py-2`}
+                onClick={closeMobileMenu}
+              >
+                Locations
+              </Link>
               
               {/* Mobile Resources Section */}
               <div className="space-y-2">
@@ -178,11 +232,39 @@ export function Header() {
                       Free Calculator
                     </Link>
                     <Link 
-                      href="/painting-quote-templates" 
+                      href="/paint-estimate-templates" 
                       className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
                       Quote Templates
+                    </Link>
+                    <Link 
+                      href="/interior-painting-quote-calculator" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Interior Calculator
+                    </Link>
+                    <Link 
+                      href="/exterior-painting-estimate-calculator" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Exterior Calculator
+                    </Link>
+                    <Link 
+                      href="/house-painting-cost-calculator" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      House Cost Calculator
+                    </Link>
+                    <Link 
+                      href="/paint-contractor-app" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Contractor App
                     </Link>
                     <Link 
                       href="/how-to-quote-painting-jobs-professionally" 

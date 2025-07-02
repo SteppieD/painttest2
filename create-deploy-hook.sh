@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# This script helps create a Vercel deploy hook
+
+echo "To create a deploy hook for your Vercel project:"
+echo ""
+echo "1. Go to: https://vercel.com/danger-dangers-projects/painttest2/settings/git"
+echo ""
+echo "2. Scroll down to 'Deploy Hooks' section"
+echo ""
+echo "3. Click 'Create Hook'"
+echo ""
+echo "4. Give it a name like 'GitHub Deploy Hook'"
+echo ""
+echo "5. Select the branch to deploy (main)"
+echo ""
+echo "6. Copy the generated webhook URL"
+echo ""
+echo "7. Add this webhook URL to your GitHub repository:"
+echo "   - Go to https://github.com/SteppieD/painttest2/settings/hooks"
+echo "   - Click 'Add webhook'"
+echo "   - Paste the Vercel webhook URL"
+echo "   - Set Content type to 'application/json'"
+echo "   - Select 'Just the push event'"
+echo "   - Click 'Add webhook'"
+echo ""
+echo "Your deployments will now trigger automatically when you push to the main branch!"

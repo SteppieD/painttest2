@@ -3,6 +3,25 @@
 import { User, Bot } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
+// Simple markdown component for basic formatting
+function MarkdownContent({ content }: { content: string }) {
+  // Process basic markdown: **bold** and *italic*
+  const processMarkdown = (text: string) => {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br>')
+  }
+
+  return (
+    <div 
+      dangerouslySetInnerHTML={{ 
+        __html: processMarkdown(content) 
+      }}
+    />
+  )
+}
+
 interface Message {
   id: string
   role: 'user' | 'assistant'
@@ -67,7 +86,7 @@ export function MessageBubble({ message, isLoading }: MessageBubbleProps) {
             : "bg-gray-100 text-gray-900 mr-12"
         )}>
           <div className="whitespace-pre-wrap text-sm leading-relaxed">
-            {message.content}
+            <MarkdownContent content={message.content} />
           </div>
         </div>
         

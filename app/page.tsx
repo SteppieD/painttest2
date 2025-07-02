@@ -4,7 +4,6 @@ import {
   Calculator, 
   Clock, 
   CheckCircle, 
-  CheckCircle2,
   Star,
   ArrowRight,
   Users,
@@ -12,14 +11,20 @@ import {
   Shield,
   Smartphone,
   FileText,
-  BookOpen,
-  Zap,
-  Palette
+  BookOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
+import { ROICalculator } from '@/components/marketing/roi-calculator';
+import { IndustryStats } from '@/components/marketing/industry-stats';
+import { SpeedComparison } from '@/components/marketing/speed-comparison';
+import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
+import { QuickPaintCalculator } from '@/components/calculators/quick-paint-calculator';
+import { RoomCalculatorWidget } from '@/components/calculators/room-calculator-widget';
+import { PaintCoverageWidget } from '@/components/calculators/paint-coverage-widget';
+import { CostComparisonWidget } from '@/components/calculators/cost-comparison-widget';
 
 export default function HomePage() {
   return (
@@ -30,15 +35,15 @@ export default function HomePage() {
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="container mx-auto text-center max-w-4xl">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Generate Professional <span className="text-blue-600">Painting Quotes</span> in Minutes
+            From <span className="text-red-500">6 Hours</span> to <span className="text-green-600">6 Minutes</span>: Professional <span className="text-blue-600">Painting Quotes</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Stop losing jobs to slow estimates. ProPaint Quote helps professional painters create accurate, detailed quotes that win more business and increase profits.
+            While competitors take days, you deliver same-day quotes. Join 10,000+ contractors winning <strong>40-60% more jobs</strong> with professional, mobile-first quoting that closes deals on-site.
           </p>
           <div className="flex flex-col items-center gap-4 justify-center mb-12">
             <Button size="lg" asChild className="text-lg px-12 py-6 bg-blue-600 hover:bg-blue-700">
               <Link href="/trial-signup">
-                Start Free Trial Now
+                Start Free Trial - 10 Quotes Free
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
@@ -49,58 +54,18 @@ export default function HomePage() {
               </Link>
             </p>
           </div>
-          
-          {/* Modern UX Preview Banner */}
-          <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl">
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="p-2 bg-green-100 rounded-full">
-                <Star className="w-6 h-6 text-green-600" />
-              </div>
-              <div className="text-center">
-                <h3 className="font-bold text-green-900">🚀 NEW: Apple & Google-Inspired Interface</h3>
-                <p className="text-sm text-green-700">Experience our revolutionary contractor-focused UX</p>
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button 
-                size="lg" 
-                asChild 
-                className="bg-green-600 hover:bg-green-700 text-white"
-              >
-                <Link href="/dashboard-modern">
-                  <Zap className="w-4 h-4 mr-2" />
-                  Try Modern Interface
-                </Link>
-              </Button>
-              <div className="flex items-center gap-4 text-sm text-green-700">
-                <div className="flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>30-second quotes</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Smart suggestions</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Mobile-first</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div className="flex items-center justify-center gap-8 text-sm text-gray-500">
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-500" />
-              <span>1 Free Quote Included</span>
+              <Clock className="w-5 h-5 text-green-500" />
+              <span>Quote in 6 minutes vs. 6 hours</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-500" />
               <span>No credit card required</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-500" />
-              <span>Setup in 5 minutes</span>
+              <TrendingUp className="w-5 h-5 text-green-500" />
+              <span>40-60% higher win rates</span>
             </div>
           </div>
         </div>
@@ -194,168 +159,70 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Modern UX Features Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-50">
+      {/* Testimonial Carousel */}
+      <TestimonialCarousel className="bg-gray-50" />
+
+      {/* Industry Statistics */}
+      <IndustryStats className="bg-white" />
+
+      {/* Speed Comparison */}
+      <SpeedComparison className="bg-gray-50" />
+
+      {/* ROI Calculator Section */}
+      <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
-              <Star className="w-4 h-4" />
-              NEW: Revolutionary Interface
-            </div>
+          <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Apple & Google-Inspired Design for Contractors
+              Calculate Your Revenue Potential
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We studied the best mobile interfaces and rebuilt our quote system from the ground up. 
-              Experience the difference modern UX makes in your daily workflow.
+              See exactly how much more revenue you could generate with professional quotes and faster response times
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <Card className="border-0 shadow-lg bg-white">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 bg-blue-100 rounded-lg">
-                    <Zap className="w-8 h-8 text-blue-600" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl">Express Quote Creation</CardTitle>
-                    <p className="text-sm text-gray-500">Skip the chat, get quotes fast</p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Create professional quotes in 30 seconds using room templates. Perfect for repeat customers and standard configurations.
-                </p>
-                <div className="flex items-center gap-2 text-sm text-green-600">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>80% faster than traditional methods</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg bg-white">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 bg-purple-100 rounded-lg">
-                    <TrendingUp className="w-8 h-8 text-purple-600" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl">Smart Learning System</CardTitle>
-                    <p className="text-sm text-gray-500">Learns your preferences</p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  The system remembers your room sizes, paint choices, and pricing patterns to suggest smart defaults for new quotes.
-                </p>
-                <div className="flex items-center gap-2 text-sm text-green-600">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Gets smarter with every quote</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg bg-white">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 bg-green-100 rounded-lg">
-                    <Smartphone className="w-8 h-8 text-green-600" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl">Touch-First Mobile Design</CardTitle>
-                    <p className="text-sm text-gray-500">Built for phones and tablets</p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Every button, input, and interaction is optimized for mobile. Create quotes on-site with confidence.
-                </p>
-                <div className="flex items-center gap-2 text-sm text-green-600">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Apple 44pt touch standards</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg bg-white">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 bg-orange-100 rounded-lg">
-                    <Palette className="w-8 h-8 text-orange-600" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl">Professional Client Presentation</CardTitle>
-                    <p className="text-sm text-gray-500">Impress every customer</p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Quotes become beautiful, professional presentations with your branding, detailed breakdowns, and digital acceptance.
-                </p>
-                <div className="flex items-center gap-2 text-sm text-green-600">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Higher acceptance rates</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
+          <ROICalculator className="mb-8" />
+          
           <div className="text-center">
-            <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-4">
-              <Link href="/dashboard-modern">
-                <ArrowRight className="w-5 h-5 mr-2" />
-                Experience the Modern Interface
+            <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700">
+              <Link href="/roi-calculator">
+                View Detailed Calculator
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
-            <p className="text-sm text-gray-500 mt-4">
-              No signup required - try it with demo access code: <strong>DEMO2024</strong>
-            </p>
           </div>
         </div>
       </section>
 
-      {/* Social Proof */}
+      {/* Interactive Calculators Section */}
       <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Trusted by Professional Painters Nationwide
-          </h2>
-          <p className="text-xl text-gray-600 mb-12">
-            Join thousands of contractors who've increased their quote accuracy and win rates
-          </p>
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Try Our Free Paint Calculators
+            </h2>
+            <p className="text-xl text-gray-600">
+              Get instant estimates and see the power of professional painting software
+            </p>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">95%</div>
-              <div className="text-gray-600">Quote Accuracy</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-green-600 mb-2">3x</div>
-              <div className="text-gray-600">Faster Estimates</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-purple-600 mb-2">40%</div>
-              <div className="text-gray-600">Higher Win Rate</div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <QuickPaintCalculator />
+            <RoomCalculatorWidget />
+            <PaintCoverageWidget />
+            <CostComparisonWidget />
           </div>
-
-          <div className="flex justify-center mb-8">
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-6 h-6 text-yellow-400 fill-current" />
-              ))}
-            </div>
+          
+          <div className="text-center mt-8">
+            <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700">
+              <Link href="/trial-signup">
+                Get Full Professional Calculator
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+            <p className="text-sm text-gray-600 mt-2">
+              Professional features include material costs, regional pricing, and detailed breakdowns
+            </p>
           </div>
-          <p className="text-gray-600">
-            "ProPaint Quote has transformed how we estimate jobs. We're closing 40% more deals and our quotes are always accurate."
-            <br />
-            <span className="font-medium">- Mike Johnson, Elite Painting Co.</span>
-          </p>
         </div>
       </section>
 

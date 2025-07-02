@@ -8,9 +8,16 @@ export class SupabaseDatabaseAdapter {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     
+    console.log('Supabase initialization:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseKey,
+      nodeEnv: process.env.NODE_ENV
+    });
+    
     // During build, these might not be available yet
     if (!supabaseUrl || !supabaseKey) {
-      console.log('Supabase environment variables not found, adapter will be initialized later');
+      console.warn('⚠️  Supabase environment variables not found. Database operations will fail.');
+      console.warn('Required variables: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY');
       return;
     }
     
@@ -19,8 +26,9 @@ export class SupabaseDatabaseAdapter {
     
     try {
       this.supabase = createClient(cleanUrl, supabaseKey);
+      console.log('✅ Supabase client initialized successfully');
     } catch (error) {
-      console.error('Failed to create Supabase client:', error);
+      console.error('❌ Failed to create Supabase client:', error);
     }
   }
 
@@ -165,6 +173,12 @@ export class SupabaseDatabaseAdapter {
   }
 
   async getCompanyByAccessCode(accessCode: string) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('🔍 Looking up company by access code:', accessCode);
+    
     const { data, error } = await this.supabase
       .from('companies')
       .select('*')
@@ -172,13 +186,21 @@ export class SupabaseDatabaseAdapter {
       .single();
 
     if (error) {
+      console.error('❌ Supabase getCompanyByAccessCode error:', error);
       throw error;
     }
 
+    console.log('✅ Company found:', data?.company_name);
     return data;
   }
 
   async createQuote(quoteData: any) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('💾 Creating quote in Supabase:', { customer: quoteData.customer_name, amount: quoteData.quote_amount });
+    
     const { data, error } = await this.supabase
       .from('quotes')
       .insert(quoteData)
@@ -186,9 +208,11 @@ export class SupabaseDatabaseAdapter {
       .single();
 
     if (error) {
+      console.error('❌ Supabase createQuote error:', error);
       throw error;
     }
 
+    console.log('✅ Quote created successfully in Supabase:', data);
     return data;
   }
 
@@ -204,6 +228,138 @@ export class SupabaseDatabaseAdapter {
     }
 
     return data;
+  }
+
+  async getQuoteById(id: number) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('🔍 Getting quote by ID from Supabase:', id);
+    
+    const { data, error } = await this.supabase
+      .from('quotes')
+      .select(`
+        *,
+        companies (
+          company_name,
+          phone,
+          email
+        )
+      `)
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('❌ Supabase getQuoteById error:', error);
+      throw error;
+    }
+
+    console.log('✅ Quote found by ID:', data?.customer_name);
+    return data;
+  }
+
+  async getQuoteByQuoteId(quoteId: string) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('🔍 Getting quote by quote_id from Supabase:', quoteId);
+    
+    const { data, error } = await this.supabase
+      .from('quotes')
+      .select(`
+        *,
+        companies (
+          company_name,
+          phone,
+          email
+        )
+      `)
+      .eq('quote_id', quoteId)
+      .single();
+
+    if (error) {
+      console.error('❌ Supabase getQuoteByQuoteId error:', error);
+      throw error;
+    }
+
+    console.log('✅ Quote found by quote_id:', data?.customer_name);
+    return data;
+  }
+
+  async updateQuote(idOrQuoteId: string | number, updates: any) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('🔄 Updating quote in Supabase:', { id: idOrQuoteId, updates: Object.keys(updates) });
+
+    // Try to determine if we have an ID or quote_id
+    let query;
+    if (typeof idOrQuoteId === 'number' || !isNaN(parseInt(idOrQuoteId as string))) {
+      // It's a numeric ID
+      query = this.supabase
+        .from('quotes')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', parseInt(idOrQuoteId as string));
+    } else {
+      // It's a quote_id string
+      query = this.supabase
+        .from('quotes')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('quote_id', idOrQuoteId);
+    }
+
+    const { data, error } = await query.select().single();
+
+    if (error) {
+      console.error('❌ Supabase updateQuote error:', error);
+      throw error;
+    }
+
+    console.log('✅ Quote updated successfully in Supabase');
+    return data;
+  }
+
+  async deleteQuote(idOrQuoteId: string | number) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized. Check environment variables.');
+    }
+
+    console.log('🗑️ Deleting quote from Supabase:', idOrQuoteId);
+
+    // Try to determine if we have an ID or quote_id
+    let query;
+    if (typeof idOrQuoteId === 'number' || !isNaN(parseInt(idOrQuoteId as string))) {
+      // It's a numeric ID
+      query = this.supabase
+        .from('quotes')
+        .delete()
+        .eq('id', parseInt(idOrQuoteId as string));
+    } else {
+      // It's a quote_id string
+      query = this.supabase
+        .from('quotes')
+        .delete()
+        .eq('quote_id', idOrQuoteId);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('❌ Supabase deleteQuote error:', error);
+      throw error;
+    }
+
+    console.log('✅ Quote deleted successfully from Supabase');
+    return { success: true };
   }
 
   async getAllCompanies() {
@@ -277,6 +433,36 @@ export class SupabaseDatabaseAdapter {
     }
 
     return { success: true };
+  }
+
+  async addPaintProduct(companyId: number, product: any) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    const { data, error } = await this.supabase
+      .from('company_paint_products')
+      .insert({
+        user_id: companyId,
+        project_type: product.projectType,
+        product_category: product.productCategory,
+        supplier: product.supplier,
+        product_name: product.productName,
+        product_line: product.productLine || null,
+        cost_per_gallon: product.costPerGallon,
+        display_order: product.displayOrder || 1,
+        sheen: product.sheen || null,
+        coverage_per_gallon: product.coveragePerGallon || 350,
+        is_active: true
+      })
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
   }
 
   async updatePaintProduct(productId: number, updates: any) {
@@ -363,6 +549,79 @@ export class SupabaseDatabaseAdapter {
 
     return data;
   }
+
+  // Setup-related methods
+  async deletePaintProductsByCompany(companyId: number) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    const { error } = await this.supabase
+      .from('paint_products')
+      .delete()
+      .eq('company_id', companyId);
+
+    if (error) {
+      throw error;
+    }
+
+    return { success: true };
+  }
+
+  async updateCompanySetup(companyId: number, setupData: any) {
+    if (!this.supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
+    // First, update the companies table
+    const companyUpdate: any = {};
+    if (setupData.default_markup !== undefined) {
+      companyUpdate.default_markup = setupData.default_markup;
+    }
+    if (setupData.setup_method !== undefined) {
+      companyUpdate.setup_method = setupData.setup_method;
+    }
+    if (setupData.setup_completed_at !== undefined) {
+      companyUpdate.setup_completed_at = setupData.setup_completed_at;
+    }
+    if (setupData.setup_skipped_at !== undefined) {
+      companyUpdate.setup_skipped_at = setupData.setup_skipped_at;
+    }
+
+    if (Object.keys(companyUpdate).length > 0) {
+      const { error: companyError } = await this.supabase
+        .from('companies')
+        .update(companyUpdate)
+        .eq('id', companyId);
+
+      if (companyError) {
+        throw companyError;
+      }
+    }
+
+    // Then, update company preferences
+    const preferencesUpdate: any = {
+      company_id: companyId,
+      updated_at: new Date().toISOString()
+    };
+
+    if (setupData.setup_completed !== undefined) {
+      preferencesUpdate.setup_completed = setupData.setup_completed;
+    }
+    if (setupData.default_markup !== undefined) {
+      preferencesUpdate.default_markup = setupData.default_markup;
+    }
+
+    const { error: prefsError } = await this.supabase
+      .from('company_preferences')
+      .upsert(preferencesUpdate);
+
+    if (prefsError) {
+      throw prefsError;
+    }
+
+    return { success: true };
+  }
 }
 
 // Create a lazy-loaded instance
@@ -390,12 +649,20 @@ export const supabaseDb = {
   getAllCompanies: async () => getSupabaseDb().getAllCompanies(),
   createQuote: async (quoteData: any) => getSupabaseDb().createQuote(quoteData),
   getQuotesByCompany: async (companyId: number) => getSupabaseDb().getQuotesByCompany(companyId),
+  getQuoteById: async (id: number) => getSupabaseDb().getQuoteById(id),
+  getQuoteByQuoteId: async (quoteId: string) => getSupabaseDb().getQuoteByQuoteId(quoteId),
+  updateQuote: async (idOrQuoteId: string | number, updates: any) => getSupabaseDb().updateQuote(idOrQuoteId, updates),
+  deleteQuote: async (idOrQuoteId: string | number) => getSupabaseDb().deleteQuote(idOrQuoteId),
   // Paint products methods
   getPaintProducts: async (companyId: number) => getSupabaseDb().getPaintProducts(companyId),
   savePaintProducts: async (companyId: number, products: any[]) => getSupabaseDb().savePaintProducts(companyId, products),
+  addPaintProduct: async (companyId: number, product: any) => getSupabaseDb().addPaintProduct(companyId, product),
   updatePaintProduct: async (productId: number, updates: any) => getSupabaseDb().updatePaintProduct(productId, updates),
   deletePaintProduct: async (productId: number) => getSupabaseDb().deletePaintProduct(productId),
   // Company preferences methods
   getCompanyPreferences: async (companyId: number) => getSupabaseDb().getCompanyPreferences(companyId),
   saveCompanyPreferences: async (companyId: number, preferences: any) => getSupabaseDb().saveCompanyPreferences(companyId, preferences),
+  // Setup methods
+  deletePaintProductsByCompany: async (companyId: number) => getSupabaseDb().deletePaintProductsByCompany(companyId),
+  updateCompanySetup: async (companyId: number, setupData: any) => getSupabaseDb().updateCompanySetup(companyId, setupData),
 };

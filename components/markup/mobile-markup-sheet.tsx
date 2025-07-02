@@ -50,18 +50,18 @@ export function MobileMarkupSheet({
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="h-[85vh] overflow-y-auto">
-        <SheetHeader className="space-y-2 pb-4 border-b">
+      <SheetContent side="bottom" className="h-[85vh] overflow-y-auto bg-white">
+        <SheetHeader className="space-y-2 pb-4 border-b border-flat-gray-200">
           <div className="flex items-center justify-between">
             <SheetTitle className="flex items-center gap-2">
-              <Calculator className="w-5 h-5 text-blue-600" />
-              Quote Pricing
+              <Calculator className="icon-flat text-business-primary" />
+              <span className="text-flat-heading">Quote Pricing</span>
             </SheetTitle>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => onOpenChange(false)}
-              className="h-8 w-8"
+              className="h-8 w-8 interactive-flat"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -79,7 +79,7 @@ export function MobileMarkupSheet({
         <div className="py-6 space-y-6">
           {/* Quick Markup Buttons */}
           <div className="space-y-3">
-            <Label className="text-base font-medium">Quick Markup Options</Label>
+            <Label className="text-flat-subheading">Quick Markup Options</Label>
             <QuickMarkupButtons
               currentMarkup={markupPercentage}
               onMarkupChange={onMarkupChange}
@@ -88,14 +88,14 @@ export function MobileMarkupSheet({
 
           {/* Custom Markup Input with +/- buttons */}
           <div className="space-y-3">
-            <Label className="text-base font-medium">Custom Markup</Label>
+            <Label className="text-flat-subheading">Custom Markup</Label>
             <div className="flex items-center gap-3">
               <Button
                 variant="outline"
                 size="icon"
                 onClick={decrementMarkup}
                 disabled={markupPercentage <= 0}
-                className="h-12 w-12 rounded-full"
+                className="mobile-flat-button w-12 rounded-flat-full border-flat-gray-300 interactive-flat"
               >
                 <Minus className="h-4 w-4" />
               </Button>
@@ -107,10 +107,9 @@ export function MobileMarkupSheet({
                   max="100"
                   value={markupPercentage}
                   onChange={(e) => onMarkupChange(Number(e.target.value))}
-                  className="text-center text-lg h-12 text-base"
-                  style={{ fontSize: '16px' }} // Prevent zoom on iOS
+                  className="text-center text-flat-lg h-12 rounded-flat border-flat-gray-300 prevent-zoom"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-flat-gray-500">
                   %
                 </span>
               </div>
@@ -120,7 +119,7 @@ export function MobileMarkupSheet({
                 size="icon"
                 onClick={incrementMarkup}
                 disabled={markupPercentage >= 100}
-                className="h-12 w-12 rounded-full"
+                className="mobile-flat-button w-12 rounded-flat-full border-flat-gray-300 interactive-flat"
               >
                 <Plus className="h-4 w-4" />
               </Button>
@@ -131,24 +130,24 @@ export function MobileMarkupSheet({
 
           {/* Quote Breakdown */}
           <div className="space-y-4">
-            <h3 className="text-base font-medium">Cost Breakdown</h3>
-            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+            <h3 className="text-flat-subheading">Cost Breakdown</h3>
+            <div className="card-flat bg-flat-gray-50 p-4 space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Labor</span>
-                <span className="font-medium">${(quote.breakdown.labor?.total || 0).toLocaleString()}</span>
+                <span className="text-flat-body">Labor</span>
+                <span className="text-flat-body font-bold">${(quote.breakdown.labor?.total || 0).toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Materials</span>
-                <span className="font-medium">${(quote.breakdown.materials?.total || 0).toLocaleString()}</span>
+                <span className="text-flat-body">Materials</span>
+                <span className="text-flat-body font-bold">${(quote.breakdown.materials?.total || 0).toLocaleString()}</span>
               </div>
-              <div className="pt-3 border-t border-gray-200 space-y-2">
+              <div className="pt-3 border-t border-flat-gray-200 space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Base Cost</span>
-                  <span className="font-medium">${baseCost.toLocaleString()}</span>
+                  <span className="text-flat-body">Base Cost</span>
+                  <span className="text-flat-body font-bold">${baseCost.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between items-center text-blue-600">
-                  <span>Markup ({markupPercentage}%)</span>
-                  <span className="font-medium">+${markupAmount.toLocaleString()}</span>
+                <div className="flex justify-between items-center text-business-primary">
+                  <span className="text-flat-body font-semibold">Markup ({markupPercentage}%)</span>
+                  <span className="text-flat-body font-bold">+${markupAmount.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -157,16 +156,16 @@ export function MobileMarkupSheet({
           {/* Project Summary */}
           {quote.timeEstimate && (
             <div className="space-y-2">
-              <h3 className="text-base font-medium">Project Summary</h3>
-              <div className="bg-blue-50 rounded-lg p-4 space-y-2 text-sm">
+              <h3 className="text-flat-subheading">Project Summary</h3>
+              <div className="bg-business-primary/5 rounded-flat-lg p-4 space-y-2 border border-business-primary/20">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Timeline:</span>
-                  <span className="font-medium">{quote.timeEstimate}</span>
+                  <span className="text-flat-body">Timeline:</span>
+                  <span className="text-flat-body font-bold">{quote.timeEstimate}</span>
                 </div>
                 {quote.details?.sqft && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Total Sq Ft:</span>
-                    <span className="font-medium">{quote.details.sqft}</span>
+                    <span className="text-flat-body">Total Sq Ft:</span>
+                    <span className="text-flat-body font-bold">{quote.details.sqft}</span>
                   </div>
                 )}
               </div>
@@ -175,29 +174,29 @@ export function MobileMarkupSheet({
         </div>
 
         {/* Sticky Action Buttons */}
-        <div className="sticky bottom-0 bg-white border-t pt-4 space-y-3">
+        <div className="sticky bottom-0 bg-white border-t border-flat-gray-200 pt-4 space-y-3 safe-area-inset-bottom">
           <Button
             onClick={() => {
               onSave()
               onOpenChange(false)
             }}
             disabled={isSaving}
-            className="w-full h-12 text-base"
+            className="btn-flat-primary w-full mobile-flat-button"
             size="lg"
           >
-            <Save className="w-5 h-5 mr-2" />
+            <Save className="icon-flat mr-2" />
             {isSaving ? 'Saving...' : 'Save Quote'}
           </Button>
           
           <Button
             variant="outline"
-            className="w-full h-12 text-base"
+            className="btn-flat w-full mobile-flat-button border-flat-gray-300"
             onClick={() => {
               // Preview functionality
               console.log('Preview quote')
             }}
           >
-            <Eye className="w-5 h-5 mr-2" />
+            <Eye className="icon-flat mr-2" />
             Preview Customer View
           </Button>
         </div>

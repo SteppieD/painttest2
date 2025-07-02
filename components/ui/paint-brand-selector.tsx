@@ -87,7 +87,7 @@ export function PaintBrandSelector({
   const renderBrandButton = (brand: Brand, isTop: boolean = false) => {
     const productCount = brand.products[category]?.length || 0;
     const isSelected = selectedBrand === brand.brand;
-    const colorClass = brandColors[brand.brand] || 'border-gray-300 hover:bg-gray-50';
+    const colorClass = brandColors[brand.brand] || 'border-flat-gray-300 hover:bg-flat-gray-50';
     const icon = brandIcons[brand.brand] || '🎨';
     const description = brandDescriptions[brand.brand] || '';
     
@@ -96,25 +96,26 @@ export function PaintBrandSelector({
         key={brand.brand}
         variant={isSelected ? "default" : "outline"}
         className={cn(
-          "h-auto p-4 flex flex-col items-center text-center transition-all relative",
+          "mobile-flat-button p-4 flex flex-col items-center text-center transition-all duration-200 relative rounded-flat-lg",
           isSelected 
-            ? "bg-blue-600 text-white border-blue-600 shadow-lg scale-105" 
+            ? "bg-business-primary text-white border-business-primary shadow-flat-hover scale-105" 
             : colorClass,
-          isTop && "border-2"
+          isTop && "border-2",
+          "interactive-flat"
         )}
         onClick={() => onBrandSelect(brand.brand)}
       >
         {isTop && !isSelected && (
-          <span className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 text-xs px-2 py-0.5 rounded-full font-medium">
+          <span className="absolute -top-2 -right-2 bg-business-warning text-white text-flat-xs px-2 py-0.5 rounded-flat-full font-semibold">
             Popular
           </span>
         )}
-        <span className="text-2xl mb-2">{icon}</span>
-        <span className="text-sm font-semibold leading-tight">{brand.brand}</span>
+        <span className="text-flat-2xl mb-2">{icon}</span>
+        <span className="text-flat-body font-bold leading-tight">{brand.brand}</span>
         {description && (
-          <span className="text-xs opacity-75 mt-1">{description}</span>
+          <span className="text-flat-caption opacity-75 mt-1">{description}</span>
         )}
-        <span className="text-xs mt-2 opacity-60">
+        <span className="text-flat-caption mt-2 opacity-60">
           {productCount} product{productCount !== 1 ? 's' : ''}
         </span>
       </Button>
@@ -124,10 +125,10 @@ export function PaintBrandSelector({
   return (
     <div className={cn("space-y-4", className)}>
       <div>
-        <p className="text-sm font-medium text-gray-700 mb-1">
+        <p className="text-flat-subheading mb-1">
           Choose paint brand for {category}:
         </p>
-        <p className="text-xs text-gray-500">
+        <p className="text-flat-caption">
           Select from our most popular professional brands
         </p>
       </div>
@@ -142,17 +143,17 @@ export function PaintBrandSelector({
         <>
           <Button
             variant="ghost"
-            className="w-full text-sm text-blue-600 hover:text-blue-700"
+            className="btn-flat w-full text-flat-sm text-business-primary hover:text-business-primary-dark"
             onClick={() => setShowAllBrands(!showAllBrands)}
           >
             {showAllBrands ? (
               <>
-                <ChevronUp className="h-4 w-4 mr-1" />
+                <ChevronUp className="icon-flat mr-1" />
                 Show Fewer Brands
               </>
             ) : (
               <>
-                <ChevronDown className="h-4 w-4 mr-1" />
+                <ChevronDown className="icon-flat mr-1" />
                 Show {availableOtherBrands.length} More Brand{availableOtherBrands.length !== 1 ? 's' : ''}
               </>
             )}

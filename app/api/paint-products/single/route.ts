@@ -30,8 +30,7 @@ export async function POST(req: NextRequest) {
         sheen: product.sheen || null
       });
     } else {
-      // Create new product - add to existing products array
-      const existingProducts = await supabaseDb.getPaintProducts(id);
+      // Create new product - use the new addPaintProduct method
       const newProductData = {
         projectType: product.projectType,
         productCategory: product.productCategory,
@@ -44,7 +43,7 @@ export async function POST(req: NextRequest) {
         coveragePerGallon: 350
       };
       
-      await supabaseDb.savePaintProducts(id, [...existingProducts, newProductData]);
+      await supabaseDb.addPaintProduct(id, newProductData);
     }
 
     return NextResponse.json({ success: true });

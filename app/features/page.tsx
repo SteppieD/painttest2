@@ -23,6 +23,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
+import { QuickPaintCalculator } from '@/components/calculators/quick-paint-calculator';
+import { RoomCalculatorWidget } from '@/components/calculators/room-calculator-widget';
 
 export const metadata: Metadata = {
   title: 'Painting Quote Software Features - Trusted by 5,000+ Professional Contractors | ProPaint Quote',
@@ -318,8 +320,44 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* Advanced Features - CIALDINI: Scarcity */}
+      {/* Try Our Calculator */}
       <section className="py-20 px-4 bg-gray-50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Experience Our <span className="text-blue-600">Smart Calculator</span> Technology
+            </h2>
+            <p className="text-xl text-gray-600">
+              Try the same calculators that 5,000+ contractors use daily. See the difference professional tools make.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <QuickPaintCalculator 
+              title="Professional Paint Calculator"
+              subtitle="Used by 5,000+ contractors daily"
+            />
+            <RoomCalculatorWidget 
+              title="Smart Room Calculator"
+            />
+          </div>
+          
+          <div className="text-center">
+            <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700 mb-4">
+              <Link href="/trial-signup">
+                Get Full Professional Calculator Suite
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+            <p className="text-gray-600">
+              Professional version includes regional pricing, material costs, profit optimization, and mobile access
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Advanced Features - CIALDINI: Scarcity */}
+      <section className="py-20 px-4 bg-white">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">

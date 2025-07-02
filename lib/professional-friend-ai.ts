@@ -18,9 +18,7 @@
  * and established contractors (with full analytics).
  */
 
-import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
-import { dbGet, dbAll } from './database';
-import { getPreparedStatements, dbUtils } from './database/init';
+import { dbGet, dbAll, getPreparedStatements, dbUtils } from './database';
 
 /**
  * ContractorContext contains business intelligence data for the contractor.
@@ -79,20 +77,11 @@ export interface ConversationContext {
 }
 
 export class ProfessionalFriendAI {
-  private model: GenerativeModel;
-  private genAI: GoogleGenerativeAI;
+  private openRouterApiKey: string;
   
   constructor(apiKey: string) {
-    this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ 
-      model: "gemini-2.5-flash",
-      generationConfig: {
-        temperature: 0.9,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: 1024,
-      },
-    });
+    // Use OpenRouter API key for Claude 3.5 Sonnet access
+    this.openRouterApiKey = process.env.OPENROUTER_API_KEY || apiKey;
   }
 
   async loadContractorContext(userId: string): Promise<ContractorContext> {
@@ -174,9 +163,34 @@ export class ProfessionalFriendAI {
     // Generate contextual prompt
     const prompt = await this.buildPrompt(message, context, extractedInfo, stage);
     
-    // Get AI response
-    const result = await this.model.generateContent(prompt);
-    const response = result.response.text();
+    // Get AI response using Claude 3.5 Sonnet via OpenRouter
+    const result = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.openRouterApiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001',
+        'X-Title': 'Professional Painting Quote Assistant'
+      },
+      body: JSON.stringify({
+        model: 'anthropic/claude-sonnet-4',
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.9,
+        max_tokens: 1024
+      })
+    });
+    
+    if (!result.ok) {
+      throw new Error(`OpenRouter API error: ${result.status}`);
+    }
+    
+    const data = await result.json();
+    const response = data.choices[0]?.message?.content || '';
     
     // Clean up response
     const cleanedResponse = this.cleanResponse(response);
@@ -223,8 +237,33 @@ export class ProfessionalFriendAI {
     `;
     
     try {
-      const result = await this.model.generateContent(prompt);
-      const text = result.response.text();
+      const result = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.openRouterApiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001',
+          'X-Title': 'Professional Painting Quote Assistant'
+        },
+        body: JSON.stringify({
+          model: 'anthropic/claude-sonnet-4',
+          messages: [
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          temperature: 0.3,
+          max_tokens: 500
+        })
+      });
+      
+      if (!result.ok) {
+        throw new Error(`OpenRouter API error: ${result.status}`);
+      }
+      
+      const data = await result.json();
+      const text = data.choices[0]?.message?.content || '';
       // Extract JSON from response
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
