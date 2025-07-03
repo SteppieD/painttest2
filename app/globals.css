@@ -8,6 +8,9 @@
 /* Import Apple Liquid Glass System */
 @import '../styles/liquid-glass.css';
 
+/* Import AdCreative-Inspired Modern Design (optional - uncomment to use) */
+/* @import '../styles/adcreative-inspired.css'; */
+
 @layer base {
   :root {
     --background: 0 0% 100%;
