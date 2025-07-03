@@ -402,7 +402,9 @@
   }
   
   .shimmer {
-    @apply bg-gradient-to-r from-flat-gray-200 via-flat-gray-100 to-flat-gray-200 bg-size-200 animate-shimmer;
+    background: linear-gradient(to right, #e5e7eb, #f3f4f6, #e5e7eb);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
   }
 }
 
