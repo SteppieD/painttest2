@@ -1,69 +1,28 @@
-# Robots.txt for Paint Quote App
-# https://paintquoteapp.com/robots.txt
-
 User-agent: *
 Allow: /
-Allow: /sitemap.xml
-
-# Block admin and user areas from indexing
 Disallow: /admin/
+Disallow: /api/
 Disallow: /dashboard/
 Disallow: /create-quote/
+Disallow: /setup/
 Disallow: /quotes/
-Disallow: /settings/
-Disallow: /access-code/
-Disallow: /success/
-
-# Block API endpoints
-Disallow: /api/
-
-# Block temporary and cache files
-Disallow: /*.json$
-Disallow: /*.xml$
 Disallow: /_next/
-Disallow: /vercel.svg
-Disallow: /next.svg
+Disallow: /favicon.ico
 
-# Allow important SEO pages
-Allow: /about
-Allow: /contact
-Allow: /pricing
-Allow: /features
-Allow: /blog
-Allow: /support
-Allow: /demo
+User-agent: GPTBot
+Disallow: /
 
-# Allow new SEO landing pages
-Allow: /painting-estimate-calculator-free
-Allow: /how-to-quote-painting-jobs-professionally
-Allow: /painting-quote-templates-free
-Allow: /trial-signup
-Allow: /painting-estimating-software-contractors
-Allow: /painting-quote-generator-ai
-Allow: /painting-business-software
-Allow: /house-painting-estimate-calculator
-Allow: /commercial-painting-estimating-software
-Allow: /mobile-painting-estimate-app
+User-agent: ChatGPT-User
+Disallow: /
 
-# Allow case study pages
-Allow: /painting-contractor-software-case-study
-Allow: /painting-contractor-increased-revenue-software
-Allow: /painting-estimate-software-success-story
-Allow: /small-painting-business-growth-software
+User-agent: CCBot
+Disallow: /
 
-# Allow new strategic pages
-Allow: /testimonials
-Allow: /faq
-Allow: /awards
-Allow: /mobile-app
-Allow: /help
+User-agent: anthropic-ai
+Disallow: /
 
-# Allow content and resource pages
-Allow: /blog
-Allow: /tutorials
+User-agent: Claude-Web
+Disallow: /
 
-# Sitemap location
-Sitemap: https://paintquoteapp.com/sitemap.xml
-
-# Crawl-delay to be respectful
-Crawl-delay: 1
+Sitemap: https://www.paintquoteapp.com/sitemap.xml
+Host: https://www.paintquoteapp.com

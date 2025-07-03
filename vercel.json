@@ -32,7 +32,15 @@
     "enabled": true,
     "autoAlias": false,
     "silent": true,
-    "autoJobCancellation": true
+    "autoJobCancellation": true,
+    "deploymentEnabled": {
+      "main": true,
+      "master": false,
+      "dev": false,
+      "staging": false,
+      "feature/*": false,
+      "fix/*": false
+    }
   },
   "headers": [
     {

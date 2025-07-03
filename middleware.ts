@@ -28,6 +28,21 @@ export function middleware(request: NextRequest) {
     return new Response('Access Denied', { status: 403 })
   }
   
+  // Handle PDF template requests by serving HTML files
+  const pathname = request.nextUrl.pathname
+  if (pathname.startsWith('/templates/') && pathname.endsWith('.pdf')) {
+    const htmlPath = pathname.replace('.pdf', '.html')
+    return NextResponse.rewrite(new URL(htmlPath, request.url))
+  }
+  
+  // Redirect PNG icon requests to SVG versions
+  if (pathname === '/icon-192x192.png') {
+    return NextResponse.redirect(new URL('/icon-192x192.svg', request.url))
+  }
+  if (pathname === '/favicon.ico') {
+    return NextResponse.redirect(new URL('/favicon.svg', request.url))
+  }
+  
   return response
 }
 
