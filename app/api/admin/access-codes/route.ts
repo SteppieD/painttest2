@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { dbGet, dbAll, dbRun } from "@/lib/database";
 import jwt from "jsonwebtoken";
@@ -137,7 +138,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get('id');
 
     if (!companyId) {

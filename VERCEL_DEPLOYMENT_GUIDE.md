@@ -53,16 +53,13 @@ In Vercel Dashboard → Project Settings → Git:
 }
 ```
 
-### Step 4: Deploy Hook for Manual Triggers
-Your deploy hook URL:
-```
-https://api.vercel.com/v1/integrations/deploy/prj_kr3rZvlvsIPUl3jF52bpTErghrrK/2kFymWIeTC
-```
+### Step 4: Deploy Hooks (Security Warning)
+⚠️ **NEVER share or commit deploy hook URLs!** They allow anyone to trigger deployments.
 
-Manual trigger:
-```bash
-curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_kr3rZvlvsIPUl3jF52bpTErghrrK/2kFymWIeTC"
-```
+If you need manual deployment:
+1. Keep the URL private
+2. Store in environment variables
+3. Regenerate if exposed
 
 ## Environment Variables Available
 

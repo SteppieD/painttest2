@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /**
  * Optimized Dashboard API
  * 
@@ -23,7 +24,7 @@ const DashboardQuerySchema = z.object({
 
 async function getDashboardData(request: NextRequest): Promise<NextResponse> {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     
     const queryData = {
       companyId: searchParams.get('companyId'),

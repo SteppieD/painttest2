@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 // GET - Retrieve company paints
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get('companyId') || '1';
 
     // Try to get paints from the new paints table
@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
 // POST - Create new paint
 export async function POST(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get('companyId') || '1';
     
     const paintData = await request.json();
@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
 // PUT - Update existing paint
 export async function PUT(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get('companyId') || '1';
     
     const paintData = await request.json();
@@ -215,7 +215,7 @@ export async function PUT(request: NextRequest) {
 // DELETE - Remove paint
 export async function DELETE(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get('companyId') || '1';
     const paintId = searchParams.get('paintId');
 

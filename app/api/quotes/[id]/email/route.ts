@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server';
 import { emailTemplateGenerator } from '@/lib/email-templates';
 
@@ -101,7 +102,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const action = searchParams.get('action') || 'send_quote';
     const format = searchParams.get('format') || 'html';
 

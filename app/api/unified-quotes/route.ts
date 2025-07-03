@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /**
  * Unified Quote API
  * 
@@ -584,7 +585,7 @@ export const POST = withSecureApi({
   allowedMethods: ['POST'],
   sanitizeInput: true
 })(async (request: NextRequest) => {
-  const url = new URL(request.url);
+  const url = request.nextUrl;
   const action = url.searchParams.get('action');
   
   switch (action) {

@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 // GET - Retrieve company settings
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get('companyId') || '1'; // Default to first company for demo
 
     // Load settings from database
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
 // PUT - Update company settings
 export async function PUT(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get('companyId') || '1';
     
     const settings = await request.json();

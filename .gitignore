@@ -88,3 +88,7 @@ tsconfig.tsbuildinfo
 # Replit debugger
 .breakpoints
 .vercel
+
+# deployment scripts
+deploy-manual.sh
+deploy.sh

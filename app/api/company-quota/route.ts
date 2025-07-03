@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    const url = new URL(request.url);
+    const url = request.nextUrl;
     const companyId = url.searchParams.get("company_id");
 
     if (!companyId) {

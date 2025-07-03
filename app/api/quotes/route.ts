@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { createQuote, getQuotesByCompany } from "@/lib/database-simple";
 import { generateQuoteId } from "@/lib/utils";
@@ -241,7 +242,7 @@ export async function POST(request: NextRequest) {
 // GET - Retrieve quotes (with optional company filter)
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get('company_id');
     const status = searchParams.get('status');
     const limit = parseInt(searchParams.get('limit') || '50');
@@ -453,7 +454,7 @@ export async function PUT(request: NextRequest) {
 // DELETE - Delete a quote
 export async function DELETE(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const id = searchParams.get('id');
 
     if (!id) {
