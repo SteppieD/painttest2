@@ -51,6 +51,17 @@ Allow: /painting-contractor-increased-revenue-software
 Allow: /painting-estimate-software-success-story
 Allow: /small-painting-business-growth-software
 
+# Allow new strategic pages
+Allow: /testimonials
+Allow: /faq
+Allow: /awards
+Allow: /mobile-app
+Allow: /help
+
+# Allow content and resource pages
+Allow: /blog
+Allow: /tutorials
+
 # Sitemap location
 Sitemap: https://paintquoteapp.com/sitemap.xml
 
