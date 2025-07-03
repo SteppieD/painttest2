@@ -286,7 +286,9 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
-              <Palette className="w-8 h-8 text-blue-600" />
+              <div className="p-2 rounded-xl bg-gradient-to-br from-[#ef2b70] to-[#ff6b9d]">
+                <Palette className="w-6 h-6 text-white" />
+              </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900">ProPaint Quote Assistant</h1>
                 <div className="flex items-center gap-2">

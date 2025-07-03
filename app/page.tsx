@@ -32,24 +32,22 @@ export default function HomePage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
+      <section className="py-20 px-4 bg-gradient-to-br from-pink-50 via-purple-50 to-rose-50">
         <div className="container mx-auto text-center max-w-4xl">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            From <span className="text-red-500">6 Hours</span> to <span className="text-green-600">6 Minutes</span>: Professional <span className="text-blue-600">Painting Quotes</span>
+            From <span className="text-red-500">6 Hours</span> to <span className="text-green-600">6 Minutes</span>: Professional <span className="bg-gradient-to-r from-[#ef2b70] to-[#ff6b9d] bg-clip-text text-transparent">Painting Quotes</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             While competitors take days, you deliver same-day quotes. Join 10,000+ contractors winning <strong>40-60% more jobs</strong> with professional, mobile-first quoting that closes deals on-site.
           </p>
           <div className="flex flex-col items-center gap-4 justify-center mb-12">
-            <Button size="lg" asChild className="text-lg px-12 py-6 bg-blue-600 hover:bg-blue-700">
-              <Link href="/trial-signup">
-                Start Free Trial - 10 Quotes Free
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
+            <Link href="/trial-signup" className="text-lg px-12 py-6 bg-gradient-to-r from-[#ef2b70] to-[#ff6b9d] text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 inline-flex items-center">
+              Start Free Trial - 10 Quotes Free
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Link>
             <p className="text-sm text-gray-600">
               Already have an access code? 
-              <Link href="/access-code" className="text-blue-600 hover:text-blue-700 ml-1 underline">
+              <Link href="/access-code" className="text-[#ef2b70] hover:text-[#ff6b9d] ml-1 underline transition-colors duration-200">
                 Sign in here
               </Link>
             </p>
@@ -84,10 +82,12 @@ export default function HomePage() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-0 shadow-lg">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
               <CardHeader>
-                <Calculator className="w-12 h-12 text-blue-600 mb-4" />
-                <CardTitle>Smart Quote Calculator</CardTitle>
+                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 group-hover:shadow-md transition-all duration-200 w-fit">
+                  <Calculator className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">Smart Quote Calculator</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
@@ -96,10 +96,12 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
               <CardHeader>
-                <Clock className="w-12 h-12 text-green-600 mb-4" />
-                <CardTitle>5-Minute Quotes</CardTitle>
+                <div className="p-3 rounded-xl bg-gradient-to-br from-green-500 to-green-600 group-hover:shadow-md transition-all duration-200 w-fit">
+                  <Clock className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">5-Minute Quotes</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
@@ -108,10 +110,12 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
               <CardHeader>
-                <Smartphone className="w-12 h-12 text-purple-600 mb-4" />
-                <CardTitle>Mobile Optimized</CardTitle>
+                <div className="p-3 rounded-xl bg-gradient-to-br from-[#ef2b70] to-[#ff6b9d] group-hover:shadow-md transition-all duration-200 w-fit">
+                  <Smartphone className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">Mobile Optimized</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
@@ -120,10 +124,12 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
               <CardHeader>
-                <Users className="w-12 h-12 text-orange-600 mb-4" />
-                <CardTitle>Customer Management</CardTitle>
+                <div className="p-3 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 group-hover:shadow-md transition-all duration-200 w-fit">
+                  <Users className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">Customer Management</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
@@ -132,10 +138,12 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
               <CardHeader>
-                <TrendingUp className="w-12 h-12 text-red-600 mb-4" />
-                <CardTitle>Profit Analytics</CardTitle>
+                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 group-hover:shadow-md transition-all duration-200 w-fit">
+                  <TrendingUp className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">Profit Analytics</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
@@ -144,10 +152,12 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
               <CardHeader>
-                <Shield className="w-12 h-12 text-indigo-600 mb-4" />
-                <CardTitle>Professional Branding</CardTitle>
+                <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 group-hover:shadow-md transition-all duration-200 w-fit">
+                  <Shield className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">Professional Branding</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
@@ -169,7 +179,7 @@ export default function HomePage() {
       <SpeedComparison className="bg-gray-50" />
 
       {/* ROI Calculator Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-blue-50">
+      <section className="py-20 px-4 bg-gradient-to-br from-pink-50 via-purple-50 to-rose-50">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -183,12 +193,10 @@ export default function HomePage() {
           <ROICalculator className="mb-8" />
           
           <div className="text-center">
-            <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700">
-              <Link href="/roi-calculator">
-                View Detailed Calculator
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
+            <Link href="/roi-calculator" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#ef2b70] to-[#ff6b9d] text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200">
+              View Detailed Calculator
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Link>
           </div>
         </div>
       </section>

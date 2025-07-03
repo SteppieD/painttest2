@@ -6,7 +6,31 @@ import jwt from "jsonwebtoken";
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
-const JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'admin_secret_key_development';
+// Get JWT secret with build-time vs runtime detection
+function getJWTSecret() {
+  const secret = process.env.ADMIN_JWT_SECRET;
+  
+  if (secret) {
+    return secret;
+  }
+  
+  // Allow development fallback
+  if (process.env.NODE_ENV === 'development') {
+    return 'dev_admin_secret_change_in_production';
+  }
+  
+  // In production, only throw error at runtime, not build time
+  // Check if we're in a build context by looking for typical build-time conditions
+  const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build' || 
+                     process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL;
+  
+  if (!isBuildTime) {
+    throw new Error('ADMIN_JWT_SECRET environment variable is required in production');
+  }
+  
+  // Return a placeholder during build - this route won't actually execute during build
+  return 'build_time_placeholder';
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,10 +68,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For demo purposes, accept 'admin123' as password
-    // In production, properly hash passwords
-    const isValidPassword = password === 'admin123' || 
-      (adminUser.password_hash && await bcrypt.compare(password, adminUser.password_hash));
+    // Validate password using bcrypt hash
+    const isValidPassword = adminUser.password_hash && 
+      await bcrypt.compare(password, adminUser.password_hash);
 
     if (!isValidPassword) {
       // Log failed login attempt
@@ -73,7 +96,7 @@ export async function POST(request: NextRequest) {
         email: adminUser.email,
         role: adminUser.role
       },
-      JWT_SECRET,
+      getJWTSecret(),
       { expiresIn: '24h' }
     );
 

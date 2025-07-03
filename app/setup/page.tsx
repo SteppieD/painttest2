@@ -218,11 +218,11 @@ function SetupWizardContent() {
 
   if (currentStep === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-rose-50 flex items-center justify-center p-4">
         <div className="max-w-4xl w-full">
           <div className="text-center mb-8">
-            <div className="bg-white p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center shadow-lg">
-              <Palette className="w-10 h-10 text-blue-600" />
+            <div className="bg-gradient-to-br from-[#ef2b70] to-[#ff6b9d] p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center shadow-lg">
+              <Palette className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to Paint Quote Pro!</h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -236,9 +236,9 @@ function SetupWizardContent() {
                 key={path.id}
                 className={`cursor-pointer transition-all hover:shadow-lg border-2 ${
                   path.recommended 
-                    ? 'border-blue-200 bg-blue-50 ring-2 ring-blue-100' 
-                    : 'border-gray-200 hover:border-blue-300'
-                } ${selectedPath === path.id ? 'ring-2 ring-blue-500' : ''}`}
+                    ? 'border-pink-200 bg-gradient-to-r from-pink-50 to-purple-50 ring-2 ring-pink-100' 
+                    : 'border-gray-200 hover:border-[#ef2b70]'
+                } ${selectedPath === path.id ? 'ring-2 ring-[#ef2b70]' : ''}`}
                 onClick={() => {
                   setSelectedPath(path.id);
                   trackSetupStarted(path.id);
@@ -249,7 +249,7 @@ function SetupWizardContent() {
                     <CardTitle className="text-lg font-semibold">
                       {path.title}
                       {path.recommended && (
-                        <Badge className="ml-2 bg-blue-600 text-white">Recommended</Badge>
+                        <Badge className="ml-2 bg-gradient-to-r from-[#ef2b70] to-[#ff6b9d] text-white">Recommended</Badge>
                       )}
                     </CardTitle>
                     <div className="flex items-center text-sm text-gray-500">

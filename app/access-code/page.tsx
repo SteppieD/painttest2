@@ -185,7 +185,7 @@ export default function AccessCodePage() {
             style={{
               width: "100%",
               padding: "12px",
-              backgroundColor: isLoading ? "#ccc" : "#3498db",
+              backgroundColor: isLoading ? "#ccc" : "#ef2b70",
               color: "white",
               border: "none",
               borderRadius: "6px",
@@ -261,7 +261,7 @@ export default function AccessCodePage() {
             style={{
               background: "none",
               border: "none",
-              color: "#3498db",
+              color: "#ef2b70",
               textDecoration: "underline",
               cursor: "pointer",
               fontSize: "12px",
@@ -276,7 +276,7 @@ export default function AccessCodePage() {
           <a
             href="/forgot-code"
             style={{
-              color: "#3498db",
+              color: "#ef2b70",
               textDecoration: "underline",
               fontSize: "12px",
               display: "inline-block",

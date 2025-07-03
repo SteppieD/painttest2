@@ -12,15 +12,17 @@ const SECURITY_HEADERS = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none';",
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https:; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';",
 };
 
 // Rate limiting configuration
 const RATE_LIMITS = {
-  '/api/auth/': { maxRequests: 5, windowMs: 60000 }, // 5 auth attempts per minute
-  '/api/quotes': { maxRequests: 100, windowMs: 60000 }, // 100 quote operations per minute
-  '/api/': { maxRequests: 200, windowMs: 60000 }, // 200 API calls per minute (general)
-  '/trial-signup': { maxRequests: 3, windowMs: 300000 }, // 3 signups per 5 minutes
+  '/api/admin/auth/': { maxRequests: 3, windowMs: 900000 }, // 3 admin auth attempts per 15 minutes
+  '/api/auth/': { maxRequests: 3, windowMs: 900000 }, // 3 auth attempts per 15 minutes  
+  '/api/verify-code': { maxRequests: 5, windowMs: 300000 }, // 5 code verifications per 5 minutes
+  '/api/quotes': { maxRequests: 50, windowMs: 60000 }, // 50 quote operations per minute
+  '/api/': { maxRequests: 100, windowMs: 60000 }, // 100 API calls per minute (general)
+  '/trial-signup': { maxRequests: 2, windowMs: 600000 }, // 2 signups per 10 minutes
 };
 
 function getClientId(request: NextRequest): string {
