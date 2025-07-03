@@ -25,7 +25,7 @@ import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 
 export const metadata: Metadata = {
-  title: 'Live Demo - See ProPaint Quote in Action | Painting Contractor Software',
+  title: 'Live Demo - See ProPaint Quote in Action | Professional Painting Software',
   description: 'Watch a live demo of ProPaint Quote - the painting contractor software trusted by 5,000+ professionals. See how to create quotes in 5 minutes and increase win rates by 40%.',
   keywords: 'painting software demo, quote software demonstration, contractor tool preview, painting estimator demo, live software walkthrough',
   alternates: {
