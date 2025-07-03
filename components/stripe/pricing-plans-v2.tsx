@@ -130,9 +130,11 @@ export function PricingPlansV2({ companyId }: PricingPlansV2Props) {
       <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {plans.map((plan) => {
           const price = isAnnual ? plan.annualPrice : plan.monthlyPrice;
-          const displayPrice = isAnnual && plan.annualPrice > 0 
-            ? `$${Math.round(plan.annualPrice / 12)}`
-            : `$${plan.monthlyPrice}`;
+          const displayPrice = plan.monthlyPrice === 0 
+            ? '$0'
+            : isAnnual 
+              ? `$${plan.annualPrice}`
+              : `$${plan.monthlyPrice}`;
           
           return (
             <Card 
@@ -158,15 +160,18 @@ export function PricingPlansV2({ companyId }: PricingPlansV2Props) {
                     <span className="text-5xl font-bold">{displayPrice}</span>
                     {plan.monthlyPrice > 0 && (
                       <span className="text-gray-600 ml-2">
-                        /{isAnnual ? 'month' : 'per month'}
+                        {isAnnual ? '/year' : '/month'}
                       </span>
                     )}
                   </div>
                   {isAnnual && plan.annualSavings && (
-                    <div className="mt-2">
+                    <div className="mt-2 space-y-1">
                       <Badge variant="outline" className="text-green-600">
-                        Save ${plan.annualSavings}/year
+                        Save 20% (${plan.annualSavings}/year)
                       </Badge>
+                      <p className="text-sm text-gray-500">
+                        Only ${Math.round(plan.annualPrice / 12)}/month
+                      </p>
                     </div>
                   )}
                   <div className="text-lg font-semibold text-blue-600 mt-2">
