@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { companyId, planType, successUrl, cancelUrl } = body;
+    const { companyId, planType, priceId, successUrl, cancelUrl } = body;
 
     if (!companyId || !planType) {
       return NextResponse.json(
@@ -43,10 +43,10 @@ export async function POST(request: NextRequest) {
       updateCompanyStripeCustomerId(companyId, stripeCustomerId);
     }
 
-    // Determine price ID based on plan type
-    const priceId = planType === 'yearly' 
+    // Use provided price ID or fall back to config
+    const finalPriceId = priceId || (planType === 'yearly' 
       ? STRIPE_CONFIG.prices.yearlySubscription 
-      : STRIPE_CONFIG.prices.monthlySubscription;
+      : STRIPE_CONFIG.prices.monthlySubscription);
 
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       payment_method_types: ['card'],
       line_items: [
         {
-          price: priceId,
+          price: finalPriceId,
           quantity: 1,
         },
       ],

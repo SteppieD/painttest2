@@ -12,6 +12,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 interface CheckoutFormProps {
   companyId: number;
   planType: 'monthly' | 'yearly';
+  priceId?: string; // Optional: directly specify price ID
   buttonText?: string;
   successUrl?: string;
   cancelUrl?: string;
@@ -19,7 +20,8 @@ interface CheckoutFormProps {
 
 export function CheckoutForm({ 
   companyId, 
-  planType, 
+  planType,
+  priceId, 
   buttonText = 'Subscribe Now',
   successUrl,
   cancelUrl
@@ -41,6 +43,7 @@ export function CheckoutForm({
         body: JSON.stringify({
           companyId,
           planType,
+          priceId,
           successUrl,
           cancelUrl,
         }),

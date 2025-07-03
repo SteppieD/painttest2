@@ -43,9 +43,10 @@ export function convertToCents(amountInDollars: number): number {
   return Math.round(amountInDollars * 100);
 }
 
-// Calculate platform fee
+// Calculate platform fee (0% for Jobber model)
 export function calculatePlatformFee(amountInCents: number): number {
-  return Math.round(amountInCents * (STRIPE_CONFIG.platformFeePercent / 100));
+  // Following Jobber model - no platform fee, just pass through Stripe's fees
+  return 0;
 }
 
 // Calculate contractor payout after platform fee
