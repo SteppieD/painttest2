@@ -420,7 +420,7 @@ export default function FeaturesPage() {
           </div>
           
           <div className="space-y-4">
-            <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-gray-100">
+            <Button size="lg" variant="outline_white" asChild className="text-lg px-8 py-6">
               <Link href="/trial-signup">
                 Claim Your Free Trial + Bonuses
                 <ArrowRight className="w-5 h-5 ml-2" />

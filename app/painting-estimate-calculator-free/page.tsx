@@ -47,13 +47,13 @@ export default function PaintingEstimateCalculatorFreePage() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" asChild className="text-lg px-8 py-6">
+            <Button variant="primary" size="lg" asChild className="text-lg px-8 py-6">
               <Link href="/trial-signup">
                 <Download className="w-5 h-5 mr-2" />
                 Download Free App
               </Link>
             </Button>
-            <Button variant="outline" size="lg" asChild className="text-lg px-8 py-6">
+            <Button variant="outline_white" size="lg" asChild className="text-lg px-8 py-6">
               <Link href="/painting-estimate-calculator">
                 <Calculator className="w-5 h-5 mr-2" />
                 Try Online Calculator

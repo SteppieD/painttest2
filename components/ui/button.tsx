@@ -20,6 +20,10 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         adcreative: "bg-gradient-to-r from-[#ef2b70] to-[#ff6b9d] text-white hover:shadow-lg hover:scale-105 rounded-xl",
         secondary_pink: "bg-white text-[#ef2b70] border-2 border-[#ef2b70] hover:bg-gradient-to-r hover:from-pink-50 hover:to-purple-50",
+        // New variant for better contrast on colored backgrounds
+        primary: "bg-[#ef2b70] text-white shadow-lg hover:bg-[#d91f5f] hover:shadow-xl hover:scale-105 border-2 border-white/20",
+        // Outline variant with pink color for secondary CTAs on colored backgrounds
+        outline_white: "border-2 border-white bg-white/95 text-gray-900 hover:bg-white hover:shadow-lg backdrop-blur-sm",
       },
       size: {
         default: "h-10 px-4 py-2",

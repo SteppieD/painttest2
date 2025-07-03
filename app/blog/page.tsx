@@ -405,7 +405,7 @@ export default function BlogPage() {
             Start creating professional quotes that win more jobs. 
             Join thousands of contractors who've transformed their businesses.
           </p>
-          <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6">
+          <Button size="lg" variant="outline_white" asChild className="text-lg px-8 py-6">
             <Link href="/trial-signup">
               Start Free Trial Today
               <ArrowRight className="w-5 h-5 ml-2" />

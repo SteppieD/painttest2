@@ -513,13 +513,13 @@ export default function HowToScalePaintingBusinessPage() {
             Get your free Business Scaling Assessment and discover exactly where to focus your efforts for maximum growth.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
+            <Button asChild size="lg" variant="outline_white">
               <Link href="/trial-signup">
                 <Calculator className="h-5 w-5 mr-2" />
                 Get Free Assessment
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
+            <Button asChild variant="outline_white" size="lg">
               <Link href="/contact">
                 <Phone className="h-5 w-5 mr-2" />
                 Schedule Strategy Call

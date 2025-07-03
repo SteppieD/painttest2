@@ -41,7 +41,7 @@ export default function HomePage() {
             While competitors take days, you deliver same-day quotes. Join 10,000+ contractors winning <strong>40-60% more jobs</strong> with professional, mobile-first quoting that closes deals on-site.
           </p>
           <div className="flex flex-col items-center gap-4 justify-center mb-12">
-            <Link href="/trial-signup" className="text-lg px-12 py-6 bg-gradient-to-r from-[#ef2b70] to-[#ff6b9d] text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 inline-flex items-center">
+            <Link href="/trial-signup" className="text-lg px-12 py-6 bg-[#ef2b70] text-white font-semibold rounded-xl shadow-lg hover:bg-[#d91f5f] hover:shadow-xl hover:scale-105 transition-all duration-200 inline-flex items-center border-2 border-white/20">
               Start Free Trial - 10 Quotes Free
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
@@ -221,7 +221,7 @@ export default function HomePage() {
           </div>
           
           <div className="text-center mt-8">
-            <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700">
+            <Button variant="primary" size="lg" asChild>
               <Link href="/trial-signup">
                 Get Full Professional Calculator
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -319,7 +319,7 @@ export default function HomePage() {
           <p className="text-xl text-blue-100 mb-8">
             Start your free trial today and see why contractors choose ProPaint Quote
           </p>
-          <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6">
+          <Button size="lg" variant="outline_white" asChild className="text-lg px-8 py-6">
             <Link href="/trial-signup">
               Create Free Account Now
               <ArrowRight className="w-5 h-5 ml-2" />
