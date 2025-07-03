@@ -1,163 +1,140 @@
-# 🚀 Deploying PaintQuoteApp.com to Vercel
+# Vercel Deployment Guide for Private Repository
 
-This guide will walk you through deploying your painting quote app to Vercel and connecting your custom domain.
+Based on official Vercel documentation and our current setup.
 
-## Prerequisites
-- GitHub account (or GitLab/Bitbucket)
-- paintquoteapp.com domain purchased from GoDaddy
-- Your app code (already built and tested)
+## Current Issues & Solutions
 
-## Step 1: Push Code to GitHub
+### 1. Private Repository Deployment Issues
+**Problem**: Deployments not triggering from private repo
+**Causes**:
+- Git commit author must have Collaborator access to the repository
+- Vercel requires webhook configuration permissions
+- Email privacy settings blocking pushes
 
-1. Create a new repository on GitHub:
-   - Go to https://github.com/new
-   - Name it: `paintquoteapp`
-   - Make it private if you prefer
-   - Don't initialize with README (you already have one)
+### 2. Deployment Limit Issues
+**Problem**: Hit 100 deployments/day limit on Hobby plan
+**Solution**: Configure to only deploy main branch and skip unnecessary builds
 
-2. Push your code:
-   ```bash
-   git remote add origin https://github.com/YOUR_USERNAME/paintquoteapp.git
-   git push -u origin main
-   ```
+## Configuration Steps
 
-## Step 2: Deploy to Vercel
+### Step 1: Fix GitHub Email Privacy
+```bash
+# Use GitHub's noreply email to avoid privacy blocks
+git config user.email "122101575+SteppieD@users.noreply.github.com"
+```
 
-1. **Sign up/Login to Vercel**
-   - Go to https://vercel.com
-   - Sign up with your GitHub account (easiest option)
+### Step 2: Vercel Project Settings
+In Vercel Dashboard → Project Settings → Git:
 
-2. **Import Project**
-   - Click "Add New..." → "Project"
-   - Import your `paintquoteapp` repository
-   - Vercel will detect it's a Next.js project automatically
+1. **Connected Git Repository**:
+   - ✅ Keep connected to `SteppieD/painttest2`
+   - ❌ Uncheck "Pull Request Comments" (reduces deployments)
+   - ❌ Uncheck "Commit Comments" (reduces deployments)
+   - ✅ Keep "deployment_status Events" checked
 
-3. **Configure Build Settings**
-   - **Framework Preset**: Next.js (auto-detected)
-   - **Root Directory**: `.` (leave as is)
-   - **Build Command**: `npm run build` (default)
-   - **Output Directory**: Leave empty (Next.js handles this)
-   - **Install Command**: `npm install` (default)
+2. **Ignored Build Step**:
+   - Select "Only build when command passes"
+   - Command: `bash scripts/should-deploy.sh`
 
-4. **Environment Variables**
-   - Click "Environment Variables"
-   - Add your Google Gemini API key:
-     - Name: `NEXT_PUBLIC_GOOGLE_API_KEY`
-     - Value: Your API key from Google AI Studio
-   - Add any other environment variables from your `.env.local` file
+### Step 3: Configure vercel.json
+```json
+{
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
+  "github": {
+    "enabled": true,
+    "autoAlias": false,
+    "silent": true,
+    "autoJobCancellation": true
+  }
+}
+```
 
-5. **Deploy**
-   - Click "Deploy"
-   - Wait 2-3 minutes for the build to complete
-   - You'll get a URL like: `paintquoteapp-xxxxx.vercel.app`
+### Step 4: Deploy Hook for Manual Triggers
+Your deploy hook URL:
+```
+https://api.vercel.com/v1/integrations/deploy/prj_kr3rZvlvsIPUl3jF52bpTErghrrK/2kFymWIeTC
+```
 
-## Step 3: Add Custom Domain
+Manual trigger:
+```bash
+curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_kr3rZvlvsIPUl3jF52bpTErghrrK/2kFymWIeTC"
+```
 
-1. **In Vercel Dashboard**
-   - Go to your project settings
-   - Click "Domains" in the left sidebar
-   - Type `paintquoteapp.com` and click "Add"
-   - Also add `www.paintquoteapp.com`
+## Environment Variables Available
 
-2. **Vercel will show you DNS records to add**
-   You'll see something like:
-   ```
-   A Record: @ → 76.76.21.21
-   CNAME: www → cname.vercel-dns.com
-   ```
+These are automatically available in your deployments:
+- `VERCEL_GIT_PROVIDER` - Always "github"
+- `VERCEL_GIT_REPO_SLUG` - "painttest2"
+- `VERCEL_GIT_REPO_OWNER` - "SteppieD"
+- `VERCEL_GIT_COMMIT_REF` - Branch name (e.g., "main")
+- `VERCEL_GIT_COMMIT_SHA` - Commit hash
+- `VERCEL_GIT_COMMIT_MESSAGE` - Commit message
+- `VERCEL_GIT_COMMIT_AUTHOR_LOGIN` - GitHub username
+- `VERCEL_GIT_COMMIT_AUTHOR_NAME` - Committer name
 
-## Step 4: Configure GoDaddy DNS
+## Skip Deployment Patterns
 
-1. **Login to GoDaddy**
-   - Go to https://godaddy.com
-   - My Products → DNS for paintquoteapp.com
+Add to commit messages to skip deployment:
+- `[skip-deploy]` - Skip this deployment
+- `[no-deploy]` - Skip this deployment
 
-2. **Update DNS Records**
-   - Delete any existing A records for @ (if any)
-   - Add the records Vercel provided:
-   
-   **For the root domain (paintquoteapp.com):**
-   - Type: A
-   - Name: @
-   - Value: 76.76.21.21 (use the IP Vercel gives you)
-   - TTL: 600
+Example:
+```bash
+git commit -m "Update README [skip-deploy]"
+```
 
-   **For www subdomain:**
-   - Type: CNAME
-   - Name: www
-   - Value: cname.vercel-dns.com (use what Vercel gives you)
-   - TTL: 600
+## Deployment Limits
 
-3. **Save Changes**
-   - Click "Save" in GoDaddy
-   - DNS propagation can take 5-48 hours (usually 5-30 minutes)
+### Hobby Plan:
+- 100 deployments per day
+- Resets at midnight UTC (5 PM PST)
 
-## Step 5: Verify Domain in Vercel
-
-1. Go back to Vercel → Domains
-2. You'll see "Verifying" next to your domain
-3. Once DNS propagates, it will show "Valid Configuration" ✅
-4. Vercel automatically provisions SSL certificates
-
-## Step 6: Final Configuration
-
-1. **Set Production Domain**
-   - In Vercel → Settings → Domains
-   - Set `paintquoteapp.com` as the primary domain
-   - `www.paintquoteapp.com` will redirect to the main domain
-
-2. **Environment Variables for Production**
-   - Double-check all environment variables are set
-   - Especially the Google API key
-
-## Testing Your Live Site
-
-Once DNS propagates, test:
-- https://paintquoteapp.com
-- https://www.paintquoteapp.com
-- Try creating a quote
-- Test the admin panel
-- Check mobile responsiveness
+### To Reduce Deployments:
+1. Only deploy main branch
+2. Use ignored build step script
+3. Disable PR/commit comments
+4. Use skip flags for docs-only changes
 
 ## Troubleshooting
 
-**Site not loading?**
-- DNS can take up to 48 hours (but usually much faster)
-- Use https://dnschecker.org to check propagation
-- Make sure you added both A and CNAME records
+### "Git author must have access to project"
+- Ensure your GitHub email is verified
+- Make sure you have Collaborator access to the repo
+- Check Vercel team membership (if on team plan)
 
-**Build failing?**
-- Check build logs in Vercel dashboard
-- Make sure all dependencies are in package.json
-- Environment variables might be missing
+### "Resource is limited"
+- You've hit the 100/day limit
+- Wait for reset at 5 PM PST
+- Or upgrade to Pro plan
 
-**Database issues?**
-- SQLite database will be created fresh on Vercel
-- You'll need to use the seed data or manually add companies
+### Deployments not triggering
+1. Check GitHub webhook status
+2. Verify Git integration in Vercel
+3. Ensure correct branch configuration
+4. Check ignored build step script
 
-## Ongoing Deployment
+## Best Practices
 
-After initial setup, any push to your GitHub main branch will:
-1. Trigger automatic deployment on Vercel
-2. Build and deploy in ~2 minutes
-3. Zero downtime deployment
+1. **Use semantic commit messages**:
+   ```
+   feat: Add new feature
+   fix: Fix bug in component
+   docs: Update README [skip-deploy]
+   chore: Update dependencies
+   ```
 
-## Costs
+2. **Branch strategy**:
+   - `main` - Production deployments
+   - Feature branches - No automatic deployments
 
-- **Vercel Free Tier**: Includes
-  - 100GB bandwidth/month
-  - Unlimited deployments
-  - SSL certificates
-  - Global CDN
-  
-- **When to upgrade**: Only if you exceed 100GB bandwidth (thousands of users)
+3. **Environment variables**:
+   - Set in Vercel dashboard, not in code
+   - Use different values for preview/production
 
-## Support
-
-- Vercel Support: https://vercel.com/support
-- DNS Issues: Check GoDaddy support
-- App Issues: You have the code and can modify as needed!
-
----
-
-Your app will be live at https://paintquoteapp.com within minutes to hours after DNS setup! 🎉
+4. **Monitor usage**:
+   - Check https://vercel.com/account/usage regularly
+   - Set up alerts for deployment failures

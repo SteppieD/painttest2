@@ -18,6 +18,22 @@
       "destination": "/access-code"
     }
   ],
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "master": false,
+      "dev": false,
+      "development": false,
+      "staging": false,
+      "preview": false
+    }
+  },
+  "github": {
+    "enabled": true,
+    "autoAlias": false,
+    "silent": true,
+    "autoJobCancellation": true
+  },
   "headers": [
     {
       "source": "/(.*)",
