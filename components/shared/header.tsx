@@ -63,7 +63,7 @@ export function Header() {
               onMouseEnter={() => setIsUseCasesOpen(true)}
               onMouseLeave={() => setIsUseCasesOpen(false)}
             >
-              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium py-2">
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium py-3 px-2 -mx-2 min-h-[44px]">
                 Use Cases
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isUseCasesOpen ? 'rotate-180' : ''}`} />
               </button>
@@ -73,25 +73,25 @@ export function Header() {
               
               {isUseCasesOpen && (
                 <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                  <Link href="/painting-contractors" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/painting-contractors" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200 min-h-[48px]">
                     <div>
                       <div className="font-medium text-gray-900">For Contractors</div>
                       <div className="text-sm text-gray-500">Professional painting businesses</div>
                     </div>
                   </Link>
-                  <Link href="/how-to-scale-painting-business" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/how-to-scale-painting-business" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Scaling Your Business</div>
                       <div className="text-sm text-gray-500">Growth strategies for painters</div>
                     </div>
                   </Link>
-                  <Link href="/painting-business-software" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/painting-business-software" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Business Management</div>
                       <div className="text-sm text-gray-500">Complete business software</div>
                     </div>
                   </Link>
-                  <Link href="/painting-estimate-software" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/painting-estimate-software" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Estimate Software</div>
                       <div className="text-sm text-gray-500">Professional quoting tools</div>
@@ -113,7 +113,7 @@ export function Header() {
               onMouseEnter={() => setIsResourcesOpen(true)}
               onMouseLeave={() => setIsResourcesOpen(false)}
             >
-              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium py-2">
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium py-3 px-2 -mx-2 min-h-[44px]">
                 Resources
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isResourcesOpen ? 'rotate-180' : ''}`} />
               </button>
@@ -123,55 +123,55 @@ export function Header() {
               
               {isResourcesOpen && (
                 <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                  <Link href="/painting-estimate-calculator" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Free Calculator</div>
                       <div className="text-sm text-gray-500">Instant paint estimates</div>
                     </div>
                   </Link>
-                  <Link href="/paint-estimate-templates" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/paint-estimate-templates" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Quote Templates</div>
                       <div className="text-sm text-gray-500">Professional templates</div>
                     </div>
                   </Link>
-                  <Link href="/interior-painting-quote-calculator" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/interior-painting-quote-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Interior Calculator</div>
                       <div className="text-sm text-gray-500">Room-by-room quotes</div>
                     </div>
                   </Link>
-                  <Link href="/exterior-painting-estimate-calculator" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/exterior-painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Exterior Calculator</div>
                       <div className="text-sm text-gray-500">House exterior estimates</div>
                     </div>
                   </Link>
-                  <Link href="/house-painting-cost-calculator" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/house-painting-cost-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">House Cost Calculator</div>
                       <div className="text-sm text-gray-500">Complete house pricing</div>
                     </div>
                   </Link>
-                  <Link href="/paint-contractor-app" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/paint-contractor-app" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Contractor App</div>
                       <div className="text-sm text-gray-500">Mobile painting quotes</div>
                     </div>
                   </Link>
-                  <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Quoting Guide</div>
                       <div className="text-sm text-gray-500">Expert strategies</div>
                     </div>
                   </Link>
-                  <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Mobile App</div>
                       <div className="text-sm text-gray-500">Quote on-site</div>
                     </div>
                   </Link>
-                  <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Case Studies</div>
                       <div className="text-sm text-gray-500">Real success stories</div>

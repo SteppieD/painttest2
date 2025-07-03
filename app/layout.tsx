@@ -12,13 +12,13 @@ export const metadata: Metadata = {
   keywords: 'painting quote software, painting estimate software, contractor quoting app, painting business tools, professional painting quotes, painting calculator',
   manifest: '/manifest.json',
   icons: {
-    icon: '/icon-192x192.png',
-    apple: '/icon-192x192.png',
+    icon: '/favicon.svg',
+    apple: '/icon-192x192.svg',
   },
   openGraph: {
     title: 'ProPaint Quote - Win More Painting Jobs with Professional Software',
     description: 'Stop losing jobs to timing. Create professional painting quotes in 6 minutes, not 6 hours. 40-60% higher win rates guaranteed.',
-    url: 'https://propaintquote.com',
+    url: 'https://www.paintquoteapp.com',
     siteName: 'ProPaint Quote',
     type: 'website',
     images: [
@@ -63,6 +63,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="ProPaint Quote" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="canonical" href="https://www.paintquoteapp.com" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/icon-192x192.svg" />
       </head>
       <body className={inter.className}>
         <AnalyticsProvider gtmId="GTM-563BQKRH" ga4Id="G-984BZ3LDZE">

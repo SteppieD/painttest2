@@ -1,124 +1,36 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-
-// Rate limiting store (use Redis in production)
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
-
-// Security headers configuration
-const SECURITY_HEADERS = {
-  'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'DENY',
-  'X-XSS-Protection': '1; mode=block',
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https:; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';",
-};
-
-// Rate limiting configuration
-const RATE_LIMITS = {
-  '/api/admin/auth/': { maxRequests: 3, windowMs: 900000 }, // 3 admin auth attempts per 15 minutes
-  '/api/auth/': { maxRequests: 3, windowMs: 900000 }, // 3 auth attempts per 15 minutes  
-  '/api/verify-code': { maxRequests: 5, windowMs: 300000 }, // 5 code verifications per 5 minutes
-  '/api/quotes': { maxRequests: 50, windowMs: 60000 }, // 50 quote operations per minute
-  '/api/': { maxRequests: 100, windowMs: 60000 }, // 100 API calls per minute (general)
-  '/trial-signup': { maxRequests: 2, windowMs: 600000 }, // 2 signups per 10 minutes
-};
-
-function getClientId(request: NextRequest): string {
-  const forwarded = request.headers.get('x-forwarded-for');
-  const ip = forwarded ? forwarded.split(',')[0] : (request.ip || 'unknown');
-  return ip;
-}
-
-function checkRateLimit(request: NextRequest, pathname: string): boolean {
-  // Find matching rate limit rule
-  let rateLimit = null;
-  for (const [path, limit] of Object.entries(RATE_LIMITS)) {
-    if (pathname.startsWith(path)) {
-      rateLimit = limit;
-      break;
-    }
-  }
-
-  if (!rateLimit) return true; // No rate limit for this path
-
-  const clientId = getClientId(request);
-  const key = `${clientId}:${pathname}`;
-  const now = Date.now();
-  
-  // Clean up expired entries
-  for (const [mapKey, value] of rateLimitStore.entries()) {
-    if (value.resetTime < now) {
-      rateLimitStore.delete(mapKey);
-    }
-  }
-
-  const current = rateLimitStore.get(key);
-  
-  if (!current || current.resetTime < now) {
-    // New window
-    rateLimitStore.set(key, {
-      count: 1,
-      resetTime: now + rateLimit.windowMs
-    });
-    return true;
-  }
-
-  if (current.count >= rateLimit.maxRequests) {
-    return false; // Rate limit exceeded
-  }
-
-  // Increment count
-  current.count++;
-  return true;
-}
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const response = NextResponse.next()
   
-  // Create response with security headers
-  const response = NextResponse.next();
+  // Security headers
+  response.headers.set('X-DNS-Prefetch-Control', 'on')
+  response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
+  response.headers.set('X-Content-Type-Options', 'nosniff')
+  response.headers.set('X-Frame-Options', 'DENY')
+  response.headers.set('X-XSS-Protection', '1; mode=block')
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   
-  // Add security headers to all responses
-  Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
-    response.headers.set(key, value);
-  });
-
-  // Rate limiting check
-  if (!checkRateLimit(request, pathname)) {
-    return new Response('Rate limit exceeded', {
-      status: 429,
-      statusText: 'Too Many Requests',
-      headers: {
-        'Content-Type': 'application/json',
-        'Retry-After': '60',
-        ...SECURITY_HEADERS
-      }
-    });
-  }
-
-  // Allow access to homepage and marketing pages for everyone
-  const publicPaths = ['/', '/about', '/contact', '/features', '/pricing', '/support', '/privacy', '/terms'];
+  // Block suspicious user agents
+  const userAgent = request.headers.get('user-agent') || ''
+  const blockedAgents = ['sattaking', 'gambling', 'casino', 'HTTrack', 'WebCopier']
   
-  // Allow access to these paths without redirecting to dashboard
-  if (publicPaths.includes(pathname)) {
-    return response;
+  if (blockedAgents.some(agent => userAgent.toLowerCase().includes(agent.toLowerCase()))) {
+    return new Response('Access Denied', { status: 403 })
   }
   
-  // For other paths, continue with normal flow
-  return response;
+  // Block suspicious referrers
+  const referrer = request.headers.get('referer') || ''
+  const blockedReferrers = ['sattaking', 'gambling', 'casino']
+  
+  if (blockedReferrers.some(ref => referrer.toLowerCase().includes(ref.toLowerCase()))) {
+    return new Response('Access Denied', { status: 403 })
+  }
+  
+  return response
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
-};
+  matcher: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+}

@@ -25,6 +25,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { TouchFriendlyInput } from '@/components/ui/touch-friendly-input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Header } from '@/components/shared/header';
@@ -326,37 +327,42 @@ export default function ContactPage() {
                 <CardContent className="space-y-6">
                   <form className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName">First Name *</Label>
-                        <Input id="firstName" placeholder="John" required />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName">Last Name *</Label>
-                        <Input id="lastName" placeholder="Smith" required />
-                      </div>
+                      <TouchFriendlyInput
+                        label="First Name *"
+                        placeholder="John"
+                        required
+                      />
+                      <TouchFriendlyInput
+                        label="Last Name *"
+                        placeholder="Smith"
+                        required
+                      />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address *</Label>
-                      <Input id="email" type="email" placeholder="john@smithpainting.com" required />
-                    </div>
+                    <TouchFriendlyInput
+                      label="Email Address *"
+                      type="email"
+                      placeholder="john@smithpainting.com"
+                      required
+                    />
 
-                    <div className="space-y-2">
-                      <Label htmlFor="company">Company Name</Label>
-                      <Input id="company" placeholder="Smith Painting Co." />
-                    </div>
+                    <TouchFriendlyInput
+                      label="Company Name"
+                      placeholder="Smith Painting Co."
+                    />
 
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input id="phone" type="tel" placeholder="(555) 123-4567" />
-                    </div>
+                    <TouchFriendlyInput
+                      label="Phone Number"
+                      type="tel"
+                      placeholder="(555) 123-4567"
+                    />
 
                     <div className="space-y-2">
                       <Label htmlFor="subject">How can we help? *</Label>
                       <select 
                         id="subject" 
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 min-h-[44px] text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="">Select your need</option>
                         <option value="demo">Schedule a Demo</option>

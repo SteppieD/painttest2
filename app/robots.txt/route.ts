@@ -38,7 +38,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: '/',
       },
     ],
-    sitemap: 'https://paintquoteapp.com/sitemap.xml',
-    host: 'https://paintquoteapp.com',
+    sitemap: 'https://www.paintquoteapp.com/sitemap.xml',
+    host: 'https://www.paintquoteapp.com',
   }
 }

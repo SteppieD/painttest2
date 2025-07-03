@@ -198,6 +198,11 @@ DATABASE_URL=alternative_postgres_url        # Alternative to Supabase
 - **Docker**: Full containerization with volume persistence
 - **Local**: SQLite development with full feature parity
 
+## 🌐 **PRODUCTION WEBSITE**
+**Live URL**: https://www.paintquoteapp.com/
+
+The production website is deployed and accessible at paintquoteapp.com. All SEO configurations, sitemaps, and robots.txt files are configured for this domain.
+
 ## 🚀 **LATEST MAJOR MILESTONE: Modern UX Implementation Complete (Jun 21, 2025)**
 
 ### **Revolutionary Apple/Google-Inspired Interface**

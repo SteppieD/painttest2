@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TouchFriendlyInput } from "@/components/ui/touch-friendly-input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, Check, Palette, Copy } from "lucide-react";
@@ -184,34 +185,24 @@ export default function TrialSignupPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <Label htmlFor="companyName" className="text-base font-medium">Company Name</Label>
-                <Input
-                  id="companyName"
-                  type="text"
-                  placeholder="e.g., Elite Painting Co."
-                  value={formData.companyName}
-                  onChange={(e) => handleInputChange("companyName", e.target.value)}
-                  required
-                  className="mt-2 h-12 text-base"
-                />
-              </div>
+              <TouchFriendlyInput
+                label="Company Name"
+                type="text"
+                placeholder="e.g., Elite Painting Co."
+                value={formData.companyName}
+                onChange={(e) => handleInputChange("companyName", e.target.value)}
+                required
+              />
 
-              <div>
-                <Label htmlFor="email" className="text-base font-medium">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="e.g., mike@elitepainting.com"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  required
-                  className="mt-2 h-12 text-base"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  We'll email you your access code and account details
-                </p>
-              </div>
+              <TouchFriendlyInput
+                label="Email Address"
+                type="email"
+                placeholder="e.g., mike@elitepainting.com"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                required
+                helperText="We'll email you your access code and account details"
+              />
 
               {formData.accessCode && (
                 <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">

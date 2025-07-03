@@ -23,6 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
+import { ResponsiveTable } from '@/components/ui/responsive-table';
 
 export const metadata: Metadata = {
   title: 'Pricing Plans - Start Free, Grow Your Painting Business | ProPaint Quote',
@@ -273,43 +274,43 @@ export default function PricingPage() {
           </div>
           
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-900">Features</th>
-    <th className="px-6 py-4 text-center text-sm font-medium text-gray-900">Free Forever</th>
-                    <th className="px-6 py-4 text-center text-sm font-medium text-gray-900 bg-blue-50">
-                      Professional
-                      <div className="text-xs text-blue-600 font-normal">Most Popular</div>
-                    </th>
-                    <th className="px-6 py-4 text-center text-sm font-medium text-gray-900">Business</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {featureComparison.map((row, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900">{row.feature}</td>
-                      <td className="px-6 py-4 text-center text-sm text-gray-600">
-                        {typeof row.free === 'boolean' ? (
-                          row.free ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
-                        ) : row.free}
-                      </td>
-                      <td className="px-6 py-4 text-center text-sm text-gray-600 bg-blue-50">
-                        {typeof row.professional === 'boolean' ? (
-                          row.professional ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
-                        ) : row.professional}
-                      </td>
-                      <td className="px-6 py-4 text-center text-sm text-gray-600">
-                        {typeof row.business === 'boolean' ? (
-                          row.business ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
-                        ) : row.business}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <ResponsiveTable
+              headers={['Features', 'Free Forever', 'Professional', 'Business']}
+              rows={featureComparison.map(row => [
+                row.feature,
+                typeof row.free === 'boolean' ? (
+                  row.free ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
+                ) : row.free,
+                typeof row.professional === 'boolean' ? (
+                  row.professional ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
+                ) : row.professional,
+                typeof row.business === 'boolean' ? (
+                  row.business ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
+                ) : row.business
+              ])}
+              tableClassName="bg-white"
+              headerClassName="bg-gray-50"
+              cellClassName="text-gray-900"
+              mobileCardRenderer={(row, index) => (
+                <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
+                  <h3 className="font-semibold text-lg text-gray-900">{row[0]}</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                      <span className="text-sm font-medium text-gray-600">Free Forever</span>
+                      <div className="text-sm">{row[1]}</div>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-gray-100 bg-blue-50 -mx-6 px-6">
+                      <span className="text-sm font-medium text-blue-900">Professional <span className="text-xs text-blue-600">(Most Popular)</span></span>
+                      <div className="text-sm">{row[2]}</div>
+                    </div>
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-sm font-medium text-gray-600">Business</span>
+                      <div className="text-sm">{row[3]}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            />
           </div>
         </div>
       </section>

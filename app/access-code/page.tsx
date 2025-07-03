@@ -129,7 +129,7 @@ export default function AccessCodePage() {
           borderRadius: "8px",
           boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
           width: "100%",
-          maxWidth: "400px",
+          maxWidth: "min(400px, 90vw)",
         }}
       >
         <div style={{ textAlign: "center", marginBottom: "30px" }}>
