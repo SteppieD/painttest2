@@ -14,7 +14,7 @@ if ! command -v convert &> /dev/null; then
 fi
 
 # Source SVG file
-SOURCE_SVG="public/favicon-mushroom.svg"
+SOURCE_SVG="public/favicon-palette.svg"
 PUBLIC_DIR="public"
 
 # Check if source file exists
