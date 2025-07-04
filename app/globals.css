@@ -14,6 +14,9 @@
 /* Import Contractor-specific overrides for professional appearance */
 @import '../styles/contractor-overrides.css';
 
+/* Import Homepage optimization for SaaS conversions and readability */
+@import '../styles/homepage-optimization.css';
+
 @layer base {
   :root {
     --background: 0 0% 100%;

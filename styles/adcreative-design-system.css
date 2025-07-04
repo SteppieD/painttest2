@@ -503,10 +503,8 @@ body {
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: var(--space-6);
-  background: linear-gradient(135deg, var(--white) 0%, var(--gray-300) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--gray-900);
+  /* Removed gradient text effect that made text invisible */
 }
 
 .ac-hero-subtitle {
@@ -727,6 +725,8 @@ body {
 .ac-text-right { text-align: right; }
 
 .ac-text-primary { color: var(--primary-pink); }
+.ac-text-dark { color: var(--gray-900); }
+.ac-text-medium { color: var(--gray-700); }
 .ac-text-secondary { color: var(--gray-600); }
 .ac-text-white { color: var(--white); }
 

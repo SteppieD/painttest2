@@ -20,6 +20,7 @@ import {
   Check
 } from 'lucide-react';
 import { ContractorHeroSection } from '@/components/hero/ContractorHeroSection';
+import { OptimizedSaaSLayout } from '@/components/homepage/OptimizedSaaSLayout';
 import { Footer } from '@/components/shared/footer';
 import { ROICalculator } from '@/components/marketing/roi-calculator';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
@@ -27,8 +28,8 @@ import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section optimized for Contractors */}
-      <ContractorHeroSection />
+      {/* Optimized SaaS Homepage Layout */}
+      <OptimizedSaaSLayout />
 
       {/* Trust Indicators */}
       <section className="py-12 px-4 bg-gray-50">
