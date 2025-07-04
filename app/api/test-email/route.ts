@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { communicationService } from '@/lib/communication-service';
+import { communicationService } from '@/lib/communication-service-production';
 
 export async function GET() {
   const emailConfig = {

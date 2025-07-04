@@ -4,7 +4,7 @@
  * Tracks user events and triggers automated email campaigns
  */
 
-import { communicationService } from './communication-service';
+import { communicationService } from './communication-service-production';
 
 export interface UserEvent {
   companyId: number;

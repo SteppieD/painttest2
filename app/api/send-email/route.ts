@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Use communication service for sending emails
-    const { communicationService } = await import('@/lib/communication-service');
+    const { communicationService } = await import('@/lib/communication-service-production');
     
     const emailHtml = getAccessCodeEmailTemplate(companyName, accessCode, email);
     const emailText = `
