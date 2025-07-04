@@ -24,6 +24,8 @@ import { Footer } from '@/components/shared/footer';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
 import { ModernPricingTable } from '@/components/stripe/modern-pricing-table';
 
+// Metadata should be defined in a layout.tsx file or generateMetadata function for Server Components
+
 export default function PricingPage() {
   // CIALDINI PRINCIPLE: Social Proof with real customer data
   const socialProofStats = [
@@ -31,6 +33,97 @@ export default function PricingPage() {
     { number: "40%", label: "Win Rate Increase", icon: TrendingUp },
     { number: "$73M+", label: "Quotes Generated", icon: Calculator },
     { number: "4.9/5", label: "Customer Rating", icon: Star }
+  ];
+
+  // CIALDINI PRINCIPLE: Reciprocity & Commitment/Consistency
+  const pricingPlans = [
+    {
+      name: "Free Forever",
+      subtitle: "Perfect for Solo Contractors",
+      price: "$0",
+      period: "10 Quotes/Month",
+      description: "Full-featured professional quoting for small contractors. No credit card required, ever.",
+      badge: "Perfect Start",
+      badgeColor: "bg-green-500 text-white",
+      popular: false,
+      features: [
+        "10 professional quotes per month",
+        "All core features included",
+        "Mobile app access",
+        "Professional branded templates",
+        "Basic customer management",
+        "PDF quote generation",
+        "Email support",
+        "No credit card required",
+        "Perfect for 1-2 person teams"
+      ],
+      limitations: [
+        "10 quotes monthly limit",
+        "Email support only"
+      ],
+      cta: "Start Free Forever",
+      ctaVariant: "outline" as const,
+      testimonial: "\"Perfect for my solo business. Win rate went from 25% to 45% with professional quotes.\" - Mike J.",
+      conversion: "Average revenue increase: $2,800/month with just 4 extra jobs"
+    },
+    {
+      name: "Professional",
+      subtitle: "For Active Contractors", 
+      price: "$79",
+      period: "per month",
+      description: "Unlimited professional quoting with advanced features for serious contractors.",
+      badge: "Most Popular",
+      badgeColor: "bg-blue-500 text-white",
+      popular: true,
+      features: [
+        "Unlimited quotes per month",
+        "All features included",
+        "Mobile app access",
+        "Custom branding & logos",
+        "Customer management system",
+        "Quote templates library",
+        "Analytics dashboard",
+        "Digital signatures",
+        "Payment processing",
+        "Automated follow-ups",
+        "Priority phone support",
+        "QuickBooks integration"
+      ],
+      limitations: [],
+      cta: "Start 14-Day Trial",
+      ctaVariant: "default" as const,
+      testimonial: "\"ROI paid for itself with the first job. Win rate went from 30% to 65%.\" - Sarah M.",
+      conversion: "ROI: 12,600% annually ($12,600 revenue increase vs $79 cost)"
+    },
+    {
+      name: "Business", 
+      subtitle: "For Growing Teams",
+      price: "$149",
+      period: "per month",
+      description: "Advanced features for contractors scaling their business with multiple crews.",
+      badge: "Best Value",
+      badgeColor: "bg-green-500 text-white",
+      popular: false,
+      features: [
+        "Everything in Professional, plus:",
+        "Multi-user access (up to 5 team members)",
+        "Advanced analytics & reporting",
+        "Multi-location management",
+        "Team collaboration tools",
+        "API access for integrations",
+        "Custom quote workflows",
+        "Bulk operations",
+        "Advanced paint database (50k+ colors)",
+        "White-label options",
+        "Dedicated success manager",
+        "Crew assignment tools"
+      ],
+      limitations: [],
+      cta: "Start 14-Day Trial",
+      ctaVariant: "default" as const,
+      testimonial: "\"Managing 3 crews across 2 cities is now effortless. Profit margins up 25%.\" - Tom W.",
+      conversion: "Enterprise ROI: $25,200 revenue increase vs $149 monthly cost"
+    }
   ];
 
   // CIALDINI PRINCIPLE: Authority through feature comparison
@@ -49,6 +142,7 @@ export default function PricingPage() {
     <div className="min-h-screen bg-white">
       <section className="ac-hero py-20">
         <div className="container mx-auto text-center max-w-4xl px-4">
+          {/* Authority Badge */}
           <div className="ac-hero-badge mb-6">
             <Star className="w-4 h-4 fill-current" />
             <span>Trusted by 5,000+ Professional Contractors</span>
@@ -62,6 +156,7 @@ export default function PricingPage() {
             Join thousands of contractors winning 40% more jobs.
           </p>
           
+          {/* Social Proof Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
             {socialProofStats.map((stat, index) => (
               <div key={index} className="ac-fade-in text-center" style={{ animationDelay: `${index * 0.1}s` }}>
@@ -78,6 +173,7 @@ export default function PricingPage() {
         </div>
       </section>
 
+      {/* Pricing Plans - CIALDINI: Scarcity & Social Proof */}
       <section className="py-20 px-4 bg-gray-50">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-12">
@@ -93,10 +189,12 @@ export default function PricingPage() {
             </p>
           </div>
           
+          {/* Use the modern pricing table with enhanced UX */}
           <ModernPricingTable />
         </div>
       </section>
 
+      {/* Feature Comparison - CIALDINI: Authority */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
@@ -154,12 +252,51 @@ export default function PricingPage() {
                 </tbody>
               </table>
             </div>
+            {/* <ResponsiveTable
+              headers={['Features', 'Perfect Start', 'Professional', 'Business']}
+              rows={featureComparison.map(row => [
+                row.feature,
+                typeof row.free === 'boolean' ? (
+                  row.free ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
+                ) : row.free,
+                typeof row.professional === 'boolean' ? (
+                  row.professional ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
+                ) : row.professional,
+                typeof row.business === 'boolean' ? (
+                  row.business ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
+                ) : row.business
+              ])}
+              tableClassName="bg-white"
+              headerClassName="bg-gray-50"
+              cellClassName="text-gray-900"
+              mobileCardRenderer={(row, index) => (
+                <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
+                  <h3 className="font-semibold text-lg text-gray-900">{row[0]}</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                      <span className="text-sm font-medium text-gray-600">Perfect Start</span>
+                      <div className="text-sm">{row[1]}</div>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-gray-100 bg-blue-50 -mx-6 px-6">
+                      <span className="text-sm font-medium text-blue-900">Professional <span className="text-xs text-blue-600">(Most Popular)</span></span>
+                      <div className="text-sm">{row[2]}</div>
+                    </div>
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-sm font-medium text-gray-600">Business</span>
+                      <div className="text-sm">{row[3]}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            /> -->
           </div>
         </div>
       </section>
 
+      {/* Customer Success Stories - CIALDINI: Social Proof */}
       <TestimonialCarousel className="bg-white" />
 
+      {/* ROI Calculator - CIALDINI: Commitment/Consistency */}
       <section className="py-20 px-4 bg-gray-50">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-12">
@@ -217,6 +354,7 @@ export default function PricingPage() {
         </div>
       </section>
 
+      {/* FAQ Section - CIALDINI: Authority */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-12">
@@ -266,6 +404,7 @@ export default function PricingPage() {
         </div>
       </section>
 
+      {/* Final CTA - CIALDINI: Scarcity & Social Proof */}
       <section className="py-20 px-4 bg-gradient-to-r from-primary-pink to-primary-pink-dark">
         <div className="container mx-auto max-w-4xl text-center">
           <div className="ac-hero-badge inline-flex mb-6" style={{ background: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.3)' }}>
@@ -311,6 +450,7 @@ export default function PricingPage() {
       </section>
 
       <Footer />
+
     </div>
   );
 }
