@@ -34,7 +34,7 @@ export function OptimizedSaaSLayoutWithImages() {
       {/* Section 1: Above the Fold - Hero with Clear Value Proposition */}
       <section className="hero-optimized bg-gradient-to-br from-gray-50 to-orange-50">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-80px)] py-4 lg:py-8">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-120px)] py-2 lg:py-4">
             {/* Left: Messaging */}
             <div className="hero-content space-y-4 lg:space-y-6 order-2 lg:order-1">
               {/* Trust Badge */}

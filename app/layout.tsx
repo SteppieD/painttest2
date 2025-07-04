@@ -99,7 +99,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <AnalyticsProvider gtmId="GTM-563BQKRH" ga4Id="G-984BZ3LDZE">
           <ACNavbar />
-          <main style={{ paddingTop: '72px' }}>
+          <main style={{ paddingTop: '60px' }}>
             {children}
           </main>
           <Toaster />
