@@ -36,7 +36,7 @@ export function OptimizedSaaSLayoutWithImages() {
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-120px)] py-2 lg:py-4">
             {/* Left: Messaging */}
-            <div className="hero-content space-y-4 lg:space-y-6 order-2 lg:order-1">
+            <div className="hero-content space-y-4 lg:space-y-6 order-1 lg:order-1">
               {/* Trust Badge */}
               <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 px-3 py-1.5 rounded-full text-sm font-semibold">
                 <Award size={16} />
@@ -84,7 +84,7 @@ export function OptimizedSaaSLayoutWithImages() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link 
                   href="/trial-signup" 
-                  className="inline-flex items-center justify-center gap-2 bg-orange-600 text-white px-6 py-3 rounded-lg font-bold text-base lg:text-lg hover:bg-orange-700 transform hover:scale-105 transition-all shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center justify-center gap-2 bg-orange-700 text-white px-6 py-3 rounded-lg font-bold text-base lg:text-lg hover:bg-orange-800 transform hover:scale-105 transition-all shadow-lg hover:shadow-xl border border-orange-800"
                 >
                   Start Free Trial
                   <ArrowRight size={18} />
@@ -119,7 +119,7 @@ export function OptimizedSaaSLayoutWithImages() {
             </div>
 
             {/* Right: Stats Dashboard Mockup */}
-            <div className="hero-visual relative order-1 lg:order-2 mb-6 lg:mb-0">
+            <div className="hero-visual relative order-2 lg:order-2 mb-6 lg:mb-0">
               {/* Main Product Screenshot - Larger and more prominent */}
               <div className="relative z-10 bg-white rounded-xl lg:rounded-2xl shadow-2xl p-4 sm:p-5 lg:p-6 transform lg:rotate-1 hover:rotate-0 transition-all duration-300 max-w-sm sm:max-w-md mx-auto lg:max-w-none lg:scale-110 hover:scale-115 ring-4 ring-orange-600/20 hover:ring-orange-600/40">
                 <div className="mb-3 flex items-center justify-between">
