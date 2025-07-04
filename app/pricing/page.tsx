@@ -25,6 +25,7 @@ import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
 import { ResponsiveTable } from '@/components/ui/responsive-table';
+import { PricingPlansV2 } from '@/components/stripe/pricing-plans-v2';
 
 // Metadata should be defined in a layout.tsx file or generateMetadata function for Server Components
 
@@ -134,10 +135,10 @@ export default function PricingPage() {
     { feature: "Mobile App", free: true, professional: true, business: true },
     { feature: "Custom Branding", free: false, professional: true, business: true },
     { feature: "Analytics Dashboard", free: "Basic", professional: "Advanced", business: "Enterprise" },
-    { feature: "Team Management", free: false, professional: "Advanced", business: "Unlimited" },
-    { feature: "API Access", free: false, professional: true, business: true },
-    { feature: "Phone Support", free: false, professional: true, business: "24/7" },
-    { feature: "Custom Integrations", free: false, professional: "Limited", business: "Unlimited" }
+    { feature: "Team Management", free: false, professional: false, business: "Up to 5 users" },
+    { feature: "API Access", free: false, professional: false, business: true },
+    { feature: "Phone Support", free: false, professional: true, business: "Dedicated Manager" },
+    { feature: "Custom Integrations", free: false, professional: "QuickBooks", business: "Unlimited" }
   ];
 
   return (
@@ -187,64 +188,8 @@ export default function PricingPage() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {pricingPlans.map((plan, index) => (
-              <Card key={index} className={`relative border-2 ${
-                plan.popular ? 'border-blue-500 shadow-xl scale-105' : 'border-gray-200 shadow-lg'
-              } transition-all hover:shadow-xl`}>
-                {plan.badge && (
-                  <div className={`absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full text-sm font-bold ${plan.badgeColor}`}>
-                    {plan.badge}
-                  </div>
-                )}
-                
-                <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-xl font-bold text-gray-900">{plan.name}</CardTitle>
-                  <p className="text-gray-600 text-sm">{plan.subtitle}</p>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                    <span className="text-gray-600 ml-2">/{plan.period}</span>
-                  </div>
-                  <p className="text-gray-600 text-sm mt-2">{plan.description}</p>
-                </CardHeader>
-                
-                <CardContent className="space-y-6">
-                  <ul className="space-y-3">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700 text-sm">{feature}</span>
-                      </li>
-                    ))}
-                    {plan.limitations.map((limitation, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <X className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-500 text-sm">{limitation}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <Button 
-                    size="lg" 
-                    variant={plan.ctaVariant}
-                    className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700 text-white' : ''}`}
-                    asChild
-                  >
-                    <Link href={plan.cta === "Contact Sales" ? "/contact" : "/trial-signup"}>
-                      {plan.cta}
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Link>
-                  </Button>
-                  
-                  {/* Social Proof Testimonial */}
-                  <div className="bg-gray-50 p-3 rounded-lg border-l-4 border-blue-500">
-                    <p className="text-xs text-gray-700 italic mb-1">{plan.testimonial}</p>
-                    <p className="text-xs text-blue-600 font-medium">{plan.conversion}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {/* Use the PricingPlansV2 component with annual toggle */}
+          <PricingPlansV2 />
         </div>
       </section>
 
@@ -262,7 +207,7 @@ export default function PricingPage() {
           
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             <ResponsiveTable
-              headers={['Features', 'Free Forever', 'Professional', 'Business']}
+              headers={['Features', 'Perfect Start', 'Professional', 'Business']}
               rows={featureComparison.map(row => [
                 row.feature,
                 typeof row.free === 'boolean' ? (
@@ -283,7 +228,7 @@ export default function PricingPage() {
                   <h3 className="font-semibold text-lg text-gray-900">{row[0]}</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                      <span className="text-sm font-medium text-gray-600">Free Forever</span>
+                      <span className="text-sm font-medium text-gray-600">Perfect Start</span>
                       <div className="text-sm">{row[1]}</div>
                     </div>
                     <div className="flex justify-between items-center py-2 border-b border-gray-100 bg-blue-50 -mx-6 px-6">
