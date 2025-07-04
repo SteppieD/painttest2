@@ -25,145 +25,152 @@ export function OptimizedSaaSLayout() {
       {/* Section 1: Above the Fold - Hero with Clear Value Proposition */}
       <section className="hero-optimized">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-80px)] py-12">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-120px)] py-8 lg:py-12">
             {/* Left: Messaging */}
-            <div className="hero-content space-y-8">
+            <div className="hero-content space-y-4 lg:space-y-6 order-2 lg:order-1">
               {/* Trust Badge */}
-              <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-semibold">
+              <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 px-3 py-1.5 rounded-full text-sm font-semibold">
                 <Award size={16} />
                 <span>Trusted by 5,247+ Painting Contractors</span>
               </div>
 
               {/* Main Headline - Problem/Solution Fit */}
-              <h1 className="text-5xl lg:text-6xl font-black leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight">
                 Stop Losing Jobs to
                 <span className="text-orange-600 block">Faster Competitors</span>
               </h1>
 
               {/* Sub-headline - Clear Value Prop */}
-              <p className="text-xl text-gray-700 leading-relaxed">
+              <p className="text-lg lg:text-xl text-gray-700 leading-relaxed">
                 Create professional painting quotes in <strong>30 seconds</strong> instead of 3 days. 
                 Win more jobs with instant, accurate estimates that impress customers.
               </p>
 
-              {/* Social Proof Bar */}
-              <div className="flex flex-wrap gap-8 py-4">
+              {/* Social Proof Bar - Condensed for space */}
+              <div className="flex flex-wrap gap-4 lg:gap-6">
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-2">
                     {[1,2,3,4,5].map(i => (
                       <img 
                         key={i}
-                        src={`https://i.pravatar.cc/40?img=${i}`} 
+                        src={`https://i.pravatar.cc/32?img=${i}`} 
                         alt="User" 
-                        className="w-10 h-10 rounded-full border-2 border-white"
+                        className="w-8 h-8 rounded-full border-2 border-white"
                       />
                     ))}
                   </div>
                   <div className="text-sm">
-                    <div className="font-semibold">5,247+ Contractors</div>
-                    <div className="text-gray-600">Creating quotes daily</div>
+                    <div className="font-semibold">5,247+ Active</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
                   {[1,2,3,4,5].map(i => (
-                    <Star key={i} size={20} className="fill-yellow-400 text-yellow-400" />
+                    <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
                   ))}
-                  <span className="ml-2 font-semibold">4.9/5 (2,341 reviews)</span>
+                  <span className="ml-1 text-sm font-semibold">4.9/5</span>
                 </div>
               </div>
 
               {/* CTAs - Primary and Secondary */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Link 
                   href="/trial-signup" 
-                  className="inline-flex items-center justify-center gap-2 bg-orange-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-orange-700 transform hover:scale-105 transition-all shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center justify-center gap-2 bg-orange-600 text-white px-6 py-3 rounded-lg font-bold text-base lg:text-lg hover:bg-orange-700 transform hover:scale-105 transition-all shadow-lg hover:shadow-xl"
                 >
                   Start Free Trial
-                  <ArrowRight size={20} />
+                  <ArrowRight size={18} />
                 </Link>
                 <Link 
                   href="/demo" 
-                  className="inline-flex items-center justify-center gap-2 bg-white text-gray-800 px-8 py-4 rounded-lg font-bold text-lg border-2 border-gray-300 hover:border-orange-600 hover:text-orange-600 transition-all"
+                  className="inline-flex items-center justify-center gap-2 bg-white text-gray-800 px-6 py-3 rounded-lg font-bold text-base lg:text-lg border-2 border-gray-300 hover:border-orange-600 hover:text-orange-600 transition-all"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
                     <path d="M10 8L16 12L10 16V8Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
                   </svg>
-                  Watch 2-Min Demo
+                  Watch Demo
                 </Link>
               </div>
 
-              {/* Trust Indicators */}
-              <div className="flex items-center gap-6 text-sm text-gray-600">
+              {/* Trust Indicators - More compact */}
+              <div className="flex flex-wrap gap-4 text-xs lg:text-sm text-gray-600">
                 <span className="flex items-center gap-1">
-                  <Check className="text-green-600" size={16} />
-                  No credit card required
+                  <Check className="text-green-600" size={14} />
+                  No credit card
                 </span>
                 <span className="flex items-center gap-1">
-                  <Shield className="text-green-600" size={16} />
-                  30-day money back
+                  <Shield className="text-green-600" size={14} />
+                  30-day guarantee
                 </span>
                 <span className="flex items-center gap-1">
-                  <Clock className="text-green-600" size={16} />
-                  Setup in 2 minutes
+                  <Clock className="text-green-600" size={14} />
+                  2-min setup
                 </span>
               </div>
             </div>
 
-            {/* Right: Visual Demo */}
-            <div className="hero-visual relative">
-              {/* Main Product Screenshot */}
-              <div className="relative z-10 bg-white rounded-2xl shadow-2xl p-6 transform rotate-2 hover:rotate-0 transition-transform duration-300">
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="font-bold text-lg">Instant Quote Generator</h3>
-                  <span className="text-green-600 font-semibold">LIVE</span>
+            {/* Right: Visual Demo - Higher priority on mobile */}
+            <div className="hero-visual relative order-1 lg:order-2 mb-6 lg:mb-0 flex items-center justify-center">
+              {/* Attention Arrow - Desktop only */}
+              <div className="hidden lg:block absolute -left-16 top-1/2 -translate-y-1/2 text-orange-600 animate-bounce-horizontal">
+                <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+                  <path d="M5 20H45M45 20L30 5M45 20L30 35" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span className="block text-sm font-bold mt-2">Try it!</span>
+              </div>
+              
+              {/* Main Product Screenshot - Larger and more prominent */}
+              <div className="relative z-10 bg-white rounded-xl lg:rounded-2xl shadow-2xl p-4 sm:p-5 lg:p-6 transform lg:rotate-1 hover:rotate-0 transition-all duration-300 max-w-sm sm:max-w-md mx-auto lg:max-w-none lg:scale-110 hover:scale-115 ring-4 ring-orange-600/20 hover:ring-orange-600/40">
+                <div className="mb-3 flex items-center justify-between">
+                  <h3 className="font-bold text-base lg:text-lg">Instant Quote Generator</h3>
+                  <span className="text-green-600 font-semibold text-sm">LIVE</span>
                 </div>
                 
-                {/* Mock Quote Interface */}
-                <div className="space-y-4">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="text-sm text-gray-600 mb-1">Customer</div>
-                    <div className="font-semibold">Johnson Residence</div>
+                {/* Mock Quote Interface - Condensed */}
+                <div className="space-y-3">
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="text-xs lg:text-sm text-gray-600">Customer</div>
+                    <div className="font-semibold text-sm lg:text-base">Johnson Residence</div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-orange-50 p-4 rounded-lg border-2 border-orange-200">
-                      <div className="text-sm text-gray-600 mb-1">Time to Create</div>
-                      <div className="text-2xl font-bold text-orange-600">28 sec</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-orange-50 p-3 rounded-lg border border-orange-200">
+                      <div className="text-xs text-gray-600">Time</div>
+                      <div className="text-xl lg:text-2xl font-bold text-orange-600">28 sec</div>
                     </div>
-                    <div className="bg-green-50 p-4 rounded-lg border-2 border-green-200">
-                      <div className="text-sm text-gray-600 mb-1">Quote Total</div>
-                      <div className="text-2xl font-bold text-green-600">$4,850</div>
+                    <div className="bg-green-50 p-3 rounded-lg border border-green-200">
+                      <div className="text-xs text-gray-600">Total</div>
+                      <div className="text-xl lg:text-2xl font-bold text-green-600">$4,850</div>
                     </div>
                   </div>
 
-                  <button className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition-colors">
+                  <button className="w-full bg-orange-600 text-white py-2.5 rounded-lg font-semibold text-sm lg:text-base hover:bg-orange-700 transition-colors">
                     Send to Customer
                   </button>
                 </div>
               </div>
 
-              {/* Floating Stats */}
-              <div className="absolute -top-4 -left-4 bg-white rounded-xl shadow-lg p-4 transform -rotate-6">
-                <div className="flex items-center gap-3">
-                  <div className="bg-green-100 p-2 rounded-lg">
-                    <TrendingUp className="text-green-600" size={24} />
+              {/* Floating Stats - Hidden on mobile, positioned better on desktop */}
+              <div className="hidden lg:block absolute -top-2 -left-2 bg-white rounded-lg shadow-lg p-3 transform -rotate-6">
+                <div className="flex items-center gap-2">
+                  <div className="bg-green-100 p-1.5 rounded-lg">
+                    <TrendingUp className="text-green-600" size={20} />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold">+47%</div>
-                    <div className="text-sm text-gray-600">More Jobs Won</div>
+                    <div className="text-xl font-bold">+47%</div>
+                    <div className="text-xs text-gray-600">More Jobs</div>
                   </div>
                 </div>
               </div>
 
-              <div className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg p-4 transform rotate-6">
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 p-2 rounded-lg">
-                    <Clock className="text-blue-600" size={24} />
+              <div className="hidden lg:block absolute -bottom-2 -right-2 bg-white rounded-lg shadow-lg p-3 transform rotate-6">
+                <div className="flex items-center gap-2">
+                  <div className="bg-blue-100 p-1.5 rounded-lg">
+                    <Clock className="text-blue-600" size={20} />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold">32hrs</div>
-                    <div className="text-sm text-gray-600">Saved Monthly</div>
+                    <div className="text-xl font-bold">32hrs</div>
+                    <div className="text-xs text-gray-600">Saved/mo</div>
                   </div>
                 </div>
               </div>

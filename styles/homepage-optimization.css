@@ -45,14 +45,28 @@ p, .text-base, .text-lg {
    =================================================================== */
 
 /* Hero section height optimization for different viewports */
-.contractor-hero {
-  min-height: 100vh !important;
-  padding-top: 80px !important; /* Account for fixed navbar */
+.hero-optimized {
+  min-height: calc(100vh - 72px) !important; /* Ensure content fits in viewport minus navbar */
+  padding-top: 72px !important; /* Account for fixed navbar */
+  display: flex;
+  align-items: center;
 }
 
 @media (max-height: 800px) {
-  .contractor-hero {
-    min-height: calc(100vh - 72px) !important;
+  .hero-optimized {
+    min-height: auto !important;
+    padding-top: 72px !important;
+    padding-bottom: 40px !important;
+  }
+}
+
+/* Ensure visual demo is visible above fold */
+@media (min-width: 1024px) {
+  .hero-visual {
+    max-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -207,6 +221,45 @@ p, .text-base, .text-lg {
 /* ===================================================================
    7. CONVERSION-FOCUSED ELEMENTS
    =================================================================== */
+
+/* Hero Visual Demo Prominence */
+.hero-visual > div:first-child {
+  animation: gentle-float 6s ease-in-out infinite;
+}
+
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0) rotate(2deg); }
+  50% { transform: translateY(-10px) rotate(0deg); }
+}
+
+/* Horizontal bounce for attention arrow */
+.animate-bounce-horizontal {
+  animation: bounce-horizontal 2s ease-in-out infinite;
+}
+
+@keyframes bounce-horizontal {
+  0%, 100% { transform: translateX(0) translateY(-50%); }
+  50% { transform: translateX(10px) translateY(-50%); }
+}
+
+@media (max-width: 1023px) {
+  .hero-visual > div:first-child {
+    animation: none;
+    transform: none !important;
+  }
+}
+
+/* Mobile-first visual priority */
+@media (max-width: 768px) {
+  .hero-content {
+    margin-top: 0 !important;
+  }
+  
+  .hero-visual {
+    margin-top: -1rem !important; /* Pull visual higher on mobile */
+    margin-bottom: 1.5rem !important;
+  }
+}
 
 /* Urgency badge enhancement */
 .contractor-hero-badge.urgent {
