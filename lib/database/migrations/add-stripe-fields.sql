@@ -14,6 +14,8 @@ ALTER TABLE quotes ADD COLUMN IF NOT EXISTS stripe_price_id VARCHAR(255);
 ALTER TABLE quotes ADD COLUMN IF NOT EXISTS payment_status VARCHAR(50) DEFAULT 'pending';
 ALTER TABLE quotes ADD COLUMN IF NOT EXISTS payment_link TEXT;
 ALTER TABLE quotes ADD COLUMN IF NOT EXISTS stripe_invoice_id VARCHAR(255);
+ALTER TABLE quotes ADD COLUMN IF NOT EXISTS stripe_payment_intent_id VARCHAR(255);
+ALTER TABLE quotes ADD COLUMN IF NOT EXISTS paid_at TIMESTAMP;
 
 -- Create indexes for new fields
 CREATE INDEX IF NOT EXISTS idx_companies_stripe_customer ON companies(stripe_customer_id);

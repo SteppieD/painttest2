@@ -35,14 +35,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if company has connected account
+    // Check if company has connected account (optional for now)
     const connectedAccount = getConnectedAccountByCompanyId(quote.company_id);
-    if (!connectedAccount || !connectedAccount.charges_enabled) {
-      return NextResponse.json(
-        { error: 'Contractor has not set up payment processing yet' },
-        { status: 400 }
-      );
-    }
+    const hasConnectedAccount = connectedAccount && connectedAccount.charges_enabled;
 
     // Calculate amounts
     const amountInCents = convertToCents(quote.total_price);
@@ -65,8 +60,8 @@ export async function POST(request: NextRequest) {
       currency: 'usd',
     });
 
-    // Create payment link
-    const paymentLink = await stripe.paymentLinks.create({
+    // Create payment link configuration
+    const paymentLinkConfig: any = {
       line_items: [
         {
           price: price.id,
@@ -77,19 +72,27 @@ export async function POST(request: NextRequest) {
         quoteId: quoteId.toString(),
         companyId: quote.company_id.toString(),
         customerId: quote.customer_id.toString(),
+        paymentType: hasConnectedAccount ? 'connected' : 'platform',
       },
       after_completion: {
         type: 'redirect',
         redirect: {
-          url: `${process.env.NEXT_PUBLIC_APP_URL}/quotes/${quoteId}/success`,
+          url: `${process.env.NEXT_PUBLIC_APP_URL}/quotes/${quoteId}/payment-success`,
         },
       },
       customer_creation: 'always',
-      application_fee_amount: platformFee,
-      transfer_data: {
+    };
+
+    // Only add transfer data if contractor has connected account
+    if (hasConnectedAccount) {
+      paymentLinkConfig.application_fee_amount = platformFee;
+      paymentLinkConfig.transfer_data = {
         destination: connectedAccount.stripe_account_id,
-      },
-    });
+      };
+    }
+
+    // Create payment link
+    const paymentLink = await stripe.paymentLinks.create(paymentLinkConfig);
 
     // Save payment link to database
     const stmt = db.prepare(`

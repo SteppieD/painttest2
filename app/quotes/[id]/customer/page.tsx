@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
+import { QuotePaymentLink } from "@/components/stripe/quote-payment-link";
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -79,6 +80,7 @@ interface QuoteData {
     schedule: string;
     terms: string;
   };
+  payment_link?: string;
 }
 
 export default function CustomerQuotePage({ params }: { params: { id: string } }) {
@@ -558,6 +560,17 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
               </div>
             </CardContent>
           </Card>
+        )}
+
+        {/* Payment Option */}
+        {!isAccepted && quote && (
+          <div className="mb-6">
+            <QuotePaymentLink 
+              quoteId={parseInt(quote.id)}
+              amount={quote.total_cost || quote.final_price || 0}
+              existingLink={quote.payment_link}
+            />
+          </div>
         )}
 
         {/* Accept Quote */}

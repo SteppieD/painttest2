@@ -77,6 +77,43 @@ export async function POST(request: NextRequest) {
               subscription
             );
           }
+        } else if (session.mode === 'payment') {
+          // Handle one-time payment for quotes
+          const quoteId = session.metadata?.quoteId;
+          const paymentType = session.metadata?.paymentType;
+          
+          if (quoteId) {
+            const db = getDatabase();
+            
+            // Update quote payment status
+            db.prepare(`
+              UPDATE quotes 
+              SET payment_status = 'paid',
+                  paid_at = CURRENT_TIMESTAMP,
+                  stripe_payment_intent_id = ?
+              WHERE id = ?
+            `).run(session.payment_intent, quoteId);
+            
+            // Record payment in quote_payments table
+            if (session.amount_total) {
+              db.prepare(`
+                INSERT INTO quote_payments (
+                  quote_id, 
+                  company_id, 
+                  stripe_payment_intent_id,
+                  amount,
+                  status,
+                  payment_method_type,
+                  paid_at
+                ) VALUES (?, ?, ?, ?, 'succeeded', 'payment_link', CURRENT_TIMESTAMP)
+              `).run(
+                quoteId,
+                session.metadata?.companyId || 0,
+                session.payment_intent,
+                session.amount_total
+              );
+            }
+          }
         }
         break;
       }
