@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { 
   ArrowRight, 
   Check, 
@@ -22,7 +21,6 @@ import {
 import { professionalImages, getImageWithMetadata } from '@/lib/image-config';
 
 export function OptimizedSaaSLayoutWithImages() {
-  const heroImage = getImageWithMetadata(professionalImages.hero.main);
   const featureImages = {
     quoteCreation: getImageWithMetadata(professionalImages.features.quoteCreation),
     customerMeeting: getImageWithMetadata(professionalImages.features.customerMeeting),
@@ -35,7 +33,7 @@ export function OptimizedSaaSLayoutWithImages() {
       {/* Section 1: Above the Fold - Hero with Clear Value Proposition */}
       <section className="hero-optimized bg-gradient-to-br from-gray-50 to-orange-50">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-120px)] py-8 lg:py-12">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-80px)] py-4 lg:py-8">
             {/* Left: Messaging */}
             <div className="hero-content space-y-4 lg:space-y-6 order-2 lg:order-1">
               {/* Trust Badge */}
@@ -119,30 +117,60 @@ export function OptimizedSaaSLayoutWithImages() {
               </div>
             </div>
 
-            {/* Right: Professional Hero Image */}
+            {/* Right: Stats Dashboard Mockup */}
             <div className="hero-visual relative order-1 lg:order-2 mb-6 lg:mb-0">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl transform lg:scale-110 hover:scale-115 transition-transform duration-300">
-                <Image
-                  src={heroImage.src}
-                  alt={heroImage.alt}
-                  title={heroImage.title}
-                  width={800}
-                  height={600}
-                  className="w-full h-auto object-cover"
-                  priority
-                />
-                {/* Overlay with live demo preview */}
-                <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg max-w-xs">
-                  <div className="text-sm font-semibold text-gray-900 mb-2">Quote Generated!</div>
-                  <div className="flex items-center justify-between">
-                    <div>
+              {/* Main Product Screenshot - Larger and more prominent */}
+              <div className="relative z-10 bg-white rounded-xl lg:rounded-2xl shadow-2xl p-4 sm:p-5 lg:p-6 transform lg:rotate-1 hover:rotate-0 transition-all duration-300 max-w-sm sm:max-w-md mx-auto lg:max-w-none lg:scale-110 hover:scale-115 ring-4 ring-orange-600/20 hover:ring-orange-600/40">
+                <div className="mb-3 flex items-center justify-between">
+                  <h3 className="font-bold text-base lg:text-lg">Instant Quote Generator</h3>
+                  <span className="text-green-600 font-semibold text-sm">LIVE</span>
+                </div>
+                
+                {/* Mock Quote Interface - Condensed */}
+                <div className="space-y-3">
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="text-xs lg:text-sm text-gray-600">Customer</div>
+                    <div className="font-semibold text-sm lg:text-base">Johnson Residence</div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-orange-50 p-3 rounded-lg border border-orange-200">
                       <div className="text-xs text-gray-600">Time</div>
-                      <div className="text-lg font-bold text-orange-600">28 sec</div>
+                      <div className="text-xl lg:text-2xl font-bold text-orange-600">28 sec</div>
                     </div>
-                    <div>
+                    <div className="bg-green-50 p-3 rounded-lg border border-green-200">
                       <div className="text-xs text-gray-600">Total</div>
-                      <div className="text-lg font-bold text-green-600">$4,850</div>
+                      <div className="text-xl lg:text-2xl font-bold text-green-600">$4,850</div>
                     </div>
+                  </div>
+
+                  <button className="w-full bg-orange-600 text-white py-2.5 rounded-lg font-semibold text-sm lg:text-base hover:bg-orange-700 transition-colors">
+                    Send to Customer
+                  </button>
+                </div>
+              </div>
+
+              {/* Floating Stats - Hidden on mobile, positioned better on desktop */}
+              <div className="hidden lg:block absolute -top-2 -left-2 bg-white rounded-lg shadow-lg p-3 transform -rotate-6">
+                <div className="flex items-center gap-2">
+                  <div className="bg-green-100 p-1.5 rounded-lg">
+                    <TrendingUp className="text-green-600" size={20} />
+                  </div>
+                  <div>
+                    <div className="text-xl font-bold">+47%</div>
+                    <div className="text-xs text-gray-600">More Jobs</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="hidden lg:block absolute -bottom-2 -right-2 bg-white rounded-lg shadow-lg p-3 transform rotate-6">
+                <div className="flex items-center gap-2">
+                  <div className="bg-blue-100 p-1.5 rounded-lg">
+                    <Clock className="text-blue-600" size={20} />
+                  </div>
+                  <div>
+                    <div className="text-xl font-bold">32hrs</div>
+                    <div className="text-xs text-gray-600">Saved/mo</div>
                   </div>
                 </div>
               </div>
