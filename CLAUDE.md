@@ -611,6 +611,25 @@ When making database changes:
 - All Vercel deployments must be done manually using the CLI or Vercel dashboard
 - This allows for better version control and deployment management
 
+### **Standard Deployment Practice:**
+1. **Commit and Push to GitHub**: 
+   ```bash
+   git add .
+   git commit -m "Your changes"
+   git push origin main
+   ```
+
+2. **Manual Vercel Deployment**:
+   ```bash
+   # For preview
+   vercel
+   
+   # For production
+   vercel --prod
+   ```
+
+See `VERCEL_MANUAL_DEPLOYMENT.md` for detailed instructions.
+
 ### **Environment Setup:**
 ```bash
 # Required environment variables

@@ -4,17 +4,46 @@ import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 import AnalyticsProvider from '@/components/analytics/AnalyticsProvider'
 import { ACNavbar } from '@/components/adcreative/ACNavbar'
+import { StructuredData } from '@/components/seo/StructuredData'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'ProPaint Quote - Professional Painting Quote Software for Contractors',
-  description: 'Win 40-60% more painting jobs with professional quotes in 6 minutes vs 6 hours. Trusted by 5,000+ contractors. Start free with 10 quotes included.',
-  keywords: 'painting quote software, painting estimate software, contractor quoting app, painting business tools, professional painting quotes, painting calculator',
+  description: 'Win 40-60% more painting jobs with professional quotes in 30 seconds. Trusted by 5,247+ painting contractors. Start free trial today.',
+  keywords: 'painting quote software, painting estimate software, contractor quoting app, painting business tools, professional painting quotes, painting calculator, painting estimator, contractor software',
   manifest: '/manifest.json',
+  metadataBase: new URL('https://www.paintquoteapp.com'),
   icons: {
-    icon: '/favicon.svg',
-    apple: '/icon-192x192.svg',
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' }
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/apple-touch-icon-152x152.png', sizes: '152x152', type: 'image/png' },
+      { url: '/apple-touch-icon-120x120.png', sizes: '120x120', type: 'image/png' }
+    ],
+    other: [
+      { rel: 'mask-icon', url: '/safari-pinned-tab.svg', color: '#FF6B35' }
+    ]
+  },
+  applicationName: 'ProPaint Quote',
+  authors: [{ name: 'ProPaint Quote Team' }],
+  generator: 'Next.js',
+  referrer: 'origin-when-cross-origin',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FF6B35' },
+    { media: '(prefers-color-scheme: dark)', color: '#FF6B35' }
+  ],
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
+  verification: {
+    google: 'your-google-site-verification-code',
   },
   openGraph: {
     title: 'ProPaint Quote - Win More Painting Jobs with Professional Software',
@@ -58,16 +87,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="ProPaint Quote" />
-        <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" />
-        <link rel="manifest" href="/manifest.json" />
+        <meta name="msapplication-TileColor" content="#FF6B35" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
         <link rel="canonical" href="https://www.paintquoteapp.com" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/icon-192x192.svg" />
+        <StructuredData />
       </head>
       <body className={inter.className}>
         <AnalyticsProvider gtmId="GTM-563BQKRH" ga4Id="G-984BZ3LDZE">
