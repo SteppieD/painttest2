@@ -5,6 +5,7 @@ const nextConfig = {
     domains: [
       'lh3.googleusercontent.com',
       'placehold.co',
+      'i.pravatar.cc',
     ],
   },
   

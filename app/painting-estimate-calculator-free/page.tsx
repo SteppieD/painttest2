@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Calculator, 
   Download, 
@@ -14,6 +15,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
+import { ImageHeroSection } from '@/components/seo/ImageHeroSection';
+import { professionalImages } from '@/lib/image-config';
 
 export const metadata: Metadata = {
   title: 'Free Painting Estimate Calculator App - Download for iPhone & Android | ProPaint Quote',
@@ -36,17 +39,16 @@ export default function PaintingEstimateCalculatorFreePage() {
     <div className="min-h-screen bg-white">
       <Header />
 
-      {/* Hero Section */}
-      <section className="py-16 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto text-center max-w-4xl">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Free Painting Estimate <span className="text-blue-600">Calculator App</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Download the most accurate painting estimate calculator app for iPhone and Android. Calculate professional painting quotes instantly, even offline. Used by over 10,000+ contractors nationwide.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+      {/* Hero Section with Professional Image */}
+      <ImageHeroSection
+        title={<>Free Painting Estimate <span className="text-blue-600">Calculator App</span></>}
+        subtitle="Download the most accurate painting estimate calculator app for iPhone and Android. Calculate professional painting quotes instantly, even offline. Used by over 10,000+ contractors nationwide."
+        imageSrc={professionalImages.seoPages.calculator}
+        imageAlt="Professional contractor using painting estimate calculator app"
+        imageTitle="Digital Painting Quote Calculator for Contractors"
+        backgroundClass="bg-gradient-to-br from-blue-50 to-indigo-100"
+      >
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button variant="primary" size="lg" asChild className="text-lg px-8 py-6">
               <Link href="/trial-signup">
                 <Download className="w-5 h-5 mr-2" />
@@ -75,8 +77,22 @@ export default function PaintingEstimateCalculatorFreePage() {
               <span>iPhone & Android</span>
             </div>
           </div>
+        
+        {/* App Store Rating */}
+        <div className="flex items-center justify-center gap-6 text-sm text-gray-600 mt-8">
+          <div className="flex items-center gap-1">
+            {[1,2,3,4,5].map(i => (
+              <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            ))}
+            <span className="ml-2">4.9/5 (2,847 reviews)</span>
+          </div>
+          <div className="hidden sm:block">•</div>
+          <div className="flex items-center gap-1">
+            <Users className="w-4 h-4" />
+            <span>10,000+ active users</span>
+          </div>
         </div>
-      </section>
+      </ImageHeroSection>
 
       {/* App Features */}
       <section className="py-20 px-4">

@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   TrendingUp, 
   Clock, 
@@ -16,6 +17,7 @@ import {
 import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { Button } from '@/components/ui/button';
+import { professionalImages } from '@/lib/image-config';
 
 export const metadata: Metadata = {
   title: 'Painting Contractor Software Case Study: 278% ROI in 90 Days | ProPaint Quote',
@@ -105,6 +107,21 @@ export default function PaintingContractorSoftwareCaseStudy() {
               <div className="text-3xl font-bold text-orange-600 mb-2">340%</div>
               <div className="text-gray-600">Quote Volume Increase</div>
             </div>
+          </div>
+        </div>
+
+        {/* Success Story Image */}
+        <div className="relative rounded-2xl overflow-hidden shadow-2xl mb-16">
+          <Image
+            src={professionalImages.caseStudies.satisfaction}
+            alt="Rodriguez Painting team celebrating success with contractor software"
+            width={1200}
+            height={600}
+            className="w-full h-auto"
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8">
+            <h2 className="text-3xl font-bold text-white mb-2">Rodriguez Painting Success Story</h2>
+            <p className="text-white/90 text-lg">How modern software transformed a small painting business</p>
           </div>
         </div>
 
