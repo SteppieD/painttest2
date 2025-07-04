@@ -1,0 +1,129 @@
+/* Contractor-specific overrides for professional appearance */
+
+/* Override AdCreative purple backgrounds with professional grays */
+.ac-bg-dark {
+  background: #111827 !important; /* Professional dark gray */
+}
+
+.ac-hero {
+  background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%) !important;
+}
+
+/* Update primary colors to construction orange for key CTAs */
+.contractor-primary {
+  color: #ea580c !important;
+}
+
+/* Professional pricing section */
+.ac-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.ac-pricing-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.ac-pricing-card.featured {
+  transform: scale(1.05);
+  box-shadow: 0 20px 60px rgba(234, 88, 12, 0.2);
+  border: 2px solid #ea580c;
+}
+
+.ac-pricing-badge {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ea580c;
+  color: white;
+  padding: 6px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ac-pricing-price {
+  font-size: 48px;
+  font-weight: 800;
+  color: #111827;
+  margin: 16px 0;
+}
+
+.ac-pricing-period {
+  font-size: 18px;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+/* Update navbar for contractor appeal */
+.ac-navbar {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-bottom: 2px solid #ea580c;
+}
+
+/* Professional feature cards */
+.ac-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* Update buttons for contractor branding */
+.ac-btn-primary {
+  background: #ea580c !important;
+  color: white !important;
+}
+
+.ac-btn-primary:hover {
+  background: #c2410c !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(234, 88, 12, 0.3);
+}
+
+/* Trust indicators with construction theme */
+.trust-indicator {
+  color: #059669; /* Construction safety green */
+}
+
+/* Professional testimonial styling */
+.testimonial-card {
+  background: #f9fafb;
+  border-left: 4px solid #ea580c;
+}
+
+/* Analytics dashboard updates */
+.dashboard-stat {
+  background: linear-gradient(135deg, #f3f4f6 0%, #ffffff 100%);
+  border: 1px solid #e5e7eb;
+}
+
+.dashboard-stat:hover {
+  border-color: #ea580c;
+  box-shadow: 0 10px 25px rgba(234, 88, 12, 0.1);
+}
+
+/* Professional form styling */
+.ac-input:focus {
+  border-color: #ea580c !important;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1) !important;
+}
+
+/* Update pink text to construction orange */
+.text-primary-pink {
+  color: #ea580c !important;
+}
+
+/* Professional mobile menu */
+@media (max-width: 768px) {
+  .ac-mobile-menu {
+    background: white !important;
+    border-left: 4px solid #ea580c;
+  }
+}

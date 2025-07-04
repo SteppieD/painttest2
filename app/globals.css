@@ -11,6 +11,9 @@
 /* Import AdCreative-Inspired Modern Design */
 @import '../styles/adcreative-design-system.css';
 
+/* Import Contractor-specific overrides for professional appearance */
+@import '../styles/contractor-overrides.css';
+
 @layer base {
   :root {
     --background: 0 0% 100%;

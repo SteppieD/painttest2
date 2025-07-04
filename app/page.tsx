@@ -19,7 +19,7 @@ import {
   Award,
   Check
 } from 'lucide-react';
-import { ACHeroSection } from '@/components/adcreative/ACHeroSection';
+import { ContractorHeroSection } from '@/components/hero/ContractorHeroSection';
 import { Footer } from '@/components/shared/footer';
 import { ROICalculator } from '@/components/marketing/roi-calculator';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
@@ -27,8 +27,8 @@ import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section with AdCreative Design */}
-      <ACHeroSection />
+      {/* Hero Section optimized for Contractors */}
+      <ContractorHeroSection />
 
       {/* Trust Indicators */}
       <section className="py-12 px-4 bg-gray-50">
@@ -127,8 +127,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Pricing Preview with AC Design */}
-      <section className="py-20 px-4 ac-bg-dark">
+      {/* Pricing Preview with professional design */}
+      <section className="py-20 px-4 bg-gray-900">
         <div className="container mx-auto max-w-6xl text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Simple, Transparent Pricing
