@@ -26,6 +26,7 @@ import { Footer } from '@/components/shared/footer';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
 import { ResponsiveTable } from '@/components/ui/responsive-table';
 import { PricingPlansV2 } from '@/components/stripe/pricing-plans-v2';
+import { ModernPricingTable } from '@/components/stripe/modern-pricing-table';
 
 // Metadata should be defined in a layout.tsx file or generateMetadata function for Server Components
 
@@ -188,8 +189,8 @@ export default function PricingPage() {
             </p>
           </div>
           
-          {/* Use the PricingPlansV2 component with annual toggle */}
-          <PricingPlansV2 />
+          {/* Use the modern pricing table with enhanced UX */}
+          <ModernPricingTable />
         </div>
       </section>
 

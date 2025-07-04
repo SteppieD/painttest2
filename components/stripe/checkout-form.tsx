@@ -14,6 +14,7 @@ interface CheckoutFormProps {
   planType: 'monthly' | 'yearly';
   priceId?: string; // Optional: directly specify price ID
   buttonText?: string;
+  buttonClassName?: string;
   successUrl?: string;
   cancelUrl?: string;
 }
@@ -23,6 +24,7 @@ export function CheckoutForm({
   planType,
   priceId, 
   buttonText = 'Subscribe Now',
+  buttonClassName,
   successUrl,
   cancelUrl
 }: CheckoutFormProps) {
@@ -73,7 +75,7 @@ export function CheckoutForm({
       onClick={handleCheckout}
       disabled={loading}
       size="lg"
-      className="w-full"
+      className={buttonClassName || "w-full"}
     >
       {loading ? (
         <>
