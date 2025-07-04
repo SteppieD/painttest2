@@ -169,17 +169,6 @@ export default function TrialSignupPage() {
           </div>
         </div>
 
-        <style jsx>{`
-          .text-primary-pink {
-            color: var(--primary-pink);
-          }
-
-          .ac-gradient-box {
-            background: linear-gradient(135deg, rgba(239, 43, 112, 0.05) 0%, rgba(239, 43, 112, 0.02) 100%);
-            border: 1px solid rgba(239, 43, 112, 0.1);
-            border-radius: 12px;
-          }
-        `}</style>
       </div>
     );
   }
@@ -360,25 +349,6 @@ export default function TrialSignupPage() {
 
       <Footer />
 
-      <style jsx>{`
-        .text-primary-pink {
-          color: var(--primary-pink);
-        }
-        
-        .text-primary-pink-dark {
-          color: var(--primary-pink-dark);
-        }
-        
-        .hover\:text-primary-pink-dark:hover {
-          color: var(--primary-pink-dark);
-        }
-
-        .ac-gradient-box {
-          background: linear-gradient(135deg, rgba(239, 43, 112, 0.05) 0%, rgba(239, 43, 112, 0.02) 100%);
-          border: 1px solid rgba(239, 43, 112, 0.1);
-          border-radius: 12px;
-        }
-      `}</style>
     </div>
   );
 }

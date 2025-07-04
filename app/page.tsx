@@ -290,23 +290,6 @@ export default function HomePage() {
 
       <Footer />
 
-      <style jsx>{`
-        .text-primary-pink {
-          color: var(--primary-pink);
-        }
-        
-        .bg-primary-pink {
-          background-color: var(--primary-pink);
-        }
-        
-        .from-primary-pink {
-          --tw-gradient-from: var(--primary-pink);
-        }
-        
-        .to-primary-pink-dark {
-          --tw-gradient-to: var(--primary-pink-dark);
-        }
-      `}</style>
     </div>
   );
 }

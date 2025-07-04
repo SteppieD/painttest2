@@ -655,40 +655,6 @@ export default function DashboardPage() {
 
       <Footer />
 
-      <style jsx>{`
-        .text-primary-pink {
-          color: var(--primary-pink);
-        }
-        
-        .bg-primary-pink {
-          background-color: var(--primary-pink);
-        }
-        
-        .from-primary-pink {
-          --tw-gradient-from: var(--primary-pink);
-        }
-        
-        .to-primary-pink-dark {
-          --tw-gradient-to: var(--primary-pink-dark);
-        }
-        
-        .border-primary-pink\/20 {
-          border-color: rgba(239, 43, 112, 0.2);
-        }
-        
-        .bg-primary-pink\/5 {
-          background-color: rgba(239, 43, 112, 0.05);
-        }
-        
-        .bg-primary-pink\/10 {
-          background-color: rgba(239, 43, 112, 0.1);
-        }
-        
-        .ac-gradient-box {
-          background: linear-gradient(135deg, rgba(239, 43, 112, 0.05) 0%, rgba(239, 43, 112, 0.02) 100%);
-          border: 1px solid rgba(239, 43, 112, 0.1);
-        }
-      `}</style>
     </div>
   );
 }

@@ -257,19 +257,6 @@ export default function AccessCodePage() {
 
       <Footer />
 
-      <style jsx>{`
-        .text-primary-pink {
-          color: var(--primary-pink);
-        }
-        
-        .text-primary-pink-dark {
-          color: var(--primary-pink-dark);
-        }
-        
-        .hover\:text-primary-pink-dark:hover {
-          color: var(--primary-pink-dark);
-        }
-      `}</style>
     </div>
   );
 }
