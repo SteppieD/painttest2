@@ -70,13 +70,10 @@ export default function AccessCodePage() {
         
         // Redirect based on setup completion and new company status
         if (data.isNewCompany || !setupCompleted) {
-          // New companies or companies that haven't completed setup go to setup wizard
-          router.push(`/setup?code=${data.company.accessCode}`);
-        } else if (data.isNewCompany) {
-          router.push(
-            `/success?newCompany=true&companyName=${encodeURIComponent(data.company.name)}&redirect=${encodeURIComponent(redirectTo)}`,
-          );
+          // New companies or companies that haven't completed setup go to conversational setup
+          router.push(`/setup-chat`);
         } else {
+          // Existing companies with completed setup
           // Check if user wants modern interface
           const modernInterface = new URLSearchParams(window.location.search).get('modern');
           if (modernInterface === 'true') {

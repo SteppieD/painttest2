@@ -89,9 +89,9 @@ export default function TrialSuccessPage() {
         )}
 
         <div className="grid md:grid-cols-2 gap-4">
-          <Link href="/setup">
+          <Link href="/setup-chat">
             <Button className="w-full" size="lg" variant="default">
-              Complete Setup (2 min)
+              Complete Setup (5-10 min)
             </Button>
           </Link>
           <Link href="/dashboard">

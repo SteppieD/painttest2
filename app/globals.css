@@ -17,6 +17,9 @@
 /* Import Homepage optimization for SaaS conversions and readability */
 @import '../styles/homepage-optimization.css';
 
+/* Import Professional Contractor Theme - Must be last to override all pink colors */
+@import '../styles/professional-contractor-theme.css';
+
 @layer base {
   :root {
     --background: 0 0% 100%;

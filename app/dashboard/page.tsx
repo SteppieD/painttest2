@@ -298,9 +298,9 @@ export default function DashboardPage() {
                 <span>Company Dashboard</span>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                Welcome back, <span style={{ color: 'var(--primary-pink)' }}>{companyInfo?.name || companyInfo?.company_name || 'Contractor'}</span>
+                Welcome back, <span className="text-yellow-300 font-bold">{companyInfo?.name || companyInfo?.company_name || 'Contractor'}</span>
               </h1>
-              <p className="text-lg text-gray-300">
+              <p className="text-lg text-gray-100">
                 Access Code: {companyInfo?.accessCode || companyInfo?.access_code}
                 <button
                   onClick={() => {
@@ -379,7 +379,7 @@ export default function DashboardPage() {
         {!isCheckingOnboarding && needsOnboarding && (
           <div className="mb-8">
             <div className="ac-card ac-gradient-box p-8 text-center">
-              <div className="w-20 h-20 bg-primary-pink rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Palette className="w-10 h-10 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-gray-900 mb-3">
@@ -391,7 +391,7 @@ export default function DashboardPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button 
-                  onClick={() => router.push("/setup")}
+                  onClick={() => router.push("/setup-chat")}
                   className="ac-btn ac-btn-primary ac-btn-lg"
                 >
                   <ArrowRight size={20} />
@@ -596,7 +596,7 @@ export default function DashboardPage() {
                       
                       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                         <div className="text-right sm:text-left">
-                          <div className="text-2xl font-bold text-primary-pink">
+                          <div className="text-2xl font-bold text-green-700">
                             {formatCurrency(quote.final_price || quote.quote_amount || 0)}
                           </div>
                         </div>

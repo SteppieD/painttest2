@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -21,7 +21,14 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isResourcesOpen, setIsResourcesOpen] = useState(false);
   const [isUseCasesOpen, setIsUseCasesOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    // Check if user is logged in by looking for company data in localStorage
+    const companyData = localStorage.getItem("paintquote_company");
+    setIsLoggedIn(!!companyData);
+  }, [pathname]); // Re-check on route changes
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -187,17 +194,28 @@ export function Header() {
             >
               Pricing
             </Link>
-            <Link 
-              href="/access-code" 
-              className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium"
-            >
-              Login
-            </Link>
-            <div className="flex items-center gap-3">
-              <Link href="/trial-signup" className="px-6 py-2.5 bg-[#FFE4E9] text-[#ef2b70] font-semibold rounded-lg hover:bg-[#FFD1DA] transition-all duration-200">
-                Try For Free Now
+            {isLoggedIn ? (
+              <Link 
+                href="/dashboard" 
+                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium"
+              >
+                Dashboard
               </Link>
-            </div>
+            ) : (
+              <>
+                <Link 
+                  href="/access-code" 
+                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium"
+                >
+                  Login
+                </Link>
+                <div className="flex items-center gap-3">
+                  <Link href="/trial-signup" className="px-6 py-2.5 bg-[#FFE4E9] text-[#ef2b70] font-semibold rounded-lg hover:bg-[#FFD1DA] transition-all duration-200">
+                    Try For Free Now
+                  </Link>
+                </div>
+              </>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -364,22 +382,34 @@ export function Header() {
               >
                 Pricing
               </Link>
-              <Link 
-                href="/access-code" 
-                className="text-gray-600 hover:text-[#ef2b70] py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium"
-                onClick={closeMobileMenu}
-              >
-                Sign In
-              </Link>
-              <div className="pt-4">
+              {isLoggedIn ? (
                 <Link 
-                  href="/trial-signup" 
+                  href="/dashboard" 
+                  className="text-gray-600 hover:text-[#ef2b70] py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium"
                   onClick={closeMobileMenu}
-                  className="block w-full text-center px-6 py-3 bg-[#FFE4E9] text-[#ef2b70] font-semibold rounded-lg hover:bg-[#FFD1DA] transition-all duration-200"
                 >
-                  Start Free Trial
+                  Dashboard
                 </Link>
-              </div>
+              ) : (
+                <>
+                  <Link 
+                    href="/access-code" 
+                    className="text-gray-600 hover:text-[#ef2b70] py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium"
+                    onClick={closeMobileMenu}
+                  >
+                    Sign In
+                  </Link>
+                  <div className="pt-4">
+                    <Link 
+                      href="/trial-signup" 
+                      onClick={closeMobileMenu}
+                      className="block w-full text-center px-6 py-3 bg-[#FFE4E9] text-[#ef2b70] font-semibold rounded-lg hover:bg-[#FFD1DA] transition-all duration-200"
+                    >
+                      Start Free Trial
+                    </Link>
+                  </div>
+                </>
+              )}
             </nav>
           </div>
         )}

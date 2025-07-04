@@ -34,6 +34,7 @@ export function ACNavbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -44,6 +45,12 @@ export function ACNavbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    // Check if user is logged in by looking for company data in localStorage
+    const companyData = localStorage.getItem("paintquote_company");
+    setIsLoggedIn(!!companyData);
+  }, [pathname]); // Re-check on route changes
 
   useEffect(() => {
     // Close mobile menu on route change
@@ -116,12 +123,20 @@ export function ACNavbar() {
 
           {/* CTA Buttons */}
           <div className="ac-navbar-cta">
-            <Link href="/access-code" className="ac-btn ac-btn-ghost ac-btn-sm">
-              Login
-            </Link>
-            <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-sm">
-              Try For Free
-            </Link>
+            {isLoggedIn ? (
+              <Link href="/dashboard" className="ac-btn ac-btn-ghost ac-btn-sm">
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link href="/access-code" className="ac-btn ac-btn-ghost ac-btn-sm">
+                  Login
+                </Link>
+                <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-sm">
+                  Try For Free
+                </Link>
+              </>
+            )}
             
             {/* Mobile Menu Toggle */}
             <button
@@ -199,12 +214,20 @@ export function ACNavbar() {
             </ul>
             
             <div className="ac-mobile-menu-footer">
-              <Link href="/access-code" className="ac-btn ac-btn-ghost ac-btn-lg" onClick={() => setIsMobileMenuOpen(false)}>
-                Login
-              </Link>
-              <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-lg" onClick={() => setIsMobileMenuOpen(false)}>
-                Try For Free
-              </Link>
+              {isLoggedIn ? (
+                <Link href="/dashboard" className="ac-btn ac-btn-ghost ac-btn-lg" onClick={() => setIsMobileMenuOpen(false)}>
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link href="/access-code" className="ac-btn ac-btn-ghost ac-btn-lg" onClick={() => setIsMobileMenuOpen(false)}>
+                    Login
+                  </Link>
+                  <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-lg" onClick={() => setIsMobileMenuOpen(false)}>
+                    Try For Free
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

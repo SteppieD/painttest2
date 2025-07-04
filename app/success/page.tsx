@@ -127,7 +127,7 @@ function SuccessContent() {
           <button
             onClick={() => {
               if (quoteInfo.newCompany === "true") {
-                router.push("/onboarding/setup");
+                router.push("/setup-chat");
               } else {
                 router.push(quoteInfo.redirect || "/dashboard");
               }
