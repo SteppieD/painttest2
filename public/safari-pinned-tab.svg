@@ -1,0 +1,22 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#FF6B35"/>
+  
+  <!-- Paint Brush -->
+  <g transform="translate(8, 4)">
+    <!-- Brush Handle -->
+    <rect x="6" y="12" width="4" height="10" rx="1" fill="#333333"/>
+    
+    <!-- Brush Ferrule (metal part) -->
+    <rect x="5" y="10" width="6" height="3" rx="0.5" fill="#C0C0C0"/>
+    
+    <!-- Brush Bristles -->
+    <path d="M4 3 Q4 1 8 1 Q12 1 12 3 L12 10 L4 10 Z" fill="#F5F5F5"/>
+    
+    <!-- Paint Drip -->
+    <ellipse cx="8" cy="4" rx="3" ry="2" fill="#FF6B35"/>
+  </g>
+  
+  <!-- "PQ" Text (ProPaint Quote) -->
+  <text x="16" y="26" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">PQ</text>
+</svg>
