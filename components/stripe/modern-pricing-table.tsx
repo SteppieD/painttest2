@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Star, Zap, HelpCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -20,8 +20,19 @@ interface ModernPricingTableProps {
   companyId?: number;
 }
 
-export function ModernPricingTable({ companyId }: ModernPricingTableProps) {
+export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTableProps) {
   const [isYearly, setIsYearly] = useState(false);
+  const [companyId, setCompanyId] = useState<number | undefined>(propCompanyId);
+
+  useEffect(() => {
+    // Check session storage for company ID if not passed as prop
+    if (!propCompanyId && typeof window !== 'undefined') {
+      const storedCompanyId = sessionStorage.getItem('companyId');
+      if (storedCompanyId) {
+        setCompanyId(parseInt(storedCompanyId));
+      }
+    }
+  }, [propCompanyId]);
 
   const plans = [
     {

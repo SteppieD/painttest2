@@ -88,9 +88,12 @@ export default function TrialSignupPage() {
 
       setSuccess(true);
       
-      // Auto-redirect to setup after 3 seconds
+      // Store access code in localStorage for trial-success page
+      localStorage.setItem('companyAccessCode', formData.accessCode);
+      
+      // Auto-redirect to trial-success page after 3 seconds
       setTimeout(() => {
-        router.push(`/setup?code=${formData.accessCode}`);
+        router.push('/trial-success');
       }, 3000);
 
     } catch (error: any) {
