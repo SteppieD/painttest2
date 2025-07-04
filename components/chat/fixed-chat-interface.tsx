@@ -9,6 +9,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { QuoteTrainingModal } from './quote-training-modal'
 import { QuotaCounter } from '@/components/ui/quota-counter'
+import { MarkdownMessage } from './markdown-message'
 import { trackChatMessage, trackChatQuoteReady, trackQuoteSaved, trackQuoteCalculated } from '@/lib/analytics/tracking'
 
 interface Message {
@@ -426,9 +427,13 @@ export function FixedChatInterface({
                     : "bg-white border rounded-bl-sm"
                 )}
               >
-                <div className="whitespace-pre-wrap text-sm">
-                  {message.content}
-                </div>
+                {message.role === 'user' ? (
+                  <div className="whitespace-pre-wrap text-sm">
+                    {message.content}
+                  </div>
+                ) : (
+                  <MarkdownMessage content={message.content} className="text-sm" />
+                )}
                 {message.role === 'assistant' && (message.content.includes('Total Quote:') || message.content.includes('Customer Price:')) && (
                   <div className="mt-4 pt-3 border-t border-gray-200">
                     <div className="text-xs text-gray-500 mb-3">Quote is ready!</div>

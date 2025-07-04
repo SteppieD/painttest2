@@ -209,12 +209,27 @@ export class UnifiedQuoteAssistant {
   } {
     const lower = input.toLowerCase();
     
+    // Check for explicit exclusions
+    const notWalls = lower.includes('not painting the walls') || lower.includes('no walls') || lower.includes('walls not included');
+    const notCeilings = lower.includes('not painting the ceilings') || lower.includes('no ceilings') || lower.includes('ceilings not included');
+    const notTrim = (lower.includes('not painting') && lower.includes('trim')) || lower.includes('no trim') || lower.includes('trim not included');
+    const notDoors = (lower.includes('not painting') && lower.includes('doors')) || lower.includes('no doors') || lower.includes('doors not included');
+    const notWindows = (lower.includes('not painting') && lower.includes('windows')) || lower.includes('no windows') || lower.includes('windows not included');
+    
+    // Check for explicit inclusions
+    const includesDoors = lower.includes('including doors') || lower.includes('paint doors') || lower.includes('doors included') || 
+                         (lower.includes('doors') && lower.includes('trim'));
+    const includesWindows = lower.includes('including windows') || lower.includes('paint windows') || lower.includes('windows included') ||
+                           (lower.includes('windows') && lower.includes('trim'));
+    const includesTrim = lower.includes('including trim') || lower.includes('paint trim') || lower.includes('trim included') ||
+                        includesDoors || includesWindows; // If doors/windows included, usually trim is too
+    
     return {
-      walls: !lower.includes('not painting the walls') && !lower.includes('no walls'),
-      ceilings: !lower.includes('not painting the ceilings') && !lower.includes('no ceilings'),
-      trim: !(lower.includes('not painting') && lower.includes('trim')),
-      doors: !(lower.includes('not painting') && lower.includes('doors')),
-      windows: !(lower.includes('not painting') && lower.includes('windows'))
+      walls: !notWalls,
+      ceilings: !notCeilings,
+      trim: !notTrim || includesTrim,
+      doors: !notDoors || includesDoors,
+      windows: !notWindows || includesWindows
     };
   }
 
@@ -251,6 +266,16 @@ export class UnifiedQuoteAssistant {
     if (!data.dimensions.wall_linear_feet) missing.push('linear feet of walls');
     if (!data.dimensions.ceiling_height) missing.push('ceiling height');
     if (!data.paintInfo.cost_per_gallon && !data.laborRate) missing.push('paint costs or labor rates');
+    
+    // Check for door/window counts if painting doors/windows
+    if (data.surfaces && (data.surfaces.doors || data.surfaces.windows || data.surfaces.trim)) {
+      if (!data.dimensions.number_of_doors && (data.surfaces.doors || data.surfaces.trim)) {
+        missing.push('number of doors');
+      }
+      if (!data.dimensions.number_of_windows && (data.surfaces.windows || data.surfaces.trim)) {
+        missing.push('number of windows');
+      }
+    }
     
     return missing;
   }
@@ -382,6 +407,15 @@ export class UnifiedQuoteAssistant {
       const paintBrand = parsed.paintInfo.brand || 'Quality paint';
       const paintProduct = parsed.paintInfo.product || 'interior paint';
       
+      // Build detailed surface information
+      let surfaceDetails = [];
+      if (parsed.surfaces.doors && dimensions.number_of_doors) {
+        surfaceDetails.push(`${dimensions.number_of_doors} doors`);
+      }
+      if (parsed.surfaces.windows && dimensions.number_of_windows) {
+        surfaceDetails.push(`${dimensions.number_of_windows} windows`);
+      }
+      
       const response = `Perfect! Here's your professional quote for ${parsed.customerInfo.customer_name} at ${parsed.customerInfo.address}:
 
 **Project Details:**
@@ -389,7 +423,7 @@ export class UnifiedQuoteAssistant {
 • ${parsed.dimensions.ceiling_height} foot ceiling height
 • ${paintBrand} ${paintProduct} at $${parsed.paintInfo.cost_per_gallon}/gallon
 • ${parsed.surfaces.ceilings ? 'Including' : 'NOT including'} ceilings
-• ${parsed.surfaces.doors ? 'Including' : 'NOT including'} doors and trim
+• ${parsed.surfaces.doors || parsed.surfaces.trim ? 'Including' : 'NOT including'} doors and trim${surfaceDetails.length > 0 ? ` (${surfaceDetails.join(', ')})` : ''}
 • ${parsed.specialRequests.length > 0 ? parsed.specialRequests.join(', ') : 'Standard painting'}
 
 **Quote Summary:**
@@ -681,8 +715,33 @@ Ready to save this quote?`;
           }
         });
         
+        // Create a more natural response for missing fields
+        let missingFieldsResponse = `Great! I have: ${this.summarizeExtractedInfo(parsed)}.\n\n`;
+        
+        // Handle door/window counts specially for better clarity
+        if (parsed.missingFields.includes('number of doors') || parsed.missingFields.includes('number of windows')) {
+          const needsDoors = parsed.missingFields.includes('number of doors');
+          const needsWindows = parsed.missingFields.includes('number of windows');
+          
+          if (needsDoors && needsWindows) {
+            missingFieldsResponse += `Since we're painting doors and trim, I need to know:\n• How many doors need painting?\n• How many windows need painting?`;
+          } else if (needsDoors) {
+            missingFieldsResponse += `Since we're painting doors and trim, how many doors need painting?`;
+          } else if (needsWindows) {
+            missingFieldsResponse += `Since we're painting windows and trim, how many windows need painting?`;
+          }
+          
+          // Remove door/window from missing fields list
+          const otherMissing = parsed.missingFields.filter(f => f !== 'number of doors' && f !== 'number of windows');
+          if (otherMissing.length > 0) {
+            missingFieldsResponse += `\n\nI also need: ${otherMissing.join(', ')}.`;
+          }
+        } else {
+          missingFieldsResponse += `I still need: ${parsed.missingFields.join(', ')}. Can you provide these details?`;
+        }
+        
         return {
-          response: `Great! I have: ${this.summarizeExtractedInfo(parsed)}.\n\nI still need: ${parsed.missingFields.join(', ')}. Can you provide these details?`,
+          response: missingFieldsResponse,
           extractedData: parsed,
           confidence: 0.7,
           success: true
@@ -820,9 +879,11 @@ For painting quotes, you typically need:
 - Measurements (linear feet of walls, ceiling height, room dimensions)
 - Paint preferences and costs
 - Which surfaces to paint (walls, ceilings, trim, doors, windows)
+- If painting doors/trim: Number of doors
+- If painting windows/trim: Number of windows
 - Labor rates and markup percentage
 
-Keep responses concise and focused on getting the information needed for an accurate quote.`
+Keep responses concise and focused on getting the information needed for an accurate quote. When doors or windows are included, always ask for specific counts.`
             },
             {
               role: 'user',
