@@ -1,13 +1,33 @@
 import Stripe from 'stripe';
 
-// Server-side Stripe instance
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
-  typescript: true,
+// Server-side Stripe instance - lazy initialization to avoid build errors
+let stripeInstance: Stripe | null = null;
+
+export function getStripe(): Stripe {
+  if (!stripeInstance) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-12-18.acacia',
+      typescript: true,
+    });
+  }
+  return stripeInstance;
+}
+
+// For backward compatibility
+export const stripe = new Proxy({} as Stripe, {
+  get(target, prop, receiver) {
+    return Reflect.get(getStripe(), prop, receiver);
+  }
 });
 
 // Configuration constants
 export const STRIPE_CONFIG = {
+  // Secret key for server-side operations
+  secretKey: process.env.STRIPE_SECRET_KEY!,
+  
   // Platform fee percentage (3-5%)
   platformFeePercent: parseInt(process.env.STRIPE_APPLICATION_FEE_PERCENT || '3'),
   

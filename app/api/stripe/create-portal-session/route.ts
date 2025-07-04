@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
 import { getDatabase } from '@/lib/database/init';
-import { STRIPE_CONFIG } from '@/lib/stripe/config';
-
-const stripe = new Stripe(STRIPE_CONFIG.secretKey, {
-  apiVersion: '2024-10-28.acacia',
-});
+import { getStripe } from '@/lib/stripe/config';
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,6 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create portal session
+    const stripe = getStripe();
     const session = await stripe.billingPortal.sessions.create({
       customer: subscription.stripe_customer_id,
       return_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings/billing`,
