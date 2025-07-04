@@ -233,8 +233,8 @@ export function PricingPlansV2({ companyId }: PricingPlansV2Props) {
                     companyId={companyId}
                     planType={isAnnual ? 'yearly' : 'monthly'}
                     priceId={plan.planType === 'professional' 
-                      ? (isAnnual ? process.env.STRIPE_PROFESSIONAL_YEARLY_PRICE_ID : process.env.STRIPE_PROFESSIONAL_MONTHLY_PRICE_ID)
-                      : (isAnnual ? process.env.STRIPE_BUSINESS_YEARLY_PRICE_ID : process.env.STRIPE_BUSINESS_MONTHLY_PRICE_ID)
+                      ? (isAnnual ? process.env.NEXT_PUBLIC_STRIPE_PROFESSIONAL_YEARLY_PRICE_ID : process.env.NEXT_PUBLIC_STRIPE_PROFESSIONAL_MONTHLY_PRICE_ID)
+                      : (isAnnual ? process.env.NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PRICE_ID : process.env.NEXT_PUBLIC_STRIPE_BUSINESS_MONTHLY_PRICE_ID)
                     }
                     buttonText={plan.cta}
                   />
