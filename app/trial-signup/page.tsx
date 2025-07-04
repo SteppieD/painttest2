@@ -2,12 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { TouchFriendlyInput } from "@/components/ui/touch-friendly-input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { AlertCircle, Check, Palette, Copy } from "lucide-react";
+import { AlertCircle, Check, Palette, Copy, Sparkles, ArrowRight, Shield, Zap, Award } from "lucide-react";
+import { Footer } from "@/components/shared/footer";
 
 export default function TrialSignupPage() {
   const router = useRouter();
@@ -120,152 +117,268 @@ export default function TrialSignupPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
-              <Check className="w-6 h-6 text-green-600" />
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+        <div className="ac-card w-full max-w-md">
+          <div className="ac-card-body p-8 text-center">
+            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+              <Check className="w-8 h-8 text-green-600" />
             </div>
-            <CardTitle className="text-2xl text-green-600">Trial Account Created!</CardTitle>
-            <CardDescription>
+            <h2 className="text-2xl font-bold text-green-600 mb-2">Trial Account Created!</h2>
+            <p className="text-gray-600 mb-6">
               Your free trial account is ready with 1 quote included.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600 mb-2">Your Access Code:</p>
-              <div className="flex items-center justify-center gap-2">
-                <p className="text-xl font-bold text-blue-600">{formData.accessCode}</p>
-                <Button
-                  size="sm"
-                  variant="outline"
+            </p>
+            
+            <div className="ac-gradient-box p-6 mb-6">
+              <p className="text-sm text-gray-600 mb-3">Your Access Code:</p>
+              <div className="flex items-center justify-center gap-3">
+                <p className="text-2xl font-bold text-primary-pink">{formData.accessCode}</p>
+                <button
                   onClick={() => {
                     navigator.clipboard.writeText(formData.accessCode);
                     alert('Access code copied to clipboard!');
                   }}
-                  className="h-8"
+                  className="ac-btn ac-btn-sm ac-btn-secondary"
                 >
                   <Copy className="h-4 w-4" />
-                </Button>
+                </button>
               </div>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-gray-500 mt-3">
                 Click the copy button to save your access code
               </p>
             </div>
-            <div className="text-sm text-gray-600">
-              <p className="mb-2">✅ 1 Free Quote Included</p>
-              <p className="mb-2">✅ Full Dashboard Access</p>
-              <p className="mb-4">✅ AI-Powered Quote Generation</p>
-              <p>Redirecting you to get started...</p>
+            
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center justify-center gap-2">
+                <Check className="w-5 h-5 text-green-500" />
+                <span className="text-sm text-gray-700">1 Free Quote Included</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Check className="w-5 h-5 text-green-500" />
+                <span className="text-sm text-gray-700">Full Dashboard Access</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Check className="w-5 h-5 text-green-500" />
+                <span className="text-sm text-gray-700">AI-Powered Quote Generation</span>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+            
+            <div className="flex items-center justify-center gap-2 text-primary-pink">
+              <Zap className="w-5 h-5 animate-pulse" />
+              <p className="text-sm font-medium">Redirecting you to get started...</p>
+            </div>
+          </div>
+        </div>
+
+        <style jsx>{`
+          .text-primary-pink {
+            color: var(--primary-pink);
+          }
+
+          .ac-gradient-box {
+            background: linear-gradient(135deg, rgba(239, 43, 112, 0.05) 0%, rgba(239, 43, 112, 0.02) 100%);
+            border: 1px solid rgba(239, 43, 112, 0.1);
+            border-radius: 12px;
+          }
+        `}</style>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Palette className="w-8 h-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900">ProPaint Quote</span>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="ac-hero py-20">
+        <div className="container mx-auto max-w-4xl px-4 text-center">
+          <div className="ac-hero-badge mb-6">
+            <Sparkles size={16} />
+            <span>Start Free in 30 Seconds</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Get Started in 30 Seconds</h1>
-          <p className="text-gray-600">Just 2 fields to unlock your free professional quote</p>
+          
+          <h1 className="ac-hero-title mb-6">
+            Create Professional Quotes <span style={{ color: 'var(--primary-pink)' }}>14x Faster</span>
+          </h1>
+          
+          <p className="ac-hero-subtitle">
+            Join 5,000+ contractors winning more jobs with AI-powered quotes.
+            No credit card required. Get your first quote free.
+          </p>
         </div>
+      </section>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Start Your Free Trial</CardTitle>
-            <CardDescription>
-              No credit card required • Instant access • 1 free quote included
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+      {/* Signup Form */}
+      <section className="py-12 px-4 -mt-20 relative z-10">
+        <div className="container mx-auto max-w-md">
+          <div className="ac-card">
+            <div className="ac-card-body p-8">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Start Your Free Trial</h2>
+                <p className="text-gray-600">
+                  No credit card required • Instant access • 1 free quote included
+                </p>
+              </div>
             <form onSubmit={handleSubmit} className="space-y-6">
-              <TouchFriendlyInput
-                label="Company Name"
-                type="text"
-                placeholder="e.g., Elite Painting Co."
-                value={formData.companyName}
-                onChange={(e) => handleInputChange("companyName", e.target.value)}
-                required
-              />
+              <div className="ac-form-group">
+                <label htmlFor="companyName" className="ac-label">
+                  Company Name
+                </label>
+                <input
+                  type="text"
+                  id="companyName"
+                  placeholder="e.g., Elite Painting Co."
+                  value={formData.companyName}
+                  onChange={(e) => handleInputChange("companyName", e.target.value)}
+                  className="ac-input"
+                  required
+                />
+              </div>
 
-              <TouchFriendlyInput
-                label="Email Address"
-                type="email"
-                placeholder="e.g., mike@elitepainting.com"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                required
-                helperText="We'll email you your access code and account details"
-              />
+              <div className="ac-form-group">
+                <label htmlFor="email" className="ac-label">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="e.g., mike@elitepainting.com"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  className="ac-input"
+                  required
+                />
+                <p className="ac-form-helper">We'll email you your access code and account details</p>
+              </div>
 
               {formData.accessCode && (
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <Label className="text-sm font-medium text-blue-900">Your Access Code</Label>
-                  <div className="flex items-center justify-between mt-1">
-                    <p className="text-lg font-bold text-blue-700">{formData.accessCode}</p>
-                    <Button
-                      size="sm"
-                      variant="ghost"
+                <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg ac-fade-in">
+                  <div className="text-sm font-medium text-purple-900 mb-2">Your Access Code</div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-lg font-bold text-primary-pink">{formData.accessCode}</p>
+                    <button
                       type="button"
                       onClick={() => {
                         navigator.clipboard.writeText(formData.accessCode);
                         alert('Access code copied to clipboard!');
                       }}
-                      className="h-7 text-blue-600 hover:text-blue-700 hover:bg-blue-100"
+                      className="ac-btn ac-btn-sm ac-btn-ghost text-primary-pink hover:bg-purple-100"
                     >
-                      <Copy className="h-3 w-3 mr-1" />
+                      <Copy className="h-4 w-4 mr-1" />
                       Copy
-                    </Button>
+                    </button>
                   </div>
-                  <p className="text-xs text-blue-600 mt-1">
+                  <p className="text-xs text-purple-700 mt-2">
                     Save this code - you'll use it to sign in after creating your account
                   </p>
                 </div>
               )}
 
               {error && (
-                <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-md">
-                  <AlertCircle className="w-4 h-4 text-red-600" />
-                  <span className="text-sm text-red-600">{error}</span>
+                <div className="ac-form-error flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" />
+                  <span>{error}</span>
                 </div>
               )}
 
-              <div className="bg-green-50 border border-green-200 rounded-md p-4">
-                <h4 className="font-medium text-green-900 mb-2">🎉 Your Free Trial Includes:</h4>
-                <ul className="text-sm text-green-700 space-y-1">
-                  <li>✅ 1 Professional Quote (No credit card required)</li>
-                  <li>✅ AI Quote Assistant</li>
-                  <li>✅ Full Dashboard Access</li>
-                  <li>✅ Mobile & Desktop Compatible</li>
+              <div className="ac-gradient-box p-4">
+                <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
+                  <Award className="w-5 h-5 text-primary-pink" />
+                  Your Free Trial Includes:
+                </h4>
+                <ul className="space-y-2">
+                  <li className="flex items-start gap-2">
+                    <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                    <span className="text-sm text-gray-700">1 Professional Quote (No credit card required)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                    <span className="text-sm text-gray-700">AI Quote Assistant</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                    <span className="text-sm text-gray-700">Full Dashboard Access</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                    <span className="text-sm text-gray-700">Mobile & Desktop Compatible</span>
+                  </li>
                 </ul>
               </div>
 
-              <Button type="submit" className="w-full h-12 text-base bg-blue-600 hover:bg-blue-700" disabled={isLoading || !formData.companyName || !formData.email}>
-                {isLoading ? "Creating Your Account..." : "Create Free Trial Account"}
-              </Button>
+              <button
+                type="submit"
+                disabled={isLoading || !formData.companyName || !formData.email}
+                className={`ac-btn ac-btn-primary ac-btn-lg w-full ${isLoading ? 'ac-btn-loading' : ''}`}
+              >
+                {isLoading ? '' : (
+                  <>
+                    Create Free Trial Account
+                    <ArrowRight size={20} />
+                  </>
+                )}
+              </button>
 
               <p className="text-xs text-gray-500 text-center">
                 No credit card required • Instant access • 1 free quote included
               </p>
             </form>
-          </CardContent>
-        </Card>
+            </div>
+          </div>
 
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">
-            Already have an access code?{" "}
-            <a href="/access-code" className="text-blue-600 hover:text-blue-700 font-medium">
-              Sign in here
-            </a>
-          </p>
+          <div className="text-center mt-6">
+            <p className="text-sm text-gray-600">
+              Already have an access code?{" "}
+              <a href="/access-code" className="text-primary-pink hover:text-primary-pink-dark font-medium transition-colors">
+                Sign in here →
+              </a>
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Trust Indicators */}
+      <section className="py-16 px-4 bg-gray-50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div className="ac-fade-in">
+              <div className="text-3xl font-bold text-gray-900">5,000+</div>
+              <div className="text-sm text-gray-600">Active Contractors</div>
+            </div>
+            <div className="ac-fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="text-3xl font-bold text-gray-900">99%</div>
+              <div className="text-sm text-gray-600">Accuracy Rate</div>
+            </div>
+            <div className="ac-fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="text-3xl font-bold text-gray-900">30s</div>
+              <div className="text-sm text-gray-600">Average Quote Time</div>
+            </div>
+            <div className="ac-fade-in" style={{ animationDelay: '0.3s' }}>
+              <div className="text-3xl font-bold text-gray-900">4.9/5</div>
+              <div className="text-sm text-gray-600">Customer Rating</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+
+      <style jsx>{`
+        .text-primary-pink {
+          color: var(--primary-pink);
+        }
+        
+        .text-primary-pink-dark {
+          color: var(--primary-pink-dark);
+        }
+        
+        .hover\:text-primary-pink-dark:hover {
+          color: var(--primary-pink-dark);
+        }
+
+        .ac-gradient-box {
+          background: linear-gradient(135deg, rgba(239, 43, 112, 0.05) 0%, rgba(239, 43, 112, 0.02) 100%);
+          border: 1px solid rgba(239, 43, 112, 0.1);
+          border-radius: 12px;
+        }
+      `}</style>
     </div>
   );
 }

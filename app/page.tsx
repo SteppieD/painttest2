@@ -11,353 +11,301 @@ import {
   Shield,
   Smartphone,
   FileText,
-  BookOpen
+  BookOpen,
+  Zap,
+  DollarSign,
+  BarChart3,
+  Award,
+  Check
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Header } from '@/components/shared/header';
+import { ACHeroSection } from '@/components/adcreative/ACHeroSection';
 import { Footer } from '@/components/shared/footer';
 import { ROICalculator } from '@/components/marketing/roi-calculator';
-import { IndustryStats } from '@/components/marketing/industry-stats';
-import { SpeedComparison } from '@/components/marketing/speed-comparison';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
-import { QuickPaintCalculator } from '@/components/calculators/quick-paint-calculator';
-import { RoomCalculatorWidget } from '@/components/calculators/room-calculator-widget';
-import { PaintCoverageWidget } from '@/components/calculators/paint-coverage-widget';
-import { CostComparisonWidget } from '@/components/calculators/cost-comparison-widget';
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      {/* Hero Section with AdCreative Design */}
+      <ACHeroSection />
 
-      {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-pink-50 via-purple-50 to-rose-50">
-        <div className="container mx-auto text-center max-w-4xl">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            From <span className="text-red-500">6 Hours</span> to <span className="text-green-600">6 Minutes</span>: Professional <span className="bg-gradient-to-r from-[#ef2b70] to-[#ff6b9d] bg-clip-text text-transparent">Painting Quotes</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            While competitors take days, you deliver same-day quotes. Join 10,000+ contractors winning <strong>40-60% more jobs</strong> with professional, mobile-first quoting that closes deals on-site.
-          </p>
-          <div className="flex flex-col items-center gap-4 justify-center mb-12">
-            <Link href="/trial-signup" className="text-lg px-12 py-6 bg-[#ef2b70] text-white font-semibold rounded-xl shadow-lg hover:bg-[#d91f5f] hover:shadow-xl hover:scale-105 transition-all duration-200 inline-flex items-center border-2 border-white/20">
-              Start Free Trial - 10 Quotes Free
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
-            <p className="text-sm text-gray-600">
-              Already have an access code? 
-              <Link href="/access-code" className="text-[#ef2b70] hover:text-[#ff6b9d] ml-1 underline transition-colors duration-200">
-                Sign in here
-              </Link>
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-green-500 shrink-0" />
-              <span>Quote in 6 minutes</span>
+      {/* Trust Indicators */}
+      <section className="py-12 px-4 bg-gray-50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div className="ac-fade-in">
+              <div className="text-3xl font-bold text-gray-900">5,000+</div>
+              <div className="text-sm text-gray-600">Active Contractors</div>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-              <span>No credit card</span>
+            <div className="ac-fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="text-3xl font-bold text-gray-900">$73M+</div>
+              <div className="text-sm text-gray-600">Quotes Generated</div>
             </div>
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-green-500 shrink-0" />
-              <span>40-60% higher wins</span>
+            <div className="ac-fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="text-3xl font-bold text-gray-900">99%</div>
+              <div className="text-sm text-gray-600">Accuracy Rate</div>
+            </div>
+            <div className="ac-fade-in" style={{ animationDelay: '0.3s' }}>
+              <div className="text-3xl font-bold text-gray-900">4.9/5</div>
+              <div className="text-sm text-gray-600">Customer Rating</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section with AC Design */}
       <section id="features" className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Everything You Need to Quote Like a Pro
+            <div className="ac-hero-badge inline-flex mb-4">
+              <Zap size={16} />
+              <span>Professional Features</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Everything You Need to <span className="text-primary-pink">Win More Jobs</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Built specifically for painting contractors who want to win more jobs and increase profit margins
+              Built specifically for painting contractors who want to dominate their market
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
-              <CardHeader>
-                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 group-hover:shadow-md transition-all duration-200 w-fit">
-                  <Calculator className="w-8 h-8 text-white" />
+            {[
+              {
+                icon: Calculator,
+                title: "AI-Powered Calculator",
+                description: "99% accurate estimates with smart material and labor calculations. Never lose money on underquotes.",
+                color: "from-blue-500 to-blue-600"
+              },
+              {
+                icon: Clock,
+                title: "30-Second Quotes",
+                description: "Create professional quotes in seconds, not hours. Close deals on-site before competitors respond.",
+                color: "from-green-500 to-green-600"
+              },
+              {
+                icon: Smartphone,
+                title: "Mobile-First Design",
+                description: "Quote from anywhere - job sites, client meetings, or your truck. Works perfectly on any device.",
+                color: "from-purple-500 to-purple-600"
+              },
+              {
+                icon: FileText,
+                title: "Professional Templates",
+                description: "Stunning quote templates that make you look like a million-dollar company. Customizable branding.",
+                color: "from-pink-500 to-pink-600"
+              },
+              {
+                icon: TrendingUp,
+                title: "Win Rate Analytics",
+                description: "Track which quotes win and why. Optimize your pricing for maximum profit and conversion.",
+                color: "from-orange-500 to-orange-600"
+              },
+              {
+                icon: Shield,
+                title: "Digital Signatures",
+                description: "Get quotes approved instantly with legally-binding e-signatures. No more chasing paperwork.",
+                color: "from-indigo-500 to-indigo-600"
+              }
+            ].map((feature, index) => (
+              <div key={index} className="ac-card group ac-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div className="ac-card-body">
+                  <div className={`p-3 rounded-xl bg-gradient-to-br ${feature.color} w-fit mb-4 group-hover:scale-110 transition-transform`}>
+                    <feature.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-pink transition-colors">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600">
+                    {feature.description}
+                  </p>
                 </div>
-                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">Smart Quote Calculator</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Automatically calculate materials, labor, and markup with industry-standard formulas. Never underestimate a job again.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
-              <CardHeader>
-                <div className="p-3 rounded-xl bg-gradient-to-br from-green-500 to-green-600 group-hover:shadow-md transition-all duration-200 w-fit">
-                  <Clock className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">5-Minute Quotes</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Generate detailed, professional quotes in minutes instead of hours. Respond to leads faster than your competition.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
-              <CardHeader>
-                <div className="p-3 rounded-xl bg-gradient-to-br from-[#ef2b70] to-[#ff6b9d] group-hover:shadow-md transition-all duration-200 w-fit">
-                  <Smartphone className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">Mobile Optimized</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Create quotes on-site with your phone or tablet. Perfect for walk-through estimates and immediate customer responses.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
-              <CardHeader>
-                <div className="p-3 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 group-hover:shadow-md transition-all duration-200 w-fit">
-                  <Users className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">Customer Management</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Track all your quotes and customers in one place. Follow up on pending estimates and convert more leads.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
-              <CardHeader>
-                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 group-hover:shadow-md transition-all duration-200 w-fit">
-                  <TrendingUp className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">Profit Analytics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Track your win rates, average job size, and profit margins. Make data-driven decisions to grow your business.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-200 group">
-              <CardHeader>
-                <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 group-hover:shadow-md transition-all duration-200 w-fit">
-                  <Shield className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle className="group-hover:text-[#ef2b70] transition-colors duration-200">Professional Branding</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Send professional, branded quotes that build trust with customers and help you stand out from competitors.
-                </p>
-              </CardContent>
-            </Card>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonial Carousel */}
-      <TestimonialCarousel className="bg-gray-50" />
+      {/* Pricing Preview with AC Design */}
+      <section className="py-20 px-4 ac-bg-dark">
+        <div className="container mx-auto max-w-6xl text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Simple, Transparent Pricing
+          </h2>
+          <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+            Start free, upgrade when ready. No contracts, no hidden fees.
+          </p>
+          
+          <div className="ac-pricing-grid">
+            {/* Free Plan */}
+            <div className="ac-pricing-card">
+              <h3 className="text-2xl font-bold mb-2">Perfect Start</h3>
+              <p className="text-gray-600 mb-6">For solo contractors</p>
+              <div className="ac-pricing-price">
+                $0<span className="ac-pricing-period">/month</span>
+              </div>
+              <p className="text-sm text-gray-600 mb-6">10 quotes per month</p>
+              <ul className="space-y-3 mb-8 text-left">
+                <li className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span>All core features</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span>Mobile app access</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span>Email support</span>
+                </li>
+              </ul>
+              <Link href="/trial-signup" className="ac-btn ac-btn-secondary ac-btn-lg">
+                Start Free
+              </Link>
+            </div>
 
-      {/* Industry Statistics */}
-      <IndustryStats className="bg-white" />
+            {/* Professional Plan */}
+            <div className="ac-pricing-card featured">
+              <div className="ac-pricing-badge">Most Popular</div>
+              <h3 className="text-2xl font-bold mb-2">Professional</h3>
+              <p className="text-gray-600 mb-6">For growing businesses</p>
+              <div className="ac-pricing-price">
+                $79<span className="ac-pricing-period">/month</span>
+              </div>
+              <p className="text-sm text-gray-600 mb-6">Unlimited quotes</p>
+              <ul className="space-y-3 mb-8 text-left">
+                <li className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span>Everything in Free</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span>Custom branding</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span>Priority support</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span>Analytics dashboard</span>
+                </li>
+              </ul>
+              <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-lg">
+                Start 14-Day Trial
+              </Link>
+            </div>
 
-      {/* Speed Comparison */}
-      <SpeedComparison className="bg-gray-50" />
+            {/* Business Plan */}
+            <div className="ac-pricing-card">
+              <h3 className="text-2xl font-bold mb-2">Business</h3>
+              <p className="text-gray-600 mb-6">For teams & enterprises</p>
+              <div className="ac-pricing-price">
+                $149<span className="ac-pricing-period">/month</span>
+              </div>
+              <p className="text-sm text-gray-600 mb-6">Everything included</p>
+              <ul className="space-y-3 mb-8 text-left">
+                <li className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span>Everything in Pro</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span>Multi-user access</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span>API access</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span>Dedicated manager</span>
+                </li>
+              </ul>
+              <Link href="/contact" className="ac-btn ac-btn-secondary ac-btn-lg">
+                Contact Sales
+              </Link>
+            </div>
+          </div>
+          
+          <div className="mt-12 text-center">
+            <Link href="/pricing" className="text-white hover:text-primary-pink transition-colors">
+              View detailed pricing & features →
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* ROI Calculator Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-pink-50 via-purple-50 to-rose-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Calculate Your Revenue Potential
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              See exactly how much more revenue you could generate with professional quotes and faster response times
-            </p>
-          </div>
-          
-          <ROICalculator className="mb-8" />
-          
-          <div className="text-center">
-            <Link href="/roi-calculator" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#ef2b70] to-[#ff6b9d] text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200">
-              View Detailed Calculator
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Interactive Calculators Section */}
       <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-7xl">
+        <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Try Our Free Paint Calculators
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Calculate Your <span className="text-primary-pink">ROI</span>
             </h2>
             <p className="text-xl text-gray-600">
-              Get instant estimates and see the power of professional painting software
+              See how much revenue ProPaint Quote can generate for your business
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <QuickPaintCalculator />
-            <RoomCalculatorWidget />
-            <PaintCoverageWidget />
-            <CostComparisonWidget />
-          </div>
-          
-          <div className="text-center mt-8">
-            <Button variant="primary" size="lg" asChild>
-              <Link href="/trial-signup">
-                Get Full Professional Calculator
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
-            <p className="text-sm text-gray-600 mt-2">
-              Professional features include material costs, regional pricing, and detailed breakdowns
-            </p>
-          </div>
+          <ROICalculator />
         </div>
       </section>
 
-      {/* Resources Section */}
-      <section className="py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Painting Business Resources
-            </h2>
-            <p className="text-xl text-gray-600">
-              Everything you need to grow your painting business and create professional estimates
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Calculator className="w-8 h-8 text-blue-600 mb-2" />
-                <CardTitle className="text-lg">Estimate Calculator</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Free painting estimate calculator for instant, accurate quotes on any project size.
-                </p>
-                <Link href="/painting-estimate-calculator" className="text-blue-600 hover:text-blue-700 font-medium">
-                  Try Calculator →
-                </Link>
-              </CardContent>
-            </Card>
+      {/* Testimonials */}
+      <TestimonialCarousel className="bg-white" />
 
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <FileText className="w-8 h-8 text-green-600 mb-2" />
-                <CardTitle className="text-lg">Quote Templates</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Professional painting quote templates for interior, exterior, and commercial projects.
-                </p>
-                <Link href="/painting-quote-templates" className="text-green-600 hover:text-green-700 font-medium">
-                  Download Templates →
-                </Link>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <BookOpen className="w-8 h-8 text-purple-600 mb-2" />
-                <CardTitle className="text-lg">Quoting Guide</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Complete guide on how to quote painting jobs like a professional contractor.
-                </p>
-                <Link href="/how-to-quote-painting-jobs" className="text-purple-600 hover:text-purple-700 font-medium">
-                  Read Guide →
-                </Link>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Smartphone className="w-8 h-8 text-indigo-600 mb-2" />
-                <CardTitle className="text-lg">Software Features</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Learn about the best painting estimating software features and benefits.
-                </p>
-                <Link href="/painting-estimating-software" className="text-indigo-600 hover:text-indigo-700 font-medium">
-                  Explore Features →
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4 bg-blue-600">
+      {/* Final CTA with AC Design */}
+      <section className="py-20 px-4 bg-gradient-to-r from-primary-pink to-primary-pink-dark">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ready to Win More Painting Jobs?
+          <div className="ac-hero-badge inline-flex mb-6" style={{ background: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.3)' }}>
+            <Award size={16} />
+            <span className="text-white">Limited Time Offer</span>
+          </div>
+          
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Ready to 14x Your Quote Speed?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Start your free trial today and see why contractors choose ProPaint Quote
+          <p className="text-xl text-white/90 mb-8">
+            Join 5,000+ contractors winning more jobs with professional quotes
           </p>
-          <Button size="lg" variant="outline_white" asChild className="text-lg px-8 py-6">
-            <Link href="/trial-signup">
-              Create Free Account Now
-              <ArrowRight className="w-5 h-5 ml-2" />
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+            <Link href="/trial-signup" className="ac-btn ac-btn-secondary ac-btn-lg">
+              Start Free Trial - 10 Quotes Included
+              <ArrowRight size={20} />
             </Link>
-          </Button>
-          <p className="text-blue-200 mt-4 text-sm">
-            1 Free Quote • No credit card required • Instant access
-          </p>
+            <Link href="/demo" className="ac-btn ac-btn-ghost ac-btn-lg text-white border-white hover:bg-white hover:text-primary-pink">
+              Watch Demo
+            </Link>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-white/80 text-sm">
+            <span>✓ No credit card required</span>
+            <span>✓ Full feature access</span>
+            <span>✓ Cancel anytime</span>
+          </div>
         </div>
       </section>
 
       <Footer />
 
-      {/* Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "ProPaint Quote",
-            "description": "Professional painting quote software for contractors",
-            "url": "https://propaintquote.com",
-            "applicationCategory": "BusinessApplication",
-            "operatingSystem": "Web",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD",
-              "description": "Free trial available"
-            },
-            "provider": {
-              "@type": "Organization",
-              "name": "ProPaint Quote"
-            }
-          })
-        }}
-      />
+      <style jsx>{`
+        .text-primary-pink {
+          color: var(--primary-pink);
+        }
+        
+        .bg-primary-pink {
+          background-color: var(--primary-pink);
+        }
+        
+        .from-primary-pink {
+          --tw-gradient-from: var(--primary-pink);
+        }
+        
+        .to-primary-pink-dark {
+          --tw-gradient-to: var(--primary-pink-dark);
+        }
+      `}</style>
     </div>
   );
 }

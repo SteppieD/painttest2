@@ -17,15 +17,11 @@ import {
   Calculator,
   Smartphone,
   Target,
-  Award
+  Award,
+  Percent
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
-import { ResponsiveTable } from '@/components/ui/responsive-table';
-import { PricingPlansV2 } from '@/components/stripe/pricing-plans-v2';
 import { ModernPricingTable } from '@/components/stripe/modern-pricing-table';
 
 // Metadata should be defined in a layout.tsx file or generateMetadata function for Server Components
@@ -33,10 +29,10 @@ import { ModernPricingTable } from '@/components/stripe/modern-pricing-table';
 export default function PricingPage() {
   // CIALDINI PRINCIPLE: Social Proof with real customer data
   const socialProofStats = [
-    { number: "5,000+", label: "Active Contractors", color: "text-blue-600" },
-    { number: "40%", label: "Average Win Rate Increase", color: "text-green-600" },
-    { number: "$2.3M+", label: "Quotes Generated", color: "text-purple-600" },
-    { number: "95%", label: "Customer Satisfaction", color: "text-orange-600" }
+    { number: "5,000+", label: "Active Contractors", icon: Users },
+    { number: "40%", label: "Win Rate Increase", icon: TrendingUp },
+    { number: "$73M+", label: "Quotes Generated", icon: Calculator },
+    { number: "4.9/5", label: "Customer Rating", icon: Star }
   ];
 
   // CIALDINI PRINCIPLE: Reciprocity & Commitment/Consistency
@@ -144,45 +140,50 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
-
       {/* Hero Section - CIALDINI: Social Proof & Authority */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto text-center max-w-4xl">
+      <section className="ac-hero py-20">
+        <div className="container mx-auto text-center max-w-4xl px-4">
           {/* Authority Badge */}
-          <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+          <div className="ac-hero-badge mb-6">
             <Star className="w-4 h-4 fill-current" />
             <span>Trusted by 5,000+ Professional Contractors</span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Simple Pricing That <span className="text-blue-600">Grows With You</span>
+          <h1 className="ac-hero-title">
+            Simple Pricing That <span style={{ color: 'var(--primary-pink)' }}>Scales With You</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="ac-hero-subtitle mb-8">
             Start free, upgrade when ready. No contracts, no hidden fees. 
-            Join thousands of contractors who've increased their revenue with transparent pricing.
+            Join thousands of contractors winning 40% more jobs.
           </p>
           
           {/* Social Proof Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
             {socialProofStats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className={`text-2xl md:text-3xl font-bold ${stat.color}`}>{stat.number}</div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
+              <div key={index} className="ac-fade-in text-center" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/20 mb-3">
+                  <stat.icon className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-2xl md:text-3xl font-bold text-white">{stat.number}</div>
+                <div className="text-sm text-gray-300">{stat.label}</div>
               </div>
             ))}
           </div>
           
-          <p className="text-gray-500">⚡ Most contractors see ROI within their first quote</p>
+          <p className="text-gray-300">⚡ Most contractors see ROI within their first quote</p>
         </div>
       </section>
 
       {/* Pricing Plans - CIALDINI: Scarcity & Social Proof */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-gray-50">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Choose Your Growth Plan
+            <div className="ac-hero-badge inline-flex mb-4" style={{ background: 'rgba(239, 43, 112, 0.1)', borderColor: 'rgba(239, 43, 112, 0.2)', color: 'var(--primary-pink)' }}>
+              <Percent size={16} />
+              <span>Save 20% with Annual Billing</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Choose Your <span style={{ color: 'var(--primary-pink)' }}>Growth Plan</span>
             </h2>
             <p className="text-xl text-gray-600">
               Every plan includes all core features. Upgrade anytime as your business grows.
@@ -195,19 +196,64 @@ export default function PricingPage() {
       </section>
 
       {/* Feature Comparison - CIALDINI: Authority */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Compare All Features
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Compare All <span style={{ color: 'var(--primary-pink)' }}>Features</span>
             </h2>
             <p className="text-xl text-gray-600">
               See exactly what's included in each plan. No hidden features or surprise limitations.
             </p>
           </div>
           
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <ResponsiveTable
+          <div className="ac-card">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b bg-gray-50">
+                    <th className="text-left p-6 font-semibold text-gray-900">Features</th>
+                    <th className="text-center p-6 font-semibold text-gray-900">Perfect Start</th>
+                    <th className="text-center p-6 font-semibold text-gray-900">
+                      <div className="flex flex-col items-center">
+                        <span>Professional</span>
+                        <span className="text-xs font-normal text-primary-pink mt-1">Most Popular</span>
+                      </div>
+                    </th>
+                    <th className="text-center p-6 font-semibold text-gray-900">Business</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {featureComparison.map((row, index) => (
+                    <tr key={index} className="hover:bg-gray-50 transition-colors">
+                      <td className="p-6 font-medium text-gray-900">{row.feature}</td>
+                      <td className="p-6 text-center">
+                        {typeof row.free === 'boolean' ? (
+                          row.free ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
+                        ) : (
+                          <span className="text-gray-600">{row.free}</span>
+                        )}
+                      </td>
+                      <td className="p-6 text-center bg-blue-50/30">
+                        {typeof row.professional === 'boolean' ? (
+                          row.professional ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
+                        ) : (
+                          <span className="text-gray-600 font-medium">{row.professional}</span>
+                        )}
+                      </td>
+                      <td className="p-6 text-center">
+                        {typeof row.business === 'boolean' ? (
+                          row.business ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-gray-400 mx-auto" />
+                        ) : (
+                          <span className="text-gray-600">{row.business}</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* <ResponsiveTable
               headers={['Features', 'Perfect Start', 'Professional', 'Business']}
               rows={featureComparison.map(row => [
                 row.feature,
@@ -243,7 +289,7 @@ export default function PricingPage() {
                   </div>
                 </div>
               )}
-            />
+            /> -->
           </div>
         </div>
       </section>
@@ -252,18 +298,18 @@ export default function PricingPage() {
       <TestimonialCarousel className="bg-white" />
 
       {/* ROI Calculator - CIALDINI: Commitment/Consistency */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-gray-50">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Calculate Your ROI
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Calculate Your <span style={{ color: 'var(--primary-pink)' }}>ROI</span>
             </h2>
             <p className="text-xl text-gray-600">
               See how much revenue ProPaint Quote can generate for your business
             </p>
           </div>
           
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8">
+          <div className="ac-card p-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               <div>
                 <Calculator className="w-12 h-12 text-blue-600 mx-auto mb-4" />
@@ -297,26 +343,24 @@ export default function PricingPage() {
             </div>
             
             <div className="text-center mt-8">
-              <div className="text-2xl font-bold text-gray-900 mb-2">
+              <div className="text-2xl font-bold text-gray-900 mb-4">
                 ProPaint Quote pays for itself with just 1 additional job per month
               </div>
-              <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700">
-                <Link href="/trial-signup">
-                  Start Earning More Today
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Link>
-              </Button>
+              <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-lg">
+                Start Earning More Today
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* FAQ Section - CIALDINI: Authority */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Frequently Asked Questions
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Frequently Asked <span style={{ color: 'var(--primary-pink)' }}>Questions</span>
             </h2>
             <p className="text-xl text-gray-600">
               Get answers to common questions about our pricing and features
@@ -350,9 +394,11 @@ export default function PricingPage() {
                 a: "All plans include email support. Starter+ plans get chat support. Professional+ plans get phone support. Business plans get a dedicated success manager. Average response time is under 2 hours."
               }
             ].map((faq, index) => (
-              <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{faq.q}</h3>
-                <p className="text-gray-600">{faq.a}</p>
+              <div key={index} className="ac-card ac-fade-in" style={{ animationDelay: `${index * 0.05}s` }}>
+                <div className="ac-card-body">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{faq.q}</h3>
+                  <p className="text-gray-600">{faq.a}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -360,33 +406,29 @@ export default function PricingPage() {
       </section>
 
       {/* Final CTA - CIALDINI: Scarcity & Social Proof */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
+      <section className="py-20 px-4 bg-gradient-to-r from-primary-pink to-primary-pink-dark">
         <div className="container mx-auto max-w-4xl text-center">
-          <div className="inline-flex items-center gap-2 bg-yellow-400 text-yellow-900 px-4 py-2 rounded-full text-sm font-bold mb-6">
+          <div className="ac-hero-badge inline-flex mb-6" style={{ background: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.3)' }}>
             <Sparkles className="w-4 h-4" />
-            <span>Limited Time: 10 Free Quotes for Early Adopters</span>
+            <span className="text-white">Limited Time: 10 Free Quotes for Early Adopters</span>
           </div>
           
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ready to <span className="text-yellow-300">10x Your Quote Game?</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Ready to <span className="text-yellow-300">14x Your Quote Speed?</span>
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p className="text-xl text-white/90 mb-8">
             Join 5,000+ contractors who've transformed their businesses. 
             Start free, see results immediately, scale as you grow.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-gray-100">
-              <Link href="/trial-signup">
-                Start Free Trial - 10 Quotes Included
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6 border-white text-white hover:bg-white hover:text-blue-600">
-              <Link href="/demo">
-                Watch Live Demo
-              </Link>
-            </Button>
+            <Link href="/trial-signup" className="ac-btn ac-btn-secondary ac-btn-lg">
+              Start Free Trial - 10 Quotes Included
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Link>
+            <Link href="/demo" className="ac-btn ac-btn-ghost ac-btn-lg text-white border-white hover:bg-white hover:text-primary-pink">
+              Watch Live Demo
+            </Link>
           </div>
           
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-blue-200 text-sm mb-6">
@@ -409,6 +451,24 @@ export default function PricingPage() {
       </section>
 
       <Footer />
+
+      <style jsx>{`
+        .text-primary-pink {
+          color: var(--primary-pink);
+        }
+        
+        .bg-primary-pink {
+          background-color: var(--primary-pink);
+        }
+        
+        .from-primary-pink {
+          --tw-gradient-from: var(--primary-pink);
+        }
+        
+        .to-primary-pink-dark {
+          --tw-gradient-to: var(--primary-pink-dark);
+        }
+      `}</style>
     </div>
   );
 }

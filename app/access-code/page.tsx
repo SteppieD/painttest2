@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { trackAccessCodeUsed, trackPageView } from "@/lib/analytics/tracking";
+import Link from "next/link";
+import { ArrowRight, Sparkles, Users, Lock, Zap } from "lucide-react";
+import { Footer } from "@/components/shared/footer";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -14,6 +17,10 @@ export default function AccessCodePage() {
   const [availableCodes, setAvailableCodes] = useState<any[]>([]);
   const [showDemoCodes, setShowDemoCodes] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    trackPageView('/access-code');
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,262 +86,190 @@ export default function AccessCodePage() {
           }
         }
       } else {
-        if (data.error && data.error.includes("not found")) {
-          setError("Access code not found. Please check your code or create a new trial account.");
-        } else if (data.error && data.error.includes("expired")) {
-          setError("This access code has expired. Please contact support or create a new trial account.");
-        } else {
-          setError("Invalid access code. Please check your spelling and try again.");
-        }
+        setError(data.message || "Invalid access code. Please try again.");
       }
     } catch (error) {
-      console.error("Error:", error);
-      setError("Connection problem. Please check your internet and try again.");
+      setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   const loadDemoCodes = async () => {
+    setShowDemoCodes(true);
     try {
-      const response = await fetch("/api/verify-code");
-      const data = await response.json();
-      setAvailableCodes(data.companies || []);
-      setShowDemoCodes(true);
+      // Using the correct endpoint
+      const response = await fetch("/api/admin/access-codes", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        // Filter for active demo codes only
+        const demoCodes = data.accessCodes?.filter((code: any) => 
+          code.status === 'active' && 
+          (code.code.startsWith('DEMO') || code.companyName?.includes('Demo'))
+        ) || [];
+        setAvailableCodes(demoCodes);
+      }
     } catch (error) {
-      console.error("Error loading demo codes:", error);
+      console.error("Failed to load demo codes:", error);
     }
   };
 
-  const selectDemoCode = (code: string) => {
+  const useDemoCode = (code: string) => {
     setAccessCode(code);
-    setShowDemoCodes(false);
+    setError("");
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#f5f5f5",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "white",
-          padding: "40px",
-          borderRadius: "8px",
-          boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-          width: "100%",
-          maxWidth: "min(400px, 90vw)",
-        }}
-      >
-        <div style={{ textAlign: "center", marginBottom: "30px" }}>
-          <h1 style={{ color: "#333", margin: "0 0 10px 0", fontSize: "24px" }}>
-            🎨 Painting Quote Pro
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Hero Section */}
+      <section className="ac-hero py-20">
+        <div className="container mx-auto max-w-4xl px-4 text-center">
+          <div className="ac-hero-badge mb-6">
+            <Lock size={16} />
+            <span>Secure Access Portal</span>
+          </div>
+          
+          <h1 className="ac-hero-title mb-6">
+            Welcome Back to <span style={{ color: 'var(--primary-pink)' }}>ProPaint Quote</span>
           </h1>
-          <p style={{ color: "#666", fontSize: "14px", margin: 0 }}>
-            Enter your company access code to continue
+          
+          <p className="ac-hero-subtitle">
+            Enter your company access code to continue creating professional painting quotes
           </p>
         </div>
+      </section>
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "20px" }}>
-            <input
-              type="text"
-              value={accessCode}
-              onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
-              placeholder="Enter access code (e.g., DEMO2024)"
-              style={{
-                width: "100%",
-                padding: "12px",
-                border: "1px solid #ddd",
-                borderRadius: "6px",
-                fontSize: "16px",
-                textAlign: "center",
-                textTransform: "uppercase",
-                letterSpacing: "1px",
-                fontWeight: "bold",
-              }}
-              disabled={isLoading}
-            />
-          </div>
+      {/* Access Code Form */}
+      <section className="py-12 px-4 -mt-20 relative z-10">
+        <div className="container mx-auto max-w-md">
+          <div className="ac-card">
+            <div className="ac-card-body p-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="ac-form-group">
+                  <label htmlFor="accessCode" className="ac-label">
+                    Company Access Code
+                  </label>
+                  <input
+                    type="text"
+                    id="accessCode"
+                    value={accessCode}
+                    onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
+                    placeholder="Enter your access code"
+                    className={`ac-input ${error ? 'ac-input-error' : ''}`}
+                    disabled={isLoading}
+                    autoFocus
+                  />
+                  {error && (
+                    <p className="ac-form-error">{error}</p>
+                  )}
+                </div>
 
-          {error && (
-            <div
-              style={{
-                backgroundColor: "#fee",
-                color: "#c33",
-                padding: "10px",
-                borderRadius: "4px",
-                marginBottom: "20px",
-                fontSize: "14px",
-                textAlign: "center",
-              }}
-            >
-              {error}
-            </div>
-          )}
+                <button
+                  type="submit"
+                  disabled={isLoading || !accessCode.trim()}
+                  className={`ac-btn ac-btn-primary ac-btn-lg w-full ${isLoading ? 'ac-btn-loading' : ''}`}
+                >
+                  {isLoading ? '' : (
+                    <>
+                      Access Dashboard
+                      <ArrowRight size={20} />
+                    </>
+                  )}
+                </button>
+              </form>
 
-          <button
-            type="submit"
-            disabled={isLoading || !accessCode.trim()}
-            style={{
-              width: "100%",
-              padding: "12px",
-              backgroundColor: isLoading ? "#ccc" : "#ef2b70",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              fontSize: "16px",
-              fontWeight: "bold",
-              cursor: isLoading ? "not-allowed" : "pointer",
-              marginBottom: "15px",
-            }}
-          >
-            {isLoading ? "Verifying..." : "Access Dashboard"}
-          </button>
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-600 mb-2">
+                  Don't have an access code?
+                </p>
+                <Link 
+                  href="/trial-signup" 
+                  className="text-primary-pink hover:text-primary-pink-dark font-medium transition-colors"
+                >
+                  Start your free trial →
+                </Link>
+              </div>
 
-          {/* Modern Interface Option */}
-          <div style={{ 
-            marginTop: "15px", 
-            padding: "12px", 
-            backgroundColor: "#e8f4fd", 
-            borderRadius: "6px",
-            border: "1px solid #b3d9ff"
-          }}>
-            <div style={{ 
-              display: "flex", 
-              alignItems: "center", 
-              justifyContent: "center", 
-              gap: "8px", 
-              marginBottom: "8px" 
-            }}>
-              <span style={{ fontSize: "16px" }}>🚀</span>
-              <span style={{ fontSize: "14px", fontWeight: "bold", color: "#1a5490" }}>
-                NEW: Modern Interface
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                if (accessCode.trim()) {
-                  const form = new FormData();
-                  const submitEvent = new Event('submit');
-                  // Set flag to redirect to modern interface
-                  window.history.replaceState({}, '', `${window.location.pathname}?modern=true`);
-                  handleSubmit({ preventDefault: () => {} } as any);
-                }
-              }}
-              disabled={!accessCode.trim() || isLoading}
-              style={{
-                width: "100%",
-                padding: "10px",
-                backgroundColor: !accessCode.trim() || isLoading ? "#ccc" : "#10b981",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                fontSize: "14px",
-                fontWeight: "bold",
-                cursor: !accessCode.trim() || isLoading ? "not-allowed" : "pointer",
-              }}
-            >
-              Try Apple & Google-Inspired Interface
-            </button>
-            <p style={{ 
-              margin: "8px 0 0 0", 
-              fontSize: "11px", 
-              color: "#666", 
-              textAlign: "center" 
-            }}>
-              Experience 30-second quotes, smart suggestions, and mobile-first design
-            </p>
-          </div>
-        </form>
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <button
+                  onClick={loadDemoCodes}
+                  className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  {showDemoCodes ? "Hide demo codes" : "Try with demo code"}
+                </button>
 
-        <div style={{ textAlign: "center" }}>
-          <button
-            onClick={loadDemoCodes}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#ef2b70",
-              textDecoration: "underline",
-              cursor: "pointer",
-              fontSize: "12px",
-              marginBottom: "10px",
-              display: "block",
-              width: "100%",
-            }}
-          >
-            View Demo Access Codes
-          </button>
-          
-          <a
-            href="/forgot-code"
-            style={{
-              color: "#ef2b70",
-              textDecoration: "underline",
-              fontSize: "12px",
-              display: "inline-block",
-            }}
-          >
-            Forgot your access code?
-          </a>
-        </div>
-
-        {showDemoCodes && (
-          <div
-            style={{
-              marginTop: "20px",
-              padding: "15px",
-              backgroundColor: "#f8f9fa",
-              borderRadius: "6px",
-            }}
-          >
-            <h4
-              style={{ margin: "0 0 10px 0", fontSize: "14px", color: "#333" }}
-            >
-              Available Demo Codes:
-            </h4>
-            {availableCodes.map((company, index) => (
-              <div
-                key={index}
-                onClick={() => selectDemoCode(company.access_code)}
-                style={{
-                  padding: "8px",
-                  margin: "5px 0",
-                  backgroundColor: "white",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "12px",
-                }}
-              >
-                <strong>{company.access_code}</strong> - {company.company_name}
-                {company.phone && (
-                  <div style={{ color: "#666" }}>{company.phone}</div>
+                {showDemoCodes && (
+                  <div className="mt-4 space-y-2">
+                    {availableCodes.length > 0 ? (
+                      availableCodes.map((code) => (
+                        <button
+                          key={code.id}
+                          onClick={() => useDemoCode(code.code)}
+                          className="w-full p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors ac-fade-in"
+                        >
+                          <div className="font-mono font-semibold text-primary-pink">
+                            {code.code}
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            {code.companyName}
+                          </div>
+                        </button>
+                      ))
+                    ) : (
+                      <div className="text-sm text-gray-500 text-center py-2">
+                        Loading demo codes...
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
-            ))}
+            </div>
           </div>
-        )}
 
-        <div
-          style={{
-            marginTop: "20px",
-            fontSize: "11px",
-            color: "#999",
-            textAlign: "center",
-          }}
-        >
-          <p>New access codes auto-create companies</p>
-          <p>Format: LETTERS + NUMBERS (e.g., PAINT2025)</p>
+          {/* Benefits */}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="text-center ac-fade-in">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md mb-3">
+                <Zap className="w-6 h-6 text-primary-pink" />
+              </div>
+              <p className="text-sm text-gray-600">30-second quotes</p>
+            </div>
+            <div className="text-center ac-fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md mb-3">
+                <Users className="w-6 h-6 text-primary-pink" />
+              </div>
+              <p className="text-sm text-gray-600">5,000+ contractors</p>
+            </div>
+            <div className="text-center ac-fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md mb-3">
+                <Sparkles className="w-6 h-6 text-primary-pink" />
+              </div>
+              <p className="text-sm text-gray-600">99% accuracy</p>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <Footer />
+
+      <style jsx>{`
+        .text-primary-pink {
+          color: var(--primary-pink);
+        }
+        
+        .text-primary-pink-dark {
+          color: var(--primary-pink-dark);
+        }
+        
+        .hover\:text-primary-pink-dark:hover {
+          color: var(--primary-pink-dark);
+        }
+      `}</style>
     </div>
   );
 }

@@ -8,8 +8,8 @@
 /* Import Apple Liquid Glass System */
 @import '../styles/liquid-glass.css';
 
-/* Import AdCreative-Inspired Modern Design (optional - uncomment to use) */
-/* @import '../styles/adcreative-inspired.css'; */
+/* Import AdCreative-Inspired Modern Design */
+@import '../styles/adcreative-design-system.css';
 
 @layer base {
   :root {
