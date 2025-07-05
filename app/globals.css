@@ -20,6 +20,9 @@
 /* Import Professional Contractor Theme - Must be last to override all pink colors */
 @import '../styles/professional-contractor-theme.css';
 
+/* Import Navigation Balance Fixes */
+@import '../styles/navigation-balance.css';
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -59,6 +59,20 @@ const parseCustomerInfo = (input: string, existingData: Partial<ConversationData
     };
   }
   
+  // Handle "A/An [adjective] painting quote for Name at Address" pattern
+  if (lower.includes('quote for') && lower.includes(' at ') && /\d/.test(input)) {
+    const match = input.match(/quote\s+for\s+([A-Za-z\s]+?)\s+at\s+([^.]+)/i);
+    if (match) {
+      const customerName = match[1].trim();
+      const address = match[2].trim();
+      console.log('🔍 PARSING: "quote for X at Y" - Customer:', customerName, 'Address:', address);
+      return {
+        customer_name: customerName,
+        address: address
+      };
+    }
+  }
+  
   // Handle "It's for Name at Address" pattern
   if (lower.includes("it's for") && lower.includes(' at ') && /\d/.test(input)) {
     const match = input.match(/it'?s\s+for\s+([A-Za-z\s]+?)\s+at\s+([^.]+)/i);
@@ -195,9 +209,10 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
     }
   }
   
-  // Handle room descriptions (like "2 bedrooms that are 15 x 9")
+  // Handle room descriptions (like "2 bedrooms that are 15 x 9" or "15 x 12 for each room")
   if (lower.includes('bedroom') || lower.includes('room') || lower.includes('area')) {
-    const roomMatch = input.match(/(\d+)\s*(?:bedrooms?|rooms?|areas?)\s*(?:that are|are|of|:)?\s*(\d+\.?\d*)\s*[x×*]\s*(\d+\.?\d*)/i);
+    // Pattern 1: "2 bedrooms that are 15 x 9"
+    let roomMatch = input.match(/(\d+)\s*(?:bedrooms?|rooms?|areas?)\s*(?:that are|are|of|:)?\s*(\d+\.?\d*)\s*[x×*]\s*(\d+\.?\d*)/i);
     if (roomMatch) {
       const roomCount = Number(roomMatch[1]);
       const length = Number(roomMatch[2]);
@@ -207,6 +222,38 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
       const totalFloorArea = roomCount * length * width;
       
       // If they're asking for ceiling area, use floor area
+      // Calculate perimeter for walls: (length + width) * 2 * number of rooms
+      const totalPerimeter = (length + width) * 2 * roomCount;
+      
+      dimensions.wall_linear_feet = totalPerimeter;
+      dimensions.ceiling_area = totalFloorArea;
+      
+      // Assume standard ceiling height if not provided
+      if (!dimensions.ceiling_height) {
+        dimensions.ceiling_height = 9;
+      }
+      
+      return dimensions;
+    }
+    
+    // Pattern 2: "15 feet by 12 feet for each room" (with 2 rooms mentioned elsewhere)
+    roomMatch = input.match(/(\d+\.?\d*)\s*(?:feet|ft)?\s*(?:by|x|×)\s*(\d+\.?\d*)\s*(?:feet|ft)?\s*(?:for each|per)\s*room/i);
+    if (roomMatch) {
+      const length = Number(roomMatch[1]);
+      const width = Number(roomMatch[2]);
+      
+      // Look for room count in the input or existing data
+      const roomCountMatch = input.match(/(\d+)\s*rooms?/i);
+      const roomCount = roomCountMatch ? Number(roomCountMatch[1]) : (existingDimensions.room_count || 1);
+      
+      // Store the room count for future reference
+      if (roomCountMatch) {
+        dimensions.room_count = roomCount;
+      }
+      
+      // Calculate total floor area for all rooms
+      const totalFloorArea = roomCount * length * width;
+      
       // Calculate perimeter for walls: (length + width) * 2 * number of rooms
       const totalPerimeter = (length + width) * 2 * roomCount;
       
@@ -324,6 +371,12 @@ const parseDimensions = (input: string, projectType: string, existingDimensions:
     }
   }
   
+  
+  // Parse room count
+  if (lower.includes('room') && !lower.includes('for each room')) {
+    const roomMatch = input.match(/(\d+)\s*rooms?/i);
+    if (roomMatch) dimensions.room_count = Number(roomMatch[1]);
+  }
   
   // Parse doors and windows
   if (lower.includes('door')) {

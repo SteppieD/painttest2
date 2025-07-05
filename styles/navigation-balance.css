@@ -1,0 +1,93 @@
+/* Navigation Balance Improvements - AdCreative.ai Style */
+
+/* Desktop Navigation */
+@media (min-width: 1024px) {
+  /* Header shadow for floating effect */
+  header {
+    box-shadow: 0 2px 4px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.08);
+  }
+  
+  /* Logo styling */
+  header .container > div > a:first-child {
+    flex-shrink: 0;
+  }
+  
+  /* Navigation centered with proper spacing */
+  header nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+  }
+  
+  /* Right-side CTA group */
+  header .container > div > div:last-child {
+    flex-shrink: 0;
+  }
+  
+  /* Consistent nav item spacing */
+  header nav > * {
+    white-space: nowrap;
+  }
+  
+  /* Dropdown menus alignment */
+  header nav .relative.group {
+    position: relative;
+  }
+  
+  /* Ensure dropdowns don't push other items */
+  header nav .absolute {
+    position: absolute;
+    top: 100%;
+    z-index: 50;
+  }
+}
+
+/* Hover effects for better visual feedback */
+header nav a:not(.px-6),
+header nav button {
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+header nav a:not(.px-6)::after,
+header nav button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 30px;
+  height: 2px;
+  background-color: #ef2b70;
+  transition: transform 0.2s ease;
+}
+
+header nav a:hover::after,
+header nav button:hover::after,
+header nav a.active::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* Ensure consistent heights */
+header nav > * {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+/* Better dropdown positioning */
+.group:hover .absolute {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.group .absolute {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+}

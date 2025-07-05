@@ -69,20 +69,60 @@ export class UnifiedQuoteAssistant {
   /**
    * Parse comprehensive quote information from a single message
    */
-  async parseCompleteQuoteMessage(userInput: string): Promise<QuoteParsingResult> {
+  async parseCompleteQuoteMessage(userInput: string, existingData?: any): Promise<QuoteParsingResult> {
     console.log('🔍 PARSING INPUT:', userInput);
+    console.log('📦 EXISTING DATA:', existingData);
     
-    // Use existing proven parsers first
-    const customerInfo = parseCustomerInfo(userInput);
-    console.log('👤 Customer Info:', customerInfo);
+    // Use existing proven parsers first, but merge with existing data
+    // Only parse customer info if we don't already have a name or if this looks like a customer info message
+    let customerInfo = {
+      customer_name: existingData?.customerInfo?.customer_name || '',
+      address: existingData?.customerInfo?.address || ''
+    };
     
-    const projectType = parseProjectType(userInput);
+    // Only update customer info if we don't have it or if this is clearly a customer info message
+    if (!customerInfo.customer_name || userInput.toLowerCase().includes('quote for') || 
+        userInput.toLowerCase().includes("it's for") || userInput.toLowerCase().includes('name is')) {
+      const newCustomerInfo = parseCustomerInfo(userInput);
+      if (newCustomerInfo.customer_name) {
+        customerInfo.customer_name = newCustomerInfo.customer_name;
+      }
+      if (newCustomerInfo.address) {
+        customerInfo.address = newCustomerInfo.address;
+      }
+    }
+    console.log('👤 Customer Info (merged):', customerInfo);
+    
+    const projectType = parseProjectType(userInput) || existingData?.projectType || 'interior';
     console.log('🏠 Project Type:', projectType);
     
-    const dimensions = parseDimensions(userInput, projectType);
-    console.log('📏 Dimensions:', dimensions);
+    // Only parse dimensions if this message is not primarily about customer info
+    // Check if this is primarily a customer info message
+    const lower = userInput.toLowerCase();
+    const isCustomerInfoMessage = (
+      lower.includes('quote for') || 
+      lower.includes("it's for") || 
+      lower.includes('name is') ||
+      (lower.includes(' at ') && /\d+\s+\w+\s+(street|st|avenue|ave|road|rd|drive|dr|lane|ln|way)/.test(lower))
+    );
     
-    const markupPercentage = parseMarkupPercentage(userInput);
+    let newDimensions = {};
+    if (!isCustomerInfoMessage) {
+      newDimensions = parseDimensions(userInput, projectType, existingData?.measurements || {});
+    }
+    
+    const dimensions = {
+      ...existingData?.measurements,
+      ...newDimensions,
+      // Don't overwrite with 0 values
+      wall_linear_feet: newDimensions.wall_linear_feet || existingData?.measurements?.wall_linear_feet,
+      ceiling_height: newDimensions.ceiling_height || existingData?.measurements?.ceiling_height,
+      number_of_doors: newDimensions.number_of_doors || existingData?.measurements?.number_of_doors,
+      number_of_windows: newDimensions.number_of_windows || existingData?.measurements?.number_of_windows
+    };
+    console.log('📏 Dimensions (merged):', dimensions);
+    
+    const markupPercentage = parseMarkupPercentage(userInput) || existingData?.markupPercentage;
     console.log('💰 Markup Percentage:', markupPercentage);
     
     // Parse additional information
@@ -209,27 +249,42 @@ export class UnifiedQuoteAssistant {
   } {
     const lower = input.toLowerCase();
     
+    // Check for "just walls" or "only walls" patterns
+    if (lower.includes('just walls') || lower.includes('only walls') || 
+        (lower.includes('walls only') && !lower.includes('ceilings'))) {
+      return {
+        walls: true,
+        ceilings: false,
+        trim: false,
+        doors: false,
+        windows: false
+      };
+    }
+    
     // Check for explicit exclusions
-    const notWalls = lower.includes('not painting the walls') || lower.includes('no walls') || lower.includes('walls not included');
-    const notCeilings = lower.includes('not painting the ceilings') || lower.includes('no ceilings') || lower.includes('ceilings not included');
-    const notTrim = (lower.includes('not painting') && lower.includes('trim')) || lower.includes('no trim') || lower.includes('trim not included');
-    const notDoors = (lower.includes('not painting') && lower.includes('doors')) || lower.includes('no doors') || lower.includes('doors not included');
-    const notWindows = (lower.includes('not painting') && lower.includes('windows')) || lower.includes('no windows') || lower.includes('windows not included');
+    const notWalls = lower.includes('no walls');
+    const notCeilings = lower.includes('no ceiling') || lower.includes('not ceiling') || 
+                       lower.includes('no trim') || lower.includes('just walls');
+    const notTrim = lower.includes('no trim') || lower.includes('not trim') || 
+                   lower.includes('just walls') || lower.includes('only walls');
+    const notDoors = lower.includes('no doors') || lower.includes('not doors') || 
+                    !lower.includes('doors') || notTrim;
+    const notWindows = lower.includes('no windows') || lower.includes('not windows') || 
+                      !lower.includes('windows') || notTrim;
     
     // Check for explicit inclusions
-    const includesDoors = lower.includes('including doors') || lower.includes('paint doors') || lower.includes('doors included') || 
-                         (lower.includes('doors') && lower.includes('trim'));
-    const includesWindows = lower.includes('including windows') || lower.includes('paint windows') || lower.includes('windows included') ||
-                           (lower.includes('windows') && lower.includes('trim'));
-    const includesTrim = lower.includes('including trim') || lower.includes('paint trim') || lower.includes('trim included') ||
-                        includesDoors || includesWindows; // If doors/windows included, usually trim is too
+    const includesWalls = lower.includes('walls') || !lower.includes('no walls');
+    const includesCeilings = lower.includes('ceiling') && !notCeilings;
+    const includesTrim = (lower.includes('trim') || lower.includes('doors') || lower.includes('windows')) && !notTrim;
+    const includesDoors = lower.includes('doors') && !notDoors;
+    const includesWindows = lower.includes('windows') && !notWindows;
     
     return {
-      walls: !notWalls,
-      ceilings: !notCeilings,
-      trim: !notTrim || includesTrim,
-      doors: !notDoors || includesDoors,
-      windows: !notWindows || includesWindows
+      walls: includesWalls,
+      ceilings: includesCeilings,
+      trim: includesTrim,
+      doors: includesDoors,
+      windows: includesWindows
     };
   }
 
@@ -265,7 +320,8 @@ export class UnifiedQuoteAssistant {
     if (!data.customerInfo.address) missing.push('address');
     if (!data.dimensions.wall_linear_feet) missing.push('linear feet of walls');
     if (!data.dimensions.ceiling_height) missing.push('ceiling height');
-    if (!data.paintInfo.cost_per_gallon && !data.laborRate) missing.push('paint costs or labor rates');
+    // Remove paint cost requirement - we'll use defaults if not provided
+    // if (!data.paintInfo.cost_per_gallon && !data.laborRate) missing.push('paint costs or labor rates');
     
     // Check for door/window counts if painting doors/windows
     if (data.surfaces && (data.surfaces.doors || data.surfaces.windows || data.surfaces.trim)) {
@@ -308,24 +364,24 @@ export class UnifiedQuoteAssistant {
       };
       console.log('🏗️ Final Dimensions:', dimensions);
 
-      // Build paint products
+      // Build paint products - use defaults if not provided
       const selectedProducts = {
         primer: {
-          spread_rate: 400,
+          spread_rate: DEFAULT_PAINT_PRODUCTS.primer_spread_rate,
           cost: 0 // No primer if specified
         },
         wall_paint: {
-          spread_rate: parsed.paintInfo.spread_rate || 350,
-          cost_per_gallon: parsed.paintInfo.cost_per_gallon || 50
+          spread_rate: parsed.paintInfo.spread_rate || DEFAULT_PAINT_PRODUCTS.wall_paints[0].spread_rate,
+          cost_per_gallon: parsed.paintInfo.cost_per_gallon || DEFAULT_PAINT_PRODUCTS.wall_paints[0].cost_per_gallon
         },
         ceiling_paint: {
-          spread_rate: parsed.paintInfo.spread_rate || 350,
-          cost_per_gallon: parsed.surfaces.ceilings ? (parsed.paintInfo.cost_per_gallon || 50) : 0
+          spread_rate: parsed.paintInfo.spread_rate || DEFAULT_PAINT_PRODUCTS.ceiling_paints[0].spread_rate,
+          cost_per_gallon: parsed.surfaces.ceilings ? (parsed.paintInfo.cost_per_gallon || DEFAULT_PAINT_PRODUCTS.ceiling_paints[0].cost_per_gallon) : 0
         },
         trim_paint: {
-          doors_per_gallon: 4.5,
-          windows_per_gallon: 2.5,
-          cost_per_gallon: parsed.surfaces.trim ? (parsed.paintInfo.cost_per_gallon || 50) : 0
+          doors_per_gallon: DEFAULT_PAINT_PRODUCTS.trim_paints[0].doors_per_gallon,
+          windows_per_gallon: DEFAULT_PAINT_PRODUCTS.trim_paints[0].windows_per_gallon,
+          cost_per_gallon: parsed.surfaces.trim ? (parsed.paintInfo.cost_per_gallon || DEFAULT_PAINT_PRODUCTS.trim_paints[0].cost_per_gallon) : 0
         }
       };
       console.log('🎨 Selected Products:', selectedProducts);
@@ -416,24 +472,13 @@ export class UnifiedQuoteAssistant {
         surfaceDetails.push(`${dimensions.number_of_windows} windows`);
       }
       
-      const response = `Perfect! Here's your professional quote for ${parsed.customerInfo.customer_name} at ${parsed.customerInfo.address}:
+      const response = `✅ **Quote for ${parsed.customerInfo.customer_name}**
 
-**Project Details:**
-• ${parsed.dimensions.wall_linear_feet} linear feet of interior walls
-• ${parsed.dimensions.ceiling_height} foot ceiling height
-• ${paintBrand} ${paintProduct} at $${parsed.paintInfo.cost_per_gallon}/gallon
-• ${parsed.surfaces.ceilings ? 'Including' : 'NOT including'} ceilings
-• ${parsed.surfaces.doors || parsed.surfaces.trim ? 'Including' : 'NOT including'} doors and trim${surfaceDetails.length > 0 ? ` (${surfaceDetails.join(', ')})` : ''}
-• ${parsed.specialRequests.length > 0 ? parsed.specialRequests.join(', ') : 'Standard painting'}
+**Total: $${quote.final_price.toLocaleString()}**
+• Cost: $${quote.total_cost.toLocaleString()}
+• Profit: $${quote.markup_amount.toLocaleString()} (${quote.profit_margin.toFixed(1)}%)
 
-**Quote Summary:**
-• Materials: $${quote.materials.total_material_cost.toLocaleString()}
-• Labor: $${quote.labor.total_labor.toLocaleString()}  
-• Your Cost: $${quote.total_cost.toLocaleString()}
-• Customer Price: $${quote.final_price.toLocaleString()}
-• Your Profit: $${quote.markup_amount.toLocaleString()} (${quote.profit_margin.toFixed(1)}% margin)
-
-Ready to save this quote?`;
+Ready to save?`;
 
       return {
         quote,
@@ -573,7 +618,7 @@ Ready to save this quote?`;
               enhancedConversationStateManager.setState(sessionId, { stage: 'quote_saved' });
               
               return {
-                response: `🎉 **Quote Saved Successfully!**\n\n**Quote ID:** ${saveResult.quoteId}\n**Customer:** ${conversationState.customerInfo?.customer_name}\n**Total:** $${conversationState.lastQuote?.final_price?.toLocaleString()}\n\n**What's Next?**\n• **Preview Quote** - View the professional client-facing quote\n• **Send to Client** - Email or text the quote directly\n• **Download PDF** - Get a printable version\n• **Create Another** - Start a new quote\n\nReady to preview and send this quote to your client?`,
+                response: `✅ **Saved! Quote #${saveResult.quoteId}**\n\n$${conversationState.lastQuote?.final_price?.toLocaleString()} for ${conversationState.customerInfo?.customer_name}`,
                 extractedData: { 
                   action: 'quote_saved', 
                   quoteId: saveResult.quoteId,
@@ -613,7 +658,7 @@ Ready to save this quote?`;
           enhancedConversationStateManager.setState(sessionId, { stage: 'gathering_info' });
           
           return {
-            response: "No problem! What would you like to change about the quote? You can provide updated information or tell me what needs to be different.",
+            response: "What would you like to change?",
             extractedData: { action: 'edit_quote' },
             confidence: 0.9,
             success: true
@@ -638,15 +683,19 @@ Ready to save this quote?`;
         };
       }
 
+      // Skip fallback for now - it's not handling conversation properly
+      const skipFallback = true;
+      
       // Try enhanced quote creation with fallback
-      try {
-        const fallbackResult = await quoteCreationFallback.createQuoteWithFallback(
-          userInput, 
-          companyId, 
-          conversationHistory
-        );
-        
-        if (fallbackResult.success && fallbackResult.quote) {
+      if (!skipFallback) {
+        try {
+          const fallbackResult = await quoteCreationFallback.createQuoteWithFallback(
+            userInput, 
+            companyId, 
+            conversationHistory
+          );
+          
+          if (fallbackResult.success && fallbackResult.quote) {
           // Save conversation state with generated quote
           enhancedConversationStateManager.setState(sessionId, {
             stage: 'awaiting_confirmation',
@@ -659,7 +708,7 @@ Ready to save this quote?`;
           });
           
           return {
-            response: fallbackResult.response + "\n\nWould you like me to save this quote?",
+            response: fallbackResult.response + "\n\nSave this quote?",
             extractedData: { action: 'quote_generated', method: fallbackResult.method },
             quote: fallbackResult.quote,
             confidence: fallbackResult.method === 'ai' ? 0.95 : 0.85,
@@ -673,12 +722,16 @@ Ready to save this quote?`;
             success: true
           };
         }
-      } catch (fallbackError) {
-        console.warn('Fallback system failed, trying original parser:', fallbackError);
+        } catch (fallbackError) {
+          console.warn('Fallback system failed, trying original parser:', fallbackError);
+        }
       }
       
+      // Get existing collected data from conversation state
+      const existingData = conversationState?.collectedData || {};
+      
       // Fallback to original parsing if all else fails
-      const parsed = await this.parseCompleteQuoteMessage(userInput);
+      const parsed = await this.parseCompleteQuoteMessage(userInput, existingData);
       
       if (parsed.isComplete) {
         // We have everything we need - generate the quote
@@ -715,29 +768,29 @@ Ready to save this quote?`;
           }
         });
         
-        // Create a more natural response for missing fields
-        let missingFieldsResponse = `Great! I have: ${this.summarizeExtractedInfo(parsed)}.\n\n`;
+        // Create a simpler response for missing fields
+        let missingFieldsResponse = `Got it! `;
         
-        // Handle door/window counts specially for better clarity
+        // Handle door/window counts specially
         if (parsed.missingFields.includes('number of doors') || parsed.missingFields.includes('number of windows')) {
           const needsDoors = parsed.missingFields.includes('number of doors');
           const needsWindows = parsed.missingFields.includes('number of windows');
           
           if (needsDoors && needsWindows) {
-            missingFieldsResponse += `Since we're painting doors and trim, I need to know:\n• How many doors need painting?\n• How many windows need painting?`;
+            missingFieldsResponse += `How many doors and windows?`;
           } else if (needsDoors) {
-            missingFieldsResponse += `Since we're painting doors and trim, how many doors need painting?`;
+            missingFieldsResponse += `How many doors?`;
           } else if (needsWindows) {
-            missingFieldsResponse += `Since we're painting windows and trim, how many windows need painting?`;
+            missingFieldsResponse += `How many windows?`;
           }
           
           // Remove door/window from missing fields list
           const otherMissing = parsed.missingFields.filter(f => f !== 'number of doors' && f !== 'number of windows');
           if (otherMissing.length > 0) {
-            missingFieldsResponse += `\n\nI also need: ${otherMissing.join(', ')}.`;
+            missingFieldsResponse += ` Also need: ${otherMissing.join(', ')}.`;
           }
         } else {
-          missingFieldsResponse += `I still need: ${parsed.missingFields.join(', ')}. Can you provide these details?`;
+          missingFieldsResponse += `Just need: ${parsed.missingFields.join(', ')}.`;
         }
         
         return {
@@ -768,7 +821,7 @@ Ready to save this quote?`;
     } catch (error) {
       console.error('Processing error:', error);
       return {
-        response: "I'm having trouble processing that information. Could you tell me the customer's name and address to get started?",
+        response: "Let's start over. Customer name?",
         extractedData: {},
         confidence: 0.1,
         success: false
@@ -816,23 +869,13 @@ Ready to save this quote?`;
     const paintBrand = parsed.paintInfo.brand || 'Quality paint';
     const paintProduct = parsed.paintInfo.product || 'interior paint';
     
-    return `Perfect! Here's your quote for ${parsed.customerInfo.customer_name} at ${parsed.customerInfo.address}:
+    return `✅ **Quote for ${parsed.customerInfo.customer_name}**
 
-**Project Details:**
-• ${parsed.dimensions.wall_linear_feet} linear feet of interior walls
-• ${parsed.dimensions.ceiling_height} foot ceiling height  
-• ${paintBrand} ${paintProduct} at $${parsed.paintInfo.cost_per_gallon}/gallon
-• NOT including ceilings
-• NOT including doors and trim
-• Labor included in per-sqft rate
+**Total: $${quote.final_price.toLocaleString()}**
+• ${quote.materials.walls.sqft_needed.toLocaleString()} sqft @ $${parsed.laborRate}/sqft
+${quote.markup_amount > 0 ? `• Profit: $${quote.markup_amount.toLocaleString()} (${quote.markup_percentage}%)` : ''}
 
-**All-Inclusive Quote:**
-• Wall Area: ${quote.materials.walls.sqft_needed.toLocaleString()} sqft
-• Rate: $${parsed.laborRate}/sqft (materials + labor included)
-• Total Project Cost: $${quote.final_price.toLocaleString()}
-${quote.markup_amount > 0 ? `• Markup: $${quote.markup_amount.toLocaleString()} (${quote.markup_percentage}%)` : ''}
-
-Ready to save this quote?`;
+Ready to save?`;
   }
 
   /**
@@ -849,14 +892,49 @@ Ready to save this quote?`;
     success: boolean;
   }> {
     if (!this.openRouterApiKey) {
+      console.error('❌ OpenRouter API key not configured');
       return {
-        response: "I'd be happy to help with your painting quote! Could you tell me the customer's name and address to get started?",
-        extractedData: {},
-        confidence: 0.3,
-        success: true
+        response: "Connection issue. Please check your internet and try again.",
+        extractedData: { error: 'api_key_missing' },
+        confidence: 0.1,
+        success: false
       };
     }
 
+    // Debug conversation history
+    console.log('🔍 AI Request - Conversation History:', conversationHistory.length, 'messages');
+    console.log('🔍 AI Request - Current Input:', userInput);
+    
+    const messages = [
+      {
+        role: 'system',
+        content: `You are a concise painting quote assistant. Keep responses SHORT (1-2 sentences max).
+
+What you need:
+- Customer name & address
+- Project type (interior/exterior)
+- Measurements (linear feet, ceiling height)
+- Paint info
+- Surfaces (walls/ceilings/trim/doors/windows)
+- Door/window counts if painting trim
+
+Be friendly but BRIEF. Ask for one thing at a time.
+
+IMPORTANT: Always remember information from earlier in the conversation. Never ask for information that was already provided.`
+      },
+      // Include conversation history
+      ...conversationHistory.slice(-6).map(msg => ({
+        role: msg.role as 'user' | 'assistant',
+        content: msg.content
+      })),
+      {
+        role: 'user',
+        content: userInput
+      }
+    ];
+    
+    console.log('🔍 AI Messages being sent:', JSON.stringify(messages, null, 2));
+    
     try {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
@@ -868,28 +946,7 @@ Ready to save this quote?`;
         },
         body: JSON.stringify({
           model: 'anthropic/claude-3-5-sonnet-20241022',
-          messages: [
-            {
-              role: 'system',
-              content: `You are a helpful painting quote assistant. Your job is to gather information for painting quotes in a natural, conversational way. Always be friendly and professional. When you need information, ask for it clearly.
-
-For painting quotes, you typically need:
-- Customer name and address
-- Type of project (interior/exterior)
-- Measurements (linear feet of walls, ceiling height, room dimensions)
-- Paint preferences and costs
-- Which surfaces to paint (walls, ceilings, trim, doors, windows)
-- If painting doors/trim: Number of doors
-- If painting windows/trim: Number of windows
-- Labor rates and markup percentage
-
-Keep responses concise and focused on getting the information needed for an accurate quote. When doors or windows are included, always ask for specific counts.`
-            },
-            {
-              role: 'user',
-              content: `Customer message: "${userInput}"\n\nPlease respond naturally and guide them toward providing quote information.`
-            }
-          ],
+          messages,
           temperature: 0.7,
           max_tokens: 200
         })
@@ -897,7 +954,7 @@ Keep responses concise and focused on getting the information needed for an accu
 
       if (response.ok) {
         const data = await response.json();
-        const aiResponse = data.choices[0]?.message?.content || "I'd be happy to help with your painting quote! What information can you provide about the project?";
+        const aiResponse = data.choices[0]?.message?.content || "What information do you have for the quote?";
         
         return {
           response: aiResponse,
@@ -905,18 +962,24 @@ Keep responses concise and focused on getting the information needed for an accu
           confidence: 0.6,
           success: true
         };
+      } else {
+        console.error('❌ AI API returned error:', response.status, response.statusText);
+        return {
+          response: "Connection issue. Please check your internet and try again.",
+          extractedData: { error: 'api_call_failed', status: response.status },
+          confidence: 0.1,
+          success: false
+        };
       }
     } catch (error) {
-      console.error('Claude API error:', error);
+      console.error('❌ AI API error:', error);
+      return {
+        response: "Connection issue. Please check your internet and try again.",
+        extractedData: { error: 'network_error' },
+        confidence: 0.1,
+        success: false
+      };
     }
-
-    // Fallback response
-    return {
-      response: "I'd be happy to help with your painting quote! Could you tell me the customer's name, address, and project details?",
-      extractedData: {},
-      confidence: 0.3,
-      success: true
-    };
   }
 }
 

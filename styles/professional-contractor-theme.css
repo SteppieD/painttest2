@@ -72,15 +72,10 @@
 }
 
 /* Button overrides for better visibility */
-.ac-btn-primary,
 .bg-primary-pink,
 [class*="bg-pink"] {
   background-color: var(--contractor-blue) !important;
   color: white !important;
-}
-
-.ac-btn-primary:hover {
-  background-color: var(--contractor-blue-dark) !important;
 }
 
 /* Secondary buttons with orange accent */
@@ -227,12 +222,17 @@ a[class*="hover:text-primary-pink"]:hover {
 }
 
 /* CTA buttons - use orange for high contrast */
-button.ac-btn-lg.ac-btn-primary {
+.ac-btn-primary,
+button.ac-btn-lg.ac-btn-primary,
+a.ac-btn-primary {
   background-color: var(--accent-orange) !important;
   border: 1px solid var(--accent-orange-dark) !important;
+  color: white !important;
 }
 
-button.ac-btn-lg.ac-btn-primary:hover {
+.ac-btn-primary:hover,
+button.ac-btn-lg.ac-btn-primary:hover,
+a.ac-btn-primary:hover {
   background-color: var(--accent-orange-hover) !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3) !important;

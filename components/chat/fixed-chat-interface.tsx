@@ -78,7 +78,7 @@ export function FixedChatInterface({
     {
       id: '1',
       role: 'assistant',
-      content: `Hi! I'm here to help you create quotes quickly. 💨\n\n**Pro tip**: Include all details in one message for instant quotes! Tell me the customer name, project type, and measurements.\n\nNeed examples? Click the help button (?) in the top-right corner.\n\nWhat project are we quoting today?`,
+      content: `Hi! Ready to create a quote.\n\nTell me the customer name and project details.`,
       timestamp: new Date().toISOString()
     }
   ])
@@ -108,10 +108,30 @@ export function FixedChatInterface({
 
   // Check if user is first-time and show training modal
   useEffect(() => {
-    const hasSeenTraining = localStorage.getItem(`paintquote_training_${companyId}`)
-    if (!hasSeenTraining) {
-      setShowTrainingModal(true)
-      localStorage.setItem(`paintquote_training_${companyId}`, 'true')
+    const checkIfShowTraining = async () => {
+      // First check if they've explicitly dismissed the training before
+      const hasSeenTraining = localStorage.getItem(`paintquote_training_${companyId}`)
+      if (hasSeenTraining) {
+        return // They've seen it and dismissed it
+      }
+
+      // Check if they have created quotes before
+      try {
+        const response = await fetch(`/api/company-quota?company_id=${companyId}`)
+        if (response.ok) {
+          const data = await response.json()
+          // Only show training modal if they haven't created any quotes
+          if (data.quotes_used === 0) {
+            setShowTrainingModal(true)
+          }
+        }
+      } catch (error) {
+        console.error('Error checking quote count:', error)
+      }
+    }
+
+    if (companyId) {
+      checkIfShowTraining()
     }
   }, [companyId])
 
@@ -513,7 +533,11 @@ export function FixedChatInterface({
       {/* Training Modal */}
       <QuoteTrainingModal
         isOpen={showTrainingModal}
-        onClose={() => setShowTrainingModal(false)}
+        onClose={() => {
+          setShowTrainingModal(false)
+          // Save that they've seen the training modal
+          localStorage.setItem(`paintquote_training_${companyId}`, 'true')
+        }}
         onUseExample={handleUseExample}
       />
     </div>

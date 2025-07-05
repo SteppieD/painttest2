@@ -43,35 +43,46 @@ export function Header() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-6 py-5">
+    <header className="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-100">
+      <div className="container mx-auto px-8 py-5">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="p-2 rounded-lg bg-[#ef2b70] group-hover:shadow-md transition-all duration-200">
-              <Palette className="w-6 h-6 text-white" />
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-[#ef2b70] to-[#d91e5a] group-hover:shadow-md transition-all duration-200">
+              <Palette className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900">
-              ProPaint Quote
-            </span>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-gray-900 leading-tight">
+                Paint Quote Pro
+              </span>
+              <span className="text-xs text-gray-500">
+                AI Painting Estimates
+              </span>
+            </div>
           </Link>
           
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-12 flex-1 justify-center">
+            <Link 
+              href="/" 
+              className={`${isActive('/') ? 'text-[#ef2b70]' : 'text-gray-700 hover:text-[#ef2b70]'} transition-colors duration-200 font-medium text-base`}
+            >
+              Home
+            </Link>
             <Link 
               href="/features" 
-              className={`${isActive('/features') ? 'text-[#ef2b70]' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-200 font-medium`}
+              className={`${isActive('/features') ? 'text-[#ef2b70]' : 'text-gray-700 hover:text-[#ef2b70]'} transition-colors duration-200 font-medium text-base`}
             >
               Features
             </Link>
             
-            {/* Use Cases Dropdown */}
+            {/* Solutions Dropdown */}
             <div 
               className="relative group"
               onMouseEnter={() => setIsUseCasesOpen(true)}
               onMouseLeave={() => setIsUseCasesOpen(false)}
             >
-              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium py-3 px-2 -mx-2 min-h-[44px]">
-                Use Cases
+              <button className="flex items-center gap-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base">
+                Solutions
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isUseCasesOpen ? 'rotate-180' : ''}`} />
               </button>
               
@@ -107,12 +118,6 @@ export function Header() {
                 </div>
               )}
             </div>
-            <Link 
-              href="/enterprise" 
-              className={`${isActive('/enterprise') ? 'text-[#ef2b70]' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-200 font-medium`}
-            >
-              Enterprise
-            </Link>
             
             {/* Resources Dropdown */}
             <div 
@@ -120,7 +125,7 @@ export function Header() {
               onMouseEnter={() => setIsResourcesOpen(true)}
               onMouseLeave={() => setIsResourcesOpen(false)}
             >
-              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium py-3 px-2 -mx-2 min-h-[44px]">
+              <button className="flex items-center gap-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base">
                 Resources
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isResourcesOpen ? 'rotate-180' : ''}`} />
               </button>
@@ -190,14 +195,18 @@ export function Header() {
             
             <Link 
               href="/pricing" 
-              className={`${isActive('/pricing') ? 'text-[#ef2b70]' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-200 font-medium`}
+              className={`${isActive('/pricing') ? 'text-[#ef2b70]' : 'text-gray-700 hover:text-[#ef2b70]'} transition-colors duration-200 font-medium text-base`}
             >
               Pricing
             </Link>
+          </nav>
+          
+          {/* Right side - Login & CTA */}
+          <div className="hidden lg:flex items-center gap-6">
             {isLoggedIn ? (
               <Link 
                 href="/dashboard" 
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium"
+                className="text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base"
               >
                 Dashboard
               </Link>
@@ -205,18 +214,16 @@ export function Header() {
               <>
                 <Link 
                   href="/access-code" 
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium"
+                  className="text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base"
                 >
                   Login
                 </Link>
-                <div className="flex items-center gap-3">
-                  <Link href="/trial-signup" className="px-6 py-2.5 bg-[#FFE4E9] text-[#ef2b70] font-semibold rounded-lg hover:bg-[#FFD1DA] transition-all duration-200">
-                    Try For Free Now
-                  </Link>
-                </div>
+                <Link href="/trial-signup" className="px-6 py-2.5 bg-[#ef2b70] text-white font-semibold rounded-full hover:bg-[#d91e5a] transition-all duration-200 shadow-sm hover:shadow-md">
+                  Try For Free Now
+                </Link>
               </>
             )}
-          </nav>
+          </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -237,6 +244,13 @@ export function Header() {
           <div className="lg:hidden mt-4 pb-4 border-t border-gray-100">
             <nav className="flex flex-col space-y-3 pt-4">
               <Link 
+                href="/" 
+                className={`${isActive('/') ? 'text-[#ef2b70] font-semibold' : 'text-gray-700 hover:text-[#ef2b70]'} py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium`}
+                onClick={closeMobileMenu}
+              >
+                Home
+              </Link>
+              <Link 
                 href="/features" 
                 className={`${isActive('/features') ? 'text-[#ef2b70] font-semibold' : 'text-gray-700 hover:text-[#ef2b70]'} py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium`}
                 onClick={closeMobileMenu}
@@ -244,13 +258,13 @@ export function Header() {
                 Features
               </Link>
               
-              {/* Mobile Use Cases Section */}
+              {/* Mobile Solutions Section */}
               <div className="space-y-2">
                 <button
                   onClick={() => setIsUseCasesOpen(!isUseCasesOpen)}
                   className="flex items-center justify-between w-full text-gray-700 hover:text-[#ef2b70] py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium"
                 >
-                  Use Cases
+                  Solutions
                   <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isUseCasesOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
@@ -287,14 +301,6 @@ export function Header() {
                   </div>
                 )}
               </div>
-              
-              <Link 
-                href="/enterprise" 
-                className={`${isActive('/enterprise') ? 'text-[#ef2b70] font-semibold' : 'text-gray-700 hover:text-[#ef2b70]'} py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium`}
-                onClick={closeMobileMenu}
-              >
-                Enterprise
-              </Link>
               
               {/* Mobile Resources Section */}
               <div className="space-y-2">
