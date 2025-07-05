@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Header } from '@/components/shared/header'
 import { Footer } from '@/components/shared/footer'
 import { CityPageTemplate } from '@/components/locations/city-page-template'
 
@@ -235,7 +234,6 @@ export default function CityPage({ params }: { params: { slug: string } }) {
 
   return (
     <>
-      <Header />
       
       <CityPageTemplate
         city={data.city}

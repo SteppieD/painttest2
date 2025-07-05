@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 import AnalyticsProvider from '@/components/analytics/AnalyticsProvider'
-import { ACNavbar } from '@/components/adcreative/ACNavbar'
+import { ACNavbarClean } from '@/components/adcreative/ACNavbar-clean'
 import { StructuredData } from '@/components/seo/StructuredData'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -98,8 +98,8 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <AnalyticsProvider gtmId="GTM-563BQKRH" ga4Id="G-984BZ3LDZE">
-          <ACNavbar />
-          <main style={{ paddingTop: '60px' }}>
+          <ACNavbarClean />
+          <main style={{ paddingTop: '64px' }}>
             {children}
           </main>
           <Toaster />

@@ -1,13 +1,11 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Header } from '@/components/shared/header'
 import { Footer } from '@/components/shared/footer'
 import { ArrowRight, Home } from 'lucide-react'
 
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
       
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-2xl text-center">

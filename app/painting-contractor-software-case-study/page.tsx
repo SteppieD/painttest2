@@ -14,7 +14,6 @@ import {
   Target,
   Zap
 } from 'lucide-react';
-import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { Button } from '@/components/ui/button';
 import { professionalImages } from '@/lib/image-config';
@@ -37,7 +36,6 @@ export const metadata: Metadata = {
 export default function PaintingContractorSoftwareCaseStudy() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <Header />
       
       <main className="container mx-auto px-4 py-16 max-w-4xl">
         {/* Hero Section */}

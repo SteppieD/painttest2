@@ -129,7 +129,7 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Preview with professional design */}
-      <section className="py-20 px-4 bg-gray-900">
+      <section className="py-20 px-4 bg-gray-900 text-white">
         <div className="container mx-auto max-w-6xl text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Simple, Transparent Pricing
@@ -257,17 +257,17 @@ export default function HomePage() {
       <TestimonialCarousel className="bg-white" />
 
       {/* Final CTA with AC Design */}
-      <section className="py-20 px-4 bg-gradient-to-r from-primary-pink to-primary-pink-dark">
+      <section className="py-20 px-4 gradient-pink-contrast text-white-important">
         <div className="container mx-auto max-w-4xl text-center">
-          <div className="ac-hero-badge inline-flex mb-6" style={{ background: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.3)' }}>
-            <Award size={16} />
+          <div className="ac-hero-badge inline-flex mb-6 text-white" style={{ background: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.3)' }}>
+            <Award size={16} className="text-white" />
             <span className="text-white">Limited Time Offer</span>
           </div>
           
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Ready to 14x Your Quote Speed?
           </h2>
-          <p className="text-xl text-white/90 mb-8">
+          <p className="text-xl text-white opacity-90 mb-8">
             Join 5,000+ contractors winning more jobs with professional quotes
           </p>
           
@@ -281,7 +281,7 @@ export default function HomePage() {
             </Link>
           </div>
           
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-white/80 text-sm">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-white text-sm">
             <span>✓ No credit card required</span>
             <span>✓ Full feature access</span>
             <span>✓ Cancel anytime</span>

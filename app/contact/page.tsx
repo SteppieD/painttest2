@@ -28,7 +28,6 @@ import { Input } from '@/components/ui/input';
 import { TouchFriendlyInput } from '@/components/ui/touch-friendly-input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 
 export const metadata: Metadata = {
@@ -135,7 +134,6 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">

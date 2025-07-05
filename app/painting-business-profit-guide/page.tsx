@@ -19,7 +19,6 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Header } from '@/components/shared/header'
 import { Footer } from '@/components/shared/footer'
 
 export const metadata: Metadata = {
@@ -166,7 +165,6 @@ const marginBenchmarks = [
 export default function PaintingBusinessProfitGuidePage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-green-600 via-green-700 to-green-800 text-white py-20">

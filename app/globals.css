@@ -23,6 +23,9 @@
 /* Import Navigation Balance Fixes */
 @import '../styles/navigation-balance.css';
 
+/* Import Contrast Fix Utilities - Must be last for highest priority */
+@import '../styles/contrast-fix.css';
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -43,7 +43,7 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
       yearlyPrice: 0,
       badge: null,
       popular: false,
-      gradient: 'from-gray-50 to-gray-100',
+      gradient: 'bg-gradient-to-br from-gray-50 to-gray-100',
       features: [
         { text: '10 professional quotes per month', highlighted: true },
         { text: 'All core features included', highlighted: false },
@@ -66,7 +66,7 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
       savings: 190,
       badge: 'Most Popular',
       popular: true,
-      gradient: 'from-blue-500 to-blue-600',
+      gradient: 'gradient-blue-contrast',
       features: [
         { text: 'Unlimited quotes per month', highlighted: true },
         { text: 'Everything in Free, plus:', highlighted: false },
@@ -94,7 +94,7 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
       savings: 358,
       badge: null,
       popular: false,
-      gradient: 'from-purple-50 to-purple-100',
+      gradient: 'bg-gradient-to-br from-purple-50 to-purple-100',
       features: [
         { text: 'Everything in Professional, plus:', highlighted: false },
         { text: 'Multi-user access (up to 5)', highlighted: true },
@@ -197,9 +197,9 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                 )}
 
                 {/* Card Header */}
-                <div className={`p-8 pb-6 text-center bg-gradient-to-br ${plan.gradient} rounded-t-lg`}>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                  <p className="text-gray-600 mb-6">{plan.description}</p>
+                <div className={`p-8 pb-6 text-center ${plan.gradient} rounded-t-lg`}>
+                  <h3 className={`text-2xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>{plan.name}</h3>
+                  <p className={`mb-6 ${plan.popular ? 'text-white/90' : 'text-gray-600'}`}>{plan.description}</p>
 
                   {/* Pricing */}
                   <div className="mb-2">
@@ -211,11 +211,11 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                         exit={{ opacity: 0, scale: 0.9 }}
                         className="flex items-baseline justify-center gap-1"
                       >
-                        <span className="text-5xl font-bold text-gray-900">
+                        <span className={`text-5xl font-bold ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
                           ${isYearly && plan.yearlyMonthlyPrice ? Math.floor(plan.yearlyMonthlyPrice) : price}
                         </span>
                         {price > 0 && (
-                          <span className="text-gray-600 text-lg">
+                          <span className={`text-lg ${plan.popular ? 'text-white/80' : 'text-gray-600'}`}>
                             /{isYearly ? 'month' : 'month'}
                           </span>
                         )}
@@ -230,9 +230,9 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                       animate={{ opacity: 1 }}
                       className="space-y-1"
                     >
-                      <p className="text-sm text-gray-600">
+                      <p className={`text-sm ${plan.popular ? 'text-white/90' : 'text-gray-600'}`}>
                         <span className="line-through">${plan.monthlyPrice * 12}</span>
-                        <span className="ml-2 font-semibold text-gray-900">${plan.yearlyPrice}/year</span>
+                        <span className={`ml-2 font-semibold ${plan.popular ? 'text-white' : 'text-gray-900'}`}>${plan.yearlyPrice}/year</span>
                       </p>
                       <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
                         You save ${plan.savings}
@@ -242,7 +242,7 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
 
                   {/* Free plan specifics */}
                   {plan.id === 'free' && (
-                    <p className="text-sm font-semibold text-gray-700 mt-2">
+                    <p className={`text-sm font-semibold mt-2 ${plan.popular ? 'text-white' : 'text-gray-700'}`}>
                       10 Quotes/Month Limit
                     </p>
                   )}

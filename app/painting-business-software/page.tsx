@@ -16,7 +16,6 @@ import {
   TrendingUp,
   Shield
 } from 'lucide-react';
-import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 
 export const metadata: Metadata = {
@@ -33,7 +32,6 @@ export const metadata: Metadata = {
 export default function PaintingBusinessSoftwarePage() {
   return (
     <div className="min-h-screen bg-white">
-      <Header />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">

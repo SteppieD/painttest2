@@ -22,7 +22,6 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Header } from '@/components/shared/header'
 import { Footer } from '@/components/shared/footer'
 
 export const metadata: Metadata = {
@@ -214,7 +213,6 @@ const roiCalculation = {
 export default function DigitalTransformationPaintingContractorsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 text-white py-20">

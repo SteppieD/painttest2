@@ -251,25 +251,39 @@ export function ACNavbar() {
 
         .ac-navbar-dropdown-menu {
           position: absolute;
+          top: calc(100% + 4px);
+          left: 50%;
+          transform: translateX(-50%);
+          margin-top: 0;
+          background: white;
+          border-radius: 16px;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+          min-width: 240px;
+          padding: 12px;
+          z-index: 50;
+          border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .ac-navbar-dropdown::before {
+          content: '';
+          position: absolute;
           top: 100%;
           left: 0;
-          margin-top: 8px;
-          background: white;
-          border-radius: 12px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-          min-width: 220px;
-          padding: 8px;
-          z-index: 50;
+          right: 0;
+          height: 8px;
         }
 
         .ac-navbar-dropdown-link {
           display: block;
-          padding: 12px 16px;
+          padding: 10px 14px;
+          margin: 2px 0;
           color: #374151;
           text-decoration: none;
-          border-radius: 8px;
+          border-radius: 10px;
           transition: all 150ms ease;
           font-size: 14px;
+          font-weight: 500;
+          white-space: nowrap;
         }
 
         .ac-navbar-dropdown-link:hover {

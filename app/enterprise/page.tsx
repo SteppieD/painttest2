@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Building2, Shield, Users, Zap, Phone, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 
 export const metadata: Metadata = {
@@ -14,7 +13,6 @@ export const metadata: Metadata = {
 export default function EnterprisePage() {
   return (
     <div className="min-h-screen bg-white">
-      <Header />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-gray-100">

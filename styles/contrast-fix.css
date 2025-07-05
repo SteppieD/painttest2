@@ -1,8 +1,7 @@
-/* Contrast Fix Utility Classes for Painting Quote Platform
-   WCAG AA/AAA Compliant Color Combinations
-   Created to fix contrast issues across gradient backgrounds */
-
-/* High-Contrast Gradient Backgrounds with Proper Text Colors */
+/* Contrast Fix Utilities - High Priority Overrides */
+/* This file contains utility classes to fix low contrast issues across the site */
+/* All classes use !important to ensure they override existing styles */
+/* WCAG AA/AAA Compliant Color Combinations */
 
 /* Orange/Red Gradients - Always use white text */
 .gradient-orange-contrast {
@@ -10,15 +9,7 @@
   color: white !important;
 }
 
-.gradient-orange-contrast h1,
-.gradient-orange-contrast h2,
-.gradient-orange-contrast h3,
-.gradient-orange-contrast h4,
-.gradient-orange-contrast h5,
-.gradient-orange-contrast h6,
-.gradient-orange-contrast p,
-.gradient-orange-contrast span,
-.gradient-orange-contrast div {
+.gradient-orange-contrast * {
   color: white !important;
 }
 
@@ -28,37 +19,31 @@
   color: white !important;
 }
 
-.gradient-blue-contrast h1,
-.gradient-blue-contrast h2,
-.gradient-blue-contrast h3,
-.gradient-blue-contrast h4,
-.gradient-blue-contrast h5,
-.gradient-blue-contrast h6,
-.gradient-blue-contrast p,
-.gradient-blue-contrast span,
-.gradient-blue-contrast div {
+.gradient-blue-contrast * {
   color: white !important;
 }
 
-/* Pink/Red CTA Gradients - Always use white text */
+/* Pink/Red Gradients - Always use white text */
 .gradient-pink-contrast {
   background: linear-gradient(135deg, #ef2b70 0%, #c2185b 100%) !important;
   color: white !important;
 }
 
-.gradient-pink-contrast h1,
-.gradient-pink-contrast h2,
-.gradient-pink-contrast h3,
-.gradient-pink-contrast h4,
-.gradient-pink-contrast h5,
-.gradient-pink-contrast h6,
-.gradient-pink-contrast p,
-.gradient-pink-contrast span,
-.gradient-pink-contrast div {
+.gradient-pink-contrast * {
   color: white !important;
 }
 
-/* Text Color Utilities for Different Backgrounds */
+/* Green Gradients - Always use white text */
+.gradient-green-contrast {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  color: white !important;
+}
+
+.gradient-green-contrast * {
+  color: white !important;
+}
+
+/* Force White Text */
 .text-white-important {
   color: white !important;
 }
@@ -67,6 +52,7 @@
   color: white !important;
 }
 
+/* Dark Text for Light Backgrounds */
 .text-dark-contrast {
   color: #1f2937 !important;
 }
@@ -75,9 +61,35 @@
   color: #1f2937 !important;
 }
 
-/* Contrast Overlay for Images */
+/* High Contrast Glass Effect */
+.glass-high-contrast {
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+  color: white !important;
+}
+
+.glass-high-contrast * {
+  color: white !important;
+}
+
+/* Liquid Glass Contrast Variants */
+.liquid-glass-high-contrast {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+}
+
+.liquid-glass-dark-contrast {
+  background: rgba(30, 41, 59, 0.95) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  color: white !important;
+}
+
+/* Overlay for Images with Text */
 .contrast-overlay {
   position: relative;
+  overflow: hidden;
 }
 
 .contrast-overlay::before {
@@ -87,7 +99,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 1;
 }
 
@@ -106,17 +118,137 @@
   background: rgba(0, 0, 0, 0.7);
 }
 
-/* Glass Effect Fixes for Better Contrast */
-.liquid-glass-high-contrast {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(20px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+/* High Contrast Badges */
+.badge-high-contrast {
+  background: rgba(0, 0, 0, 0.9) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
-.liquid-glass-dark-contrast {
-  background: rgba(30, 41, 59, 0.95) !important;
-  backdrop-filter: blur(20px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+/* High Contrast Buttons */
+.btn-high-contrast-primary {
+  background: #1e40af !important;
+  color: white !important;
+  border: 2px solid #1e40af !important;
+}
+
+.btn-high-contrast-primary:hover {
+  background: #1e3a8a !important;
+  border-color: #1e3a8a !important;
+}
+
+.btn-high-contrast-secondary {
+  background: white !important;
+  color: #1e40af !important;
+  border: 2px solid #1e40af !important;
+}
+
+.btn-high-contrast-secondary:hover {
+  background: #f3f4f6 !important;
+}
+
+/* High Contrast Cards */
+.card-high-contrast {
+  background: white !important;
+  border: 2px solid #1e40af !important;
+  color: #111827 !important;
+}
+
+.card-high-contrast-dark {
+  background: #1e40af !important;
+  color: white !important;
+  border: none !important;
+}
+
+.card-high-contrast-dark * {
+  color: white !important;
+}
+
+/* Fix Low Opacity Text */
+.opacity-90 {
+  opacity: 0.9 !important;
+}
+
+.opacity-80 {
+  opacity: 0.85 !important;
+}
+
+.opacity-70 {
+  opacity: 0.8 !important;
+}
+
+/* Ensure Links Are Visible */
+.gradient-orange-contrast a,
+.gradient-blue-contrast a,
+.gradient-pink-contrast a,
+.gradient-green-contrast a {
+  color: white !important;
+  text-decoration: underline !important;
+}
+
+.gradient-orange-contrast a:hover,
+.gradient-blue-contrast a:hover,
+.gradient-pink-contrast a:hover,
+.gradient-green-contrast a:hover {
+  opacity: 0.8 !important;
+}
+
+/* Button Styles in Gradient Sections */
+.gradient-orange-contrast button,
+.gradient-blue-contrast button,
+.gradient-pink-contrast button {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border: 2px solid white !important;
+}
+
+.gradient-orange-contrast button:hover,
+.gradient-blue-contrast button:hover,
+.gradient-pink-contrast button:hover {
+  background: white !important;
+  color: #1f2937 !important;
+}
+
+/* Fix Primary Pink Button Contrast */
+.bg-primary-pink,
+.from-primary-pink {
+  background: #dc2626 !important;
+  color: white !important;
+}
+
+/* Ensure all gradient backgrounds have proper text contrast */
+[class*="gradient-to-"] {
+  color: white !important;
+}
+
+[class*="from-orange"],
+[class*="to-orange"],
+[class*="from-red"],
+[class*="to-red"],
+[class*="from-pink"],
+[class*="to-pink"],
+[class*="from-blue"],
+[class*="to-blue"],
+[class*="from-purple"],
+[class*="to-purple"],
+[class*="from-green"],
+[class*="to-green"] {
+  color: white !important;
+}
+
+/* Override text colors in gradient sections */
+[class*="from-orange"] *,
+[class*="to-orange"] *,
+[class*="from-red"] *,
+[class*="to-red"] *,
+[class*="from-pink"] *,
+[class*="to-pink"] *,
+[class*="from-blue"] *,
+[class*="to-blue"] *,
+[class*="from-purple"] *,
+[class*="to-purple"] *,
+[class*="from-green"] *,
+[class*="to-green"] * {
   color: white !important;
 }
 
@@ -158,10 +290,7 @@
   color: white !important;
 }
 
-/* Ensure links and buttons maintain contrast */
-.gradient-orange-contrast a,
-.gradient-blue-contrast a,
-.gradient-pink-contrast a,
+/* Ensure links and buttons maintain contrast in specific sections */
 .hero-orange-fix a,
 .stats-gradient-fix a,
 .cta-gradient-fix a {
@@ -169,25 +298,11 @@
   text-decoration: underline;
 }
 
-.gradient-orange-contrast button,
-.gradient-blue-contrast button,
-.gradient-pink-contrast button {
-  background: rgba(255, 255, 255, 0.2) !important;
-  color: white !important;
-  border: 2px solid white !important;
-}
-
-.gradient-orange-contrast button:hover,
-.gradient-blue-contrast button:hover,
-.gradient-pink-contrast button:hover {
-  background: white !important;
-  color: #1f2937 !important;
-}
-
 /* Accessibility overrides for reduced transparency */
 @media (prefers-reduced-transparency: reduce) {
   .liquid-glass-high-contrast,
-  .liquid-glass-dark-contrast {
+  .liquid-glass-dark-contrast,
+  .glass-high-contrast {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
@@ -198,6 +313,10 @@
   
   .liquid-glass-dark-contrast {
     background: rgba(30, 41, 59, 1) !important;
+  }
+  
+  .glass-high-contrast {
+    background: rgba(0, 0, 0, 1) !important;
   }
 }
 

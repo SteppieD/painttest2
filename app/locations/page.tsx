@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, Star, TrendingUp, Users } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Header } from '@/components/shared/header'
 import { Footer } from '@/components/shared/footer'
 
 export const metadata: Metadata = {
@@ -60,7 +59,6 @@ const totalContractors = Object.values(locations).flat().reduce((sum, loc) => su
 export default function LocationsPage() {
   return (
     <>
-      <Header />
       
       <main className="min-h-screen bg-gradient-to-br from-white to-blue-50">
         {/* Hero Section */}

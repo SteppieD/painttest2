@@ -87,34 +87,49 @@ export function Header() {
               </button>
               
               {/* Invisible bridge to prevent gap */}
-              <div className="absolute top-full left-0 h-2 w-full" />
+              <div className="absolute top-full left-0 h-4 w-full" />
               
               {isUseCasesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                  <Link href="/painting-contractors" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200 min-h-[48px]">
-                    <div>
+                <div className="absolute top-full left-0 mt-1 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50">
+                  {/* Use Cases Section */}
+                  <div className="px-3 pb-2">
+                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 py-1">Use Cases</div>
+                    <Link href="/interior-painting-quote-calculator" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
+                      <div className="font-medium text-gray-900">Interior Painting</div>
+                      <div className="text-sm text-gray-500">Room-by-room estimates</div>
+                    </Link>
+                    <Link href="/exterior-painting-estimate-calculator" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
+                      <div className="font-medium text-gray-900">Exterior Painting</div>
+                      <div className="text-sm text-gray-500">House exterior quotes</div>
+                    </Link>
+                    <Link href="/commercial-painting-estimating-software" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
+                      <div className="font-medium text-gray-900">Commercial</div>
+                      <div className="text-sm text-gray-500">Large project estimates</div>
+                    </Link>
+                  </div>
+                  
+                  <div className="border-t border-gray-100 my-2"></div>
+                  
+                  {/* Business Solutions Section */}
+                  <div className="px-3 pt-2">
+                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 py-1">Business Solutions</div>
+                    <Link href="/painting-contractors" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
                       <div className="font-medium text-gray-900">For Contractors</div>
                       <div className="text-sm text-gray-500">Professional painting businesses</div>
-                    </div>
-                  </Link>
-                  <Link href="/how-to-scale-painting-business" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
-                    <div>
+                    </Link>
+                    <Link href="/how-to-scale-painting-business" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
                       <div className="font-medium text-gray-900">Scaling Your Business</div>
                       <div className="text-sm text-gray-500">Growth strategies for painters</div>
-                    </div>
-                  </Link>
-                  <Link href="/painting-business-software" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
-                    <div>
+                    </Link>
+                    <Link href="/painting-business-software" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
                       <div className="font-medium text-gray-900">Business Management</div>
                       <div className="text-sm text-gray-500">Complete business software</div>
-                    </div>
-                  </Link>
-                  <Link href="/painting-estimate-software" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
-                    <div>
+                    </Link>
+                    <Link href="/painting-estimate-software" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
                       <div className="font-medium text-gray-900">Estimate Software</div>
                       <div className="text-sm text-gray-500">Professional quoting tools</div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
@@ -131,10 +146,10 @@ export function Header() {
               </button>
               
               {/* Invisible bridge to prevent gap */}
-              <div className="absolute top-full left-0 h-2 w-full" />
+              <div className="absolute top-full left-0 h-4 w-full" />
               
               {isResourcesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                <div className="absolute top-full left-0 mt-1 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50">
                   <Link href="/painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Free Calculator</div>
@@ -270,6 +285,32 @@ export function Header() {
                 
                 {isUseCasesOpen && (
                   <div className="pl-4 space-y-1 border-l-2 border-gray-200">
+                    {/* Use Cases */}
+                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 py-1">Use Cases</div>
+                    <Link 
+                      href="/interior-painting-quote-calculator" 
+                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      onClick={closeMobileMenu}
+                    >
+                      Interior Painting
+                    </Link>
+                    <Link 
+                      href="/exterior-painting-estimate-calculator" 
+                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      onClick={closeMobileMenu}
+                    >
+                      Exterior Painting
+                    </Link>
+                    <Link 
+                      href="/commercial-painting-estimating-software" 
+                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      onClick={closeMobileMenu}
+                    >
+                      Commercial
+                    </Link>
+                    
+                    {/* Business Solutions */}
+                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 py-1 pt-3">Business Solutions</div>
                     <Link 
                       href="/painting-contractors" 
                       className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"

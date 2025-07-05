@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Smartphone, Monitor, Cloud, CheckCircle, Star, Users, ArrowRight, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 
 export const metadata: Metadata = {
@@ -75,7 +74,6 @@ export default function PaintingEstimatingSoftwarePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

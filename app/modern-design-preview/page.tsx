@@ -18,7 +18,6 @@ import {
   Rocket
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 
 // Import the new design system
@@ -83,7 +82,6 @@ export default function ModernDesignPreview() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
 
       {/* Hero Section with AdCreative.ai Style */}
       <section className="ad-hero relative">

@@ -10,7 +10,6 @@ import {
   Share2,
   Bookmark
 } from 'lucide-react';
-import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { Button } from '@/components/ui/button';
 import { professionalImages } from '@/lib/image-config';
@@ -35,7 +34,6 @@ export default function PaintingColorTrends2025Page() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
 
       {/* Hero Section with Featured Image */}
       <article className="py-8">
