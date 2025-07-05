@@ -113,9 +113,15 @@ export function ACNavbarClean() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-[#ef2b70] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">P</span>
-              </div>
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <rect width="32" height="32" rx="8" fill="#ef2b70"/>
+                <path d="M16 6C11.5817 6 8 9.58172 8 14C8 18.4183 11.5817 22 16 22C16 22 16 26 16 26C16 26 24 22 24 14C24 9.58172 20.4183 6 16 6Z" fill="white"/>
+                <circle cx="12" cy="12" r="1.5" fill="#ef2b70"/>
+                <circle cx="20" cy="12" r="1.5" fill="#ef2b70"/>
+                <circle cx="12" cy="16" r="1.5" fill="#ef2b70"/>
+                <circle cx="20" cy="16" r="1.5" fill="#ef2b70"/>
+                <circle cx="16" cy="14" r="1.5" fill="#ef2b70"/>
+              </svg>
               <span className="text-xl font-semibold text-gray-900">Paint Quote Pro</span>
             </Link>
 

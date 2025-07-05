@@ -542,3 +542,6 @@
     color: #2563eb !important;
   }
 }
+
+/* Import Contrast Fix Utilities - Must be last for highest priority */
+@import '../styles/contrast-fix.css';
