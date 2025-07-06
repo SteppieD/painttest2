@@ -375,40 +375,64 @@ export default function DashboardPage() {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+            <button 
+              onClick={() => {
+                trackFeatureUsed('analytics_total_quotes', { from: 'dashboard' });
+                router.push("/analytics/quotes");
+              }}
+              className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-left hover:bg-white/20 transition-all cursor-pointer group"
+            >
               <div className="flex items-center justify-between mb-2">
-                <FileText className="w-8 h-8 text-white/80" />
+                <FileText className="w-8 h-8 text-white/80 group-hover:scale-110 transition-transform" />
                 <span className="text-2xl font-bold text-white">{analytics.totalQuotes}</span>
               </div>
               <p className="text-white/80 font-medium">Total Quotes</p>
               <p className="text-sm text-white/60 mt-1">
                 {analytics.acceptedQuotes} won ({analytics.totalQuotes > 0 ? Math.round((analytics.acceptedQuotes / analytics.totalQuotes) * 100) : 0}%)
               </p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+            </button>
+            <button 
+              onClick={() => {
+                trackFeatureUsed('analytics_revenue', { from: 'dashboard' });
+                router.push("/analytics/revenue");
+              }}
+              className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-left hover:bg-white/20 transition-all cursor-pointer group"
+            >
               <div className="flex items-center justify-between mb-2">
-                <DollarSign className="w-8 h-8 text-white/80" />
+                <DollarSign className="w-8 h-8 text-white/80 group-hover:scale-110 transition-transform" />
                 <span className="text-2xl font-bold text-white">{formatCurrency(analytics.totalRevenue)}</span>
               </div>
               <p className="text-white/80 font-medium">Total Revenue</p>
               <p className="text-sm text-white/60 mt-1">All time earnings</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+            </button>
+            <button 
+              onClick={() => {
+                trackFeatureUsed('analytics_average', { from: 'dashboard' });
+                router.push("/analytics/average");
+              }}
+              className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-left hover:bg-white/20 transition-all cursor-pointer group"
+            >
               <div className="flex items-center justify-between mb-2">
-                <TrendingUp className="w-8 h-8 text-white/80" />
+                <TrendingUp className="w-8 h-8 text-white/80 group-hover:scale-110 transition-transform" />
                 <span className="text-2xl font-bold text-white">{formatCurrency(analytics.averageQuote)}</span>
               </div>
               <p className="text-white/80 font-medium">Average Quote</p>
               <p className="text-sm text-white/60 mt-1">Per job value</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+            </button>
+            <button 
+              onClick={() => {
+                trackFeatureUsed('analytics_pending', { from: 'dashboard' });
+                router.push("/analytics/pending");
+              }}
+              className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-left hover:bg-white/20 transition-all cursor-pointer group"
+            >
               <div className="flex items-center justify-between mb-2">
-                <Clock className="w-8 h-8 text-white/80" />
+                <Clock className="w-8 h-8 text-white/80 group-hover:scale-110 transition-transform" />
                 <span className="text-2xl font-bold text-white">{analytics.pendingQuotes}</span>
               </div>
               <p className="text-white/80 font-medium">Pending</p>
               <p className="text-sm text-white/60 mt-1">Awaiting response</p>
-            </div>
+            </button>
           </div>
         </div>
       </section>
@@ -450,11 +474,11 @@ export default function DashboardPage() {
         {/* Quick Settings Access */}
         {!isCheckingOnboarding && !needsOnboarding && (
           <div className="mb-6">
-            <div className="ac-card bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+            <div className="ac-card bg-white border-purple-200 shadow-sm">
               <div className="ac-card-body flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary-pink/10 rounded-xl flex items-center justify-center">
-                    <Settings className="w-6 h-6 text-primary-pink" />
+                  <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center">
+                    <Settings className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-gray-900">Customize Your Products & Pricing</h3>
@@ -476,13 +500,13 @@ export default function DashboardPage() {
         {/* Primary Action - Create Quote */}
         <div className="mb-8">
           <div 
-            className="ac-card cursor-pointer group hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-primary-pink/5 to-purple-50 border-primary-pink/20" 
+            className="ac-card cursor-pointer group hover:shadow-xl transition-all duration-300 bg-white border-orange-200 shadow-md" 
             onClick={() => router.push("/create-quote")}
           >
             <div className="ac-card-body p-8">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-5">
-                  <div className="w-20 h-20 bg-gradient-to-br from-primary-pink to-primary-pink-dark rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <div className="w-20 h-20 bg-orange-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                     <Calculator className="w-10 h-10 text-white" />
                   </div>
                   <div className="flex-1">
@@ -490,7 +514,7 @@ export default function DashboardPage() {
                     <p className="text-lg text-gray-600">Room-by-room measurements • Industry pricing • Customer-ready output</p>
                   </div>
                 </div>
-                <div className="text-primary-pink group-hover:translate-x-2 transition-transform">
+                <div className="text-orange-600 group-hover:translate-x-2 transition-transform">
                   <ArrowRight size={32} />
                 </div>
               </div>
@@ -546,8 +570,8 @@ export default function DashboardPage() {
               className="ac-card group hover:shadow-lg transition-all"
             >
               <div className="ac-card-body flex items-center gap-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Settings className="w-6 h-6 text-purple-600" />
+                <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Settings className="w-6 h-6 text-white" />
                 </div>
                 <div className="text-left">
                   <h3 className="font-semibold text-gray-900">Settings</h3>

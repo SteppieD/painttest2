@@ -448,7 +448,7 @@ export function FixedChatInterface({
                 )}
               >
                 {message.role === 'user' ? (
-                  <div className="whitespace-pre-wrap text-sm">
+                  <div className="whitespace-pre-wrap text-sm text-white">
                     {message.content}
                   </div>
                 ) : (

@@ -20,6 +20,7 @@ const PUBLIC_PAGES = [
   '/painting-estimate-calculator',
   '/how-to-quote-painting-jobs-professionally',
   '/painting-contractor-software-case-study',
+  '/create-quote', // Don't show feedback on the chat interface
 ];
 
 export function AppFeedback() {

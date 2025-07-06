@@ -98,6 +98,21 @@ const parseCustomerInfo = (input: string, existingData: Partial<ConversationData
     }
   }
   
+  // Handle "her/his/their name is X and she/he/they is at Y" pattern
+  if ((lower.includes('her name is') || lower.includes('his name is') || lower.includes('their name is')) && 
+      (lower.includes(' and she is at ') || lower.includes(' and he is at ') || lower.includes(' and they are at ') || lower.includes(' and she\'s at ') || lower.includes(' and he\'s at '))) {
+    const nameMatch = input.match(/(?:her|his|their)\s+name\s+is\s+([^,]+?)(?:\s+and\s+)/i);
+    const addressMatch = input.match(/(?:and\s+(?:she|he|they)\s+(?:is|are|'s)\s+at\s+)(.+)/i);
+    
+    if (nameMatch && addressMatch) {
+      console.log('🔍 PARSING: "her/his name is X and she/he is at Y" - Customer:', nameMatch[1].trim(), 'Address:', addressMatch[1].trim());
+      return {
+        customer_name: nameMatch[1].trim(),
+        address: addressMatch[1].trim()
+      };
+    }
+  }
+  
   // Handle "Name at Address" pattern
   if (lower.includes(' at ') && /\d/.test(input)) {
     const parts = input.split(' at ');
