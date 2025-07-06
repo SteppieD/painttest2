@@ -89,14 +89,17 @@ export default function TrialSignupPage() {
             {/* Left side - Value Props */}
             <div className="space-y-8">
               <div>
-                <div className="ac-hero-badge mb-6 inline-flex" style={{ background: 'rgba(239, 43, 112, 0.1)', borderColor: 'rgba(239, 43, 112, 0.2)', color: 'var(--primary-pink)' }}>
-                  <Sparkles size={16} />
-                  <span>5,000+ contractors trust ProPaint Quote</span>
+                <div className="ac-hero-badge mb-6 inline-flex" style={{ background: 'rgba(239, 43, 112, 0.15)', borderColor: 'rgba(239, 43, 112, 0.3)' }}>
+                  <Sparkles size={16} className="text-primary-pink" />
+                  <span className="text-gray-800 font-medium">5,000+ contractors trust ProPaint Quote</span>
                 </div>
                 
                 <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
                   Start creating quotes in{" "}
-                  <span className="text-primary-pink">30 seconds</span>
+                  <span className="relative inline-block">
+                    <span className="absolute inset-0 bg-primary-pink/10 rounded-lg -skew-x-12"></span>
+                    <span className="relative text-primary-pink font-extrabold px-2">30 seconds</span>
+                  </span>
                 </h1>
                 
                 <p className="text-xl text-gray-600 mb-8">
