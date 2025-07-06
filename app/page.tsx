@@ -24,6 +24,7 @@ import { OptimizedSaaSLayoutWithImages } from '@/components/homepage/OptimizedSa
 import { Footer } from '@/components/shared/footer';
 import { ROICalculator } from '@/components/marketing/roi-calculator';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
+import { FeedbackBox } from '@/components/ui/feedback-box';
 
 export default function HomePage() {
   return (
@@ -286,6 +287,21 @@ export default function HomePage() {
             <span>✓ Full feature access</span>
             <span>✓ Cancel anytime</span>
           </div>
+        </div>
+      </section>
+
+      {/* Feedback Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto max-w-4xl px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Help Us Improve
+            </h2>
+            <p className="text-lg text-gray-600">
+              Your feedback helps us build better features for painting contractors
+            </p>
+          </div>
+          <FeedbackBox type="website" position="inline" />
         </div>
       </section>
 

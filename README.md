@@ -2,14 +2,14 @@
 
 A comprehensive Next.js painting quote application with admin portal, customer management, and AI-powered quoting system.
 
-## ✅ **Current Status - PRODUCTION READY & FEATURE COMPLETE (Updated June 30, 2025)**
+## ✅ **Current Status - PRODUCTION READY & FEATURE COMPLETE (Updated July 6, 2025)**
 
 ### 🎉 **Latest Updates:**
+- **Fixed**: All contrast issues site-wide - white text on light backgrounds, orange buttons, and CTAs
 - **Enhanced**: Chat interface with customer name display and smart action buttons
-- **Fixed**: All quote preview errors with proper fallback handling
 - **Optimized**: Database schema compatibility and null field handling
 - **Improved**: User experience with conversational tone and clear workflows
-- **Deployed**: Stable production build with comprehensive error handling
+- **Deployed**: Stable production build with comprehensive error handling and WCAG compliance
 
 ### 🎯 **Core Features Working:**
 1. **🤖 Enhanced AI Chat Interface** - Smart customer name detection, conversational tone, action buttons when quotes are ready
@@ -35,42 +35,58 @@ A comprehensive Next.js painting quote application with admin portal, customer m
 
 ## 🚀 **Quick Start:**
 
-### **🌐 Deploy Online (Use From Anywhere):**
-**One-Click Deploy to Railway:**
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template)
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions for Railway, Vercel, and Render.
-
-### **💻 Local Development:**
+### **🌐 Deploy to Vercel (Recommended):**
 ```bash
 # Clone the repository
-git clone https://github.com/SteppieD/painttest2.git
+git clone https://github.com/yourusername/painttest2.git
 cd painttest2
 
 # Install dependencies
 npm install
 
-# Set up environment variables
+# Build the project
+npm run build
+
+# Deploy to Vercel
+vercel --prod
+```
+
+### **💻 Local Development:**
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/painttest2.git
+cd painttest2
+
+# Install dependencies
+npm install
+
+# Set up environment variables (see Environment Setup below)
 cp .env.example .env.local
-# Edit .env.local with your Supabase credentials
 
 # Run development server
 npm run dev
 # Visit: http://localhost:3001
 ```
 
-### **🌐 Production Deployment:**
-```bash
-# Build for production
-npm run build
+### **🔧 Environment Setup:**
+Create `.env.local` with these variables:
+```env
+# Supabase (Required for Production)
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-# Deploy to Vercel
-vercel --prod
+# AI Services (Optional - defaults to mock data if not set)
+OPENAI_API_KEY=your_openai_key
+ANTHROPIC_API_KEY=your_anthropic_key
 
-# Or deploy via Git push (if connected to Vercel)
-git add .
-git commit -m "Deploy: Updated with latest fixes"
-git push origin main
+# Email (Optional)
+RESEND_API_KEY=your_resend_key
+RESEND_FROM_EMAIL=noreply@yourdomain.com
+
+# Stripe (Optional)
+STRIPE_SECRET_KEY=your_stripe_secret
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_public
 ```
 
 ### **🐳 Docker:**

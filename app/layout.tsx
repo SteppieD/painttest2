@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster'
 import AnalyticsProvider from '@/components/analytics/AnalyticsProvider'
 import { ACNavbarClean } from '@/components/adcreative/ACNavbar-clean'
 import { StructuredData } from '@/components/seo/StructuredData'
+import { AppFeedback } from '@/components/ui/app-feedback'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -103,6 +104,7 @@ export default function RootLayout({
             {children}
           </main>
           <Toaster />
+          <AppFeedback />
         </AnalyticsProvider>
       </body>
     </html>

@@ -26,6 +26,350 @@
 /* Import Contrast Fix Utilities - Must be last for highest priority */
 @import '../styles/contrast-fix.css';
 
+/* SITE-WIDE CONTRAST FIXES - Ensure readability everywhere */
+
+/* 1. Hero Section - Force black text on light backgrounds */
+.hero-optimized,
+.hero-optimized *,
+.hero-optimized h1,
+.hero-optimized h2,
+.hero-optimized h3,
+.hero-optimized h4,
+.hero-optimized h5,
+.hero-optimized h6,
+.hero-optimized p,
+.hero-optimized span,
+.hero-optimized div,
+.hero-optimized strong,
+.hero-optimized em,
+.hero-optimized a {
+  color: #000000 !important;
+  opacity: 1 !important;
+}
+
+/* Ensure orange accents stay orange in hero */
+.hero-optimized .text-orange-600,
+.hero-optimized .text-orange-500,
+.hero-optimized .text-orange-700,
+.hero-optimized span[style*="#ea580c"] {
+  color: #ea580c !important;
+}
+
+/* Ensure green icons stay green in hero */
+.hero-optimized .text-green-600,
+.hero-optimized .text-green-500,
+.hero-optimized svg.text-green-600,
+.hero-optimized svg.text-green-500 {
+  color: #059669 !important;
+}
+
+/* Light gradient background for hero */
+.hero-optimized {
+  background: linear-gradient(to bottom right, #f9fafb, #fff7ed) !important;
+}
+
+/* 2. Fix Orange Buttons & Backgrounds - Use white text */
+.bg-orange-600,
+.bg-orange-700,
+.bg-orange-800,
+[class*="bg-orange-6"],
+[class*="bg-orange-7"],
+[class*="bg-orange-8"],
+.bg-\[#ea580c\],
+.bg-\[#dc2626\],
+.bg-\[#c2410c\],
+button[class*="orange"],
+a[class*="orange"] {
+  color: #ffffff !important;
+}
+
+/* Fix orange gradient backgrounds */
+[class*="from-orange"],
+[class*="to-orange"],
+.gradient-orange-contrast {
+  color: #ffffff !important;
+}
+
+/* Ensure all children of orange backgrounds have white text */
+.bg-orange-600 *,
+.bg-orange-700 *,
+.bg-orange-800 *,
+[class*="bg-orange-6"] *,
+[class*="bg-orange-7"] *,
+[class*="bg-orange-8"] *,
+[class*="from-orange"] *,
+[class*="to-orange"] * {
+  color: #ffffff !important;
+}
+
+/* 3. Pink/Red backgrounds - Use white text */
+.bg-\[#ef2b70\],
+.bg-\[#d91e5a\],
+[class*="bg-pink"],
+[class*="bg-red"],
+[class*="from-pink"],
+[class*="to-pink"],
+[class*="from-red"],
+[class*="to-red"] {
+  color: #ffffff !important;
+}
+
+.bg-\[#ef2b70\] *,
+.bg-\[#d91e5a\] *,
+[class*="bg-pink"] *,
+[class*="bg-red"] *,
+[class*="from-pink"] *,
+[class*="to-pink"] *,
+[class*="from-red"] *,
+[class*="to-red"] * {
+  color: #ffffff !important;
+}
+
+/* 4. Light backgrounds - Use dark text */
+.bg-gray-50,
+.bg-gray-100,
+.bg-orange-50,
+.bg-orange-100,
+.bg-pink-50,
+.bg-pink-100,
+[class*="bg-gray-5"],
+[class*="bg-gray-10"],
+[class*="bg-orange-5"],
+[class*="bg-orange-10"] {
+  color: #000000 !important;
+}
+
+.bg-gray-50 *,
+.bg-gray-100 *,
+.bg-orange-50 *,
+.bg-orange-100 *,
+.bg-pink-50 *,
+.bg-pink-100 *,
+[class*="bg-gray-5"] *,
+[class*="bg-gray-10"] *,
+[class*="bg-orange-5"] *,
+[class*="bg-orange-10"] * {
+  color: #000000 !important;
+}
+
+/* 5. Fix specific button contrasts */
+.ac-btn-primary,
+.ac-btn-secondary,
+button.bg-orange-600,
+button.bg-orange-700,
+a.bg-orange-600,
+a.bg-orange-700 {
+  background-color: #ea580c !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.ac-btn-primary:hover,
+.ac-btn-secondary:hover,
+button.bg-orange-600:hover,
+button.bg-orange-700:hover,
+a.bg-orange-600:hover,
+a.bg-orange-700:hover {
+  background-color: #c2410c !important;
+  color: #ffffff !important;
+}
+
+/* Fix white background buttons - ensure dark text */
+.bg-white,
+button.bg-white,
+a.bg-white,
+[class*="bg-white"] {
+  background-color: #ffffff !important;
+  color: #1f2937 !important; /* gray-800 */
+}
+
+.bg-white:hover,
+button.bg-white:hover,
+a.bg-white:hover,
+[class*="bg-white"]:hover {
+  background-color: #f3f4f6 !important; /* gray-100 */
+  color: #ea580c !important; /* orange-600 on hover */
+}
+
+/* Ensure white button SVGs and icons inherit color */
+.bg-white svg,
+button.bg-white svg,
+a.bg-white svg {
+  color: currentColor !important;
+}
+
+/* 6. Navigation specific fixes - preserve existing behavior */
+nav a:not([class*="bg-"]):not([class*="btn"]),
+header a:not([class*="bg-"]):not([class*="btn"]) {
+  /* Let existing styles work unless it's a button */
+}
+
+/* Ensure nav CTAs maintain contrast */
+nav a[class*="bg-"],
+nav button[class*="bg-"],
+header a[class*="bg-"],
+header button[class*="bg-"] {
+  /* Buttons will be handled by button rules above */
+}
+
+/* 7. Fix badge contrasts */
+.badge,
+[class*="badge"] {
+  background-color: #ea580c !important;
+  color: #ffffff !important;
+}
+
+/* 8. Fix trust badges and indicators */
+.trust-badge,
+.ac-hero-badge {
+  background-color: #ea580c !important;
+  color: #ffffff !important;
+}
+
+/* 9. Ensure form elements are visible */
+input,
+textarea,
+select {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+/* 10. Override any remaining opacity issues */
+* {
+  opacity: 1 !important;
+}
+
+/* 11. Fix specific pink gradient sections */
+.gradient-pink-contrast {
+  background: linear-gradient(135deg, #ef2b70 0%, #c2185b 100%) !important;
+  color: white !important;
+}
+
+.gradient-pink-contrast * {
+  color: white !important;
+}
+
+/* 12. Ensure icons maintain their colors */
+svg.text-green-600,
+svg.text-green-500,
+svg.text-blue-600,
+svg.text-blue-500 {
+  color: currentColor !important;
+}
+
+/* 13. Fix card backgrounds */
+.card,
+.ac-card,
+[class*="card"] {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+/* 14. Fix pricing cards */
+.ac-pricing-card {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.ac-pricing-card.featured {
+  border-color: #ea580c !important;
+}
+
+/* 15. Final CTA sections */
+section[class*="gradient"] {
+  color: #ffffff !important;
+}
+
+section[class*="gradient"] h1,
+section[class*="gradient"] h2,
+section[class*="gradient"] h3,
+section[class*="gradient"] p,
+section[class*="gradient"] span {
+  color: #ffffff !important;
+}
+
+/* 16. Ensure proper contrast for all CTAs */
+/* Orange CTAs - white text */
+.bg-orange-600,
+.bg-orange-700,
+.bg-\[#ea580c\],
+.bg-\[#ef2b70\],
+.bg-\[#d91e5a\] {
+  color: #ffffff !important;
+}
+
+/* White CTAs - dark text */
+.bg-white {
+  color: #1f2937 !important;
+}
+
+/* Navigation specific fixes */
+nav .bg-\[#ef2b70\],
+header .bg-\[#ef2b70\] {
+  background-color: #ef2b70 !important;
+  color: #ffffff !important;
+}
+
+nav .bg-\[#ef2b70\]:hover,
+header .bg-\[#ef2b70\]:hover {
+  background-color: #d91e5a !important;
+  color: #ffffff !important;
+}
+
+/* 17. Quote Generator Mockup - ensure proper contrast */
+.hero-visual .bg-white {
+  color: #1f2937 !important;
+}
+
+.hero-visual .bg-white h3,
+.hero-visual .bg-white .text-gray-900 {
+  color: #1f2937 !important;
+}
+
+.hero-visual .bg-white .text-gray-600 {
+  color: #6b7280 !important;
+}
+
+.hero-visual .bg-white .text-green-600 {
+  color: #059669 !important;
+}
+
+.hero-visual .bg-white .text-orange-600 {
+  color: #ea580c !important;
+}
+
+/* 18. Fix transparent buttons that become white on hover */
+/* Ensure any button/link with hover:bg-white has proper text color */
+[class*="hover:bg-white"]:hover {
+  color: #ea580c !important; /* Orange text on white background */
+}
+
+/* Specific fix for transparent white-bordered buttons */
+.bg-transparent[class*="hover:bg-white"]:hover,
+a.bg-transparent[class*="hover:bg-white"]:hover,
+button.bg-transparent[class*="hover:bg-white"]:hover {
+  background-color: #ffffff !important;
+  color: #ea580c !important;
+  border-color: #ea580c !important;
+}
+
+/* Ensure hover states are properly handled for all CTAs */
+.text-white[class*="hover:bg-white"]:hover {
+  color: #ea580c !important;
+}
+
+/* Override any inline styles during hover transitions */
+[class*="hover:bg-white"]:hover * {
+  color: inherit !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -32,26 +32,26 @@ export function OptimizedSaaSLayoutWithImages() {
   return (
     <div className="saas-optimized-layout">
       {/* Section 1: Above the Fold - Hero with Clear Value Proposition */}
-      <section className="hero-optimized bg-gradient-to-br from-gray-50 to-orange-50">
+      <section className="hero-optimized bg-gradient-to-br from-gray-50 to-orange-50" style={{ color: '#000000 !important' }}>
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-120px)] py-2 lg:py-4">
             {/* Left: Messaging */}
-            <div className="hero-content space-y-4 lg:space-y-6 order-1 lg:order-1">
+            <div className="hero-content space-y-4 lg:space-y-6 order-1 lg:order-1" style={{ color: '#000000 !important' }}>
               {/* Trust Badge */}
-              <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 px-3 py-1.5 rounded-full text-sm font-semibold">
+              <div className="inline-flex items-center gap-2 bg-orange-600 text-white px-3 py-1.5 rounded-full text-sm font-semibold">
                 <Award size={16} />
                 <span>Trusted by 5,247+ Painting Contractors</span>
               </div>
 
               {/* Main Headline - Problem/Solution Fit */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight" style={{ color: '#000000 !important' }}>
                 Stop Losing Jobs to
-                <span className="text-orange-600 block">Faster Competitors</span>
+                <span className="text-orange-600 block" style={{ color: '#ea580c !important' }}>Faster Competitors</span>
               </h1>
 
               {/* Sub-headline - Clear Value Prop */}
-              <p className="text-lg lg:text-xl text-gray-700 leading-relaxed">
-                Create professional painting quotes in <strong>30 seconds</strong> instead of 3 days. 
+              <p className="text-lg lg:text-xl leading-relaxed" style={{ color: '#000000 !important' }}>
+                Create professional painting quotes in <strong style={{ color: '#000000 !important' }}>30 seconds</strong> instead of 3 days. 
                 Win more jobs with instant, accurate estimates that impress customers.
               </p>
 
@@ -68,15 +68,15 @@ export function OptimizedSaaSLayoutWithImages() {
                       />
                     ))}
                   </div>
-                  <div className="text-sm">
-                    <div className="font-semibold">5,247+ Active</div>
+                  <div className="text-sm" style={{ color: '#000000 !important' }}>
+                    <div className="font-semibold" style={{ color: '#000000 !important' }}>5,247+ Active</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
                   {[1,2,3,4,5].map(i => (
                     <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
                   ))}
-                  <span className="ml-1 text-sm font-semibold">4.9/5</span>
+                  <span className="ml-1 text-sm font-semibold" style={{ color: '#000000 !important' }}>4.9/5</span>
                 </div>
               </div>
 
@@ -102,18 +102,18 @@ export function OptimizedSaaSLayoutWithImages() {
               </div>
 
               {/* Trust Indicators */}
-              <div className="flex flex-wrap gap-4 text-xs lg:text-sm text-gray-600">
-                <span className="flex items-center gap-1">
+              <div className="flex flex-wrap gap-4 text-xs lg:text-sm" style={{ color: '#000000 !important' }}>
+                <span className="flex items-center gap-1" style={{ color: '#000000 !important' }}>
                   <Check className="text-green-600" size={14} />
-                  No credit card
+                  <span style={{ color: '#000000 !important' }}>No credit card</span>
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1" style={{ color: '#000000 !important' }}>
                   <Shield className="text-green-600" size={14} />
-                  30-day guarantee
+                  <span style={{ color: '#000000 !important' }}>30-day guarantee</span>
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1" style={{ color: '#000000 !important' }}>
                   <Clock className="text-green-600" size={14} />
-                  2-min setup
+                  <span style={{ color: '#000000 !important' }}>2-min setup</span>
                 </span>
               </div>
             </div>
@@ -123,7 +123,7 @@ export function OptimizedSaaSLayoutWithImages() {
               {/* Main Product Screenshot - Larger and more prominent */}
               <div className="relative z-10 bg-white rounded-xl lg:rounded-2xl shadow-2xl p-4 sm:p-5 lg:p-6 transform lg:rotate-1 hover:rotate-0 transition-all duration-300 max-w-sm sm:max-w-md mx-auto lg:max-w-none lg:scale-110 hover:scale-115 ring-4 ring-orange-600/20 hover:ring-orange-600/40">
                 <div className="mb-3 flex items-center justify-between">
-                  <h3 className="font-bold text-base lg:text-lg">Instant Quote Generator</h3>
+                  <h3 className="font-bold text-base lg:text-lg text-gray-900">Instant Quote Generator</h3>
                   <span className="text-green-600 font-semibold text-sm">LIVE</span>
                 </div>
                 
@@ -131,7 +131,7 @@ export function OptimizedSaaSLayoutWithImages() {
                 <div className="space-y-3">
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <div className="text-xs lg:text-sm text-gray-600">Customer</div>
-                    <div className="font-semibold text-sm lg:text-base">Johnson Residence</div>
+                    <div className="font-semibold text-sm lg:text-base text-gray-900">Johnson Residence</div>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-3">
@@ -158,7 +158,7 @@ export function OptimizedSaaSLayoutWithImages() {
                     <TrendingUp className="text-green-600" size={20} />
                   </div>
                   <div>
-                    <div className="text-xl font-bold">+47%</div>
+                    <div className="text-xl font-bold text-gray-900">+47%</div>
                     <div className="text-xs text-gray-600">More Jobs</div>
                   </div>
                 </div>
@@ -170,7 +170,7 @@ export function OptimizedSaaSLayoutWithImages() {
                     <Clock className="text-blue-600" size={20} />
                   </div>
                   <div>
-                    <div className="text-xl font-bold">32hrs</div>
+                    <div className="text-xl font-bold text-gray-900">32hrs</div>
                     <div className="text-xs text-gray-600">Saved/mo</div>
                   </div>
                 </div>
@@ -375,10 +375,11 @@ export function OptimizedSaaSLayoutWithImages() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               href="/trial-signup" 
-              className="inline-flex items-center justify-center gap-2 bg-white text-orange-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all shadow-xl"
+              className="inline-flex items-center justify-center gap-2 bg-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all shadow-xl"
+              style={{ color: '#ea580c' }}
             >
               Start Your Free Trial
-              <ArrowRight size={20} />
+              <ArrowRight size={20} style={{ color: '#ea580c' }} />
             </Link>
             <Link 
               href="/pricing" 
@@ -387,7 +388,7 @@ export function OptimizedSaaSLayoutWithImages() {
               View Pricing
             </Link>
           </div>
-          <p className="text-sm mt-6 opacity-80">
+          <p className="text-sm mt-6" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
             No credit card required • 2-minute setup • Cancel anytime
           </p>
         </div>
