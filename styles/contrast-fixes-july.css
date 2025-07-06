@@ -339,6 +339,90 @@ footer .text-2xl {
   border-top: 1px solid #e5e7eb !important;
 }
 
+/* Paint Estimate Templates Page Contrast Fixes */
+/* Fix white text on light blue/indigo gradient background */
+.bg-gradient-to-br.from-blue-50.to-indigo-100 h1,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 h2,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 h3,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 h4,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 p,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 span,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 div,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 strong {
+  color: #1f2937 !important;
+}
+
+/* Fix buttons on paint-estimate-templates page */
+.bg-gradient-to-br.from-blue-50.to-indigo-100 .bg-blue-600,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 a[href="/trial-signup"] {
+  background-color: #1e40af !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.bg-gradient-to-br.from-blue-50.to-indigo-100 .bg-blue-600:hover,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 a[href="/trial-signup"]:hover {
+  background-color: #1e3a8a !important;
+}
+
+/* Fix outline buttons to have proper contrast */
+.bg-gradient-to-br.from-blue-50.to-indigo-100 .variant-outline,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 button[variant="outline"],
+.bg-gradient-to-br.from-blue-50.to-indigo-100 a.variant-outline {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+.bg-gradient-to-br.from-blue-50.to-indigo-100 .variant-outline:hover,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 button[variant="outline"]:hover,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 a.variant-outline:hover {
+  background-color: #f9fafb !important;
+  border-color: #1e40af !important;
+  color: #1e40af !important;
+}
+
+/* Ensure all text in hero section is dark */
+section.bg-gradient-to-br.from-blue-50.to-indigo-100 * {
+  color: #1f2937 !important;
+}
+
+/* But preserve button colors */
+section.bg-gradient-to-br.from-blue-50.to-indigo-100 .bg-blue-600 *,
+section.bg-gradient-to-br.from-blue-50.to-indigo-100 .bg-green-600 * {
+  color: #ffffff !important;
+}
+
+/* Fix any remaining white-on-white issues on templates page */
+#templates .bg-white {
+  background-color: #ffffff !important;
+}
+
+#templates .text-white:not(.bg-blue-600 *):not(.bg-green-600 *) {
+  color: #1f2937 !important;
+}
+
+/* Ensure checkmarks stay green */
+.text-green-500 {
+  color: #10b981 !important;
+}
+
+/* Fix "Ready for Automated Quote Generation" section */
+section.bg-gradient-to-br.from-blue-50.to-indigo-100 .bg-blue-50 {
+  background-color: #eff6ff !important;
+  border: 2px solid #3b82f6 !important;
+}
+
+/* Ensure Professional Software card stands out */
+.border-blue-500.bg-blue-50 {
+  background-color: #eff6ff !important;
+  border-color: #3b82f6 !important;
+}
+
+.border-blue-500.bg-blue-50 * {
+  color: #1f2937 !important;
+}
+
 /* Alternative: Keep dark footer but ensure high contrast */
 footer.keep-dark {
   background-color: #111827 !important;
