@@ -423,6 +423,220 @@ section.bg-gradient-to-br.from-blue-50.to-indigo-100 .bg-blue-50 {
   color: #1f2937 !important;
 }
 
+/* Global Fixes for All Light Background Pages */
+/* Fix all light gradient backgrounds to have dark text */
+[class*="from-blue-50"][class*="to-indigo-100"] h1,
+[class*="from-blue-50"][class*="to-indigo-100"] h2,
+[class*="from-blue-50"][class*="to-indigo-100"] h3,
+[class*="from-blue-50"][class*="to-indigo-100"] h4,
+[class*="from-blue-50"][class*="to-indigo-100"] h5,
+[class*="from-blue-50"][class*="to-indigo-100"] h6,
+[class*="from-blue-50"][class*="to-indigo-100"] p,
+[class*="from-blue-50"][class*="to-indigo-100"] span,
+[class*="from-blue-50"][class*="to-indigo-100"] div,
+[class*="from-blue-50"][class*="to-indigo-100"] strong,
+[class*="from-blue-50"][class*="to-indigo-100"] em,
+[class*="from-blue-50"][class*="to-indigo-100"] li,
+[class*="from-gray-50"][class*="to-orange-50"] h1,
+[class*="from-gray-50"][class*="to-orange-50"] h2,
+[class*="from-gray-50"][class*="to-orange-50"] h3,
+[class*="from-gray-50"][class*="to-orange-50"] h4,
+[class*="from-gray-50"][class*="to-orange-50"] h5,
+[class*="from-gray-50"][class*="to-orange-50"] h6,
+[class*="from-gray-50"][class*="to-orange-50"] p,
+[class*="from-gray-50"][class*="to-orange-50"] span,
+[class*="from-gray-50"][class*="to-orange-50"] div,
+[class*="from-gray-50"][class*="to-orange-50"] strong {
+  color: #1f2937 !important;
+}
+
+/* Fix buttons on all light gradient backgrounds */
+[class*="from-blue-50"] button:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600),
+[class*="to-indigo-100"] button:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600),
+[class*="from-gray-50"] button:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600),
+[class*="to-orange-50"] button:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600) {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+/* Ensure primary action buttons maintain proper contrast */
+.bg-blue-600,
+.bg-blue-700,
+.bg-green-600,
+.bg-purple-600,
+.bg-orange-600,
+.hover\:bg-blue-700:hover,
+.hover\:bg-green-700:hover {
+  color: #ffffff !important;
+}
+
+/* Fix ac-btn buttons on light backgrounds */
+.bg-gray-50 .ac-btn-secondary,
+.bg-blue-50 .ac-btn-secondary,
+[class*="from-blue-50"] .ac-btn-secondary,
+[class*="from-gray-50"] .ac-btn-secondary {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+.bg-gray-50 .ac-btn-secondary:hover,
+.bg-blue-50 .ac-btn-secondary:hover,
+[class*="from-blue-50"] .ac-btn-secondary:hover,
+[class*="from-gray-50"] .ac-btn-secondary:hover {
+  background-color: #f9fafb !important;
+  border-color: #ef2b70 !important;
+  color: #ef2b70 !important;
+}
+
+/* Fix ghost buttons on light backgrounds */
+.ac-btn-ghost {
+  background-color: transparent !important;
+  border: 2px solid currentColor !important;
+}
+
+.bg-gray-50 .ac-btn-ghost,
+.bg-blue-50 .ac-btn-ghost,
+[class*="from-blue-50"] .ac-btn-ghost,
+[class*="from-gray-50"] .ac-btn-ghost {
+  color: #1f2937 !important;
+  border-color: #1f2937 !important;
+}
+
+.bg-gray-50 .ac-btn-ghost:hover,
+.bg-blue-50 .ac-btn-ghost:hover,
+[class*="from-blue-50"] .ac-btn-ghost:hover,
+[class*="from-gray-50"] .ac-btn-ghost:hover {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+/* Ensure links on light backgrounds are visible */
+.bg-gray-50 a:not(.ac-btn):not(button),
+.bg-blue-50 a:not(.ac-btn):not(button),
+[class*="from-blue-50"] a:not(.ac-btn):not(button),
+[class*="from-gray-50"] a:not(.ac-btn):not(button) {
+  color: #2563eb !important;
+}
+
+.bg-gray-50 a:not(.ac-btn):not(button):hover,
+.bg-blue-50 a:not(.ac-btn):not(button):hover,
+[class*="from-blue-50"] a:not(.ac-btn):not(button):hover,
+[class*="from-gray-50"] a:not(.ac-btn):not(button):hover {
+  color: #1d4ed8 !important;
+  text-decoration: underline;
+}
+
+/* Fix any remaining text-white classes on light backgrounds */
+.bg-gray-50 .text-white:not(.bg-blue-600 *):not(.bg-green-600 *):not(.bg-purple-600 *):not(.bg-orange-600 *),
+.bg-blue-50 .text-white:not(.bg-blue-600 *):not(.bg-green-600 *):not(.bg-purple-600 *):not(.bg-orange-600 *),
+[class*="from-blue-50"] .text-white:not(.bg-blue-600 *):not(.bg-green-600 *):not(.bg-purple-600 *):not(.bg-orange-600 *),
+[class*="from-gray-50"] .text-white:not(.bg-blue-600 *):not(.bg-green-600 *):not(.bg-purple-600 *):not(.bg-orange-600 *) {
+  color: #1f2937 !important;
+}
+
+/* Ensure cards on light backgrounds have proper contrast */
+.bg-gray-50 .bg-white,
+.bg-blue-50 .bg-white,
+[class*="from-blue-50"] .bg-white,
+[class*="from-gray-50"] .bg-white {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+/* Fix trial-success page specific issues */
+.bg-gray-50 .ac-btn.ac-btn-secondary {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+/* Ensure all text on pricing page is readable */
+.ac-hero-badge {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.bg-gray-50 .ac-hero-badge {
+  background-color: rgba(239, 43, 112, 0.1) !important;
+  color: #ef2b70 !important;
+  border-color: rgba(239, 43, 112, 0.2) !important;
+}
+
+/* Fix variant="outline" buttons on light backgrounds */
+button[variant="outline"],
+a[variant="outline"],
+.variant-outline {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+button[variant="outline"]:hover,
+a[variant="outline"]:hover,
+.variant-outline:hover {
+  background-color: #f9fafb !important;
+  border-color: #2563eb !important;
+  color: #2563eb !important;
+}
+
+/* Ensure calculator pages have proper contrast */
+.painting-estimate-calculator .bg-gray-50,
+.interior-painting-quote-calculator .bg-gray-50,
+.exterior-painting-estimate-calculator .bg-gray-50 {
+  background-color: #f9fafb !important;
+}
+
+/* Fix any blue gradient hero sections */
+.bg-gradient-to-br.from-blue-600.to-blue-800 {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+}
+
+.bg-gradient-to-br.from-blue-600.to-blue-800 * {
+  color: #ffffff !important;
+}
+
+/* Ensure text contrast on features page */
+.features-page .bg-gradient-to-br.from-blue-50.to-indigo-100 {
+  background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%) !important;
+}
+
+/* Fix any remaining Button components with size="lg" on light backgrounds */
+.bg-gray-50 Button[size="lg"],
+.bg-blue-50 Button[size="lg"],
+[class*="from-blue-50"] Button[size="lg"],
+[class*="from-gray-50"] Button[size="lg"] {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+/* Ensure all Card components have proper borders on light backgrounds */
+.bg-gray-50 .card,
+.bg-blue-50 .card,
+[class*="from-blue-50"] .card,
+[class*="from-gray-50"] .card,
+.bg-gray-50 [class*="rounded"][class*="shadow"],
+.bg-blue-50 [class*="rounded"][class*="shadow"] {
+  border: 1px solid #e5e7eb !important;
+  background-color: #ffffff !important;
+}
+
+/* Fix text colors in cards */
+.card h1, .card h2, .card h3, .card h4, .card h5, .card h6,
+.card p, .card span, .card div, .card li {
+  color: #1f2937 !important;
+}
+
+/* But preserve icon colors */
+.card .text-blue-600,
+.card .text-green-600,
+.card .text-purple-600,
+.card .text-orange-600 {
+  color: inherit !important;
+}
+
 /* Alternative: Keep dark footer but ensure high contrast */
 footer.keep-dark {
   background-color: #111827 !important;
