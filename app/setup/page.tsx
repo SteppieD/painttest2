@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
 import { CheckCircle, Palette, DollarSign, Rocket, ArrowRight, Star, Info, Clock, AlertCircle } from "lucide-react";
 import { trackSetupStarted, trackSetupCompleted, trackPageView } from "@/lib/analytics/tracking";
+import { OnboardingProgressBar } from "@/components/ui/onboarding-progress-bar";
 
 interface SetupChoice {
   id: string;

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Send, Loader2, Sparkles, CheckCircle, ArrowRight } from "lucide-react";
 import { trackPageView, trackFeatureUsed } from "@/lib/analytics/tracking";
+import { OnboardingProgressBar } from "@/components/ui/onboarding-progress-bar";
 
 interface SetupProgress {
   businessName?: string;
@@ -155,7 +156,7 @@ export default function SetupChatPage() {
       {/* Header */}
       <div className="bg-white border-b sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                 <Sparkles className="w-6 h-6 text-blue-600" />
@@ -165,11 +166,34 @@ export default function SetupChatPage() {
                 <p className="text-sm text-gray-600">Let's get your painting business configured</p>
               </div>
             </div>
-            {setupProgress.currentStep && (
-              <div className="text-sm text-gray-500">
-                Step: {setupProgress.currentStep.replace(/_/g, ' ')}
-              </div>
-            )}
+          </div>
+          {/* Compact Progress Bar in Header */}
+          <div className="max-w-md">
+            <OnboardingProgressBar
+              steps={[
+                {
+                  id: 'business-info',
+                  title: 'Business Info',
+                  completed: !!setupProgress.businessName,
+                  active: setupProgress.currentStep === 'business_info'
+                },
+                {
+                  id: 'paint-products',
+                  title: 'Paint Products',
+                  completed: !!setupProgress.interiorWallPaint,
+                  active: setupProgress.currentStep === 'paint_products'
+                },
+                {
+                  id: 'labor-rates',
+                  title: 'Labor Rates',
+                  completed: !!setupProgress.laborRates,
+                  active: setupProgress.currentStep === 'labor_rates'
+                }
+              ]}
+              variant="compact"
+              animated={true}
+              showPercentage={true}
+            />
           </div>
         </div>
       </div>
@@ -273,18 +297,33 @@ export default function SetupChatPage() {
 
         {/* Progress Indicator */}
         <div className="mt-4 bg-white rounded-lg shadow-sm border p-4">
-          <h3 className="text-sm font-medium text-gray-700 mb-2">Setup Progress</h3>
-          <div className="grid grid-cols-3 gap-2 text-xs">
-            <div className={`p-2 rounded ${setupProgress.businessName ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-              ✓ Business Info
-            </div>
-            <div className={`p-2 rounded ${setupProgress.interiorWallPaint ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-              ✓ Paint Products
-            </div>
-            <div className={`p-2 rounded ${setupProgress.laborRates ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-              ✓ Labor Rates
-            </div>
-          </div>
+          <OnboardingProgressBar
+            steps={[
+              {
+                id: 'business-info',
+                title: 'Business Info',
+                description: 'Company name and details',
+                completed: !!setupProgress.businessName,
+                active: setupProgress.currentStep === 'business_info'
+              },
+              {
+                id: 'paint-products',
+                title: 'Paint Products',
+                description: 'Your preferred paint brands',
+                completed: !!setupProgress.interiorWallPaint,
+                active: setupProgress.currentStep === 'paint_products'
+              },
+              {
+                id: 'labor-rates',
+                title: 'Labor & Pricing',
+                description: 'Rates and markup',
+                completed: !!setupProgress.laborRates,
+                active: setupProgress.currentStep === 'labor_rates'
+              }
+            ]}
+            variant="detailed"
+            animated={true}
+          />
         </div>
       </div>
     </div>

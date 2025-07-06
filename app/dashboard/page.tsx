@@ -31,9 +31,11 @@ import {
   Target,
   Sparkles
 } from "lucide-react";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { QuotaCounter } from "@/components/ui/quota-counter";
 import { trackDashboardViewed, trackPageView, trackFeatureUsed } from "@/lib/analytics/tracking";
+import { OnboardingTour } from "@/components/ui/onboarding-tour";
+import { TrialExpiryBanner } from "@/components/ui/trial-expiry-banner";
 
 interface Quote {
   id: number;
@@ -88,6 +90,11 @@ export default function DashboardPage() {
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true);
   const [isLoadingDemo, setIsLoadingDemo] = useState(false);
+  const [showOnboardingTour, setShowOnboardingTour] = useState(false);
+  const [trialInfo, setTrialInfo] = useState<{
+    startDate: Date | null;
+    isTrial: boolean;
+  }>({ startDate: null, isTrial: false });
 
   useEffect(() => {
     const companyData = localStorage.getItem("paintquote_company");
@@ -104,6 +111,12 @@ export default function DashboardPage() {
         loadQuotes(company.id);
         loadQuotaInfo(company.id);
         checkOnboardingStatus(company.id);
+        
+        // Check if user has seen the onboarding tour
+        const hasSeenTour = localStorage.getItem('paintquote_onboarding_completed');
+        if (!hasSeenTour) {
+          setShowOnboardingTour(true);
+        }
       } catch (e) {
         router.push("/access-code");
       }
@@ -186,6 +199,20 @@ export default function DashboardPage() {
           quotesUsed: data.quotes_used,
           quotesAllowed: data.quote_limit
         });
+        
+        // Set trial info for banner
+        if (data.is_trial) {
+          // Get trial start date from company creation or use current date minus some days
+          const companyData = localStorage.getItem("paintquote_company");
+          if (companyData) {
+            const company = JSON.parse(companyData);
+            // Use login time as approximation of trial start
+            setTrialInfo({
+              startDate: new Date(company.loginTime || Date.now()),
+              isTrial: true
+            });
+          }
+        }
       }
     } catch (error) {
       console.error("Error loading quota info:", error);
@@ -327,8 +354,20 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Trial Expiry Banner */}
+      {trialInfo.isTrial && trialInfo.startDate && quotaInfo.quotesAllowed && (
+        <TrialExpiryBanner
+          trialStartDate={trialInfo.startDate}
+          trialDurationDays={14}
+          quotesUsed={quotaInfo.quotesUsed}
+          quotesAllowed={quotaInfo.quotesAllowed}
+          companyId={companyInfo?.id?.toString() || ''}
+          variant="full"
+        />
+      )}
+
       {/* Hero Section with Dashboard Stats */}
-      <section className="ac-hero py-12">
+      <section className={cn("ac-hero py-12", trialInfo.isTrial && "pt-20")}>
         <div className="container mx-auto max-w-7xl px-4">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
             <div>
@@ -743,6 +782,22 @@ export default function DashboardPage() {
 
       <Footer />
 
+      {/* Onboarding Tour */}
+      {showOnboardingTour && companyInfo && (
+        <OnboardingTour
+          companyName={companyInfo.name || companyInfo.company_name || 'Contractor'}
+          onComplete={() => {
+            setShowOnboardingTour(false);
+            // Track completion
+            trackFeatureUsed('onboarding_tour_completed', { companyId: companyInfo.id });
+          }}
+          onSkip={() => {
+            setShowOnboardingTour(false);
+            // Track skip
+            trackFeatureUsed('onboarding_tour_skipped', { companyId: companyInfo.id });
+          }}
+        />
+      )}
     </div>
   );
 }

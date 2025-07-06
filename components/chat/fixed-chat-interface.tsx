@@ -11,6 +11,9 @@ import { QuoteTrainingModal } from './quote-training-modal'
 import { QuotaCounter } from '@/components/ui/quota-counter'
 import { MarkdownMessage } from './markdown-message'
 import { trackChatMessage, trackChatQuoteReady, trackQuoteSaved, trackQuoteCalculated } from '@/lib/analytics/tracking'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { QuoteProgressIndicator, QuoteProgressStep } from '@/components/ui/quote-progress-indicator'
+import { TrialExpiryBanner } from '@/components/ui/trial-expiry-banner'
 
 interface Message {
   id: string
@@ -88,6 +91,17 @@ export function FixedChatInterface({
   const [currentQuote, setCurrentQuote] = useState<any>(null)
   const [customerName, setCustomerName] = useState<string>('')
   const [showTrainingModal, setShowTrainingModal] = useState(false)
+  const [quoteProgress, setQuoteProgress] = useState<QuoteProgressStep[]>([
+    { id: 'customer', title: 'Customer Info', status: 'active' },
+    { id: 'project', title: 'Project Details', status: 'pending' },
+    { id: 'measurements', title: 'Measurements', status: 'pending' },
+    { id: 'calculation', title: 'Calculate Quote', status: 'pending' }
+  ])
+  const [trialInfo, setTrialInfo] = useState<{ isTrial: boolean; quotesUsed: number; quotesAllowed: number }>({
+    isTrial: false,
+    quotesUsed: 0,
+    quotesAllowed: 0
+  })
   
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -120,6 +134,16 @@ export function FixedChatInterface({
         const response = await fetch(`/api/company-quota?company_id=${companyId}`)
         if (response.ok) {
           const data = await response.json()
+          
+          // Set trial info for banner
+          if (data.success) {
+            setTrialInfo({
+              isTrial: data.is_trial,
+              quotesUsed: data.quotes_used,
+              quotesAllowed: data.quote_limit || 0
+            })
+          }
+          
           // Only show training modal if they haven't created any quotes
           if (data.quotes_used === 0) {
             setShowTrainingModal(true)
@@ -135,7 +159,7 @@ export function FixedChatInterface({
     }
   }, [companyId])
 
-  const processMessage = async (userInput: string) => {
+  const processMessage = async (userInput: string, currentProgress: QuoteProgressStep[]) => {
     try {
       const response = await fetch('/api/unified-quote', {
         method: 'POST',
@@ -161,6 +185,36 @@ export function FixedChatInterface({
       // If we got a complete quote, store it
       if (data.quote) {
         setCurrentQuote(data.quote)
+      }
+
+      // Update progress based on extracted data
+      if (data.extractedData) {
+        const newProgress = [...currentProgress];
+        
+        // Customer info step
+        if (data.extractedData.customerInfo?.customer_name && data.extractedData.customerInfo?.address) {
+          newProgress[0] = { ...newProgress[0], status: 'completed' };
+          newProgress[1] = { ...newProgress[1], status: 'active' };
+        }
+        
+        // Project details step
+        if (data.extractedData.projectType && data.extractedData.surfaces) {
+          newProgress[1] = { ...newProgress[1], status: 'completed' };
+          newProgress[2] = { ...newProgress[2], status: 'active' };
+        }
+        
+        // Measurements step
+        if (data.extractedData.dimensions && Object.keys(data.extractedData.dimensions).length > 0) {
+          newProgress[2] = { ...newProgress[2], status: 'completed' };
+          newProgress[3] = { ...newProgress[3], status: 'active' };
+        }
+        
+        // Quote calculation step
+        if (data.extractedData.isComplete && data.quote) {
+          newProgress[3] = { ...newProgress[3], status: 'completed' };
+        }
+        
+        setQuoteProgress(newProgress);
       }
 
       // Extract customer name from response for header display
@@ -249,7 +303,7 @@ export function FixedChatInterface({
       // Simulate thinking delay for better UX
       await new Promise(resolve => setTimeout(resolve, 800))
       
-      const aiResponse = await processMessage(textToSend)
+      const aiResponse = await processMessage(textToSend, quoteProgress)
       
       setIsThinking(false)
       setMessages(prev => [...prev, aiResponse])
@@ -367,9 +421,22 @@ export function FixedChatInterface({
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b">
+    <TooltipProvider>
+      <div className="h-screen flex flex-col bg-gray-50">
+        {/* Trial Banner - Minimal */}
+        {trialInfo.isTrial && trialInfo.quotesAllowed > 0 && (
+          <TrialExpiryBanner
+            trialStartDate={new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)} // Assume 7 days into trial
+            trialDurationDays={14}
+            quotesUsed={trialInfo.quotesUsed}
+            quotesAllowed={trialInfo.quotesAllowed}
+            companyId={companyId}
+            variant="minimal"
+          />
+        )}
+        
+        {/* Header */}
+        <header className={cn("bg-white border-b", trialInfo.isTrial && "mt-10")}>
         <div className="px-4 py-3">
           <div className="flex items-center gap-3">
             {onBack && (
@@ -390,30 +457,44 @@ export function FixedChatInterface({
                 className="hidden sm:flex"
               />
               {currentQuote && (
-                <Button 
-                  variant="default" 
-                  size="sm"
-                  onClick={saveQuote}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      <Save className="h-4 w-4 mr-2" />
-                      Save Quote
-                    </>
-                  )}
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant="default" 
+                      size="sm"
+                      onClick={saveQuote}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Save className="h-4 w-4 mr-2" />
+                          Save Quote
+                        </>
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Save and proceed to quote review</p>
+                  </TooltipContent>
+                </Tooltip>
               )}
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => setShowTrainingModal(true)}
-                title="Show training examples"
-              >
-                <HelpCircle className="h-4 w-4" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => setShowTrainingModal(true)}
+                    title="Show training examples"
+                  >
+                    <HelpCircle className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>View example conversations</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -426,6 +507,24 @@ export function FixedChatInterface({
           variant="badge"
           className="w-full justify-center"
         />
+      </div>
+
+      {/* Progress Indicator */}
+      <div className="px-4 py-3 bg-white border-b">
+        <div className="hidden sm:block">
+          <QuoteProgressIndicator 
+            steps={quoteProgress}
+            variant="horizontal"
+            className="max-w-3xl mx-auto"
+          />
+        </div>
+        <div className="sm:hidden">
+          <QuoteProgressIndicator 
+            steps={quoteProgress}
+            variant="minimal"
+            className="max-w-full"
+          />
+        </div>
       </div>
 
       {/* Chat Area */}
@@ -506,26 +605,40 @@ export function FixedChatInterface({
         {/* Input Area */}
         <div className="bg-white border-t p-4">
           <div className="flex gap-2">
-            <Input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type your message or complete quote information..."
-              disabled={isLoading || isThinking}
-              className="flex-1"
-            />
-            <Button
-              onClick={() => sendMessage()}
-              disabled={!input.trim() || isLoading || isThinking}
-              size="icon"
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Input
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message or complete quote information..."
+                  disabled={isLoading || isThinking}
+                  className="flex-1"
+                />
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                <p>Start with customer name and address, then provide project details</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => sendMessage()}
+                  disabled={!input.trim() || isLoading || isThinking}
+                  size="icon"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Send message (Enter)</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -541,5 +654,6 @@ export function FixedChatInterface({
         onUseExample={handleUseExample}
       />
     </div>
+    </TooltipProvider>
   )
 }
