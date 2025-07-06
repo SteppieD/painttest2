@@ -26,6 +26,9 @@
 /* Import Contrast Fix Utilities - Must be last for highest priority */
 @import '../styles/contrast-fix.css';
 
+/* Import July 2025 Contrast Fixes - Specific targeted fixes */
+@import '../styles/contrast-fixes-july.css';
+
 /* SITE-WIDE CONTRAST FIXES - Ensure readability everywhere */
 
 /* 1. Hero Section - Force black text on light backgrounds */

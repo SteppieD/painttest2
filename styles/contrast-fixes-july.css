@@ -1,0 +1,373 @@
+/* Contrast Fixes - July 6, 2025 */
+/* Fixes for specific white-on-white and low contrast issues */
+
+/* 1. Fix View Pricing button on homepage - ensure dark text */
+.hero-optimized a[href="/pricing"],
+.hero-optimized .bg-white {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+.hero-optimized a[href="/pricing"]:hover,
+.hero-optimized .bg-white:hover {
+  background-color: #f9fafb !important;
+  border-color: #ea580c !important;
+  color: #ea580c !important;
+}
+
+/* 2. Fix Annual Revenue section - white text on purple background */
+.bg-gradient-to-br.from-purple-600.to-purple-700,
+[class*="from-purple-600"][class*="to-purple-700"] {
+  background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%) !important;
+  color: #ffffff !important;
+}
+
+.bg-gradient-to-br.from-purple-600.to-purple-700 *,
+[class*="from-purple-600"][class*="to-purple-700"] * {
+  color: #ffffff !important;
+}
+
+/* 3. Fix Watch Demo button - ensure proper contrast */
+a[href="/demo"] {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+a[href="/demo"]:hover {
+  background-color: #f9fafb !important;
+  border-color: #ea580c !important;
+  color: #ea580c !important;
+}
+
+/* 4. Fix features page white text - make it dark */
+.bg-gradient-to-br.from-blue-50.to-indigo-100 h1,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 h2,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 p,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 span,
+.bg-gradient-to-br.from-blue-50.to-indigo-100 div {
+  color: #1f2937 !important;
+}
+
+/* 5. Fix Live Demo Available CTAs */
+.bg-blue-100 a,
+.bg-blue-50 a,
+[class*="bg-blue-1"] a,
+[class*="bg-blue-5"] a {
+  background-color: #1e40af !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.bg-blue-100 a:hover,
+.bg-blue-50 a:hover,
+[class*="bg-blue-1"] a:hover,
+[class*="bg-blue-5"] a:hover {
+  background-color: #1e3a8a !important;
+}
+
+/* 6. Fix bottom sections white-on-white */
+footer a.text-white,
+footer span.text-white,
+footer p.text-white {
+  color: #1f2937 !important;
+}
+
+/* Center footer content */
+footer .container {
+  text-align: center !important;
+}
+
+footer .flex {
+  justify-content: center !important;
+}
+
+/* 7. Fix Solutions submenu hover */
+.group:hover > div[class*="absolute"],
+div[onMouseEnter]:hover > div[class*="absolute"] {
+  display: block !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Add delay to prevent menu from closing too quickly */
+div[class*="absolute top-full"] {
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* 8. Fix pricing page bottom section */
+.bg-blue-600 .text-blue-100,
+.bg-blue-700 .text-blue-100,
+[class*="bg-blue-6"] .text-blue-100,
+[class*="bg-blue-7"] .text-blue-100 {
+  color: #ffffff !important;
+}
+
+/* Fix Mike Johnson testimonial area */
+.bg-white\/10.backdrop-blur {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.bg-white\/10.backdrop-blur p {
+  color: #ffffff !important;
+}
+
+/* 9. Fix Professional plan section */
+.gradient-blue-contrast {
+  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%) !important;
+  color: #ffffff !important;
+}
+
+.gradient-blue-contrast h3,
+.gradient-blue-contrast p,
+.gradient-blue-contrast span,
+.gradient-blue-contrast div {
+  color: #ffffff !important;
+}
+
+/* Fix pricing table text colors */
+.bg-gradient-to-br.from-gray-50.to-gray-100 {
+  color: #1f2937 !important;
+}
+
+.bg-gradient-to-br.from-purple-50.to-purple-100 {
+  color: #1f2937 !important;
+}
+
+/* Ensure all CTAs have proper contrast */
+.ac-btn-primary {
+  background-color: #ea580c !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.ac-btn-primary:hover {
+  background-color: #c2410c !important;
+}
+
+.ac-btn-secondary {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+.ac-btn-secondary:hover {
+  background-color: #f9fafb !important;
+  border-color: #ea580c !important;
+  color: #ea580c !important;
+}
+
+/* Fix any remaining white-on-white text */
+.text-white:not(.ac-hero *):not(.gradient-blue-contrast *):not(.gradient-orange-contrast *) {
+  color: #1f2937 !important;
+}
+
+/* Ensure proper contrast for all light backgrounds */
+.bg-gray-50 *,
+.bg-gray-100 *,
+.bg-white *,
+.bg-blue-50 *,
+.bg-indigo-50 *,
+.bg-orange-50 * {
+  color: #1f2937 !important;
+}
+
+/* But preserve white text on dark backgrounds */
+.ac-hero *,
+.gradient-blue-contrast *,
+.gradient-orange-contrast *,
+.bg-blue-600 *,
+.bg-blue-700 *,
+.bg-purple-600 *,
+.bg-purple-700 *,
+.bg-orange-600 *,
+.bg-orange-700 * {
+  color: #ffffff !important;
+}
+
+/* Specific fix for the Annual Revenue section */
+.stats-card-gradient {
+  background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%) !important;
+  color: #ffffff !important;
+}
+
+.stats-card-gradient h3,
+.stats-card-gradient .text-3xl,
+.stats-card-gradient .text-sm {
+  color: #ffffff !important;
+}
+
+/* Fix hover states for navigation */
+nav a:hover,
+header a:hover {
+  color: #ea580c !important;
+}
+
+/* Fix dropdown menu backgrounds */
+.absolute.bg-white {
+  background-color: #ffffff !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Ensure dropdown menu text is readable */
+.absolute.bg-white a {
+  color: #1f2937 !important;
+}
+
+.absolute.bg-white a:hover {
+  background-color: #f9fafb !important;
+  color: #ea580c !important;
+}
+
+/* Fix for testimonial sections with dark backgrounds */
+section[class*="bg-blue-"] .text-white,
+section[class*="bg-purple-"] .text-white {
+  color: #ffffff !important;
+}
+
+/* Center alignment for footer and bottom sections */
+.text-center {
+  text-align: center !important;
+}
+
+.mx-auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Fix specific buttons that might be missed */
+button.bg-white,
+a.bg-white {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+button.bg-white:hover,
+a.bg-white:hover {
+  background-color: #f9fafb !important;
+  border-color: #ea580c !important;
+  color: #ea580c !important;
+}
+
+/* Ensure testimonial cards have proper contrast */
+.testimonial-card {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+/* Fix any remaining contrast issues with important override */
+.needs-dark-text {
+  color: #1f2937 !important;
+}
+
+.needs-white-text {
+  color: #ffffff !important;
+}
+
+/* Footer Contrast Fixes */
+/* Change dark footer to light footer for better readability */
+footer.bg-gray-900 {
+  background-color: #f9fafb !important; /* Light gray background */
+}
+
+footer.bg-gray-900 .text-white,
+footer.bg-gray-900 span,
+footer.bg-gray-900 p,
+footer.bg-gray-900 a,
+footer.bg-gray-900 div {
+  color: #1f2937 !important; /* Dark text for contrast */
+}
+
+/* Footer heading colors - keep them vibrant but darker */
+footer .text-blue-400 {
+  color: #1e40af !important;
+}
+
+footer .text-green-400 {
+  color: #059669 !important;
+}
+
+footer .text-purple-400 {
+  color: #7c3aed !important;
+}
+
+footer .text-orange-400 {
+  color: #ea580c !important;
+}
+
+footer .text-yellow-400 {
+  color: #ca8a04 !important;
+}
+
+/* Footer link hover states */
+footer a:hover {
+  color: #ea580c !important;
+  text-decoration: underline;
+}
+
+/* Footer borders */
+footer .border-gray-800 {
+  border-color: #e5e7eb !important;
+}
+
+/* Footer text colors */
+footer .text-gray-400 {
+  color: #6b7280 !important;
+}
+
+/* Ensure footer stats are readable */
+footer .text-2xl {
+  font-weight: 700;
+}
+
+/* Fix footer on dark backgrounds by adding white background */
+.bg-blue-600 + footer,
+.bg-blue-700 + footer,
+.bg-purple-600 + footer,
+.bg-purple-700 + footer,
+.bg-gray-800 + footer,
+.bg-gray-900 + footer,
+[class*="bg-blue-6"] + footer,
+[class*="bg-blue-7"] + footer,
+[class*="bg-purple-6"] + footer,
+[class*="bg-purple-7"] + footer {
+  background-color: #ffffff !important;
+  border-top: 1px solid #e5e7eb !important;
+}
+
+/* Alternative: Keep dark footer but ensure high contrast */
+footer.keep-dark {
+  background-color: #111827 !important;
+}
+
+footer.keep-dark * {
+  color: #f9fafb !important;
+}
+
+footer.keep-dark .text-blue-400 {
+  color: #60a5fa !important;
+}
+
+footer.keep-dark .text-green-400 {
+  color: #4ade80 !important;
+}
+
+footer.keep-dark .text-purple-400 {
+  color: #a78bfa !important;
+}
+
+footer.keep-dark .text-orange-400 {
+  color: #fb923c !important;
+}
+
+footer.keep-dark .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+footer.keep-dark a:hover {
+  color: #60a5fa !important;
+}

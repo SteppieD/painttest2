@@ -79,7 +79,7 @@ export function Header() {
             <div 
               className="relative group"
               onMouseEnter={() => setIsUseCasesOpen(true)}
-              onMouseLeave={() => setIsUseCasesOpen(false)}
+              onMouseLeave={() => setTimeout(() => setIsUseCasesOpen(false), 100)}
             >
               <button className="flex items-center gap-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base">
                 Solutions
@@ -90,7 +90,11 @@ export function Header() {
               <div className="absolute top-full left-0 h-4 w-full" />
               
               {isUseCasesOpen && (
-                <div className="absolute top-full left-0 mt-1 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50">
+                <div 
+                  className="absolute top-full left-0 mt-1 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50"
+                  onMouseEnter={() => setIsUseCasesOpen(true)}
+                  onMouseLeave={() => setIsUseCasesOpen(false)}
+                >
                   {/* Use Cases Section */}
                   <div className="px-3 pb-2">
                     <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 py-1">Use Cases</div>
@@ -138,7 +142,7 @@ export function Header() {
             <div 
               className="relative group"
               onMouseEnter={() => setIsResourcesOpen(true)}
-              onMouseLeave={() => setIsResourcesOpen(false)}
+              onMouseLeave={() => setTimeout(() => setIsResourcesOpen(false), 100)}
             >
               <button className="flex items-center gap-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base">
                 Resources
@@ -149,7 +153,11 @@ export function Header() {
               <div className="absolute top-full left-0 h-4 w-full" />
               
               {isResourcesOpen && (
-                <div className="absolute top-full left-0 mt-1 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50">
+                <div 
+                  className="absolute top-full left-0 mt-1 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50"
+                  onMouseEnter={() => setIsResourcesOpen(true)}
+                  onMouseLeave={() => setIsResourcesOpen(false)}
+                >
                   <Link href="/painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Free Calculator</div>
