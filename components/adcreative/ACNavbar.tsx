@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, ChevronDown } from 'lucide-react';
+import { LoginPopup } from '@/components/ui/login-popup';
 
 interface NavItem {
   label: string;
@@ -35,6 +36,7 @@ export function ACNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -129,9 +131,12 @@ export function ACNavbar() {
               </Link>
             ) : (
               <>
-                <Link href="/access-code" className="ac-btn ac-btn-ghost ac-btn-sm">
+                <button 
+                  onClick={() => setShowLoginPopup(true)} 
+                  className="ac-btn ac-btn-ghost ac-btn-sm"
+                >
                   Login
-                </Link>
+                </button>
                 <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-sm">
                   Try For Free
                 </Link>
@@ -220,9 +225,15 @@ export function ACNavbar() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/access-code" className="ac-btn ac-btn-ghost ac-btn-lg" onClick={() => setIsMobileMenuOpen(false)}>
+                  <button 
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setShowLoginPopup(true);
+                    }} 
+                    className="ac-btn ac-btn-ghost ac-btn-lg w-full"
+                  >
                     Login
-                  </Link>
+                  </button>
                   <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-lg" onClick={() => setIsMobileMenuOpen(false)}>
                     Try For Free
                   </Link>
@@ -421,6 +432,12 @@ export function ACNavbar() {
           gap: 12px;
         }
       `}</style>
+
+      {/* Login Popup */}
+      <LoginPopup 
+        open={showLoginPopup} 
+        onOpenChange={setShowLoginPopup} 
+      />
     </>
   );
 }
