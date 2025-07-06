@@ -29,6 +29,9 @@
 /* Import July 2025 Contrast Fixes - Specific targeted fixes */
 @import '../styles/contrast-fixes-july.css';
 
+/* Import navigation dropdown interaction fixes */
+@import '../styles/navigation-dropdown-fix.css';
+
 /* SITE-WIDE CONTRAST FIXES - Ensure readability everywhere */
 
 /* 1. Hero Section - Force black text on light backgrounds */

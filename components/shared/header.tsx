@@ -79,19 +79,21 @@ export function Header() {
             <div 
               className="relative group"
               onMouseEnter={() => setIsUseCasesOpen(true)}
-              onMouseLeave={() => setTimeout(() => setIsUseCasesOpen(false), 100)}
+              onMouseLeave={() => setTimeout(() => setIsUseCasesOpen(false), 200)}
             >
-              <button className="flex items-center gap-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base">
+              <button className="flex items-center gap-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base py-2">
                 Solutions
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isUseCasesOpen ? 'rotate-180' : ''}`} />
               </button>
               
-              {/* Invisible bridge to prevent gap */}
-              <div className="absolute top-full left-0 h-4 w-full" />
+              {/* Invisible bridge to prevent gap - extended height */}
+              {isUseCasesOpen && (
+                <div className="absolute top-full left-0 h-2 w-full" />
+              )}
               
               {isUseCasesOpen && (
                 <div 
-                  className="absolute top-full left-0 mt-1 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50"
+                  className="absolute top-full left-0 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50"
                   onMouseEnter={() => setIsUseCasesOpen(true)}
                   onMouseLeave={() => setIsUseCasesOpen(false)}
                 >
@@ -142,19 +144,21 @@ export function Header() {
             <div 
               className="relative group"
               onMouseEnter={() => setIsResourcesOpen(true)}
-              onMouseLeave={() => setTimeout(() => setIsResourcesOpen(false), 100)}
+              onMouseLeave={() => setTimeout(() => setIsResourcesOpen(false), 200)}
             >
-              <button className="flex items-center gap-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base">
+              <button className="flex items-center gap-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base py-2">
                 Resources
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isResourcesOpen ? 'rotate-180' : ''}`} />
               </button>
               
-              {/* Invisible bridge to prevent gap */}
-              <div className="absolute top-full left-0 h-4 w-full" />
+              {/* Invisible bridge to prevent gap - extended height */}
+              {isResourcesOpen && (
+                <div className="absolute top-full left-0 h-2 w-full" />
+              )}
               
               {isResourcesOpen && (
                 <div 
-                  className="absolute top-full left-0 mt-1 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50"
+                  className="absolute top-full left-0 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50"
                   onMouseEnter={() => setIsResourcesOpen(true)}
                   onMouseLeave={() => setIsResourcesOpen(false)}
                 >
