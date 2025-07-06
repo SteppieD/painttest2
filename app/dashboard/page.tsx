@@ -28,7 +28,8 @@ import {
   XCircle,
   Zap,
   Award,
-  Target
+  Target,
+  Sparkles
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { QuotaCounter } from "@/components/ui/quota-counter";
@@ -86,6 +87,7 @@ export default function DashboardPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true);
+  const [isLoadingDemo, setIsLoadingDemo] = useState(false);
 
   useEffect(() => {
     const companyData = localStorage.getItem("paintquote_company");
@@ -266,13 +268,50 @@ export default function DashboardPage() {
       case "accepted": return "bg-green-100 text-green-800";
       case "completed": return "bg-blue-100 text-blue-800";
       case "cancelled": return "bg-red-100 text-red-800";
-      default: return "bg-yellow-100 text-yellow-800";
+      default: return "bg-orange-100 text-orange-800";
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem("paintquote_company");
     router.push("/access-code");
+  };
+
+  const loadDemoData = async () => {
+    if (isLoadingDemo) return;
+    
+    setIsLoadingDemo(true);
+    try {
+      const response = await fetch('/api/seed-demo-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Store demo contractors in localStorage
+        if (data.demoContractors) {
+          localStorage.setItem('demo_contractors', JSON.stringify(data.demoContractors));
+        }
+        
+        // Reload quotes to show demo data
+        if (companyInfo) {
+          await loadQuotes(companyInfo.id);
+        }
+        
+        alert(`Success! Loaded ${data.quotesCreated} demo quotes and ${data.contractorProfilesCreated} contractor success stories.`);
+      } else if (data.message === 'Demo data already exists') {
+        alert('Demo data has already been loaded for this account.');
+      } else {
+        alert('Failed to load demo data. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error loading demo data:', error);
+      alert('Error loading demo data. Please try again.');
+    } finally {
+      setIsLoadingDemo(false);
+    }
   };
 
   if (isLoading) {
@@ -298,7 +337,7 @@ export default function DashboardPage() {
                 <span>Company Dashboard</span>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                Welcome back, <span className="text-yellow-300 font-bold">{companyInfo?.name || companyInfo?.company_name || 'Contractor'}</span>
+                Welcome back, <span className="text-white font-bold">{companyInfo?.name || companyInfo?.company_name || 'Contractor'}</span>
               </h1>
               <p className="text-lg text-gray-100">
                 Access Code: {companyInfo?.accessCode || companyInfo?.access_code}
@@ -473,7 +512,7 @@ export default function DashboardPage() {
         {/* Quick Actions */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <button
               onClick={() => router.push("/quotes")}
               className="ac-card group hover:shadow-lg transition-all"
@@ -513,6 +552,21 @@ export default function DashboardPage() {
                 <div className="text-left">
                   <h3 className="font-semibold text-gray-900">Settings</h3>
                   <p className="text-sm text-gray-600">Configure options</p>
+                </div>
+              </div>
+            </button>
+            <button
+              onClick={loadDemoData}
+              disabled={isLoadingDemo}
+              className="ac-card group hover:shadow-lg transition-all"
+            >
+              <div className="ac-card-body flex items-center gap-4">
+                <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Sparkles className={`w-6 h-6 text-yellow-600 ${isLoadingDemo ? 'animate-spin' : ''}`} />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold text-gray-900">Load Demo Data</h3>
+                  <p className="text-sm text-gray-600">Try sample quotes</p>
                 </div>
               </div>
             </button>
@@ -561,10 +615,20 @@ export default function DashboardPage() {
                   {quotes.length === 0 ? "No quotes yet" : "No quotes match your filters"}
                 </p>
                 {quotes.length === 0 && (
-                  <button onClick={() => router.push("/create-quote")} className="ac-btn ac-btn-primary ac-btn-lg">
-                    <Calculator size={20} />
-                    Create Your First Professional Quote
-                  </button>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button onClick={() => router.push("/create-quote")} className="ac-btn ac-btn-primary ac-btn-lg">
+                      <Calculator size={20} />
+                      Create Your First Professional Quote
+                    </button>
+                    <button 
+                      onClick={loadDemoData} 
+                      disabled={isLoadingDemo}
+                      className="ac-btn ac-btn-secondary ac-btn-lg"
+                    >
+                      <Sparkles size={20} className={isLoadingDemo ? 'animate-spin' : ''} />
+                      {isLoadingDemo ? 'Loading...' : 'Try Sample Quotes'}
+                    </button>
+                  </div>
                 )}
               </div>
             ) : (

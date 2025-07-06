@@ -99,7 +99,7 @@ export function FeedbackBox({ type, position = 'fixed', page }: FeedbackBoxProps
       {/* Floating Feedback Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-orange-600 text-white p-4 rounded-full shadow-lg hover:bg-orange-700 transition-all hover:scale-110 z-40"
+        className="fixed bottom-20 right-6 bg-orange-600 text-white p-4 rounded-full shadow-lg hover:bg-orange-700 transition-all hover:scale-110 z-30"
         aria-label="Give Feedback"
       >
         <MessageSquare size={24} />
@@ -154,10 +154,10 @@ function FeedbackForm({
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+          className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-all"
           aria-label="Close"
         >
-          <X size={20} />
+          <X size={24} />
         </button>
       )}
 
