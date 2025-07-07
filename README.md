@@ -1,5 +1,7 @@
 # 🎨 Professional Painting Quote Platform
 
+**⚠️ DEPLOYMENT NOTE: Vercel auto-deployment is DISABLED. All deployments must be done manually using `vercel --prod`**
+
 A comprehensive Next.js painting quote application with admin portal, customer management, and AI-powered quoting system.
 
 ## ✅ **Current Status - PRODUCTION READY & FEATURE COMPLETE (Updated July 6, 2025)**

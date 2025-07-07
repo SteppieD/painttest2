@@ -671,10 +671,11 @@ When making database changes:
 3. **Docker**: `docker-compose up -d` for containerized deployment
 4. **Local Testing**: `npm run dev` for development environment
 
-### **Important Deployment Note:**
-- **GitHub auto-deployment is DISABLED** - pushing to main branch does NOT trigger automatic Vercel deployments
-- All Vercel deployments must be done manually using the CLI or Vercel dashboard
-- This allows for better version control and deployment management
+### **⚠️ CRITICAL DEPLOYMENT NOTE:**
+- **GitHub auto-deployment is PERMANENTLY DISABLED** - pushing to main branch does NOT trigger automatic Vercel deployments
+- **ALL Vercel deployments MUST be done MANUALLY** using the CLI
+- **This is intentional** - provides better control over production deployments
+- **NEVER assume automatic deployment** - always run `vercel --prod` manually
 
 ### **Standard Deployment Practice:**
 1. **Commit and Push to GitHub**: 
@@ -684,16 +685,21 @@ When making database changes:
    git push origin main
    ```
 
-2. **Manual Vercel Deployment**:
+2. **Manual Vercel Deployment (REQUIRED)**:
    ```bash
-   # For preview
-   vercel
-   
-   # For production
+   # For production (most common)
    vercel --prod
+   
+   # For preview/staging
+   vercel
    ```
 
-See `VERCEL_MANUAL_DEPLOYMENT.md` for detailed instructions.
+3. **Verify Deployment**:
+   - Check the URL provided by Vercel CLI
+   - Test the deployed features
+   - Monitor for any errors
+
+**REMINDER**: Every deployment to production requires running `vercel --prod` manually. There is NO automatic deployment.
 
 ### **Environment Setup:**
 ```bash
