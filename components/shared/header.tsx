@@ -38,8 +38,12 @@ export function Header() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Palette className="w-8 h-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900">ProPaint Quote</span>
+            <img 
+              src="/paint-quote-logo.png" 
+              alt="Paint Quote App" 
+              className="w-8 h-8"
+            />
+            <span className="text-2xl font-bold text-gray-900">Paint Quote App</span>
           </Link>
           
           {/* Desktop Navigation */}
