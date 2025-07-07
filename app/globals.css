@@ -26,8 +26,7 @@
 /* Import Contrast Fix Utilities - Must be last for highest priority */
 @import '../styles/contrast-fix.css';
 
-/* Import July 2025 Contrast Fixes - Specific targeted fixes */
-@import '../styles/contrast-fixes-july.css';
+/* Import July 2025 Contrast Fixes - Moved to end for higher priority */
 
 /* Import navigation dropdown interaction fixes */
 @import '../styles/navigation-dropdown-fix.css';
@@ -895,3 +894,15 @@ button.bg-transparent[class*="hover:bg-white"]:hover {
 
 /* Import Contrast Fix Utilities - Must be last for highest priority */
 @import '../styles/contrast-fix.css';
+
+/* Import July Contrast Fixes - High priority */
+@import '../styles/contrast-fixes-july.css';
+
+/* Import Hero Text Contrast Fix - ABSOLUTE LAST for maximum priority */
+@import '../styles/hero-text-contrast-fix.css';
+
+/* Import Homepage CTA Fixes - For View Pricing button and Annual Revenue section */
+@import '../styles/homepage-cta-fixes.css';
+
+/* Import COMPREHENSIVE Site-Wide Contrast Fix - MUST BE ABSOLUTE LAST */
+@import '../styles/site-wide-contrast-fix.css';

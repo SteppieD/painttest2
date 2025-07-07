@@ -1,0 +1,122 @@
+/* Hero Section Text Contrast Fix - July 6, 2025 */
+/* Ensures dark text on ALL light gradient backgrounds */
+
+/* Universal rule for all light gradient backgrounds (-50 to -100) */
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] h1,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] h2,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] h3,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] h4,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] h5,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] h6,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] p,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] span,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] div,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] strong,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] em,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] li,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] label,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] th,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] td {
+  color: #1f2937 !important; /* gray-800 for high contrast */
+}
+
+/* Specific gradient patterns for better specificity */
+.from-green-50.to-blue-100 h1,
+.from-green-50.to-blue-100 h2,
+.from-green-50.to-blue-100 h3,
+.from-green-50.to-blue-100 h4,
+.from-green-50.to-blue-100 h5,
+.from-green-50.to-blue-100 h6,
+.from-green-50.to-blue-100 p,
+.from-green-50.to-blue-100 span,
+.from-green-50.to-blue-100 div,
+.from-green-50.to-blue-100 strong,
+.from-green-50.to-blue-100 em,
+.from-green-50.to-blue-100 li {
+  color: #1f2937 !important;
+}
+
+/* Additional patterns found in the codebase */
+.from-blue-50.to-indigo-100 *:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600):not(.bg-orange-600),
+.from-blue-50.to-purple-100 *:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600):not(.bg-orange-600),
+.from-emerald-50.to-teal-100 *:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600):not(.bg-orange-600),
+.from-gray-50.to-gray-100 *:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600):not(.bg-orange-600),
+.from-green-50.to-blue-100 *:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600):not(.bg-orange-600),
+.from-green-50.to-emerald-100 *:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600):not(.bg-orange-600),
+.from-purple-50.to-indigo-100 *:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600):not(.bg-orange-600),
+.from-purple-50.to-purple-100 *:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600):not(.bg-orange-600),
+.from-slate-50.to-blue-100 *:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600):not(.bg-orange-600),
+.from-yellow-50.to-orange-100 *:not(.bg-blue-600):not(.bg-green-600):not(.bg-purple-600):not(.bg-orange-600) {
+  color: #1f2937 !important;
+}
+
+/* Ensure buttons on light backgrounds maintain proper contrast */
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] button.bg-blue-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] button.bg-green-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] button.bg-purple-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] button.bg-orange-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] a.bg-blue-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] a.bg-green-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] a.bg-purple-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] a.bg-orange-600 {
+  color: #ffffff !important;
+}
+
+/* Fix any text-white classes on light backgrounds - they should be dark */
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .text-white:not(.bg-blue-600 *):not(.bg-green-600 *):not(.bg-purple-600 *):not(.bg-orange-600 *) {
+  color: #1f2937 !important;
+}
+
+/* Preserve icon colors that should stay colored */
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .text-blue-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .text-green-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .text-purple-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .text-orange-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .text-yellow-500,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .text-red-600,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .text-indigo-600 {
+  color: inherit !important;
+}
+
+/* Ensure white buttons on light backgrounds have dark text */
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] button.bg-white,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] a.bg-white {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] button.bg-white:hover,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] a.bg-white:hover {
+  background-color: #f9fafb !important;
+  border-color: #2563eb !important;
+  color: #2563eb !important;
+}
+
+/* Fix variant="outline" buttons on light backgrounds */
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] button[variant="outline"],
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] a[variant="outline"],
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .variant-outline {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+/* Fix Cards on light backgrounds */
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .card,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .bg-white {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .card *,
+[class*="from-"][class*="-50"][class*="to-"][class*="-100"] .bg-white * {
+  color: #1f2937 !important;
+}
+
+/* Special fix for the exterior calculator page specifically */
+section.bg-gradient-to-br.from-green-50.to-blue-100 *:not([class*="bg-"]) {
+  color: #1f2937 !important;
+}
+
+/* IMPORTANT: This rule must be loaded LAST to ensure it overrides other styles */

@@ -1,22 +1,41 @@
 /* Contrast Fixes - July 6, 2025 */
 /* Fixes for specific white-on-white and low contrast issues */
 
-/* 1. Fix View Pricing button on homepage - ensure dark text */
-.hero-optimized a[href="/pricing"],
-.hero-optimized .bg-white {
+/* 1. Fix View Pricing button on homepage CTA section - ensure proper contrast */
+.view-pricing-cta {
+  background-color: transparent !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+.view-pricing-cta:hover {
   background-color: #ffffff !important;
-  color: #1f2937 !important;
-  border: 2px solid #e5e7eb !important;
-}
-
-.hero-optimized a[href="/pricing"]:hover,
-.hero-optimized .bg-white:hover {
-  background-color: #f9fafb !important;
-  border-color: #ea580c !important;
   color: #ea580c !important;
+  border-color: #ffffff !important;
 }
 
-/* 2. Fix Annual Revenue section - white text on purple background */
+/* 2. Fix Annual Revenue section - white text on blue/purple background */
+.gradient-blue-contrast {
+  background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%) !important;
+  color: #ffffff !important;
+}
+
+.gradient-blue-contrast h4,
+.gradient-blue-contrast p,
+.gradient-blue-contrast * {
+  color: #ffffff !important;
+}
+
+/* Specific fix for ROI Calculator Annual Revenue section */
+.gradient-blue-contrast.text-white {
+  color: #ffffff !important;
+}
+
+.gradient-blue-contrast .text-white {
+  color: #ffffff !important;
+}
+
+/* Also fix any purple gradient variations */
 .bg-gradient-to-br.from-purple-600.to-purple-700,
 [class*="from-purple-600"][class*="to-purple-700"] {
   background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%) !important;
