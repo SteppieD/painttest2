@@ -96,6 +96,7 @@ export default function RootLayout({
         <meta name="msapplication-config" content="/browserconfig.xml" />
         <link rel="canonical" href="https://www.paintquoteapp.com" />
         <StructuredData />
+        <script src="/js/navigation-dropdown-fix.js" defer></script>
       </head>
       <body className={inter.className}>
         <AnalyticsProvider gtmId="GTM-563BQKRH" ga4Id="G-984BZ3LDZE">

@@ -26,6 +26,9 @@
 /* Import Master Design System - Comprehensive CSS overhaul */
 @import '../styles/master-design-system.css';
 
+/* Import Contractor Professional Theme - MUST BE LAST for highest priority */
+@import '../styles/contractor-professional-theme.css';
+
 /* SITE-WIDE CONTRAST FIXES - Ensure readability everywhere */
 
 /* 1. Hero Section - Force black text on light backgrounds */
