@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Settings, Palette, Plus, Trash2, Edit3 } from "lucide-react";
+import { ArrowLeft, Save, Settings, Palette, Plus, Trash2, Edit3, Upload, Building2, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,6 +34,8 @@ interface CompanySettings {
   paint_multiplier: number;
   doors_per_gallon: number;
   windows_per_gallon: number;
+  // Company branding
+  logo_url?: string;
 }
 
 interface PaintBrand {
@@ -397,6 +399,69 @@ export default function SettingsPage() {
               <Label htmlFor="tax-materials-only">
                 Apply tax to materials only (not labor)
               </Label>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Company Branding */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-blue-600" />
+              Company Branding
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="logo-url">Company Logo URL</Label>
+              <Input
+                id="logo-url"
+                type="url"
+                value={settings.logo_url || ''}
+                onChange={(e) => updateSetting('logo_url', e.target.value)}
+                placeholder="https://example.com/your-logo.png"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Enter a URL to your company logo. This will appear on customer quotes and make your business look more professional.
+              </p>
+            </div>
+            
+            {/* Logo Preview */}
+            {settings.logo_url && (
+              <div className="space-y-2">
+                <Label>Logo Preview</Label>
+                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                  <div className="w-16 h-16 shrink-0">
+                    <img 
+                      src={settings.logo_url} 
+                      alt="Company Logo Preview"
+                      className="w-16 h-16 rounded-lg object-cover border shadow-sm"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        target.nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                    <div className="hidden w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                      <ImageIcon className="w-8 h-8 text-white" />
+                    </div>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">{companyData?.company_name}</p>
+                    <p className="text-sm text-gray-600">This is how your logo will appear on customer quotes</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h4 className="font-medium text-blue-900 mb-2">Tips for best results:</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• Use a square or rectangular logo (recommended: 200x200px or larger)</li>
+                <li>• Ensure the image URL is publicly accessible</li>
+                <li>• PNG or JPG formats work best</li>
+                <li>• Keep file size under 1MB for faster loading</li>
+              </ul>
             </div>
           </CardContent>
         </Card>

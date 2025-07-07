@@ -1,26 +1,56 @@
 {
-  "name": "ProPaint Quote Assistant",
-  "short_name": "ProPaint",
-  "description": "AI-powered painting quote generator for professional contractors",
-  "start_url": "/",
+  "name": "ProPaint Quote - Professional Painting Estimate Software",
+  "short_name": "ProPaint Quote",
+  "description": "Professional painting quote software for contractors. Create accurate painting estimates in 30 seconds. Win more painting jobs with instant quotes.",
+  "start_url": "/?utm_source=pwa",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#2563eb",
-  "orientation": "portrait",
+  "theme_color": "#FF6B35",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/icon-192x192.png",
-      "sizes": "192x192",
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
       "type": "image/png"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-512x512.png",
       "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
       "type": "image/png"
     }
   ],
-  "categories": ["business", "productivity", "utilities"],
-  "lang": "en",
-  "scope": "/",
+  "categories": ["business", "productivity", "finance"],
+  "screenshots": [
+    {
+      "src": "/screenshot-dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Professional painting contractor dashboard"
+    },
+    {
+      "src": "/screenshot-quote.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Instant painting quote generator"
+    }
+  ],
+  "related_applications": [],
   "prefer_related_applications": false
 }

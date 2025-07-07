@@ -2,53 +2,25 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { AlertCircle, Check, Palette, Copy } from "lucide-react";
+import { AlertCircle, Check, Sparkles, ArrowRight, Shield, Star, TrendingUp, Users } from "lucide-react";
+import { Footer } from "@/components/shared/footer";
 
 export default function TrialSignupPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    companyName: "",
-    accessCode: "",
-    contactName: "",
-    email: "",
-    phone: ""
-  });
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-
-  const generateSuggestedCode = (companyName: string = formData.companyName) => {
-    const prefix = companyName
-      .replace(/[^a-zA-Z0-9]/g, "")
-      .substring(0, 6)
-      .toUpperCase();
-    const suffix = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
-    return prefix + suffix;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.companyName) {
-      setError("Please enter your company name to continue.");
+    
+    if (!email) {
+      setError("Please enter your email address");
       return;
     }
 
-    if (!formData.email) {
-      setError("Please enter your email address to receive your access code.");
-      return;
-    }
-
-    if (!formData.email.includes("@") || !formData.email.includes(".")) {
-      setError("Please enter a valid email address (e.g., yourname@company.com).");
-      return;
-    }
-
-    if (!formData.accessCode) {
-      setError("Access code generation failed. Please try typing your company name again.");
+    if (!email.includes("@") || !email.includes(".")) {
+      setError("Please enter a valid email address");
       return;
     }
 
@@ -56,225 +28,268 @@ export default function TrialSignupPage() {
     setError("");
 
     try {
+      // Generate a simple access code based on email
+      const emailPrefix = email.split("@")[0].replace(/[^a-zA-Z0-9]/g, "").substring(0, 6).toUpperCase();
+      const suffix = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
+      const accessCode = emailPrefix + suffix;
+      
+      // Generate a temporary company name from email domain
+      const domain = email.split("@")[1].split(".")[0];
+      const companyName = domain.charAt(0).toUpperCase() + domain.slice(1) + " Painting";
+
       const response = await fetch("/api/trial-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          email,
+          accessCode,
+          companyName,
+          contactName: email.split("@")[0],
+          phone: ""
+        }),
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers.get('content-type'));
-
-      // Check if response is actually JSON
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        const textResponse = await response.text();
-        console.error('Non-JSON response:', textResponse);
-        throw new Error("Server error: Invalid response format. Please try again.");
+        throw new Error("Server error. Please try again.");
       }
 
       const result = await response.json();
-      console.log('API response:', result);
 
       if (!response.ok) {
         if (result.error && result.error.includes("already exists")) {
-          throw new Error("This company name or access code is already taken. Please try a different one.");
-        } else if (result.error && result.error.includes("email")) {
-          throw new Error("Please enter a valid email address.");
-        } else if (result.error && result.error.includes("validation")) {
-          throw new Error("Please check your information and try again.");
+          throw new Error("This email is already registered. Please sign in instead.");
         } else {
-          throw new Error(result.error || "Account creation failed. Please try again or contact support.");
+          throw new Error(result.error || "Something went wrong. Please try again.");
         }
       }
 
-      setSuccess(true);
+      // Store access code for the success page
+      localStorage.setItem('companyAccessCode', accessCode);
+      localStorage.setItem('trialEmail', email);
       
-      // Auto-redirect to setup after 3 seconds
-      setTimeout(() => {
-        router.push(`/setup?code=${formData.accessCode}`);
-      }, 3000);
+      // Redirect to success page
+      router.push('/trial-success');
 
     } catch (error: any) {
       console.error('Trial signup error:', error);
-      if (error.message) {
-        setError(error.message);
-      } else {
-        setError("Something went wrong. Please check your internet connection and try again.");
-      }
+      setError(error.message || "Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Auto-generate access code when company name changes
-    if (field === "companyName" && value && value.length >= 3) {
-      const newCode = generateSuggestedCode(value);
-      setFormData(prev => ({ ...prev, accessCode: newCode }));
-    }
-  };
-
-  if (success) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
-              <Check className="w-6 h-6 text-green-600" />
-            </div>
-            <CardTitle className="text-2xl text-green-600">Trial Account Created!</CardTitle>
-            <CardDescription>
-              Your free trial account is ready with 1 quote included.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600 mb-2">Your Access Code:</p>
-              <div className="flex items-center justify-center gap-2">
-                <p className="text-xl font-bold text-blue-600">{formData.accessCode}</p>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    navigator.clipboard.writeText(formData.accessCode);
-                    alert('Access code copied to clipboard!');
-                  }}
-                  className="h-8"
-                >
-                  <Copy className="h-4 w-4" />
-                </Button>
-              </div>
-              <p className="text-xs text-gray-500 mt-2">
-                Click the copy button to save your access code
-              </p>
-            </div>
-            <div className="text-sm text-gray-600">
-              <p className="mb-2">✅ 1 Free Quote Included</p>
-              <p className="mb-2">✅ Full Dashboard Access</p>
-              <p className="mb-4">✅ AI-Powered Quote Generation</p>
-              <p>Redirecting you to get started...</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Palette className="w-8 h-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900">ProPaint Quote</span>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Get Started in 30 Seconds</h1>
-          <p className="text-gray-600">Just 2 fields to unlock your free professional quote</p>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Start Your Free Trial</CardTitle>
-            <CardDescription>
-              No credit card required • Instant access • 1 free quote included
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="min-h-screen bg-white">
+      {/* Split Hero Section with Form */}
+      <section className="min-h-[80vh] flex items-center py-12 px-4 bg-gradient-to-br from-gray-50 to-white">
+        <div className="container mx-auto max-w-7xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            
+            {/* Left side - Value Props */}
+            <div className="space-y-8">
               <div>
-                <Label htmlFor="companyName" className="text-base font-medium">Company Name</Label>
-                <Input
-                  id="companyName"
-                  type="text"
-                  placeholder="e.g., Elite Painting Co."
-                  value={formData.companyName}
-                  onChange={(e) => handleInputChange("companyName", e.target.value)}
-                  required
-                  className="mt-2 h-12 text-base"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="email" className="text-base font-medium">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="e.g., mike@elitepainting.com"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  required
-                  className="mt-2 h-12 text-base"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  We'll email you your access code and account details
+                <div className="ac-hero-badge mb-6 inline-flex" style={{ background: 'rgba(239, 43, 112, 0.15)', borderColor: 'rgba(239, 43, 112, 0.3)' }}>
+                  <Sparkles size={16} className="text-primary-pink" />
+                  <span className="text-gray-800 font-medium">5,000+ contractors trust ProPaint Quote</span>
+                </div>
+                
+                <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+                  Start creating quotes in{" "}
+                  <span className="relative inline-block">
+                    <span className="absolute inset-0 bg-primary-pink/10 rounded-lg -skew-x-12"></span>
+                    <span className="relative text-primary-pink font-extrabold px-2">30 seconds</span>
+                  </span>
+                </h1>
+                
+                <p className="text-xl text-gray-600 mb-8">
+                  Join thousands of painting contractors who create professional quotes 14x faster with AI. 
+                  No credit card required.
                 </p>
               </div>
 
-              {formData.accessCode && (
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <Label className="text-sm font-medium text-blue-900">Your Access Code</Label>
-                  <div className="flex items-center justify-between mt-1">
-                    <p className="text-lg font-bold text-blue-700">{formData.accessCode}</p>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(formData.accessCode);
-                        alert('Access code copied to clipboard!');
-                      }}
-                      className="h-7 text-blue-600 hover:text-blue-700 hover:bg-blue-100"
-                    >
-                      <Copy className="h-3 w-3 mr-1" />
-                      Copy
-                    </Button>
+              {/* Social Proof */}
+              <div className="flex items-center gap-8">
+                <div className="flex -space-x-2">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="w-10 h-10 rounded-full bg-gray-300 border-2 border-white" />
+                  ))}
+                </div>
+                <div>
+                  <div className="flex items-center gap-1 mb-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                    ))}
                   </div>
-                  <p className="text-xs text-blue-600 mt-1">
-                    Save this code - you'll use it to sign in after creating your account
+                  <p className="text-sm text-gray-600">
+                    <span className="font-semibold">4.9/5</span> from 2,847 reviews
                   </p>
                 </div>
-              )}
-
-              {error && (
-                <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-md">
-                  <AlertCircle className="w-4 h-4 text-red-600" />
-                  <span className="text-sm text-red-600">{error}</span>
-                </div>
-              )}
-
-              <div className="bg-green-50 border border-green-200 rounded-md p-4">
-                <h4 className="font-medium text-green-900 mb-2">🎉 Your Free Trial Includes:</h4>
-                <ul className="text-sm text-green-700 space-y-1">
-                  <li>✅ 1 Professional Quote (No credit card required)</li>
-                  <li>✅ AI Quote Assistant</li>
-                  <li>✅ Full Dashboard Access</li>
-                  <li>✅ Mobile & Desktop Compatible</li>
-                </ul>
               </div>
 
-              <Button type="submit" className="w-full h-12 text-base bg-blue-600 hover:bg-blue-700" disabled={isLoading || !formData.companyName || !formData.email}>
-                {isLoading ? "Creating Your Account..." : "Create Free Trial Account"}
-              </Button>
+              {/* Key Benefits */}
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Check className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Create quotes 14x faster</h3>
+                    <p className="text-gray-600">AI-powered estimates in under 30 seconds</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Check className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Win 40% more jobs</h3>
+                    <p className="text-gray-600">Professional quotes that convert</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Check className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Save 10+ hours per week</h3>
+                    <p className="text-gray-600">Automate quote creation and follow-ups</p>
+                  </div>
+                </div>
+              </div>
 
-              <p className="text-xs text-gray-500 text-center">
-                No credit card required • Instant access • 1 free quote included
-              </p>
-            </form>
-          </CardContent>
-        </Card>
+              {/* Trust Badges */}
+              <div className="flex flex-wrap gap-6 pt-4">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Shield className="w-5 h-5" />
+                  <span className="text-sm font-medium">SOC 2 Compliant</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <TrendingUp className="w-5 h-5" />
+                  <span className="text-sm font-medium">99.9% Uptime</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Users className="w-5 h-5" />
+                  <span className="text-sm font-medium">24/7 Support</span>
+                </div>
+              </div>
+            </div>
 
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">
-            Already have an access code?{" "}
-            <a href="/access-code" className="text-blue-600 hover:text-blue-700 font-medium">
-              Sign in here
-            </a>
-          </p>
+            {/* Right side - Signup Form */}
+            <div className="lg:pl-12">
+              <div className="ac-card shadow-xl border-2 max-w-md mx-auto">
+                <div className="ac-card-body p-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    Start your free trial
+                  </h2>
+                  <p className="text-gray-600 mb-6">
+                    No credit card required. 1 free quote included.
+                  </p>
+
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="ac-form-group">
+                      <label htmlFor="email" className="ac-label">
+                        Work email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        placeholder="you@company.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="ac-input text-lg py-3"
+                        autoFocus
+                        required
+                      />
+                    </div>
+
+                    {error && (
+                      <div className="ac-form-error flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4" />
+                        <span>{error}</span>
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={isLoading || !email}
+                      className={`ac-btn ac-btn-primary ac-btn-lg w-full ${isLoading ? 'ac-btn-loading' : ''}`}
+                    >
+                      {isLoading ? '' : (
+                        <>
+                          Get Started Free
+                          <ArrowRight size={20} />
+                        </>
+                      )}
+                    </button>
+
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-300"></div>
+                      </div>
+                      <div className="relative flex justify-center text-sm">
+                        <span className="px-2 bg-white text-gray-500">or</span>
+                      </div>
+                    </div>
+
+                    <p className="text-center">
+                      <span className="text-gray-600">Already have an account? </span>
+                      <button
+                        type="button"
+                        onClick={() => router.push('/access-code')}
+                        className="text-primary-pink hover:text-primary-pink-dark font-medium transition-colors"
+                      >
+                        Sign in
+                      </button>
+                    </p>
+                  </form>
+                </div>
+              </div>
+
+              {/* Testimonial below form */}
+              <div className="mt-8 p-6 bg-gray-50 rounded-lg max-w-md mx-auto">
+                <p className="text-gray-700 italic mb-3">
+                  "ProPaint Quote transformed our business. We're winning 40% more jobs and saving 
+                  hours every day. Best investment we've made."
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gray-300"></div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Mike Johnson</p>
+                    <p className="text-sm text-gray-600">Elite Painting Co.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Simple Stats Bar */}
+      <section className="py-8 px-4 bg-gray-900 text-white">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-2xl font-bold">5,000+</div>
+              <div className="text-sm opacity-80">Active Users</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold">$73M+</div>
+              <div className="text-sm opacity-80">Quotes Generated</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold">14x</div>
+              <div className="text-sm opacity-80">Faster Quotes</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold">40%</div>
+              <div className="text-sm opacity-80">More Jobs Won</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 }

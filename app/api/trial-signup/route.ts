@@ -97,7 +97,22 @@ export async function POST(request: NextRequest) {
 
     console.log(`✅ Trial account created with Supabase: ${cleanAccessCode} - ${companyName} (${email})`);
 
-    // Send email with access code
+    // Track trial started event for email automation
+    try {
+      const { trackTrialStarted } = await import('@/lib/email-automation');
+      await trackTrialStarted({
+        id: result.companyId,
+        name: companyName,
+        email,
+        access_code: cleanAccessCode
+      });
+      console.log('📊 Trial started event tracked for automation');
+    } catch (automationError) {
+      console.error('Failed to track trial event:', automationError);
+      // Don't fail the signup if automation fails
+    }
+
+    // Send immediate welcome email
     try {
       await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/send-email`, {
         method: 'POST',

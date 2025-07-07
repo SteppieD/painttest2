@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
@@ -82,7 +83,7 @@ export async function POST(request: NextRequest) {
 
 // Handle GET requests for retrieving uploaded logos
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
+  const searchParams = request.nextUrl.searchParams;
   const companyId = searchParams.get('companyId');
 
   if (!companyId) {

@@ -63,7 +63,7 @@ export async function GET(
     `, [customer.access_code]);
 
     // Get monthly revenue for the last 6 months
-    const monthlyRevenue = dbAll(`
+    const monthlyRevenue = await dbAll(`
       SELECT 
         strftime('%Y-%m', q.created_at) as month,
         SUM(q.final_price) as revenue,
@@ -78,7 +78,7 @@ export async function GET(
     `, [customer.access_code]);
 
     // Format monthly revenue with month names
-    const formattedMonthlyRevenue = monthlyRevenue.map((item: any) => {
+    const formattedMonthlyRevenue = (monthlyRevenue || []).map((item: any) => {
       const [year, month] = item.month.split('-');
       const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       return {

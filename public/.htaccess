@@ -1,0 +1,15 @@
+# Block bad bots and referrers
+RewriteEngine On
+RewriteCond %{HTTP_REFERER} sattaking [NC,OR]
+RewriteCond %{HTTP_REFERER} gambling [NC,OR]
+RewriteCond %{HTTP_REFERER} casino [NC]
+RewriteRule .* - [F]
+
+# Prevent content scraping
+SetEnvIfNoCase User-Agent "^$" bad_bot
+SetEnvIfNoCase User-Agent "HTTrack" bad_bot
+SetEnvIfNoCase User-Agent "SiteSnagger" bad_bot
+SetEnvIfNoCase User-Agent "WebCopier" bad_bot
+Order Allow,Deny
+Allow from all
+Deny from env=bad_bot

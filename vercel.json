@@ -17,5 +17,56 @@
       "source": "/",
       "destination": "/access-code"
     }
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "master": false,
+      "dev": false,
+      "development": false,
+      "staging": false,
+      "preview": false
+    }
+  },
+  "github": {
+    "enabled": true,
+    "autoAlias": false,
+    "silent": true,
+    "autoJobCancellation": true,
+    "deploymentEnabled": {
+      "main": true,
+      "master": false,
+      "dev": false,
+      "staging": false,
+      "feature/*": false,
+      "fix/*": false
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    }
   ]
 }

@@ -7,30 +7,41 @@ export const dynamic = 'force-dynamic';
 // GET - Retrieve company settings
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get('companyId') || '1'; // Default to first company for demo
 
-    // Return default settings for now to get things working
-    // TODO: Implement database reading once database schema is confirmed
+    // Load settings from database
+    const company: any = dbGet(`
+      SELECT * FROM companies WHERE id = ?
+    `, [companyId]);
+
+    if (!company) {
+      return NextResponse.json(
+        { error: "Company not found" },
+        { status: 404 }
+      );
+    }
+
     const settings = {
-      default_walls_rate: 3.00,
-      default_ceilings_rate: 2.00,
-      default_trim_rate: 1.92,
-      default_walls_paint_cost: 26.00,
-      default_ceilings_paint_cost: 25.00,
-      default_trim_paint_cost: 35.00,
-      default_labor_percentage: 30,
-      default_paint_coverage: 350,
-      default_sundries_percentage: 12,
-      tax_rate: 0,
-      tax_on_materials_only: false,
-      tax_label: 'Tax',
-      overhead_percentage: 10,
-      default_markup_percentage: 20,
-      ceiling_height: 9,
-      paint_multiplier: 1.8,
-      doors_per_gallon: 4.5,
-      windows_per_gallon: 2.5
+      default_walls_rate: company.default_walls_rate || 3.00,
+      default_ceilings_rate: company.default_ceilings_rate || 2.00,
+      default_trim_rate: company.default_trim_rate || 1.92,
+      default_walls_paint_cost: company.default_walls_paint_cost || 26.00,
+      default_ceilings_paint_cost: company.default_ceilings_paint_cost || 25.00,
+      default_trim_paint_cost: company.default_trim_paint_cost || 35.00,
+      default_labor_percentage: company.default_labor_percentage || 30,
+      default_paint_coverage: company.default_paint_coverage || 350,
+      default_sundries_percentage: company.default_sundries_percentage || 12,
+      tax_rate: company.tax_rate || 0,
+      tax_on_materials_only: company.tax_on_materials_only || false,
+      tax_label: company.tax_label || 'Tax',
+      overhead_percentage: company.overhead_percentage || 10,
+      default_markup_percentage: company.default_markup_percentage || 20,
+      ceiling_height: company.ceiling_height || 9,
+      paint_multiplier: company.paint_multiplier || 1.8,
+      doors_per_gallon: company.doors_per_gallon || 4.5,
+      windows_per_gallon: company.windows_per_gallon || 2.5,
+      logo_url: company.logo_url || ''
     };
 
     return NextResponse.json(settings);
@@ -47,7 +58,7 @@ export async function GET(request: NextRequest) {
 // PUT - Update company settings
 export async function PUT(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get('companyId') || '1';
     
     const settings = await request.json();
@@ -73,6 +84,7 @@ export async function PUT(request: NextRequest) {
         paint_multiplier = ?,
         doors_per_gallon = ?,
         windows_per_gallon = ?,
+        logo_url = ?,
         updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `, [
@@ -94,6 +106,7 @@ export async function PUT(request: NextRequest) {
       settings.paint_multiplier || 1.8,
       settings.doors_per_gallon || 4.5,
       settings.windows_per_gallon || 2.5,
+      settings.logo_url || null,
       companyId
     ]);
 

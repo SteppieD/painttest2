@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { Header } from '@/components/shared/header'
 import { Footer } from '@/components/shared/footer'
 import { CityPageTemplate } from '@/components/locations/city-page-template'
 
@@ -49,7 +48,6 @@ const chicagoTestimonials = [
 export default function ChicagoPage() {
   return (
     <>
-      <Header />
       
       <CityPageTemplate
         city="Chicago"

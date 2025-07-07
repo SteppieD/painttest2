@@ -1,0 +1,221 @@
+/* ===================================================================
+   NAVIGATION MENU FIX - PROPER SPACING
+   ===================================================================
+   
+   Fixes squished menu and removes unwanted blur effects
+   Created: July 7, 2025
+   =================================================================== */
+
+/* Remove all previous navigation styles */
+nav.fixed,
+header nav {
+  all: unset !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  z-index: 50 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Container with proper max-width */
+nav .max-w-7xl,
+header .container {
+  max-width: 1280px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0 32px !important;
+}
+
+/* Main flex container - proper spacing */
+nav .flex.items-center.justify-between,
+header .flex {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 72px !important;
+  gap: 0 !important;
+}
+
+/* Logo section */
+nav a[href="/"],
+header .logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Logo text */
+nav .text-xl,
+.logo span {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #1f2937 !important;
+  white-space: nowrap !important;
+}
+
+/* Center navigation - proper spacing */
+nav nav.hidden.lg\\:flex,
+header .nav-center {
+  display: flex !important;
+  align-items: center !important;
+  gap: 40px !important;
+  margin: 0 auto !important;
+  padding: 0 40px !important;
+}
+
+/* Navigation links */
+nav nav a,
+nav nav button,
+header .nav-link {
+  color: #4b5563 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  padding: 6px 0 !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  transition: color 0.2s ease !important;
+}
+
+nav nav a:hover,
+nav nav button:hover {
+  color: #ea580c !important;
+}
+
+/* Right side CTAs */
+nav > div > div:last-child,
+header .nav-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 24px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Login link */
+a[href="/access-code"] {
+  color: #4b5563 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+}
+
+a[href="/access-code"]:hover {
+  color: #ea580c !important;
+}
+
+/* Try For Free button */
+a[href="/trial-signup"] {
+  background-color: #ea580c !important;
+  color: #ffffff !important;
+  padding: 12px 28px !important;
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  transition: all 0.2s ease !important;
+}
+
+a[href="/trial-signup"]:hover {
+  background-color: #dc2626 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3) !important;
+}
+
+/* Dropdown styling */
+.group {
+  position: relative !important;
+}
+
+.group .absolute {
+  position: absolute !important;
+  top: 100% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin-top: 12px !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+  padding: 8px !important;
+  min-width: 280px !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: all 0.2s ease !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.group:hover .absolute {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 1024px) {
+  nav nav.hidden.lg\\:flex {
+    display: none !important;
+  }
+  
+  nav .max-w-7xl {
+    padding: 0 20px !important;
+  }
+}
+
+/* ===================================================================
+   HERO SECTION FIX - REMOVE BLUR
+   =================================================================== */
+
+/* Remove all blur effects from hero */
+.hero-optimized,
+section:first-of-type,
+main > div:first-child {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  background: #ffffff !important;
+}
+
+/* Clean hero background */
+.hero-optimized {
+  background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%) !important;
+  padding: 120px 20px 80px !important;
+}
+
+/* Remove any blur from cards or overlays */
+.hero-optimized *,
+section * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* Quote generator card - clean styling */
+.hero-optimized .bg-white {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Remove all glass effects globally */
+.liquid-glass,
+.glass-effect,
+[class*="glass"] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* ===================================================================
+   END OF NAVIGATION AND HERO FIXES
+   =================================================================== */

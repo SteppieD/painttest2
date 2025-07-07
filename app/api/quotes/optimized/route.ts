@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /**
  * Optimized Quotes API
  * 
@@ -25,7 +26,7 @@ const QuotesQuerySchema = z.object({
 
 async function getOptimizedQuotes(request: NextRequest): Promise<NextResponse> {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     
     // Parse and validate query parameters
     const queryData = Object.fromEntries(searchParams.entries());

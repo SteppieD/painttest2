@@ -162,7 +162,7 @@ export class QuoteCreationFallback {
     const missingFields = this.getMissingFields(parsedData);
     return {
       success: false,
-      response: `I was able to extract some information, but I need more details:\n\n${this.formatMissingFields(missingFields, parsedData)}\n\nCould you provide the missing information?`
+      response: `Got it! Just need: ${missingFields.join(', ')}.`
     };
   }
 
@@ -356,22 +356,11 @@ export class QuoteCreationFallback {
    * Generate response for fallback quote
    */
   private generateFallbackResponse(data: FallbackQuoteData, quote: any): string {
-    return `I've created a quote based on the information provided:
+    return `✅ **Quote for ${data.customer_name}**
 
-**Project Details:**
-• Customer: ${data.customer_name}
-• Address: ${data.address}
-• Project: ${data.project_type} painting
-• Surfaces: ${data.surfaces.join(', ')}
-
-**Quote Summary:**
+**Total: $${quote.final_price.toLocaleString()}**
 • Materials: $${quote.materials.total_material_cost.toLocaleString()}
-• Labor: $${quote.labor.total_labor.toLocaleString()}
-• Total: $${quote.final_price.toLocaleString()}
-
-Note: This quote was generated using standard industry calculations. For the most accurate quote, please provide specific measurements and paint preferences.
-
-Would you like to save this quote or make any adjustments?`;
+• Labor: $${quote.labor.total_labor.toLocaleString()}`;
   }
 
   /**
@@ -380,19 +369,7 @@ Would you like to save this quote or make any adjustments?`;
   private fallbackToWizard(userInput: string): FallbackQuoteResult {
     return {
       success: false,
-      response: `I'm having trouble processing your request with the current information. Let me guide you through creating a quote step by step.
-
-Please visit our quote wizard at [Create Quote Wizard] where you can:
-
-1. Enter customer information
-2. Select project details
-3. Choose paint products
-4. Get an accurate quote
-
-Or, you can provide the information in this format:
-"Customer: [Name], Address: [Full Address], Project: [Interior/Exterior], Linear Feet: [Number], Ceiling Height: [Number]"
-
-Example: "Customer: John Smith, Address: 123 Main Street, Project: Interior, Linear Feet: 200, Ceiling Height: 9"`,
+      response: `Need more info. Try: "John Smith at 123 Main St, interior 200 linear feet, 9ft ceilings"`,
       method: 'wizard'
     };
   }

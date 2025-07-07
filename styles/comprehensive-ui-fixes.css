@@ -1,0 +1,331 @@
+/* ===================================================================
+   COMPREHENSIVE UI FIXES - All Issues
+   ===================================================================
+   
+   Addresses all UI issues reported:
+   1. Navigation menu readability
+   2. Watch Demo button centering
+   3. Start Free Trial button readability
+   4. Win More Jobs section highlighting
+   5. Heading backgrounds
+   6. Pricing white on white text
+   7. ROI readability
+   8. Black on dark blue text
+   9. Side scroll button overlaps
+   
+   Created: July 7, 2025
+   =================================================================== */
+
+/* ===================================================================
+   1. WATCH DEMO BUTTON - Center and Fix Contrast
+   =================================================================== */
+
+/* Center the button group in hero */
+.hero-optimized .flex.flex-col.sm\\:flex-row {
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 1rem !important;
+}
+
+/* Fix Watch Demo button specifically */
+a[href="/demo"],
+.bg-white[href="/demo"] {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #ea580c !important;
+  font-weight: 600 !important;
+  padding: 0.75rem 1.5rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+}
+
+a[href="/demo"]:hover,
+.bg-white[href="/demo"]:hover {
+  background-color: #ea580c !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3) !important;
+}
+
+/* ===================================================================
+   2. START FREE TRIAL BUTTON - Apple-style with Liquid Glass
+   =================================================================== */
+
+/* Start Free Trial button with gradient */
+a[href="/trial-signup"],
+.bg-orange-700 {
+  background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3) !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+a[href="/trial-signup"]:hover,
+.bg-orange-700:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(234, 88, 12, 0.4) !important;
+}
+
+/* ===================================================================
+   3. WIN MORE JOBS SECTION - Remove Ugly Highlighting
+   =================================================================== */
+
+/* Remove blue background from "Win More Jobs" text */
+.text-flat-2xl span,
+h1 span[class*="bg-"],
+h2 span[class*="bg-"] {
+  background: none !important;
+  background-color: transparent !important;
+  color: inherit !important;
+  padding: 0 !important;
+}
+
+/* Specific fix for the blue highlight */
+span.bg-blue-600,
+span.text-white.px-4 {
+  background: none !important;
+  background-color: transparent !important;
+  color: #1e3a8a !important;
+  padding: 0 !important;
+}
+
+/* ===================================================================
+   4. HEADING BACKGROUNDS - Remove All
+   =================================================================== */
+
+/* Remove backgrounds from all headings */
+h1, h2, h3, h4, h5, h6 {
+  background: none !important;
+  background-color: transparent !important;
+}
+
+/* Remove backgrounds from heading containers */
+.bg-blue-600.text-white,
+.bg-navy-600.text-white {
+  background: none !important;
+  background-color: transparent !important;
+  color: #1f2937 !important;
+}
+
+/* Feature card headings */
+.card h3,
+.ac-card h3,
+[class*="card"] h3 {
+  background: none !important;
+  background-color: transparent !important;
+  color: #1f2937 !important;
+  padding: 0 !important;
+}
+
+/* ===================================================================
+   5. PRICING SECTION - Fix White on White
+   =================================================================== */
+
+/* Pricing cards */
+.ac-pricing-card,
+.pricing-card,
+[class*="pricing"] {
+  background-color: #ffffff !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+/* Pricing text */
+.ac-pricing-card *,
+.pricing-card * {
+  color: #1f2937 !important;
+}
+
+/* Price amounts */
+.text-4xl,
+.text-5xl,
+.text-6xl {
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+}
+
+/* Pricing features list */
+.ac-pricing-card ul li,
+.pricing-card ul li {
+  color: #4b5563 !important;
+}
+
+/* ===================================================================
+   6. ROI SECTION - Fix Readability
+   =================================================================== */
+
+/* ROI container */
+.bg-gradient-to-br,
+section[class*="gradient"] {
+  color: #ffffff !important;
+}
+
+/* ROI headings and text */
+.bg-gradient-to-br h2,
+.bg-gradient-to-br h3,
+.bg-gradient-to-br p,
+section[class*="gradient"] h2,
+section[class*="gradient"] h3,
+section[class*="gradient"] p {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ROI metric values */
+.text-orange-300,
+.text-orange-400 {
+  color: #fbbf24 !important;
+  font-weight: 700 !important;
+}
+
+/* ===================================================================
+   7. DARK BLUE SECTIONS - Fix Black on Dark Blue
+   =================================================================== */
+
+/* Dark blue backgrounds */
+.bg-blue-900,
+.bg-navy-900,
+.bg-gradient-to-br.from-blue-900,
+[class*="bg-blue-9"] {
+  color: #ffffff !important;
+}
+
+/* All text in dark sections */
+.bg-blue-900 *,
+.bg-navy-900 *,
+.bg-gradient-to-br.from-blue-900 *,
+[class*="bg-blue-9"] * {
+  color: #ffffff !important;
+}
+
+/* Links in dark sections */
+.bg-blue-900 a,
+.bg-navy-900 a,
+[class*="bg-blue-9"] a {
+  color: #fbbf24 !important;
+  text-decoration: underline !important;
+}
+
+/* ===================================================================
+   8. TESTIMONIAL CAROUSEL - Fix Side Scroll Overlaps
+   =================================================================== */
+
+/* Hide overflow on testimonial sections */
+.overflow-x-auto {
+  overflow-x: hidden !important;
+  position: relative !important;
+}
+
+/* Position scroll buttons properly */
+button[aria-label*="scroll"],
+button[class*="scroll"] {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 50% !important;
+  width: 48px !important;
+  height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Left button */
+button[aria-label*="left"],
+button.scroll-left {
+  left: -24px !important;
+}
+
+/* Right button */
+button[aria-label*="right"],
+button.scroll-right {
+  right: -24px !important;
+}
+
+/* Testimonial container padding */
+.testimonial-container,
+[class*="testimonial"] {
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+
+/* ===================================================================
+   9. GLOBAL FIXES - Apple-style Polish
+   =================================================================== */
+
+/* Remove all weird backgrounds */
+[class*="bg-gradient-"] {
+  background-image: none !important;
+}
+
+/* Ensure proper text contrast everywhere */
+.text-white {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.text-black {
+  color: #000000 !important;
+  opacity: 1 !important;
+}
+
+/* Fix any remaining contrast issues */
+* {
+  text-shadow: none !important;
+}
+
+/* Buttons should have clear states */
+button, a[class*="btn"], [role="button"] {
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+/* Ensure form elements are visible */
+input, textarea, select {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+/* ===================================================================
+   10. MOBILE RESPONSIVENESS
+   =================================================================== */
+
+@media (max-width: 768px) {
+  /* Center buttons on mobile */
+  .hero-optimized .flex.flex-col {
+    align-items: stretch !important;
+  }
+  
+  .hero-optimized a {
+    width: 100% !important;
+    text-align: center !important;
+  }
+  
+  /* Fix testimonial scroll on mobile */
+  .testimonial-container {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  
+  button[aria-label*="scroll"] {
+    display: none !important;
+  }
+}
+
+/* ===================================================================
+   END OF COMPREHENSIVE UI FIXES
+   =================================================================== */

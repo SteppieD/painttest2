@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { Header } from '@/components/shared/header'
 import { Footer } from '@/components/shared/footer'
 import { Search, MessageCircle, Book, Video, Settings, Users, Calculator, FileText, ArrowRight, CheckCircle } from 'lucide-react'
 
@@ -12,7 +11,6 @@ export const metadata: Metadata = {
 export default function HelpPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
       
       {/* Hero Section */}
       <section className="py-16 px-4 bg-white">

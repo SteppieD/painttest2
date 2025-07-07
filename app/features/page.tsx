@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { QuickPaintCalculator } from '@/components/calculators/quick-paint-calculator';
 import { RoomCalculatorWidget } from '@/components/calculators/room-calculator-widget';
@@ -175,8 +174,6 @@ export default function FeaturesPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
-
       {/* Hero Section - CIALDINI: Social Proof & Authority */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="container mx-auto text-center max-w-5xl">
@@ -420,7 +417,7 @@ export default function FeaturesPage() {
           </div>
           
           <div className="space-y-4">
-            <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-gray-100">
+            <Button size="lg" variant="outline_white" asChild className="text-lg px-8 py-6">
               <Link href="/trial-signup">
                 Claim Your Free Trial + Bonuses
                 <ArrowRight className="w-5 h-5 ml-2" />

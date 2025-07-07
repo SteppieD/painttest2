@@ -16,7 +16,6 @@ import {
   TrendingUp,
   Shield
 } from 'lucide-react';
-import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 
 export const metadata: Metadata = {
@@ -33,7 +32,6 @@ export const metadata: Metadata = {
 export default function PaintingBusinessSoftwarePage() {
   return (
     <div className="min-h-screen bg-white">
-      <Header />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -351,11 +349,11 @@ export default function PaintingBusinessSoftwarePage() {
           <p className="text-xl text-blue-100 mb-8">Join hundreds of painting contractors who've streamlined their business with our software</p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Link href="/trial-signup" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-md text-lg font-medium flex items-center gap-2">
+            <Link href="/trial-signup" className="bg-white/95 backdrop-blur-sm text-gray-900 hover:bg-white hover:shadow-lg px-8 py-4 rounded-xl text-lg font-medium flex items-center gap-2 border-2 border-white/20 transition-all duration-200">
               Start Free Business Trial
               <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link href="/painting-estimate-calculator" className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-md text-lg font-medium">
+            <Link href="/painting-estimate-calculator" className="border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 hover:shadow-lg px-8 py-4 rounded-xl text-lg font-medium transition-all duration-200">
               See Demo
             </Link>
           </div>

@@ -1,0 +1,202 @@
+/* Navigation Dropdown Contrast Fix - July 6, 2025 */
+/* Fixes black rectangles in navigation dropdowns and contrast issues */
+
+/* ============================= */
+/* 1. FIX DROPDOWN VISIBILITY */
+/* ============================= */
+
+/* Ensure dropdowns are properly visible */
+header nav .group .absolute {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Fix dropdown container backgrounds */
+header .bg-white {
+  background-color: #ffffff !important;
+}
+
+/* Ensure dropdown items have proper backgrounds */
+header nav a[href].block {
+  background-color: transparent !important;
+  color: #1f2937 !important;
+}
+
+header nav a[href].block:hover {
+  background-color: #f9fafb !important;
+  color: #1f2937 !important;
+}
+
+/* Fix dropdown text colors */
+header nav .text-gray-900 {
+  color: #1f2937 !important;
+}
+
+header nav .text-gray-500 {
+  color: #6b7280 !important;
+}
+
+header nav .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+/* ============================= */
+/* 2. FIX HOVER STATES */
+/* ============================= */
+
+/* Dropdown hover backgrounds */
+header .hover\:bg-gray-50:hover {
+  background-color: #f9fafb !important;
+  color: #1f2937 !important;
+}
+
+/* Main nav hover colors */
+header nav a.hover\:text-\[\#ef2b70\]:hover,
+header nav button.hover\:text-\[\#ef2b70\]:hover {
+  color: #ef2b70 !important;
+}
+
+/* ============================= */
+/* 3. FIX TRY FOR FREE BUTTON */
+/* ============================= */
+
+/* Desktop Try For Free button */
+header a[href="/trial-signup"].bg-\[\#ef2b70\] {
+  background-color: #ef2b70 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+header a[href="/trial-signup"].bg-\[\#ef2b70\]:hover {
+  background-color: #d91e5a !important;
+  color: #ffffff !important;
+}
+
+/* Mobile Try For Free button */
+header a[href="/trial-signup"].bg-\[\#FFE4E9\] {
+  background-color: #FFE4E9 !important;
+  color: #ef2b70 !important;
+}
+
+header a[href="/trial-signup"].bg-\[\#FFE4E9\]:hover {
+  background-color: #FFD1DA !important;
+  color: #ef2b70 !important;
+}
+
+/* ============================= */
+/* 4. FIX DROPDOWN ANIMATIONS */
+/* ============================= */
+
+/* Override navigation-balance.css conflicts */
+header nav .group:hover .absolute {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+
+header nav .group .absolute {
+  transition: all 0.2s ease;
+}
+
+/* ============================= */
+/* 5. FIX DROPDOWN BORDERS */
+/* ============================= */
+
+/* Ensure dropdown borders are visible */
+header .border-gray-100 {
+  border-color: #f3f4f6 !important;
+}
+
+header .border-gray-200 {
+  border-color: #e5e7eb !important;
+}
+
+/* ============================= */
+/* 6. PREVENT BLACK BACKGROUNDS */
+/* ============================= */
+
+/* Force all navigation elements to not have black backgrounds */
+header * {
+  background-color: transparent !important;
+}
+
+/* Then re-apply specific backgrounds */
+header.bg-white {
+  background-color: #ffffff !important;
+}
+
+header .bg-white {
+  background-color: #ffffff !important;
+}
+
+header .hover\:bg-gray-50:hover {
+  background-color: #f9fafb !important;
+}
+
+header a[href="/trial-signup"].bg-\[\#ef2b70\] {
+  background-color: #ef2b70 !important;
+}
+
+header a[href="/trial-signup"].bg-\[\#FFE4E9\] {
+  background-color: #FFE4E9 !important;
+}
+
+/* Logo gradient background */
+header .bg-gradient-to-br {
+  background: linear-gradient(to bottom right, #ef2b70, #d91e5a) !important;
+}
+
+/* ============================= */
+/* 7. MOBILE MENU FIXES */
+/* ============================= */
+
+/* Mobile menu background */
+@media (max-width: 1023px) {
+  header .border-t {
+    background-color: #ffffff !important;
+  }
+  
+  header nav.flex.flex-col {
+    background-color: #ffffff !important;
+  }
+  
+  /* Mobile menu items */
+  header nav a.hover\:bg-gray-50:hover {
+    background-color: #f9fafb !important;
+  }
+}
+
+/* ============================= */
+/* 8. CHEVRON ICONS */
+/* ============================= */
+
+/* Ensure chevron icons are visible */
+header .text-gray-700 svg {
+  color: #374151 !important;
+}
+
+header .hover\:text-\[\#ef2b70\]:hover svg {
+  color: #ef2b70 !important;
+}
+
+/* ============================= */
+/* 9. ACTIVE STATES */
+/* ============================= */
+
+/* Active page styling */
+header .text-\[\#ef2b70\] {
+  color: #ef2b70 !important;
+}
+
+/* ============================= */
+/* 10. Z-INDEX FIXES */
+/* ============================= */
+
+/* Ensure dropdowns appear above other content */
+header .z-50 {
+  z-index: 50 !important;
+}
+
+/* IMPORTANT: This file should be loaded after other navigation CSS */

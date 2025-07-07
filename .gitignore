@@ -70,6 +70,14 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Build outputs
+tsconfig.tsbuildinfo
+
 # yarn v2
 .yarn/cache
 .yarn/unplugged
@@ -80,3 +88,7 @@ dist
 # Replit debugger
 .breakpoints
 .vercel
+
+# deployment scripts
+deploy-manual.sh
+deploy.sh

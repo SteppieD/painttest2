@@ -11,7 +11,6 @@ import {
   Users,
   Smartphone
 } from 'lucide-react';
-import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -62,7 +61,6 @@ export default function PaintingQuoteTemplatesFreePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
 
       {/* Hero Section */}
       <section className="py-16 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">

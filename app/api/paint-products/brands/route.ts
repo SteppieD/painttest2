@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
 import { dbGet, dbAll, dbRun } from "@/lib/database";
 
@@ -19,7 +20,7 @@ interface BrandGroup {
 }
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
+  const searchParams = request.nextUrl.searchParams;
   const companyId = searchParams.get('companyId');
   
   if (!companyId) {

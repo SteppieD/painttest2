@@ -1,0 +1,544 @@
+/* Apple Liquid Glass Design System for Painting Quote Platform 
+   Based on Apple Human Interface Guidelines 2025
+   Implements real-time rendering, intelligent adaptation, and accessibility standards */
+
+/* Base Glass Variables - Following Apple's semantic color system */
+:root {
+  /* Glass opacity levels - Apple standard values */
+  --glass-opacity-ultralight: rgba(255, 255, 255, 0.05);
+  --glass-opacity-light: rgba(255, 255, 255, 0.1);
+  --glass-opacity-medium: rgba(255, 255, 255, 0.15);
+  --glass-opacity-strong: rgba(255, 255, 255, 0.25);
+  --glass-opacity-bold: rgba(255, 255, 255, 0.35);
+  
+  /* Glass border colors */
+  --glass-border-light: rgba(255, 255, 255, 0.2);
+  --glass-border-medium: rgba(255, 255, 255, 0.3);
+  --glass-border-strong: rgba(255, 255, 255, 0.4);
+  
+  /* Apple-inspired glass shadow colors */
+  --glass-shadow-primary: rgba(142, 142, 147, 0.15); /* Apple's System Gray */
+  --glass-shadow-inset: rgba(255, 255, 255, 0.25);
+  --glass-shadow-success: rgba(52, 199, 89, 0.2); /* Apple Green */
+  --glass-shadow-info: rgba(0, 122, 255, 0.2); /* Apple Blue */
+  --glass-shadow-accent: rgba(239, 43, 112, 0.2); /* AdCreative.ai Pink */
+  
+  /* Apple Store inspired contractor colors with glass */
+  --contractor-apple-blue: rgba(0, 122, 255, 0.12); /* Apple Blue */
+  --contractor-apple-green: rgba(52, 199, 89, 0.12); /* Apple Green */
+  --contractor-apple-gray: rgba(142, 142, 147, 0.08); /* Apple System Gray */
+  --contractor-accent-pink: rgba(239, 43, 112, 0.12); /* AdCreative.ai Pink */
+  --contractor-apple-purple: rgba(175, 82, 222, 0.12); /* Apple Purple */
+  --contractor-apple-orange: rgba(255, 149, 0, 0.12); /* Apple Orange */
+  
+  /* Apple-style specular highlight colors */
+  --specular-highlight-primary: rgba(255, 255, 255, 0.6);
+  --specular-highlight-secondary: rgba(255, 255, 255, 0.3);
+  
+  /* Intelligent adaptation variables (light mode defaults) */
+  --adaptive-blur-strength: 20px;
+  --adaptive-saturation: 180%;
+  --adaptive-brightness: 100%;
+}
+
+/* Apple's Reduce Transparency accessibility support */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-opacity-ultralight: rgba(255, 255, 255, 0.95);
+    --glass-opacity-light: rgba(255, 255, 255, 0.95);
+    --glass-opacity-medium: rgba(255, 255, 255, 0.95);
+    --glass-opacity-strong: rgba(255, 255, 255, 0.95);
+    --glass-opacity-bold: rgba(255, 255, 255, 0.95);
+    --adaptive-blur-strength: 0px;
+  }
+}
+
+/* Apple's Enhanced Motion and Interaction Classes */
+
+/* Liquid Glass with Apple's real-time movement tracking */
+.liquid-glass-interactive {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.liquid-glass-interactive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--specular-highlight-secondary) 0%,
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.liquid-glass-interactive:hover::before {
+  opacity: 0.6;
+}
+
+/* High contrast mode support - Apple accessibility standard */
+@media (prefers-contrast: high) {
+  :root {
+    --glass-opacity-ultralight: rgba(255, 255, 255, 0.8);
+    --glass-opacity-light: rgba(255, 255, 255, 0.85);
+    --glass-opacity-medium: rgba(255, 255, 255, 0.9);
+    --glass-opacity-strong: rgba(255, 255, 255, 0.95);
+    --glass-opacity-bold: rgba(255, 255, 255, 1);
+    --adaptive-blur-strength: 2px;
+  }
+}
+
+/* Core Liquid Glass Classes */
+
+/* Primary Glass Card - Main component container with Apple-style real-time rendering */
+.liquid-glass-card {
+  position: relative;
+  background: var(--glass-opacity-medium);
+  backdrop-filter: blur(var(--adaptive-blur-strength)) saturate(var(--adaptive-saturation));
+  -webkit-backdrop-filter: blur(var(--adaptive-blur-strength)) saturate(var(--adaptive-saturation));
+  border: 1px solid var(--glass-border-medium);
+  border-radius: 16px;
+  box-shadow: 
+    0 8px 32px var(--glass-shadow-primary),
+    inset 0 4px 20px var(--glass-shadow-inset);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow: hidden;
+  /* Apple's real-time rendering optimizations */
+  will-change: transform, background, filter;
+  filter: brightness(var(--adaptive-brightness));
+}
+
+/* Apple's specular highlight system - dynamic movement reactions */
+.liquid-glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--specular-highlight-primary) 50%, 
+    transparent 100%);
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+/* Apple's dynamic specular highlight - reacts to movement */
+.liquid-glass-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    var(--specular-highlight-secondary) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Apple's intelligent hover adaptation with specular highlights */
+.liquid-glass-card:hover {
+  background: var(--glass-opacity-strong);
+  border-color: var(--glass-border-strong);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px var(--glass-shadow-primary),
+    inset 0 4px 20px var(--glass-shadow-inset);
+}
+
+.liquid-glass-card:hover::before {
+  opacity: 1;
+}
+
+.liquid-glass-card:hover::after {
+  opacity: 0.1;
+  transform: scale(1.1);
+}
+
+/* Apple's mouse tracking for dynamic highlights (CSS-only approximation) */
+@keyframes specular-shimmer {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(100%) skewX(-15deg); }
+}
+
+.liquid-glass-card:hover .specular-highlight {
+  animation: specular-shimmer 2s ease-in-out infinite;
+}
+
+/* Header Glass - For navigation and headers with enhanced contrast */
+.liquid-glass-header {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(255, 255, 255, 0.85) 100%);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border-bottom: 1px solid rgba(0, 122, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  /* Ensure proper text contrast */
+  color: #1f2937; /* Apple's dark gray for text */
+}
+
+/* Quote Presentation Glass - For customer-facing quotes */
+.liquid-glass-quote {
+  background: linear-gradient(135deg,
+    var(--contractor-apple-blue) 0%,
+    var(--contractor-apple-gray) 100%);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid var(--glass-border-medium);
+  border-radius: 20px;
+  box-shadow: 
+    0 16px 48px var(--glass-shadow-info),
+    inset 0 2px 16px var(--glass-shadow-inset);
+}
+
+/* Price Highlight Glass - For important pricing */
+.liquid-glass-price {
+  background: var(--contractor-apple-green);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(52, 199, 89, 0.3);
+  border-radius: 12px;
+  box-shadow: 
+    0 8px 24px var(--glass-shadow-success),
+    inset 0 2px 12px rgba(255, 255, 255, 0.2);
+}
+
+/* Primary Action Button - AdCreative.ai Pink Accent */
+.liquid-glass-cta {
+  background: linear-gradient(135deg, 
+    rgba(239, 43, 112, 0.9) 0%, 
+    rgba(239, 43, 112, 0.85) 100%);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(239, 43, 112, 0.6);
+  border-radius: 12px;
+  box-shadow: 
+    0 8px 24px var(--glass-shadow-accent),
+    inset 0 2px 12px rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.liquid-glass-cta:hover {
+  background: linear-gradient(135deg, 
+    rgba(239, 43, 112, 1) 0%, 
+    rgba(239, 43, 112, 0.95) 100%);
+  border-color: rgba(239, 43, 112, 0.8);
+  transform: translateY(-1px);
+  box-shadow: 
+    0 12px 32px var(--glass-shadow-accent),
+    inset 0 2px 12px rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+/* Button Glass Effects */
+.liquid-glass-button {
+  position: relative;
+  background: var(--glass-opacity-medium);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid var(--glass-border-medium);
+  border-radius: 12px;
+  padding: 12px 24px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.liquid-glass-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 100%);
+  transition: left 0.5s ease;
+}
+
+.liquid-glass-button:hover::before {
+  left: 100%;
+}
+
+.liquid-glass-button:hover {
+  background: var(--glass-opacity-strong);
+  border-color: var(--glass-border-strong);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--glass-shadow-primary);
+}
+
+.liquid-glass-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px var(--glass-shadow-primary);
+}
+
+/* Navigation Glass */
+.liquid-glass-nav {
+  background: var(--glass-opacity-light);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid var(--glass-border-light);
+  border-radius: 16px;
+  padding: 8px;
+}
+
+/* Input Glass Effects */
+.liquid-glass-input {
+  background: var(--glass-opacity-light);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border-light);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+}
+
+.liquid-glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.liquid-glass-input:focus {
+  background: var(--glass-opacity-medium);
+  border-color: var(--glass-border-medium);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Dashboard Glass Panels */
+.liquid-glass-panel {
+  background: var(--glass-opacity-light);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  border: 1px solid var(--glass-border-light);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.liquid-glass-panel:hover {
+  background: var(--glass-opacity-medium);
+  border-color: var(--glass-border-medium);
+  transform: translateY(-1px);
+}
+
+/* Apple Store Inspired Glass Variants */
+
+/* Success Glass - Apple Green for completed quotes */
+.liquid-glass-success {
+  background: var(--contractor-apple-green);
+  border-color: rgba(52, 199, 89, 0.3);
+  box-shadow: 0 8px 24px var(--glass-shadow-success);
+}
+
+/* Warning Glass - Apple Orange for pending items */
+.liquid-glass-warning {
+  background: var(--contractor-apple-orange);
+  border-color: rgba(255, 149, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(255, 149, 0, 0.2);
+}
+
+/* Info Glass - Apple Blue for informational content */
+.liquid-glass-info {
+  background: var(--contractor-apple-blue);
+  border-color: rgba(0, 122, 255, 0.3);
+  box-shadow: 0 8px 24px var(--glass-shadow-info);
+}
+
+/* Accent Glass - AdCreative.ai Pink for primary actions */
+.liquid-glass-accent {
+  background: var(--contractor-accent-pink);
+  border-color: rgba(239, 43, 112, 0.3);
+  box-shadow: 0 8px 24px var(--glass-shadow-accent);
+}
+
+/* Premium Glass - Apple Purple for premium features */
+.liquid-glass-premium {
+  background: var(--contractor-apple-purple);
+  border-color: rgba(175, 82, 222, 0.3);
+  box-shadow: 0 8px 24px rgba(175, 82, 222, 0.2);
+}
+
+/* Floating Action Button Glass */
+.liquid-glass-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background: var(--contractor-apple-blue);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(0, 122, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 8px 32px var(--glass-shadow-info);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.liquid-glass-fab:hover {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 12px 40px var(--glass-shadow-info);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .liquid-glass-card {
+    border-radius: 12px;
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+  }
+  
+  .liquid-glass-header {
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+  }
+  
+  .liquid-glass-quote {
+    border-radius: 16px;
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .liquid-glass-card,
+  .liquid-glass-button,
+  .liquid-glass-panel,
+  .liquid-glass-fab {
+    transition: none;
+  }
+  
+  .liquid-glass-button::before {
+    display: none;
+  }
+}
+
+/* Performance Optimizations */
+.liquid-glass-card,
+.liquid-glass-header,
+.liquid-glass-quote,
+.liquid-glass-button,
+.liquid-glass-nav,
+.liquid-glass-panel,
+.liquid-glass-fab {
+  will-change: transform, background, border-color, box-shadow;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Apple's Modern Gradient Backgrounds */
+.liquid-glass-background-light {
+  background: linear-gradient(135deg, 
+    #f8fafc 0%,     /* Apple's Ultra Light Gray */
+    #e2e8f0 25%,    /* Apple's Light Gray */
+    #cbd5e1 50%,    /* Apple's Medium Gray */
+    #94a3b8 100%);  /* Apple's System Gray */
+}
+
+.liquid-glass-background-primary {
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 0.05) 0%,    /* Apple Blue - subtle */
+    rgba(52, 199, 89, 0.05) 50%,   /* Apple Green - subtle */
+    rgba(175, 82, 222, 0.05) 100%); /* Apple Purple - subtle */
+}
+
+.liquid-glass-background-accent {
+  background: linear-gradient(135deg, 
+    rgba(239, 43, 112, 0.03) 0%,   /* AdCreative.ai Pink - very subtle */
+    rgba(255, 149, 0, 0.03) 50%,   /* Apple Orange - very subtle */
+    rgba(0, 122, 255, 0.03) 100%); /* Apple Blue - very subtle */
+}
+
+/* Apple's Intelligent Dark Mode Adaptation - "intelligently adapts between light and dark environments" */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Enhanced dark mode glass with Apple's intelligent adaptation */
+    --glass-opacity-ultralight: rgba(255, 255, 255, 0.02);
+    --glass-opacity-light: rgba(255, 255, 255, 0.05);
+    --glass-opacity-medium: rgba(255, 255, 255, 0.08);
+    --glass-opacity-strong: rgba(255, 255, 255, 0.12);
+    --glass-opacity-bold: rgba(255, 255, 255, 0.18);
+    
+    --glass-border-light: rgba(255, 255, 255, 0.08);
+    --glass-border-medium: rgba(255, 255, 255, 0.15);
+    --glass-border-strong: rgba(255, 255, 255, 0.25);
+    
+    /* Intelligent adaptation variables for dark environments */
+    --adaptive-blur-strength: 24px; /* Increased blur for dark mode */
+    --adaptive-saturation: 160%; /* Reduced saturation for dark */
+    --adaptive-brightness: 90%; /* Slightly dimmed for eye comfort */
+    
+    /* Dark mode specular highlights - more subtle */
+    --specular-highlight-primary: rgba(255, 255, 255, 0.3);
+    --specular-highlight-secondary: rgba(255, 255, 255, 0.15);
+    
+    /* Dark contractor colors with enhanced glass */
+    --contractor-apple-blue: rgba(0, 122, 255, 0.12);
+    --contractor-apple-green: rgba(52, 199, 89, 0.12);
+    --contractor-apple-gray: rgba(142, 142, 147, 0.12);
+    --contractor-accent-pink: rgba(239, 43, 112, 0.12);
+  }
+  
+  /* Dark mode header with enhanced contrast */
+  .liquid-glass-header {
+    background: linear-gradient(135deg, 
+      rgba(30, 41, 59, 0.95) 0%,   /* Dark slate with opacity */
+      rgba(51, 65, 85, 0.85) 100%); /* Medium slate with opacity */
+    border-bottom: 1px solid rgba(0, 122, 255, 0.3);
+    color: #f8fafc; /* Light text for dark mode */
+  }
+  
+  /* Dark mode gradient backgrounds */
+  .liquid-glass-background-light {
+    background: linear-gradient(135deg, 
+      #1e293b 0%,     /* Dark Slate */
+      #334155 25%,    /* Medium Slate */
+      #475569 50%,    /* Light Slate */
+      #64748b 100%);  /* Gray Slate */
+  }
+  
+  .liquid-glass-background-primary {
+    background: linear-gradient(135deg, 
+      rgba(0, 122, 255, 0.08) 0%,    /* Apple Blue - dark mode */
+      rgba(52, 199, 89, 0.08) 50%,   /* Apple Green - dark mode */
+      rgba(175, 82, 222, 0.08) 100%); /* Apple Purple - dark mode */
+  }
+  
+  .liquid-glass-background-accent {
+    background: linear-gradient(135deg, 
+      rgba(239, 43, 112, 0.06) 0%,   /* AdCreative.ai Pink - dark mode */
+      rgba(255, 149, 0, 0.06) 50%,   /* Apple Orange - dark mode */
+      rgba(0, 122, 255, 0.06) 100%); /* Apple Blue - dark mode */
+  }
+}

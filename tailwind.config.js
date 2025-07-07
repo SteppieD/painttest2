@@ -85,6 +85,25 @@ module.exports = {
           warning: "#d97706", // Constructor orange - warnings
           error: "#dc2626", // Clear red - errors
         },
+        // AdCreative.ai Design System Colors
+        adcreative: {
+          primary: "#ef2b70", // Main pink brand color
+          secondary: "#ff6b9d", // Lighter pink for gradients
+          accent: "#ff8fb3", // Softest pink for backgrounds
+          purple: "#9333ea", // Complementary purple
+          gray: {
+            50: "#f9fafb",
+            100: "#f3f4f6", 
+            200: "#e5e7eb",
+            300: "#d1d5db",
+            400: "#9ca3af",
+            500: "#6b7280",
+            600: "#4b5563",
+            700: "#374151",
+            800: "#1f2937",
+            900: "#111827",
+          },
+        },
         // Flat Design Neutrals
         flat: {
           white: "#ffffff",
@@ -143,10 +162,18 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "shimmer": {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "shimmer": "shimmer 2s infinite linear",
+      },
+      backgroundSize: {
+        '200': '200% 100%',
       },
     },
   },

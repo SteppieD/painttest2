@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { Header } from '@/components/shared/header'
 import { Footer } from '@/components/shared/footer'
 import { ROICalculator } from '@/components/marketing/roi-calculator'
 
@@ -12,7 +11,6 @@ export const metadata: Metadata = {
 export default function ROICalculatorPage() {
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       
       {/* Hero Section */}
       <section className="py-16 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">

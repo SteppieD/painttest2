@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { dbGet, dbAll, dbRun } from "@/lib/database";
 import jwt from "jsonwebtoken";
@@ -82,7 +83,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if access code already exists
-    const existingCompany = dbGet(`
+    const existingCompany = await dbGet(`
       SELECT id FROM companies WHERE access_code = ?
     `, [accessCode.toUpperCase()]);
 
@@ -94,13 +95,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new company
-    const result = dbRun(`
+    const result = await dbRun(`
       INSERT INTO companies (access_code, company_name, phone, email, created_at)
       VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
     `, [accessCode.toUpperCase(), companyName, phone || null, email || null]);
 
     // Log admin activity
-    dbRun(`
+    await dbRun(`
       INSERT INTO admin_activity_logs (admin_user_id, action, details, ip_address)
       VALUES (?, 'create_access_code', ?, ?)
     `, [
@@ -137,7 +138,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get('id');
 
     if (!companyId) {

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { SimplifiedConversationalWizard } from "@/components/setup/simplified-conversational-wizard";
 import { trackSetupStarted, trackSetupCompleted, trackPageView } from "@/lib/analytics/tracking";
+import { OnboardingProgressBar } from "@/components/ui/onboarding-progress-bar";
 
 function SetupPageContent() {
   const [accessCode, setAccessCode] = useState('');

@@ -12,7 +12,8 @@ import {
   X,
   Shield,
   Home,
-  CreditCard
+  CreditCard,
+  MessageSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -94,6 +95,12 @@ export default function AdminLayout({
       href: '/admin/analytics',
       icon: BarChart3,
       active: pathname.startsWith('/admin/analytics')
+    },
+    {
+      label: 'Feedback',
+      href: '/admin/feedback',
+      icon: MessageSquare,
+      active: pathname.startsWith('/admin/feedback')
     },
     {
       label: 'Subscriptions',

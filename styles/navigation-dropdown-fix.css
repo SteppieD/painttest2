@@ -1,0 +1,79 @@
+/* Navigation Dropdown Interaction Fixes */
+/* Improves the user experience when hovering over dropdown menus */
+
+/* Create an invisible hover zone between button and dropdown */
+.relative.group::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: -20px;
+  right: -20px;
+  height: 20px;
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* Ensure the dropdown container captures hover events properly */
+.relative.group:hover::before {
+  pointer-events: auto;
+}
+
+/* Keep dropdowns visible when hovering anywhere in the group */
+.relative.group:hover > div[class*="absolute top-full"],
+.relative.group > div[class*="absolute top-full"]:hover {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Smooth transitions for dropdown appearance */
+.relative.group > div[class*="absolute top-full"] {
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+}
+
+/* Increase hover area for dropdown trigger buttons */
+nav .relative.group > button {
+  padding: 0.5rem 0.75rem;
+  margin: -0.5rem -0.75rem;
+  position: relative;
+}
+
+/* Extend the clickable/hoverable area of dropdown links */
+nav .relative.group a {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure dropdown stays open when moving mouse diagonally */
+.relative.group > div[class*="absolute top-full"]::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+/* Fix z-index stacking issues */
+header .relative.group {
+  z-index: 100;
+}
+
+header .relative.group > div[class*="absolute"] {
+  z-index: 101;
+}
+
+/* Prevent dropdown from closing too quickly on mouse leave */
+.relative.group {
+  position: relative;
+}
+
+/* Make the entire dropdown area hoverable */
+.relative.group > div.absolute {
+  pointer-events: auto;
+}
+
+/* Improve dropdown shadow for better visibility */
+.relative.group > div[class*="shadow-xl"] {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+}

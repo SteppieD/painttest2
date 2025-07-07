@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { Header } from '@/components/shared/header'
 import { Footer } from '@/components/shared/footer'
 import { Shield, Lock, Eye, Server, Users, AlertTriangle, CheckCircle, FileText } from 'lucide-react'
 
@@ -58,7 +57,6 @@ export default function SecurityPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
       
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">

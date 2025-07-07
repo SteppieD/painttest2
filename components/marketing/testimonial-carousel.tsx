@@ -332,28 +332,28 @@ export function TestimonialCarousel({
         </div>
 
         {/* Overall Industry Stats */}
-        <div className="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl">
+        <div className="mt-16 gradient-blue-contrast text-white p-8 rounded-2xl">
           <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold mb-2">Industry-Wide Results</h3>
-            <p className="text-blue-100">Based on data from 5,000+ active contractors using our platform</p>
+            <h3 className="text-2xl font-bold mb-2 text-white">Industry-Wide Results</h3>
+            <p className="text-white opacity-90">Based on data from 5,000+ active contractors using our platform</p>
           </div>
           
           <div className="grid md:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-3xl font-bold mb-2">47%</div>
-              <p className="text-blue-100 text-sm">Average win rate increase</p>
+              <div className="text-3xl font-bold mb-2 text-white">47%</div>
+              <p className="text-white opacity-90 text-sm">Average win rate increase</p>
             </div>
             <div>
-              <div className="text-3xl font-bold mb-2">$8,400</div>
-              <p className="text-blue-100 text-sm">Average monthly revenue increase</p>
+              <div className="text-3xl font-bold mb-2 text-white">$8,400</div>
+              <p className="text-white opacity-90 text-sm">Average monthly revenue increase</p>
             </div>
             <div>
-              <div className="text-3xl font-bold mb-2">4.2x</div>
-              <p className="text-blue-100 text-sm">Faster quote delivery</p>
+              <div className="text-3xl font-bold mb-2 text-white">4.2x</div>
+              <p className="text-white opacity-90 text-sm">Faster quote delivery</p>
             </div>
             <div>
-              <div className="text-3xl font-bold mb-2">94%</div>
-              <p className="text-blue-100 text-sm">Customer satisfaction rate</p>
+              <div className="text-3xl font-bold mb-2 text-white">94%</div>
+              <p className="text-white opacity-90 text-sm">Customer satisfaction rate</p>
             </div>
           </div>
         </div>

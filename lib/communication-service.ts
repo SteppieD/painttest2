@@ -572,7 +572,16 @@ class ResendProvider implements EmailProvider {
   async send(options: EmailOptions): Promise<EmailResult> {
     try {
       // Import Resend dynamically to avoid errors if not installed
-      const { Resend } = await import('resend');
+      const ResendModule = await import('resend').catch(() => null);
+      if (!ResendModule) {
+        return {
+          success: false,
+          error: 'Resend package not installed',
+          provider: this.name,
+          timestamp: new Date()
+        };
+      }
+      const { Resend } = ResendModule;
       const resend = new Resend(process.env.RESEND_API_KEY);
 
       const result = await resend.emails.send({
@@ -606,7 +615,15 @@ class SendGridProvider implements EmailProvider {
   async send(options: EmailOptions): Promise<EmailResult> {
     try {
       // Import SendGrid dynamically
-      const sgMail = await import('@sendgrid/mail');
+      const sgMail = await import('@sendgrid/mail').catch(() => null);
+      if (!sgMail) {
+        return {
+          success: false,
+          error: 'SendGrid package not installed',
+          provider: this.name,
+          timestamp: new Date()
+        };
+      }
       sgMail.default.setApiKey(process.env.SENDGRID_API_KEY!);
 
       const msg = {
@@ -642,7 +659,15 @@ class SMTPProvider implements EmailProvider {
   async send(options: EmailOptions): Promise<EmailResult> {
     try {
       // Import nodemailer dynamically
-      const nodemailer = await import('nodemailer');
+      const nodemailer = await import('nodemailer').catch(() => null);
+      if (!nodemailer) {
+        return {
+          success: false,
+          error: 'Nodemailer package not installed',
+          provider: this.name,
+          timestamp: new Date()
+        };
+      }
       
       const transporter = nodemailer.createTransporter({
         host: process.env.SMTP_HOST,
@@ -685,7 +710,15 @@ class TwilioProvider implements SMSProvider {
   async send(options: SMSOptions): Promise<SMSResult> {
     try {
       // Import Twilio dynamically
-      const twilio = await import('twilio');
+      const twilio = await import('twilio').catch(() => null);
+      if (!twilio) {
+        return {
+          success: false,
+          error: 'Twilio package not installed',
+          provider: this.name,
+          timestamp: new Date()
+        };
+      }
       const client = twilio.default(
         process.env.TWILIO_ACCOUNT_SID,
         process.env.TWILIO_AUTH_TOKEN

@@ -66,36 +66,49 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In a production environment, you would use a real email service like:
-    // - SendGrid
-    // - AWS SES
-    // - Resend
-    // - Postmark
+    // Use communication service for sending emails
+    const { communicationService } = await import('@/lib/communication-service-production');
     
-    // For now, we'll just log the email and return success
-    console.log("📧 Email would be sent to:", email);
-    console.log("Subject: Your ProPaint Quote Access Code");
-    console.log("Company:", companyName);
-    console.log("Access Code:", accessCode);
+    const emailHtml = getAccessCodeEmailTemplate(companyName, accessCode, email);
+    const emailText = `
+Welcome to ProPaint Quote!
 
-    // In production, uncomment and configure your email service:
-    /*
-    const sgMail = require('@sendgrid/mail');
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+Your trial account for ${companyName} has been created successfully.
+
+Your Access Code: ${accessCode}
+
+Save this code - you'll need it to sign in.
+
+Your Free Trial Includes:
+- 1 Professional Quote (no credit card required)
+- AI-Powered Quote Assistant
+- Full Dashboard Access
+- Mobile & Desktop Compatible
+
+Sign in at: ${process.env.NEXT_PUBLIC_APP_URL || 'https://your-app.vercel.app'}/access-code
+
+Important: Keep this email for your records.
+    `.trim();
     
-    const msg = {
+    const result = await communicationService.sendEmail({
       to: email,
-      from: 'noreply@propaintquote.com',
       subject: 'Your ProPaint Quote Access Code',
-      html: getAccessCodeEmailTemplate(companyName, accessCode, email),
-    };
-    
-    await sgMail.send(msg);
-    */
+      text: emailText,
+      html: emailHtml,
+      from: process.env.DEFAULT_FROM_EMAIL || 'ProPaint Quote <onboarding@resend.dev>',
+      priority: 'high'
+    });
+
+    if (result.success) {
+      console.log(`✅ Email sent successfully to ${email} via ${result.provider}`);
+    } else {
+      console.error(`❌ Failed to send email: ${result.error}`);
+    }
 
     return NextResponse.json({
-      success: true,
-      message: "Email sent successfully"
+      success: result.success,
+      message: result.success ? "Email sent successfully" : result.error,
+      provider: result.provider
     });
 
   } catch (error) {
