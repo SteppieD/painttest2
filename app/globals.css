@@ -906,3 +906,6 @@ button.bg-transparent[class*="hover:bg-white"]:hover {
 
 /* Import COMPREHENSIVE Site-Wide Contrast Fix - MUST BE ABSOLUTE LAST */
 @import '../styles/site-wide-contrast-fix.css';
+
+/* Import Navigation Dropdown Contrast Fix - Fixes black rectangles in nav */
+@import '../styles/navigation-dropdown-contrast-fix.css';
