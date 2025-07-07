@@ -401,13 +401,23 @@ export default function DashboardPage() {
                       <p className="text-flat-base text-flat-gray-700 font-medium">Set up paint products and costs for accurate quotes</p>
                     </div>
                   </div>
-                  <Button 
-                    variant="outline"
-                    onClick={() => router.push("/settings/products")}
-                    className="btn-flat-wall mobile-flat-button flex items-center gap-2"
-                  >
-                    Settings
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="ghost"
+                      onClick={() => router.push("/setup?update=true")}
+                      className="btn-flat-wall mobile-flat-button flex items-center gap-2 text-sm"
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      <span className="hidden sm:inline">Quick Update</span>
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => router.push("/settings/products")}
+                      className="btn-flat-wall mobile-flat-button flex items-center gap-2"
+                    >
+                      Settings
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>

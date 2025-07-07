@@ -109,7 +109,8 @@ export function FixedChatInterface({
   useEffect(() => {
     const hasSeenTraining = localStorage.getItem(`paintquote_training_${companyId}`)
     if (!hasSeenTraining) {
-      setShowTrainingModal(true)
+      // Don't show modal automatically anymore
+      // setShowTrainingModal(true)
       localStorage.setItem(`paintquote_training_${companyId}`, 'true')
     }
   }, [companyId])
@@ -410,6 +411,36 @@ export function FixedChatInterface({
       {/* Chat Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {/* Simple help text for empty state */}
+          {messages.length === 0 && (
+            <div className="text-center py-8">
+              <div className="max-w-lg mx-auto">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Welcome! Let's create a quote
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Just tell me about your painting project. Include the customer name, 
+                  project details, and any specific requirements.
+                </p>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-left">
+                  <p className="text-sm text-blue-800 font-medium mb-1">Example:</p>
+                  <p className="text-sm text-blue-700 italic">
+                    "Quote for John Smith at 123 Main St. Interior painting - 
+                    living room 15x20, 2 bedrooms 12x14 each, using Benjamin Moore paint"
+                  </p>
+                </div>
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={() => setShowTrainingModal(true)}
+                  className="mt-4 text-blue-600"
+                >
+                  See more examples →
+                </Button>
+              </div>
+            </div>
+          )}
+          
           {messages.map((message) => (
             <div
               key={message.id}
