@@ -357,13 +357,14 @@ export function OptimizedSaaSLayoutWithImages() {
 
       {/* Section 4: Final CTA with Image */}
       <section className="py-16 lg:py-24 gradient-orange-contrast contrast-overlay text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 image-overlay">
           <Image
             src={professionalImages.hero.tertiary}
             alt="Contractor success"
             fill
             className="object-cover"
           />
+          <div className="gradient-mesh-overlay"></div>
         </div>
         <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center relative z-10 text-white-important">
           <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white">

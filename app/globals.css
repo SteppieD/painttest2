@@ -23,13 +23,8 @@
 /* Import Navigation Balance Fixes */
 @import '../styles/navigation-balance.css';
 
-/* Import Contrast Fix Utilities - Must be last for highest priority */
-@import '../styles/contrast-fix.css';
-
-/* Import July 2025 Contrast Fixes - Moved to end for higher priority */
-
-/* Import navigation dropdown interaction fixes */
-@import '../styles/navigation-dropdown-fix.css';
+/* Import Master Design System - Comprehensive CSS overhaul */
+@import '../styles/master-design-system.css';
 
 /* SITE-WIDE CONTRAST FIXES - Ensure readability everywhere */
 
@@ -892,23 +887,3 @@ button.bg-transparent[class*="hover:bg-white"]:hover {
   }
 }
 
-/* Import Contrast Fix Utilities - Must be last for highest priority */
-@import '../styles/contrast-fix.css';
-
-/* Import July Contrast Fixes - High priority */
-@import '../styles/contrast-fixes-july.css';
-
-/* Import Hero Text Contrast Fix - ABSOLUTE LAST for maximum priority */
-@import '../styles/hero-text-contrast-fix.css';
-
-/* Import Homepage CTA Fixes - For View Pricing button and Annual Revenue section */
-@import '../styles/homepage-cta-fixes.css';
-
-/* Import COMPREHENSIVE Site-Wide Contrast Fix - MUST BE ABSOLUTE LAST */
-@import '../styles/site-wide-contrast-fix.css';
-
-/* Import Navigation Dropdown Contrast Fix - Fixes black rectangles in nav */
-@import '../styles/navigation-dropdown-contrast-fix.css';
-
-/* Import EMERGENCY Navigation Fix - Maximum specificity to fix dropdown issues */
-@import '../styles/navigation-emergency-fix.css';
