@@ -35,6 +35,9 @@
 /* Import Comprehensive UX/UI Audit Fix - WCAG compliant design system */
 @import '../styles/comprehensive-ux-audit-fix.css';
 
+/* Import Complete Design Transformation - Premium SaaS design overhaul */
+@import '../styles/complete-design-transformation.css';
+
 /* SITE-WIDE CONTRAST FIXES - Ensure readability everywhere */
 
 /* 1. Hero Section - Force black text on light backgrounds */
