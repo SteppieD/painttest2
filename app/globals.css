@@ -38,6 +38,9 @@
 /* Import Complete Design Transformation - Premium SaaS design overhaul */
 @import '../styles/complete-design-transformation.css';
 
+/* Import Pricing Section Critical Fix - Fixes white on white text issue */
+@import '../styles/pricing-section-critical-fix.css';
+
 /* SITE-WIDE CONTRAST FIXES - Ensure readability everywhere */
 
 /* 1. Hero Section - Force black text on light backgrounds */
