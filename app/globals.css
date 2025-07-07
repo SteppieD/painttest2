@@ -26,8 +26,11 @@
 /* Import Master Design System - Comprehensive CSS overhaul */
 @import '../styles/master-design-system.css';
 
-/* Import Contractor Professional Theme - MUST BE LAST for highest priority */
-@import '../styles/contractor-professional-theme.css';
+/* Import Master UI Fix - Complete clean design overhaul */
+@import '../styles/master-ui-fix.css';
+
+/* Import Pricing Section Fix - Fixes white on white text */
+@import '../styles/pricing-section-fix.css';
 
 /* SITE-WIDE CONTRAST FIXES - Ensure readability everywhere */
 
