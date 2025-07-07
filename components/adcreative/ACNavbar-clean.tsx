@@ -108,7 +108,11 @@ export function ACNavbarClean() {
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-200 ${
         isScrolled ? 'shadow-md' : ''
-      }`}>
+      }`} style={{
+        background: '#ffffff',
+        borderBottom: '1px solid #e5e7eb',
+        boxShadow: isScrolled ? '0 4px 6px rgba(0, 0, 0, 0.1)' : '0 1px 3px rgba(0, 0, 0, 0.05)'
+      }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -134,8 +138,8 @@ export function ACNavbarClean() {
                       onMouseEnter={() => setOpenDropdown(item.label)}
                       onMouseLeave={() => setOpenDropdown(null)}
                     >
-                      <button className="flex items-center space-x-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-100 py-2">
-                        <span className="text-sm font-medium">{item.label}</span>
+                      <button className="flex items-center space-x-1 text-gray-700 hover:text-[#ea580c] transition-colors duration-100 py-2" style={{ color: '#374151' }}>
+                        <span className="text-sm font-medium" style={{ color: 'inherit' }}>{item.label}</span>
                         <ChevronDown className="w-4 h-4" />
                       </button>
                       
@@ -165,9 +169,13 @@ export function ACNavbarClean() {
                       href={item.href}
                       className={`text-sm font-medium transition-colors duration-100 ${
                         pathname === item.href 
-                          ? 'text-[#ef2b70]' 
-                          : 'text-gray-700 hover:text-[#ef2b70]'
+                          ? 'text-[#ea580c]' 
+                          : 'text-gray-700 hover:text-[#ea580c]'
                       }`}
+                      style={{ 
+                        color: pathname === item.href ? '#ea580c' : '#374151',
+                        fontWeight: '500'
+                      }}
                     >
                       {item.label}
                     </Link>
@@ -195,7 +203,17 @@ export function ACNavbarClean() {
                   </Link>
                   <Link
                     href="/trial-signup"
-                    className="bg-[#ef2b70] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#d91e5a] transition-colors duration-100"
+                    className="bg-[#ea580c] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#dc2626] transition-colors duration-100"
+                    style={{
+                      backgroundColor: '#ea580c',
+                      color: '#ffffff',
+                      padding: '10px 24px',
+                      borderRadius: '8px',
+                      fontWeight: '600',
+                      textDecoration: 'none'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#dc2626'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ea580c'}
                   >
                     Try For Free
                   </Link>

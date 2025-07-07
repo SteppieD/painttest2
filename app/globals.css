@@ -32,6 +32,9 @@
 /* Import Pricing Section Fix - Fixes white on white text */
 @import '../styles/pricing-section-fix.css';
 
+/* Import Comprehensive UX/UI Audit Fix - WCAG compliant design system */
+@import '../styles/comprehensive-ux-audit-fix.css';
+
 /* SITE-WIDE CONTRAST FIXES - Ensure readability everywhere */
 
 /* 1. Hero Section - Force black text on light backgrounds */

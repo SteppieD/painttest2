@@ -1,0 +1,253 @@
+/* ===================================================================
+   NAVIGATION OVERRIDE - FINAL FIX
+   ===================================================================
+   
+   Simple, clean navigation that works
+   Created: July 7, 2025
+   =================================================================== */
+
+/* Force clean slate for navigation */
+header, nav, .navbar, .nav {
+  all: unset !important;
+  display: block !important;
+}
+
+/* Main navigation container */
+nav.fixed,
+header nav {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  z-index: 50 !important;
+  padding: 0 !important;
+}
+
+/* Inner container */
+nav .max-w-7xl,
+header .max-w-7xl {
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  padding: 0 24px !important;
+}
+
+/* Main flex container */
+nav .flex,
+header .flex {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 64px !important;
+}
+
+/* Logo section */
+nav a[href="/"],
+header a[href="/"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-decoration: none !important;
+}
+
+/* Logo text */
+nav .text-xl,
+header .text-xl,
+nav a[href="/"] span,
+header a[href="/"] span {
+  color: #111827 !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* Navigation links container */
+nav nav,
+header nav nav {
+  display: flex !important;
+  align-items: center !important;
+  gap: 32px !important;
+}
+
+/* All navigation links */
+nav a:not([href="/trial-signup"]):not([href="/"]),
+header a:not([href="/trial-signup"]):not([href="/"]),
+nav button,
+header button {
+  color: #374151 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  padding: 8px 0 !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: color 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+/* Navigation link hover */
+nav a:not([href="/trial-signup"]):not([href="/"]):hover,
+header a:not([href="/trial-signup"]):not([href="/"]):hover,
+nav button:hover,
+header button:hover {
+  color: #ea580c !important;
+}
+
+/* Dropdown container */
+.group {
+  position: relative !important;
+}
+
+/* Dropdown menu */
+.group .absolute,
+.group > div[class*="absolute"] {
+  position: absolute !important;
+  top: 100% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin-top: 8px !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  padding: 8px !important;
+  min-width: 280px !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Show dropdown on hover */
+.group:hover .absolute,
+.group:hover > div[class*="absolute"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Dropdown items */
+.group .absolute a,
+.group > div[class*="absolute"] a {
+  display: block !important;
+  padding: 12px 16px !important;
+  color: #1f2937 !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  text-decoration: none !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Dropdown item hover */
+.group .absolute a:hover,
+.group > div[class*="absolute"] a:hover {
+  background: #fef3c7 !important;
+  color: #ea580c !important;
+}
+
+/* Dropdown description */
+.text-xs,
+.text-gray-500 {
+  font-size: 13px !important;
+  color: #6b7280 !important;
+  margin-top: 2px !important;
+}
+
+/* CTA section */
+nav > div > div:last-child,
+header > div > div:last-child {
+  display: flex !important;
+  align-items: center !important;
+  gap: 24px !important;
+}
+
+/* Login link */
+a[href="/access-code"] {
+  color: #374151 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+a[href="/access-code"]:hover {
+  color: #ea580c !important;
+}
+
+/* Try For Free button */
+a[href="/trial-signup"],
+nav .bg-\\[\\#ef2b70\\],
+header .bg-\\[\\#ef2b70\\] {
+  background: #ea580c !important;
+  color: #ffffff !important;
+  padding: 10px 24px !important;
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+a[href="/trial-signup"]:hover,
+nav .bg-\\[\\#ef2b70\\]:hover,
+header .bg-\\[\\#ef2b70\\]:hover {
+  background: #dc2626 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3) !important;
+}
+
+/* Mobile menu button */
+button[class*="lg:hidden"] {
+  display: none !important;
+}
+
+@media (max-width: 1024px) {
+  button[class*="lg:hidden"] {
+    display: flex !important;
+    padding: 8px !important;
+    color: #374151 !important;
+  }
+  
+  nav nav,
+  header nav nav {
+    display: none !important;
+  }
+  
+  nav > div > div:last-child,
+  header > div > div:last-child {
+    display: none !important;
+  }
+}
+
+/* Mobile menu panel */
+nav.fixed.bg-white {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 80% !important;
+  max-width: 320px !important;
+  background: #ffffff !important;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Remove all weird backgrounds and colors */
+* {
+  text-fill-color: unset !important;
+  -webkit-text-fill-color: unset !important;
+}
+
+/* Ensure readability */
+nav *, header * {
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+/* ===================================================================
+   END OF NAVIGATION OVERRIDE
+   =================================================================== */
