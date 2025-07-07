@@ -909,3 +909,6 @@ button.bg-transparent[class*="hover:bg-white"]:hover {
 
 /* Import Navigation Dropdown Contrast Fix - Fixes black rectangles in nav */
 @import '../styles/navigation-dropdown-contrast-fix.css';
+
+/* Import EMERGENCY Navigation Fix - Maximum specificity to fix dropdown issues */
+@import '../styles/navigation-emergency-fix.css';
