@@ -359,18 +359,20 @@ export function OptimizedSaaSLayoutWithImages() {
       <section className="py-16 lg:py-24 gradient-orange-contrast contrast-overlay text-white relative overflow-hidden">
         <div className="absolute inset-0 image-overlay">
           <Image
-            src={professionalImages.hero.tertiary}
-            alt="Contractor success"
+            src={professionalImages.hero.main}
+            alt="Professional painter at work"
             fill
             className="object-cover"
           />
+          {/* Dark overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/60"></div>
           <div className="gradient-mesh-overlay"></div>
         </div>
         <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center relative z-10 text-white-important">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white">
+          <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white drop-shadow-lg">
             Ready to Transform Your Painting Business?
           </h2>
-          <p className="text-xl mb-8 text-white">
+          <p className="text-xl mb-8 text-white drop-shadow-lg">
             Join 5,247+ contractors who are winning more jobs with less effort
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
