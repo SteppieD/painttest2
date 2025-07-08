@@ -225,3 +225,232 @@ dbGet called - using mock data for deployment
  GET /api/company-quota?company_id=1 200 in 30ms
 dbGet called - using mock data for deployment
  GET /api/company-quota?company_id=1 200 in 14ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 27ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 14ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 23ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 24ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 37ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 13ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 18ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 32ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 42ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 14ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 17ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 12ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 66ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 13ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 19ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 13ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 26ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 15ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 34ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 14ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 33ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 16ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 18ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 19ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 20ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 25ms
+ ✓ Compiled in 328ms (424 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 14ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 13ms
+ ✓ Compiled in 226ms (424 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 16ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 14ms
+ ⚠ Failed to reload dynamic routes: Error: You cannot use different slug names for the same dynamic path ('slug' !== 'location').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:558:65)
+ ✓ Compiled in 215ms (424 modules)
+Error: You cannot use different slug names for the same dynamic path ('location' !== 'slug').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/render-server.js:75:13)
+    at async propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:627:17)
+Error: You cannot use different slug names for the same dynamic path ('location' !== 'slug').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/render-server.js:75:13)
+    at async propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:627:17)
+Error: You cannot use different slug names for the same dynamic path ('location' !== 'slug').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/render-server.js:75:13)
+    at async propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:627:17)
+ ⨯ unhandledRejection: Error: You cannot use different slug names for the same dynamic path ('location' !== 'slug').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/render-server.js:75:13)
+    at async propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:627:17)
+ ⨯ unhandledRejection: Error: You cannot use different slug names for the same dynamic path ('location' !== 'slug').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/render-server.js:75:13)
+    at async propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:627:17)
+Error: You cannot use different slug names for the same dynamic path ('location' !== 'slug').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/render-server.js:75:13)
+    at async propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:627:17)
+Error: You cannot use different slug names for the same dynamic path ('location' !== 'slug').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/render-server.js:75:13)
+    at async propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:627:17)
+Error: You cannot use different slug names for the same dynamic path ('location' !== 'slug').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/render-server.js:75:13)
+    at async propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:627:17)
+Error: You cannot use different slug names for the same dynamic path ('location' !== 'slug').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/render-server.js:75:13)
+    at async propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:627:17)
+Error: You cannot use different slug names for the same dynamic path ('location' !== 'slug').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/render-server.js:75:13)
+    at async propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:627:17)
+Error: You cannot use different slug names for the same dynamic path ('location' !== 'slug').
+    at handleSlug (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/sepg/painttest2/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (/Users/sepg/painttest2/node_modules/next/dist/server/future/route-matcher-managers/dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/render-server.js:75:13)
+    at async propagateServerField (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (/Users/sepg/painttest2/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:627:17)
+ ✓ Compiled in 242ms (424 modules)
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 20ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 9ms
+ ✓ Compiled in 188ms (424 modules)
