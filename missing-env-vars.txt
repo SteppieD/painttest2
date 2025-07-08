@@ -1,0 +1,40 @@
+# Critical Environment Variables Needed for Paint Quote App
+
+## Already Added:
+- NEXT_PUBLIC_SUPABASE_URL ✓
+- NEXT_PUBLIC_SUPABASE_ANON_KEY ✓ 
+- SUPABASE_SERVICE_ROLE_KEY ✓
+
+## Missing - Need to Add:
+
+### OpenRouter (AI Features):
+- OPENROUTER_API_KEY
+
+### Stripe (Payments):
+- STRIPE_SECRET_KEY
+- NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+- STRIPE_WEBHOOK_SECRET
+- STRIPE_PROFESSIONAL_MONTHLY_PRICE_ID
+- STRIPE_PROFESSIONAL_YEARLY_PRICE_ID
+- STRIPE_BUSINESS_MONTHLY_PRICE_ID
+- STRIPE_BUSINESS_YEARLY_PRICE_ID
+
+### Email (Resend):
+- RESEND_API_KEY
+
+### Analytics:
+- NEXT_PUBLIC_GTM_ID (Google Tag Manager)
+- NEXT_PUBLIC_GA4_ID (Google Analytics 4)
+
+### Authentication:
+- JWT_SECRET
+- ADMIN_JWT_SECRET
+
+### AI Models:
+- GOOGLE_API_KEY (for Gemini)
+- GEMINI_API_KEY
+
+### App Configuration:
+- NEXT_PUBLIC_APP_URL
+- NODE_ENV=production
+- NEXT_TELEMETRY_DISABLED=1

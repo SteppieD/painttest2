@@ -8,64 +8,220 @@
   - Environments: .env.local
 
  ✓ Starting...
- ⚠ Found lockfile missing swc dependencies, patching...
- ⚠ Lockfile was successfully patched, please run "npm install" to ensure @next/swc dependencies are downloaded
- ✓ Ready in 1252ms
- ○ Compiling /api/admin/customers ...
- ✓ Compiled /api/admin/customers in 552ms (252 modules)
-Error fetching customers: TypeError: _lib_database_supabase_adapter__WEBPACK_IMPORTED_MODULE_2__.supabaseDb.query is not a function
-    at getAllCustomers (webpack-internal:///(rsc)/./app/api/admin/customers/route.ts:23:104)
-    at eval (webpack-internal:///(rsc)/./lib/secure-api-wrapper.ts:159:40)
-    at /Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57234
-    at /Users/sepg/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:140:36
-    at NoopContextManager.with (/Users/sepg/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
-    at ContextAPI.with (/Users/sepg/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
-    at NoopTracer.startActiveSpan (/Users/sepg/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
-    at ProxyTracer.startActiveSpan (/Users/sepg/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
-    at /Users/sepg/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:122:103
-    at NoopContextManager.with (/Users/sepg/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
-    at ContextAPI.with (/Users/sepg/painttest2/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
-    at NextTracerImpl.trace (/Users/sepg/painttest2/node_modules/next/dist/server/lib/trace/tracer.js:122:28)
-    at /Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:48896
-    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
-    at Object.wrap (/Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:40958)
-    at /Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:47472
-    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
-    at Object.wrap (/Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:38293)
-    at /Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:47434
-    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
-    at eT.execute (/Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46881)
-    at eT.handle (/Users/sepg/painttest2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58771)
-    at doRender (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1366:60)
-    at cacheEntry.responseCache.get.routeKind (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1588:34)
-    at ResponseCache.get (/Users/sepg/painttest2/node_modules/next/dist/server/response-cache/index.js:49:26)
-    at DevServer.renderToResponseWithComponentsImpl (/Users/sepg/painttest2/node_modules/next/dist/server/base-server.js:1496:53)
- GET /api/admin/customers 500 in 660ms
- ✓ Compiled in 75ms (160 modules)
- ✓ Compiled in 35ms (160 modules)
-No database configured - using mock data for development
+ ✓ Ready in 767ms
+ ✓ Compiled /middleware in 208ms (72 modules)
+ ○ Compiling / ...
+ ✓ Compiled /api/company-quota in 4.5s (976 modules)
+Database configuration: {
+  isProduction: false,
+  hasSupabase: true,
+  shouldUseSupabase: true,
+  supabaseUrl: 'SET',
+  serviceKey: 'SET',
+  anonKey: 'SET'
+}
+Supabase initialization: { hasUrl: true, hasKey: true, nodeEnv: 'development' }
+✅ Supabase client initialized successfully
+Checking Supabase PostgreSQL schema...
 Database initialized with simplified adapter
-dbAll called - using mock data for deployment
-📊 Returning quotes: 1 quotes found
- GET /api/admin/customers 200 in 33ms
-dbAll called - using mock data for deployment
-📊 Returning quotes: 1 quotes found
- GET /api/admin/customers 200 in 6ms
- ✓ Compiled in 24ms (56 modules)
- ⨯ ./app/api/admin/customers/route.ts:2:1
-Module not found: Can't resolve 'better-sqlite3'
-[0m [90m 1 |[39m [36mimport[39m { [33mNextRequest[39m[33m,[39m [33mNextResponse[39m } [36mfrom[39m [32m"next/server"[39m[33m;[39m[0m
-[0m[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m [33mDatabase[39m [36mfrom[39m [32m'better-sqlite3'[39m[33m;[39m[0m
-[0m [90m   |[39m [31m[1m^[22m[39m[0m
-[0m [90m 3 |[39m [36mimport[39m path [36mfrom[39m [32m'path'[39m[33m;[39m[0m
-[0m [90m 4 |[39m[0m
-[0m [90m 5 |[39m [90m/**[39m[0m
-
-https://nextjs.org/docs/messages/module-not-found
- ✓ Compiled in 22ms (58 modules)
- GET /api/admin/customers 200 in 26ms
- ✓ Compiled in 662ms (202 modules)
- ✓ Compiled in 72ms (202 modules)
- ✓ Compiled in 28ms (202 modules)
- ✓ Compiled in 28ms (202 modules)
-[?25h
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 3548ms
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 47ms
+ GET / 200 in 4895ms
+ ⚠ The "images.domains" configuration is deprecated. Please use "images.remotePatterns" configuration instead.
+✓ Supabase schema verified
+✓ Supabase database initialized
+ ✓ Compiled in 1479ms (424 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 17ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 12ms
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 40ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 26ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 11ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 14ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 20ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 19ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 21ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 21ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 8ms
+ ✓ Compiled in 360ms (967 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ✓ Compiled in 209ms (424 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ✓ Compiled in 313ms (967 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ✓ Compiled in 199ms (424 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ✓ Compiled in 213ms (424 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Database configuration: {
+  isProduction: false,
+  hasSupabase: true,
+  shouldUseSupabase: true,
+  supabaseUrl: 'SET',
+  serviceKey: 'SET',
+  anonKey: 'SET'
+}
+Supabase initialization: { hasUrl: true, hasKey: true, nodeEnv: 'development' }
+✅ Supabase client initialized successfully
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 47ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 7ms
+✓ Supabase schema verified
+✓ Supabase database initialized
+ ✓ Compiled in 250ms (424 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 97ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 20ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 8ms
+ ✓ Compiled in 1017ms (967 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 89ms
+Database configuration: {
+  isProduction: false,
+  hasSupabase: true,
+  shouldUseSupabase: true,
+  supabaseUrl: 'SET',
+  serviceKey: 'SET',
+  anonKey: 'SET'
+}
+Supabase initialization: { hasUrl: true, hasKey: true, nodeEnv: 'development' }
+✅ Supabase client initialized successfully
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 56ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 11ms
+✓ Supabase schema verified
+✓ Supabase database initialized
+ ✓ Compiled in 414ms (967 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ✓ Compiled in 281ms (967 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ✓ Compiled in 278ms (967 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 94ms
+Database configuration: {
+  isProduction: false,
+  hasSupabase: true,
+  shouldUseSupabase: true,
+  supabaseUrl: 'SET',
+  serviceKey: 'SET',
+  anonKey: 'SET'
+}
+Supabase initialization: { hasUrl: true, hasKey: true, nodeEnv: 'development' }
+✅ Supabase client initialized successfully
+Checking Supabase PostgreSQL schema...
+Database initialized with simplified adapter
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 36ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 9ms
+✓ Supabase schema verified
+✓ Supabase database initialized
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 20ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 26ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 24ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 19ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 36ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 12ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 37ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 11ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 24ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 11ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 46ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 21ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 38ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 14ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 25ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 17ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 30ms
+dbGet called - using mock data for deployment
+ GET /api/company-quota?company_id=1 200 in 14ms

@@ -51,6 +51,33 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // New Brand Colors from Logo
+        brand: {
+          primary: {
+            DEFAULT: "#2f97e0", // Primary Blue
+            light: "#5fb0e8",
+            dark: "#1e7cc8",
+            foreground: "#ffffff",
+          },
+          secondary: {
+            DEFAULT: "#3db987", // Teal/Secondary Green
+            light: "#5ec79b",
+            dark: "#2ea670",
+            foreground: "#ffffff",
+          },
+          accent: {
+            DEFAULT: "#6ed174", // Green
+            light: "#8ddb91",
+            dark: "#4fc757",
+            foreground: "#08101c",
+          },
+          dark: {
+            DEFAULT: "#08101c", // Dark Navy/Black
+            light: "#1a2436",
+            dark: "#000000",
+            foreground: "#ffffff",
+          },
+        },
         // Flat Design Paint Industry Colors
         paint: {
           primer: {
