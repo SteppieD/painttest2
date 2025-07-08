@@ -378,11 +378,10 @@ export function OptimizedSaaSLayoutWithImages() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               href="/trial-signup" 
-              className="inline-flex items-center justify-center gap-2 bg-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all shadow-xl"
-              style={{ color: '#2f97e0' }}
+              className="inline-flex items-center justify-center gap-2 bg-brand-primary text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-brand-primary/90 transform hover:scale-105 transition-all shadow-xl"
             >
               Start Your Free Trial
-              <ArrowRight size={20} style={{ color: '#2f97e0' }} />
+              <ArrowRight size={20} />
             </Link>
             <Link 
               href="/pricing" 
