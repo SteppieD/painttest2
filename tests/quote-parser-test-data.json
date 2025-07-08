@@ -1,0 +1,86 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Test data for intelligent quote parser validation",
+    "lastUpdated": "2024-12-24"
+  },
+  "testCases": [
+    {
+      "id": "cici-interior-linear",
+      "description": "Interior project with linear feet calculation",
+      "input": "It's for Cici at 9090 Hillside Drive. We are not painting the ceilings. The project is a 500 linear feet of interior painting. $50 a gallon bucket eggshell shirwin williams. spread rate is 350 square feet ceilings are 9 feet tall. We are not painting doors, or trim or windows. No primer. labour is included in the cost per square foot at $1.50. add 20% markup.",
+      "expected": {
+        "customer_name": "Cici",
+        "property_address": "9090 Hillside Drive",
+        "linear_feet": 500,
+        "wall_height_ft": 9,
+        "walls_sqft": 4500,
+        "labor_cost_per_sqft": 1.50,
+        "markup_percent": 20,
+        "paint_cost_per_gallon": 50,
+        "primer_included": false,
+        "project_type": "interior"
+      },
+      "notes": "Tests linear feet to wall area calculation and explicit exclusions"
+    },
+    {
+      "id": "john-interior-direct-sqft",
+      "description": "Interior project with direct square footage",
+      "input": "John Smith, 123 Main Street. Interior only. 1200 sqft walls, 800 sqft ceilings. Benjamin Moore paint at $45/gallon. $2.00 per square foot labor. 15% markup.",
+      "expected": {
+        "customer_name": "John Smith",
+        "property_address": "123 Main Street",
+        "walls_sqft": 1200,
+        "labor_cost_per_sqft": 2.00,
+        "markup_percent": 15,
+        "paint_cost_per_gallon": 45,
+        "project_type": "interior"
+      },
+      "notes": "Tests direct square footage input and brand recognition"
+    },
+    {
+      "id": "sarah-trim-doors-windows",
+      "description": "Interior project with trim, doors, and windows specified",
+      "input": "Sarah at 456 Oak Ave. 2000 sqft total interior. Include trim and doors but not windows. Sherwin Williams ProClassic semi-gloss $55/gal. Labor at $1.75/sqft with 25% markup.",
+      "expected": {
+        "customer_name": "Sarah",
+        "property_address": "456 Oak Ave",
+        "walls_sqft": 2000,
+        "labor_cost_per_sqft": 1.75,
+        "markup_percent": 25,
+        "paint_cost_per_gallon": 55,
+        "project_type": "interior"
+      },
+      "notes": "Tests surface inclusions/exclusions and premium paint products"
+    },
+    {
+      "id": "commercial-primer-required",
+      "description": "Commercial project with primer requirements",
+      "input": "Commercial office building, 5000 sqft walls, primer required at $0.85/sqft, $3.50/sqft all-in pricing.",
+      "expected": {
+        "customer_name": "",
+        "property_address": "",
+        "walls_sqft": 5000,
+        "labor_cost_per_sqft": 3.50,
+        "primer_included": true,
+        "project_type": "interior"
+      },
+      "notes": "Tests commercial context and primer cost parsing"
+    },
+    {
+      "id": "interior-repaint-primer",
+      "description": "Repaint project with primer and specific costs",
+      "input": "Interior repaint, 1800 sqft, needs primer, labor $2.25/sqft, primer cost $0.70 per square foot, 15% markup.",
+      "expected": {
+        "customer_name": "",
+        "property_address": "",
+        "walls_sqft": 1800,
+        "labor_cost_per_sqft": 2.25,
+        "markup_percent": 15,
+        "primer_included": true,
+        "project_type": "interior"
+      },
+      "notes": "Tests primer cost extraction and repaint context"
+    }
+  ]
+}

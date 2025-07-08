@@ -27,7 +27,8 @@ export async function POST(req: NextRequest) {
         productName: product.productName,
         productLine: product.productLine || null,
         costPerGallon: product.costPerGallon,
-        sheen: product.sheen || null
+        sheen: product.sheen || null,
+        coveragePerGallon: product.coveragePerGallon || 350
       });
     } else {
       // Create new product - use the new addPaintProduct method
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
         costPerGallon: product.costPerGallon,
         displayOrder: product.displayOrder,
         sheen: product.sheen || null,
-        coveragePerGallon: 350
+        coveragePerGallon: product.coveragePerGallon || 350
       };
       
       await supabaseDb.addPaintProduct(id, newProductData);

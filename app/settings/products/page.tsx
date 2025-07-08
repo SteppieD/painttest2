@@ -23,6 +23,7 @@ interface PaintProduct {
   costPerGallon: number;
   displayOrder: number;
   sheen?: string;
+  coveragePerGallon?: number;
 }
 
 const INTERIOR_CATEGORIES = [
@@ -230,6 +231,7 @@ export default function ProductSettingsPage() {
       productName: "",
       costPerGallon: 0,
       displayOrder: categoryProducts.length + 1,
+      coveragePerGallon: 350,
     };
 
     setEditingProduct(newProduct);
@@ -267,6 +269,7 @@ export default function ProductSettingsPage() {
       productName: product.name,
       costPerGallon: product.cost,
       displayOrder: categoryProducts.length + 1,
+      coveragePerGallon: 350,
     };
 
     console.log("💾 Saving new product:", newProduct);
@@ -323,6 +326,9 @@ export default function ProductSettingsPage() {
             {product.productLine && (
               <p className="text-flat-sm text-flat-gray-600 mt-1">{product.productLine}</p>
             )}
+            <p className="text-flat-sm text-flat-gray-600 mt-1">
+              Coverage: {product.coveragePerGallon || 350} sq ft/gal
+            </p>
             
             {/* Inline price editing */}
             {editingInlineProduct === product.id ? (
@@ -658,6 +664,24 @@ export default function ProductSettingsPage() {
                     }
                     placeholder="e.g., Duration, Harmony"
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Coverage per Gallon (sq ft)</Label>
+                  <Input
+                    type="number"
+                    value={editingProduct.coveragePerGallon || 350}
+                    onChange={(e) =>
+                      setEditingProduct({
+                        ...editingProduct,
+                        coveragePerGallon: parseInt(e.target.value) || 350,
+                      })
+                    }
+                    placeholder="350"
+                  />
+                  <p className="text-flat-xs text-flat-gray-600">
+                    How many square feet does one gallon cover? (Standard: 350 sq ft/gal)
+                  </p>
                 </div>
 
                 <div className="flex justify-end gap-2 pt-4">

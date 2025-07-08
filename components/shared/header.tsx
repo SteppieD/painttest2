@@ -43,6 +43,7 @@ export function Header() {
   const isActive = (path: string) => pathname === path;
 
   return (
+<<<<<<< HEAD
     <header className="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-100">
       <div className="container mx-auto px-8 py-5">
         <div className="flex items-center justify-between">
@@ -71,6 +72,27 @@ export function Header() {
             <Link 
               href="/features" 
               className={`${isActive('/features') ? 'text-[#ef2b70]' : 'text-gray-700 hover:text-[#ef2b70]'} transition-colors duration-200 font-medium text-base`}
+=======
+    <header className="neomorphism-nav border-b sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3 neomorphism-interactive px-4 py-2 rounded-2xl">
+            <div className="neomorphism-flat p-2 rounded-xl">
+              <Palette className="w-6 h-6 text-blue-600" />
+            </div>
+            <span className="text-2xl font-bold text-gray-900 neomorphism-text">ProPaint Quote</span>
+          </Link>
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-4">
+            <Link 
+              href="/features" 
+              className={`neomorphism-button px-4 py-2 rounded-xl transition-all duration-200 ${
+                isActive('/features') 
+                  ? 'neomorphism-button-primary' 
+                  : 'text-gray-700 hover:neomorphism-blue'
+              }`}
+>>>>>>> clean-recovery-deploy
             >
               Features
             </Link>
@@ -146,13 +168,18 @@ export function Header() {
               onMouseEnter={() => setIsResourcesOpen(true)}
               onMouseLeave={() => setTimeout(() => setIsResourcesOpen(false), 200)}
             >
+<<<<<<< HEAD
               <button className="flex items-center gap-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base py-2">
+=======
+              <button className="neomorphism-button px-4 py-2 rounded-xl flex items-center gap-2 text-gray-700 hover:neomorphism-blue transition-all duration-200">
+>>>>>>> clean-recovery-deploy
                 Resources
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isResourcesOpen ? 'rotate-180' : ''}`} />
               </button>
               
               {/* Invisible bridge to prevent gap - extended height */}
               {isResourcesOpen && (
+<<<<<<< HEAD
                 <div className="absolute top-full left-0 h-2 w-full" />
               )}
               
@@ -163,17 +190,28 @@ export function Header() {
                   onMouseLeave={() => setIsResourcesOpen(false)}
                 >
                   <Link href="/painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
+=======
+                <div className="neomorphism-modal absolute top-full left-0 mt-3 w-64 py-3 z-50 border-0">
+                  <Link href="/painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl hover:neomorphism-subtle transition-all duration-200">
+                    <Calculator className="w-5 h-5 text-blue-600" />
+>>>>>>> clean-recovery-deploy
                     <div>
                       <div className="font-medium text-gray-900">Free Calculator</div>
                       <div className="text-sm text-gray-500">Instant paint estimates</div>
                     </div>
                   </Link>
+<<<<<<< HEAD
                   <Link href="/paint-estimate-templates" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
+=======
+                  <Link href="/painting-quote-templates" className="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl hover:neomorphism-subtle transition-all duration-200">
+                    <FileText className="w-5 h-5 text-green-600" />
+>>>>>>> clean-recovery-deploy
                     <div>
                       <div className="font-medium text-gray-900">Quote Templates</div>
                       <div className="text-sm text-gray-500">Professional templates</div>
                     </div>
                   </Link>
+<<<<<<< HEAD
                   <Link href="/interior-painting-quote-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
                     <div>
                       <div className="font-medium text-gray-900">Interior Calculator</div>
@@ -199,18 +237,32 @@ export function Header() {
                     </div>
                   </Link>
                   <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
+=======
+                  <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl hover:neomorphism-subtle transition-all duration-200">
+                    <BookOpen className="w-5 h-5 text-purple-600" />
+>>>>>>> clean-recovery-deploy
                     <div>
                       <div className="font-medium text-gray-900">Quoting Guide</div>
                       <div className="text-sm text-gray-500">Expert strategies</div>
                     </div>
                   </Link>
+<<<<<<< HEAD
                   <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
+=======
+                  <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl hover:neomorphism-subtle transition-all duration-200">
+                    <Smartphone className="w-5 h-5 text-indigo-600" />
+>>>>>>> clean-recovery-deploy
                     <div>
                       <div className="font-medium text-gray-900">Mobile App</div>
                       <div className="text-sm text-gray-500">Quote on-site</div>
                     </div>
                   </Link>
+<<<<<<< HEAD
                   <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
+=======
+                  <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl hover:neomorphism-subtle transition-all duration-200">
+                    <TrendingUp className="w-5 h-5 text-emerald-600" />
+>>>>>>> clean-recovery-deploy
                     <div>
                       <div className="font-medium text-gray-900">Case Studies</div>
                       <div className="text-sm text-gray-500">Real success stories</div>
@@ -222,10 +274,50 @@ export function Header() {
             
             <Link 
               href="/pricing" 
+<<<<<<< HEAD
               className={`${isActive('/pricing') ? 'text-[#ef2b70]' : 'text-gray-700 hover:text-[#ef2b70]'} transition-colors duration-200 font-medium text-base`}
             >
               Pricing
             </Link>
+=======
+              className={`neomorphism-button px-4 py-2 rounded-xl transition-all duration-200 ${
+                isActive('/pricing') 
+                  ? 'neomorphism-button-primary' 
+                  : 'text-gray-700 hover:neomorphism-blue'
+              }`}
+            >
+              Pricing
+            </Link>
+            <Link 
+              href="/about" 
+              className={`neomorphism-button px-4 py-2 rounded-xl transition-all duration-200 ${
+                isActive('/about') 
+                  ? 'neomorphism-button-primary' 
+                  : 'text-gray-700 hover:neomorphism-blue'
+              }`}
+            >
+              About
+            </Link>
+            <Link 
+              href="/contact" 
+              className={`neomorphism-button px-4 py-2 rounded-xl transition-all duration-200 ${
+                isActive('/contact') 
+                  ? 'neomorphism-button-primary' 
+                  : 'text-gray-700 hover:neomorphism-blue'
+              }`}
+            >
+              Contact
+            </Link>
+            <Link 
+              href="/access-code" 
+              className="neomorphism-button px-4 py-2 rounded-xl text-gray-700 hover:neomorphism-green transition-all duration-200"
+            >
+              Sign In
+            </Link>
+            <Link href="/trial-signup" className="neomorphism-button-primary px-6 py-3 rounded-2xl font-semibold hover:scale-105 transition-all duration-200">
+              Start Free Trial
+            </Link>
+>>>>>>> clean-recovery-deploy
           </nav>
           
           {/* Right side - Login & CTA */}
@@ -255,7 +347,11 @@ export function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={toggleMobileMenu}
+<<<<<<< HEAD
             className="lg:hidden p-2 text-gray-600 hover:text-[#ef2b70] focus:outline-none focus:ring-2 focus:ring-[#ef2b70] focus:ring-offset-2 rounded-xl transition-all duration-200"
+=======
+            className="lg:hidden neomorphism-button p-3 text-gray-700 hover:neomorphism-blue focus:outline-none rounded-xl transition-all duration-200"
+>>>>>>> clean-recovery-deploy
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (

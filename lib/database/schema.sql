@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS cost_settings (
   contact_name TEXT,
   default_labor_percentage DECIMAL DEFAULT 30,
   default_spread_rate DECIMAL DEFAULT 350,
-  door_trim_pricing TEXT DEFAULT '{"door_unit_price": 45, "trim_linear_foot_price": 3}', -- JSON
+  door_trim_pricing TEXT DEFAULT '{"door_unit_price": 100, "trim_linear_foot_price": 3}', -- JSON
   baseboard_pricing TEXT DEFAULT '{"charge_method": "linear_foot", "price_per_linear_foot": 2.5}', -- JSON
   default_rates TEXT DEFAULT '{"walls": 3.00, "ceilings": 2.00, "trim_doors": 5.00}', -- JSON
   default_paint_costs TEXT DEFAULT '{"walls": 26, "ceilings": 25, "trim_doors": 35}', -- JSON

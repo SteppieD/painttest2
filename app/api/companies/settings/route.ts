@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
     }
 
     const settings = {
+<<<<<<< HEAD
       default_walls_rate: company.default_walls_rate || 3.00,
       default_ceilings_rate: company.default_ceilings_rate || 2.00,
       default_trim_rate: company.default_trim_rate || 1.92,
@@ -42,6 +43,54 @@ export async function GET(request: NextRequest) {
       doors_per_gallon: company.doors_per_gallon || 4.5,
       windows_per_gallon: company.windows_per_gallon || 2.5,
       logo_url: company.logo_url || ''
+=======
+      default_walls_rate: 3.00,
+      default_ceilings_rate: 2.00,
+      default_trim_rate: 1.92,
+      default_walls_paint_cost: 26.00,
+      default_ceilings_paint_cost: 25.00,
+      default_trim_paint_cost: 35.00,
+      default_labor_percentage: 30,
+      default_paint_coverage: 350,
+      default_sundries_percentage: 12,
+      tax_rate: 0,
+      tax_on_materials_only: false,
+      tax_label: 'Tax',
+      overhead_percentage: 10,
+      default_markup_percentage: 20,
+      ceiling_height: 9,
+      paint_multiplier: 1.8,
+      doors_per_gallon: 4.5,
+      windows_per_gallon: 2.5,
+      
+      // Product-Specific Spread Rates (from AI conversations)
+      primer_spread_rate: 250, // 200-300 sqft/gallon default
+      wall_paint_spread_rate: 375, // 350-400 sqft/gallon default
+      ceiling_paint_spread_rate: 350, // 350 sqft/gallon default
+      trim_doors_per_gallon: 4.5, // 4-5 doors per gallon default
+      trim_windows_per_gallon: 2.5, // 2-3 windows per gallon default
+      
+      // All-In Labor Rates (includes materials + labor from AI)
+      wall_allin_rate_per_sqft: 1.50, // $1.50 default
+      ceiling_allin_rate_per_sqft: 1.25, // $1.25 default
+      primer_allin_rate_per_sqft: 0.45, // $0.45 default
+      door_allin_rate_each: 150, // $150 default
+      window_allin_rate_each: 100, // $100 default
+      
+      // Product Preferences (contractor's go-to products from AI)
+      preferred_primer_brand: 'Kilz', // Default primer brand
+      preferred_primer_product: 'PVA Primer', // Default primer product
+      preferred_wall_paint_brand: 'Sherwin Williams', // Default wall paint brand
+      preferred_wall_paint_product: 'ProClassic', // Default wall paint product
+      preferred_ceiling_paint_brand: 'Benjamin Moore', // Default ceiling paint brand
+      preferred_ceiling_paint_product: 'Waterborne Ceiling', // Default ceiling paint product
+      preferred_trim_paint_brand: 'Sherwin Williams', // Default trim paint brand
+      preferred_trim_paint_product: 'ProClassic Semi-Gloss', // Default trim paint product
+      
+      // AI Learning Settings
+      ai_learning_enabled: true, // Auto-save conversation data to settings
+      ai_ask_before_saving: true // Ask before saving new preferences
+>>>>>>> clean-recovery-deploy
     };
 
     return NextResponse.json(settings);
@@ -84,7 +133,30 @@ export async function PUT(request: NextRequest) {
         paint_multiplier = ?,
         doors_per_gallon = ?,
         windows_per_gallon = ?,
+<<<<<<< HEAD
         logo_url = ?,
+=======
+        primer_spread_rate = ?,
+        wall_paint_spread_rate = ?,
+        ceiling_paint_spread_rate = ?,
+        trim_doors_per_gallon = ?,
+        trim_windows_per_gallon = ?,
+        wall_allin_rate_per_sqft = ?,
+        ceiling_allin_rate_per_sqft = ?,
+        primer_allin_rate_per_sqft = ?,
+        door_allin_rate_each = ?,
+        window_allin_rate_each = ?,
+        preferred_primer_brand = ?,
+        preferred_primer_product = ?,
+        preferred_wall_paint_brand = ?,
+        preferred_wall_paint_product = ?,
+        preferred_ceiling_paint_brand = ?,
+        preferred_ceiling_paint_product = ?,
+        preferred_trim_paint_brand = ?,
+        preferred_trim_paint_product = ?,
+        ai_learning_enabled = ?,
+        ai_ask_before_saving = ?,
+>>>>>>> clean-recovery-deploy
         updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `, [
@@ -106,7 +178,30 @@ export async function PUT(request: NextRequest) {
       settings.paint_multiplier || 1.8,
       settings.doors_per_gallon || 4.5,
       settings.windows_per_gallon || 2.5,
+<<<<<<< HEAD
       settings.logo_url || null,
+=======
+      settings.primer_spread_rate || 250,
+      settings.wall_paint_spread_rate || 375,
+      settings.ceiling_paint_spread_rate || 350,
+      settings.trim_doors_per_gallon || 4.5,
+      settings.trim_windows_per_gallon || 2.5,
+      settings.wall_allin_rate_per_sqft || 1.50,
+      settings.ceiling_allin_rate_per_sqft || 1.25,
+      settings.primer_allin_rate_per_sqft || 0.45,
+      settings.door_allin_rate_each || 150,
+      settings.window_allin_rate_each || 100,
+      settings.preferred_primer_brand || 'Kilz',
+      settings.preferred_primer_product || 'PVA Primer',
+      settings.preferred_wall_paint_brand || 'Sherwin Williams',
+      settings.preferred_wall_paint_product || 'ProClassic',
+      settings.preferred_ceiling_paint_brand || 'Benjamin Moore',
+      settings.preferred_ceiling_paint_product || 'Waterborne Ceiling',
+      settings.preferred_trim_paint_brand || 'Sherwin Williams',
+      settings.preferred_trim_paint_product || 'ProClassic Semi-Gloss',
+      settings.ai_learning_enabled ? 1 : 0,
+      settings.ai_ask_before_saving ? 1 : 0,
+>>>>>>> clean-recovery-deploy
       companyId
     ]);
 

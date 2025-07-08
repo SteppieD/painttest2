@@ -1,0 +1,15 @@
+Version: Broken Orange Build (main branch - commit 935bdbe)
+Date: July 7, 2025
+Status: BROKEN BUILD - DO NOT USE
+
+IMPORTANT: Only valuable for:
+1. Copywriting content
+2. Resource pages
+
+DO NOT USE FOR:
+- Functionality
+- Design/theme
+- Database operations
+- General development
+
+Location: /Users/sepg/Desktop/painttest2 (main branch)

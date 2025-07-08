@@ -2,32 +2,32 @@
 
 A comprehensive Next.js painting quote application with admin portal, customer management, and AI-powered quoting system.
 
-## ✅ **Current Status - PRODUCTION READY & FEATURE COMPLETE (Updated July 6, 2025)**
+## ✅ **Current Status - PRODUCTION READY & FEATURE COMPLETE (Updated July 8, 2025)**
 
 ### 🎉 **Latest Updates:**
-- **Fixed**: All contrast issues site-wide - white text on light backgrounds, orange buttons, and CTAs
-- **Enhanced**: Chat interface with customer name display and smart action buttons
-- **Optimized**: Database schema compatibility and null field handling
-- **Improved**: User experience with conversational tone and clear workflows
-- **Deployed**: Stable production build with comprehensive error handling and WCAG compliance
+- **Enhanced**: AI models upgraded to Claude Sonnet 4 as primary intelligent assistant
+- **Improved**: Quote chat UI with proper markdown rendering and better contrast
+- **Added**: Progress indicators and quick action buttons based on conversation stage
+- **Fixed**: Setup wizard now uses GPT-4o-mini for more accurate onboarding
+- **Optimized**: Multi-model AI strategy for cost-effective intelligent responses
 
 ### 🎯 **Core Features Working:**
-1. **🤖 Enhanced AI Chat Interface** - Smart customer name detection, conversational tone, action buttons when quotes are ready
-2. **📋 Intelligent Quote Processing** - Natural language parsing with "Save Quote" and "Continue Editing" options
-3. **📊 Robust Quote Preview** - Fixed all client-side errors with proper fallback handling for missing data
-4. **⚡ State Management Optimization** - 50% fewer re-renders with useReducer pattern consolidating 25+ useState hooks
-5. **⚡ API Call Batching** - 60% faster quote initialization (4s → 1.5s) with professional loading UI
-6. **📊 Progressive Price Estimation** - Real-time estimates during input for 25% higher completion rate
-7. **🎨 2-Minute Setup Wizard** - Pick favorite paint products and markup, ready to quote immediately
-8. **🎨 Favorite Products System** - One-click paint selection from contractor's 3 pre-configured favorites
-9. **📊 Streamlined Quote Creation** - 80% faster with favorite products vs traditional selection
-10. **🎨 Measurement-Driven Paint Selection** - Revolutionary UX with immediate brand/product selection after each measurement
-11. **💭 AI Thinking Animation** - Human-like conversational experience with smart response timing
-12. **📱 Mobile Navigation** - Complete responsive design with hamburger menu for tablets/mobile
-13. **📊 Dashboard Analytics** - Fixed all analytics pages with real-time business intelligence
-14. **👨‍💼 Admin Portal** - Complete customer management and business analytics
-15. **🚀 SEO Landing Pages** - 6 optimized pages targeting high-value painting keywords
-16. **🆓 Trial Signup System** - Self-service account creation with 1-quote limit for lead generation
+1. **🤖 Enhanced AI Chat Interface** - Claude Sonnet 4 for intelligent conversation, markdown rendering fixed
+2. **📋 Intelligent Quote Processing** - Natural language parsing with progress indicators
+3. **📊 Robust Quote Preview** - Fixed all client-side errors with proper fallback handling
+4. **⚡ State Management Optimization** - 50% fewer re-renders with useReducer pattern
+5. **⚡ API Call Batching** - 60% faster quote initialization (4s → 1.5s)
+6. **📊 Progressive Price Estimation** - Real-time estimates during input
+7. **🎨 2-Minute Setup Wizard** - Enhanced with GPT-4o-mini for better accuracy
+8. **🎨 Favorite Products System** - One-click paint selection from favorites
+9. **📊 Streamlined Quote Creation** - 80% faster with favorite products
+10. **🎨 Measurement-Driven Paint Selection** - Revolutionary UX workflow
+11. **💭 AI Thinking Animation** - Human-like conversational experience
+12. **📱 Mobile Navigation** - Complete responsive design
+13. **📊 Dashboard Analytics** - Fixed all analytics pages
+14. **👨‍💼 Admin Portal** - Complete customer management
+15. **🚀 SEO Landing Pages** - 6 optimized pages targeting keywords
+16. **🆓 Trial Signup System** - Self-service account creation
 
 ### 🔐 **Access Credentials:**
 - **Customer Access Codes**: `DEMO2024`, `PAINTER001`, `CONTRACTOR123`
@@ -49,6 +49,16 @@ npm run build
 
 # Deploy to Vercel
 vercel --prod
+```
+
+### **⚠️ CRITICAL: Vercel Deployment Workflow**
+If using Vercel (auto-deploys from git), **ALWAYS** push to git before testing:
+```bash
+# After making any changes:
+npm run build                           # Verify no errors
+git add -A && git commit -m "Changes"   # Commit changes
+git push                               # REQUIRED - Vercel deploys from git
+# Then test on live Vercel URL
 ```
 
 ### **💻 Local Development:**
@@ -79,6 +89,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 # AI Services (Optional - defaults to mock data if not set)
 OPENAI_API_KEY=your_openai_key
 ANTHROPIC_API_KEY=your_anthropic_key
+OPENROUTER_API_KEY=your_openrouter_key  # For Claude Sonnet 4
 
 # Email (Optional)
 RESEND_API_KEY=your_resend_key
@@ -107,11 +118,15 @@ docker-compose up -d
 - **100% quote calculation accuracy** (NaN errors fixed)
 - **Full admin oversight** with real-time business intelligence
 - **Revolutionary UX** with measurement-driven paint selection workflow
+- **AI-powered** with Claude Sonnet 4 for intelligent conversations
 
 ## 🗂️ **Key Files:**
 - `app/setup/page.tsx` - 2-minute setup wizard for paint favorites
 - `app/create-quote/page.tsx` - AI-powered quote creation with favorites
 - `components/ui/favorite-paint-selector.tsx` - One-click paint selection
+- `components/ui/quote-chat-improvements.tsx` - Enhanced chat UI
+- `lib/intelligent-quote-parser.ts` - Claude Sonnet 4 integration
+- `lib/intelligent-quote-assistant.ts` - AI conversation engine
 - `app/admin/` - Complete admin portal with customer management
 - `app/dashboard/page.tsx` - Customer dashboard and quote tracking  
 - `lib/professional-quote-calculator.ts` - Enhanced calculation engine
@@ -137,21 +152,29 @@ docker-compose up -d
 - **Lead Generation Funnel** - SEO traffic → Free resources → Trial accounts → Conversions
 - **Expected Results** - 500+ monthly visitors, 50+ trial signups (3-6 months)
 
-## 📈 **Recent Achievements (June 18, 2025):**
-- ✅ **State Management Optimization** - 50% fewer re-renders using useReducer pattern consolidating 25+ useState hooks
-- ✅ **API Call Batching** - 60% faster quote initialization (4s → 1.5s) with parallel data loading
-- ✅ **Progressive Price Estimation** - Real-time estimates during input for 25% higher completion rate  
-- ✅ **Setup Wizard** - 2-minute onboarding for paint favorites and markup
-- ✅ **Favorite Products System** - One-click paint selection from pre-configured favorites
-- ✅ **Streamlined Quote Flow** - 80% faster paint selection during quotes
-- ✅ **Smart Onboarding** - Auto-detection of setup completion status
-- ✅ **Dashboard Setup Prompts** - Encourages new contractors to complete setup
-- ✅ **SEO Landing Pages** - 6 optimized pages targeting high-value keywords
-- ✅ **Trial System** - Self-service account creation with quota management
-- ✅ **Admin Portal Foundation** - Complete customer management system
-- ✅ **Quote Calculation Fix** - Resolved critical NaN pricing errors
-- ✅ **Mobile Optimization** - Full responsive design implementation
-- ✅ **Business Intelligence** - Real-time metrics and customer analytics
+## 📈 **Recent Achievements (July 8, 2025):**
+- ✅ **AI Model Upgrades** - Claude Sonnet 4 as primary AI, GPT-4o-mini for setup wizard
+- ✅ **Quote Chat UI Enhancements** - Fixed markdown rendering, better contrast, progress indicators
+- ✅ **Quick Action Buttons** - Context-aware suggestions based on conversation stage
+- ✅ **Visual Hierarchy** - Avatars, animations, and better message spacing
+- ✅ **Smart Placeholders** - Dynamic input hints that change with conversation progress
+- ✅ **Multi-Model Strategy** - Optimal AI selection based on task complexity and cost
+
+## 📈 **Previous Achievements (June 18, 2025):**
+- ✅ **State Management Optimization** - 50% fewer re-renders using useReducer pattern
+- ✅ **API Call Batching** - 60% faster quote initialization with parallel loading
+- ✅ **Progressive Price Estimation** - Real-time estimates during input  
+- ✅ **Setup Wizard** - 2-minute onboarding for paint favorites
+- ✅ **Favorite Products System** - One-click paint selection
+- ✅ **Streamlined Quote Flow** - 80% faster paint selection
+- ✅ **Smart Onboarding** - Auto-detection of setup completion
+- ✅ **Dashboard Setup Prompts** - Encourages completion
+- ✅ **SEO Landing Pages** - 6 optimized pages
+- ✅ **Trial System** - Self-service account creation
+- ✅ **Admin Portal Foundation** - Complete management system
+- ✅ **Quote Calculation Fix** - Resolved NaN pricing errors
+- ✅ **Mobile Optimization** - Full responsive design
+- ✅ **Business Intelligence** - Real-time metrics
 
 ## 🔧 **Critical Production Fix: Supabase Setup**
 
@@ -201,7 +224,9 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIs...
 7. **Enhanced Customer Analytics** - Health scoring and trend analysis
 8. **Content Marketing Hub** - Blog, guides, and video tutorials
 
-**Platform ready for scaling to full SaaS business model!** 🚀# Deployment test Thu  3 Jul 2025 14:17:56 PDT
+**Platform ready for scaling to full SaaS business model!** 🚀
+
+# Deployment test Thu  3 Jul 2025 14:17:56 PDT
 # Trigger deployment Thu  3 Jul 2025 14:23:55 PDT
 # Vercel reconnected at Thu  3 Jul 2025 14:28:30 PDT
 # Deployment with correct GitHub email Thu  3 Jul 2025 14:31:54 PDT

@@ -353,6 +353,7 @@ export default function DashboardPage() {
   }
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-white">
       {/* Trial Expiry Banner */}
       {trialInfo.isTrial && trialInfo.startDate && quotaInfo.quotesAllowed && (
@@ -374,6 +375,39 @@ export default function DashboardPage() {
               <div className="ac-hero-badge inline-flex mb-4">
                 <Zap size={16} />
                 <span>Company Dashboard</span>
+=======
+    <div className="min-h-screen bg-gray-50" style={{ background: '#f0f0f3' }}>
+      {/* Header */}
+      <div className="neomorphism-nav-enhanced">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div className="flex items-center gap-4">
+              <div className="neomorphism-accessible-subtle p-3 rounded-2xl">
+                <Palette className="w-8 h-8 text-blue-600" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900 neomorphism-text">ProPaint Quote Assistant</h1>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm text-gray-500">{companyInfo?.company_name}</p>
+                  {companyInfo?.access_code && (
+                    <>
+                      <span className="text-sm text-gray-400">•</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm text-gray-500">Code: {companyInfo.access_code}</span>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(companyInfo.access_code);
+                            alert('Access code copied to clipboard!');
+                          }}
+                          className="neomorphism-button-enhanced h-6 w-6 p-0 rounded-lg flex items-center justify-center"
+                        >
+                          <Copy className="h-3 w-3" />
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+>>>>>>> clean-recovery-deploy
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
                 Welcome back, <span className="text-white font-bold">{companyInfo?.name || companyInfo?.company_name || 'Contractor'}</span>
@@ -391,6 +425,7 @@ export default function DashboardPage() {
                 </button>
               </p>
             </div>
+<<<<<<< HEAD
             <div className="flex gap-3">
               <button
                 onClick={() => {
@@ -407,6 +442,24 @@ export default function DashboardPage() {
                 className="ac-btn ac-btn-ghost ac-btn-lg text-white border-white/20 hover:bg-white/10"
               >
                 <LogOut size={20} />
+=======
+            
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => router.push("/create-quote")}
+                className="neomorphism-button-primary-enhanced flex items-center"
+              >
+                <Calculator className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">New Quote</span>
+                <span className="sm:hidden">Quote</span>
+              </button>
+              
+              <button
+                onClick={handleLogout}
+                className="neomorphism-button-enhanced flex items-center"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+>>>>>>> clean-recovery-deploy
                 <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
@@ -476,6 +529,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
+<<<<<<< HEAD
       <div className="container mx-auto max-w-7xl px-4 py-8">
         {/* Setup Completion Prompt */}
         {!isCheckingOnboarding && needsOnboarding && (
@@ -505,11 +559,45 @@ export default function DashboardPage() {
                 >
                   Skip for Now
                 </button>
+=======
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        {/* Setup Completion Prompt - Neumorphism Design */}
+        {!isCheckingOnboarding && needsOnboarding && (
+          <div className="mb-8">
+            <div className="neomorphism-modal-enhanced animate-neomorphism-scale-in">
+              <div className="text-center">
+                <div className="neomorphism-accessible w-20 h-20 flex items-center justify-center mx-auto mb-5">
+                  <Palette className="w-10 h-10 text-blue-600" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-3 neomorphism-text">
+                  Complete Your Setup
+                </h2>
+                <p className="text-lg text-gray-700 mb-6 max-w-md mx-auto">
+                  Set up your favorite paint products and pricing to create quotes quickly. 
+                  This takes just 2 minutes and you'll be ready to start quoting!
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button 
+                    onClick={() => router.push("/setup")}
+                    className="neomorphism-button-primary-enhanced px-8"
+                  >
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Complete Setup
+                  </button>
+                  <button 
+                    onClick={() => setNeedsOnboarding(false)}
+                    className="neomorphism-button-enhanced"
+                  >
+                    Skip for Now
+                  </button>
+                </div>
+>>>>>>> clean-recovery-deploy
               </div>
             </div>
           </div>
         )}
 
+<<<<<<< HEAD
         {/* Quick Settings Access */}
         {!isCheckingOnboarding && !needsOnboarding && (
           <div className="mb-6">
@@ -522,13 +610,32 @@ export default function DashboardPage() {
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-gray-900">Customize Your Products & Pricing</h3>
                     <p className="text-gray-600">Set up paint products and costs for accurate quotes</p>
+=======
+        {/* Quick Settings Access - Neumorphism Design */}
+        {!isCheckingOnboarding && !needsOnboarding && (
+          <div className="mb-6">
+            <div className="neomorphism-card-accessible animate-neomorphism-fade-in">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="neomorphism-accessible-subtle w-12 h-12 flex items-center justify-center">
+                    <Palette className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-gray-900">Customize Your Products & Pricing</h3>
+                    <p className="text-base text-gray-700">Set up paint products and costs for accurate quotes</p>
+>>>>>>> clean-recovery-deploy
                   </div>
                 </div>
                 <button 
                   onClick={() => router.push("/settings/products")}
+<<<<<<< HEAD
                   className="ac-btn ac-btn-secondary"
                 >
                   <Settings size={18} />
+=======
+                  className="neomorphism-button-enhanced flex items-center gap-2"
+                >
+>>>>>>> clean-recovery-deploy
                   Settings
                 </button>
               </div>
@@ -536,6 +643,7 @@ export default function DashboardPage() {
           </div>
         )}
 
+<<<<<<< HEAD
         {/* Primary Action - Create Quote */}
         <div className="mb-8">
           <div 
@@ -557,6 +665,27 @@ export default function DashboardPage() {
                   <ArrowRight size={32} />
                 </div>
               </div>
+=======
+        {/* Primary Action - Create Quote - Neumorphism Design */}
+        <div className="mb-8">
+          <div 
+            className="neomorphism-interactive neomorphism-green p-8 cursor-pointer animate-neomorphism-scale-in" 
+            onClick={() => router.push("/create-quote")}
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-6">
+                <div className="neomorphism-strong w-24 h-24 flex items-center justify-center">
+                  <Calculator className="w-12 h-12 text-green-700" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-green-800 mb-2 neomorphism-text">Create Professional Quote</h3>
+                  <p className="text-lg font-medium text-gray-700">Room-by-room measurements • Industry pricing • Customer-ready output</p>
+                </div>
+              </div>
+              <div className="text-green-700">
+                <ArrowRight className="w-8 h-8" />
+              </div>
+>>>>>>> clean-recovery-deploy
             </div>
           </div>
         </div>
@@ -572,6 +701,7 @@ export default function DashboardPage() {
           </div>
         )}
 
+<<<<<<< HEAD
         {/* Quick Actions */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Quick Actions</h2>
@@ -631,19 +761,103 @@ export default function DashboardPage() {
                   <h3 className="font-semibold text-gray-900">Load Demo Data</h3>
                   <p className="text-sm text-gray-600">Try sample quotes</p>
                 </div>
+=======
+        {/* Business Metrics - Enhanced Neumorphism Design */}
+        <div className="mb-8">
+          <div className="neomorphism-card-accessible animate-neomorphism-fade-in">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 neomorphism-text">Business Performance</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Total Quotes Card */}
+              <div className="neomorphism-metric-card text-center">
+                <div className="neomorphism-accessible-subtle w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-8 h-8 text-blue-600" />
+                </div>
+                <div className="text-3xl font-bold text-gray-900 mb-2 neomorphism-text">{analytics.totalQuotes}</div>
+                <div className="text-base font-semibold text-gray-700 mb-2">Total Quotes</div>
+                <div className="neomorphism-badge-enhanced">
+                  {analytics.acceptedQuotes} won ({analytics.totalQuotes > 0 ? Math.round((analytics.acceptedQuotes / analytics.totalQuotes) * 100) : 0}%)
+                </div>
+              </div>
+
+              {/* Revenue Card */}
+              <div className="neomorphism-metric-card text-center">
+                <div className="neomorphism-accessible-subtle w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <DollarSign className="w-8 h-8 text-green-600" />
+                </div>
+                <div className="text-3xl font-bold text-green-700 mb-2 neomorphism-text">{formatCurrency(analytics.totalRevenue)}</div>
+                <div className="text-base font-semibold text-gray-700 mb-2">Revenue Generated</div>
+                <div className="text-sm font-medium text-gray-600">All time</div>
+              </div>
+
+              {/* Average Quote Card */}
+              <div className="neomorphism-metric-card text-center">
+                <div className="neomorphism-accessible-subtle w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="w-8 h-8 text-purple-600" />
+                </div>
+                <div className="text-3xl font-bold text-purple-700 mb-2 neomorphism-text">{formatCurrency(analytics.averageQuote)}</div>
+                <div className="text-base font-semibold text-gray-700 mb-2">Average Job Value</div>
+                <div className="text-sm font-medium text-gray-600">Per quote</div>
+              </div>
+
+              {/* Pending Quotes Card */}
+              <div className="neomorphism-metric-card text-center">
+                <div className="neomorphism-accessible-subtle w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <Calendar className="w-8 h-8 text-orange-600" />
+                </div>
+                <div className="text-3xl font-bold text-orange-700 mb-2 neomorphism-text">{analytics.pendingQuotes}</div>
+                <div className="text-base font-semibold text-gray-700 mb-2">Awaiting Response</div>
+                <div className="text-sm font-medium text-gray-600">Follow up needed</div>
+>>>>>>> clean-recovery-deploy
               </div>
             </button>
           </div>
         </div>
 
+<<<<<<< HEAD
 
         {/* Quotes List */}
         <div className="ac-card">
           <div className="ac-card-header">
+=======
+        {/* Secondary Navigation - Enhanced Neumorphism Design */}
+        <div className="mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <button
+              onClick={() => router.push("/quotes")}
+              className="neomorphism-button-enhanced flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
+              style={{ animationDelay: '0.1s' }}
+            >
+              <FileText className="w-5 h-5 text-blue-600" />
+              <span className="font-semibold">View All Quotes</span>
+            </button>
+            <button
+              onClick={() => router.push("/analytics")}
+              className="neomorphism-button-enhanced flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
+              style={{ animationDelay: '0.2s' }}
+            >
+              <TrendingUp className="w-5 h-5 text-purple-600" />
+              <span className="font-semibold">Business Intelligence</span>
+            </button>
+            <button
+              onClick={() => router.push("/settings")}
+              className="neomorphism-button-enhanced flex items-center justify-center gap-3 py-4 animate-neomorphism-slide-up"
+              style={{ animationDelay: '0.3s' }}
+            >
+              <MessageSquare className="w-5 h-5 text-orange-600" />
+              <span className="font-semibold">Settings</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Quotes List - Enhanced Neumorphism Design */}
+        <div className="neomorphism-card-accessible animate-neomorphism-slide-up">
+          <div className="mb-6">
+>>>>>>> clean-recovery-deploy
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <h2 className="text-2xl font-bold text-gray-900">Recent Quotes ({filteredQuotes.length})</h2>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <div className="relative">
+<<<<<<< HEAD
                   <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
@@ -651,12 +865,24 @@ export default function DashboardPage() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="ac-input pl-10 w-full sm:w-48"
+=======
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    placeholder="Search quotes..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="neomorphism-input-enhanced pl-10 w-full sm:w-48"
+>>>>>>> clean-recovery-deploy
                   />
                 </div>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
+<<<<<<< HEAD
                   className="ac-input"
+=======
+                  className="neomorphism-input-enhanced"
+>>>>>>> clean-recovery-deploy
                 >
                   <option value="all">All Status</option>
                   <option value="pending">Pending</option>
@@ -668,6 +894,7 @@ export default function DashboardPage() {
             </div>
           </div>
           
+<<<<<<< HEAD
           <div className="ac-card-body">
             {filteredQuotes.length === 0 ? (
               <div className="text-center py-12">
@@ -692,11 +919,31 @@ export default function DashboardPage() {
                       {isLoadingDemo ? 'Loading...' : 'Try Sample Quotes'}
                     </button>
                   </div>
+=======
+          <div>
+            {filteredQuotes.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="neomorphism-accessible-subtle w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-8 h-8 text-gray-400" />
+                </div>
+                <p className="text-gray-600 mb-4">
+                  {quotes.length === 0 ? "No quotes yet" : "No quotes match your filters"}
+                </p>
+                {quotes.length === 0 && (
+                  <button 
+                    onClick={() => router.push("/create-quote")} 
+                    className="neomorphism-button-primary-enhanced"
+                  >
+                    <Calculator className="w-4 h-4 mr-2" />
+                    Create Your First Professional Quote
+                  </button>
+>>>>>>> clean-recovery-deploy
                 )}
               </div>
             ) : (
               <div className="space-y-4">
                 {filteredQuotes.map((quote) => (
+<<<<<<< HEAD
                   <div key={quote.id} className="ac-card hover:shadow-lg transition-all">
                     <div className="ac-card-body flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div className="flex-1">
@@ -712,6 +959,19 @@ export default function DashboardPage() {
                             {quote.status === 'completed' && <Award className="w-3 h-3 mr-1" />}
                             {quote.status === 'cancelled' && <XCircle className="w-3 h-3 mr-1" />}
                             {(!quote.status || quote.status === 'pending') && <Clock className="w-3 h-3 mr-1" />}
+=======
+                  <div key={quote.id} className="neomorphism-accessible-subtle p-4 hover:neomorphism-accessible transition-all">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                          <h3 className="font-semibold text-lg sm:text-base">{quote.customer_name}</h3>
+                          <span className={`neomorphism-badge-enhanced text-xs ${
+                            quote.status === 'accepted' ? 'text-green-700' :
+                            quote.status === 'completed' ? 'text-blue-700' :
+                            quote.status === 'cancelled' ? 'text-red-700' :
+                            'text-yellow-700'
+                          }`}>
+>>>>>>> clean-recovery-deploy
                             {quote.status || 'pending'}
                           </span>
                         </div>
@@ -732,7 +992,11 @@ export default function DashboardPage() {
                           <select
                             value={quote.status || "pending"}
                             onChange={(e) => updateQuoteStatus(quote.id, e.target.value)}
+<<<<<<< HEAD
                             className="ac-input py-2"
+=======
+                            className="neomorphism-input-enhanced text-sm"
+>>>>>>> clean-recovery-deploy
                           >
                             <option value="pending">Pending</option>
                             <option value="accepted">Accepted</option>
@@ -742,8 +1006,12 @@ export default function DashboardPage() {
                           
                           <div className="flex gap-2">
                             <button
+<<<<<<< HEAD
                               onClick={(e) => {
                                 e.stopPropagation();
+=======
+                              onClick={() => {
+>>>>>>> clean-recovery-deploy
                                 const customerUrl = `${window.location.origin}/quotes/${quote.quote_id}/customer`;
                                 navigator.clipboard.writeText(customerUrl);
                                 // Show a simple visual feedback
@@ -755,18 +1023,32 @@ export default function DashboardPage() {
                                 }, 1500);
                               }}
                               title="Copy customer quote link"
+<<<<<<< HEAD
                               className="ac-btn ac-btn-sm ac-btn-secondary"
                             >
                               <Copy className="w-4 h-4" />
                               <span className="hidden sm:inline">Copy</span>
+=======
+                              className="neomorphism-button-enhanced px-3 py-2"
+                            >
+                              <Copy className="w-4 h-4" />
+                              <span className="sm:hidden ml-2">Copy Link</span>
+>>>>>>> clean-recovery-deploy
                             </button>
                             <button
                               onClick={() => router.push(`/quotes/${quote.id}`)}
                               title="View quote details"
+<<<<<<< HEAD
                               className="ac-btn ac-btn-sm ac-btn-primary"
                             >
                               <Eye className="w-4 h-4" />
                               <span className="hidden sm:inline">View</span>
+=======
+                              className="neomorphism-button-enhanced px-3 py-2"
+                            >
+                              <Eye className="w-4 h-4" />
+                              <span className="sm:hidden ml-2">View</span>
+>>>>>>> clean-recovery-deploy
                             </button>
                           </div>
                         </div>

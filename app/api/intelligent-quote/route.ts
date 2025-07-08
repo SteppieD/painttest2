@@ -8,7 +8,9 @@ export async function POST(request: NextRequest) {
       companyId, 
       conversationHistory = [], 
       extractedData = {},
-      stage = 'information_gathering'
+      stage = 'information_gathering',
+      instruction = '',
+      parseOnly = false
     } = await request.json();
 
     if (!userInput || !companyId) {
@@ -28,6 +30,21 @@ export async function POST(request: NextRequest) {
       contractorContext
     };
 
+    // Handle parsing-only requests
+    if (parseOnly && instruction) {
+      const parseResult = await intelligentQuoteAssistant.parseInformation(userInput, instruction, contractorContext);
+      
+      return NextResponse.json({
+        success: true,
+        response: '',
+        extractedData: parseResult,
+        nextStage: stage,
+        confidence: 0.9,
+        parseOnly: true,
+        model: 'claude-sonnet-4'
+      });
+    }
+
     // Generate intelligent response
     const result = await intelligentQuoteAssistant.generateResponse(userInput, conversationState);
 
@@ -38,6 +55,7 @@ export async function POST(request: NextRequest) {
       nextStage: result.nextStage,
       confidence: result.confidence,
       paintActions: result.paintActions || [],
+      settingsSave: result.settingsSave || null,
       contractorName: contractorContext.contactName,
       companyName: contractorContext.companyName,
       model: 'claude-sonnet-4'

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+<<<<<<< HEAD
 import Database from 'better-sqlite3';
 import path from 'path';
 
@@ -44,6 +45,9 @@ const getDatabase = () => {
     return null;
   }
 };
+=======
+import { getCompanyByAccessCode, createCompany } from "@/lib/database";
+>>>>>>> clean-recovery-deploy
 
 interface Company {
   id: number;
@@ -73,6 +77,7 @@ export async function POST(request: NextRequest) {
     // Convert to uppercase for consistency
     const normalizedCode = accessCode.toString().toUpperCase();
 
+<<<<<<< HEAD
     // Get database connection
     const db = getDatabase();
     if (!db) {
@@ -84,6 +89,10 @@ export async function POST(request: NextRequest) {
 
     // Check if access code exists in companies table
     const company = db.getCompanyByAccessCode(normalizedCode);
+=======
+    // Check if access code exists in companies table using unified database interface
+    const company = await getCompanyByAccessCode(normalizedCode);
+>>>>>>> clean-recovery-deploy
 
     if (company) {
       // Valid company found - return company data
@@ -113,9 +122,15 @@ export async function POST(request: NextRequest) {
         // Auto-create new company for valid pattern
         const companyName = `Company ${normalizedCode}`;
 
+<<<<<<< HEAD
         const result = db.createCompany({
           accessCode: normalizedCode,
           companyName: companyName,
+=======
+        const result = await createCompany({
+          access_code: normalizedCode,
+          company_name: companyName,
+>>>>>>> clean-recovery-deploy
           phone: "",
           email: ""
         });
@@ -127,10 +142,10 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: true,
           companyName: companyName,
-          userId: `demo_${result.id}_${Date.now()}`,
-          sessionToken: `session_${result.id}_${Date.now()}`,
+          userId: `demo_${result.lastID}_${Date.now()}`,
+          sessionToken: `session_${result.lastID}_${Date.now()}`,
           company: {
-            id: result.id,
+            id: result.lastID,
             accessCode: normalizedCode,
             name: companyName,
             phone: "",
@@ -162,6 +177,7 @@ export async function POST(request: NextRequest) {
 // GET endpoint - List available demo companies (for testing)
 export async function GET() {
   try {
+<<<<<<< HEAD
     const db = getDatabase();
     if (!db) {
       return NextResponse.json(
@@ -175,10 +191,17 @@ export async function GET() {
       { access_code: 'DEMO2024', company_name: 'Demo Painting Company' },
       { access_code: 'PAINTER001', company_name: 'Smith Painting LLC' },
       { access_code: 'CONTRACTOR123', company_name: 'Elite Contractors' }
+=======
+    // Return demo companies for testing
+    const demoCompanies = [
+      { access_code: "DEMO2024", company_name: "Demo Painting Company", phone: "(555) 123-4567" },
+      { access_code: "PAINTER001", company_name: "Smith Painting LLC", phone: "(555) 987-6543" },
+      { access_code: "CONTRACTOR123", company_name: "Elite Contractors", phone: "(555) 456-7890" }
+>>>>>>> clean-recovery-deploy
     ];
 
     return NextResponse.json({
-      companies,
+      companies: demoCompanies,
       message: "Available access codes for testing",
     });
   } catch (error) {

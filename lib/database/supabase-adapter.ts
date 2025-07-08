@@ -174,6 +174,7 @@ export class SupabaseDatabaseAdapter {
 
   async getCompanyByAccessCode(accessCode: string) {
     if (!this.supabase) {
+<<<<<<< HEAD
       throw new Error('Supabase client not initialized. Check environment variables.');
     }
 
@@ -192,6 +193,29 @@ export class SupabaseDatabaseAdapter {
 
     console.log('✅ Company found:', data?.company_name);
     return data;
+=======
+      // Return null if Supabase client not initialized - fallback to demo logic
+      return null;
+    }
+
+    try {
+      const { data, error } = await this.supabase
+        .from('companies')
+        .select('*')
+        .eq('access_code', accessCode)
+        .single();
+
+      if (error) {
+        console.log('Supabase access code lookup failed:', error.message);
+        return null; // Return null to trigger fallback
+      }
+
+      return data;
+    } catch (error) {
+      console.log('Supabase connection error during access code lookup:', error);
+      return null; // Return null to trigger fallback
+    }
+>>>>>>> clean-recovery-deploy
   }
 
   async createQuote(quoteData: any) {
@@ -478,6 +502,7 @@ export class SupabaseDatabaseAdapter {
         product_line: updates.productLine,
         cost_per_gallon: updates.costPerGallon,
         sheen: updates.sheen,
+        coverage_per_gallon: updates.coveragePerGallon || 350,
         updated_at: new Date().toISOString()
       })
       .eq('id', productId)

@@ -271,6 +271,7 @@ export async function GET(request: NextRequest) {
       params.push(status);
     }
 
+<<<<<<< HEAD
     // Validate and sanitize limit
     const sanitizedLimit = Math.min(Math.max(parseInt(searchParams.get('limit') || '50'), 1), 100);
 
@@ -303,6 +304,27 @@ export async function GET(request: NextRequest) {
     // Ensure quotes is an array
     const quotesArray = Array.isArray(quotes) ? quotes : [];
     
+=======
+    const quotes = await dbAll(`
+      SELECT 
+        q.*,
+        c.company_name,
+        c.access_code
+      FROM quotes q
+      LEFT JOIN companies c ON q.company_id = c.id
+      WHERE ${whereClause}
+      ORDER BY q.created_at DESC
+      LIMIT ?
+    `, [...params, limit]);
+
+    // Ensure quotes is an array before mapping
+    const quotesArray = Array.isArray(quotes) ? quotes : [];
+    
+    if (!Array.isArray(quotes)) {
+      console.warn('dbAll returned non-array:', typeof quotes, quotes);
+    }
+
+>>>>>>> clean-recovery-deploy
     // Map quotes to the format expected by the quotes page
     const mappedQuotes = quotesArray.map((quote: any) => {
         // Parse conversation summary for breakdown
@@ -404,10 +426,11 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error("Error fetching quotes:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch quotes" },
-      { status: 500 }
-    );
+    // Return empty quotes array instead of error to prevent frontend crashes
+    return NextResponse.json({
+      quotes: [],
+      error: "Failed to fetch quotes, returning empty list"
+    });
   }
 }
 

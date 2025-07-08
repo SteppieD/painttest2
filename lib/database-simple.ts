@@ -10,6 +10,7 @@ const hasSupabase = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && (process.env.SUPA
 // Use Supabase when available, otherwise use fallback
 const shouldUseSupabase = hasSupabase;
 
+<<<<<<< HEAD
 console.log('Database configuration:', {
   isProduction,
   hasSupabase,
@@ -18,6 +19,10 @@ console.log('Database configuration:', {
   serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'NOT SET',
   anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'SET' : 'NOT SET'
 });
+=======
+// In-memory storage for development mode
+const devQuotes = new Map<string, any>();
+>>>>>>> clean-recovery-deploy
 
 // Legacy compatibility functions
 export const getCompanyByAccessCode = async (accessCode: string) => {
@@ -109,6 +114,7 @@ export const createQuote = async (data: any) => {
         quote_id: result.quote_id || result.id 
       };
     } catch (error) {
+<<<<<<< HEAD
       console.error('❌ Supabase create failed:', error);
       console.error('🔧 Error details:', {
         message: error instanceof Error ? error.message : 'Unknown error',
@@ -123,11 +129,16 @@ export const createQuote = async (data: any) => {
         throw new Error(`Supabase error: ${errorMessage}`);
       }
       // In development, fall through to local storage
+=======
+      console.log('Supabase create failed:', error);
+      // Fall through to development storage
+>>>>>>> clean-recovery-deploy
     }
   } else if (process.env.NODE_ENV === 'production') {
     throw new Error('Supabase environment variables not configured for production.');
   }
   
+<<<<<<< HEAD
   // Store in local memory for development only
   console.log('📝 Using local storage fallback (development only)');
   const quoteId = Date.now();
@@ -150,6 +161,20 @@ export const createQuote = async (data: any) => {
   console.log('📝 Created quote locally:', { id: quoteId, customer: data.customer_name, amount: data.quote_amount });
   
   return { lastID: quoteId, changes: 1 };
+=======
+  // Development mode - store in memory
+  const id = Date.now().toString();
+  const quoteRecord = {
+    id,
+    ...data,
+    created_at: new Date().toISOString()
+  };
+  
+  devQuotes.set(id, quoteRecord);
+  console.log(`📝 Dev quote stored with ID: ${id}`, quoteRecord);
+  
+  return { lastID: id, changes: 1 };
+>>>>>>> clean-recovery-deploy
 };
 
 export const createCompany = async (data: {
@@ -189,8 +214,50 @@ export const dbGet = async (sql: string, params: any[] = []) => {
         const accessCode = params[0];
         return await supabaseDb.getCompanyByAccessCode(accessCode);
       }
+      
+      if (sql.includes('quotes') && sql.includes('WHERE')) {
+        const quoteId = params[0];
+        const quote = await supabaseDb.getQuoteById(quoteId);
+        return quote;
+      }
     } catch (error) {
-      console.log('Supabase query failed, using mock data');
+      console.log('Supabase query failed, using development storage');
+    }
+  }
+  
+  // Development mode - check in-memory storage
+  if (sql.includes('quotes') && sql.includes('WHERE')) {
+    const lookupId = params[0];
+    const lookupId2 = params[1];
+    console.log(`📖 Dev quote retrieval for IDs: ${lookupId}, ${lookupId2}`);
+    
+    // Check both direct lookup and search through all quotes
+    let quote = devQuotes.get(lookupId) || devQuotes.get(lookupId2);
+    
+    if (!quote) {
+      // Search through all stored quotes by quote_id or id
+      console.log('🔍 Searching through all dev quotes...');
+      for (const [key, storedQuote] of devQuotes.entries()) {
+        console.log(`📋 Checking quote with key: ${key}, quote_id: ${storedQuote.quote_id}, id: ${storedQuote.id}`);
+        if (storedQuote.quote_id === lookupId || storedQuote.id === lookupId || 
+            storedQuote.quote_id === lookupId2 || storedQuote.id === lookupId2) {
+          quote = storedQuote;
+          console.log(`✅ Found matching quote with key: ${key}`);
+          break;
+        }
+      }
+    }
+    
+    console.log(`📖 Dev quote retrieval result:`, quote ? 'FOUND' : 'NOT FOUND');
+    
+    if (quote) {
+      // Add company info for compatibility
+      return {
+        ...quote,
+        company_name: "Demo Company",
+        company_phone: "(555) 123-4567",
+        company_email: "demo@example.com"
+      };
     }
   }
   

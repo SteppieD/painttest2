@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  paintquote:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    volumes:
+      # Mount database files for persistence
+      - ./painting_quotes_app.db:/app/painting_quotes_app.db
+      - ./painting_quotes_app.db-shm:/app/painting_quotes_app.db-shm
+      - ./painting_quotes_app.db-wal:/app/painting_quotes_app.db-wal
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/api/test-connection"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

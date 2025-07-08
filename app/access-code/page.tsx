@@ -69,6 +69,7 @@ export default function AccessCodePage() {
         const redirectTo = redirectParam || '/dashboard'; // Default to dashboard for normal access code entry
         
         // Redirect based on setup completion and new company status
+<<<<<<< HEAD
         if (data.isNewCompany || !setupCompleted) {
           // New companies or companies that haven't completed setup go to conversational setup
           router.push(`/setup-chat`);
@@ -81,6 +82,22 @@ export default function AccessCodePage() {
           } else {
             router.push(redirectTo);
           }
+=======
+        if (data.isNewCompany && !setupCompleted) {
+          // Brand new companies that haven't completed setup go to setup wizard
+          router.push(`/setup?code=${data.company.accessCode}`);
+        } else if (data.isNewCompany) {
+          // New companies that completed setup go to success page
+          router.push(
+            `/success?newCompany=true&companyName=${encodeURIComponent(data.company.name)}&redirect=${encodeURIComponent(redirectTo)}`,
+          );
+        } else if (!setupCompleted) {
+          // Existing companies that haven't completed setup go to setup wizard
+          router.push(`/setup?code=${data.company.accessCode}`);
+        } else {
+          // Existing companies with completed setup go to dashboard
+          router.push('/dashboard');
+>>>>>>> clean-recovery-deploy
         }
       } else {
         setError(data.message || "Invalid access code. Please try again.");

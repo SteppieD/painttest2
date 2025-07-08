@@ -1,8 +1,11 @@
 /**
- * Intelligent Quote Assistant - Claude 3.5 Sonnet Integration
+ * Intelligent Quote Assistant - Claude Sonnet 4 Integration
  * 
- * This system integrates Claude 3.5 Sonnet into the main quote creation workflow
+ * This system integrates Claude Sonnet 4 (Latest) into the main quote creation workflow
  * with full contractor context, settings, and natural conversation capabilities.
+ * 
+ * Uses Claude Sonnet 4 as the primary AI for intelligent conversation and parsing
+ * to ensure the highest quality understanding and responses.
  */
 
 interface ContractorContext {
@@ -215,6 +218,120 @@ export class IntelligentQuoteAssistant {
   }
 
   /**
+   * Parse specific information from user input using targeted AI
+   */
+  async parseInformation(
+    userInput: string, 
+    instruction: string, 
+    contractorContext: ContractorContext
+  ): Promise<any> {
+    if (!this.openRouterApiKey) {
+      // Fallback parsing logic
+      if (instruction.includes('customer name and address')) {
+        const parseCustomerInfo = (input: string) => {
+          const trimmed = input.trim();
+          
+          // Try to detect name and address patterns
+          if (trimmed.includes(' and ') && (trimmed.includes('address') || trimmed.includes('at '))) {
+            const parts = trimmed.split(/\s+and\s+/i);
+            const name = parts[0].trim();
+            const addressPart = parts[1].replace(/^(the\s+)?(property\s+)?address\s+(is\s+)?/i, '').trim();
+            return { customer_name: name, address: addressPart };
+          }
+          
+          // Try "Name at Address" pattern
+          if (trimmed.includes(' at ')) {
+            const parts = trimmed.split(' at ');
+            return { customer_name: parts[0].trim(), address: parts[1].trim() };
+          }
+          
+          // Check if it looks like an address (has numbers and street words)
+          const addressKeywords = ['street', 'st', 'avenue', 'ave', 'road', 'rd', 'drive', 'dr', 'lane', 'ln'];
+          const hasAddress = addressKeywords.some(keyword => trimmed.toLowerCase().includes(keyword));
+          
+          if (hasAddress && /\d/.test(trimmed)) {
+            return { address: trimmed };
+          } else {
+            return { customer_name: trimmed };
+          }
+        };
+        
+        return parseCustomerInfo(userInput);
+      } else if (instruction.includes('interior, exterior, or both')) {
+        const lower = userInput.toLowerCase();
+        if (lower.includes('both') || (lower.includes('interior') && lower.includes('exterior'))) {
+          return { type: 'both' };
+        } else if (lower.includes('exterior') || lower.includes('outside')) {
+          return { type: 'exterior' };
+        } else if (lower.includes('interior') || lower.includes('inside')) {
+          return { type: 'interior' };
+        }
+        return {};
+      }
+      return {};
+    }
+
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.openRouterApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'anthropic/claude-sonnet-4',
+          messages: [
+            {
+              role: 'system',
+              content: `You are a data extraction assistant for a painting quote system. ${instruction}
+
+Your task: Extract ONLY the requested information and return it as a JSON object.
+
+Company Context:
+- Company: ${contractorContext.companyName}
+- Contact: ${contractorContext.contactName}
+
+Instructions:
+- Return ONLY valid JSON with the extracted data
+- Do not include explanations or additional text
+- If information is not found, return empty object {}
+
+Examples:
+For "Extract customer name and address":
+{"customer_name": "John Smith", "address": "123 Main Street"}
+
+For "Determine if this is interior, exterior, or both":
+{"type": "interior"}`
+            },
+            {
+              role: 'user',
+              content: userInput
+            }
+          ],
+          temperature: 0.1,
+          max_tokens: 200
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenRouter API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const content = data.choices[0]?.message?.content || '{}';
+      
+      try {
+        return JSON.parse(content);
+      } catch {
+        return {};
+      }
+    } catch (error) {
+      console.error('Parse AI error:', error);
+      return {};
+    }
+  }
+
+  /**
    * Generate intelligent response using Claude 3.5 Sonnet with full contractor context
    */
   async generateResponse(
@@ -284,10 +401,14 @@ export class IntelligentQuoteAssistant {
       // Handle paint-related actions
       const paintActions = await this.handlePaintActions(extractedData, context);
 
+      // Save conversation data to settings (if AI learning is enabled)
+      const settingsSave = await this.saveToSettings(extractedData, context);
+
       return {
         response: aiResponse,
         extractedData,
         paintActions,
+        settingsSave,
         confidence: 0.9
       };
 
@@ -302,6 +423,110 @@ export class IntelligentQuoteAssistant {
         extractedData: {},
         confidence: 0.3
       };
+    }
+  }
+
+  /**
+   * Save conversation data to contractor settings
+   */
+  private async saveToSettings(extractedData: any, context: ContractorContext): Promise<any> {
+    try {
+      // Check if AI learning is enabled first
+      const learningCheck = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/ai/save-preferences?companyId=${context.companyId}`);
+      
+      if (!learningCheck.ok) {
+        return { success: false, message: 'Could not check learning settings' };
+      }
+
+      const learningSettings = await learningCheck.json();
+      if (!learningSettings.learningEnabled) {
+        return { success: false, message: 'AI learning disabled' };
+      }
+
+      // Build preferences object from extracted data
+      const preferences: any = {};
+
+      // Extract spread rates
+      if (extractedData.paint_products?.primer?.spread_rate) {
+        preferences.primer_spread_rate = extractedData.paint_products.primer.spread_rate;
+      }
+      if (extractedData.paint_products?.wall?.spread_rate) {
+        preferences.wall_paint_spread_rate = extractedData.paint_products.wall.spread_rate;
+      }
+      if (extractedData.paint_products?.ceiling?.spread_rate) {
+        preferences.ceiling_paint_spread_rate = extractedData.paint_products.ceiling.spread_rate;
+      }
+
+      // Extract all-in labor rates
+      if (extractedData.rates?.wall_rate_per_sqft) {
+        preferences.wall_allin_rate_per_sqft = extractedData.rates.wall_rate_per_sqft;
+      }
+      if (extractedData.rates?.ceiling_rate_per_sqft) {
+        preferences.ceiling_allin_rate_per_sqft = extractedData.rates.ceiling_rate_per_sqft;
+      }
+      if (extractedData.rates?.primer_rate_per_sqft) {
+        preferences.primer_allin_rate_per_sqft = extractedData.rates.primer_rate_per_sqft;
+      }
+      if (extractedData.rates?.door_rate_each) {
+        preferences.door_allin_rate_each = extractedData.rates.door_rate_each;
+      }
+      if (extractedData.rates?.window_rate_each) {
+        preferences.window_allin_rate_each = extractedData.rates.window_rate_each;
+      }
+
+      // Extract product preferences
+      if (extractedData.paint_products?.primer?.brand) {
+        preferences.preferred_primer_brand = extractedData.paint_products.primer.brand;
+      }
+      if (extractedData.paint_products?.primer?.product) {
+        preferences.preferred_primer_product = extractedData.paint_products.primer.product;
+      }
+      if (extractedData.paint_products?.wall?.brand) {
+        preferences.preferred_wall_paint_brand = extractedData.paint_products.wall.brand;
+      }
+      if (extractedData.paint_products?.wall?.product) {
+        preferences.preferred_wall_paint_product = extractedData.paint_products.wall.product;
+      }
+      if (extractedData.paint_products?.ceiling?.brand) {
+        preferences.preferred_ceiling_paint_brand = extractedData.paint_products.ceiling.brand;
+      }
+      if (extractedData.paint_products?.ceiling?.product) {
+        preferences.preferred_ceiling_paint_product = extractedData.paint_products.ceiling.product;
+      }
+      if (extractedData.paint_products?.trim?.brand) {
+        preferences.preferred_trim_paint_brand = extractedData.paint_products.trim.brand;
+      }
+      if (extractedData.paint_products?.trim?.product) {
+        preferences.preferred_trim_paint_product = extractedData.paint_products.trim.product;
+      }
+
+      // Only save if we have something to save
+      if (Object.keys(preferences).length === 0) {
+        return { success: false, message: 'No preferences to save' };
+      }
+
+      // Save to settings
+      const saveResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/ai/save-preferences`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          companyId: context.companyId,
+          preferences,
+          askForConfirmation: learningSettings.askBeforeSaving,
+          source: 'ai_conversation'
+        })
+      });
+
+      if (saveResponse.ok) {
+        const result = await saveResponse.json();
+        return result;
+      } else {
+        return { success: false, message: 'Failed to save preferences' };
+      }
+
+    } catch (error) {
+      console.error('Save to settings error:', error);
+      return { success: false, message: 'Error saving preferences' };
     }
   }
 
@@ -415,56 +640,99 @@ export class IntelligentQuoteAssistant {
       .map(q => `${q.customerName} (${q.daysAgo} days ago): $${q.amount} ${q.projectType}`)
       .join('\n') || 'No recent projects';
 
-    return `You are a painting quote assistant integrated into a visual chat interface with buttons and structured UI elements.
-
-CORE APPROACH: Guide users step-by-step through building a quote using room-by-room collection with visual button confirmations.
-
-VISUAL CONFIRMATION FLOW:
-1. Ask for customer name and address
-2. Ask: interior, exterior, or both
-3. Start room-by-room collection:
-   - Ask room name and dimensions  
-   - Create confirmation button: "Living Room (12x15, 9ft)" [✅ Confirm] [✖️ Edit]
-   - Ask which surfaces in this room (walls, ceilings, trim, doors)
-   - Create surface buttons for each selected
-   - Ask "➕ Add Another Room?" or continue
-4. After all rooms: paint selection for each surface type
-5. Final quote with all calculations
-
-BUTTON GENERATION RULES:
-• Always create confirmation buttons for collected data
-• Room buttons: "Room Name (LxWxH)" with confirm/edit options
-• Surface buttons: "Walls", "Ceilings", "Trim" with room context
-• Action buttons: "➕ Add Another Room", "✅ Confirm Quote"
-• Never assume - always confirm with buttons before proceeding
+    return `You are a friendly painting contractor helping to create professional quotes through natural conversation.
 
 CONVERSATION STYLE:
-• Natural and friendly, but systematic
-• One question at a time, wait for confirmation
-• Visual progress through button collection
-• Smart unit detection: 12x15 = room dimensions, 120 = linear feet
-• NO price estimates or calculations until final step
+• Chat like an experienced contractor friend
+• Natural, relaxed tone but stay professional  
+• Extract ANY information you can from each message
+• Ask the next logical question to move forward
+• One question at a time, don't overwhelm
+
+QUOTE INFORMATION TO COLLECT (in this order):
+
+1. PROJECT BASICS:
+   • Customer name and address
+   • Interior, exterior, or both project
+
+2. DIMENSIONS (collect systematically):
+   • Wall linear footage (LNFT) - perimeter of walls to paint
+   • Ceiling height (in feet)
+   • Ceiling area or room area (sqft)
+   • Number of doors and windows
+
+3. PAINT PRODUCT PREFERENCES (contractor's go-to products):
+   PRIMER:
+   • "What drywall primer do you typically use?"
+   • "What's its spread rate?" (typical: 200-300 sqft/gallon)
+   
+   WALL PAINT:
+   • "What are your 3 go-to interior wall paints?"
+   • "What's the spread rate for each?" (typical: 350-400 sqft/gallon)
+   
+   CEILING PAINT:
+   • "What ceiling paint do you use?"
+   • "What's its spread rate?" (typical: 350 sqft/gallon)
+   
+   TRIM/DOORS/WINDOWS:
+   • "What trim paint do you use for doors and windows?"
+   • "Coverage rate?" (typical: 4-5 doors per gallon, 2-3 windows per gallon)
+
+4. ALL-IN LABOR RATES (includes materials + labor):
+   • "What do you charge per sqft for walls (2 coats, including paint)?" (example: $1.50)
+   • "Per sqft for ceilings (2 coats, including paint)?" (example: $1.25)
+   • "Per door + trim (2 coats)?" (example: $150)
+   • "Per window?" (example: $100)
+   • "Primer application per sqft (1 coat)?" (example: $0.45)
+
+5. MARKUP: When ready, suggest markup buttons (15%, 20%, 25%, 30%, Custom)
+
+EXACT CALCULATION FORMULAS:
+• PRIMER: LNFT × ceiling_height ÷ primer_spread_rate = gallons (1 coat)
+• WALLS: LNFT × ceiling_height ÷ wall_spread_rate × 1.8 = gallons (2 coats)
+• CEILINGS: ceiling_area ÷ ceiling_spread_rate × 1.8 = gallons (2 coats)
+• DOORS: door_count ÷ 4.5 = gallons (2 coats both sides, ~20 sqft per door)
+• WINDOWS: window_count ÷ 2.5 = gallons (2 coats, ~15 sqft per window)
 
 CONTRACTOR CONTEXT:
-Working for ${context.contactName} at ${context.companyName}
-Paint favorites available: ${paintInventoryDisplay || 'Standard paints'}
-Current progress: ${state.stage}
+Working with ${context.contactName} at ${context.companyName}
+Recent projects: ${recentProjectsContext}
 
-ROOM COLLECTION PATTERN:
-1. "What room are we painting?"
-2. "What are the room dimensions and ceiling height?"
-3. Generate button: "[Room Name] ([dimensions], [height]ft ceiling)" 
-4. "What surfaces in this room?" → surface selection buttons
-5. "Add another room or continue?"
+CONTRACTOR'S SAVED PREFERENCES (use these as defaults):
+• Preferred Primer: ${context.settings.preferred_primer_brand || 'Not set'} ${context.settings.preferred_primer_product || ''} (${context.settings.primer_spread_rate || 250} sqft/gal)
+• Preferred Wall Paint: ${context.settings.preferred_wall_paint_brand || 'Not set'} ${context.settings.preferred_wall_paint_product || ''} (${context.settings.wall_paint_spread_rate || 375} sqft/gal)
+• Preferred Ceiling Paint: ${context.settings.preferred_ceiling_paint_brand || 'Not set'} ${context.settings.preferred_ceiling_paint_product || ''} (${context.settings.ceiling_paint_spread_rate || 350} sqft/gal)
+• Preferred Trim Paint: ${context.settings.preferred_trim_paint_brand || 'Not set'} ${context.settings.preferred_trim_paint_product || ''}
 
-SURFACE TYPES TO TRACK:
-• Walls (linear feet + ceiling height)
-• Ceilings (room area)  
-• Trim & Baseboards (linear feet)
-• Doors (count)
-• Window Frames (count)
+ALL-IN LABOR RATES (includes materials + labor):
+• Walls: $${context.settings.wall_allin_rate_per_sqft || 1.50}/sqft
+• Ceilings: $${context.settings.ceiling_allin_rate_per_sqft || 1.25}/sqft
+• Primer: $${context.settings.primer_allin_rate_per_sqft || 0.45}/sqft
+• Doors: $${context.settings.door_allin_rate_each || 150} each
+• Windows: $${context.settings.window_allin_rate_each || 100} each
 
-Remember: Create visual buttons for everything, confirm before moving forward, collect all rooms first, then paint selection, then final quote.`;
+AI LEARNING: ${context.settings.ai_learning_enabled ? 'ENABLED - Save new preferences' : 'DISABLED - Do not save preferences'}
+
+CONVERSATION EXAMPLES:
+• "Hey! Tell me about your painting project."
+• "Got the basics! What are the wall linear feet and ceiling height?"
+• If no saved preferences: "What's your go-to primer and its spread rate?"
+• If saved preferences: "I see you usually use ${context.settings.preferred_primer_brand || 'Kilz'} ${context.settings.preferred_primer_product || 'PVA Primer'}. Use that for this quote?"
+• "What do you typically charge per sqft for walls, including paint?"
+
+SMART PREFERENCE USAGE:
+• When asking about products, mention their saved preferences first
+• If they give different info, ask: "Should I update your preferences to use [new product] instead of [saved product]?"
+• Pre-fill quotes with their standard rates and products
+• Learn and save new preferences when AI learning is enabled
+
+HELPFUL GUIDANCE:
+• Mention typical spread rates to help contractors estimate
+• Use real contractor terminology (LNFT, spread rate, etc.)
+• Ask for their actual go-to products, not generic brands
+• All-in pricing includes both materials and labor
+
+Remember: This is how contractors actually think - collect their standard products and rates, then apply to this specific job!`;
   }
 
   /**
@@ -484,34 +752,38 @@ User said: "${userInput}"
 Current data: ${JSON.stringify(existingData)}
 
 PARSING PATTERNS:
-• "John and the address is 123 Main St" → {"customer_name": "John", "address": "123 Main St"}
-• "Sarah, address 456 Oak Ave" → {"customer_name": "Sarah", "address": "456 Oak Ave"}
-• "Mike and address is downtown" → {"customer_name": "Mike", "address": "downtown"}
+• "Cici at 2020 hillside drive" → {"customer_name": "Cici", "address": "2020 hillside drive"}
+• "120 linear feet, 9 foot ceilings" → {"dimensions": {"wall_linear_feet": 120, "ceiling_height": 9}}
+• "Sherwin Williams ProClassic, white, $65/gal, 400 sqft coverage" → {"paint_products": {"wall": {"brand": "Sherwin Williams", "product": "ProClassic", "color": "white", "cost_per_gallon": 65, "spread_rate": 400}}}
 
-Extract any mentioned:
+Extract any mentioned information into this structure:
 {
   "customer_name": "string",
-  "address": "string",
-  "phone": "string", 
-  "email": "string",
+  "address": "string", 
   "project_type": "interior|exterior|both",
-  "wall_linear_feet": number,
-  "ceiling_height": number,
-  "ceiling_sqft": number,
-  "number_of_doors": number,
-  "number_of_windows": number,
-  "rooms": ["array", "of", "rooms"],
-  "surfaces": ["walls", "ceilings", "trim", "doors", "windows"],
-  "paint_quality": "basic|premium|luxury",
-  "timeline": "rush|standard|flexible",
-  "special_requests": "string",
-  "budget_range": "string",
-  "preferred_brands": ["array"],
-  "paint_products": [{"category": "string", "brand": "string", "product": "string", "cost": number}],
-  "paint_selection_action": "use_saved|use_new|update_price|save_as_favorite",
-  "selected_paint": {"brand": "string", "product": "string", "cost": number, "category": "string"},
-  "price_update": {"old_price": number, "new_price": number, "product": "string"},
-  "save_new_favorite": {"brand": "string", "product": "string", "cost": number, "category": "string"}
+  "dimensions": {
+    "wall_linear_feet": number,
+    "ceiling_height": number,
+    "ceiling_area": number,
+    "number_of_doors": number,
+    "number_of_windows": number
+  },
+  "paint_products": {
+    "primer": {"brand": "string", "product": "string", "cost_per_gallon": number, "spread_rate": number},
+    "wall": {"brand": "string", "product": "string", "color": "string", "cost_per_gallon": number, "spread_rate": number},
+    "ceiling": {"brand": "string", "product": "string", "color": "string", "cost_per_gallon": number, "spread_rate": number},
+    "trim": {"brand": "string", "product": "string", "color": "string", "cost_per_gallon": number, "spread_rate": number}
+  },
+  "rates": {
+    "wall_rate_per_sqft": number,
+    "ceiling_rate_per_sqft": number,
+    "primer_rate_per_sqft": number,
+    "door_rate_each": number,
+    "window_rate_each": number
+  },
+  "markup_percentage": number,
+  "showMarkupButtons": boolean,
+  "quoteComplete": boolean
 }
 
 Return {} if nothing relevant found.`;
