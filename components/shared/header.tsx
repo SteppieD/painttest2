@@ -63,43 +63,43 @@ export function Header() {
           <nav className="hidden lg:flex items-center gap-6">
             {/* Product Dropdown */}
             <div 
-              className="relative"
+              className="nav-main-item"
               onMouseEnter={() => setIsProductOpen(true)}
               onMouseLeave={() => setIsProductOpen(false)}
             >
               <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
                 Product
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="nav-chevron w-4 h-4" />
               </button>
               
               {isProductOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
-                  <Link href="/features" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Zap className="w-5 h-5 text-blue-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Features</div>
-                      <div className="text-sm text-gray-500">Everything included</div>
+                <div className="nav-dropdown show">
+                  <Link href="/features" className="nav-dropdown-item">
+                    <Zap className="nav-dropdown-icon nav-icon-blue" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Features</span>
+                      <span className="nav-dropdown-description">Everything included in our platform</span>
                     </div>
                   </Link>
-                  <Link href="/demo" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <BarChart3 className="w-5 h-5 text-green-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Watch Demo</div>
-                      <div className="text-sm text-gray-500">See it in action</div>
+                  <Link href="/demo" className="nav-dropdown-item">
+                    <BarChart3 className="nav-dropdown-icon nav-icon-green" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Watch Demo</span>
+                      <span className="nav-dropdown-description">See Paint Quote App in action</span>
                     </div>
                   </Link>
-                  <Link href="/integrations" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Shield className="w-5 h-5 text-purple-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Integrations</div>
-                      <div className="text-sm text-gray-500">Connect your tools</div>
+                  <Link href="/integrations" className="nav-dropdown-item">
+                    <Shield className="nav-dropdown-icon nav-icon-purple" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Integrations</span>
+                      <span className="nav-dropdown-description">Connect with QuickBooks, Stripe & more</span>
                     </div>
                   </Link>
-                  <Link href="/security" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Shield className="w-5 h-5 text-gray-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Security</div>
-                      <div className="text-sm text-gray-500">Enterprise-grade</div>
+                  <Link href="/security" className="nav-dropdown-item">
+                    <Shield className="nav-dropdown-icon nav-icon-gray" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Security</span>
+                      <span className="nav-dropdown-description">Enterprise-grade protection</span>
                     </div>
                   </Link>
                 </div>
@@ -108,43 +108,43 @@ export function Header() {
 
             {/* Solutions Dropdown */}
             <div 
-              className="relative"
+              className="nav-main-item"
               onMouseEnter={() => setIsSolutionsOpen(true)}
               onMouseLeave={() => setIsSolutionsOpen(false)}
             >
               <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
                 Solutions
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="nav-chevron w-4 h-4" />
               </button>
               
               {isSolutionsOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
-                  <Link href="/painting-contractors" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Users className="w-5 h-5 text-blue-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">For Contractors</div>
-                      <div className="text-sm text-gray-500">Painting businesses</div>
+                <div className="nav-dropdown show">
+                  <Link href="/painting-contractors" className="nav-dropdown-item">
+                    <Users className="nav-dropdown-icon nav-icon-blue" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">For Contractors</span>
+                      <span className="nav-dropdown-description">Tailored for painting businesses</span>
                     </div>
                   </Link>
-                  <Link href="/enterprise" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Building2 className="w-5 h-5 text-purple-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Enterprise</div>
-                      <div className="text-sm text-gray-500">Large teams</div>
+                  <Link href="/enterprise" className="nav-dropdown-item">
+                    <Building2 className="nav-dropdown-icon nav-icon-purple" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Enterprise</span>
+                      <span className="nav-dropdown-description">Solutions for large teams</span>
                     </div>
                   </Link>
-                  <Link href="/commercial-painting-estimating" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Briefcase className="w-5 h-5 text-green-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Commercial</div>
-                      <div className="text-sm text-gray-500">Large projects</div>
+                  <Link href="/commercial-painting-estimating" className="nav-dropdown-item">
+                    <Briefcase className="nav-dropdown-icon nav-icon-green" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Commercial</span>
+                      <span className="nav-dropdown-description">Handle large-scale projects</span>
                     </div>
                   </Link>
-                  <Link href="/locations" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <MapPin className="w-5 h-5 text-red-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">By Location</div>
-                      <div className="text-sm text-gray-500">Find local contractors</div>
+                  <Link href="/locations" className="nav-dropdown-item">
+                    <MapPin className="nav-dropdown-icon nav-icon-red" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">By Location</span>
+                      <span className="nav-dropdown-description">Find contractors in your area</span>
                     </div>
                   </Link>
                 </div>
@@ -153,66 +153,66 @@ export function Header() {
             
             {/* Resources Dropdown */}
             <div 
-              className="relative"
+              className="nav-main-item"
               onMouseEnter={() => setIsResourcesOpen(true)}
               onMouseLeave={() => setIsResourcesOpen(false)}
             >
               <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
                 Resources
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="nav-chevron w-4 h-4" />
               </button>
               
               {isResourcesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg shadow-lg border py-2 z-50">
+                <div className="nav-dropdown show" style={{ minWidth: '320px' }}>
                   {/* Free Tools Section */}
-                  <div className="px-4 py-2 border-b">
-                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Free Tools</h3>
+                  <div className="nav-dropdown-section">
+                    <h3 className="nav-dropdown-section-title">Free Tools</h3>
                   </div>
-                  <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Calculator className="w-5 h-5 text-blue-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Quote Calculator</div>
-                      <div className="text-sm text-gray-500">Instant estimates</div>
+                  <Link href="/painting-estimate-calculator-free" className="nav-dropdown-item">
+                    <Calculator className="nav-dropdown-icon nav-icon-blue" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Quote Calculator</span>
+                      <span className="nav-dropdown-description">Generate instant painting estimates</span>
                     </div>
                   </Link>
-                  <Link href="/paint-estimate-templates" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <FileText className="w-5 h-5 text-green-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Quote Templates</div>
-                      <div className="text-sm text-gray-500">Professional formats</div>
+                  <Link href="/paint-estimate-templates" className="nav-dropdown-item">
+                    <FileText className="nav-dropdown-icon nav-icon-green" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Quote Templates</span>
+                      <span className="nav-dropdown-description">Professional, ready-to-use formats</span>
                     </div>
                   </Link>
-                  <Link href="/roi-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <TrendingUp className="w-5 h-5 text-purple-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">ROI Calculator</div>
-                      <div className="text-sm text-gray-500">See your savings</div>
+                  <Link href="/roi-calculator" className="nav-dropdown-item">
+                    <TrendingUp className="nav-dropdown-icon nav-icon-purple" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">ROI Calculator</span>
+                      <span className="nav-dropdown-description">Calculate your potential savings</span>
                     </div>
                   </Link>
                   
                   {/* Learning Center Section */}
-                  <div className="px-4 py-2 border-b border-t mt-2">
-                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Learning Center</h3>
+                  <div className="nav-dropdown-section">
+                    <h3 className="nav-dropdown-section-title">Learning Center</h3>
                   </div>
-                  <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <BookOpen className="w-5 h-5 text-indigo-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Quoting Guide</div>
-                      <div className="text-sm text-gray-500">Expert strategies</div>
+                  <Link href="/how-to-quote-painting-jobs-professionally" className="nav-dropdown-item">
+                    <BookOpen className="nav-dropdown-icon nav-icon-indigo" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Quoting Guide</span>
+                      <span className="nav-dropdown-description">Expert strategies for winning bids</span>
                     </div>
                   </Link>
-                  <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Award className="w-5 h-5 text-emerald-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Success Stories</div>
-                      <div className="text-sm text-gray-500">Real results</div>
+                  <Link href="/painting-contractor-software-case-study" className="nav-dropdown-item">
+                    <Award className="nav-dropdown-icon nav-icon-emerald" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Success Stories</span>
+                      <span className="nav-dropdown-description">Real contractors, real results</span>
                     </div>
                   </Link>
-                  <Link href="/blog" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <FileText className="w-5 h-5 text-gray-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Blog</div>
-                      <div className="text-sm text-gray-500">Tips & insights</div>
+                  <Link href="/blog" className="nav-dropdown-item">
+                    <FileText className="nav-dropdown-icon nav-icon-gray" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Blog</span>
+                      <span className="nav-dropdown-description">Industry tips & insights</span>
                     </div>
                   </Link>
                 </div>
@@ -228,36 +228,36 @@ export function Header() {
             
             {/* Company Dropdown */}
             <div 
-              className="relative"
+              className="nav-main-item"
               onMouseEnter={() => setIsCompanyOpen(true)}
               onMouseLeave={() => setIsCompanyOpen(false)}
             >
               <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
                 Company
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="nav-chevron w-4 h-4" />
               </button>
               
               {isCompanyOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
-                  <Link href="/about" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Building2 className="w-5 h-5 text-blue-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">About Us</div>
-                      <div className="text-sm text-gray-500">Our story</div>
+                <div className="nav-dropdown show">
+                  <Link href="/about" className="nav-dropdown-item">
+                    <Building2 className="nav-dropdown-icon nav-icon-blue" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">About Us</span>
+                      <span className="nav-dropdown-description">Our mission & story</span>
                     </div>
                   </Link>
-                  <Link href="/careers" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Briefcase className="w-5 h-5 text-green-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Careers</div>
-                      <div className="text-sm text-gray-500">Join our team</div>
+                  <Link href="/careers" className="nav-dropdown-item">
+                    <Briefcase className="nav-dropdown-icon nav-icon-green" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Careers</span>
+                      <span className="nav-dropdown-description">Join our growing team</span>
                     </div>
                   </Link>
-                  <Link href="/contact" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Users className="w-5 h-5 text-purple-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Contact</div>
-                      <div className="text-sm text-gray-500">Get in touch</div>
+                  <Link href="/contact" className="nav-dropdown-item">
+                    <Users className="nav-dropdown-icon nav-icon-purple" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Contact</span>
+                      <span className="nav-dropdown-description">Get in touch with sales</span>
                     </div>
                   </Link>
                 </div>
@@ -265,11 +265,11 @@ export function Header() {
             </div>
             <Link 
               href="/access-code" 
-              className="text-gray-600 hover:text-gray-900 text-sm"
+              className="nav-cta-secondary"
             >
               Sign In
             </Link>
-            <Button asChild className="bg-blue-600 hover:bg-blue-700">
+            <Button asChild className="nav-cta-primary">
               <Link href="/trial-signup">Start Free Trial</Link>
             </Button>
           </nav>

@@ -25,11 +25,25 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
   const [companyId, setCompanyId] = useState<number | undefined>(propCompanyId);
 
   useEffect(() => {
-    // Check session storage for company ID if not passed as prop
+    // Check for company ID if not passed as prop
     if (!propCompanyId && typeof window !== 'undefined') {
+      // First check sessionStorage
       const storedCompanyId = sessionStorage.getItem('companyId');
       if (storedCompanyId) {
         setCompanyId(parseInt(storedCompanyId));
+      } else {
+        // Also check localStorage for company data
+        const companyData = localStorage.getItem('paintquote_company');
+        if (companyData) {
+          try {
+            const company = JSON.parse(companyData);
+            if (company.id) {
+              setCompanyId(company.id);
+            }
+          } catch (e) {
+            console.error('Error parsing company data:', e);
+          }
+        }
       }
     }
   }, [propCompanyId]);

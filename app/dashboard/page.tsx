@@ -21,7 +21,9 @@ import {
   Eye,
   Copy,
   Calculator,
-  ArrowRight
+  ArrowRight,
+  Crown,
+  Sparkles
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { QuotaCounter } from "@/components/ui/quota-counter";
@@ -348,6 +350,42 @@ export default function DashboardPage() {
       </div>
 
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        {/* Upgrade Banner for Trial/Freemium Users */}
+        {!isCheckingOnboarding && quotaInfo.isTrial && quotaInfo.quotesAllowed && quotaInfo.quotesUsed >= quotaInfo.quotesAllowed * 0.5 && (
+          <div className="mb-8">
+            <Card className="card-flat bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-flat-lg">
+              <CardContent className="p-6">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white/20 rounded-flat-lg flex items-center justify-center">
+                      <Crown className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-flat-xl font-bold mb-1">
+                        {quotaInfo.quotesUsed >= quotaInfo.quotesAllowed 
+                          ? "You've reached your quote limit!" 
+                          : `You've used ${quotaInfo.quotesUsed} of ${quotaInfo.quotesAllowed} free quotes`}
+                      </h3>
+                      <p className="text-white/90">
+                        Upgrade to Professional for unlimited quotes and premium features
+                      </p>
+                    </div>
+                  </div>
+                  <Button 
+                    size="lg"
+                    variant="secondary"
+                    onClick={() => router.push('/pricing')}
+                    className="bg-white text-blue-600 hover:bg-gray-100"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Upgrade Now - Save 20%
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Setup Completion Prompt - Flat Design */}
         {!isCheckingOnboarding && needsOnboarding && (
           <div className="mb-8">

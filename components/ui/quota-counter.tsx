@@ -89,7 +89,10 @@ export function QuotaCounter({
             size="sm" 
             variant="default"
             className="h-6 px-2 text-xs bg-blue-600 hover:bg-blue-700"
-            onClick={() => window.open('mailto:sales@propaintquote.com?subject=Upgrade Request', '_blank')}
+            onClick={() => {
+              // Use router.push for better navigation experience
+              window.location.href = '/pricing';
+            }}
           >
             Upgrade
           </Button>
@@ -155,7 +158,10 @@ export function QuotaCounter({
         <Button 
           variant="default"
           className="bg-blue-600 hover:bg-blue-700"
-          onClick={() => window.open('mailto:sales@propaintquote.com?subject=Upgrade Request', '_blank')}
+          onClick={() => {
+            // Navigate to pricing page for upgrade
+            window.location.href = '/pricing';
+          }}
         >
           Upgrade Now
         </Button>

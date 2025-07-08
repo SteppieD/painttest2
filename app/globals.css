@@ -16,6 +16,7 @@
 
 /* Navigation */
 @import '../styles/navigation-balance.css';
+@import '../styles/navigation-saas-best-practices.css';
 
 /* ================================================
    BRAND COLOR SYSTEM
@@ -28,6 +29,7 @@
    This replaces ALL previous contrast fixes
    ================================================ */
 @import '../styles/comprehensive-contrast-fix.css';
+@import '../styles/contrast-fixes-july.css';
 
 /* ================================================
    OVERRIDE ORANGE BUTTON COLORS
