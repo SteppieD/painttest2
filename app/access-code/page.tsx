@@ -105,9 +105,11 @@ export default function AccessCodePage() {
             </Link>
             <div className="flex items-center gap-2">
               <img 
-                src="/paint-quote-logo.png" 
-                alt="Paint Quote App" 
+                src="/paint-logo-transparent.png" 
+                alt="Paint Quote App - Access Code Login" 
                 className="w-8 h-8"
+                width="32"
+                height="32"
               />
               <span className="text-xl font-bold">Paint Quote App</span>
             </div>

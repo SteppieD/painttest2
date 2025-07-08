@@ -52,9 +52,11 @@ export function Header() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img 
-              src="/paint-quote-logo.png" 
-              alt="Paint Quote App" 
+              src="/paint-logo-transparent.png" 
+              alt="Paint Quote App - Professional painting estimate software for contractors" 
               className="w-8 h-8"
+              width="32"
+              height="32"
             />
             <span className="text-2xl font-bold text-gray-900">Paint Quote App</span>
           </Link>

@@ -17,9 +17,11 @@ export function Footer() {
         <div className="text-center mb-12 border-b border-gray-800 pb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <img 
-              src="/paint-quote-logo.png" 
-              alt="Paint Quote App" 
+              src="/paint-logo-transparent.png" 
+              alt="Paint Quote App - Professional painting estimate software footer logo" 
               className="w-8 h-8"
+              width="32"
+              height="32"
             />
             <span className="text-2xl font-bold">Paint Quote App</span>
           </div>

@@ -499,7 +499,7 @@ export default function AboutPage() {
             "name": "ProPaint Quote",
             "description": "Professional painting contractor software built by painters, for painters. Trusted by 5,000+ contractors nationwide.",
             "url": "https://propaintquote.com",
-            "logo": "https://propaintquote.com/logo.png",
+            "logo": "https://propaintquote.com/paint-logo-transparent.png",
             "foundingDate": "2019",
             "founder": [
               {

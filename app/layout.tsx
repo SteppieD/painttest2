@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     icon: [
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-48x48.png', sizes: '48x48', type: 'image/png' },
       { url: '/favicon.ico', sizes: 'any' }
     ],
     apple: [
@@ -24,7 +25,9 @@ export const metadata: Metadata = {
       { url: '/apple-touch-icon-120x120.png', sizes: '120x120', type: 'image/png' }
     ],
     other: [
-      { rel: 'mask-icon', url: '/safari-pinned-tab.svg', color: '#FF6B35' }
+      { rel: 'mask-icon', url: '/paint-logo-transparent.png', color: '#FF6B35' },
+      { rel: 'icon', url: '/favicon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { rel: 'icon', url: '/favicon-512x512.png', sizes: '512x512', type: 'image/png' }
     ]
   },
   applicationName: 'ProPaint Quote',

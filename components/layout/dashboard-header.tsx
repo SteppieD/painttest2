@@ -48,9 +48,11 @@ export function DashboardHeader() {
         <div className="flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
             <img 
-              src="/paint-quote-logo.png" 
-              alt="Paint Quote App" 
+              src="/paint-logo-transparent.png" 
+              alt="Paint Quote App Dashboard - Professional painting estimate software" 
               className="w-8 h-8"
+              width="32"
+              height="32"
             />
             <span className="text-2xl font-bold text-gray-900">Paint Quote App</span>
           </Link>

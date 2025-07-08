@@ -33,8 +33,8 @@ export function StructuredData() {
           "@type": "ImageObject",
           "inLanguage": "en-US",
           "@id": "https://www.paintquoteapp.com/#/schema/logo/image/",
-          "url": "https://www.paintquoteapp.com/logo.png",
-          "contentUrl": "https://www.paintquoteapp.com/logo.png",
+          "url": "https://www.paintquoteapp.com/paint-logo-transparent.png",
+          "contentUrl": "https://www.paintquoteapp.com/paint-logo-transparent.png",
           "width": 512,
           "height": 512,
           "caption": "ProPaint Quote"
