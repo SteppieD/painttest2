@@ -271,7 +271,7 @@ export function Header() {
             >
               Sign In
             </Link>
-            <Button asChild className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+            <Button asChild className="nav-cta-primary bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
               <Link href="/trial-signup">Start Free Trial</Link>
             </Button>
           </nav>

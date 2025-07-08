@@ -225,21 +225,22 @@
   transition: transform 0.15s ease;
 }
 
-/* CTA Button Enhancements */
+/* CTA Button Enhancements - GREEN */
 .nav-cta-primary {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: #16a34a;
   color: white;
   padding: 0.625rem 1.5rem;
   border-radius: 8px;
   font-weight: 500;
   font-size: 0.875rem;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);
 }
 
 .nav-cta-primary:hover {
+  background: #15803d;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
 }
 
 /* Secondary CTA (Sign In) */

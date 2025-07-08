@@ -285,19 +285,19 @@ body {
   overflow: hidden;
 }
 
-/* Primary Button - Blue */
+/* Primary Button - Green */
 .ac-btn-primary {
-  background: #2f97e0 !important;
+  background: #16a34a;
   color: var(--white);
-  box-shadow: 0 4px 14px rgba(47, 151, 224, 0.25);
-  border-color: #2f97e0 !important;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
+  border-color: #16a34a;
 }
 
 .ac-btn-primary:hover {
-  background: #1e7cc8 !important;
+  background: #15803d;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(47, 151, 224, 0.35);
-  border-color: #1e7cc8 !important;
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.35);
+  border-color: #15803d;
 }
 
 .ac-btn-primary:active {

@@ -33,25 +33,58 @@
 
 /* ================================================
    OVERRIDE ORANGE BUTTON COLORS
-   Force brand blue on Try For Free button
+   Force brand green on Try For Free button
    ================================================ */
 .ac-btn-primary,
 a[href="/trial-signup"].ac-btn-primary,
 .bg-orange-600,
 .bg-orange-500,
 .hover\:bg-orange-700:hover {
-  background-color: #2f97e0 !important;
-  border-color: #2f97e0 !important;
-  color: #ffffff !important;
+  background-color: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
 }
 
 .ac-btn-primary:hover,
 a[href="/trial-signup"].ac-btn-primary:hover,
 .bg-orange-600:hover,
 .bg-orange-500:hover {
-  background-color: #1e7cc8 !important;
-  border-color: #1e7cc8 !important;
-  color: #ffffff !important;
+  background-color: #15803d;
+  border-color: #15803d;
+  color: #ffffff;
+}
+
+/* ================================================
+   REMOVE MENU BORDERS & UNDERLINES
+   Fix menu items having border-bottom
+   ================================================ */
+.nav-main-item,
+.nav-main-item button,
+.nav-main-item a,
+nav a,
+nav button,
+header nav a,
+header nav button {
+  border-bottom: none;
+  border: none;
+}
+
+/* ================================================
+   FOOTER DARK THEME OVERRIDE
+   Make footer truly dark with light text
+   ================================================ */
+footer {
+  background: #1f2937;
+  background-color: #1f2937;
+  color: #f9fafb;
+}
+
+footer a {
+  color: #d1d5db;
+}
+
+footer a:hover {
+  color: #ffffff;
 }
 
 /* ================================================
