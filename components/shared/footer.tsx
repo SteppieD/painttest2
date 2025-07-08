@@ -61,40 +61,40 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-4 text-blue-400">Product</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><Link href="/features" className="hover:text-white transition-colors">All Features</Link></li>
-              <li><Link href="/pricing" className="hover:text-white transition-colors">Pricing Plans</Link></li>
-              <li><Link href="/trial-signup" className="hover:text-white transition-colors">Free Trial</Link></li>
-              <li><Link href="/demo" className="hover:text-white transition-colors">Live Demo</Link></li>
+              <li><Link href="/features" className="hover:text-blue-300 transition-colors">All Features</Link></li>
+              <li><Link href="/pricing" className="hover:text-blue-300 transition-colors">Pricing Plans</Link></li>
+              <li><Link href="/trial-signup" className="hover:text-blue-300 transition-colors">Free Trial</Link></li>
+              <li><Link href="/demo" className="hover:text-blue-300 transition-colors">Live Demo</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="font-semibold mb-4 text-green-400">Free Resources</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><Link href="/painting-estimate-calculator" className="hover:text-white transition-colors">Paint Calculator</Link></li>
-              <li><Link href="/painting-quote-templates" className="hover:text-white transition-colors">Quote Templates</Link></li>
-              <li><Link href="/how-to-quote-painting-jobs-professionally" className="hover:text-white transition-colors">Quoting Guide</Link></li>
-              <li><Link href="/painting-business-tips" className="hover:text-white transition-colors">Business Tips</Link></li>
+              <li><Link href="/painting-estimate-calculator" className="hover:text-green-300 transition-colors">Paint Calculator</Link></li>
+              <li><Link href="/painting-quote-templates" className="hover:text-green-300 transition-colors">Quote Templates</Link></li>
+              <li><Link href="/how-to-quote-painting-jobs-professionally" className="hover:text-green-300 transition-colors">Quoting Guide</Link></li>
+              <li><Link href="/painting-business-tips" className="hover:text-green-300 transition-colors">Business Tips</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="font-semibold mb-4 text-purple-400">Support</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><Link href="/help" className="hover:text-white transition-colors">Help Center</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
-              <li><Link href="/tutorials" className="hover:text-white transition-colors">Video Tutorials</Link></li>
-              <li><Link href="/api-docs" className="hover:text-white transition-colors">API Documentation</Link></li>
+              <li><Link href="/help" className="hover:text-purple-300 transition-colors">Help Center</Link></li>
+              <li><Link href="/contact" className="hover:text-purple-300 transition-colors">Contact Us</Link></li>
+              <li><Link href="/tutorials" className="hover:text-purple-300 transition-colors">Video Tutorials</Link></li>
+              <li><Link href="/api-docs" className="hover:text-purple-300 transition-colors">API Documentation</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="font-semibold mb-4 text-orange-400">Company</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="/testimonials" className="hover:text-white transition-colors">Success Stories</Link></li>
-              <li><Link href="/painting-contractor-software-case-study" className="hover:text-white transition-colors">Case Studies</Link></li>
-              <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
+              <li><Link href="/about" className="hover:text-orange-300 transition-colors">About Us</Link></li>
+              <li><Link href="/testimonials" className="hover:text-orange-300 transition-colors">Success Stories</Link></li>
+              <li><Link href="/painting-contractor-software-case-study" className="hover:text-orange-300 transition-colors">Case Studies</Link></li>
+              <li><Link href="/careers" className="hover:text-orange-300 transition-colors">Careers</Link></li>
             </ul>
           </div>
         </div>
@@ -121,10 +121,10 @@ export function Footer() {
               <span className="text-gray-400 text-sm">Enterprise-grade security • SOC 2 compliant • 99.9% uptime</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-gray-400">
-              <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-              <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-              <Link href="/security" className="hover:text-white transition-colors">Security</Link>
-              <Link href="/sitemap.xml" className="hover:text-white transition-colors">Sitemap</Link>
+              <Link href="/privacy" className="hover:text-blue-300 transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-blue-300 transition-colors">Terms of Service</Link>
+              <Link href="/security" className="hover:text-blue-300 transition-colors">Security</Link>
+              <Link href="/sitemap.xml" className="hover:text-blue-300 transition-colors">Sitemap</Link>
             </div>
           </div>
         </div>

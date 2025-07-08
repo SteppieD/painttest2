@@ -165,10 +165,10 @@ export function ROICalculator({ className }: ROICalculatorProps) {
           </div>
 
           {/* Annual Summary */}
-          <div className="gradient-blue-contrast text-white p-6 rounded-lg text-center">
-            <h4 className="text-xl font-bold mb-2 text-white">Annual Revenue Increase</h4>
-            <p className="text-4xl font-bold mb-2 text-white">{formatCurrency(results.annualIncrease)}</p>
-            <p className="text-white opacity-90">
+          <div className="bg-blue-600 text-white p-6 rounded-lg text-center" style={{ backgroundColor: '#2563eb', color: '#ffffff' }}>
+            <h4 className="text-xl font-bold mb-2" style={{ color: '#ffffff' }}>Annual Revenue Increase</h4>
+            <p className="text-4xl font-bold mb-2" style={{ color: '#ffffff' }}>{formatCurrency(results.annualIncrease)}</p>
+            <p className="opacity-90" style={{ color: '#ffffff' }}>
               Based on 40-60% win rate improvement with professional quotes and faster response times
             </p>
           </div>

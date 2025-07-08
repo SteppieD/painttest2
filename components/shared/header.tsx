@@ -50,19 +50,19 @@ export function Header() {
     <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0 min-w-0">
             <img 
               src="/paint-logo-transparent.png" 
               alt="Paint Quote App - Professional painting estimate software for contractors" 
-              className="w-8 h-8"
+              className="w-8 h-8 flex-shrink-0"
               width="32"
               height="32"
             />
-            <span className="text-2xl font-bold text-gray-900">Paint Quote App</span>
+            <span className="text-xl md:text-2xl font-bold text-gray-900 truncate">Paint Quote App</span>
           </Link>
           
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-4 flex-1 justify-end min-w-0">
             {/* Product Dropdown */}
             <div 
               className="nav-main-item"
