@@ -18,7 +18,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Footer } from '@/components/shared/footer';
 import { Header } from '@/components/shared/header';
 
@@ -245,32 +244,36 @@ export default function QuotingGuidePage() {
           
           <div className="space-y-6">
             {commonMistakes.map((item, index) => (
-              <Alert key={index} className={`border-l-4 ${
+              <Card key={index} className={`border-l-4 ${
                 item.severity === 'critical' ? 'border-red-500' : 
                 item.severity === 'high' ? 'border-orange-500' : 'border-yellow-500'
               }`}>
-                <AlertCircle className="w-5 h-5" />
-                <AlertDescription>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                      <h3 className="font-bold text-gray-900 mb-1">
-                        Mistake #{index + 1}: {item.mistake}
-                      </h3>
-                      <p className="text-sm text-gray-600 mb-2">Impact: {item.impact}</p>
-                      <p className="text-sm font-medium text-blue-600">
-                        ✓ Solution: {item.solution}
-                      </p>
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                          <h3 className="font-bold text-gray-900 mb-1">
+                            Mistake #{index + 1}: {item.mistake}
+                          </h3>
+                          <p className="text-sm text-gray-600 mb-2">Impact: {item.impact}</p>
+                          <p className="text-sm font-medium text-blue-600">
+                            ✓ Solution: {item.solution}
+                          </p>
+                        </div>
+                        <Badge variant="outline" className={`self-start ${
+                          item.severity === 'critical' ? 'text-red-600 border-red-200' : 
+                          item.severity === 'high' ? 'text-orange-600 border-orange-200' : 
+                          'text-yellow-600 border-yellow-200'
+                        }`}>
+                          {item.severity.toUpperCase()}
+                        </Badge>
+                      </div>
                     </div>
-                    <Badge variant="outline" className={`self-start ${
-                      item.severity === 'critical' ? 'text-red-600 border-red-200' : 
-                      item.severity === 'high' ? 'text-orange-600 border-orange-200' : 
-                      'text-yellow-600 border-yellow-200'
-                    }`}>
-                      {item.severity.toUpperCase()}
-                    </Badge>
                   </div>
-                </AlertDescription>
-              </Alert>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
