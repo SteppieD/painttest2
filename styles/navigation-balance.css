@@ -61,7 +61,7 @@ header nav button::after {
   transform: translateX(-50%) scaleX(0);
   width: 30px;
   height: 2px;
-  background-color: #ef2b70;
+  background-color: var(--brand-primary, #2f97e0);
   transition: transform 0.2s ease;
 }
 

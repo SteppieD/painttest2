@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { trackAccessCodeUsed, trackPageView } from "@/lib/analytics/tracking";
 import Link from "next/link";
-import { ArrowRight, Sparkles, Users, Lock, Zap } from "lucide-react";
-import { Footer } from "@/components/shared/footer";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Loader2, ArrowLeft, Lock, AlertCircle } from "lucide-react";
+import { trackAccessCodeUsed, trackPageView } from "@/lib/analytics/tracking";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -14,12 +16,10 @@ export default function AccessCodePage() {
   const [accessCode, setAccessCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [availableCodes, setAvailableCodes] = useState<any[]>([]);
-  const [showDemoCodes, setShowDemoCodes] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    trackPageView('/access-code');
+    trackPageView('/access-code', 'Login');
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,222 +55,166 @@ export default function AccessCodePage() {
             email: data.company.email,
             logoUrl: data.company.logoUrl,
             loginTime: Date.now(),
-            isNewCompany: data.isNewCompany || false,
-          }),
+            company_name: data.company.name,
+            access_code: data.company.accessCode,
+          })
         );
 
-        // Check setup completion status
-        const preferencesResponse = await fetch(`/api/companies/preferences?companyId=${data.company.id}`);
-        const preferencesData = await preferencesResponse.json();
-        const setupCompleted = preferencesData.preferences?.setup_completed;
-
-        // Check if user came from homepage sign-in link (has redirect parameter)
-        const redirectParam = new URLSearchParams(window.location.search).get('redirect');
-        const redirectTo = redirectParam || '/dashboard'; // Default to dashboard for normal access code entry
-        
-        // Redirect based on setup completion and new company status
-<<<<<<< HEAD
-        if (data.isNewCompany || !setupCompleted) {
-          // New companies or companies that haven't completed setup go to conversational setup
-          router.push(`/setup-chat`);
+        // Check if user needs onboarding
+        if (data.company.needsOnboarding) {
+          router.push("/setup");
         } else {
-          // Existing companies with completed setup
-          // Check if user wants modern interface
-          const modernInterface = new URLSearchParams(window.location.search).get('modern');
-          if (modernInterface === 'true') {
-            router.push('/dashboard-modern');
-          } else {
-            router.push(redirectTo);
-          }
-=======
-        if (data.isNewCompany && !setupCompleted) {
-          // Brand new companies that haven't completed setup go to setup wizard
-          router.push(`/setup?code=${data.company.accessCode}`);
-        } else if (data.isNewCompany) {
-          // New companies that completed setup go to success page
-          router.push(
-            `/success?newCompany=true&companyName=${encodeURIComponent(data.company.name)}&redirect=${encodeURIComponent(redirectTo)}`,
-          );
-        } else if (!setupCompleted) {
-          // Existing companies that haven't completed setup go to setup wizard
-          router.push(`/setup?code=${data.company.accessCode}`);
-        } else {
-          // Existing companies with completed setup go to dashboard
-          router.push('/dashboard');
->>>>>>> clean-recovery-deploy
+          router.push("/dashboard");
         }
       } else {
-        setError(data.message || "Invalid access code. Please try again.");
+        // Detailed error messages
+        if (data.error === "Invalid access code") {
+          setError("Invalid access code. Please check your code and try again.");
+        } else if (data.error === "Access code expired") {
+          setError("This access code has expired. Please contact support or create a new trial account.");
+        } else {
+          setError("Invalid access code. Please check your spelling and try again.");
+        }
       }
     } catch (error) {
-      setError("An error occurred. Please try again.");
+      console.error("Error:", error);
+      setError("Connection problem. Please check your internet and try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadDemoCodes = async () => {
-    setShowDemoCodes(true);
-    try {
-      // Using the correct endpoint
-      const response = await fetch("/api/admin/access-codes", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        // Filter for active demo codes only
-        const demoCodes = data.accessCodes?.filter((code: any) => 
-          code.status === 'active' && 
-          (code.code.startsWith('DEMO') || code.companyName?.includes('Demo'))
-        ) || [];
-        setAvailableCodes(demoCodes);
-      }
-    } catch (error) {
-      console.error("Failed to load demo codes:", error);
+  // Check for admin parameter (hidden feature)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const adminParam = urlParams.get('admin');
+    if (adminParam === 'true') {
+      // Could set admin state here if needed
     }
-  };
-
-  const useDemoCode = (code: string) => {
-    setAccessCode(code);
-    setError("");
-  };
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Hero Section */}
-      <section className="ac-hero py-20">
-        <div className="container mx-auto max-w-4xl px-4 text-center">
-          <div className="ac-hero-badge mb-6">
-            <Lock size={16} />
-            <span>Secure Access Portal</span>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Header with back button */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Link href="/" className="flex items-center text-gray-600 hover:text-gray-900">
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Back to Website
+            </Link>
+            <div className="flex items-center gap-2">
+              <img 
+                src="/paint-quote-logo.png" 
+                alt="Paint Quote App" 
+                className="w-8 h-8"
+              />
+              <span className="text-xl font-bold">Paint Quote App</span>
+            </div>
+            <div className="w-32"></div> {/* Spacer for centering */}
           </div>
-          
-          <h1 className="ac-hero-title mb-6">
-            Welcome Back to <span style={{ color: 'var(--primary-pink)' }}>ProPaint Quote</span>
-          </h1>
-          
-          <p className="ac-hero-subtitle">
-            Enter your company access code to continue creating professional painting quotes
-          </p>
         </div>
-      </section>
+      </div>
 
-      {/* Access Code Form */}
-      <section className="py-12 px-4 -mt-20 relative z-10">
-        <div className="container mx-auto max-w-md">
-          <div className="ac-card">
-            <div className="ac-card-body p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="ac-form-group">
-                  <label htmlFor="accessCode" className="ac-label">
-                    Company Access Code
-                  </label>
-                  <input
-                    type="text"
-                    id="accessCode"
-                    value={accessCode}
-                    onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
-                    placeholder="Enter your access code"
-                    className={`ac-input ${error ? 'ac-input-error' : ''}`}
-                    disabled={isLoading}
-                    autoFocus
-                  />
-                  {error && (
-                    <p className="ac-form-error">{error}</p>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isLoading || !accessCode.trim()}
-                  className={`ac-btn ac-btn-primary ac-btn-lg w-full ${isLoading ? 'ac-btn-loading' : ''}`}
-                >
-                  {isLoading ? '' : (
-                    <>
-                      Access Dashboard
-                      <ArrowRight size={20} />
-                    </>
-                  )}
-                </button>
-              </form>
-
-              <div className="mt-6 text-center">
-                <p className="text-sm text-gray-600 mb-2">
-                  Don't have an access code?
+      {/* Login Form */}
+      <div className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-1">
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                <Lock className="w-6 h-6 text-white" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl text-center">Welcome Back</CardTitle>
+            <CardDescription className="text-center">
+              Enter your company access code to login
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="access-code" className="text-sm font-medium">
+                  Access Code
+                </label>
+                <Input
+                  id="access-code"
+                  type="text"
+                  value={accessCode}
+                  onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
+                  placeholder="Enter your access code"
+                  className="text-center text-lg font-mono tracking-wider"
+                  disabled={isLoading}
+                  required
+                  autoFocus
+                />
+                <p className="text-xs text-gray-500 text-center">
+                  Example: DEMO2024, PAINTER001
                 </p>
-                <Link 
-                  href="/trial-signup" 
-                  className="text-primary-pink hover:text-primary-pink-dark font-medium transition-colors"
+              </div>
+
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm flex items-start gap-2">
+                  <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoading || !accessCode.trim()}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging in...
+                  </>
+                ) : (
+                  "Login to Dashboard"
+                )}
+              </Button>
+            </form>
+
+            <div className="mt-6 space-y-4">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-gray-500">Need help?</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col space-y-2">
+                <Link
+                  href="/forgot-code"
+                  className="text-sm text-center text-blue-600 hover:text-blue-800"
                 >
-                  Start your free trial →
+                  Forgot your access code?
+                </Link>
+                <Link
+                  href="/trial-signup"
+                  className="text-sm text-center text-blue-600 hover:text-blue-800"
+                >
+                  Don't have an account? Start free trial
                 </Link>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <button
-                  onClick={loadDemoCodes}
-                  className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-                >
-                  {showDemoCodes ? "Hide demo codes" : "Try with demo code"}
-                </button>
-
-                {showDemoCodes && (
-                  <div className="mt-4 space-y-2">
-                    {availableCodes.length > 0 ? (
-                      availableCodes.map((code) => (
-                        <button
-                          key={code.id}
-                          onClick={() => useDemoCode(code.code)}
-                          className="w-full p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors ac-fade-in"
-                        >
-                          <div className="font-mono font-semibold text-primary-pink">
-                            {code.code}
-                          </div>
-                          <div className="text-xs text-gray-600">
-                            {code.companyName}
-                          </div>
-                        </button>
-                      ))
-                    ) : (
-                      <div className="text-sm text-gray-500 text-center py-2">
-                        Loading demo codes...
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Benefits */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="text-center ac-fade-in">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md mb-3">
-                <Zap className="w-6 h-6 text-primary-pink" />
-              </div>
-              <p className="text-sm text-gray-600">30-second quotes</p>
-            </div>
-            <div className="text-center ac-fade-in" style={{ animationDelay: '0.1s' }}>
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md mb-3">
-                <Users className="w-6 h-6 text-primary-pink" />
-              </div>
-              <p className="text-sm text-gray-600">5,000+ contractors</p>
-            </div>
-            <div className="text-center ac-fade-in" style={{ animationDelay: '0.2s' }}>
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md mb-3">
-                <Sparkles className="w-6 h-6 text-primary-pink" />
-              </div>
-              <p className="text-sm text-gray-600">99% accuracy</p>
-            </div>
+      {/* Footer */}
+      <div className="bg-white border-t py-4">
+        <div className="text-center text-sm text-gray-500">
+          <p>© 2025 Paint Quote App. All rights reserved.</p>
+          <div className="mt-2 space-x-4">
+            <Link href="/privacy" className="hover:text-gray-700">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-gray-700">Terms of Service</Link>
+            <Link href="/contact" className="hover:text-gray-700">Contact Support</Link>
           </div>
         </div>
-      </section>
-
-      <Footer />
-
+      </div>
     </div>
   );
 }

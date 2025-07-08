@@ -7,11 +7,11 @@ export const dynamic = 'force-dynamic';
 // GET - Retrieve company paints
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
+    const { searchParams } = new URL(request.url);
     const companyId = searchParams.get('companyId') || '1';
 
     // Try to get paints from the new paints table
-    let paints = await dbAll(`
+    let paints = dbAll(`
       SELECT * FROM company_paints 
       WHERE company_id = ? 
       ORDER BY brand_name, product_name
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     if (!paints || paints.length === 0) {
       try {
         // Create table if it doesn't exist
-        await dbRun(`
+        dbRun(`
           CREATE TABLE IF NOT EXISTS company_paints (
             id TEXT PRIMARY KEY,
             company_id TEXT NOT NULL,
@@ -105,53 +105,141 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Create new paint
+// POST - Create new paint(s)
 export async function POST(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const companyId = searchParams.get('companyId') || '1';
+    const { searchParams } = new URL(request.url);
+    let companyId = searchParams.get('companyId');
     
-    const paintData = await request.json();
+    const requestData = await request.json();
+    
+    // Support both single paint and batch creation from conversational setup
+    if (requestData.accessCode && requestData.products) {
+      // Batch creation from conversational setup
+      try {
+        // Get company ID from access code
+        const company = dbGet(`
+          SELECT id FROM companies WHERE access_code = ?
+        `, [requestData.accessCode]);
+        
+        if (!company) {
+          return NextResponse.json(
+            { error: "Invalid access code" },
+            { status: 404 }
+          );
+        }
+        
+        companyId = company.id.toString();
+        
+        // Ensure paint_products table exists with new structure
+        dbRun(`
+          CREATE TABLE IF NOT EXISTS paint_products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            company_id INTEGER NOT NULL,
+            category VARCHAR(50) NOT NULL,
+            project_type VARCHAR(20) NOT NULL,
+            supplier VARCHAR(100) NOT NULL,
+            name VARCHAR(100) NOT NULL,
+            cost_per_gallon DECIMAL(8,2) NOT NULL,
+            coverage INTEGER,
+            coverage_unit VARCHAR(20),
+            tier VARCHAR(20) DEFAULT 'standard',
+            display_order INTEGER DEFAULT 1,
+            is_favorite BOOLEAN DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+          )
+        `);
+        
+        // Clear existing products for this company
+        dbRun(`DELETE FROM paint_products WHERE company_id = ?`, [companyId]);
+        
+        // Insert new products
+        const results = [];
+        for (const product of requestData.products) {
+          try {
+            const result = dbRun(`
+              INSERT INTO paint_products (
+                company_id, category, project_type, supplier, name, 
+                cost_per_gallon, coverage, coverage_unit
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `, [
+              companyId,
+              product.category,
+              product.project_type,
+              product.supplier,
+              product.name,
+              product.cost_per_gallon,
+              product.coverage || null,
+              product.coverage_unit || null
+            ]);
+            results.push({ success: true, insertId: result.lastInsertRowid });
+          } catch (error) {
+            console.error('Error inserting product:', error, product);
+            results.push({ success: false, error: error.message });
+          }
+        }
+        
+        return NextResponse.json({
+          success: true,
+          message: `Created ${results.filter(r => r.success).length} paint products`,
+          results
+        });
+        
+      } catch (error) {
+        console.error("Error in batch paint creation:", error);
+        return NextResponse.json(
+          { error: "Failed to create paint products: " + error.message },
+          { status: 500 }
+        );
+      }
+    } else {
+      // Single paint creation (legacy)
+      const paintData = requestData;
+      
+      if (!companyId) companyId = '1';
 
-    // Ensure table exists
-    dbRun(`
-      CREATE TABLE IF NOT EXISTS company_paints (
-        id TEXT PRIMARY KEY,
-        company_id TEXT NOT NULL,
-        brand_name TEXT NOT NULL,
-        product_name TEXT NOT NULL,
-        cost_per_gallon REAL NOT NULL,
-        quality_grade TEXT CHECK(quality_grade IN ('good', 'better', 'best')) DEFAULT 'good',
-        coverage_sqft INTEGER DEFAULT 350,
-        notes TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+      // Ensure legacy table exists
+      dbRun(`
+        CREATE TABLE IF NOT EXISTS company_paints (
+          id TEXT PRIMARY KEY,
+          company_id TEXT NOT NULL,
+          brand_name TEXT NOT NULL,
+          product_name TEXT NOT NULL,
+          cost_per_gallon REAL NOT NULL,
+          quality_grade TEXT CHECK(quality_grade IN ('good', 'better', 'best')) DEFAULT 'good',
+          coverage_sqft INTEGER DEFAULT 350,
+          notes TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
 
-    const paintId = paintData.id || `paint_${Date.now()}`;
+      const paintId = paintData.id || `paint_${Date.now()}`;
 
-    const result = dbRun(`
-      INSERT INTO company_paints (
-        id, company_id, brand_name, product_name, cost_per_gallon, 
-        quality_grade, coverage_sqft, notes
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `, [
-      paintId,
-      companyId,
-      paintData.brand_name,
-      paintData.product_name,
-      paintData.cost_per_gallon,
-      paintData.quality_grade || 'good',
-      paintData.coverage_sqft || 350,
-      paintData.notes || null
-    ]);
+      const result = dbRun(`
+        INSERT INTO company_paints (
+          id, company_id, brand_name, product_name, cost_per_gallon, 
+          quality_grade, coverage_sqft, notes
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `, [
+        paintId,
+        companyId,
+        paintData.brand_name,
+        paintData.product_name,
+        paintData.cost_per_gallon,
+        paintData.quality_grade || 'good',
+        paintData.coverage_sqft || 350,
+        paintData.notes || null
+      ]);
 
-    return NextResponse.json({
-      success: true,
-      id: paintId,
-      message: "Paint created successfully"
-    });
+      return NextResponse.json({
+        success: true,
+        id: paintId,
+        message: "Paint created successfully"
+      });
+    }
 
   } catch (error) {
     console.error("Error creating paint:", error);
@@ -165,7 +253,7 @@ export async function POST(request: NextRequest) {
 // PUT - Update existing paint
 export async function PUT(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
+    const { searchParams } = new URL(request.url);
     const companyId = searchParams.get('companyId') || '1';
     
     const paintData = await request.json();
@@ -215,7 +303,7 @@ export async function PUT(request: NextRequest) {
 // DELETE - Remove paint
 export async function DELETE(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
+    const { searchParams } = new URL(request.url);
     const companyId = searchParams.get('companyId') || '1';
     const paintId = searchParams.get('paintId');
 

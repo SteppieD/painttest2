@@ -11,11 +11,11 @@
    =================================================================== */
 
 :root {
-  /* Primary Colors - AdCreative Pink Theme */
-  --primary-pink: #ef2b70;
-  --primary-pink-hover: #d91e5a;
-  --primary-pink-light: #ff4081;
-  --primary-pink-dark: #c9184a;
+  /* Primary Colors - Brand Blue Theme */
+  --primary-pink: #2f97e0;
+  --primary-pink-hover: #1e7cc8;
+  --primary-pink-light: #5fb0e8;
+  --primary-pink-dark: #155e9f;
   
   /* Background Colors - Purple Gradient Theme */
   --bg-dark-purple: #1E1541;
@@ -153,11 +153,12 @@ body {
   left: 0;
   right: 0;
   z-index: var(--z-fixed);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-menu);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: all var(--transition-base);
+  height: 72px;
 }
 
 .ac-navbar.scrolled {
@@ -284,17 +285,19 @@ body {
   overflow: hidden;
 }
 
-/* Primary Button - Pink */
+/* Primary Button - Blue */
 .ac-btn-primary {
-  background: var(--primary-pink);
+  background: #2f97e0 !important;
   color: var(--white);
-  box-shadow: 0 4px 14px rgba(239, 43, 112, 0.25);
+  box-shadow: 0 4px 14px rgba(47, 151, 224, 0.25);
+  border-color: #2f97e0 !important;
 }
 
 .ac-btn-primary:hover {
-  background: var(--primary-pink-hover);
+  background: #1e7cc8 !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(239, 43, 112, 0.35);
+  box-shadow: 0 6px 20px rgba(47, 151, 224, 0.35);
+  border-color: #1e7cc8 !important;
 }
 
 .ac-btn-primary:active {
@@ -459,7 +462,7 @@ body {
   right: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(239, 43, 112, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(47, 151, 224, 0.1) 0%, transparent 70%);
   animation: ac-pulse 20s ease-in-out infinite;
 }
 
@@ -488,8 +491,8 @@ body {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  background: rgba(239, 43, 112, 0.2);
-  border: 1px solid rgba(239, 43, 112, 0.3);
+  background: rgba(47, 151, 224, 0.2);
+  border: 1px solid rgba(47, 151, 224, 0.3);
   color: var(--primary-pink-light);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
@@ -583,7 +586,7 @@ body {
 .ac-select:focus {
   outline: none;
   border-color: var(--primary-pink);
-  box-shadow: 0 0 0 3px rgba(239, 43, 112, 0.1);
+  box-shadow: 0 0 0 3px rgba(47, 151, 224, 0.1);
 }
 
 .ac-input-error {
@@ -641,7 +644,7 @@ body {
 .ac-pricing-card.featured {
   border-color: var(--primary-pink);
   transform: scale(1.05);
-  box-shadow: 0 20px 40px rgba(239, 43, 112, 0.15);
+  box-shadow: 0 20px 40px rgba(47, 151, 224, 0.15);
 }
 
 .ac-pricing-badge {

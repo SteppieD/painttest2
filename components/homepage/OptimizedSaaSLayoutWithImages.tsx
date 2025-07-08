@@ -32,13 +32,13 @@ export function OptimizedSaaSLayoutWithImages() {
   return (
     <div className="saas-optimized-layout">
       {/* Section 1: Above the Fold - Hero with Clear Value Proposition */}
-      <section className="hero-optimized bg-gradient-to-br from-gray-50 to-orange-50" style={{ color: '#000000 !important' }}>
+      <section className="hero-optimized bg-gradient-to-br from-gray-50 to-brand-primary/5 pt-20 lg:pt-24" style={{ color: '#000000 !important' }}>
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-120px)] py-2 lg:py-4">
             {/* Left: Messaging */}
             <div className="hero-content space-y-4 lg:space-y-6 order-1 lg:order-1" style={{ color: '#000000 !important' }}>
               {/* Trust Badge */}
-              <div className="inline-flex items-center gap-2 bg-orange-600 text-white px-3 py-1.5 rounded-full text-sm font-semibold">
+              <div className="inline-flex items-center gap-2 bg-brand-primary text-white px-3 py-1.5 rounded-full text-sm font-semibold">
                 <Award size={16} />
                 <span>Trusted by 5,247+ Painting Contractors</span>
               </div>
@@ -46,7 +46,7 @@ export function OptimizedSaaSLayoutWithImages() {
               {/* Main Headline - Problem/Solution Fit */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight" style={{ color: '#000000 !important' }}>
                 Stop Losing Jobs to
-                <span className="text-orange-600 block" style={{ color: '#ea580c !important' }}>Faster Competitors</span>
+                <span className="text-brand-primary block" style={{ color: '#2f97e0 !important' }}>Faster Competitors</span>
               </h1>
 
               {/* Sub-headline - Clear Value Prop */}
@@ -84,14 +84,14 @@ export function OptimizedSaaSLayoutWithImages() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link 
                   href="/trial-signup" 
-                  className="inline-flex items-center justify-center gap-2 bg-orange-700 text-white px-6 py-3 rounded-lg font-bold text-base lg:text-lg hover:bg-orange-800 transform hover:scale-105 transition-all shadow-lg hover:shadow-xl border border-orange-800"
+                  className="inline-flex items-center justify-center gap-2 bg-brand-primary text-white px-6 py-3 rounded-lg font-bold text-base lg:text-lg hover:bg-brand-primary/90 transform hover:scale-105 transition-all shadow-lg hover:shadow-xl border border-brand-primary"
                 >
                   Start Free Trial
                   <ArrowRight size={18} />
                 </Link>
                 <Link 
                   href="/demo" 
-                  className="inline-flex items-center justify-center gap-2 bg-white text-gray-800 px-6 py-3 rounded-lg font-bold text-base lg:text-lg border-2 border-gray-300 hover:border-orange-600 hover:text-orange-600 transition-all"
+                  className="inline-flex items-center justify-center gap-2 bg-white text-gray-800 px-6 py-3 rounded-lg font-bold text-base lg:text-lg border-2 border-gray-300 hover:border-brand-primary hover:text-brand-primary transition-all"
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
@@ -121,7 +121,7 @@ export function OptimizedSaaSLayoutWithImages() {
             {/* Right: Stats Dashboard Mockup */}
             <div className="hero-visual relative order-2 lg:order-2 mb-6 lg:mb-0">
               {/* Main Product Screenshot - Larger and more prominent */}
-              <div className="relative z-10 bg-white rounded-xl lg:rounded-2xl shadow-2xl p-4 sm:p-5 lg:p-6 transform lg:rotate-1 hover:rotate-0 transition-all duration-300 max-w-sm sm:max-w-md mx-auto lg:max-w-none lg:scale-110 hover:scale-115 ring-4 ring-orange-600/20 hover:ring-orange-600/40">
+              <div className="relative z-10 bg-white rounded-xl lg:rounded-2xl shadow-2xl p-4 sm:p-5 lg:p-6 transform lg:rotate-1 hover:rotate-0 transition-all duration-300 max-w-sm sm:max-w-md mx-auto lg:max-w-none lg:scale-110 hover:scale-115 ring-4 ring-brand-primary/20 hover:ring-brand-primary/40">
                 <div className="mb-3 flex items-center justify-between">
                   <h3 className="font-bold text-base lg:text-lg text-gray-900">Instant Quote Generator</h3>
                   <span className="text-green-600 font-semibold text-sm">LIVE</span>
@@ -135,9 +135,9 @@ export function OptimizedSaaSLayoutWithImages() {
                   </div>
                   
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-orange-50 p-3 rounded-lg border border-orange-200">
+                    <div className="bg-brand-primary/10 p-3 rounded-lg border border-brand-primary/20">
                       <div className="text-xs text-gray-600">Time</div>
-                      <div className="text-xl lg:text-2xl font-bold text-orange-600">28 sec</div>
+                      <div className="text-xl lg:text-2xl font-bold text-brand-primary">28 sec</div>
                     </div>
                     <div className="bg-green-50 p-3 rounded-lg border border-green-200">
                       <div className="text-xs text-gray-600">Total</div>
@@ -145,7 +145,7 @@ export function OptimizedSaaSLayoutWithImages() {
                     </div>
                   </div>
 
-                  <button className="w-full bg-orange-600 text-white py-2.5 rounded-lg font-semibold text-sm lg:text-base hover:bg-orange-700 transition-colors">
+                  <button className="w-full bg-brand-primary text-white py-2.5 rounded-lg font-semibold text-sm lg:text-base hover:bg-brand-primary/90 transition-colors">
                     Send to Customer
                   </button>
                 </div>
@@ -185,7 +185,7 @@ export function OptimizedSaaSLayoutWithImages() {
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Everything You Need to <span className="text-orange-600">Win More Jobs</span>
+              Everything You Need to <span className="text-brand-primary">Win More Jobs</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               From instant quotes to customer management, we've got you covered
@@ -205,8 +205,8 @@ export function OptimizedSaaSLayoutWithImages() {
                 />
               </div>
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                  <Calculator className="text-orange-600" size={20} />
+                <div className="w-10 h-10 bg-brand-primary/10 rounded-lg flex items-center justify-center">
+                  <Calculator className="text-brand-primary" size={20} />
                 </div>
                 <h3 className="font-bold text-lg">Instant Quotes</h3>
               </div>
@@ -289,7 +289,7 @@ export function OptimizedSaaSLayoutWithImages() {
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Real Results from <span className="text-orange-600">Real Contractors</span>
+              Real Results from <span className="text-brand-primary">Real Contractors</span>
             </h2>
           </div>
 
@@ -325,7 +325,7 @@ export function OptimizedSaaSLayoutWithImages() {
                     fill
                     className="object-cover"
                   />
-                  <div className="absolute top-4 right-4 bg-orange-600 text-white px-3 py-1 rounded-full text-sm font-bold">
+                  <div className="absolute top-4 right-4 bg-brand-primary text-white px-3 py-1 rounded-full text-sm font-bold">
                     {testimonial.result}
                   </div>
                 </div>
@@ -346,7 +346,7 @@ export function OptimizedSaaSLayoutWithImages() {
           <div className="text-center mt-12">
             <Link 
               href="/painting-contractor-software-case-study"
-              className="inline-flex items-center gap-2 text-orange-600 font-semibold hover:underline"
+              className="inline-flex items-center gap-2 text-brand-primary font-semibold hover:underline"
             >
               Read Full Case Studies
               <ArrowRight size={16} />
@@ -359,32 +359,33 @@ export function OptimizedSaaSLayoutWithImages() {
       <section className="py-16 lg:py-24 gradient-orange-contrast contrast-overlay text-white relative overflow-hidden">
         <div className="absolute inset-0 image-overlay">
           <Image
-            src={professionalImages.hero.tertiary}
-            alt="Contractor success"
+            src={professionalImages.hero.main}
+            alt="Professional painter at work"
             fill
             className="object-cover"
           />
+          {/* Dark overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/60"></div>
           <div className="gradient-mesh-overlay"></div>
         </div>
         <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center relative z-10 text-white-important">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white">
+          <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white drop-shadow-lg">
             Ready to Transform Your Painting Business?
           </h2>
-          <p className="text-xl mb-8 text-white">
+          <p className="text-xl mb-8 text-white drop-shadow-lg">
             Join 5,247+ contractors who are winning more jobs with less effort
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               href="/trial-signup" 
-              className="inline-flex items-center justify-center gap-2 bg-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all shadow-xl"
-              style={{ color: '#ea580c' }}
+              className="inline-flex items-center justify-center gap-2 bg-brand-primary text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-brand-primary/90 transform hover:scale-105 transition-all shadow-xl"
             >
               Start Your Free Trial
-              <ArrowRight size={20} style={{ color: '#ea580c' }} />
+              <ArrowRight size={20} />
             </Link>
             <Link 
               href="/pricing" 
-              className="inline-flex items-center justify-center gap-2 bg-transparent text-white px-8 py-4 rounded-lg font-bold text-lg border-2 border-white hover:bg-white hover:text-orange-600 transition-all view-pricing-cta"
+              className="inline-flex items-center justify-center gap-2 bg-transparent text-white px-8 py-4 rounded-lg font-bold text-lg border-2 border-white hover:bg-white hover:text-brand-primary transition-all view-pricing-cta"
             >
               View Pricing
             </Link>

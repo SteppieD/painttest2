@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { LoginPopup } from '@/components/ui/login-popup';
@@ -75,11 +76,13 @@ export function ACNavbar() {
         <div className="ac-navbar-container">
           {/* Logo */}
           <Link href="/" className="ac-navbar-logo">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <rect width="32" height="32" rx="8" fill="#ef2b70"/>
-              <path d="M10 22L16 10L22 22" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M12.5 18H19.5" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+            <Image 
+              src="/paint-quote-logo.png" 
+              alt="Paint Quote Pro" 
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
             <span>Paint Quote Pro</span>
           </Link>
 
@@ -137,7 +140,7 @@ export function ACNavbar() {
                 >
                   Login
                 </button>
-                <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-sm">
+                <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-sm" style={{ backgroundColor: '#2f97e0', borderColor: '#2f97e0' }}>
                   Try For Free
                 </Link>
               </>
@@ -162,11 +165,13 @@ export function ACNavbar() {
           <div className="ac-mobile-menu-content">
             <div className="ac-mobile-menu-header">
               <Link href="/" className="ac-navbar-logo" onClick={() => setIsMobileMenuOpen(false)}>
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                  <rect width="32" height="32" rx="8" fill="#ef2b70"/>
-                  <path d="M10 22L16 10L22 22" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M12.5 18H19.5" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
+                <Image 
+                  src="/paint-quote-logo.png" 
+                  alt="Paint Quote Pro" 
+                  width={32}
+                  height={32}
+                  className="h-8 w-8"
+                />
                 <span>Paint Quote Pro</span>
               </Link>
               <button
@@ -234,7 +239,7 @@ export function ACNavbar() {
                   >
                     Login
                   </button>
-                  <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-lg" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-lg" style={{ backgroundColor: '#2f97e0', borderColor: '#2f97e0' }} onClick={() => setIsMobileMenuOpen(false)}>
                     Try For Free
                   </Link>
                 </>
@@ -299,7 +304,7 @@ export function ACNavbar() {
 
         .ac-navbar-dropdown-link:hover {
           background: #f3f4f6;
-          color: #ef2b70;
+          color: #2f97e0;
         }
 
         /* Mobile Menu Styles */
@@ -378,7 +383,7 @@ export function ACNavbar() {
         .ac-mobile-menu-link:hover,
         .ac-mobile-menu-link.active {
           background: #fef3c7;
-          color: #ef2b70;
+          color: #2f97e0;
         }
 
         .ac-mobile-menu-dropdown-trigger {
@@ -421,7 +426,7 @@ export function ACNavbar() {
 
         .ac-mobile-menu-dropdown-link:hover {
           background: #f3f4f6;
-          color: #ef2b70;
+          color: #2f97e0;
         }
 
         .ac-mobile-menu-footer {

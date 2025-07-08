@@ -3,7 +3,64 @@ import { dbGet, dbRun } from '@/lib/database'
 
 export async function POST(req: NextRequest) {
   try {
-    const { companyId, setupData } = await req.json()
+    const requestData = await req.json()
+    
+    // Handle both old format (companyId + setupData) and new conversational format (accessCode + company details)
+    let companyId = requestData.companyId
+    let setupData = requestData.setupData
+    
+    if (requestData.accessCode) {
+      // New conversational setup format
+      const company = dbGet(`
+        SELECT id FROM companies WHERE access_code = ?
+      `, [requestData.accessCode])
+      
+      if (!company) {
+        return NextResponse.json(
+          { error: 'Invalid access code' },
+          { status: 404 }
+        )
+      }
+      
+      companyId = company.id
+      
+      // Update company details if provided
+      if (requestData.companyName || requestData.address || requestData.phone || requestData.email) {
+        const updateFields = []
+        const updateValues = []
+        
+        if (requestData.companyName) {
+          updateFields.push('name = ?')
+          updateValues.push(requestData.companyName)
+        }
+        if (requestData.address) {
+          updateFields.push('address = ?')
+          updateValues.push(requestData.address)
+        }
+        if (requestData.phone) {
+          updateFields.push('phone = ?')
+          updateValues.push(requestData.phone)
+        }
+        if (requestData.email) {
+          updateFields.push('email = ?')
+          updateValues.push(requestData.email)
+        }
+        
+        if (updateFields.length > 0) {
+          updateValues.push(companyId)
+          dbRun(`
+            UPDATE companies 
+            SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+          `, updateValues)
+        }
+      }
+      
+      // For conversational setup, create minimal setupData
+      setupData = {
+        setupType: requestData.setupType || 'conversational'
+      }
+    }
     
     if (!companyId) {
       return NextResponse.json(

@@ -16,8 +16,12 @@ export function Footer() {
         {/* Trust Indicators */}
         <div className="text-center mb-12 border-b border-gray-800 pb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Palette className="w-8 h-8 text-blue-400" />
-            <span className="text-2xl font-bold">ProPaint Quote</span>
+            <img 
+              src="/paint-quote-logo.png" 
+              alt="Paint Quote App" 
+              className="w-8 h-8"
+            />
+            <span className="text-2xl font-bold">Paint Quote App</span>
           </div>
           
           {/* Social Proof Stats */}

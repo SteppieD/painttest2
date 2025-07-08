@@ -2,10 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
-import AnalyticsProvider from '@/components/analytics/AnalyticsProvider'
-import { ACNavbarClean } from '@/components/adcreative/ACNavbar-clean'
-import { StructuredData } from '@/components/seo/StructuredData'
-import { AppFeedback } from '@/components/ui/app-feedback'
+import { ConditionalNavbar } from '@/components/layout/conditional-navbar'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -92,21 +89,33 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="ProPaint Quote" />
-        <meta name="msapplication-TileColor" content="#FF6B35" />
-        <meta name="msapplication-config" content="/browserconfig.xml" />
-        <link rel="canonical" href="https://www.paintquoteapp.com" />
-        <StructuredData />
-        <script src="/js/navigation-dropdown-fix.js" defer></script>
+        <link rel="manifest" href="/manifest.json" />
+        
+        {/* Google Tag Manager */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-563BQKRH');`,
+          }}
+        />
       </head>
       <body className={inter.className}>
-        <AnalyticsProvider gtmId="GTM-563BQKRH" ga4Id="G-984BZ3LDZE">
-          <ACNavbarClean />
-          <main style={{ paddingTop: '64px' }}>
-            {children}
-          </main>
-          <Toaster />
-          <AppFeedback />
-        </AnalyticsProvider>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe 
+            src="https://www.googletagmanager.com/ns.html?id=GTM-563BQKRH"
+            height="0" 
+            width="0" 
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
+        
+        <ConditionalNavbar />
+        {children}
+        <Toaster />
       </body>
     </html>
   )

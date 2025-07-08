@@ -25,6 +25,7 @@ import { Footer } from '@/components/shared/footer';
 import { ROICalculator } from '@/components/marketing/roi-calculator';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
 import { FeedbackBox } from '@/components/ui/feedback-box';
+import { QuickLinksSection } from '@/components/homepage/QuickLinksSection';
 
 export default function HomePage() {
   return (
@@ -96,13 +97,13 @@ export default function HomePage() {
                 icon: FileText,
                 title: "Professional Templates",
                 description: "Stunning quote templates that make you look like a million-dollar company. Customizable branding.",
-                color: "from-pink-500 to-pink-600"
+                color: "from-brand-primary to-brand-primary/90"
               },
               {
                 icon: TrendingUp,
                 title: "Win Rate Analytics",
                 description: "Track which quotes win and why. Optimize your pricing for maximum profit and conversion.",
-                color: "from-orange-500 to-orange-600"
+                color: "from-brand-secondary to-brand-secondary/90"
               },
               {
                 icon: Shield,
@@ -304,6 +305,9 @@ export default function HomePage() {
           <FeedbackBox type="website" position="inline" />
         </div>
       </section>
+
+      {/* Quick Links Section for SEO */}
+      <QuickLinksSection />
 
       <Footer />
 

@@ -2,411 +2,97 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Modern Design System */
+/* ================================================
+   CLEANED UP IMPORTS - REMOVED CONFLICTING FILES
+   ================================================ */
+
+/* Core Design Systems - Keep these */
 @import '../styles/design-system.css';
-
-/* Import Apple Liquid Glass System */
 @import '../styles/liquid-glass.css';
-
-/* Import AdCreative-Inspired Modern Design */
 @import '../styles/adcreative-design-system.css';
 
-/* Import Contractor-specific overrides for professional appearance */
-@import '../styles/contractor-overrides.css';
-
-/* Import Homepage optimization for SaaS conversions and readability */
-@import '../styles/homepage-optimization.css';
-
-/* Import Professional Contractor Theme - Must be last to override all pink colors */
+/* Professional Theme */
 @import '../styles/professional-contractor-theme.css';
 
-/* Import Navigation Balance Fixes */
+/* Navigation */
 @import '../styles/navigation-balance.css';
 
-/* Import Master Design System - Comprehensive CSS overhaul */
-@import '../styles/master-design-system.css';
+/* ================================================
+   BRAND COLOR SYSTEM
+   New brand colors from logo
+   ================================================ */
+@import '../styles/brand-color-system.css';
 
-/* Import Master UI Fix - Complete clean design overhaul */
-@import '../styles/master-ui-fix.css';
+/* ================================================
+   COMPREHENSIVE CONTRAST FIX
+   This replaces ALL previous contrast fixes
+   ================================================ */
+@import '../styles/comprehensive-contrast-fix.css';
 
-/* Import Pricing Section Fix - Fixes white on white text */
-@import '../styles/pricing-section-fix.css';
-
-/* Import Comprehensive UX/UI Audit Fix - WCAG compliant design system */
-@import '../styles/comprehensive-ux-audit-fix.css';
-
-/* Import Complete Design Transformation - Premium SaaS design overhaul */
-@import '../styles/complete-design-transformation.css';
-
-/* Import Pricing Section Critical Fix - Fixes white on white text issue */
-@import '../styles/pricing-section-critical-fix.css';
-
-/* SITE-WIDE CONTRAST FIXES - Ensure readability everywhere */
-
-/* 1. Hero Section - Force black text on light backgrounds */
-.hero-optimized,
-.hero-optimized *,
-.hero-optimized h1,
-.hero-optimized h2,
-.hero-optimized h3,
-.hero-optimized h4,
-.hero-optimized h5,
-.hero-optimized h6,
-.hero-optimized p,
-.hero-optimized span,
-.hero-optimized div,
-.hero-optimized strong,
-.hero-optimized em,
-.hero-optimized a {
-  color: #000000 !important;
-  opacity: 1 !important;
-}
-
-/* Ensure orange accents stay orange in hero */
-.hero-optimized .text-orange-600,
-.hero-optimized .text-orange-500,
-.hero-optimized .text-orange-700,
-.hero-optimized span[style*="#ea580c"] {
-  color: #ea580c !important;
-}
-
-/* Ensure green icons stay green in hero */
-.hero-optimized .text-green-600,
-.hero-optimized .text-green-500,
-.hero-optimized svg.text-green-600,
-.hero-optimized svg.text-green-500 {
-  color: #059669 !important;
-}
-
-/* Light gradient background for hero */
-.hero-optimized {
-  background: linear-gradient(to bottom right, #f9fafb, #fff7ed) !important;
-}
-
-/* 2. Fix Orange Buttons & Backgrounds - Use white text */
-.bg-orange-600,
-.bg-orange-700,
-.bg-orange-800,
-[class*="bg-orange-6"],
-[class*="bg-orange-7"],
-[class*="bg-orange-8"],
-.bg-\[#ea580c\],
-.bg-\[#dc2626\],
-.bg-\[#c2410c\],
-button[class*="orange"],
-a[class*="orange"] {
-  color: #ffffff !important;
-}
-
-/* Fix orange gradient backgrounds */
-[class*="from-orange"],
-[class*="to-orange"],
-.gradient-orange-contrast {
-  color: #ffffff !important;
-}
-
-/* Ensure all children of orange backgrounds have white text */
-.bg-orange-600 *,
-.bg-orange-700 *,
-.bg-orange-800 *,
-[class*="bg-orange-6"] *,
-[class*="bg-orange-7"] *,
-[class*="bg-orange-8"] *,
-[class*="from-orange"] *,
-[class*="to-orange"] * {
-  color: #ffffff !important;
-}
-
-/* 3. Pink/Red backgrounds - Use white text */
-.bg-\[#ef2b70\],
-.bg-\[#d91e5a\],
-[class*="bg-pink"],
-[class*="bg-red"],
-[class*="from-pink"],
-[class*="to-pink"],
-[class*="from-red"],
-[class*="to-red"] {
-  color: #ffffff !important;
-}
-
-.bg-\[#ef2b70\] *,
-.bg-\[#d91e5a\] *,
-[class*="bg-pink"] *,
-[class*="bg-red"] *,
-[class*="from-pink"] *,
-[class*="to-pink"] *,
-[class*="from-red"] *,
-[class*="to-red"] * {
-  color: #ffffff !important;
-}
-
-/* 4. Light backgrounds - Use dark text */
-.bg-gray-50,
-.bg-gray-100,
-.bg-orange-50,
-.bg-orange-100,
-.bg-pink-50,
-.bg-pink-100,
-[class*="bg-gray-5"],
-[class*="bg-gray-10"],
-[class*="bg-orange-5"],
-[class*="bg-orange-10"] {
-  color: #000000 !important;
-}
-
-.bg-gray-50 *,
-.bg-gray-100 *,
-.bg-orange-50 *,
-.bg-orange-100 *,
-.bg-pink-50 *,
-.bg-pink-100 *,
-[class*="bg-gray-5"] *,
-[class*="bg-gray-10"] *,
-[class*="bg-orange-5"] *,
-[class*="bg-orange-10"] * {
-  color: #000000 !important;
-}
-
-/* 5. Fix specific button contrasts */
+/* ================================================
+   OVERRIDE ORANGE BUTTON COLORS
+   Force brand blue on Try For Free button
+   ================================================ */
 .ac-btn-primary,
-.ac-btn-secondary,
-button.bg-orange-600,
-button.bg-orange-700,
-a.bg-orange-600,
-a.bg-orange-700 {
-  background-color: #ea580c !important;
+a[href="/trial-signup"].ac-btn-primary,
+.bg-orange-600,
+.bg-orange-500,
+.hover\:bg-orange-700:hover {
+  background-color: #2f97e0 !important;
+  border-color: #2f97e0 !important;
   color: #ffffff !important;
-  border: none !important;
 }
 
 .ac-btn-primary:hover,
-.ac-btn-secondary:hover,
-button.bg-orange-600:hover,
-button.bg-orange-700:hover,
-a.bg-orange-600:hover,
-a.bg-orange-700:hover {
-  background-color: #c2410c !important;
+a[href="/trial-signup"].ac-btn-primary:hover,
+.bg-orange-600:hover,
+.bg-orange-500:hover {
+  background-color: #1e7cc8 !important;
+  border-color: #1e7cc8 !important;
   color: #ffffff !important;
 }
 
-/* Fix white background buttons - ensure dark text */
-.bg-white,
-button.bg-white,
-a.bg-white,
-[class*="bg-white"] {
-  background-color: #ffffff !important;
-  color: #1f2937 !important; /* gray-800 */
-}
-
-.bg-white:hover,
-button.bg-white:hover,
-a.bg-white:hover,
-[class*="bg-white"]:hover {
-  background-color: #f3f4f6 !important; /* gray-100 */
-  color: #ea580c !important; /* orange-600 on hover */
-}
-
-/* Ensure white button SVGs and icons inherit color */
-.bg-white svg,
-button.bg-white svg,
-a.bg-white svg {
-  color: currentColor !important;
-}
-
-/* 6. Navigation specific fixes - preserve existing behavior */
-nav a:not([class*="bg-"]):not([class*="btn"]),
-header a:not([class*="bg-"]):not([class*="btn"]) {
-  /* Let existing styles work unless it's a button */
-}
-
-/* Ensure nav CTAs maintain contrast */
-nav a[class*="bg-"],
-nav button[class*="bg-"],
-header a[class*="bg-"],
-header button[class*="bg-"] {
-  /* Buttons will be handled by button rules above */
-}
-
-/* 7. Fix badge contrasts */
-.badge,
-[class*="badge"] {
-  background-color: #ea580c !important;
-  color: #ffffff !important;
-}
-
-/* 8. Fix trust badges and indicators */
-.trust-badge,
-.ac-hero-badge {
-  background-color: #ea580c !important;
-  color: #ffffff !important;
-}
-
-/* 9. Ensure form elements are visible */
-input,
-textarea,
-select {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  border: 1px solid #d1d5db !important;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: #6b7280 !important;
-}
-
-/* 10. Override any remaining opacity issues */
-* {
-  opacity: 1 !important;
-}
-
-/* 11. Fix specific pink gradient sections */
-.gradient-pink-contrast {
-  background: linear-gradient(135deg, #ef2b70 0%, #c2185b 100%) !important;
-  color: white !important;
-}
-
-.gradient-pink-contrast * {
-  color: white !important;
-}
-
-/* 12. Ensure icons maintain their colors */
-svg.text-green-600,
-svg.text-green-500,
-svg.text-blue-600,
-svg.text-blue-500 {
-  color: currentColor !important;
-}
-
-/* 13. Fix card backgrounds */
-.card,
-.ac-card,
-[class*="card"] {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  border: 1px solid #e5e7eb !important;
-}
-
-/* 14. Fix pricing cards */
-.ac-pricing-card {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-}
-
-.ac-pricing-card.featured {
-  border-color: #ea580c !important;
-}
-
-/* 15. Final CTA sections */
-section[class*="gradient"] {
-  color: #ffffff !important;
-}
-
-section[class*="gradient"] h1,
-section[class*="gradient"] h2,
-section[class*="gradient"] h3,
-section[class*="gradient"] p,
-section[class*="gradient"] span {
-  color: #ffffff !important;
-}
-
-/* 16. Ensure proper contrast for all CTAs */
-/* Orange CTAs - white text */
-.bg-orange-600,
-.bg-orange-700,
-.bg-\[#ea580c\],
-.bg-\[#ef2b70\],
-.bg-\[#d91e5a\] {
-  color: #ffffff !important;
-}
-
-/* White CTAs - dark text */
-.bg-white {
-  color: #1f2937 !important;
-}
-
-/* Navigation specific fixes */
-nav .bg-\[#ef2b70\],
-header .bg-\[#ef2b70\] {
-  background-color: #ef2b70 !important;
-  color: #ffffff !important;
-}
-
-nav .bg-\[#ef2b70\]:hover,
-header .bg-\[#ef2b70\]:hover {
-  background-color: #d91e5a !important;
-  color: #ffffff !important;
-}
-
-/* 17. Quote Generator Mockup - ensure proper contrast */
-.hero-visual .bg-white {
-  color: #1f2937 !important;
-}
-
-.hero-visual .bg-white h3,
-.hero-visual .bg-white .text-gray-900 {
-  color: #1f2937 !important;
-}
-
-.hero-visual .bg-white .text-gray-600 {
-  color: #6b7280 !important;
-}
-
-.hero-visual .bg-white .text-green-600 {
-  color: #059669 !important;
-}
-
-.hero-visual .bg-white .text-orange-600 {
-  color: #ea580c !important;
-}
-
-/* 18. Fix transparent buttons that become white on hover */
-/* Ensure any button/link with hover:bg-white has proper text color */
-[class*="hover:bg-white"]:hover {
-  color: #ea580c !important; /* Orange text on white background */
-}
-
-/* Specific fix for transparent white-bordered buttons */
-.bg-transparent[class*="hover:bg-white"]:hover,
-a.bg-transparent[class*="hover:bg-white"]:hover,
-button.bg-transparent[class*="hover:bg-white"]:hover {
-  background-color: #ffffff !important;
-  color: #ea580c !important;
-  border-color: #ea580c !important;
-}
-
-/* Ensure hover states are properly handled for all CTAs */
-.text-white[class*="hover:bg-white"]:hover {
-  color: #ea580c !important;
-}
-
-/* Override any inline styles during hover transitions */
-[class*="hover:bg-white"]:hover * {
-  color: inherit !important;
-}
+/* ================================================
+   REMOVED THESE CONFLICTING IMPORTS:
+   - contractor-overrides.css
+   - homepage-optimization.css  
+   - master-design-system.css
+   - master-ui-fix.css
+   - pricing-section-fix.css
+   - comprehensive-ux-audit-fix.css
+   - complete-design-transformation.css
+   - pricing-section-critical-fix.css
+   - All inline contrast fixes below
+   ================================================ */
 
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 220 39% 11%; /* Dark Navy #08101c */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 39% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 39% 11%;
+    --primary: 205 68% 53%; /* Primary Blue #2f97e0 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 155 50% 48%; /* Teal #3db987 */
+    --secondary-foreground: 0 0% 100%;
     --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
+    --accent: 124 41% 63%; /* Green #6ed174 */
+    --accent-foreground: 220 39% 11%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 205 68% 53%;
     --radius: 0.5rem;
+    
+    /* Brand colors as CSS custom properties */
+    --brand-primary: #2f97e0;
+    --brand-secondary: #3db987;
+    --brand-accent: #6ed174;
+    --brand-dark: #08101c;
   }
 
   .dark {
@@ -576,128 +262,6 @@ button.bg-transparent[class*="hover:bg-white"]:hover {
     @apply hover:bg-blue-700 focus:ring-blue-500;
   }
   
-  .btn-flat-primer {
-    @apply btn-flat bg-paint-primer text-paint-primer-foreground;
-    @apply hover:bg-paint-primer-dark focus:ring-paint-primer;
-  }
-  
-  .btn-flat-wall {
-    @apply btn-flat bg-paint-wall text-paint-wall-foreground;
-    @apply hover:bg-paint-wall-dark focus:ring-paint-wall;
-  }
-  
-  .btn-flat-ceiling {
-    @apply btn-flat bg-paint-ceiling text-paint-ceiling-foreground;
-    @apply hover:bg-paint-ceiling-dark focus:ring-paint-ceiling;
-  }
-  
-  .btn-flat-trim {
-    @apply btn-flat bg-paint-trim text-paint-trim-foreground;
-    @apply hover:bg-paint-trim-dark focus:ring-paint-trim;
-  }
-  
-  /* Flat Design Card Styles */
-  .card-flat {
-    @apply bg-white rounded-flat-lg border border-flat-gray-200;
-    @apply shadow-flat hover:shadow-flat-hover transition-shadow duration-200;
-  }
-  
-  .card-flat-primer {
-    @apply card-flat border-paint-primer-light;
-    @apply bg-gradient-to-br from-paint-primer/5 to-paint-primer/10;
-  }
-  
-  .card-flat-wall {
-    @apply card-flat border-paint-wall-light;
-    @apply bg-gradient-to-br from-paint-wall/5 to-paint-wall/10;
-  }
-  
-  .card-flat-ceiling {
-    @apply card-flat border-paint-ceiling-light;
-    @apply bg-gradient-to-br from-paint-ceiling/5 to-paint-ceiling/10;
-  }
-  
-  .card-flat-trim {
-    @apply card-flat border-paint-trim-light;
-    @apply bg-gradient-to-br from-paint-trim/5 to-paint-trim/10;
-  }
-  
-  /* Flat Design Typography */
-  .text-flat-heading {
-    @apply text-flat-2xl font-bold text-flat-gray-900;
-  }
-  
-  .text-flat-subheading {
-    @apply text-flat-lg font-semibold text-flat-gray-800;
-  }
-  
-  .text-flat-body {
-    @apply text-flat-base font-medium text-flat-gray-700;
-  }
-  
-  .text-flat-caption {
-    @apply text-flat-sm font-medium text-flat-gray-600;
-  }
-  
-  /* Flat Design Icons */
-  .icon-flat {
-    @apply w-5 h-5 flex-shrink-0;
-  }
-  
-  .icon-flat-lg {
-    @apply w-6 h-6 flex-shrink-0;
-  }
-  
-  /* Flat Design Interactive States */
-  .interactive-flat {
-    @apply cursor-pointer transition-all duration-200;
-    @apply hover:scale-105 active:scale-95;
-  }
-  
-  /* Flat Design Mobile Optimizations */
-  .mobile-flat-button {
-    @apply min-h-[48px] min-w-[48px] text-flat-base font-semibold;
-    @apply rounded-flat-lg touch-target;
-  }
-  
-  /* Flat Design Success/Error States */
-  .state-success {
-    @apply bg-business-success text-white;
-  }
-  
-  .state-warning {
-    @apply bg-business-warning text-white;
-  }
-  
-  .state-error {
-    @apply bg-business-error text-white;
-  }
-  
-  /* Flat Design Data Visualization */
-  .chart-flat {
-    @apply bg-white rounded-flat-lg border border-flat-gray-200 shadow-flat;
-  }
-  
-  .metric-card-flat {
-    @apply card-flat p-4 hover:shadow-flat-hover transition-shadow duration-200;
-  }
-  
-  .metric-card-primary {
-    @apply metric-card-flat border-business-primary/20 bg-gradient-to-br from-business-primary/5 to-business-primary/10;
-  }
-  
-  .metric-card-success {
-    @apply metric-card-flat border-business-success/20 bg-gradient-to-br from-business-success/5 to-business-success/10;
-  }
-  
-  .metric-card-warning {
-    @apply metric-card-flat border-business-warning/20 bg-gradient-to-br from-business-warning/5 to-business-warning/10;
-  }
-  
-  .metric-card-info {
-    @apply metric-card-flat border-business-info/20 bg-gradient-to-br from-business-info/5 to-business-info/10;
-  }
-  
   /* Progress Bars */
   .progress-flat {
     @apply w-full bg-flat-gray-200 rounded-flat-full h-2;
@@ -707,44 +271,12 @@ button.bg-transparent[class*="hover:bg-white"]:hover {
     @apply h-2 rounded-flat-full transition-all duration-300 ease-out;
   }
   
-  .progress-primary {
-    @apply progress-bar-flat bg-gradient-to-r from-business-primary to-business-primary-dark;
-  }
-  
-  .progress-success {
-    @apply progress-bar-flat bg-gradient-to-r from-business-success to-green-600;
-  }
-  
-  .progress-warning {
-    @apply progress-bar-flat bg-gradient-to-r from-business-warning to-yellow-600;
-  }
-  
   /* Badge Styles */
   .badge-flat {
     @apply px-3 py-1 rounded-flat text-flat-sm font-semibold;
   }
   
-  .badge-flat-primary {
-    @apply badge-flat bg-business-primary text-white;
-  }
-  
-  .badge-flat-success {
-    @apply badge-flat bg-business-success text-white;
-  }
-  
-  .badge-flat-warning {
-    @apply badge-flat bg-business-warning text-white;
-  }
-  
-  .badge-flat-info {
-    @apply badge-flat bg-business-info text-white;
-  }
-  
-  .badge-flat-outline {
-    @apply badge-flat border border-flat-gray-300 bg-white text-flat-gray-700;
-  }
-  
-  /* Flat Design Micro-interactions */
+  /* Micro-interactions */
   .hover-lift {
     @apply transform transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-flat-hover;
   }
@@ -753,24 +285,8 @@ button.bg-transparent[class*="hover:bg-white"]:hover {
     @apply transform transition-transform duration-200 ease-out hover:scale-105;
   }
   
-  .hover-glow {
-    @apply transition-all duration-200 ease-out hover:shadow-lg hover:shadow-business-primary/20;
-  }
-  
   .click-feedback {
     @apply active:scale-95 transition-transform duration-100 ease-out;
-  }
-  
-  .fade-in {
-    @apply opacity-0 animate-fade-in;
-  }
-  
-  .slide-up {
-    @apply transform translate-y-4 opacity-0 animate-slide-up;
-  }
-  
-  .bounce-in {
-    @apply transform scale-95 opacity-0 animate-bounce-in;
   }
   
   /* Loading States */
@@ -832,15 +348,6 @@ button.bg-transparent[class*="hover:bg-white"]:hover {
 
 .animate-bounce-in {
   animation: bounce-in 0.5s ease-out forwards;
-}
-
-.animate-shimmer {
-  animation: shimmer 2s infinite linear;
-}
-
-/* Staggered Animations */
-.stagger-children > * {
-  animation-delay: calc(var(--stagger-delay, 0.1s) * var(--index, 0));
 }
 
 /* Animation for typing indicator */
@@ -1843,11 +1350,11 @@ button.bg-transparent[class*="hover:bg-white"]:hover {
     background: white !important;
   }
   
-  .print\\:hidden {
+  .print\:hidden {
     display: none !important;
   }
   
-  .print\\:shadow-none {
+  .print\:shadow-none {
     box-shadow: none !important;
   }
   
@@ -1866,4 +1373,3 @@ button.bg-transparent[class*="hover:bg-white"]:hover {
     color: #2563eb !important;
   }
 }
-

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -13,22 +13,24 @@ import {
   BookOpen,
   Smartphone,
   Users,
-  TrendingUp
+  TrendingUp,
+  Building2,
+  Shield,
+  Zap,
+  BarChart3,
+  Award,
+  Briefcase,
+  MapPin
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isResourcesOpen, setIsResourcesOpen] = useState(false);
-  const [isUseCasesOpen, setIsUseCasesOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isProductOpen, setIsProductOpen] = useState(false);
+  const [isSolutionsOpen, setIsSolutionsOpen] = useState(false);
+  const [isCompanyOpen, setIsCompanyOpen] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    // Check if user is logged in by looking for company data in localStorage
-    const companyData = localStorage.getItem("paintquote_company");
-    setIsLoggedIn(!!companyData);
-  }, [pathname]); // Re-check on route changes
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -37,235 +39,180 @@ export function Header() {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
     setIsResourcesOpen(false);
-    setIsUseCasesOpen(false);
+    setIsProductOpen(false);
+    setIsSolutionsOpen(false);
+    setIsCompanyOpen(false);
   };
 
   const isActive = (path: string) => pathname === path;
 
   return (
-<<<<<<< HEAD
-    <header className="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-100">
-      <div className="container mx-auto px-8 py-5">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-[#ef2b70] to-[#d91e5a] group-hover:shadow-md transition-all duration-200">
-              <Palette className="w-5 h-5 text-white" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold text-gray-900 leading-tight">
-                Paint Quote Pro
-              </span>
-              <span className="text-xs text-gray-500">
-                AI Painting Estimates
-              </span>
-            </div>
-          </Link>
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-12 flex-1 justify-center">
-            <Link 
-              href="/" 
-              className={`${isActive('/') ? 'text-[#ef2b70]' : 'text-gray-700 hover:text-[#ef2b70]'} transition-colors duration-200 font-medium text-base`}
-            >
-              Home
-            </Link>
-            <Link 
-              href="/features" 
-              className={`${isActive('/features') ? 'text-[#ef2b70]' : 'text-gray-700 hover:text-[#ef2b70]'} transition-colors duration-200 font-medium text-base`}
-=======
-    <header className="neomorphism-nav border-b sticky top-0 z-50">
+    <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 neomorphism-interactive px-4 py-2 rounded-2xl">
-            <div className="neomorphism-flat p-2 rounded-xl">
-              <Palette className="w-6 h-6 text-blue-600" />
-            </div>
-            <span className="text-2xl font-bold text-gray-900 neomorphism-text">ProPaint Quote</span>
+          <Link href="/" className="flex items-center gap-2">
+            <img 
+              src="/paint-quote-logo.png" 
+              alt="Paint Quote App" 
+              className="w-8 h-8"
+            />
+            <span className="text-2xl font-bold text-gray-900">Paint Quote App</span>
           </Link>
           
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-4">
-            <Link 
-              href="/features" 
-              className={`neomorphism-button px-4 py-2 rounded-xl transition-all duration-200 ${
-                isActive('/features') 
-                  ? 'neomorphism-button-primary' 
-                  : 'text-gray-700 hover:neomorphism-blue'
-              }`}
->>>>>>> clean-recovery-deploy
-            >
-              Features
-            </Link>
-            
-            {/* Solutions Dropdown */}
+          <nav className="hidden lg:flex items-center gap-6">
+            {/* Product Dropdown */}
             <div 
-              className="relative group"
-              onMouseEnter={() => setIsUseCasesOpen(true)}
-              onMouseLeave={() => setTimeout(() => setIsUseCasesOpen(false), 200)}
+              className="relative"
+              onMouseEnter={() => setIsProductOpen(true)}
+              onMouseLeave={() => setIsProductOpen(false)}
             >
-              <button className="flex items-center gap-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base py-2">
-                Solutions
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isUseCasesOpen ? 'rotate-180' : ''}`} />
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
+                Product
+                <ChevronDown className="w-4 h-4" />
               </button>
               
-              {/* Invisible bridge to prevent gap - extended height */}
-              {isUseCasesOpen && (
-                <div className="absolute top-full left-0 h-2 w-full" />
+              {isProductOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
+                  <Link href="/features" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Zap className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Features</div>
+                      <div className="text-sm text-gray-500">Everything included</div>
+                    </div>
+                  </Link>
+                  <Link href="/demo" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <BarChart3 className="w-5 h-5 text-green-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Watch Demo</div>
+                      <div className="text-sm text-gray-500">See it in action</div>
+                    </div>
+                  </Link>
+                  <Link href="/integrations" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Shield className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Integrations</div>
+                      <div className="text-sm text-gray-500">Connect your tools</div>
+                    </div>
+                  </Link>
+                  <Link href="/security" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Shield className="w-5 h-5 text-gray-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Security</div>
+                      <div className="text-sm text-gray-500">Enterprise-grade</div>
+                    </div>
+                  </Link>
+                </div>
               )}
+            </div>
+
+            {/* Solutions Dropdown */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsSolutionsOpen(true)}
+              onMouseLeave={() => setIsSolutionsOpen(false)}
+            >
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
+                Solutions
+                <ChevronDown className="w-4 h-4" />
+              </button>
               
-              {isUseCasesOpen && (
-                <div 
-                  className="absolute top-full left-0 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50"
-                  onMouseEnter={() => setIsUseCasesOpen(true)}
-                  onMouseLeave={() => setIsUseCasesOpen(false)}
-                >
-                  {/* Use Cases Section */}
-                  <div className="px-3 pb-2">
-                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 py-1">Use Cases</div>
-                    <Link href="/interior-painting-quote-calculator" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
-                      <div className="font-medium text-gray-900">Interior Painting</div>
-                      <div className="text-sm text-gray-500">Room-by-room estimates</div>
-                    </Link>
-                    <Link href="/exterior-painting-estimate-calculator" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
-                      <div className="font-medium text-gray-900">Exterior Painting</div>
-                      <div className="text-sm text-gray-500">House exterior quotes</div>
-                    </Link>
-                    <Link href="/commercial-painting-estimating-software" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
-                      <div className="font-medium text-gray-900">Commercial</div>
-                      <div className="text-sm text-gray-500">Large project estimates</div>
-                    </Link>
-                  </div>
-                  
-                  <div className="border-t border-gray-100 my-2"></div>
-                  
-                  {/* Business Solutions Section */}
-                  <div className="px-3 pt-2">
-                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 py-1">Business Solutions</div>
-                    <Link href="/painting-contractors" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
+              {isSolutionsOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
+                  <Link href="/painting-contractors" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Users className="w-5 h-5 text-blue-600" />
+                    <div>
                       <div className="font-medium text-gray-900">For Contractors</div>
-                      <div className="text-sm text-gray-500">Professional painting businesses</div>
-                    </Link>
-                    <Link href="/how-to-scale-painting-business" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
-                      <div className="font-medium text-gray-900">Scaling Your Business</div>
-                      <div className="text-sm text-gray-500">Growth strategies for painters</div>
-                    </Link>
-                    <Link href="/painting-business-software" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
-                      <div className="font-medium text-gray-900">Business Management</div>
-                      <div className="text-sm text-gray-500">Complete business software</div>
-                    </Link>
-                    <Link href="/painting-estimate-software" className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200">
-                      <div className="font-medium text-gray-900">Estimate Software</div>
-                      <div className="text-sm text-gray-500">Professional quoting tools</div>
-                    </Link>
-                  </div>
+                      <div className="text-sm text-gray-500">Painting businesses</div>
+                    </div>
+                  </Link>
+                  <Link href="/enterprise" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Building2 className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Enterprise</div>
+                      <div className="text-sm text-gray-500">Large teams</div>
+                    </div>
+                  </Link>
+                  <Link href="/commercial-painting-estimating" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Briefcase className="w-5 h-5 text-green-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Commercial</div>
+                      <div className="text-sm text-gray-500">Large projects</div>
+                    </div>
+                  </Link>
+                  <Link href="/locations" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <MapPin className="w-5 h-5 text-red-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">By Location</div>
+                      <div className="text-sm text-gray-500">Find local contractors</div>
+                    </div>
+                  </Link>
                 </div>
               )}
             </div>
             
             {/* Resources Dropdown */}
             <div 
-              className="relative group"
+              className="relative"
               onMouseEnter={() => setIsResourcesOpen(true)}
-              onMouseLeave={() => setTimeout(() => setIsResourcesOpen(false), 200)}
+              onMouseLeave={() => setIsResourcesOpen(false)}
             >
-<<<<<<< HEAD
-              <button className="flex items-center gap-1 text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base py-2">
-=======
-              <button className="neomorphism-button px-4 py-2 rounded-xl flex items-center gap-2 text-gray-700 hover:neomorphism-blue transition-all duration-200">
->>>>>>> clean-recovery-deploy
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
                 Resources
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isResourcesOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className="w-4 h-4" />
               </button>
               
-              {/* Invisible bridge to prevent gap - extended height */}
               {isResourcesOpen && (
-<<<<<<< HEAD
-                <div className="absolute top-full left-0 h-2 w-full" />
-              )}
-              
-              {isResourcesOpen && (
-                <div 
-                  className="absolute top-full left-0 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-3 z-50"
-                  onMouseEnter={() => setIsResourcesOpen(true)}
-                  onMouseLeave={() => setIsResourcesOpen(false)}
-                >
-                  <Link href="/painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
-=======
-                <div className="neomorphism-modal absolute top-full left-0 mt-3 w-64 py-3 z-50 border-0">
-                  <Link href="/painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl hover:neomorphism-subtle transition-all duration-200">
+                <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg shadow-lg border py-2 z-50">
+                  {/* Free Tools Section */}
+                  <div className="px-4 py-2 border-b">
+                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Free Tools</h3>
+                  </div>
+                  <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
                     <Calculator className="w-5 h-5 text-blue-600" />
->>>>>>> clean-recovery-deploy
                     <div>
-                      <div className="font-medium text-gray-900">Free Calculator</div>
-                      <div className="text-sm text-gray-500">Instant paint estimates</div>
+                      <div className="font-medium text-gray-900">Quote Calculator</div>
+                      <div className="text-sm text-gray-500">Instant estimates</div>
                     </div>
                   </Link>
-<<<<<<< HEAD
-                  <Link href="/paint-estimate-templates" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
-=======
-                  <Link href="/painting-quote-templates" className="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl hover:neomorphism-subtle transition-all duration-200">
+                  <Link href="/paint-estimate-templates" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
                     <FileText className="w-5 h-5 text-green-600" />
->>>>>>> clean-recovery-deploy
                     <div>
                       <div className="font-medium text-gray-900">Quote Templates</div>
-                      <div className="text-sm text-gray-500">Professional templates</div>
+                      <div className="text-sm text-gray-500">Professional formats</div>
                     </div>
                   </Link>
-<<<<<<< HEAD
-                  <Link href="/interior-painting-quote-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
+                  <Link href="/roi-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <TrendingUp className="w-5 h-5 text-purple-600" />
                     <div>
-                      <div className="font-medium text-gray-900">Interior Calculator</div>
-                      <div className="text-sm text-gray-500">Room-by-room quotes</div>
+                      <div className="font-medium text-gray-900">ROI Calculator</div>
+                      <div className="text-sm text-gray-500">See your savings</div>
                     </div>
                   </Link>
-                  <Link href="/exterior-painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
-                    <div>
-                      <div className="font-medium text-gray-900">Exterior Calculator</div>
-                      <div className="text-sm text-gray-500">House exterior estimates</div>
-                    </div>
-                  </Link>
-                  <Link href="/house-painting-cost-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
-                    <div>
-                      <div className="font-medium text-gray-900">House Cost Calculator</div>
-                      <div className="text-sm text-gray-500">Complete house pricing</div>
-                    </div>
-                  </Link>
-                  <Link href="/paint-contractor-app" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
-                    <div>
-                      <div className="font-medium text-gray-900">Contractor App</div>
-                      <div className="text-sm text-gray-500">Mobile painting quotes</div>
-                    </div>
-                  </Link>
-                  <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
-=======
-                  <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl hover:neomorphism-subtle transition-all duration-200">
-                    <BookOpen className="w-5 h-5 text-purple-600" />
->>>>>>> clean-recovery-deploy
+                  
+                  {/* Learning Center Section */}
+                  <div className="px-4 py-2 border-b border-t mt-2">
+                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Learning Center</h3>
+                  </div>
+                  <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <BookOpen className="w-5 h-5 text-indigo-600" />
                     <div>
                       <div className="font-medium text-gray-900">Quoting Guide</div>
                       <div className="text-sm text-gray-500">Expert strategies</div>
                     </div>
                   </Link>
-<<<<<<< HEAD
-                  <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
-=======
-                  <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl hover:neomorphism-subtle transition-all duration-200">
-                    <Smartphone className="w-5 h-5 text-indigo-600" />
->>>>>>> clean-recovery-deploy
+                  <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Award className="w-5 h-5 text-emerald-600" />
                     <div>
-                      <div className="font-medium text-gray-900">Mobile App</div>
-                      <div className="text-sm text-gray-500">Quote on-site</div>
+                      <div className="font-medium text-gray-900">Success Stories</div>
+                      <div className="text-sm text-gray-500">Real results</div>
                     </div>
                   </Link>
-<<<<<<< HEAD
-                  <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-200">
-=======
-                  <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl hover:neomorphism-subtle transition-all duration-200">
-                    <TrendingUp className="w-5 h-5 text-emerald-600" />
->>>>>>> clean-recovery-deploy
+                  <Link href="/blog" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <FileText className="w-5 h-5 text-gray-600" />
                     <div>
-                      <div className="font-medium text-gray-900">Case Studies</div>
-                      <div className="text-sm text-gray-500">Real success stories</div>
+                      <div className="font-medium text-gray-900">Blog</div>
+                      <div className="text-sm text-gray-500">Tips & insights</div>
                     </div>
                   </Link>
                 </div>
@@ -274,84 +221,63 @@ export function Header() {
             
             <Link 
               href="/pricing" 
-<<<<<<< HEAD
-              className={`${isActive('/pricing') ? 'text-[#ef2b70]' : 'text-gray-700 hover:text-[#ef2b70]'} transition-colors duration-200 font-medium text-base`}
+              className={`${isActive('/pricing') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}`}
             >
               Pricing
             </Link>
-=======
-              className={`neomorphism-button px-4 py-2 rounded-xl transition-all duration-200 ${
-                isActive('/pricing') 
-                  ? 'neomorphism-button-primary' 
-                  : 'text-gray-700 hover:neomorphism-blue'
-              }`}
+            
+            {/* Company Dropdown */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsCompanyOpen(true)}
+              onMouseLeave={() => setIsCompanyOpen(false)}
             >
-              Pricing
-            </Link>
-            <Link 
-              href="/about" 
-              className={`neomorphism-button px-4 py-2 rounded-xl transition-all duration-200 ${
-                isActive('/about') 
-                  ? 'neomorphism-button-primary' 
-                  : 'text-gray-700 hover:neomorphism-blue'
-              }`}
-            >
-              About
-            </Link>
-            <Link 
-              href="/contact" 
-              className={`neomorphism-button px-4 py-2 rounded-xl transition-all duration-200 ${
-                isActive('/contact') 
-                  ? 'neomorphism-button-primary' 
-                  : 'text-gray-700 hover:neomorphism-blue'
-              }`}
-            >
-              Contact
-            </Link>
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
+                Company
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              
+              {isCompanyOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
+                  <Link href="/about" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Building2 className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">About Us</div>
+                      <div className="text-sm text-gray-500">Our story</div>
+                    </div>
+                  </Link>
+                  <Link href="/careers" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Briefcase className="w-5 h-5 text-green-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Careers</div>
+                      <div className="text-sm text-gray-500">Join our team</div>
+                    </div>
+                  </Link>
+                  <Link href="/contact" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Users className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Contact</div>
+                      <div className="text-sm text-gray-500">Get in touch</div>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
             <Link 
               href="/access-code" 
-              className="neomorphism-button px-4 py-2 rounded-xl text-gray-700 hover:neomorphism-green transition-all duration-200"
+              className="text-gray-600 hover:text-gray-900 text-sm"
             >
               Sign In
             </Link>
-            <Link href="/trial-signup" className="neomorphism-button-primary px-6 py-3 rounded-2xl font-semibold hover:scale-105 transition-all duration-200">
-              Start Free Trial
-            </Link>
->>>>>>> clean-recovery-deploy
+            <Button asChild className="bg-blue-600 hover:bg-blue-700">
+              <Link href="/trial-signup">Start Free Trial</Link>
+            </Button>
           </nav>
-          
-          {/* Right side - Login & CTA */}
-          <div className="hidden lg:flex items-center gap-6">
-            {isLoggedIn ? (
-              <Link 
-                href="/dashboard" 
-                className="text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base"
-              >
-                Dashboard
-              </Link>
-            ) : (
-              <>
-                <Link 
-                  href="/access-code" 
-                  className="text-gray-700 hover:text-[#ef2b70] transition-colors duration-200 font-medium text-base"
-                >
-                  Login
-                </Link>
-                <Link href="/trial-signup" className="px-6 py-2.5 bg-[#ef2b70] text-white font-semibold rounded-full hover:bg-[#d91e5a] transition-all duration-200 shadow-sm hover:shadow-md">
-                  Try For Free Now
-                </Link>
-              </>
-            )}
-          </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={toggleMobileMenu}
-<<<<<<< HEAD
-            className="lg:hidden p-2 text-gray-600 hover:text-[#ef2b70] focus:outline-none focus:ring-2 focus:ring-[#ef2b70] focus:ring-offset-2 rounded-xl transition-all duration-200"
-=======
-            className="lg:hidden neomorphism-button p-3 text-gray-700 hover:neomorphism-blue focus:outline-none rounded-xl transition-all duration-200"
->>>>>>> clean-recovery-deploy
+            className="lg:hidden p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
@@ -364,88 +290,91 @@ export function Header() {
 
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 border-t border-gray-100">
-            <nav className="flex flex-col space-y-3 pt-4">
-              <Link 
-                href="/" 
-                className={`${isActive('/') ? 'text-[#ef2b70] font-semibold' : 'text-gray-700 hover:text-[#ef2b70]'} py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium`}
-                onClick={closeMobileMenu}
-              >
-                Home
-              </Link>
-              <Link 
-                href="/features" 
-                className={`${isActive('/features') ? 'text-[#ef2b70] font-semibold' : 'text-gray-700 hover:text-[#ef2b70]'} py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium`}
-                onClick={closeMobileMenu}
-              >
-                Features
-              </Link>
+          <div className="lg:hidden mt-4 pb-4 border-t">
+            <nav className="flex flex-col space-y-4 pt-4">
+              {/* Mobile Product Section */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => setIsProductOpen(!isProductOpen)}
+                  className="flex items-center justify-between w-full text-gray-600 hover:text-gray-900 py-2"
+                >
+                  Product
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isProductOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isProductOpen && (
+                  <div className="pl-4 space-y-2 border-l-2 border-gray-100">
+                    <Link 
+                      href="/features" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Features
+                    </Link>
+                    <Link 
+                      href="/demo" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Watch Demo
+                    </Link>
+                    <Link 
+                      href="/integrations" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Integrations
+                    </Link>
+                    <Link 
+                      href="/security" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Security
+                    </Link>
+                  </div>
+                )}
+              </div>
               
               {/* Mobile Solutions Section */}
               <div className="space-y-2">
                 <button
-                  onClick={() => setIsUseCasesOpen(!isUseCasesOpen)}
-                  className="flex items-center justify-between w-full text-gray-700 hover:text-[#ef2b70] py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium"
+                  onClick={() => setIsSolutionsOpen(!isSolutionsOpen)}
+                  className="flex items-center justify-between w-full text-gray-600 hover:text-gray-900 py-2"
                 >
                   Solutions
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isUseCasesOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isSolutionsOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
-                {isUseCasesOpen && (
-                  <div className="pl-4 space-y-1 border-l-2 border-gray-200">
-                    {/* Use Cases */}
-                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 py-1">Use Cases</div>
-                    <Link 
-                      href="/interior-painting-quote-calculator" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                      onClick={closeMobileMenu}
-                    >
-                      Interior Painting
-                    </Link>
-                    <Link 
-                      href="/exterior-painting-estimate-calculator" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                      onClick={closeMobileMenu}
-                    >
-                      Exterior Painting
-                    </Link>
-                    <Link 
-                      href="/commercial-painting-estimating-software" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                      onClick={closeMobileMenu}
-                    >
-                      Commercial
-                    </Link>
-                    
-                    {/* Business Solutions */}
-                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 py-1 pt-3">Business Solutions</div>
+                {isSolutionsOpen && (
+                  <div className="pl-4 space-y-2 border-l-2 border-gray-100">
                     <Link 
                       href="/painting-contractors" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
                       For Contractors
                     </Link>
                     <Link 
-                      href="/how-to-scale-painting-business" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      href="/enterprise" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
-                      Scaling Your Business
+                      Enterprise
                     </Link>
                     <Link 
-                      href="/painting-business-software" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      href="/commercial-painting-estimating" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
-                      Business Management
+                      Commercial
                     </Link>
                     <Link 
-                      href="/painting-estimate-software" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      href="/locations" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
-                      Estimate Software
+                      By Location
                     </Link>
                   </div>
                 )}
@@ -455,76 +384,55 @@ export function Header() {
               <div className="space-y-2">
                 <button
                   onClick={() => setIsResourcesOpen(!isResourcesOpen)}
-                  className="flex items-center justify-between w-full text-gray-700 hover:text-[#ef2b70] py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium"
+                  className="flex items-center justify-between w-full text-gray-600 hover:text-gray-900 py-2"
                 >
                   Resources
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isResourcesOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isResourcesOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
                 {isResourcesOpen && (
-                  <div className="pl-4 space-y-1 border-l-2 border-gray-200">
+                  <div className="pl-4 space-y-2 border-l-2 border-gray-100">
                     <Link 
-                      href="/painting-estimate-calculator" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      href="/painting-estimate-calculator-free" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
-                      Free Calculator
+                      Quote Calculator
                     </Link>
                     <Link 
                       href="/paint-estimate-templates" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
                       Quote Templates
                     </Link>
                     <Link 
-                      href="/interior-painting-quote-calculator" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      href="/roi-calculator" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
-                      Interior Calculator
-                    </Link>
-                    <Link 
-                      href="/exterior-painting-estimate-calculator" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                      onClick={closeMobileMenu}
-                    >
-                      Exterior Calculator
-                    </Link>
-                    <Link 
-                      href="/house-painting-cost-calculator" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                      onClick={closeMobileMenu}
-                    >
-                      House Cost Calculator
-                    </Link>
-                    <Link 
-                      href="/paint-contractor-app" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                      onClick={closeMobileMenu}
-                    >
-                      Contractor App
+                      ROI Calculator
                     </Link>
                     <Link 
                       href="/how-to-quote-painting-jobs-professionally" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
                       Quoting Guide
                     </Link>
                     <Link 
-                      href="/painting-estimate-calculator-free" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      href="/painting-contractor-software-case-study" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
-                      Mobile App
+                      Success Stories
                     </Link>
                     <Link 
-                      href="/painting-contractor-software-case-study" 
-                      className="block text-gray-600 hover:text-[#ef2b70] py-2 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      href="/blog" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
-                      Case Studies
+                      Blog
                     </Link>
                   </div>
                 )}
@@ -532,39 +440,58 @@ export function Header() {
               
               <Link 
                 href="/pricing" 
-                className={`${isActive('/pricing') ? 'text-[#ef2b70] font-semibold' : 'text-gray-700 hover:text-[#ef2b70]'} py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium`}
+                className={`${isActive('/pricing') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'} py-2`}
                 onClick={closeMobileMenu}
               >
                 Pricing
               </Link>
-              {isLoggedIn ? (
-                <Link 
-                  href="/dashboard" 
-                  className="text-gray-600 hover:text-[#ef2b70] py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium"
-                  onClick={closeMobileMenu}
+              
+              {/* Mobile Company Section */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => setIsCompanyOpen(!isCompanyOpen)}
+                  className="flex items-center justify-between w-full text-gray-600 hover:text-gray-900 py-2"
                 >
-                  Dashboard
-                </Link>
-              ) : (
-                <>
-                  <Link 
-                    href="/access-code" 
-                    className="text-gray-600 hover:text-[#ef2b70] py-3 px-2 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium"
-                    onClick={closeMobileMenu}
-                  >
-                    Sign In
-                  </Link>
-                  <div className="pt-4">
+                  Company
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isCompanyOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isCompanyOpen && (
+                  <div className="pl-4 space-y-2 border-l-2 border-gray-100">
                     <Link 
-                      href="/trial-signup" 
+                      href="/about" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
-                      className="block w-full text-center px-6 py-3 bg-[#FFE4E9] text-[#ef2b70] font-semibold rounded-lg hover:bg-[#FFD1DA] transition-all duration-200"
                     >
-                      Start Free Trial
+                      About Us
+                    </Link>
+                    <Link 
+                      href="/careers" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Careers
+                    </Link>
+                    <Link 
+                      href="/contact" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Contact
                     </Link>
                   </div>
-                </>
-              )}
+                )}
+              </div>
+              <Link 
+                href="/access-code" 
+                className="text-gray-600 hover:text-gray-900 py-2"
+                onClick={closeMobileMenu}
+              >
+                Sign In
+              </Link>
+              <Button asChild className="mt-4">
+                <Link href="/trial-signup" onClick={closeMobileMenu}>Start Free Trial</Link>
+              </Button>
             </nav>
           </div>
         )}

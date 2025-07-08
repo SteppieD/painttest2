@@ -268,29 +268,29 @@ export function TestimonialCarousel({
                   </div>
 
                   {/* Summary Stats */}
-                  <div className="mt-6 bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                    <h5 className="font-semibold text-blue-800 mb-3 text-center">Impact Summary</h5>
+                  <div className="mt-6 bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                    <h5 className="font-semibold text-gray-900 mb-3 text-center">Impact Summary</h5>
                     <div className="grid grid-cols-3 gap-4 text-center text-sm">
                       <div>
                         <DollarSign className="w-6 h-6 text-blue-600 mx-auto mb-1" />
-                        <div className="font-bold text-blue-700">
+                        <div className="font-bold text-gray-900 text-lg">
                           +{Math.round(((parseInt(currentTestimonial.afterStats.monthlyRevenue.replace(/[,$]/g, '')) - parseInt(currentTestimonial.beforeStats.monthlyRevenue.replace(/[,$]/g, ''))) / parseInt(currentTestimonial.beforeStats.monthlyRevenue.replace(/[,$]/g, ''))) * 100)}%
                         </div>
-                        <div className="text-gray-600">Revenue</div>
+                        <div className="text-gray-700 font-medium">Revenue</div>
                       </div>
                       <div>
                         <TrendingUp className="w-6 h-6 text-green-600 mx-auto mb-1" />
-                        <div className="font-bold text-green-700">
+                        <div className="font-bold text-gray-900 text-lg">
                           +{parseInt(currentTestimonial.afterStats.winRate) - parseInt(currentTestimonial.beforeStats.winRate)}%
                         </div>
-                        <div className="text-gray-600">Win Rate</div>
+                        <div className="text-gray-700 font-medium">Win Rate</div>
                       </div>
                       <div>
                         <Clock className="w-6 h-6 text-purple-600 mx-auto mb-1" />
-                        <div className="font-bold text-purple-700">
+                        <div className="font-bold text-gray-900 text-lg">
                           {currentTestimonial.afterStats.quotesPerMonth - currentTestimonial.beforeStats.quotesPerMonth}+
                         </div>
-                        <div className="text-gray-600">More Quotes</div>
+                        <div className="text-gray-700 font-medium">More Quotes</div>
                       </div>
                     </div>
                   </div>

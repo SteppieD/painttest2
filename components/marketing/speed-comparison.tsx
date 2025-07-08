@@ -182,27 +182,27 @@ export function SpeedComparison({ className }: SpeedComparisonProps) {
         </div>
 
         {/* Impact Summary */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl">
+        <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-300 text-gray-900 p-8 rounded-2xl">
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
-              <Clock className="w-12 h-12 mx-auto mb-4" />
-              <div className="text-3xl font-bold mb-2">4.5 Hours</div>
-              <p className="text-blue-100">Saved per quote</p>
-              <p className="text-sm text-blue-200 mt-1">Worth $225 at $50/hour</p>
+              <Clock className="w-12 h-12 mx-auto mb-4 text-blue-600" />
+              <div className="text-3xl font-bold mb-2 text-gray-900">4.5 Hours</div>
+              <p className="text-gray-700 font-medium">Saved per quote</p>
+              <p className="text-sm text-gray-600 mt-1">Worth $225 at $50/hour</p>
             </div>
             
             <div>
-              <DollarSign className="w-12 h-12 mx-auto mb-4" />
-              <div className="text-3xl font-bold mb-2">40-60%</div>
-              <p className="text-blue-100">Higher win rates</p>
-              <p className="text-sm text-blue-200 mt-1">From professional presentation</p>
+              <DollarSign className="w-12 h-12 mx-auto mb-4 text-green-600" />
+              <div className="text-3xl font-bold mb-2 text-gray-900">40-60%</div>
+              <p className="text-gray-700 font-medium">Higher win rates</p>
+              <p className="text-sm text-gray-600 mt-1">From professional presentation</p>
             </div>
             
             <div>
-              <Smartphone className="w-12 h-12 mx-auto mb-4" />
-              <div className="text-3xl font-bold mb-2">Same Day</div>
-              <p className="text-blue-100">Quote delivery</p>
-              <p className="text-sm text-blue-200 mt-1">While competitors take days</p>
+              <Smartphone className="w-12 h-12 mx-auto mb-4 text-purple-600" />
+              <div className="text-3xl font-bold mb-2 text-gray-900">Same Day</div>
+              <p className="text-gray-700 font-medium">Quote delivery</p>
+              <p className="text-sm text-gray-600 mt-1">While competitors take days</p>
             </div>
           </div>
         </div>
