@@ -34,10 +34,8 @@ interface CompanySettings {
   paint_multiplier: number;
   doors_per_gallon: number;
   windows_per_gallon: number;
-<<<<<<< HEAD
   // Company branding
   logo_url?: string;
-=======
   
   // Product-Specific Spread Rates (from AI conversations)
   primer_spread_rate: number; // 200-300 sqft/gallon
@@ -66,7 +64,6 @@ interface CompanySettings {
   // AI Learning Settings
   ai_learning_enabled: boolean; // Auto-save conversation data to settings
   ai_ask_before_saving: boolean; // Ask before saving new preferences
->>>>>>> clean-recovery-deploy
 }
 
 interface PaintBrand {

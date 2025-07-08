@@ -1,53 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-<<<<<<< HEAD
-import Database from 'better-sqlite3';
-import path from 'path';
-
-// Direct SQLite database connection for local development
-const getDatabase = () => {
-  try {
-    const dbPath = path.join(process.cwd(), 'painting_quotes_app.db');
-    const db = new Database(dbPath);
-    
-    return {
-      getCompanyByAccessCode: (accessCode: string) => {
-        const company = db.prepare(`
-          SELECT id, access_code, company_name, phone, email, logo_url, 
-                 default_walls_rate, default_ceilings_rate, default_trim_rate
-          FROM companies 
-          WHERE UPPER(access_code) = UPPER(?)
-        `).get(accessCode);
-        
-        if (company) {
-          return {
-            id: company.id,
-            access_code: company.access_code,
-            company_name: company.company_name,
-            phone: company.phone,
-            email: company.email,
-            logo_url: company.logo_url
-          };
-        }
-        return null;
-      },
-      
-      createCompany: (data: any) => {
-        const result = db.prepare(`
-          INSERT INTO companies (access_code, company_name, phone, email)
-          VALUES (?, ?, ?, ?)
-        `).run(data.accessCode, data.companyName, data.phone, data.email);
-        
-        return { id: result.lastInsertRowid };
-      }
-    };
-  } catch (error) {
-    console.error('Failed to connect to SQLite database:', error);
-    return null;
-  }
-};
-=======
 import { getCompanyByAccessCode, createCompany } from "@/lib/database";
->>>>>>> clean-recovery-deploy
 
 interface Company {
   id: number;
@@ -77,22 +29,8 @@ export async function POST(request: NextRequest) {
     // Convert to uppercase for consistency
     const normalizedCode = accessCode.toString().toUpperCase();
 
-<<<<<<< HEAD
-    // Get database connection
-    const db = getDatabase();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 500 },
-      );
-    }
-
-    // Check if access code exists in companies table
-    const company = db.getCompanyByAccessCode(normalizedCode);
-=======
     // Check if access code exists in companies table using unified database interface
     const company = await getCompanyByAccessCode(normalizedCode);
->>>>>>> clean-recovery-deploy
 
     if (company) {
       // Valid company found - return company data
@@ -122,15 +60,9 @@ export async function POST(request: NextRequest) {
         // Auto-create new company for valid pattern
         const companyName = `Company ${normalizedCode}`;
 
-<<<<<<< HEAD
-        const result = db.createCompany({
-          accessCode: normalizedCode,
-          companyName: companyName,
-=======
         const result = await createCompany({
           access_code: normalizedCode,
           company_name: companyName,
->>>>>>> clean-recovery-deploy
           phone: "",
           email: ""
         });
@@ -177,27 +109,11 @@ export async function POST(request: NextRequest) {
 // GET endpoint - List available demo companies (for testing)
 export async function GET() {
   try {
-<<<<<<< HEAD
-    const db = getDatabase();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 500 },
-      );
-    }
-
-    // Get demo companies for testing
-    const companies = [
-      { access_code: 'DEMO2024', company_name: 'Demo Painting Company' },
-      { access_code: 'PAINTER001', company_name: 'Smith Painting LLC' },
-      { access_code: 'CONTRACTOR123', company_name: 'Elite Contractors' }
-=======
     // Return demo companies for testing
     const demoCompanies = [
       { access_code: "DEMO2024", company_name: "Demo Painting Company", phone: "(555) 123-4567" },
       { access_code: "PAINTER001", company_name: "Smith Painting LLC", phone: "(555) 987-6543" },
       { access_code: "CONTRACTOR123", company_name: "Elite Contractors", phone: "(555) 456-7890" }
->>>>>>> clean-recovery-deploy
     ];
 
     return NextResponse.json({

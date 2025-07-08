@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // AI Model Strategy for Onboarding:
@@ -15,7 +13,6 @@ const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
 // Fallback to Gemini if OpenRouter is not configured
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || "");
 
->>>>>>> clean-recovery-deploy
 interface OnboardingContext {
   currentStep: string;
   companyData: any;
@@ -37,9 +34,6 @@ const CATEGORY_LABELS = {
 };
 
 export async function processOnboardingMessage(context: OnboardingContext) {
-<<<<<<< HEAD
-  const openRouterApiKey = process.env.OPENROUTER_API_KEY;
-=======
   // Try to use GPT-4o-mini first for better understanding
   if (OPENROUTER_API_KEY) {
     try {
@@ -51,7 +45,6 @@ export async function processOnboardingMessage(context: OnboardingContext) {
   
   // Fallback to Gemini
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
->>>>>>> clean-recovery-deploy
 
   const systemPrompt = `You are a friendly onboarding assistant helping painting contractors set up their company profile and paint products.
 
@@ -87,56 +80,32 @@ Based on the conversation flow, determine:
 Respond with a friendly message guiding the user to the next step.`;
 
   try {
-    if (!openRouterApiKey) {
-      throw new Error('OpenRouter API key not configured');
+    // Format conversation history for Gemini API
+    let formattedHistory = context.conversationHistory.map((msg) => ({
+      role: msg.role === "assistant" ? "model" : "user",
+      parts: [{ text: msg.content }],
+    }));
+
+    // Ensure the first message is from user, not model
+    if (formattedHistory.length > 0 && formattedHistory[0].role === "model") {
+      formattedHistory = formattedHistory.slice(1);
     }
 
-    // Build messages for OpenRouter
-    const messages = [
-      {
-        role: 'system',
-        content: systemPrompt
-      },
-      ...context.conversationHistory.map((msg) => ({
-        role: msg.role === "assistant" ? "assistant" : "user",
-        content: msg.content
-      })),
-      {
-        role: 'user',
-        content: context.message
-      }
-    ];
-
-    // Call OpenRouter API
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openRouterApiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001',
-        'X-Title': 'Onboarding Assistant'
-      },
-      body: JSON.stringify({
-        model: 'anthropic/claude-3-5-sonnet-20241022',
-        messages,
-        temperature: 0.7,
-        max_tokens: 300
-      })
+    const chat = model.startChat({
+      history: formattedHistory,
     });
 
-    if (!response.ok) {
-      throw new Error(`OpenRouter API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const aiResponse = data.choices[0]?.message?.content || "Let's continue with your setup. What information would you like to provide?";
+    const result = await chat.sendMessage(
+      `${systemPrompt}\n\nUser message: ${context.message}`
+    );
+    const response = await result.response.text();
 
     // Parse the response and determine next step
     const nextStep = determineNextStep(context);
     const updatedData = parseUserResponse(context);
 
     return {
-      response: aiResponse.trim(),
+      response: response.trim(),
       currentStep: nextStep,
       companyData: updatedData.companyData,
       productData: updatedData.productData,

@@ -7,7 +7,6 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-<<<<<<< HEAD
     console.log('🔍 Fetching quote by ID:', params.id);
 
     // Retrieve quote using Supabase database adapter
@@ -36,47 +35,11 @@ export async function GET(
     }
 
     console.log('📊 Raw quote from database:', quote);
-=======
-    console.log(`🔍 API: Looking for quote with ID: ${params.id}`);
-    
-    // First try the new quote creation API
-    const newQuoteResponse = await fetch(`${request.nextUrl.origin}/api/quotes/create-from-conversation?id=${params.id}`);
-    if (newQuoteResponse.ok) {
-      const quote = await newQuoteResponse.json();
-      console.log(`✅ Found quote in new system:`, quote.quote_id);
-      return NextResponse.json(quote);
-    }
-    
-    // Fallback to old database system with enhanced company data
-    const quote: any = await dbGet(`
-      SELECT 
-        q.*,
-        c.company_name,
-        c.phone as company_phone,
-        c.email as company_email,
-        c.logo_url as company_logo_url,
-        cp.company_address,
-        cp.license_number,
-        cp.insurance_info,
-        cp.company_website,
-        cp.quote_header_text,
-        cp.quote_footer_text,
-        cp.payment_terms as default_payment_terms
-      FROM quotes q
-      LEFT JOIN companies c ON q.company_id = c.id
-      LEFT JOIN company_profiles cp ON cp.user_id = c.id
-      WHERE q.id = ? OR q.quote_id = ?
-    `, [params.id, params.id]);
->>>>>>> clean-recovery-deploy
 
     console.log(`📖 API: Database query result:`, quote ? 'FOUND' : 'NOT FOUND');
 
     if (!quote) {
-<<<<<<< HEAD
       console.log('❌ Quote not found for ID:', params.id);
-=======
-      console.log(`❌ Quote ${params.id} not found in either system`);
->>>>>>> clean-recovery-deploy
       return NextResponse.json(
         { error: "Quote not found", id: params.id },
         { status: 404 }
