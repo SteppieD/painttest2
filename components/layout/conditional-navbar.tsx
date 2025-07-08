@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { ACNavbar } from '@/components/adcreative/ACNavbar';
+import { Header } from '@/components/shared/header';
 import { DashboardHeader } from '@/components/layout/dashboard-header';
 
 // Pages that should show the dashboard header instead of the main navbar
@@ -48,5 +48,5 @@ export function ConditionalNavbar() {
   }
   
   // Show main navbar for public pages
-  return <ACNavbar />;
+  return <Header />;
 }
