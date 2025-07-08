@@ -1,8 +1,11 @@
 /**
- * Intelligent Quote Assistant - Claude 3.5 Sonnet Integration
+ * Intelligent Quote Assistant - Claude Sonnet 4 Integration
  * 
- * This system integrates Claude 3.5 Sonnet into the main quote creation workflow
+ * This system integrates Claude Sonnet 4 (Latest) into the main quote creation workflow
  * with full contractor context, settings, and natural conversation capabilities.
+ * 
+ * Uses Claude Sonnet 4 as the primary AI for intelligent conversation and parsing
+ * to ensure the highest quality understanding and responses.
  */
 
 interface ContractorContext {
@@ -276,7 +279,7 @@ export class IntelligentQuoteAssistant {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'anthropic/claude-3.5-sonnet',
+          model: 'anthropic/claude-sonnet-4',
           messages: [
             {
               role: 'system',

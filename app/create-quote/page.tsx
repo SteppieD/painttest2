@@ -6,9 +6,19 @@ import { ArrowLeft, Save, Send, Calculator, Loader2, FileText, Users, ExternalLi
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
+import { 
+  chatStyles, 
+  renderMarkdown, 
+  getStageLabel, 
+  getProgressPercentage, 
+  getQuickActions, 
+  getInputPlaceholder 
+} from "@/components/ui/quote-chat-improvements";
+import { User, Sparkles, HelpCircle, X } from "lucide-react";
 import {
   ProjectAreas,
   ChargeRates,
@@ -75,6 +85,8 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: string;
+  parsedData?: any;
+  confidence?: number;
 }
 
 interface PaintProduct {
@@ -233,7 +245,9 @@ export default function CreateQuotePage() {
       id: Date.now().toString(),
       role: 'user',
       content: inputValue,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      parsedData: null,
+      confidence: 1.0
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -249,7 +263,9 @@ export default function CreateQuotePage() {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: "I'm sorry, I encountered an error. Please try again or contact support.",
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        parsedData: null,
+        confidence: 0
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
@@ -260,6 +276,8 @@ export default function CreateQuotePage() {
   const processUserInput = async (input: string, stage: string): Promise<Message> => {
     let responseContent = '';
     let nextStage = stage;
+    let extractedData: any = null;
+    let parsingConfidence = 0;
 
     switch (stage) {
       case 'customer_info':
@@ -272,8 +290,13 @@ export default function CreateQuotePage() {
           });
           
           const data = await response.json();
+          const parsingResult = data; // Ensure consistent naming
+          const parsedData = data.parsed_data || {};
+          extractedData = parsedData;
+          parsingConfidence = (data.confidence_score || 0) / 100;
           
           // 🐛 DEBUG: Log parser results if debug mode enabled
+          const DEBUG_PARSER = false; // Set to true for debugging
           if (DEBUG_PARSER) {
             console.log('🧠 Intelligent Parser Results:', {
               success: parsingResult.success,
@@ -306,7 +329,7 @@ export default function CreateQuotePage() {
           }
           
           // ✅ SUCCESS: Parser extracted data successfully
-          const parsedData = data.parsed_data || {};
+          // (parsedData already defined above)
           
           // Update quote data with ALL parsed information from API response
           let updatedQuoteData = { ...quoteData };
@@ -1291,7 +1314,9 @@ What would you like to change it to? Please specify the new rate like:
       id: (Date.now() + 1).toString(),
       role: 'assistant',
       content: responseContent,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      parsedData: extractedData,
+      confidence: parsingConfidence
     };
   };
 
@@ -1383,6 +1408,7 @@ What would you like to change it to? Please specify the new rate like:
       handleSend();
     }
   };
+
 
   // Helper function to generate rate confirmation display with selected products
   const generateRateConfirmation = (rates: ChargeRates, areas: ProjectAreas): string => {
@@ -1907,33 +1933,73 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
         </div>
       )}
 
+      {/* Progress Indicator */}
+      <div className={chatStyles.progressContainer}>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3">
+            <Progress value={getProgressPercentage(conversationStage)} className="flex-1 h-2" />
+            <span className="text-sm text-gray-600 min-w-fit">
+              {getStageLabel(conversationStage)}
+            </span>
+          </div>
+        </div>
+      </div>
+
       {/* Chat Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 max-w-4xl mx-auto w-full">
           {messages.map((message) => (
-            <div
-              key={message.id}
-              className={cn(
-                "flex gap-3",
-                message.role === 'user' ? "justify-end" : "justify-start"
+            <div key={message.id} className={chatStyles.messageContainer}>
+              {/* Avatar for assistant */}
+              {message.role === 'assistant' && (
+                <div className={chatStyles.assistantAvatar}>
+                  <Sparkles className="w-4 h-4" />
+                </div>
               )}
-            >
-              <div
-                className={cn(
-                  "max-w-[80%] p-4 rounded-lg shadow-sm",
-                  message.role === 'user'
-                    ? "bg-blue-600 text-white rounded-br-sm"
-                    : "bg-white border rounded-bl-sm"
-                )}
-              >
-                <MessageContent content={message.content} />
+              
+              <div className={cn(
+                "flex flex-col max-w-[85%] lg:max-w-[70%]",
+                message.role === 'user' ? "items-end" : "items-start"
+              )}>
+                {/* Message bubble */}
+                <div
+                  className={cn(
+                    "transition-all duration-200 hover:shadow-md",
+                    message.role === 'user'
+                      ? chatStyles.userMessage
+                      : chatStyles.assistantMessage
+                  )}
+                >
+                  {message.role === 'assistant' ? (
+                    <div className="p-4">
+                      <div 
+                        dangerouslySetInnerHTML={{ __html: renderMarkdown(message.content) }} 
+                        className="prose-sm text-gray-700 [&_strong]:font-semibold [&_strong]:text-gray-900"
+                      />
+                    </div>
+                  ) : (
+                    <div className="text-sm leading-relaxed">{message.content}</div>
+                  )}
+                </div>
+                
+                {/* Timestamp */}
                 <div className={cn(
-                  "text-xs mt-2",
-                  message.role === 'user' ? "text-blue-100" : "text-gray-500"
+                  "text-xs mt-1 px-2",
+                  message.role === 'user' ? "text-gray-500" : "text-gray-400"
                 )}>
-                  {new Date(message.timestamp).toLocaleTimeString()}
+                  {new Date(message.timestamp).toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                  })}
                 </div>
               </div>
+              
+              {/* Avatar for user */}
+              {message.role === 'user' && (
+                <div className={chatStyles.userAvatar}>
+                  <User className="w-4 h-4" />
+                </div>
+              )}
             </div>
           ))}
           
@@ -1953,23 +2019,70 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
 
         {/* Input Area */}
         <div className="bg-white border-t p-4">
-          <div className="flex gap-2">
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type your response..."
-              disabled={isLoading}
-              className="flex-1"
-            />
-            <Button
-              onClick={handleSend}
-              disabled={!inputValue.trim() || isLoading}
-              size="icon"
-              className="shrink-0"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
+          <div className="max-w-4xl mx-auto">
+            {/* Quick actions */}
+            {getQuickActions(conversationStage).length > 0 && (
+              <div className="mb-2 p-2 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs text-gray-500">Quick actions:</span>
+                  {getQuickActions(conversationStage).map((action, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setInputValue(action.value)}
+                      className={chatStyles.quickActionButton}
+                      disabled={isLoading}
+                    >
+                      {action.label}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Input field */}
+            <div className={chatStyles.inputContainer}>
+              <div className="flex items-end gap-2">
+                <Input
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder={getInputPlaceholder(conversationStage)}
+                  disabled={isLoading}
+                  className="flex-1 border-0 focus:ring-0 p-0 text-sm"
+                />
+                
+                <Button
+                  onClick={handleSend}
+                  disabled={!inputValue.trim() || isLoading}
+                  size="icon"
+                  className={cn(
+                    "h-9 w-9 transition-all duration-200",
+                    inputValue.trim() && !isLoading
+                      ? "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
+                      : "bg-gray-100 text-gray-400"
+                  )}
+                >
+                  {isLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
+                </Button>
+              </div>
+              
+              {/* AI indicator */}
+              <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-3 h-3" />
+                  <span>Powered by Claude Sonnet 4</span>
+                </div>
+                <span className="text-gray-400">
+                  Press Enter to send
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

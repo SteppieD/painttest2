@@ -1,5 +1,10 @@
 // Intelligent Quote Parsing System
 // Multi-LLM approach for robust painting quote extraction
+// 
+// AI MODEL STRATEGY:
+// - Primary extraction: Claude Sonnet 4 (Latest) - Most intelligent model for complex parsing
+// - Validation: GPT-4o-mini - Cheaper model for simple validation tasks
+// - This ensures optimal balance of intelligence and cost
 
 interface ParsedQuoteData {
   // Customer Information
@@ -193,7 +198,7 @@ ENHANCED JSON format with separate wall/ceiling rates:
 
 Return ONLY the raw JSON object. Do not include markdown formatting, code fences, or any explanation. Response must start with { and end with }`;
 
-    const response = await this.callLLM('anthropic/claude-3.5-sonnet', prompt);
+    const response = await this.callLLM('anthropic/claude-sonnet-4', prompt); // Claude Sonnet 4 (Latest)
     
     try {
       return JSON.parse(response);
@@ -219,7 +224,7 @@ Your tasks:
 
 Return ONLY the raw corrected JSON object. Do not include markdown formatting, code fences, or any explanation. Response must start with { and end with }`;
 
-    const response = await this.callLLM('openai/gpt-4o', prompt);
+    const response = await this.callLLM('openai/gpt-4o-mini', prompt); // Using cheaper model for validation
     
     try {
       return JSON.parse(response);

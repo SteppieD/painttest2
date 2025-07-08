@@ -1,5 +1,16 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// AI Model Strategy for Onboarding:
+// Primary: GPT-4o-mini via OpenRouter - Intelligent enough to understand contractor inputs
+//          correctly during critical business setup (happens only once per contractor)
+// Fallback: Gemini 1.5 Flash - Basic model if OpenRouter is not configured
+// 
+// The setup wizard is crucial for getting paint products and pricing right,
+// so we use a smarter model than the basic Gemini Flash to ensure accuracy
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || "";
+const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
+
+// Fallback to Gemini if OpenRouter is not configured
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || "");
 
 interface OnboardingContext {
@@ -23,6 +34,16 @@ const CATEGORY_LABELS = {
 };
 
 export async function processOnboardingMessage(context: OnboardingContext) {
+  // Try to use GPT-4o-mini first for better understanding
+  if (OPENROUTER_API_KEY) {
+    try {
+      return await processWithOpenRouter(context);
+    } catch (error) {
+      console.error("OpenRouter failed, falling back to Gemini:", error);
+    }
+  }
+  
+  // Fallback to Gemini
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   const systemPrompt = `You are a friendly onboarding assistant helping painting contractors set up their company profile and paint products.
@@ -153,6 +174,77 @@ function determineNextStep(context: OnboardingContext): string {
     default:
       return currentStep;
   }
+}
+
+async function processWithOpenRouter(context: OnboardingContext) {
+  const systemPrompt = `You are a friendly onboarding assistant helping painting contractors set up their company profile and paint products.
+
+Current Step: ${context.currentStep}
+Company Name: ${context.companyData?.name || "Unknown"}
+
+Your task is to guide the user through setting up:
+1. Company information (phone, email)
+2. Interior paint products (primer, ceiling paint, wall paint, trim paint)
+3. Exterior paint products (primer, wall paint, trim paint)
+
+For each product category, collect:
+- Supplier name (e.g., Sherwin-Williams, Benjamin Moore)
+- Product name (e.g., ProClassic, Duration)
+- Cost per gallon (number only)
+
+Guidelines:
+- Be conversational and encouraging
+- Ask for one piece of information at a time
+- Confirm information before moving to the next step
+- Allow up to 3 products per category
+- Accept "skip" or "none" to skip a category
+- Use emojis sparingly for friendliness
+- Be smart about parsing - if they say "Sherwin ProClassic $45" extract all parts
+
+Current product data:
+${JSON.stringify(context.productData, null, 2)}
+
+Respond with a friendly message guiding the user to the next step.`;
+
+  const messages = [
+    { role: "system", content: systemPrompt },
+    ...context.conversationHistory,
+    { role: "user", content: context.message }
+  ];
+
+  const response = await fetch(`${OPENROUTER_BASE_URL}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001',
+      'X-Title': 'Paint Quote App Onboarding'
+    },
+    body: JSON.stringify({
+      model: 'openai/gpt-4o-mini', // Good balance of intelligence and cost for onboarding
+      messages,
+      temperature: 0.7,
+      max_tokens: 300
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`OpenRouter API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const aiResponse = data.choices[0]?.message?.content || "";
+
+  // Parse the response and determine next step
+  const nextStep = determineNextStep(context);
+  const updatedData = parseUserResponse(context);
+
+  return {
+    response: aiResponse.trim(),
+    currentStep: nextStep,
+    companyData: updatedData.companyData,
+    productData: updatedData.productData,
+  };
 }
 
 function getNextStepAfterSkip(currentStep: string): string {
