@@ -13,13 +13,23 @@ import {
   BookOpen,
   Smartphone,
   Users,
-  TrendingUp
+  TrendingUp,
+  Building2,
+  Shield,
+  Zap,
+  BarChart3,
+  Award,
+  Briefcase,
+  MapPin
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isResourcesOpen, setIsResourcesOpen] = useState(false);
+  const [isProductOpen, setIsProductOpen] = useState(false);
+  const [isSolutionsOpen, setIsSolutionsOpen] = useState(false);
+  const [isCompanyOpen, setIsCompanyOpen] = useState(false);
   const pathname = usePathname();
 
   const toggleMobileMenu = () => {
@@ -29,6 +39,9 @@ export function Header() {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
     setIsResourcesOpen(false);
+    setIsProductOpen(false);
+    setIsSolutionsOpen(false);
+    setIsCompanyOpen(false);
   };
 
   const isActive = (path: string) => pathname === path;
@@ -48,24 +61,95 @@ export function Header() {
           
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-6">
-            <Link 
-              href="/features" 
-              className={`${isActive('/features') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}`}
+            {/* Product Dropdown */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsProductOpen(true)}
+              onMouseLeave={() => setIsProductOpen(false)}
             >
-              Features
-            </Link>
-            <Link 
-              href="/painting-contractors" 
-              className={`${isActive('/painting-contractors') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}`}
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
+                Product
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              
+              {isProductOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
+                  <Link href="/features" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Zap className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Features</div>
+                      <div className="text-sm text-gray-500">Everything included</div>
+                    </div>
+                  </Link>
+                  <Link href="/demo" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <BarChart3 className="w-5 h-5 text-green-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Watch Demo</div>
+                      <div className="text-sm text-gray-500">See it in action</div>
+                    </div>
+                  </Link>
+                  <Link href="/integrations" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Shield className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Integrations</div>
+                      <div className="text-sm text-gray-500">Connect your tools</div>
+                    </div>
+                  </Link>
+                  <Link href="/security" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Shield className="w-5 h-5 text-gray-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Security</div>
+                      <div className="text-sm text-gray-500">Enterprise-grade</div>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Solutions Dropdown */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsSolutionsOpen(true)}
+              onMouseLeave={() => setIsSolutionsOpen(false)}
             >
-              For Contractors
-            </Link>
-            <Link 
-              href="/locations" 
-              className={`${isActive('/locations') || pathname.startsWith('/locations/') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}`}
-            >
-              Locations
-            </Link>
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
+                Solutions
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              
+              {isSolutionsOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
+                  <Link href="/painting-contractors" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Users className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">For Contractors</div>
+                      <div className="text-sm text-gray-500">Painting businesses</div>
+                    </div>
+                  </Link>
+                  <Link href="/enterprise" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Building2 className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Enterprise</div>
+                      <div className="text-sm text-gray-500">Large teams</div>
+                    </div>
+                  </Link>
+                  <Link href="/commercial-painting-estimating" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Briefcase className="w-5 h-5 text-green-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Commercial</div>
+                      <div className="text-sm text-gray-500">Large projects</div>
+                    </div>
+                  </Link>
+                  <Link href="/locations" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <MapPin className="w-5 h-5 text-red-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">By Location</div>
+                      <div className="text-sm text-gray-500">Find local contractors</div>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
             
             {/* Resources Dropdown */}
             <div 
@@ -79,68 +163,56 @@ export function Header() {
               </button>
               
               {isResourcesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
-                  <Link href="/painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg shadow-lg border py-2 z-50">
+                  {/* Free Tools Section */}
+                  <div className="px-4 py-2 border-b">
+                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Free Tools</h3>
+                  </div>
+                  <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
                     <Calculator className="w-5 h-5 text-blue-600" />
                     <div>
-                      <div className="font-medium text-gray-900">Free Calculator</div>
-                      <div className="text-sm text-gray-500">Instant paint estimates</div>
+                      <div className="font-medium text-gray-900">Quote Calculator</div>
+                      <div className="text-sm text-gray-500">Instant estimates</div>
                     </div>
                   </Link>
                   <Link href="/paint-estimate-templates" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
                     <FileText className="w-5 h-5 text-green-600" />
                     <div>
                       <div className="font-medium text-gray-900">Quote Templates</div>
-                      <div className="text-sm text-gray-500">Professional templates</div>
+                      <div className="text-sm text-gray-500">Professional formats</div>
                     </div>
                   </Link>
-                  <Link href="/interior-painting-quote-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Calculator className="w-5 h-5 text-blue-600" />
+                  <Link href="/roi-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <TrendingUp className="w-5 h-5 text-purple-600" />
                     <div>
-                      <div className="font-medium text-gray-900">Interior Calculator</div>
-                      <div className="text-sm text-gray-500">Room-by-room quotes</div>
+                      <div className="font-medium text-gray-900">ROI Calculator</div>
+                      <div className="text-sm text-gray-500">See your savings</div>
                     </div>
                   </Link>
-                  <Link href="/exterior-painting-estimate-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Calculator className="w-5 h-5 text-emerald-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Exterior Calculator</div>
-                      <div className="text-sm text-gray-500">House exterior estimates</div>
-                    </div>
-                  </Link>
-                  <Link href="/house-painting-cost-calculator" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Calculator className="w-5 h-5 text-orange-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">House Cost Calculator</div>
-                      <div className="text-sm text-gray-500">Complete house pricing</div>
-                    </div>
-                  </Link>
-                  <Link href="/paint-contractor-app" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Smartphone className="w-5 h-5 text-violet-600" />
-                    <div>
-                      <div className="font-medium text-gray-900">Contractor App</div>
-                      <div className="text-sm text-gray-500">Mobile painting quotes</div>
-                    </div>
-                  </Link>
+                  
+                  {/* Learning Center Section */}
+                  <div className="px-4 py-2 border-b border-t mt-2">
+                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Learning Center</h3>
+                  </div>
                   <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <BookOpen className="w-5 h-5 text-purple-600" />
+                    <BookOpen className="w-5 h-5 text-indigo-600" />
                     <div>
                       <div className="font-medium text-gray-900">Quoting Guide</div>
                       <div className="text-sm text-gray-500">Expert strategies</div>
                     </div>
                   </Link>
-                  <Link href="/painting-estimate-calculator-free" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <Smartphone className="w-5 h-5 text-indigo-600" />
+                  <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Award className="w-5 h-5 text-emerald-600" />
                     <div>
-                      <div className="font-medium text-gray-900">Mobile App</div>
-                      <div className="text-sm text-gray-500">Quote on-site</div>
+                      <div className="font-medium text-gray-900">Success Stories</div>
+                      <div className="text-sm text-gray-500">Real results</div>
                     </div>
                   </Link>
-                  <Link href="/painting-contractor-software-case-study" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
-                    <TrendingUp className="w-5 h-5 text-emerald-600" />
+                  <Link href="/blog" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <FileText className="w-5 h-5 text-gray-600" />
                     <div>
-                      <div className="font-medium text-gray-900">Case Studies</div>
-                      <div className="text-sm text-gray-500">Real success stories</div>
+                      <div className="font-medium text-gray-900">Blog</div>
+                      <div className="text-sm text-gray-500">Tips & insights</div>
                     </div>
                   </Link>
                 </div>
@@ -153,18 +225,44 @@ export function Header() {
             >
               Pricing
             </Link>
-            <Link 
-              href="/about" 
-              className={`${isActive('/about') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}`}
+            
+            {/* Company Dropdown */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsCompanyOpen(true)}
+              onMouseLeave={() => setIsCompanyOpen(false)}
             >
-              About
-            </Link>
-            <Link 
-              href="/contact" 
-              className={`${isActive('/contact') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}`}
-            >
-              Contact
-            </Link>
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
+                Company
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              
+              {isCompanyOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
+                  <Link href="/about" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Building2 className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">About Us</div>
+                      <div className="text-sm text-gray-500">Our story</div>
+                    </div>
+                  </Link>
+                  <Link href="/careers" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Briefcase className="w-5 h-5 text-green-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Careers</div>
+                      <div className="text-sm text-gray-500">Join our team</div>
+                    </div>
+                  </Link>
+                  <Link href="/contact" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+                    <Users className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <div className="font-medium text-gray-900">Contact</div>
+                      <div className="text-sm text-gray-500">Get in touch</div>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
             <Link 
               href="/access-code" 
               className="text-gray-600 hover:text-gray-900 text-sm"
@@ -194,27 +292,93 @@ export function Header() {
         {isMobileMenuOpen && (
           <div className="lg:hidden mt-4 pb-4 border-t">
             <nav className="flex flex-col space-y-4 pt-4">
-              <Link 
-                href="/features" 
-                className={`${isActive('/features') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'} py-2`}
-                onClick={closeMobileMenu}
-              >
-                Features
-              </Link>
-              <Link 
-                href="/painting-contractors" 
-                className={`${isActive('/painting-contractors') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'} py-2`}
-                onClick={closeMobileMenu}
-              >
-                For Contractors
-              </Link>
-              <Link 
-                href="/locations" 
-                className={`${isActive('/locations') || pathname.startsWith('/locations/') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'} py-2`}
-                onClick={closeMobileMenu}
-              >
-                Locations
-              </Link>
+              {/* Mobile Product Section */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => setIsProductOpen(!isProductOpen)}
+                  className="flex items-center justify-between w-full text-gray-600 hover:text-gray-900 py-2"
+                >
+                  Product
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isProductOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isProductOpen && (
+                  <div className="pl-4 space-y-2 border-l-2 border-gray-100">
+                    <Link 
+                      href="/features" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Features
+                    </Link>
+                    <Link 
+                      href="/demo" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Watch Demo
+                    </Link>
+                    <Link 
+                      href="/integrations" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Integrations
+                    </Link>
+                    <Link 
+                      href="/security" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Security
+                    </Link>
+                  </div>
+                )}
+              </div>
+              
+              {/* Mobile Solutions Section */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => setIsSolutionsOpen(!isSolutionsOpen)}
+                  className="flex items-center justify-between w-full text-gray-600 hover:text-gray-900 py-2"
+                >
+                  Solutions
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isSolutionsOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isSolutionsOpen && (
+                  <div className="pl-4 space-y-2 border-l-2 border-gray-100">
+                    <Link 
+                      href="/painting-contractors" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      For Contractors
+                    </Link>
+                    <Link 
+                      href="/enterprise" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Enterprise
+                    </Link>
+                    <Link 
+                      href="/commercial-painting-estimating" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Commercial
+                    </Link>
+                    <Link 
+                      href="/locations" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      By Location
+                    </Link>
+                  </div>
+                )}
+              </div>
               
               {/* Mobile Resources Section */}
               <div className="space-y-2">
@@ -229,11 +393,11 @@ export function Header() {
                 {isResourcesOpen && (
                   <div className="pl-4 space-y-2 border-l-2 border-gray-100">
                     <Link 
-                      href="/painting-estimate-calculator" 
+                      href="/painting-estimate-calculator-free" 
                       className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
-                      Free Calculator
+                      Quote Calculator
                     </Link>
                     <Link 
                       href="/paint-estimate-templates" 
@@ -243,32 +407,11 @@ export function Header() {
                       Quote Templates
                     </Link>
                     <Link 
-                      href="/interior-painting-quote-calculator" 
+                      href="/roi-calculator" 
                       className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
-                      Interior Calculator
-                    </Link>
-                    <Link 
-                      href="/exterior-painting-estimate-calculator" 
-                      className="block text-gray-600 hover:text-gray-900 py-2"
-                      onClick={closeMobileMenu}
-                    >
-                      Exterior Calculator
-                    </Link>
-                    <Link 
-                      href="/house-painting-cost-calculator" 
-                      className="block text-gray-600 hover:text-gray-900 py-2"
-                      onClick={closeMobileMenu}
-                    >
-                      House Cost Calculator
-                    </Link>
-                    <Link 
-                      href="/paint-contractor-app" 
-                      className="block text-gray-600 hover:text-gray-900 py-2"
-                      onClick={closeMobileMenu}
-                    >
-                      Contractor App
+                      ROI Calculator
                     </Link>
                     <Link 
                       href="/how-to-quote-painting-jobs-professionally" 
@@ -278,18 +421,18 @@ export function Header() {
                       Quoting Guide
                     </Link>
                     <Link 
-                      href="/painting-estimate-calculator-free" 
-                      className="block text-gray-600 hover:text-gray-900 py-2"
-                      onClick={closeMobileMenu}
-                    >
-                      Mobile App
-                    </Link>
-                    <Link 
                       href="/painting-contractor-software-case-study" 
                       className="block text-gray-600 hover:text-gray-900 py-2"
                       onClick={closeMobileMenu}
                     >
-                      Case Studies
+                      Success Stories
+                    </Link>
+                    <Link 
+                      href="/blog" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Blog
                     </Link>
                   </div>
                 )}
@@ -302,20 +445,43 @@ export function Header() {
               >
                 Pricing
               </Link>
-              <Link 
-                href="/about" 
-                className={`${isActive('/about') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'} py-2`}
-                onClick={closeMobileMenu}
-              >
-                About
-              </Link>
-              <Link 
-                href="/contact" 
-                className={`${isActive('/contact') ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'} py-2`}
-                onClick={closeMobileMenu}
-              >
-                Contact
-              </Link>
+              
+              {/* Mobile Company Section */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => setIsCompanyOpen(!isCompanyOpen)}
+                  className="flex items-center justify-between w-full text-gray-600 hover:text-gray-900 py-2"
+                >
+                  Company
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isCompanyOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isCompanyOpen && (
+                  <div className="pl-4 space-y-2 border-l-2 border-gray-100">
+                    <Link 
+                      href="/about" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      About Us
+                    </Link>
+                    <Link 
+                      href="/careers" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Careers
+                    </Link>
+                    <Link 
+                      href="/contact" 
+                      className="block text-gray-600 hover:text-gray-900 py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      Contact
+                    </Link>
+                  </div>
+                )}
+              </div>
               <Link 
                 href="/access-code" 
                 className="text-gray-600 hover:text-gray-900 py-2"
