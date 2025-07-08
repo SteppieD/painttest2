@@ -211,9 +211,9 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                 )}
 
                 {/* Card Header */}
-                <div className={`p-8 pb-6 text-center ${plan.gradient} rounded-t-lg ${plan.popular ? 'text-white-important' : ''}`}>
-                  <h3 className={`text-2xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>{plan.name}</h3>
-                  <p className={`mb-6 ${plan.popular ? 'text-white' : 'text-gray-600'}`}>{plan.description}</p>
+                <div className={`p-8 pb-6 text-center ${plan.gradient} rounded-t-lg`} style={plan.popular ? { backgroundColor: '#2563eb', color: '#ffffff' } : {}}>
+                  <h3 className={`text-2xl font-bold mb-2`} style={plan.popular ? { color: '#ffffff' } : { color: '#111827' }}>{plan.name}</h3>
+                  <p className={`mb-6`} style={plan.popular ? { color: '#ffffff' } : { color: '#6b7280' }}>{plan.description}</p>
 
                   {/* Pricing */}
                   <div className="mb-2">
@@ -225,11 +225,11 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                         exit={{ opacity: 0, scale: 0.9 }}
                         className="flex items-baseline justify-center gap-1"
                       >
-                        <span className={`text-5xl font-bold ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
+                        <span className={`text-5xl font-bold`} style={plan.popular ? { color: '#ffffff' } : { color: '#111827' }}>
                           ${isYearly && plan.yearlyMonthlyPrice ? Math.floor(plan.yearlyMonthlyPrice) : price}
                         </span>
                         {price > 0 && (
-                          <span className={`text-lg ${plan.popular ? 'text-white' : 'text-gray-600'}`}>
+                          <span className={`text-lg`} style={plan.popular ? { color: '#ffffff' } : { color: '#6b7280' }}>
                             /{isYearly ? 'month' : 'month'}
                           </span>
                         )}
@@ -244,9 +244,9 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                       animate={{ opacity: 1 }}
                       className="space-y-1"
                     >
-                      <p className={`text-sm ${plan.popular ? 'text-white' : 'text-gray-600'}`}>
+                      <p className={`text-sm`} style={plan.popular ? { color: '#ffffff' } : { color: '#6b7280' }}>
                         <span className="line-through">${plan.monthlyPrice * 12}</span>
-                        <span className={`ml-2 font-semibold ${plan.popular ? 'text-white' : 'text-gray-900'}`}>${plan.yearlyPrice}/year</span>
+                        <span className={`ml-2 font-semibold`} style={plan.popular ? { color: '#ffffff' } : { color: '#111827' }}>${plan.yearlyPrice}/year</span>
                       </p>
                       <Badge variant="outline" className={`${plan.popular ? 'bg-white/20 text-white border-white/40' : 'bg-green-50 text-green-700 border-green-200'}`}>
                         You save ${plan.savings}

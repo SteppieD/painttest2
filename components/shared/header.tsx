@@ -47,7 +47,7 @@ export function Header() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
+    <header className="bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 flex-shrink-0 min-w-0">
@@ -271,7 +271,7 @@ export function Header() {
             >
               Sign In
             </Link>
-            <Button asChild className="nav-cta-primary">
+            <Button asChild className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
               <Link href="/trial-signup">Start Free Trial</Link>
             </Button>
           </nav>
