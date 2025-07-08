@@ -272,6 +272,57 @@ export default function SecurityPage() {
         </div>
       </section>
 
+      {/* Security Trust Badges */}
+      <section className="py-20 px-4 bg-blue-50">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Trusted by Professional Contractors</h2>
+            <p className="text-xl text-gray-600">
+              Join thousands of painting professionals who trust us with their business data
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <Shield className="w-12 h-12 text-green-600 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-gray-900 mb-2">5,000+</h3>
+              <p className="text-gray-600">Active Contractors Protected</p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <Lock className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-gray-900 mb-2">99.9%</h3>
+              <p className="text-gray-600">Uptime & Availability</p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <CheckCircle className="w-12 h-12 text-purple-600 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Zero</h3>
+              <p className="text-gray-600">Security Incidents to Date</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Security Certifications */}
+      <section className="py-20 px-4 bg-white">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Security Certifications & Partnerships</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center opacity-60">
+            <div className="bg-gray-100 rounded-lg p-6 h-24 flex items-center justify-center">
+              <span className="text-gray-600 font-semibold">SOC 2</span>
+            </div>
+            <div className="bg-gray-100 rounded-lg p-6 h-24 flex items-center justify-center">
+              <span className="text-gray-600 font-semibold">GDPR</span>
+            </div>
+            <div className="bg-gray-100 rounded-lg p-6 h-24 flex items-center justify-center">
+              <span className="text-gray-600 font-semibold">CCPA</span>
+            </div>
+            <div className="bg-gray-100 rounded-lg p-6 h-24 flex items-center justify-center">
+              <span className="text-gray-600 font-semibold">ISO 27001</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section className="py-20 px-4 bg-gray-100">
         <div className="container mx-auto max-w-2xl text-center">
