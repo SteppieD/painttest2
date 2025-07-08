@@ -2,6 +2,8 @@
 
 **⚠️ DEPLOYMENT NOTE: Vercel auto-deployment is DISABLED. All deployments must be done manually using `vercel --prod`**
 
+**📋 VERSION CONTROL: See `VERSION_CONTROL.md` for stable versions and recovery procedures**
+
 A comprehensive Next.js painting quote application with admin portal, customer management, and AI-powered quoting system.
 
 ## ✅ **Current Status - PRODUCTION READY & FEATURE COMPLETE (Updated July 6, 2025)**

@@ -31,6 +31,67 @@ This is a sophisticated Next.js painting quote application featuring a revolutio
 - `/public/js/liquid-glass-enhancements.js` - Real-time interaction effects
 - `/app/liquid-glass-demo/page.tsx` - Interactive component showcase
 
+## Version Control & Recovery
+
+### Current Stable Versions
+- **Latest Stable**: `v1.0-seo-complete-2025-01-08` - Complete SEO implementation with all pages
+- **Backup Branch**: `stable/seo-complete-2025-01-08` - Same as above, branch format
+
+### How to Return to Previous Versions
+
+**Method 1: Checkout a Tagged Version (Recommended)**
+```bash
+# List all available version tags
+git tag -l
+
+# Checkout a specific version tag
+git checkout v1.0-seo-complete-2025-01-08
+
+# Return to main branch when done
+git checkout main
+```
+
+**Method 2: Use Backup Branches**
+```bash
+# List all backup branches
+git branch -a | grep stable/
+
+# Checkout a stable branch
+git checkout stable/seo-complete-2025-01-08
+
+# Return to main branch
+git checkout main
+```
+
+**Method 3: Emergency Reset (Use Carefully)**
+```bash
+# If main branch is broken and you need to reset it
+git checkout main
+git reset --hard v1.0-seo-complete-2025-01-08
+git push --force origin main  # DANGEROUS - only if you're sure
+```
+
+**Method 4: Create New Branch from Version**
+```bash
+# Create a new working branch from a stable version
+git checkout -b fix/issue-name v1.0-seo-complete-2025-01-08
+```
+
+### Version History
+- `v1.0-seo-complete-2025-01-08` (Jan 8, 2025)
+  - All SEO pages implemented
+  - Complete sitemap
+  - Case studies and resources
+  - Paint coverage calculator
+  - Invoice templates
+  - Stable production release
+
+### Deployment Recovery
+If Vercel deployment is broken:
+1. Checkout the stable version locally
+2. Run `npm run build` to verify it builds
+3. Deploy manually: `vercel --prod`
+
 ## Development Commands
 
 ### Core Development
