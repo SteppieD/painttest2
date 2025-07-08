@@ -81,6 +81,27 @@
   </url>
   
   <url>
+    <loc>https://www.paintquoteapp.com/exterior-painting-quote-calculator</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.paintquoteapp.com/paint-coverage-calculator</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.paintquoteapp.com/painting-invoice-template</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>https://www.paintquoteapp.com/painting-quote-generator-ai</loc>
     <lastmod>2025-01-08</lastmod>
     <changefreq>weekly</changefreq>
@@ -159,6 +180,13 @@
     <priority>0.8</priority>
   </url>
   
+  <url>
+    <loc>https://www.paintquoteapp.com/painting-contractor-app</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
   <!-- Educational Content -->
   <url>
     <loc>https://www.paintquoteapp.com/how-to-quote-painting-jobs</loc>
@@ -218,6 +246,13 @@
   </url>
   
   <!-- Case Studies & Success Stories -->
+  <url>
+    <loc>https://www.paintquoteapp.com/case-studies</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
   <url>
     <loc>https://www.paintquoteapp.com/painting-contractor-software-case-study</loc>
     <lastmod>2025-01-08</lastmod>
