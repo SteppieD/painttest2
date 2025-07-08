@@ -25,6 +25,7 @@ import { Footer } from '@/components/shared/footer';
 import { ROICalculator } from '@/components/marketing/roi-calculator';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
 import { FeedbackBox } from '@/components/ui/feedback-box';
+import { QuickLinksSection } from '@/components/homepage/QuickLinksSection';
 
 export default function HomePage() {
   return (
@@ -304,6 +305,9 @@ export default function HomePage() {
           <FeedbackBox type="website" position="inline" />
         </div>
       </section>
+
+      {/* Quick Links Section for SEO */}
+      <QuickLinksSection />
 
       <Footer />
 
