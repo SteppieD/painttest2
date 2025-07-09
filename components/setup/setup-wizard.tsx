@@ -16,7 +16,7 @@ import {
   DollarSign,
   Palette,
   Settings,
-  Skip
+  SkipForward
 } from 'lucide-react'
 
 interface RateRange {
@@ -387,7 +387,7 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
                 
                 <Button variant="ghost" onClick={onSkip}>
                   <Skip className="w-4 h-4 mr-2" />
-                  Skip Setup
+                  SkipForward Setup
                 </Button>
               </div>
               
