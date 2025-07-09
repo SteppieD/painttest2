@@ -41,7 +41,7 @@ async function getDashboardData(request: NextRequest): Promise<NextResponse> {
     const startTime = performance.now();
 
     // Get main dashboard data (company info + metrics)
-    const dashboardData = performanceDb.getDashboardData(validatedData.companyId);
+    const dashboardData = await performanceDb.getDashboardData(validatedData.companyId);
 
     if (!dashboardData) {
       return createApiResponse(
@@ -53,25 +53,25 @@ async function getDashboardData(request: NextRequest): Promise<NextResponse> {
     // Prepare response with core data
     const response: any = {
       company: {
-        id: dashboardData.id,
-        company_name: dashboardData.company_name,
-        access_code: dashboardData.access_code,
-        email: dashboardData.email,
-        phone: dashboardData.phone,
-        is_trial: dashboardData.is_trial,
-        quote_limit: dashboardData.quote_limit
+        id: dashboardData.company.id,
+        company_name: dashboardData.company.company_name || 'Demo Company',
+        access_code: dashboardData.company.access_code || 'DEMO',
+        email: dashboardData.company.email || 'demo@company.com',
+        phone: dashboardData.company.phone || '',
+        is_trial: dashboardData.company.is_trial || true,
+        quote_limit: dashboardData.company.quote_limit || 1
       },
       metrics: {
-        totalQuotes: dashboardData.total_quotes,
-        approvedQuotes: dashboardData.approved_quotes,
-        pendingQuotes: dashboardData.pending_quotes,
-        totalRevenue: dashboardData.total_revenue,
-        averageQuote: dashboardData.avg_quote_value,
-        thisMonthQuotes: dashboardData.this_month_quotes,
-        thisMonthRevenue: dashboardData.this_month_revenue,
-        totalCustomers: dashboardData.total_customers,
-        activeCustomers: dashboardData.active_customers,
-        conversionRate: dashboardData.conversion_rate
+        totalQuotes: dashboardData.quoteCount || 0,
+        approvedQuotes: 0,
+        pendingQuotes: dashboardData.quoteCount || 0,
+        totalRevenue: dashboardData.totalRevenue || 0,
+        averageQuote: dashboardData.quoteCount > 0 ? (dashboardData.totalRevenue / dashboardData.quoteCount) : 0,
+        thisMonthQuotes: 0,
+        thisMonthRevenue: 0,
+        totalCustomers: 0,
+        activeCustomers: 0,
+        conversionRate: 0
       },
       performance: {
         loadTime: performance.now() - startTime
@@ -81,7 +81,7 @@ async function getDashboardData(request: NextRequest): Promise<NextResponse> {
     // Add recent quotes if requested
     if (validatedData.includeRecentQuotes) {
       const recentQuotesStart = performance.now();
-      const quotesData = performanceDb.getQuotesWithDetails(validatedData.companyId, {
+      const quotesData = await performanceDb.getQuotesWithDetails(validatedData.companyId, {
         limit: 10,
         offset: 0
       });
@@ -103,7 +103,7 @@ async function getDashboardData(request: NextRequest): Promise<NextResponse> {
     // Add top customers if requested
     if (validatedData.includeTopCustomers) {
       const customersStart = performance.now();
-      const customersData = performanceDb.getCustomersWithMetrics(validatedData.companyId, {
+      const customersData = await performanceDb.getCustomersWithMetrics(validatedData.companyId, {
         limit: 5
       });
       
@@ -136,7 +136,7 @@ async function getDashboardData(request: NextRequest): Promise<NextResponse> {
         endDate: new Date().toISOString().split('T')[0]
       };
       
-      const analytics = performanceDb.getCompanyAnalytics(
+      const analytics = await performanceDb.getCompanyAnalytics(
         validatedData.companyId, 
         dateRange
       );
@@ -150,7 +150,7 @@ async function getDashboardData(request: NextRequest): Promise<NextResponse> {
     }
 
     // Add database performance metrics
-    response.databaseMetrics = performanceDb.getPerformanceMetrics();
+    response.databaseMetrics = await performanceDb.getPerformanceMetrics();
 
     return createApiResponse(response, {
       message: 'Dashboard data loaded successfully'

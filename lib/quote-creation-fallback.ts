@@ -125,13 +125,15 @@ export class QuoteCreationFallback {
         return {
           success: true,
           quote,
-          response: aiResponse
+          response: aiResponse,
+          method: 'ai' as const
         };
       }
 
       return {
         success: false,
-        response: aiResponse
+        response: aiResponse,
+        method: 'ai' as const
       };
 
     } catch (error) {
@@ -150,11 +152,12 @@ export class QuoteCreationFallback {
     const parsedData = this.parseInputWithRules(userInput);
     
     if (this.isDataComplete(parsedData)) {
-      const quote = await this.generateQuoteFromData(parsedData, companyId);
+      const quote = await this.generateQuoteFromData(parsedData as FallbackQuoteData, companyId);
       return {
         success: true,
         quote,
-        response: this.generateFallbackResponse(parsedData, quote)
+        response: this.generateFallbackResponse(parsedData as FallbackQuoteData, quote),
+        method: 'fallback' as const
       };
     }
 
@@ -162,7 +165,8 @@ export class QuoteCreationFallback {
     const missingFields = this.getMissingFields(parsedData);
     return {
       success: false,
-      response: `Got it! Just need: ${missingFields.join(', ')}.`
+      response: `Got it! Just need: ${missingFields.join(', ')}.`,
+      method: 'fallback' as const
     };
   }
 

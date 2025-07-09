@@ -41,7 +41,7 @@ export async function verifyAdminAuth(request: NextRequest): Promise<AuthResult>
     }
 
     // Check if session exists in database
-    const session = dbGet(`
+    const session = await dbGet(`
       SELECT s.*, u.id, u.email, u.full_name, u.role, u.is_active
       FROM admin_sessions s
       JOIN admin_users u ON s.admin_user_id = u.id

@@ -294,7 +294,7 @@ export class RobustConversationManager {
     const processedInput = this.processAmbiguousInput(userInput, conversation.context, currentStep);
 
     // Validate the input for current step
-    let validation = { valid: true, message: undefined };
+    let validation: { valid: boolean; message?: string } = { valid: true, message: undefined };
     if (currentStep.validator) {
       validation = currentStep.validator(processedInput, conversation.context);
     }

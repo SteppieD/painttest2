@@ -35,7 +35,7 @@ export class SecureDatabase {
     try {
       // Build WHERE clause with company ID restriction
       const whereConditions = ['q.company_id = ?'];
-      const whereValues = [auth.companyId];
+      const whereValues: (string | number)[] = [auth.companyId];
 
       if (status) {
         whereConditions.push('q.status = ?');
@@ -358,7 +358,7 @@ export class SecureDatabase {
 
     try {
       const whereConditions = ['company_id = ?'];
-      const whereValues = [auth.companyId];
+      const whereValues: (string | number)[] = [auth.companyId];
 
       if (status) {
         whereConditions.push('status = ?');

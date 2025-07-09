@@ -42,7 +42,7 @@ async function getOptimizedQuotes(request: NextRequest): Promise<NextResponse> {
     const startTime = performance.now();
 
     // Get quotes with optimized query
-    const quotesData = performanceDb.getQuotesWithDetails(validatedData.company_id, {
+    const quotesData = await performanceDb.getQuotesWithDetails(validatedData.company_id, {
       limit: validatedData.limit,
       offset: validatedData.offset,
       status: validatedData.status,
@@ -229,7 +229,7 @@ async function createOptimizedQuote(request: NextRequest): Promise<NextResponse>
       
     } else {
       // Batch creation
-      const results = performanceDb.batchCreateQuotes(quotes);
+      const results = await performanceDb.batchCreateQuotes(quotes);
       
       return createApiResponse({
         quotesCreated: quotes.length,
@@ -267,7 +267,7 @@ async function batchUpdateQuotes(request: NextRequest): Promise<NextResponse> {
     }
 
     const startTime = performance.now();
-    performanceDb.batchUpdateQuoteStatuses(updates);
+    await performanceDb.batchUpdateQuoteStatuses(updates);
 
     return createApiResponse({
       updatedCount: updates.length,

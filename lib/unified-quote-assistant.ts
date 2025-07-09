@@ -106,7 +106,7 @@ export class UnifiedQuoteAssistant {
       (lower.includes(' at ') && /\d+\s+\w+\s+(street|st|avenue|ave|road|rd|drive|dr|lane|ln|way)/.test(lower))
     );
     
-    let newDimensions = {};
+    let newDimensions: any = {};
     if (!isCustomerInfoMessage) {
       newDimensions = parseDimensions(userInput, projectType, existingData?.measurements || {});
     }
@@ -369,16 +369,19 @@ export class UnifiedQuoteAssistant {
         primer: {
           spread_rate: DEFAULT_PAINT_PRODUCTS.primer_spread_rate,
           cost: 0 // No primer if specified
-        },
+        } as any,
         wall_paint: {
+          name: parsed.paintInfo.brand && parsed.paintInfo.product ? `${parsed.paintInfo.brand} ${parsed.paintInfo.product}` : DEFAULT_PAINT_PRODUCTS.wall_paints[0].name,
           spread_rate: parsed.paintInfo.spread_rate || DEFAULT_PAINT_PRODUCTS.wall_paints[0].spread_rate,
           cost_per_gallon: parsed.paintInfo.cost_per_gallon || DEFAULT_PAINT_PRODUCTS.wall_paints[0].cost_per_gallon
         },
         ceiling_paint: {
+          name: DEFAULT_PAINT_PRODUCTS.ceiling_paints[0].name,
           spread_rate: parsed.paintInfo.spread_rate || DEFAULT_PAINT_PRODUCTS.ceiling_paints[0].spread_rate,
           cost_per_gallon: parsed.surfaces.ceilings ? (parsed.paintInfo.cost_per_gallon || DEFAULT_PAINT_PRODUCTS.ceiling_paints[0].cost_per_gallon) : 0
         },
         trim_paint: {
+          name: DEFAULT_PAINT_PRODUCTS.trim_paints[0].name,
           doors_per_gallon: DEFAULT_PAINT_PRODUCTS.trim_paints[0].doors_per_gallon,
           windows_per_gallon: DEFAULT_PAINT_PRODUCTS.trim_paints[0].windows_per_gallon,
           cost_per_gallon: parsed.surfaces.trim ? (parsed.paintInfo.cost_per_gallon || DEFAULT_PAINT_PRODUCTS.trim_paints[0].cost_per_gallon) : 0
@@ -765,7 +768,7 @@ Ready to save?`;
           collectedData: {
             customerInfo: parsed.customerInfo,
             measurements: parsed.dimensions
-          }
+          } as any
         });
         
         // Create a simpler response for missing fields

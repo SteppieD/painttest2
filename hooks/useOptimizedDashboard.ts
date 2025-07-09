@@ -150,7 +150,7 @@ export function useOptimizedDashboard(
   const fetchDashboardData = useCallback(async () => {
     if (!companyId) return;
 
-    const startTime = performance.now();
+    const startTime = globalThis.performance.now();
     setIsLoading(true);
     setError(null);
     requestCountRef.current++;
@@ -195,7 +195,7 @@ export function useOptimizedDashboard(
       }
 
       // Check if this was a cache hit (very fast response)
-      const totalTime = performance.now() - startTime;
+      const totalTime = globalThis.performance.now() - startTime;
       if (totalTime < 50) { // Assume cache hit if under 50ms
         cacheHitsRef.current++;
       }

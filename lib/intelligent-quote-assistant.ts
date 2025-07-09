@@ -105,11 +105,11 @@ export class IntelligentQuoteAssistant {
         fetch(`/api/quotes?companyId=${companyId}&limit=10`).catch(() => ({ json: () => ({ quotes: [] }) }))
       ]);
 
-      const [companyData, settings, paintsData, quotesData] = await Promise.all([
+      const [companyData, settings, paintsData, quotesData]: [any, any, any, any] = await Promise.all([
         companyResponse.json?.() || {},
         settingsResponse.json?.() || {},
         paintsResponse.json?.() || { paints: [] },
-        quotesData.json?.() || { quotes: [] }
+        quotesResponse.json?.() || { quotes: [] }
       ]);
 
       // Calculate business metrics from recent quotes
@@ -138,32 +138,32 @@ export class IntelligentQuoteAssistant {
 
       return {
         companyId,
-        companyName: companyData.company_name || companyData.name || 'Your Company',
-        contactName: companyData.contact_name || companyData.contactName || 'there',
-        businessType: companyData.business_type || 'painting contractor',
+        companyName: companyData?.company_name || companyData?.name || 'Your Company',
+        contactName: companyData?.contact_name || companyData?.contactName || 'there',
+        businessType: companyData?.business_type || 'painting contractor',
         
         settings: {
-          default_walls_rate: settings.default_walls_rate || 25,
-          default_ceilings_rate: settings.default_ceilings_rate || 22,
-          default_trim_rate: settings.default_trim_rate || 35,
-          default_walls_paint_cost: settings.default_walls_paint_cost || 45,
-          default_ceilings_paint_cost: settings.default_ceilings_paint_cost || 42,
-          default_trim_paint_cost: settings.default_trim_paint_cost || 55,
-          default_labor_percentage: settings.default_labor_percentage || 30,
-          default_paint_coverage: settings.default_paint_coverage || 350,
-          default_sundries_percentage: settings.default_sundries_percentage || 8,
-          tax_rate: settings.tax_rate || 8.5,
-          tax_on_materials_only: settings.tax_on_materials_only ?? true,
-          tax_label: settings.tax_label || 'Sales Tax',
-          overhead_percentage: settings.overhead_percentage || 15,
-          default_markup_percentage: settings.default_markup_percentage || 20,
-          ceiling_height: settings.ceiling_height || 9,
-          paint_multiplier: settings.paint_multiplier || 2,
-          doors_per_gallon: settings.doors_per_gallon || 8,
-          windows_per_gallon: settings.windows_per_gallon || 12
+          default_walls_rate: settings?.default_walls_rate || 25,
+          default_ceilings_rate: settings?.default_ceilings_rate || 22,
+          default_trim_rate: settings?.default_trim_rate || 35,
+          default_walls_paint_cost: settings?.default_walls_paint_cost || 45,
+          default_ceilings_paint_cost: settings?.default_ceilings_paint_cost || 42,
+          default_trim_paint_cost: settings?.default_trim_paint_cost || 55,
+          default_labor_percentage: settings?.default_labor_percentage || 30,
+          default_paint_coverage: settings?.default_paint_coverage || 350,
+          default_sundries_percentage: settings?.default_sundries_percentage || 8,
+          tax_rate: settings?.tax_rate || 8.5,
+          tax_on_materials_only: settings?.tax_on_materials_only ?? true,
+          tax_label: settings?.tax_label || 'Sales Tax',
+          overhead_percentage: settings?.overhead_percentage || 15,
+          default_markup_percentage: settings?.default_markup_percentage || 20,
+          ceiling_height: settings?.ceiling_height || 9,
+          paint_multiplier: settings?.paint_multiplier || 2,
+          doors_per_gallon: settings?.doors_per_gallon || 8,
+          windows_per_gallon: settings?.windows_per_gallon || 12
         },
         
-        paintProducts: paintsData.paints || [],
+        paintProducts: paintsData?.paints || [],
         
         recentQuotes: processedQuotes,
         
@@ -172,7 +172,7 @@ export class IntelligentQuoteAssistant {
           winRate,
           totalQuotesThisMonth: monthlyQuotes.length,
           revenueThisMonth,
-          preferredMargin: settings.default_markup_percentage || 20
+          preferredMargin: settings?.default_markup_percentage || 20
         }
       };
       
@@ -408,7 +408,6 @@ For "Determine if this is interior, exterior, or both":
         response: aiResponse,
         extractedData,
         paintActions,
-        settingsSave,
         confidence: 0.9
       };
 
@@ -699,25 +698,25 @@ Working with ${context.contactName} at ${context.companyName}
 Recent projects: ${recentProjectsContext}
 
 CONTRACTOR'S SAVED PREFERENCES (use these as defaults):
-• Preferred Primer: ${context.settings.preferred_primer_brand || 'Not set'} ${context.settings.preferred_primer_product || ''} (${context.settings.primer_spread_rate || 250} sqft/gal)
-• Preferred Wall Paint: ${context.settings.preferred_wall_paint_brand || 'Not set'} ${context.settings.preferred_wall_paint_product || ''} (${context.settings.wall_paint_spread_rate || 375} sqft/gal)
-• Preferred Ceiling Paint: ${context.settings.preferred_ceiling_paint_brand || 'Not set'} ${context.settings.preferred_ceiling_paint_product || ''} (${context.settings.ceiling_paint_spread_rate || 350} sqft/gal)
-• Preferred Trim Paint: ${context.settings.preferred_trim_paint_brand || 'Not set'} ${context.settings.preferred_trim_paint_product || ''}
+• Preferred Primer: ${(context.settings as any).preferred_primer_brand || 'Not set'} ${(context.settings as any).preferred_primer_product || ''} (${(context.settings as any).primer_spread_rate || 250} sqft/gal)
+• Preferred Wall Paint: ${(context.settings as any).preferred_wall_paint_brand || 'Not set'} ${(context.settings as any).preferred_wall_paint_product || ''} (${(context.settings as any).wall_paint_spread_rate || 375} sqft/gal)
+• Preferred Ceiling Paint: ${(context.settings as any).preferred_ceiling_paint_brand || 'Not set'} ${(context.settings as any).preferred_ceiling_paint_product || ''} (${(context.settings as any).ceiling_paint_spread_rate || 350} sqft/gal)
+• Preferred Trim Paint: ${(context.settings as any).preferred_trim_paint_brand || 'Not set'} ${(context.settings as any).preferred_trim_paint_product || ''}
 
 ALL-IN LABOR RATES (includes materials + labor):
-• Walls: $${context.settings.wall_allin_rate_per_sqft || 1.50}/sqft
-• Ceilings: $${context.settings.ceiling_allin_rate_per_sqft || 1.25}/sqft
-• Primer: $${context.settings.primer_allin_rate_per_sqft || 0.45}/sqft
-• Doors: $${context.settings.door_allin_rate_each || 150} each
-• Windows: $${context.settings.window_allin_rate_each || 100} each
+• Walls: $${(context.settings as any).wall_allin_rate_per_sqft || 1.50}/sqft
+• Ceilings: $${(context.settings as any).ceiling_allin_rate_per_sqft || 1.25}/sqft
+• Primer: $${(context.settings as any).primer_allin_rate_per_sqft || 0.45}/sqft
+• Doors: $${(context.settings as any).door_allin_rate_each || 150} each
+• Windows: $${(context.settings as any).window_allin_rate_each || 100} each
 
-AI LEARNING: ${context.settings.ai_learning_enabled ? 'ENABLED - Save new preferences' : 'DISABLED - Do not save preferences'}
+AI LEARNING: ${(context.settings as any).ai_learning_enabled ? 'ENABLED - Save new preferences' : 'DISABLED - Do not save preferences'}
 
 CONVERSATION EXAMPLES:
 • "Hey! Tell me about your painting project."
 • "Got the basics! What are the wall linear feet and ceiling height?"
 • If no saved preferences: "What's your go-to primer and its spread rate?"
-• If saved preferences: "I see you usually use ${context.settings.preferred_primer_brand || 'Kilz'} ${context.settings.preferred_primer_product || 'PVA Primer'}. Use that for this quote?"
+• If saved preferences: "I see you usually use ${(context.settings as any).preferred_primer_brand || 'Kilz'} ${(context.settings as any).preferred_primer_product || 'PVA Primer'}. Use that for this quote?"
 • "What do you typically charge per sqft for walls, including paint?"
 
 SMART PREFERENCE USAGE:

@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(request: NextRequest) {
   try {
-    const plans = subscriptionManager.getAvailablePlans();
+    const plans = await subscriptionManager.getAvailablePlans();
 
     // Format plans for frontend consumption
     const formattedPlans = plans.map(plan => ({

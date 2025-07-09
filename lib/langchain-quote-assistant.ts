@@ -46,15 +46,16 @@ export class LangChainQuoteAssistant {
       modelName: "anthropic/claude-3.5-sonnet", // Using Claude Sonnet via OpenRouter
       temperature: 0.1, // Low temperature for consistent extraction
       openAIApiKey: process.env.OPENROUTER_API_KEY,
-    }, {
-      basePath: "https://openrouter.ai/api/v1",
-      baseOptions: {
-        headers: {
-          "HTTP-Referer": process.env.NEXTAUTH_URL || "http://localhost:3001",
-          "X-Title": "ProPaint Quote Assistant",
+      configuration: {
+        basePath: "https://openrouter.ai/api/v1",
+        baseOptions: {
+          headers: {
+            "HTTP-Referer": process.env.NEXTAUTH_URL || "http://localhost:3001",
+            "X-Title": "ProPaint Quote Assistant",
+          },
         },
       },
-    });
+    } as any);
   }
 
   async extractQuoteInformation(

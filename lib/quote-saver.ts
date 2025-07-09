@@ -15,6 +15,7 @@ export interface QuoteData {
   status: 'pending' | 'accepted' | 'rejected';
   company_id: number;
   quote_details: any; // Full quote object
+  quote_id?: string; // Optional quote ID
 }
 
 export class QuoteSaver {

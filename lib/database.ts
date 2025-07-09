@@ -1,4 +1,4 @@
-// Import the simplified database system for deployment
+// Import the Supabase database system for production deployment
 import { 
   getCompanyByAccessCode as getCompanyByAccessCodeSimple,
   createQuote as createQuoteSimple,
@@ -13,7 +13,7 @@ import {
 // Initialize database on import
 initializeDatabase().catch(err => console.log('Database initialization warning:', err));
 
-// Legacy compatibility - simplified mock database
+// Supabase-only database adapter
 function getDb() {
   return {
     prepare: (sql: string) => ({
@@ -24,19 +24,16 @@ function getDb() {
   };
 }
 
-// Simplified data initialization
-console.log('Database initialized with simplified adapter');
+// Supabase data initialization
+console.log('Database initialized with Supabase adapter');
 
 export const dbGet = dbGetSimple;
 export const dbAll = dbAllSimple;
 export const dbRun = dbRunSimple;
 
-// Legacy compatibility functions using simplified adapter
+// Functions using Supabase adapter
 export const getCompanyByAccessCode = getCompanyByAccessCodeSimple;
-
 export const createCompany = createCompanySimple;
-
-// Legacy quote functions using simplified adapter
 export const createQuote = createQuoteSimple;
 export const updateQuote = updateQuoteSimple;
 

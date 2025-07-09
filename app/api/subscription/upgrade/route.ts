@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get available plans to validate the requested plan
-    const availablePlans = subscriptionManager.getAvailablePlans();
+    const availablePlans = await subscriptionManager.getAvailablePlans();
     const targetPlan = availablePlans.find(p => p.id === plan_id);
 
     if (!targetPlan) {

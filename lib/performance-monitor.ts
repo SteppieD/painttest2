@@ -4,6 +4,8 @@
  * Monitors app performance and provides optimization utilities
  */
 
+import React from 'react';
+
 export interface PerformanceMetrics {
   pageLoadTime: number;
   timeToFirstByte: number;

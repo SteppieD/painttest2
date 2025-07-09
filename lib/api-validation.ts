@@ -190,10 +190,10 @@ function validateQueryParameters(
     const url = new URL(request.url);
     const queryObject: Record<string, any> = {};
     
-    // Convert URLSearchParams to object
-    for (const [key, value] of url.searchParams.entries()) {
+    // Convert URLSearchParams to object (ES5 compatible)
+    url.searchParams.forEach((value, key) => {
       queryObject[key] = value;
-    }
+    });
     
     // Sanitize query parameters
     const sanitizedQuery = sanitizeObject(queryObject);
@@ -267,12 +267,12 @@ function checkRateLimit(
   const now = Date.now();
   const windowStart = now - options.windowMs;
 
-  // Clean up expired entries
-  for (const [key, value] of rateLimitStore.entries()) {
+  // Clean up expired entries (ES5 compatible)
+  rateLimitStore.forEach((value, key) => {
     if (value.resetTime < now) {
       rateLimitStore.delete(key);
     }
-  }
+  });
 
   const current = rateLimitStore.get(clientId);
   
@@ -318,7 +318,8 @@ function sanitizeObject(obj: any): any {
   }
 
   if (typeof obj === 'string') {
-    return InputSanitizer.sanitizeString(obj);
+    const result = InputSanitizer.validateString(obj, 'field');
+    return result.isValid ? result.sanitizedValue : obj;
   }
 
   if (typeof obj === 'number') {
@@ -336,7 +337,8 @@ function sanitizeObject(obj: any): any {
   if (typeof obj === 'object') {
     const sanitized: Record<string, any> = {};
     for (const [key, value] of Object.entries(obj)) {
-      const sanitizedKey = InputSanitizer.sanitizeString(key);
+      const keyResult = InputSanitizer.validateString(key, 'key');
+      const sanitizedKey = keyResult.isValid ? keyResult.sanitizedValue : key;
       sanitized[sanitizedKey] = sanitizeObject(value);
     }
     return sanitized;

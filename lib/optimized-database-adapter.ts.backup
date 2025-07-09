@@ -5,7 +5,7 @@
  * Eliminates the string-matching adapter pattern with proper query optimization
  */
 
-import { DatabaseCustomer, DatabaseQuote, DatabaseCompany, CustomerWithQuotes } from './database-types';
+import { DatabaseCustomer, DatabaseQuote, DatabaseCompany, CustomerWithStats } from './database-types';
 import { supabaseDb } from './database/supabase-adapter';
 
 export class OptimizedDatabaseAdapter {
@@ -14,7 +14,7 @@ export class OptimizedDatabaseAdapter {
    * Get customer with all related data in a single optimized query
    * Eliminates N+1 queries by JOINing all related tables
    */
-  async getCustomerWithDetails(customerId: number): Promise<CustomerWithQuotes | null> {
+  async getCustomerWithDetails(customerId: number): Promise<CustomerWithStats | null> {
     try {
       const result = await supabaseDb.query(`
         SELECT 
@@ -83,7 +83,7 @@ export class OptimizedDatabaseAdapter {
       search?: string;
     } = {}
   ): Promise<{
-    customers: CustomerWithQuotes[];
+    customers: CustomerWithStats[];
     total: number;
     page: number;
     pages: number;
@@ -144,8 +144,8 @@ export class OptimizedDatabaseAdapter {
         LIMIT ? OFFSET ?
       `, [...queryParams, limit, offset]);
 
-      // Transform to CustomerWithQuotes format
-      const enrichedCustomers: CustomerWithQuotes[] = customers.map(customer => ({
+      // Transform to CustomerWithStats format
+      const enrichedCustomers: CustomerWithStats[] = customers.map(customer => ({
         ...customer,
         quotes: [], // We'll populate this only if specifically requested
         lifetime_value: customer.total_revenue,
@@ -189,7 +189,7 @@ export class OptimizedDatabaseAdapter {
       conversion_rate: number;
     };
     recent_quotes: DatabaseQuote[];
-    top_customers: CustomerWithQuotes[];
+    top_customers: CustomerWithStats[];
   } | null> {
     try {
       // Get company info
@@ -256,8 +256,8 @@ export class OptimizedDatabaseAdapter {
         LIMIT 5
       `, [companyId]);
 
-      // Transform top customers to CustomerWithQuotes format
-      const enrichedTopCustomers: CustomerWithQuotes[] = topCustomers.map(customer => ({
+      // Transform top customers to CustomerWithStats format
+      const enrichedTopCustomers: CustomerWithStats[] = topCustomers.map(customer => ({
         ...customer,
         quotes: [], // Populated on demand
         lifetime_value: customer.total_revenue,
@@ -332,7 +332,7 @@ export class OptimizedDatabaseAdapter {
       companyId?: number;
     } = {}
   ): Promise<{
-    customers: CustomerWithQuotes[];
+    customers: CustomerWithStats[];
     quotes: DatabaseQuote[];
     companies: DatabaseCompany[];
   }> {
@@ -391,8 +391,8 @@ export class OptimizedDatabaseAdapter {
         LIMIT ?
       `, [searchPattern, searchPattern, searchPattern, limit]);
 
-      // Transform customers to CustomerWithQuotes format
-      const enrichedCustomers: CustomerWithQuotes[] = customers.map(customer => ({
+      // Transform customers to CustomerWithStats format
+      const enrichedCustomers: CustomerWithStats[] = customers.map(customer => ({
         ...customer,
         quotes: [],
         lifetime_value: customer.total_revenue,

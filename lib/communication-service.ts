@@ -572,7 +572,12 @@ class ResendProvider implements EmailProvider {
   async send(options: EmailOptions): Promise<EmailResult> {
     try {
       // Import Resend dynamically to avoid errors if not installed
-      const ResendModule = await import('resend').catch(() => null);
+      let ResendModule: any = null;
+      try {
+        ResendModule = require('resend');
+      } catch (e) {
+        // Resend not installed
+      }
       if (!ResendModule) {
         return {
           success: false,
@@ -615,7 +620,12 @@ class SendGridProvider implements EmailProvider {
   async send(options: EmailOptions): Promise<EmailResult> {
     try {
       // Import SendGrid dynamically
-      const sgMail = await import('@sendgrid/mail').catch(() => null);
+      let sgMail: any = null;
+      try {
+        sgMail = require('@sendgrid/mail');
+      } catch (e) {
+        // SendGrid not installed
+      }
       if (!sgMail) {
         return {
           success: false,
@@ -659,7 +669,12 @@ class SMTPProvider implements EmailProvider {
   async send(options: EmailOptions): Promise<EmailResult> {
     try {
       // Import nodemailer dynamically
-      const nodemailer = await import('nodemailer').catch(() => null);
+      let nodemailer: any = null;
+      try {
+        nodemailer = require('nodemailer');
+      } catch (e) {
+        // Nodemailer not installed
+      }
       if (!nodemailer) {
         return {
           success: false,
@@ -710,7 +725,12 @@ class TwilioProvider implements SMSProvider {
   async send(options: SMSOptions): Promise<SMSResult> {
     try {
       // Import Twilio dynamically
-      const twilio = await import('twilio').catch(() => null);
+      let twilio: any = null;
+      try {
+        twilio = require('twilio');
+      } catch (e) {
+        // Twilio not installed
+      }
       if (!twilio) {
         return {
           success: false,

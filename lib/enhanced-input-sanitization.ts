@@ -320,34 +320,34 @@ export class InputSanitizer {
           // Use specific sanitization method based on schema
           switch (schema[sanitizedKey]) {
             case 'email':
-              sanitized[sanitizedKey] = this.sanitizeEmail(value);
+              sanitized[sanitizedKey] = this.sanitizeEmail(String(value));
               break;
             case 'phone':
-              sanitized[sanitizedKey] = this.sanitizePhone(value);
+              sanitized[sanitizedKey] = this.sanitizePhone(String(value));
               break;
             case 'number':
               sanitized[sanitizedKey] = this.sanitizeNumber(value);
               break;
             case 'url':
-              sanitized[sanitizedKey] = this.sanitizeUrl(value);
+              sanitized[sanitizedKey] = this.sanitizeUrl(String(value));
               break;
             case 'html':
-              sanitized[sanitizedKey] = this.sanitizeHtml(value);
+              sanitized[sanitizedKey] = this.sanitizeHtml(String(value));
               break;
             case 'address':
-              sanitized[sanitizedKey] = this.sanitizeAddress(value);
+              sanitized[sanitizedKey] = this.sanitizeAddress(String(value));
               break;
             case 'customerName':
-              sanitized[sanitizedKey] = this.sanitizeCustomerName(value);
+              sanitized[sanitizedKey] = this.sanitizeCustomerName(String(value));
               break;
             case 'companyName':
-              sanitized[sanitizedKey] = this.sanitizeCompanyName(value);
+              sanitized[sanitizedKey] = this.sanitizeCompanyName(String(value));
               break;
             case 'accessCode':
-              sanitized[sanitizedKey] = this.sanitizeAccessCode(value);
+              sanitized[sanitizedKey] = this.sanitizeAccessCode(String(value));
               break;
             case 'notes':
-              sanitized[sanitizedKey] = this.sanitizeNotes(value);
+              sanitized[sanitizedKey] = this.sanitizeNotes(String(value));
               break;
             default:
               sanitized[sanitizedKey] = this.sanitizeObject(value, schema);

@@ -11,7 +11,7 @@ import { performanceDb } from '@/lib/performance-database-adapter';
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     // Get database performance metrics
-    const databaseMetrics = performanceDb.getPerformanceMetrics();
+    const databaseMetrics = await performanceDb.getPerformanceMetrics();
     
     // Get recent load times from performance tracking
     const loadTimes = {

@@ -298,7 +298,7 @@ export class CustomerManager {
     try {
       // Build WHERE clause
       const whereConditions = ['company_id = ?'];
-      const whereValues = [companyId];
+      const whereValues: any[] = [companyId];
 
       if (status) {
         whereConditions.push('status = ?');

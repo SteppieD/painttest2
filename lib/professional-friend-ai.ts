@@ -18,7 +18,7 @@
  * and established contractors (with full analytics).
  */
 
-import { dbGet, dbAll, getPreparedStatements, dbUtils } from './database';
+import { dbGet, dbAll } from './database';
 
 /**
  * ContractorContext contains business intelligence data for the contractor.
@@ -86,11 +86,11 @@ export class ProfessionalFriendAI {
 
   async loadContractorContext(userId: string): Promise<ContractorContext> {
     // Get user and company info
-    const user = dbGet("SELECT * FROM users WHERE id = ?", [userId]) as any;
-    const costSettings = dbGet("SELECT * FROM cost_settings WHERE user_id = ?", [userId]) as any;
+    const user = await dbGet("SELECT * FROM users WHERE id = ?", [userId]) as any;
+    const costSettings = await dbGet("SELECT * FROM cost_settings WHERE user_id = ?", [userId]) as any;
     
     // Get recent quotes for business intelligence
-    const recentQuotes = dbAll(`
+    const recentQuotes = await dbAll(`
       SELECT q.*, p.client_name, p.property_address 
       FROM quotes q 
       JOIN projects p ON q.project_id = p.id 

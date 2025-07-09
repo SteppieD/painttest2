@@ -92,6 +92,10 @@ class QuoteCostTracker {
     return this.sessions.get(sessionId)?.estimatedCost || 0;
   }
 
+  getSession(sessionId: string) {
+    return this.sessions.get(sessionId);
+  }
+
   clearSession(sessionId: string): void {
     this.sessions.delete(sessionId);
   }
@@ -130,7 +134,7 @@ export async function makeCostOptimizedAICall(
   }
 
   // Check if we're at the API call limit before making the call
-  const session = costTracker.sessions.get(sessionId);
+  const session = costTracker.getSession(sessionId);
   if (session && session.apiCalls >= COST_CONFIG.maxApiCalls) {
     return {
       response: `I've reached the conversation limit for this quote session (${COST_CONFIG.maxApiCalls} messages). Here's what I can suggest:\n\n• **Continue with manual quote creation** - You have all the flexibility you need\n• **Start a new conversation** - Begin fresh if you want to try a different approach\n• **Use the quick quote calculator** - For fast estimates\n\nWould you like me to save what we've discussed so far?`,

@@ -79,7 +79,7 @@ export function SmartSuggestionWidget({
 
   const handleApplySuggestion = (suggestion: SmartSuggestion) => {
     onApplySuggestion(suggestion);
-    setAppliedSuggestions(prev => new Set([...prev, suggestion.title]));
+    setAppliedSuggestions(prev => new Set(Array.from(prev).concat(suggestion.title)));
   };
 
   const getConfidenceColor = (confidence: string) => {

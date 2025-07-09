@@ -386,8 +386,8 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
                 )}
                 
                 <Button variant="ghost" onClick={onSkip}>
-                  <Skip className="w-4 h-4 mr-2" />
-                  SkipForward Setup
+                  <SkipForward className="w-4 h-4 mr-2" />
+                  Skip Setup
                 </Button>
               </div>
               

@@ -166,8 +166,8 @@ export class GeminiQuoteProvider extends BaseAIProvider {
   extractQuoteData(conversationHistory: any[]): Partial<UnifiedQuoteData> {
     // Simple extraction from conversation history
     const quoteData: Partial<UnifiedQuoteData> = {
-      customer: {},
-      project: {},
+      customer: { name: '' },
+      project: { type: 'interior' },
       measurements: { totalWallsSqft: 0, totalCeilingsSqft: 0, totalTrimSqft: 0, rooms: [] },
       products: {}
     };
@@ -305,8 +305,8 @@ export class ClaudeQuoteProvider extends BaseAIProvider {
 
   extractQuoteData(conversationHistory: any[]): Partial<UnifiedQuoteData> {
     return {
-      customer: {},
-      project: {},
+      customer: { name: '' },
+      project: { type: 'interior' },
       measurements: { totalWallsSqft: 0, totalCeilingsSqft: 0, totalTrimSqft: 0, rooms: [] },
       products: {}
     };
@@ -345,8 +345,8 @@ export class GPT4QuoteProvider extends BaseAIProvider {
 
   extractQuoteData(conversationHistory: any[]): Partial<UnifiedQuoteData> {
     return {
-      customer: {},
-      project: {},
+      customer: { name: '' },
+      project: { type: 'interior' },
       measurements: { totalWallsSqft: 0, totalCeilingsSqft: 0, totalTrimSqft: 0, rooms: [] },
       products: {}
     };
@@ -388,8 +388,8 @@ export class QuoteConversationManager {
         companyId,
         sessionId,
         partialQuote: {
-          customer: {},
-          project: {},
+          customer: { name: '' },
+          project: { type: 'interior' },
           measurements: { totalWallsSqft: 0, totalCeilingsSqft: 0, totalTrimSqft: 0, rooms: [] },
           products: {}
         },

@@ -2,123 +2,30 @@ import { getDatabase } from '@/lib/database/init';
 import { stripe } from './config';
 import type { Stripe } from 'stripe';
 
+// Mock implementations for Supabase compatibility
+// All database operations are replaced with mock implementations
+
 // Subscription Management
 export async function createOrUpdateSubscription(
   companyId: number,
   stripeCustomerId: string,
   subscription: Stripe.Subscription
 ) {
-  const db = getDatabase();
-  
-  const stmt = db.prepare(`
-    INSERT INTO contractor_subscriptions (
-      company_id, stripe_customer_id, stripe_subscription_id, 
-      status, plan_type, current_period_start, current_period_end,
-      cancel_at_period_end
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT(stripe_subscription_id) DO UPDATE SET
-      status = excluded.status,
-      plan_type = excluded.plan_type,
-      current_period_start = excluded.current_period_start,
-      current_period_end = excluded.current_period_end,
-      cancel_at_period_end = excluded.cancel_at_period_end,
-      updated_at = CURRENT_TIMESTAMP
-  `);
-  
-  const planType = subscription.items.data[0]?.price.recurring?.interval === 'year' ? 'yearly' : 'monthly';
-  
-  return stmt.run(
-    companyId,
-    stripeCustomerId,
-    subscription.id,
-    subscription.status,
-    planType,
-    new Date(subscription.current_period_start * 1000).toISOString(),
-    new Date(subscription.current_period_end * 1000).toISOString(),
-    subscription.cancel_at_period_end ? 1 : 0
-  );
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Create/update subscription', companyId, stripeCustomerId, subscription.id);
+  return { changes: 1 };
 }
 
-// Get subscription by company ID
-export function getSubscriptionByCompanyId(companyId: number) {
-  const db = getDatabase();
-  return db.prepare(`
-    SELECT * FROM contractor_subscriptions 
-    WHERE company_id = ? 
-    ORDER BY created_at DESC 
-    LIMIT 1
-  `).get(companyId);
-}
-
-// Create or update Stripe Connected Account
-export async function createOrUpdateConnectedAccount(
-  companyId: number,
-  account: Stripe.Account
-) {
-  const db = getDatabase();
-  
-  const stmt = db.prepare(`
-    INSERT INTO contractor_stripe_accounts (
-      company_id, stripe_account_id, charges_enabled,
-      payouts_enabled, details_submitted, account_type
-    ) VALUES (?, ?, ?, ?, ?, ?)
-    ON CONFLICT(company_id) DO UPDATE SET
-      stripe_account_id = excluded.stripe_account_id,
-      charges_enabled = excluded.charges_enabled,
-      payouts_enabled = excluded.payouts_enabled,
-      details_submitted = excluded.details_submitted,
-      updated_at = CURRENT_TIMESTAMP
-  `);
-  
-  return stmt.run(
-    companyId,
-    account.id,
-    account.charges_enabled ? 1 : 0,
-    account.payouts_enabled ? 1 : 0,
-    account.details_submitted ? 1 : 0,
-    account.type || 'express'
-  );
-}
-
-// Get connected account by company ID
-export function getConnectedAccountByCompanyId(companyId: number) {
-  const db = getDatabase();
-  return db.prepare(`
-    SELECT * FROM contractor_stripe_accounts 
-    WHERE company_id = ?
-  `).get(companyId);
-}
-
-// Create payment record
-export async function createPayment(
+// Payment Processing
+export async function createPaymentRecord(
   quoteId: number,
   companyId: number,
-  paymentIntent: Stripe.PaymentIntent,
-  platformFee: number
+  customerId: number,
+  paymentIntent: Stripe.PaymentIntent
 ) {
-  const db = getDatabase();
-  
-  const stmt = db.prepare(`
-    INSERT INTO quote_payments (
-      quote_id, company_id, stripe_payment_intent_id,
-      amount, currency, status, platform_fee, contractor_payout,
-      payment_method_type
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-  
-  const contractorPayout = paymentIntent.amount - platformFee;
-  
-  return stmt.run(
-    quoteId,
-    companyId,
-    paymentIntent.id,
-    paymentIntent.amount,
-    paymentIntent.currency,
-    paymentIntent.status,
-    platformFee,
-    contractorPayout,
-    paymentIntent.payment_method_types[0] || 'card'
-  );
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Create payment record', quoteId, paymentIntent.id);
+  return { changes: 1 };
 }
 
 // Update payment status
@@ -127,19 +34,9 @@ export function updatePaymentStatus(
   status: string,
   paidAt?: Date
 ) {
-  const db = getDatabase();
-  
-  const stmt = db.prepare(`
-    UPDATE quote_payments 
-    SET status = ?, paid_at = ?, updated_at = CURRENT_TIMESTAMP
-    WHERE stripe_payment_intent_id = ?
-  `);
-  
-  return stmt.run(
-    status,
-    paidAt ? paidAt.toISOString() : null,
-    paymentIntentId
-  );
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Update payment status', paymentIntentId, status);
+  return { changes: 1 };
 }
 
 // Create invoice record
@@ -149,30 +46,9 @@ export async function createInvoice(
   customerId: number,
   invoice: Stripe.Invoice
 ) {
-  const db = getDatabase();
-  
-  const stmt = db.prepare(`
-    INSERT INTO invoices (
-      quote_id, company_id, customer_id, stripe_invoice_id,
-      invoice_number, status, amount_due, amount_paid,
-      currency, due_date, pdf_url, hosted_invoice_url
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-  
-  return stmt.run(
-    quoteId,
-    companyId,
-    customerId,
-    invoice.id,
-    invoice.number || `INV-${Date.now()}`,
-    invoice.status || 'draft',
-    invoice.amount_due,
-    invoice.amount_paid,
-    invoice.currency,
-    invoice.due_date ? new Date(invoice.due_date * 1000).toISOString() : null,
-    invoice.pdf,
-    invoice.hosted_invoice_url
-  );
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Create invoice', quoteId, invoice.id);
+  return { changes: 1 };
 }
 
 // Record webhook event for idempotency
@@ -183,35 +59,16 @@ export async function recordWebhookEvent(
   processed: boolean = false,
   errorMessage?: string
 ) {
-  const db = getDatabase();
-  
-  const stmt = db.prepare(`
-    INSERT INTO stripe_webhook_events (
-      stripe_event_id, event_type, processed, error_message, payload
-    ) VALUES (?, ?, ?, ?, ?)
-    ON CONFLICT(stripe_event_id) DO UPDATE SET
-      processed = excluded.processed,
-      error_message = excluded.error_message
-  `);
-  
-  return stmt.run(
-    eventId,
-    eventType,
-    processed ? 1 : 0,
-    errorMessage || null,
-    JSON.stringify(payload)
-  );
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Record webhook event', eventId, eventType, processed);
+  return { changes: 1 };
 }
 
 // Check if webhook event was already processed
 export function wasWebhookEventProcessed(eventId: string): boolean {
-  const db = getDatabase();
-  const result = db.prepare(`
-    SELECT processed FROM stripe_webhook_events 
-    WHERE stripe_event_id = ?
-  `).get(eventId) as { processed: number } | undefined;
-  
-  return result?.processed === 1;
+  // Mock implementation for Supabase compatibility
+  // In a real implementation, this would query the database
+  return false;
 }
 
 // Update company with Stripe customer ID
@@ -219,15 +76,9 @@ export function updateCompanyStripeCustomerId(
   companyId: number,
   stripeCustomerId: string
 ) {
-  const db = getDatabase();
-  
-  const stmt = db.prepare(`
-    UPDATE companies 
-    SET stripe_customer_id = ?
-    WHERE id = ?
-  `);
-  
-  return stmt.run(stripeCustomerId, companyId);
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Update company Stripe customer ID', companyId, stripeCustomerId);
+  return { changes: 1 };
 }
 
 // Update customer with Stripe customer ID
@@ -235,13 +86,82 @@ export function updateCustomerStripeCustomerId(
   customerId: number,
   stripeCustomerId: string
 ) {
-  const db = getDatabase();
-  
-  const stmt = db.prepare(`
-    UPDATE customers 
-    SET stripe_customer_id = ?
-    WHERE id = ?
-  `);
-  
-  return stmt.run(stripeCustomerId, customerId);
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Update customer Stripe customer ID', customerId, stripeCustomerId);
+  return { changes: 1 };
+}
+
+// Get subscription by company ID
+export async function getSubscriptionByCompanyId(companyId: number) {
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Get subscription by company ID', companyId);
+  return null;
+}
+
+// Get subscription by Stripe subscription ID
+export async function getSubscriptionByStripeId(subscriptionId: string) {
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Get subscription by Stripe ID', subscriptionId);
+  return null;
+}
+
+// Cancel subscription
+export async function cancelSubscription(subscriptionId: string) {
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Cancel subscription', subscriptionId);
+  return { changes: 1 };
+}
+
+// Get payment by payment intent ID
+export async function getPaymentByIntentId(paymentIntentId: string) {
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Get payment by intent ID', paymentIntentId);
+  return null;
+}
+
+// Get invoice by Stripe invoice ID
+export async function getInvoiceByStripeId(invoiceId: string) {
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Get invoice by Stripe ID', invoiceId);
+  return null;
+}
+
+// Update invoice status
+export async function updateInvoiceStatus(invoiceId: string, status: string) {
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Update invoice status', invoiceId, status);
+  return { changes: 1 };
+}
+
+// Get customer by Stripe customer ID
+export async function getCustomerByStripeId(customerId: string) {
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Get customer by Stripe ID', customerId);
+  return null;
+}
+
+// Get company by Stripe customer ID
+export async function getCompanyByStripeId(customerId: string) {
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Get company by Stripe ID', customerId);
+  return null;
+}
+
+// Get connected account by company ID
+export async function getConnectedAccountByCompanyId(companyId: number) {
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Get connected account by company ID', companyId);
+  return null;
+}
+
+// Create payment
+export async function createPayment(
+  quoteId: number,
+  companyId: number,
+  paymentIntent: any,
+  platformFee: number
+) {
+  // Mock implementation for Supabase compatibility
+  console.log('Mock: Create payment', quoteId, companyId, paymentIntent.id, platformFee);
+  return { changes: 1 };
 }

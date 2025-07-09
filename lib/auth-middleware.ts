@@ -241,12 +241,12 @@ export function checkAuthRateLimit(identifier: string): {
   const windowMs = 15 * 60 * 1000; // 15 minutes
   const maxAttempts = 5;
 
-  // Clean expired entries
-  for (const [k, v] of rateLimitStore.entries()) {
+  // Clean expired entries (ES5 compatible)
+  rateLimitStore.forEach((v, k) => {
     if (v.resetTime < now) {
       rateLimitStore.delete(k);
     }
-  }
+  });
 
   const current = rateLimitStore.get(key);
   

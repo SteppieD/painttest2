@@ -55,7 +55,7 @@ export class SubscriptionManager {
    */
   async getCompanySubscription(companyId: number): Promise<CompanySubscription | null> {
     try {
-      const subscription = this.db.prepare(`
+      const subscription = await this.db.prepare(`
         SELECT cs.*, sp.quote_limit, sp.name as plan_name, sp.features
         FROM company_subscriptions cs
         JOIN subscription_plans sp ON cs.plan_id = sp.id
@@ -196,7 +196,7 @@ export class SubscriptionManager {
    */
   async createTrialSubscription(companyId: number, planId: string = 'plan_free'): Promise<void> {
     try {
-      const plan = this.db.prepare(`
+      const plan = await this.db.prepare(`
         SELECT * FROM subscription_plans WHERE id = ?
       `).get(planId) as any;
 
@@ -249,7 +249,7 @@ export class SubscriptionManager {
         throw new Error('No current subscription found');
       }
 
-      const newPlan = this.db.prepare(`
+      const newPlan = await this.db.prepare(`
         SELECT * FROM subscription_plans WHERE id = ?
       `).get(newPlanId) as any;
 
@@ -413,12 +413,12 @@ export class SubscriptionManager {
       }
 
       // Get total quotes for the company
-      const totalQuotes = this.db.prepare(`
+      const totalQuotes = await this.db.prepare(`
         SELECT COUNT(*) as count FROM quotes WHERE company_id = ?
       `).get(companyId) as any;
 
       // Get daily usage for the last N days
-      const dailyUsage = this.db.prepare(`
+      const dailyUsage = await this.db.prepare(`
         SELECT 
           DATE(created_at) as date,
           COUNT(*) as quotes
@@ -457,9 +457,9 @@ export class SubscriptionManager {
   /**
    * Get all available subscription plans
    */
-  getAvailablePlans(): SubscriptionPlan[] {
+  async getAvailablePlans(): Promise<SubscriptionPlan[]> {
     try {
-      const plans = this.db.prepare(`
+      const plans = await this.db.prepare(`
         SELECT * FROM subscription_plans 
         WHERE is_active = 1 
         ORDER BY price_monthly ASC
@@ -492,7 +492,7 @@ export class SubscriptionManager {
       }
 
       // Check for individual feature overrides
-      const featureOverride = this.db.prepare(`
+      const featureOverride = await this.db.prepare(`
         SELECT enabled FROM company_features 
         WHERE company_id = ? AND feature_key = ?
           AND (expires_at IS NULL OR expires_at > datetime('now'))
@@ -511,7 +511,7 @@ export class SubscriptionManager {
   async migrateExistingCompanies(): Promise<void> {
     try {
       // Find companies without subscriptions
-      const companiesWithoutSubs = this.db.prepare(`
+      const companiesWithoutSubs = await this.db.prepare(`
         SELECT c.id, c.is_trial, c.quote_limit
         FROM companies c
         LEFT JOIN company_subscriptions cs ON c.id = cs.company_id

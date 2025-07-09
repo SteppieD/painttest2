@@ -321,7 +321,7 @@ export function OnboardingChecklist({
   ];
 
   const handleStepComplete = (stepId: string) => {
-    const newCompleted = new Set([...completedSteps, stepId]);
+    const newCompleted = new Set(Array.from(completedSteps).concat(stepId));
     setCompletedSteps(newCompleted);
     
     if (newCompleted.size === checklistItems.length) {

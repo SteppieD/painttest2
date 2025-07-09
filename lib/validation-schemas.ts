@@ -637,7 +637,7 @@ export const CreateQuoteInputSchema = z.object({
   status: z.enum(['draft', 'pending']).optional(),
 });
 
-export const UpdateQuoteInputSchema = CreateQuoteInputSchema.partial().omit(['company_id']);
+export const UpdateQuoteInputSchema = CreateQuoteInputSchema.partial().omit({ company_id: true });
 
 export const CreateCustomerInputSchema = z.object({
   company_id: z.number().int().positive("Company ID must be a positive integer"),
@@ -674,7 +674,7 @@ export const CreateCustomerInputSchema = z.object({
   tags: z.array(z.string().max(50, "Tag must be at most 50 characters")).optional(),
 });
 
-export const UpdateCustomerInputSchema = CreateCustomerInputSchema.partial().omit(['company_id']).extend({
+export const UpdateCustomerInputSchema = CreateCustomerInputSchema.partial().omit({ company_id: true }).extend({
   status: z.enum(['prospect', 'active', 'completed', 'inactive']).optional(),
 });
 
@@ -750,7 +750,14 @@ export function validatePartialInput<T>(schema: z.ZodSchema<T>, data: unknown): 
   errors?: string[];
 } {
   try {
-    const result = schema.partial().parse(data);
+    // Check if schema is a ZodObject before calling partial
+    let partialSchema: z.ZodSchema<any>;
+    if ((schema as any)._def?.typeName === z.ZodFirstPartyTypeKind.ZodObject) {
+      partialSchema = (schema as any).partial();
+    } else {
+      partialSchema = schema;
+    }
+    const result = partialSchema.parse(data);
     return { success: true, data: result };
   } catch (error) {
     if (error instanceof z.ZodError) {

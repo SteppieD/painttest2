@@ -8,7 +8,8 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import { withSecureApi, createApiResponse } from "@/lib/secure-api-wrapper";
-import { optimizedDb } from "@/lib/optimized-database-adapter";
+// import { optimizedDb } from "@/lib/optimized-database-adapter"; // Temporarily disabled
+import { supabaseDb } from "@/lib/database/supabase-adapter";
 import { UnifiedQuoteCalculator } from "@/lib/unified-quote-calculator";
 import { generateQuoteId } from "@/lib/utils";
 import { 
@@ -79,13 +80,15 @@ async function createQuote(request: NextRequest): Promise<NextResponse> {
     const validatedData = CreateQuoteSchema.parse(body);
     
     // Get company information for defaults
-    const companyData = await optimizedDb.getCompanyDashboard(validatedData.companyId);
-    if (!companyData) {
-      return createApiResponse(
-        { error: 'Company not found' },
-        { success: false, status: 404 }
-      );
-    }
+    const companyDefaults = {
+      company: {
+        id: validatedData.companyId,
+        default_walls_rate: 3.00,
+        default_ceilings_rate: 2.00,
+        default_trim_rate: 5.00,
+        tax_rate: 0
+      }
+    };
     
     // Build measurements
     let measurements;
@@ -133,18 +136,18 @@ async function createQuote(request: NextRequest): Promise<NextResponse> {
     };
     
     // Calculate pricing using company defaults
-    const companyDefaults = {
-      wallsRate: companyData.company.default_walls_rate || 3.00,
-      ceilingsRate: companyData.company.default_ceilings_rate || 2.00,
-      trimRate: companyData.company.default_trim_rate || 5.00,
+    const pricingDefaults = {
+      wallsRate: companyDefaults.company.default_walls_rate || 3.00,
+      ceilingsRate: companyDefaults.company.default_ceilings_rate || 2.00,
+      trimRate: companyDefaults.company.default_trim_rate || 5.00,
       markupPercentage: validatedData.markupPercentage || 45,
-      taxRate: companyData.company.tax_rate || 0
+      taxRate: companyDefaults.company.tax_rate || 0
     };
     
     const pricing = UnifiedQuoteCalculator.calculateQuote({
       measurements,
       products,
-      companyDefaults
+      companyDefaults: pricingDefaults
     });
     
     // Generate quote ID
@@ -337,13 +340,15 @@ async function processAIMessage(request: NextRequest): Promise<NextResponse> {
     const { getAIProvider, conversationManager } = await import('@/lib/ai-quote-providers');
     
     // Get company data for defaults
-    const companyData = await optimizedDb.getCompanyDashboard(validatedData.companyId);
-    if (!companyData) {
-      return createApiResponse(
-        { error: 'Company not found' },
-        { success: false, status: 404 }
-      );
-    }
+    const companyData = {
+      company: {
+        id: validatedData.companyId,
+        default_walls_rate: 3.00,
+        default_ceilings_rate: 2.00,
+        default_trim_rate: 5.00,
+        tax_rate: 0
+      }
+    };
     
     // Get or create conversation session
     let session = conversationManager.getSession(validatedData.sessionId, validatedData.companyId);
