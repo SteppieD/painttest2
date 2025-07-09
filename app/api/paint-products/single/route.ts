@@ -3,12 +3,16 @@ import { supabaseDb } from "@/lib/database/supabase-adapter";
 
 
 export async function POST(req: NextRequest) {
+  let id: string | undefined;
+  let product: any;
+  
   try {
     const requestBody = await req.json();
     console.log("Product save request:", requestBody);
     
-    const { userId, companyId, product } = requestBody;
-    const id = companyId || userId; // Support both for backwards compatibility
+    const { userId, companyId } = requestBody;
+    product = requestBody.product;
+    id = companyId || userId; // Support both for backwards compatibility
 
     if (!id || !product) {
       console.error("Missing required fields:", { id, product });
@@ -44,7 +48,7 @@ export async function POST(req: NextRequest) {
         coveragePerGallon: product.coveragePerGallon || 350
       };
       
-      await supabaseDb.addPaintProduct(id, newProductData);
+      await supabaseDb.addPaintProduct(parseInt(id), newProductData);
     }
 
     return NextResponse.json({ success: true });
@@ -78,7 +82,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    await supabaseDb.deletePaintProduct(productId);
+    await supabaseDb.deletePaintProduct(parseInt(productId));
 
     return NextResponse.json({ success: true });
   } catch (error) {

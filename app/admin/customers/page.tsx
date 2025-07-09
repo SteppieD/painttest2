@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResponsiveTable } from "@/components/ui/responsive-table";
@@ -37,15 +37,7 @@ export default function CustomersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
-  useEffect(() => {
-    loadCustomers();
-  }, []);
-
-  useEffect(() => {
-    filterCustomers();
-  }, [customers, searchTerm, statusFilter]);
-
-  const loadCustomers = async () => {
+  const loadCustomers = useCallback(async () => {
     try {
       const response = await fetch('/api/admin/customers');
       if (response.ok) {
@@ -57,9 +49,9 @@ export default function CustomersPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const filterCustomers = () => {
+  const filterCustomers = useCallback(() => {
     let filtered = customers;
 
     // Search filter
@@ -77,7 +69,15 @@ export default function CustomersPage() {
     }
 
     setFilteredCustomers(filtered);
-  };
+  }, [customers, searchTerm, statusFilter]);
+
+  useEffect(() => {
+    loadCustomers();
+  }, [loadCustomers]);
+
+  useEffect(() => {
+    filterCustomers();
+  }, [filterCustomers]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -193,7 +193,7 @@ export default function CustomersPage() {
           {filteredCustomers.length > 0 ? (
             <ResponsiveTable
               headers={['Company', 'Access Code', 'Status', 'Quotes', 'Revenue', 'Joined', '']}
-              rows={filteredCustomers.map((customer) => [
+              rows={filteredCustomers.map((customer, customerIndex) => [
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-gray-100 rounded-lg">
                     <Building className="w-5 h-5 text-gray-600" />

@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
       ORDER BY cp.supplier, cp.product_category, cp.cost_per_gallon
     `;
     
-    const products = dbAll(query, [companyId]) as PaintProduct[];
+    const products = await dbAll(query, [companyId]) as PaintProduct[];
     
     // Group products by brand and category
     const brandGroups: { [brand: string]: BrandGroup } = {};
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
     
     query += ' ORDER BY cost_per_gallon';
     
-    const products = dbAll(query, params) as PaintProduct[];
+    const products = await dbAll(query, params) as PaintProduct[];
     
     return NextResponse.json({
       success: true,

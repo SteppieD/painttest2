@@ -257,13 +257,14 @@ export default function RevenueAnalytics() {
 
     // Calculate segments
     const segments = Object.entries(customerGroups).map(([customer, customerQuotes]) => {
-      const revenue = customerQuotes.reduce((sum, q) => sum + (q.quote_amount || q.final_price || q.total_revenue || 0), 0);
-      const avgQuote = revenue / customerQuotes.length;
+      const typedCustomerQuotes = customerQuotes as any[];
+      const revenue = typedCustomerQuotes.reduce((sum, q) => sum + (q.quote_amount || q.final_price || q.total_revenue || 0), 0);
+      const avgQuote = revenue / typedCustomerQuotes.length;
       
       return {
         customer,
         revenue,
-        count: customerQuotes.length,
+        count: typedCustomerQuotes.length,
         avgQuote
       };
     });
@@ -576,8 +577,7 @@ export default function RevenueAnalytics() {
               ]}
               height={350}
               showLegend={true}
-              formatValue={(value, key) => {
-                if (key === 'quotes') return (value * 100).toString(); // Scale quotes for visibility
+              formatValue={(value) => {
                 return formatChartCurrency(value);
               }}
             />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -18,7 +18,8 @@ import {
   ArrowRight,
   Zap,
   Award,
-  RefreshCw
+  RefreshCw,
+  Calculator
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 

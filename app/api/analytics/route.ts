@@ -331,16 +331,17 @@ async function handleCustomerAnalytics(companyId: string, baseQuery: string, sta
   }, {} as Record<string, any[]>);
 
   const customerAnalytics = Object.entries(customerGroups).map(([customer, customerQuotes]) => {
-    const revenue = customerQuotes.reduce((sum, q) => sum + (q.total_revenue || q.quote_amount || q.final_price || 0), 0);
-    const avgQuote = revenue / customerQuotes.length;
+    const typedCustomerQuotes = customerQuotes as any[];
+    const revenue = typedCustomerQuotes.reduce((sum, q) => sum + (q.total_revenue || q.quote_amount || q.final_price || 0), 0);
+    const avgQuote = revenue / typedCustomerQuotes.length;
     
     return {
       customer,
       revenue,
-      count: customerQuotes.length,
+      count: typedCustomerQuotes.length,
       avgQuote,
-      lastProject: customerQuotes[customerQuotes.length - 1].created_at,
-      status: customerQuotes.some(q => q.status === 'accepted') ? 'active' : 'prospect'
+      lastProject: typedCustomerQuotes[typedCustomerQuotes.length - 1].created_at,
+      status: typedCustomerQuotes.some(q => q.status === 'accepted') ? 'active' : 'prospect'
     };
   }).sort((a, b) => b.revenue - a.revenue);
 

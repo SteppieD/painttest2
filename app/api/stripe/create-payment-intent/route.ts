@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
 
     // Check if company has connected account
     const connectedAccount = getConnectedAccountByCompanyId(quote.company_id);
-    if (!connectedAccount || !connectedAccount.charges_enabled) {
+    if (!connectedAccount || !(connectedAccount as any).charges_enabled) {
       return NextResponse.json(
         { error: 'Contractor has not set up payment processing yet' },
         { status: 400 }
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
       },
       application_fee_amount: platformFee,
       transfer_data: {
-        destination: connectedAccount.stripe_account_id,
+        destination: (connectedAccount as any).stripe_account_id,
       },
       description: `Payment for Quote #${quote.id} - ${quote.company_name}`,
     });

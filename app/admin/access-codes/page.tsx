@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,11 +44,7 @@ export default function AccessCodesPage() {
     email: ''
   });
 
-  useEffect(() => {
-    loadAccessCodes();
-  }, []);
-
-  const loadAccessCodes = async () => {
+  const loadAccessCodes = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await fetch('/api/admin/access-codes');
@@ -72,7 +68,11 @@ export default function AccessCodesPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadAccessCodes();
+  }, [loadAccessCodes]);
 
   const handleCreateAccessCode = async (e: React.FormEvent) => {
     e.preventDefault();

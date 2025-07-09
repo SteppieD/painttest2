@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -100,27 +100,7 @@ export default function CustomerIntelligenceCenter() {
   const [sortBy, setSortBy] = useState<string>("lifetime-value");
   const [viewMode, setViewMode] = useState<'overview' | 'segments' | 'lifecycle' | 'insights'>('overview');
 
-  useEffect(() => {
-    const companyData = localStorage.getItem("paintquote_company");
-    if (companyData) {
-      try {
-        const company = JSON.parse(companyData);
-        if (Date.now() - company.loginTime > 24 * 60 * 60 * 1000) {
-          localStorage.removeItem("paintquote_company");
-          router.push("/access-code");
-          return;
-        }
-        setCompanyInfo(company);
-        loadCustomerData(company.id);
-      } catch (e) {
-        router.push("/access-code");
-      }
-    } else {
-      router.push("/access-code");
-    }
-  }, [router]);
-
-  const loadCustomerData = async (companyId: number) => {
+  const loadCustomerData = useCallback(async (companyId: number) => {
     try {
       setIsLoading(true);
       
@@ -142,7 +122,27 @@ export default function CustomerIntelligenceCenter() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const companyData = localStorage.getItem("paintquote_company");
+    if (companyData) {
+      try {
+        const company = JSON.parse(companyData);
+        if (Date.now() - company.loginTime > 24 * 60 * 60 * 1000) {
+          localStorage.removeItem("paintquote_company");
+          router.push("/access-code");
+          return;
+        }
+        setCompanyInfo(company);
+        loadCustomerData(company.id);
+      } catch (e) {
+        router.push("/access-code");
+      }
+    } else {
+      router.push("/access-code");
+    }
+  }, [router, loadCustomerData]);
 
   const transformQuotesToCustomerData = (quotes: any[]) => {
     // Group quotes by customer
@@ -157,12 +157,13 @@ export default function CustomerIntelligenceCenter() {
 
     // Transform to customer data
     const customers: CustomerData[] = Object.entries(customerGroups).map(([customerKey, customerQuotes], index) => {
-      const totalRevenue = customerQuotes.reduce((sum, q) => sum + (q.quote_amount || q.final_price || q.total_revenue || 0), 0);
-      const projectCount = customerQuotes.length;
+      const typedCustomerQuotes = customerQuotes as any[];
+      const totalRevenue = typedCustomerQuotes.reduce((sum, q) => sum + (q.quote_amount || q.final_price || q.total_revenue || 0), 0);
+      const projectCount = typedCustomerQuotes.length;
       const averageProject = totalRevenue / projectCount;
       
       // Sort quotes by date to get first and last
-      const sortedQuotes = customerQuotes.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+      const sortedQuotes = typedCustomerQuotes.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
       const acquisitionDate = sortedQuotes[0].created_at;
       const lastProject = sortedQuotes[sortedQuotes.length - 1].created_at;
       
@@ -171,7 +172,7 @@ export default function CustomerIntelligenceCenter() {
       
       // Determine status
       let status: CustomerData['status'] = 'prospect';
-      if (customerQuotes.some(q => q.status === 'accepted' || q.status === 'completed')) {
+      if (typedCustomerQuotes.some(q => q.status === 'accepted' || q.status === 'completed')) {
         if (daysSinceLastProject <= 90) {
           status = 'active';
         } else if (daysSinceLastProject <= 365) {

@@ -1,44 +1,36 @@
-import { MetadataRoute } from 'next'
+export async function GET() {
+  const robotsTxt = `User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /create-quote/
+Disallow: /setup/
+Disallow: /quotes/
+Disallow: /_next/
+Disallow: /favicon.ico
 
-export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow: [
-          '/admin/',
-          '/api/',
-          '/dashboard/',
-          '/create-quote/',
-          '/setup/',
-          '/quotes/',
-          '/_next/',
-          '/favicon.ico',
-        ],
-      },
-      {
-        userAgent: 'GPTBot',
-        disallow: '/',
-      },
-      {
-        userAgent: 'ChatGPT-User',
-        disallow: '/',
-      },
-      {
-        userAgent: 'CCBot',
-        disallow: '/',
-      },
-      {
-        userAgent: 'anthropic-ai',
-        disallow: '/',
-      },
-      {
-        userAgent: 'Claude-Web',
-        disallow: '/',
-      },
-    ],
-    sitemap: 'https://www.paintquoteapp.com/sitemap.xml',
-    host: 'https://www.paintquoteapp.com',
-  }
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+Sitemap: https://www.paintquoteapp.com/sitemap.xml
+Host: https://www.paintquoteapp.com`;
+
+  return new Response(robotsTxt, {
+    headers: {
+      'Content-Type': 'text/plain',
+    },
+  });
 }

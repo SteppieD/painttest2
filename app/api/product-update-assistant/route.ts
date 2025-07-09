@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Get current products
-    const products = dbAll(`
+    const products = await dbAll(`
       SELECT * FROM company_paint_products
       WHERE user_id = ? AND is_active = TRUE
       ORDER BY project_type, product_category, display_order

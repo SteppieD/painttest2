@@ -24,12 +24,12 @@ export async function POST(request: Request) {
     });
 
     // Extract any quote data updates from the understanding
-    let updatedData = {};
+    let updatedData: any = {};
     
     // Parse the primary response for structured data extraction
     // This is a simplified approach - in production, you'd want more sophisticated parsing
     const lowerMessage = message.toLowerCase();
-    const currentData = context.currentData || {};
+    const currentData: any = context.currentData || {};
 
     // Extract customer name
     if (lowerMessage.includes('name') || (!currentData.customer_name && context.stage === 'initial')) {

@@ -11,7 +11,8 @@ import {
   Ruler,
   DollarSign,
   FileText,
-  HelpCircle
+  HelpCircle,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

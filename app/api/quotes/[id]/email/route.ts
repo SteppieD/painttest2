@@ -1,5 +1,5 @@
 export const dynamic = "force-dynamic";
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { emailTemplateGenerator } from '@/lib/email-templates';
 
 export async function POST(
@@ -98,7 +98,7 @@ export async function POST(
 
 // Preview email template without sending
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

@@ -222,7 +222,7 @@ export async function POST(request: NextRequest) {
       quoteId,
       quote: {
         ...quote,
-        id: result?.lastID || result?.id || quoteId
+        id: result?.lastID || (result as any)?.id || quoteId
       }
     };
 

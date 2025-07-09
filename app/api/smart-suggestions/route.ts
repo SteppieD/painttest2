@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       suggestions.push({
         type: 'paint',
         title: 'Recommended Paint',
-        description: `${smartDefaults.paint.brand || 'Professional'} - Based on your history`,
+        description: `${(smartDefaults.paint as any).brand || 'Professional'} - Based on your history`,
         value: smartDefaults.paint,
         confidence: 'medium',
         reasoning: 'Most used paint in your recent quotes',

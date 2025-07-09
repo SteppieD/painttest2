@@ -267,7 +267,7 @@ export function SmartSurfaceSelector({
 
   // Detect measurement requirements
   const selectedSurfaceObjects = SURFACE_OPTIONS.filter(s => selectedSurfaces.includes(s.id));
-  const measurementTypes = [...new Set(selectedSurfaceObjects.map(s => s.measurementType))];
+  const measurementTypes = Array.from(new Set(selectedSurfaceObjects.map(s => s.measurementType)));
   
   return (
     <div className={cn("space-y-6", className)}>
@@ -367,7 +367,7 @@ export function getSurfaceById(id: string): SurfaceOption | undefined {
 // Helper function to get measurement types for selected surfaces
 export function getMeasurementTypesForSurfaces(surfaceIds: string[]): string[] {
   const surfaces = SURFACE_OPTIONS.filter(s => surfaceIds.includes(s.id));
-  return [...new Set(surfaces.map(s => s.measurementType))];
+  return Array.from(new Set(surfaces.map(s => s.measurementType)));
 }
 
 // Helper function to determine if room count is needed
@@ -379,5 +379,5 @@ export function needsRoomCount(surfaceIds: string[]): boolean {
 // Helper function to get surface categories for selected surfaces  
 export function getSurfaceCategories(surfaceIds: string[]): string[] {
   const surfaces = SURFACE_OPTIONS.filter(s => surfaceIds.includes(s.id));
-  return [...new Set(surfaces.map(s => s.category))];
+  return Array.from(new Set(surfaces.map(s => s.category)));
 }

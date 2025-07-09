@@ -196,7 +196,7 @@ function SetupPageContent() {
         }
       }
 
-      trackSetupCompleted('conversational', paintProducts.length);
+      trackSetupCompleted('conversational', paintProducts.length.toString());
       
       toast({
         title: "Setup Complete!",

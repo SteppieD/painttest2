@@ -293,8 +293,8 @@ export const GET = withSecureApi({
   requireAuth: false,
   allowedMethods: ['GET'],
   sanitizeInput: true,
-  rateLimit: {
-    max: 100,
+  rateLimitConfig: {
+    maxRequests: 100,
     windowMs: 60000 // 1 minute
   }
 })(getOptimizedQuotes);
@@ -303,8 +303,8 @@ export const POST = withSecureApi({
   requireAuth: false,
   allowedMethods: ['POST'],
   sanitizeInput: true,
-  rateLimit: {
-    max: 20,
+  rateLimitConfig: {
+    maxRequests: 20,
     windowMs: 60000 // 1 minute
   }
 })(createOptimizedQuote);
@@ -313,8 +313,8 @@ export const PUT = withSecureApi({
   requireAuth: false,
   allowedMethods: ['PUT'],
   sanitizeInput: true,
-  rateLimit: {
-    max: 50,
+  rateLimitConfig: {
+    maxRequests: 50,
     windowMs: 60000 // 1 minute
   }
 })(batchUpdateQuotes);

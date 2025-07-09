@@ -64,7 +64,7 @@ export async function POST(
     };
 
     // Update quote with payment terms
-    const result = dbRun(`
+    const result = await dbRun(`
       UPDATE quotes 
       SET payment_terms = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ? OR quote_id = ?
@@ -98,7 +98,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const result = dbRun(`
+    const result = await dbRun(`
       UPDATE quotes 
       SET payment_terms = NULL, updated_at = CURRENT_TIMESTAMP
       WHERE id = ? OR quote_id = ?

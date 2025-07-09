@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ArrowLeft, Activity, Users, MousePointer, Clock, Smartphone, Monitor, Globe, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -62,11 +62,7 @@ export default function UsageAnalyticsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [timeframe, setTimeframe] = useState<'7d' | '30d' | '90d'>('30d');
 
-  useEffect(() => {
-    loadUsageMetrics();
-  }, [timeframe]);
-
-  const loadUsageMetrics = async () => {
+  const loadUsageMetrics = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await fetch(`/api/admin/analytics/usage?timeframe=${timeframe}`);
@@ -79,7 +75,11 @@ export default function UsageAnalyticsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [timeframe]);
+
+  useEffect(() => {
+    loadUsageMetrics();
+  }, [loadUsageMetrics]);
 
   const formatDuration = (minutes: number) => {
     if (minutes < 60) {

@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
 
     // Check if company has connected account (optional for now)
     const connectedAccount = getConnectedAccountByCompanyId(quote.company_id);
-    const hasConnectedAccount = connectedAccount && connectedAccount.charges_enabled;
+    const hasConnectedAccount = connectedAccount && (connectedAccount as any).charges_enabled;
 
     // Calculate amounts
     const amountInCents = convertToCents(quote.total_price);
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     if (hasConnectedAccount) {
       paymentLinkConfig.application_fee_amount = platformFee;
       paymentLinkConfig.transfer_data = {
-        destination: connectedAccount.stripe_account_id,
+        destination: (connectedAccount as any).stripe_account_id,
       };
     }
 

@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get current settings to compare
-    const currentSettings = dbGet(`
+    const currentSettings = await dbGet(`
       SELECT * FROM companies WHERE id = ?
     `, [companyId]);
 
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
     updateFields.push('last_ai_update = CURRENT_TIMESTAMP');
 
     // Update the settings
-    const result = dbRun(`
+    const result = await dbRun(`
       UPDATE companies SET 
         ${updateFields.join(', ')}
       WHERE id = ?
@@ -198,7 +198,7 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const settings = dbGet(`
+    const settings = await dbGet(`
       SELECT ai_learning_enabled, ai_ask_before_saving 
       FROM companies 
       WHERE id = ?

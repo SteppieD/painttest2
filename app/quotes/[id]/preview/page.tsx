@@ -200,7 +200,7 @@ export default function QuotePreviewPage() {
 
   // Helper function to calculate cost breakdown
   const calculateBreakdown = () => {
-    const total = quote.quote_amount || quote.final_price || quote.total_revenue || 0;
+    const total = quote.quote_amount || (quote as any).final_price || (quote as any).total_revenue || 0;
     
     // Try to get from quote_details first
     if (quoteDetails?.materials?.total_material_cost || quoteDetails?.labor?.total_labor) {
@@ -212,11 +212,11 @@ export default function QuotePreviewPage() {
     }
     
     // Try to get from quote fields
-    if (quote.total_materials || quote.projected_labor) {
+    if ((quote as any).total_materials || (quote as any).projected_labor) {
       return {
-        materials: quote.total_materials || 0,
-        labor: quote.projected_labor || 0,
-        markup: total - (quote.total_materials || 0) - (quote.projected_labor || 0)
+        materials: (quote as any).total_materials || 0,
+        labor: (quote as any).projected_labor || 0,
+        markup: total - ((quote as any).total_materials || 0) - ((quote as any).projected_labor || 0)
       };
     }
     
@@ -364,7 +364,7 @@ export default function QuotePreviewPage() {
                 <p className="text-blue-100">Professional Estimate</p>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold">${(quote.quote_amount || quote.final_price || quote.total_revenue || quote.total_cost || 0).toLocaleString()}</div>
+                <div className="text-3xl font-bold">${(quote.quote_amount || (quote as any).final_price || (quote as any).total_revenue || (quote as any).total_cost || 0).toLocaleString()}</div>
                 <Badge variant="secondary" className="mt-2">
                   {quote.status.charAt(0).toUpperCase() + quote.status.slice(1)}
                 </Badge>
@@ -513,7 +513,7 @@ export default function QuotePreviewPage() {
                     
                     <div className="flex justify-between items-center py-3 text-xl font-bold bg-blue-50 px-4 rounded-lg">
                       <span className="text-blue-900">Total Investment</span>
-                      <span className="text-blue-600">${(quote.quote_amount || quote.final_price || quote.total_revenue || quote.total_cost || 0).toLocaleString()}</span>
+                      <span className="text-blue-600">${(quote.quote_amount || (quote as any).final_price || (quote as any).total_revenue || (quote as any).total_cost || 0).toLocaleString()}</span>
                     </div>
                     
                     <div className="text-sm text-gray-600 text-center mt-3">

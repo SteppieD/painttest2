@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ArrowLeft, DollarSign, TrendingUp, TrendingDown, Calendar, FileText, Users, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -48,11 +48,7 @@ export default function RevenueAnalyticsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [timeframe, setTimeframe] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
 
-  useEffect(() => {
-    loadRevenueMetrics();
-  }, [timeframe]);
-
-  const loadRevenueMetrics = async () => {
+  const loadRevenueMetrics = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await fetch(`/api/admin/analytics/revenue?timeframe=${timeframe}`);
@@ -65,7 +61,11 @@ export default function RevenueAnalyticsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [timeframe]);
+
+  useEffect(() => {
+    loadRevenueMetrics();
+  }, [loadRevenueMetrics]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {

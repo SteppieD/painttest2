@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const companyId = searchParams.get('companyId') || '1'; // Default to first company for demo
 
     // Load settings from database
-    const company: any = dbGet(`
+    const company: any = await dbGet(`
       SELECT * FROM companies WHERE id = ?
     `, [companyId]);
 
@@ -92,7 +92,7 @@ export async function PUT(request: NextRequest) {
     const settings = await request.json();
 
     // Update companies table (legacy format that exists)
-    const result = dbRun(`
+    const result = await dbRun(`
       UPDATE companies SET
         default_walls_rate = ?,
         default_ceilings_rate = ?,

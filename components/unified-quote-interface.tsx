@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { AlertCircle, MessageSquare, ClipboardList, Sparkles, CheckCircle2 } from 'lucide-react';
 import { QuoteWizard } from './quote-wizard';
-import { IntelligentChatInterface } from './intelligent-chat-interface';
+// import { IntelligentChatInterface } from './intelligent-chat-interface';
 import { ErrorBoundary } from './error-boundary';
 import { useAuthContext } from '@/hooks/use-auth-context';
 import { useToast } from '@/hooks/use-toast';
@@ -407,24 +407,15 @@ export function UnifiedQuoteInterface({
         {/* Main interface */}
         <div className="min-h-[600px]">
           {state.mode === 'guided' && (
-            <IntelligentChatInterface
-              onQuoteUpdate={handleQuoteUpdate}
-              onQuoteComplete={handleQuoteComplete}
-              onError={handleError}
-              initialData={state.quoteData}
-              onProgressChange={(progress) => dispatch({ type: 'SET_PROGRESS', payload: progress })}
-            />
+            <div className="text-center py-12">
+              <p className="text-gray-500">Guided mode temporarily unavailable</p>
+            </div>
           )}
 
           {state.mode === 'chat' && (
-            <IntelligentChatInterface
-              mode="simple"
-              onQuoteUpdate={handleQuoteUpdate}
-              onQuoteComplete={handleQuoteComplete}
-              onError={handleError}
-              initialData={state.quoteData}
-              onProgressChange={(progress) => dispatch({ type: 'SET_PROGRESS', payload: progress })}
-            />
+            <div className="text-center py-12">
+              <p className="text-gray-500">Chat mode temporarily unavailable</p>
+            </div>
           )}
 
           {state.mode === 'wizard' && (

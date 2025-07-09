@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Save or update preferences using Supabase
-    await supabaseDb.saveCompanyPreferences(companyId, {
+    await supabaseDb.saveCompanyPreferences(parseInt(companyId), {
       defaultMarkup: defaultMarkup || 20,
       setupCompleted: setupCompleted === true
     });
@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const preferences = await supabaseDb.getCompanyPreferences(companyId);
+    const preferences = await supabaseDb.getCompanyPreferences(parseInt(companyId));
 
     return NextResponse.json({ 
       preferences: preferences || {

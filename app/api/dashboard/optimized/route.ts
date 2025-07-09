@@ -128,9 +128,17 @@ async function getDashboardData(request: NextRequest): Promise<NextResponse> {
     // Add analytics if requested
     if (validatedData.includeAnalytics) {
       const analyticsStart = performance.now();
+      const dateRange = validatedData.dateRange ? {
+        startDate: validatedData.dateRange.startDate,
+        endDate: validatedData.dateRange.endDate
+      } : {
+        startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        endDate: new Date().toISOString().split('T')[0]
+      };
+      
       const analytics = performanceDb.getCompanyAnalytics(
         validatedData.companyId, 
-        validatedData.dateRange
+        dateRange
       );
       
       response.analytics = analytics.reduce((acc, item) => {
@@ -145,8 +153,7 @@ async function getDashboardData(request: NextRequest): Promise<NextResponse> {
     response.databaseMetrics = performanceDb.getPerformanceMetrics();
 
     return createApiResponse(response, {
-      message: 'Dashboard data loaded successfully',
-      performance: response.performance
+      message: 'Dashboard data loaded successfully'
     });
 
   } catch (error) {
@@ -171,8 +178,8 @@ export const GET = withSecureApi({
   requireAuth: false, // Company ID validation handles auth
   allowedMethods: ['GET'],
   sanitizeInput: true,
-  rateLimit: {
-    max: 60, // Allow frequent dashboard refreshes
+  rateLimitConfig: {
+    maxRequests: 60, // Allow frequent dashboard refreshes
     windowMs: 60000 // 1 minute
   }
 })(getDashboardData);

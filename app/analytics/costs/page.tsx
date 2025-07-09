@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -26,7 +26,8 @@ import {
   Award,
   Clock,
   Wrench,
-  Truck
+  Truck,
+  Star
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -147,6 +148,26 @@ export default function CostManagementLaboratory() {
   const [viewMode, setViewMode] = useState<'overview' | 'materials' | 'labor' | 'optimization'>('overview');
   const [costCategory, setCostCategory] = useState<string>('all');
 
+  const loadCostData = useCallback(async (companyId: number) => {
+    try {
+      setIsLoading(true);
+      
+      // Load quotes data for cost analysis
+      const quotesResponse = await fetch(`/api/quotes?company_id=${companyId}`);
+      const quotesData = await quotesResponse.json();
+      const quotes = quotesData.quotes || quotesData || [];
+
+      // Calculate cost metrics
+      const calculatedMetrics = calculateCostMetrics(quotes);
+      setMetrics(calculatedMetrics);
+
+    } catch (error) {
+      console.error("Error loading cost data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     const companyData = localStorage.getItem("paintquote_company");
     if (companyData) {
@@ -165,27 +186,7 @@ export default function CostManagementLaboratory() {
     } else {
       router.push("/access-code");
     }
-  }, [router, timeRange]);
-
-  const loadCostData = async (companyId: number) => {
-    try {
-      setIsLoading(true);
-      
-      // Load quotes data for cost analysis
-      const quotesResponse = await fetch(`/api/quotes?company_id=${companyId}`);
-      const quotesData = await quotesResponse.json();
-      const quotes = quotesData.quotes || quotesData || [];
-
-      // Calculate cost metrics
-      const calculatedMetrics = calculateCostMetrics(quotes);
-      setMetrics(calculatedMetrics);
-
-    } catch (error) {
-      console.error("Error loading cost data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [router, timeRange, loadCostData]);
 
   const calculateCostMetrics = (quotes: any[]): CostMetrics => {
     const totalRevenue = quotes.reduce((sum, q) => sum + (q.quote_amount || q.final_price || q.total_revenue || 0), 0);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -158,6 +158,26 @@ export default function CompetitiveIntelligencePlatform() {
   const [viewMode, setViewMode] = useState<'overview' | 'competitors' | 'pricing' | 'strategic'>('overview');
   const [competitorFilter, setCompetitorFilter] = useState<string>('all');
 
+  const loadCompetitiveData = useCallback(async (companyId: number) => {
+    try {
+      setIsLoading(true);
+      
+      // Load quotes data for competitive analysis
+      const quotesResponse = await fetch(`/api/quotes?company_id=${companyId}`);
+      const quotesData = await quotesResponse.json();
+      const quotes = quotesData.quotes || quotesData || [];
+
+      // Calculate competitive metrics
+      const calculatedMetrics = calculateCompetitiveMetrics(quotes);
+      setMetrics(calculatedMetrics);
+
+    } catch (error) {
+      console.error("Error loading competitive data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     const companyData = localStorage.getItem("paintquote_company");
     if (companyData) {
@@ -176,27 +196,7 @@ export default function CompetitiveIntelligencePlatform() {
     } else {
       router.push("/access-code");
     }
-  }, [router, analysisType]);
-
-  const loadCompetitiveData = async (companyId: number) => {
-    try {
-      setIsLoading(true);
-      
-      // Load quotes data for competitive analysis
-      const quotesResponse = await fetch(`/api/quotes?company_id=${companyId}`);
-      const quotesData = await quotesResponse.json();
-      const quotes = quotesData.quotes || quotesData || [];
-
-      // Calculate competitive metrics
-      const calculatedMetrics = calculateCompetitiveMetrics(quotes);
-      setMetrics(calculatedMetrics);
-
-    } catch (error) {
-      console.error("Error loading competitive data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [router, analysisType, loadCompetitiveData]);
 
   const calculateCompetitiveMetrics = (quotes: any[]): CompetitiveMetrics => {
     const totalRevenue = quotes.reduce((sum, q) => sum + (q.quote_amount || q.final_price || q.total_revenue || 0), 0);

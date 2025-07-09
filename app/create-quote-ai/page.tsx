@@ -213,23 +213,22 @@ export default function CreateQuoteAIPage() {
         wall_linear_feet: quoteData.dimensions.wall_linear_feet || 0,
         ceiling_height: quoteData.dimensions.ceiling_height || 9,
         ceiling_area: quoteData.dimensions.ceiling_area || 0,
-        floor_area: quoteData.dimensions.ceiling_area || 0,
         number_of_doors: quoteData.dimensions.number_of_doors || 0,
         number_of_windows: quoteData.dimensions.number_of_windows || 0,
-        siding_sqft: 0,
-        number_of_stories: 1,
-        trim_linear_feet: 0
+        floor_area: quoteData.dimensions.ceiling_area || 0
+      };
+
+      // Build the selected products object in the expected format
+      const selectedProducts = {
+        primer: DEFAULT_PAINT_PRODUCTS.primer_name as any, // Type assertion for complex union type
+        wall_paint: DEFAULT_PAINT_PRODUCTS.wall_paints[1], // Default to mid-range
+        ceiling_paint: DEFAULT_PAINT_PRODUCTS.ceiling_paints[1],
+        trim_paint: DEFAULT_PAINT_PRODUCTS.trim_paints[1]
       };
 
       const quote = calculateProfessionalQuote(
         dimensions,
-        {
-          primer: DEFAULT_PAINT_PRODUCTS.primer,
-          wall_paint: DEFAULT_PAINT_PRODUCTS.wall_paints[1], // Default to mid-range
-          ceiling_paint: DEFAULT_PAINT_PRODUCTS.ceiling_paints[1],
-          trim_paint: DEFAULT_PAINT_PRODUCTS.trim_paints[1],
-          floor_sealer: DEFAULT_PAINT_PRODUCTS.floor_sealer
-        },
+        selectedProducts,
         DEFAULT_CHARGE_RATES,
         20, // Default 20% markup
         false

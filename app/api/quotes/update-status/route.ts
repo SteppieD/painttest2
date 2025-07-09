@@ -32,7 +32,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update quote status with timestamp using sanitized ID
-    const result = dbRun(`
+    const result = await dbRun(`
       UPDATE quotes 
       SET status = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?

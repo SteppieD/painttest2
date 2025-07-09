@@ -316,6 +316,7 @@ export default function ModernDashboardPage() {
             </div>
 
             <ProfessionalQuotePresentation
+              quote={generatedQuote}
               onDownload={handleDownloadQuote}
               onShare={handleShareQuote}
             />

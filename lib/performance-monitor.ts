@@ -401,12 +401,12 @@ export function createLazyComponent<T extends React.ComponentType<any>>(
   return React.lazy(async () => {
     const start = Date.now();
     try {
-      const module = await importFn();
+      const importedModule = await importFn();
       const loadTime = Date.now() - start;
       
       console.log(`Component loaded in ${loadTime}ms`);
       
-      return module;
+      return importedModule;
     } catch (error) {
       console.error('Failed to load component:', error);
       throw error;

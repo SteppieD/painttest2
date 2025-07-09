@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const companyId = searchParams.get('companyId') || '1';
 
     // Try to get paints from the new paints table
-    let paints = dbAll(`
+    let paints = await dbAll(`
       SELECT * FROM company_paints 
       WHERE company_id = ? 
       ORDER BY brand_name, product_name
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     if (!paints || paints.length === 0) {
       try {
         // Create table if it doesn't exist
-        dbRun(`
+        await dbRun(`
           CREATE TABLE IF NOT EXISTS company_paints (
             id TEXT PRIMARY KEY,
             company_id TEXT NOT NULL,
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
         ];
 
         for (const paint of defaultPaints) {
-          dbRun(`
+          await dbRun(`
             INSERT INTO company_paints (
               id, company_id, brand_name, product_name, cost_per_gallon, 
               quality_grade, coverage_sqft, notes
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Fetch the newly created paints
-        paints = dbAll(`
+        paints = await dbAll(`
           SELECT * FROM company_paints 
           WHERE company_id = ? 
           ORDER BY brand_name, product_name
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
       // Batch creation from conversational setup
       try {
         // Get company ID from access code
-        const company = dbGet(`
+        const company = await dbGet(`
           SELECT id FROM companies WHERE access_code = ?
         `, [requestData.accessCode]);
         
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
         const results = [];
         for (const product of requestData.products) {
           try {
-            const result = dbRun(`
+            const result = await dbRun(`
               INSERT INTO paint_products (
                 company_id, category, project_type, supplier, name, 
                 cost_per_gallon, coverage, coverage_unit
@@ -174,7 +174,7 @@ export async function POST(request: NextRequest) {
               product.coverage || null,
               product.coverage_unit || null
             ]);
-            results.push({ success: true, insertId: result.lastInsertRowid });
+            results.push({ success: true, insertId: result.lastID });
           } catch (error) {
             console.error('Error inserting product:', error, product);
             results.push({ success: false, error: error.message });
@@ -258,7 +258,7 @@ export async function PUT(request: NextRequest) {
     
     const paintData = await request.json();
 
-    const result = dbRun(`
+    const result = await dbRun(`
       UPDATE company_paints SET
         brand_name = ?,
         product_name = ?,
@@ -314,7 +314,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const result = dbRun(`
+    const result = await dbRun(`
       DELETE FROM company_paints 
       WHERE id = ? AND company_id = ?
     `, [paintId, companyId]);

@@ -377,7 +377,7 @@ export default function CreateQuotePage() {
           
           // Markup
           if (parsedData.markup_percent !== undefined) {
-            updatedQuoteData.markup_percentage = parsedData.markup_percent;
+            (updatedQuoteData as any).markup_percentage = parsedData.markup_percent;
           }
           
           setQuoteData(updatedQuoteData);
@@ -468,7 +468,7 @@ export default function CreateQuotePage() {
                 if (parsedData.paint_sheen) responseContent += `• Sheen: ${parsedData.paint_sheen}\n`;
               }
               
-              responseContent += `\n${generateQuoteDisplay(calculation)}`;
+              responseContent += `\n${generateQuoteDisplay(calculation, updatedQuoteData.areas, updatedQuoteData.rates, updatedQuoteData.paint_costs)}`;
               
               if (parsedData.confidence_score < 80 && parsingResult.warnings?.length > 0) {
                 responseContent += `\n\n⚠️ **Note:** ${parsingResult.warnings.join(' ')}`;
@@ -617,7 +617,7 @@ export default function CreateQuotePage() {
       case 'trim_measurements':
         const trimAreas = parseAreas(input, quoteData.project_type);
         if (trimAreas.trim_sqft > 0) {
-          const finalAreas = { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: trimAreas.trim_sqft, doors_count: trimAreas.doors_count, windows_count: trimAreas.windows_count };
+          const finalAreas = { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: trimAreas.trim_sqft, doors_count: trimAreas.doors_count, windows_count: trimAreas.windows_count, priming_sqft: 0 };
           const trimQuoteData = { ...quoteData, areas: finalAreas };
           setQuoteData(trimQuoteData);
           
@@ -732,8 +732,8 @@ export default function CreateQuotePage() {
         let updatedRatesData = { ...quoteData };
         
         // Handle rate adjustment questions
-        if (rateAdjustments.needsRateInput) {
-          const rateType = rateAdjustments.rateType || 'painting';
+        if ('needsRateInput' in rateAdjustments && rateAdjustments.needsRateInput) {
+          const rateType = (rateAdjustments as any).rateType || 'painting';
           const currentRate = rateType === 'wall' ? quoteData.rates.wall_rate :
                              rateType === 'ceiling' ? quoteData.rates.ceiling_rate :
                              rateType === 'trim' ? quoteData.rates.trim_rate :
@@ -860,8 +860,8 @@ What would you like to change it to? Please specify the new rate like:
               } else {
                 // Fall back to rate adjustment check
                 const rateAdjustmentCheck = parseRateAdjustments(input);
-                if (rateAdjustmentCheck.needsRateInput) {
-                  const rateType = rateAdjustmentCheck.rateType || 'wall';
+                if ('needsRateInput' in rateAdjustmentCheck && rateAdjustmentCheck.needsRateInput) {
+                  const rateType = (rateAdjustmentCheck as any).rateType || 'wall';
                   const currentRate = rateType === 'wall' ? quoteData.rates.wall_rate :
                                      rateType === 'ceiling' ? quoteData.rates.ceiling_rate :
                                      rateType === 'trim' ? quoteData.rates.trim_rate :
@@ -886,8 +886,8 @@ What would you like to change it to? Please specify the new rate like:
             } else {
               // Fall back to standard rate adjustment check
               const rateAdjustmentCheck = parseRateAdjustments(input);
-              if (rateAdjustmentCheck.needsRateInput) {
-                const rateType = rateAdjustmentCheck.rateType || 'wall';
+              if ('needsRateInput' in rateAdjustmentCheck && rateAdjustmentCheck.needsRateInput) {
+                const rateType = (rateAdjustmentCheck as any).rateType || 'wall';
                 const currentRate = rateType === 'wall' ? quoteData.rates.wall_rate :
                                    rateType === 'ceiling' ? quoteData.rates.ceiling_rate :
                                    rateType === 'trim' ? quoteData.rates.trim_rate :
@@ -913,8 +913,8 @@ What would you like to change it to? Please specify the new rate like:
             console.error('Intelligent parsing failed in quote_review:', error);
             // Fall back to standard rate adjustment check
             const rateAdjustmentCheck = parseRateAdjustments(input);
-            if (rateAdjustmentCheck.needsRateInput) {
-              const rateType = rateAdjustmentCheck.rateType || 'wall';
+            if ('needsRateInput' in rateAdjustmentCheck && rateAdjustmentCheck.needsRateInput) {
+              const rateType = (rateAdjustmentCheck as any).rateType || 'wall';
               const currentRate = rateType === 'wall' ? quoteData.rates.wall_rate :
                                  rateType === 'ceiling' ? quoteData.rates.ceiling_rate :
                                  rateType === 'trim' ? quoteData.rates.trim_rate :
@@ -1109,7 +1109,7 @@ What would you like to change it to? Please specify the new rate like:
             customer_name: '',
             address: '',
             project_type: '',
-            areas: { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: 0, doors_count: 0, windows_count: 0 },
+            areas: { walls_sqft: 0, ceilings_sqft: 0, trim_sqft: 0, priming_sqft: 0, doors_count: 0, windows_count: 0 },
             rates: quoteData.rates, // Keep company rates
             paint_costs: quoteData.paint_costs, // Keep company paint costs
             labor_percentage: quoteData.labor_percentage, // Keep company labor %
@@ -1198,7 +1198,7 @@ What would you like to change it to? Please specify the new rate like:
               
               setQuoteData(prev => ({ ...prev, calculation }));
               
-              responseContent = `Perfect! Now I have all the information needed.\n\n${generateQuoteDisplay(calculation)}`;
+              responseContent = `Perfect! Now I have all the information needed.\n\n${generateQuoteDisplay(calculation, updatedQuoteData.areas, updatedQuoteData.rates, updatedQuoteData.paint_costs)}`;
               nextStage = 'quote_review';
             } else if (parsingResult.needs_clarification) {
               // Still need more clarification
@@ -1269,7 +1269,7 @@ What would you like to change it to? Please specify the new rate like:
             
             setQuoteData(prev => ({ ...prev, calculation }));
             
-            responseContent = `Perfect! With your labor rate of $${parsedData.labor_cost_per_sqft}/sqft:\n\n${generateQuoteDisplay(calculation)}`;
+            responseContent = `Perfect! With your labor rate of $${parsedData.labor_cost_per_sqft}/sqft:\n\n${generateQuoteDisplay(calculation, updatedQuoteData.areas, updatedQuoteData.rates, updatedQuoteData.paint_costs)}`;
             nextStage = 'quote_review';
           } else {
             // Try to parse rate with traditional methods
@@ -1290,7 +1290,7 @@ What would you like to change it to? Please specify the new rate like:
               
               setQuoteData(prev => ({ ...prev, calculation }));
               
-              responseContent = `Great! With your labor rate of $${rate}/sqft:\n\n${generateQuoteDisplay(calculation)}`;
+              responseContent = `Great! With your labor rate of $${rate}/sqft:\n\n${generateQuoteDisplay(calculation, updatedQuoteData.areas, updatedQuoteData.rates, updatedQuoteData.paint_costs)}`;
               nextStage = 'quote_review';
             } else {
               responseContent = `I need a specific dollar amount for your labor rate. For example: "$2.50" or "$3.00 per sqft"`;
@@ -1358,12 +1358,12 @@ What would you like to change it to? Please specify the new rate like:
           trim_paint_cost: quoteData.paint_costs.trim_paint_cost,
           
           // Calculation results - handle both old and new formats
-          total_revenue: quoteData.calculation.total_cost || quoteData.calculation.revenue?.total || 0,
-          total_materials: quoteData.calculation.total_materials || quoteData.calculation.materials?.total || 0,
-          projected_labor: quoteData.calculation.total_labor || quoteData.calculation.labor?.projected_labor || 0,
+          total_revenue: (quoteData.calculation as any).total_cost || quoteData.calculation.revenue?.total || 0,
+          total_materials: (quoteData.calculation as any).total_materials || quoteData.calculation.materials?.total || 0,
+          projected_labor: (quoteData.calculation as any).total_labor || quoteData.calculation.labor?.projected_labor || 0,
           labor_percentage: quoteData.labor_percentage,
-          projected_profit: quoteData.calculation.total_cost ? 
-            (quoteData.calculation.total_cost - quoteData.calculation.total_materials - quoteData.calculation.total_labor) :
+          projected_profit: (quoteData.calculation as any).total_cost ? 
+            ((quoteData.calculation as any).total_cost - (quoteData.calculation as any).total_materials - (quoteData.calculation as any).total_labor) :
             (quoteData.calculation.profit || 0),
           
           // Selected paint products
@@ -1373,8 +1373,8 @@ What would you like to change it to? Please specify the new rate like:
           confirmed_paint_product: JSON.stringify(quoteData.confirmedPaintProduct || {}),
           
           // Legacy fields for compatibility
-          quote_amount: quoteData.calculation.total_cost || quoteData.calculation.revenue?.total || 0,
-          final_price: quoteData.calculation.total_cost || quoteData.calculation.revenue?.total || 0,
+          quote_amount: (quoteData.calculation as any).total_cost || quoteData.calculation.revenue?.total || 0,
+          final_price: (quoteData.calculation as any).total_cost || quoteData.calculation.revenue?.total || 0,
           notes: `${quoteData.project_type} - ${quoteData.areas.walls_sqft} walls, ${quoteData.areas.ceilings_sqft} ceilings, ${quoteData.areas.trim_sqft} trim`,
           conversation_summary: JSON.stringify(messages)
         })
@@ -1877,7 +1877,7 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
               <div className="text-right">
                 <div className="text-sm text-gray-600">Total Quote</div>
                 <div className="text-lg font-bold text-blue-600">
-                  ${(quoteData.calculation.total_cost || quoteData.calculation.revenue?.total || 0).toFixed(2)}
+                  ${((quoteData.calculation as any).total_cost || quoteData.calculation.revenue?.total || 0).toFixed(2)}
                 </div>
               </div>
             )}

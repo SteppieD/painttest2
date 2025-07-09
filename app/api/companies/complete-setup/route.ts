@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     
     if (requestData.accessCode) {
       // New conversational setup format
-      const company = dbGet(`
+      const company = await dbGet(`
         SELECT id FROM companies WHERE access_code = ?
       `, [requestData.accessCode])
       
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if already completed to prevent duplicate bonuses
-    const existingProgress = dbGet(`
+    const existingProgress = await dbGet(`
       SELECT setup_completed_at, bonus_quotes_awarded 
       FROM company_setup_progress 
       WHERE company_id = ?
@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
       
       updateValues.push(companyId)
       
-      dbRun(`
+      await dbRun(`
         UPDATE company_rate_cards 
         SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP
         WHERE company_id = ?
@@ -144,7 +144,7 @@ export async function POST(req: NextRequest) {
       )
       const values = Object.values(rateCardData).filter(value => value !== undefined)
       
-      dbRun(`
+      await dbRun(`
         INSERT INTO company_rate_cards (
           company_id,
           ${fields.join(', ')},
@@ -167,7 +167,7 @@ export async function POST(req: NextRequest) {
       bonusAmount = 6 // 6 bonus quotes (bringing total to 10 for first month)
       
       // Get current quote limit
-      const company = dbGet(`
+      const company = await dbGet(`
         SELECT quote_limit FROM companies WHERE id = ?
       `, [companyId])
       
@@ -175,14 +175,14 @@ export async function POST(req: NextRequest) {
       const newLimit = currentLimit + bonusAmount
       
       // Update company quote limit
-      dbRun(`
+      await dbRun(`
         UPDATE companies 
         SET quote_limit = ?, updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
       `, [newLimit, companyId])
       
       // Mark bonus as awarded
-      dbRun(`
+      await dbRun(`
         UPDATE company_setup_progress 
         SET 
           bonus_quotes_awarded = TRUE,

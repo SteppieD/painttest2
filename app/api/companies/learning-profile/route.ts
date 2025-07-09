@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       console.log(`📚 Updated learning profile for company ${companyId}`);
     } else {
       // Create new profile
-      dbRun(`
+      await dbRun(`
         INSERT INTO company_learning_profiles 
         (company_id, learning_data, quotes_analyzed, confidence_score)
         VALUES (?, ?, 1, 5)
@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    const profile = dbGet(`
+    const profile = await dbGet(`
       SELECT * FROM company_learning_profiles 
       WHERE company_id = ?
     `, [companyId]);
@@ -130,10 +130,10 @@ function mergeLearningData(existing: any, newData: any): any {
   
   // Merge paint brands
   if (newData.paintBrands) {
-    merged.paintBrands = [...new Set([
+    merged.paintBrands = Array.from(new Set([
       ...(merged.paintBrands || []),
       ...newData.paintBrands
-    ])];
+    ]));
   }
   
   // Merge paint products
@@ -183,10 +183,10 @@ function mergeLearningData(existing: any, newData: any): any {
   
   // Merge project types
   if (newData.projectTypes) {
-    merged.projectTypes = [...new Set([
+    merged.projectTypes = Array.from(new Set([
       ...(merged.projectTypes || []),
       ...newData.projectTypes
-    ])];
+    ]));
   }
   
   // Merge timeline preferences

@@ -12,14 +12,14 @@ const nextConfig = {
   // Remove swcMinify to prevent SWC binary issues
   // swcMinify: true,
   
-  // Temporarily ignore build errors for deployment
+  // TypeScript configuration
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   
   // ESLint configuration  
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
 
   // Enable standalone output for Docker

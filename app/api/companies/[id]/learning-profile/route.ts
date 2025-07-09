@@ -11,7 +11,7 @@ export async function GET(
   try {
     const companyId = params.id;
     
-    const profile = dbGet(`
+    const profile = await dbGet(`
       SELECT clp.*, c.company_name 
       FROM company_learning_profiles clp
       LEFT JOIN companies c ON clp.company_id = c.id

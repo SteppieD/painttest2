@@ -48,7 +48,7 @@ const CreateQuoteSchema = z.object({
   markupPercentage: z.number().min(0).max(100).optional(),
   specialRequests: z.string().optional(),
   timeline: z.string().optional(),
-  creationMethod: z.enum(['chat', 'wizard', 'quick', 'import']).optional(),
+  creationMethod: z.enum(['chat', 'wizard', 'quick', 'import', 'manual']).optional(),
   aiProvider: z.enum(['claude', 'gpt4', 'gemini']).optional(),
   conversationSummary: z.string().optional()
 });
@@ -172,7 +172,7 @@ async function createQuote(request: NextRequest): Promise<NextResponse> {
         status: 'draft',
         createdBy: validatedData.aiProvider ? 'ai' : 'manual',
         aiProvider: validatedData.aiProvider,
-        creationMethod: validatedData.creationMethod || 'manual',
+        creationMethod: (validatedData.creationMethod || 'manual') as any,
         conversationSummary: validatedData.conversationSummary,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
@@ -200,7 +200,7 @@ async function createQuote(request: NextRequest): Promise<NextResponse> {
       // Link quote to customer
       await customerManager.linkQuoteToCustomer(
         validatedData.companyId,
-        dbResult.id,
+        (dbResult as any).id || dbResult.lastID,
         validatedData.customerName,
         validatedData.customerEmail,
         validatedData.customerPhone,

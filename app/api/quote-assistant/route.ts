@@ -55,17 +55,21 @@ export async function POST(req: NextRequest) {
           ceiling_area: extractedInfo.dimensions.total_area || undefined,
         };
 
+        // Import default products and rates
+        const { DEFAULT_PAINT_PRODUCTS, DEFAULT_CHARGE_RATES } = await import('@/lib/professional-quote-calculator');
+        
         // Calculate quote with extracted information
+        const selectedProducts = {
+          primer: DEFAULT_PAINT_PRODUCTS.primer_name as any,
+          wall_paint: DEFAULT_PAINT_PRODUCTS.wall_paints[1], // Default to "Better" option
+          ceiling_paint: DEFAULT_PAINT_PRODUCTS.ceiling_paints[1],
+          trim_paint: DEFAULT_PAINT_PRODUCTS.trim_paints[1]
+        } as any;
+        
         quote = calculateProfessionalQuote(
           dimensions,
-          extractedInfo.project_type || 'interior',
-          {
-            primer_level: extractedInfo.paint_specs.primer_needed ? 1 : 0,
-            wall_paint_level: 1, // Default to mid-level
-            ceiling_paint_level: extractedInfo.surfaces.ceilings ? 1 : 0,
-            trim_paint_level: extractedInfo.surfaces.trim ? 1 : 0,
-            include_floor_sealer: false,
-          },
+          selectedProducts,
+          DEFAULT_CHARGE_RATES,
           20 // Default markup - could be extracted or company-specific
         );
 

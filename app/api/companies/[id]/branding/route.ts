@@ -10,7 +10,7 @@ export async function GET(
     const db = getDatabase();
     
     // Get existing branding data
-    const branding = await db.query(
+    const branding = db.prepare(
       `SELECT 
         company_id,
         logo_url,
@@ -22,12 +22,11 @@ export async function GET(
         created_at,
         updated_at
       FROM company_branding 
-      WHERE company_id = ?`,
-      [params.id]
-    );
+      WHERE company_id = ?`
+    ).get(params.id);
 
     // If no branding exists, return defaults
-    if (!branding || branding.length === 0) {
+    if (!branding) {
       return NextResponse.json({
         company_id: params.id,
         logo_url: null,
@@ -100,16 +99,15 @@ export async function PUT(
     }
 
     // Check if branding record exists
-    const existing = await db.query(
-      'SELECT company_id FROM company_branding WHERE company_id = ?',
-      [params.id]
-    );
+    const existing = db.prepare(
+      'SELECT company_id FROM company_branding WHERE company_id = ?'
+    ).get(params.id);
 
     const now = new Date().toISOString();
 
-    if (existing && existing.length > 0) {
+    if (existing) {
       // Update existing record
-      await db.query(
+      db.prepare(
         `UPDATE company_branding SET 
           logo_url = ?,
           primary_color = ?,
@@ -118,21 +116,20 @@ export async function PUT(
           company_name = ?,
           company_tagline = ?,
           updated_at = ?
-        WHERE company_id = ?`,
-        [
-          logo_url || null,
-          primary_color || '#3182ce',
-          secondary_color || '#2d3748',
-          accent_color || '#38a169',
-          company_name,
-          company_tagline || null,
-          now,
-          params.id
-        ]
+        WHERE company_id = ?`
+      ).run(
+        logo_url || null,
+        primary_color || '#3182ce',
+        secondary_color || '#2d3748',
+        accent_color || '#38a169',
+        company_name,
+        company_tagline || null,
+        now,
+        params.id
       );
     } else {
       // Create new record
-      await db.query(
+      db.prepare(
         `INSERT INTO company_branding (
           company_id,
           logo_url,
@@ -143,23 +140,22 @@ export async function PUT(
           company_tagline,
           created_at,
           updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          params.id,
-          logo_url || null,
-          primary_color || '#3182ce',
-          secondary_color || '#2d3748',
-          accent_color || '#38a169',
-          company_name,
-          company_tagline || null,
-          now,
-          now
-        ]
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      ).run(
+        params.id,
+        logo_url || null,
+        primary_color || '#3182ce',
+        secondary_color || '#2d3748',
+        accent_color || '#38a169',
+        company_name,
+        company_tagline || null,
+        now,
+        now
       );
     }
 
     // Return updated branding data
-    const updated = await db.query(
+    const updated = db.prepare(
       `SELECT 
         company_id,
         logo_url,
@@ -171,13 +167,12 @@ export async function PUT(
         created_at,
         updated_at
       FROM company_branding 
-      WHERE company_id = ?`,
-      [params.id]
-    );
+      WHERE company_id = ?`
+    ).get(params.id);
 
     return NextResponse.json({
       success: true,
-      data: updated[0],
+      data: updated,
       message: 'Branding updated successfully'
     });
 

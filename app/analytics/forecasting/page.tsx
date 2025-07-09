@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -458,7 +458,7 @@ export default function ForecastingPlanningDashboard() {
           current: 92,
           progress: 97,
           deadline: "March 2025",
-          status: "ahead" as const
+          status: "on-track" as const
         }
       ],
       initiatives: [

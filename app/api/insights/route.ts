@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
     const whereClause = whereConditions.length > 0 ? 'WHERE ' + whereConditions.join(' AND ') : '';
     
     // Get all quotes with parameterized query
-    const allQuotes = dbAll(`
+    const allQuotes = await dbAll(`
       SELECT 
         q.*,
         q.customer_name as client_name,
