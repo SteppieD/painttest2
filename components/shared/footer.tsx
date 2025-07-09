@@ -12,11 +12,11 @@ import {
 export function Footer() {
   return (
     <footer 
-      className="py-12 px-4 text-white"
+      className="py-12 px-4"
       style={{ 
-        backgroundColor: '#1f2937',
-        color: '#f9fafb',
-        borderTop: '1px solid rgba(55, 65, 81, 0.5)'
+        backgroundColor: '#111827',
+        color: '#f3f4f6',
+        borderTop: '1px solid rgba(75, 85, 99, 0.3)'
       }}
     >
       <div className="container mx-auto max-w-6xl">
@@ -66,7 +66,7 @@ export function Footer() {
         {/* Footer Links */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h3 className="font-semibold mb-4 text-blue-400">Product</h3>
+            <h3 className="font-semibold mb-4 text-white">Product</h3>
             <ul className="space-y-2">
               <li><Link href="/features" className="text-gray-300 hover:text-white transition-colors">All Features</Link></li>
               <li><Link href="/pricing" className="text-gray-300 hover:text-white transition-colors">Pricing Plans</Link></li>
@@ -76,7 +76,7 @@ export function Footer() {
           </div>
           
           <div>
-            <h3 className="font-semibold mb-4 text-green-400">Free Resources</h3>
+            <h3 className="font-semibold mb-4 text-white">Free Resources</h3>
             <ul className="space-y-2">
               <li><Link href="/painting-estimate-calculator" className="text-gray-300 hover:text-white transition-colors">Paint Calculator</Link></li>
               <li><Link href="/painting-quote-templates" className="text-gray-300 hover:text-white transition-colors">Quote Templates</Link></li>
@@ -86,7 +86,7 @@ export function Footer() {
           </div>
           
           <div>
-            <h3 className="font-semibold mb-4 text-purple-400">Support</h3>
+            <h3 className="font-semibold mb-4 text-white">Support</h3>
             <ul className="space-y-2">
               <li><Link href="/help" className="text-gray-300 hover:text-white transition-colors">Help Center</Link></li>
               <li><Link href="/contact" className="text-gray-300 hover:text-white transition-colors">Contact Us</Link></li>
@@ -96,7 +96,7 @@ export function Footer() {
           </div>
           
           <div>
-            <h3 className="font-semibold mb-4 text-orange-400">Company</h3>
+            <h3 className="font-semibold mb-4 text-white">Company</h3>
             <ul className="space-y-2">
               <li><Link href="/about" className="text-gray-300 hover:text-white transition-colors">About Us</Link></li>
               <li><Link href="/testimonials" className="text-gray-300 hover:text-white transition-colors">Success Stories</Link></li>
