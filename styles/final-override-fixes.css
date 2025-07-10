@@ -356,3 +356,101 @@ section[class*="bg-green"] .checkmark {
   color: #ffffff !important;
   fill: #ffffff !important;
 }
+
+/* ================================================
+   NUCLEAR FOOTER FIXES - HIGHEST PRIORITY
+   ================================================ */
+
+/* EMERGENCY: Target footer with maximum specificity */
+html body footer,
+html body footer *,
+html body footer div,
+html body footer a,
+html body footer span,
+html body footer p,
+html body footer h1,
+html body footer h2,
+html body footer h3,
+html body footer h4,
+html body footer h5,
+html body footer h6,
+html body footer li,
+html body footer ul,
+html body footer section {
+  color: #ffffff !important;
+  background-color: #1f2937 !important;
+}
+
+/* Force footer background to be dark */
+html body footer {
+  background: #1f2937 !important;
+  background-color: #1f2937 !important;
+}
+
+/* Override any green text in footer */
+html body footer [class*="text-green"],
+html body footer [class*="text-blue"],
+html body footer [style*="color: rgb(37, 99, 235)"],
+html body footer [style*="color: rgb(22, 163, 74)"] {
+  color: #ffffff !important;
+}
+
+/* Footer links should be light blue */
+html body footer a:not([class*="btn"]):not([class*="button"]) {
+  color: #60a5fa !important;
+  text-decoration: none !important;
+}
+
+html body footer a:hover:not([class*="btn"]):not([class*="button"]) {
+  color: #93c5fd !important;
+  text-decoration: underline !important;
+}
+
+/* ================================================
+   NUCLEAR BOTTOM SECTION FIXES - HIGHEST PRIORITY
+   ================================================ */
+
+/* EMERGENCY: Target bottom green section with maximum specificity */
+html body section[style*="background-color: rgb(22, 163, 74)"],
+html body section[style*="background-color: rgb(34, 197, 94)"],
+html body section[style*="background-color: rgb(16, 185, 129)"],
+html body div[style*="background-color: rgb(22, 163, 74)"],
+html body div[style*="background-color: rgb(34, 197, 94)"],
+html body div[style*="background-color: rgb(16, 185, 129)"] {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+/* Force all text in green background sections to be white */
+html body section[style*="background-color: rgb(22, 163, 74)"] *,
+html body section[style*="background-color: rgb(34, 197, 94)"] *,
+html body section[style*="background-color: rgb(16, 185, 129)"] *,
+html body div[style*="background-color: rgb(22, 163, 74)"] *,
+html body div[style*="background-color: rgb(34, 197, 94)"] *,
+html body div[style*="background-color: rgb(16, 185, 129)"] * {
+  color: #ffffff !important;
+  text-decoration-color: #ffffff !important;
+}
+
+/* Nuclear override for any blue text on green backgrounds */
+html body *[style*="background-color: rgb(22, 163, 74)"] *[style*="color: rgb(37, 99, 235)"],
+html body *[style*="background-color: rgb(34, 197, 94)"] *[style*="color: rgb(37, 99, 235)"],
+html body *[style*="background-color: rgb(16, 185, 129)"] *[style*="color: rgb(37, 99, 235)"] {
+  color: #ffffff !important;
+  text-decoration-color: #ffffff !important;
+}
+
+/* Alternative approach: just make ALL green backgrounds dark */
+html body *[style*="background-color: rgb(22,"],
+html body *[style*="background-color: rgb(34,"],
+html body *[style*="background-color: rgb(16,"] {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+html body *[style*="background-color: rgb(22,"] *,
+html body *[style*="background-color: rgb(34,"] *,
+html body *[style*="background-color: rgb(16,"] * {
+  color: #ffffff !important;
+  text-decoration-color: #ffffff !important;
+}
