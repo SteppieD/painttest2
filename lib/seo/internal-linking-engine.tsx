@@ -3,6 +3,8 @@
  * Automatically adds contextual internal links to content
  */
 
+import React from 'react'
+
 // Define internal link mappings with keywords and their target URLs
 export const internalLinks = {
   // Product/Software Links
