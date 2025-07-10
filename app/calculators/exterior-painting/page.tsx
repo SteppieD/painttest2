@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { Metadata } from 'next'
 import { SchemaMarkup } from '@/components/seo/SchemaMarkup'
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs'
 import { ExteriorCalculator } from '@/components/calculators/ExteriorCalculator'

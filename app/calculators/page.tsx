@@ -1,14 +1,9 @@
-import { Metadata } from 'next'
+'use client'
+
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Home, Building2, Briefcase, Palette, ArrowRight, Calculator } from 'lucide-react'
-
-export const metadata: Metadata = {
-  title: 'Free Painting Calculators | Interior, Exterior, Commercial & Cabinet | ProPaint Quote',
-  description: 'Professional painting calculators for all project types. Get accurate estimates for interior rooms, exterior homes, commercial buildings, and cabinet refinishing in seconds.',
-  keywords: 'painting calculator, paint estimate calculator, painting cost calculator, free painting calculator, professional painting estimator',
-}
 
 const calculators = [
   {
