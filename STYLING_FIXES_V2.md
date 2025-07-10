@@ -2,6 +2,30 @@
 
 ## Issues Fixed (July 10, 2025)
 
+### Version 2.1 Update - Additional Fixes
+
+**New Issues Identified**:
+1. Pricing section still showing dark text on dark background
+2. Navigation CTA button still showing as pink/red
+
+**Enhanced Solutions Applied**:
+
+#### Enhanced Pricing Section Fix
+- Added more specific selectors for dark backgrounds (bg-gray-900)
+- Included span elements in color inheritance
+- Added section-specific selectors for better targeting
+- Used attribute selectors to catch all background variations
+
+#### Complete CTA Button Fix  
+- Expanded selectors to catch all pink/red buttons in navigation
+- Added class attribute selectors for any pink variations
+- Forced all CTA buttons to green (#16a34a) consistently
+- Applied to both header and nav elements
+
+---
+
+### Original Fixes
+
 ### 1. Feature Card Border Issue
 **Problem**: Extra border at bottom of feature boxes
 **Solution**: Added CSS to ensure single borders and remove double borders on last items

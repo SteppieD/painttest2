@@ -50,31 +50,50 @@ footer .text-gray-400 {
    Fix pink background with black text issue
    ======================================== */
 
-/* Navigation CTA buttons */
+/* Navigation CTA buttons - make ALL trial buttons green */
 .nav-cta-primary,
-a[href="/trial-signup"].bg-green-600,
-a[href="/trial-signup"].ac-btn-primary,
+a[href="/trial-signup"],
 header a[href="/trial-signup"],
-nav a[href="/trial-signup"] {
+nav a[href="/trial-signup"],
+header button[class*="bg-"],
+nav button[class*="bg-"],
+header a[class*="bg-pink"],
+nav a[class*="bg-pink"],
+header a[class*="bg-red"],
+nav a[class*="bg-red"],
+a.bg-pink-600,
+a.bg-\[#ef2b70\],
+a[class*="pink"] {
   background-color: #16a34a !important;
   color: #ffffff !important;
   border-color: #16a34a !important;
 }
 
 .nav-cta-primary:hover,
-a[href="/trial-signup"].bg-green-600:hover,
-a[href="/trial-signup"].ac-btn-primary:hover,
+a[href="/trial-signup"]:hover,
 header a[href="/trial-signup"]:hover,
-nav a[href="/trial-signup"]:hover {
+nav a[href="/trial-signup"]:hover,
+header button[class*="bg-"]:hover,
+nav button[class*="bg-"]:hover,
+header a[class*="bg-pink"]:hover,
+nav a[class*="bg-pink"]:hover,
+header a[class*="bg-red"]:hover,
+nav a[class*="bg-red"]:hover,
+a.bg-pink-600:hover,
+a.bg-\[#ef2b70\]:hover,
+a[class*="pink"]:hover {
   background-color: #15803d !important;
   color: #ffffff !important;
   border-color: #15803d !important;
 }
 
-/* Fix any remaining pink buttons with black text */
+/* Fix any remaining pink/red buttons to be green */
 .bg-pink-600,
 .bg-\[#ef2b70\],
-[class*="bg-pink-"] {
+[class*="bg-pink-"],
+.bg-red-600,
+[class*="bg-red-"] {
+  background-color: #16a34a !important;
   color: #ffffff !important;
 }
 
@@ -228,29 +247,56 @@ nav button:not([class*="bg-"]) {
 
 /* Fix pricing section dark background with dark text */
 .bg-\[\#1f2937\],
-.bg-gray-800 {
+.bg-gray-800,
+.bg-gray-900 {
   color: #ffffff !important;
 }
 
 .bg-\[\#1f2937\] h1,
 .bg-\[\#1f2937\] h2,
+.bg-\[\#1f2937\] h3,
 .bg-\[\#1f2937\] p,
+.bg-\[\#1f2937\] span,
 .bg-gray-800 h1,
 .bg-gray-800 h2,
-.bg-gray-800 p {
+.bg-gray-800 h3,
+.bg-gray-800 p,
+.bg-gray-800 span,
+.bg-gray-900 h1,
+.bg-gray-900 h2,
+.bg-gray-900 h3,
+.bg-gray-900 p,
+.bg-gray-900 span {
   color: #ffffff !important;
 }
 
-/* Fix "Simple, Transparent Pricing" heading */
-.text-5xl.font-bold.text-center,
-.text-4xl.font-bold.text-center {
+/* Fix "Simple, Transparent Pricing" heading - more specific */
+section[class*="bg-"] h1.text-5xl.font-bold.text-center,
+section[class*="bg-"] h2.text-4xl.font-bold.text-center,
+div[class*="bg-"] h1.text-5xl.font-bold.text-center,
+div[class*="bg-"] h2.text-4xl.font-bold.text-center {
   color: #ffffff !important;
 }
 
-/* Fix pricing subtitle */
-.text-xl.text-center,
-.text-lg.text-center {
+/* Fix pricing subtitle - more specific */
+section[class*="bg-"] p.text-xl.text-center,
+section[class*="bg-"] p.text-lg.text-center,
+div[class*="bg-"] p.text-xl.text-center,
+div[class*="bg-"] p.text-lg.text-center {
   color: #e5e7eb !important;
+}
+
+/* Ensure pricing section specifically has light text */
+section.py-20.px-4,
+section.bg-gray-900,
+section[class*="bg-gray"] {
+  color: #ffffff !important;
+}
+
+section.py-20.px-4 *,
+section.bg-gray-900 *,
+section[class*="bg-gray"] * {
+  color: inherit;
 }
 
 /* Fix any gradient text issues */
