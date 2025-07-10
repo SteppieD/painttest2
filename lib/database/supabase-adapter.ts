@@ -107,18 +107,16 @@ export class SupabaseDatabaseAdapter {
     const { data: codeCheck } = await this.supabase
       .from('companies')
       .select('id')
-      .eq('access_code', accessCode)
-      .single();
+      .eq('access_code', accessCode);
 
     const { data: emailCheck } = await this.supabase
       .from('companies')
       .select('id')
-      .eq('email', email)
-      .single();
+      .eq('email', email);
 
     return {
-      codeExists: !!codeCheck,
-      emailExists: !!emailCheck
+      codeExists: codeCheck && codeCheck.length > 0,
+      emailExists: emailCheck && emailCheck.length > 0
     };
   }
 
@@ -182,16 +180,29 @@ export class SupabaseDatabaseAdapter {
     const { data, error } = await this.supabase
       .from('companies')
       .select('*')
-      .eq('access_code', accessCode)
-      .single();
+      .eq('access_code', accessCode);
 
     if (error) {
       console.error('❌ Supabase getCompanyByAccessCode error:', error);
       throw error;
     }
 
-    console.log('✅ Company found:', data?.company_name);
-    return data;
+    // Handle no results
+    if (!data || data.length === 0) {
+      console.log('❌ No company found with access code:', accessCode);
+      return null;
+    }
+
+    // Handle multiple results (shouldn't happen with unique access codes)
+    if (data.length > 1) {
+      console.warn('⚠️ Multiple companies found with same access code:', accessCode);
+    }
+
+    // Return the first result
+    const company = data[0];
+
+    console.log('✅ Company found:', company?.company_name);
+    return company;
   }
 
   async createQuote(quoteData: any) {

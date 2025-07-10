@@ -3,6 +3,8 @@ import { QuoteCreationRequest, StandardQuote } from "@/types/quote";
 import { generateQuoteId } from "@/lib/utils";
 import { createQuote } from "@/lib/database";
 
+export const dynamic = 'force-dynamic';
+
 // Simple in-memory storage for development (fallback only)
 const quotes = new Map<string, StandardQuote>();
 

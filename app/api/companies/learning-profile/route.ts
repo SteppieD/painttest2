@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbGet, dbRun } from "@/lib/database";
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Save learning data to company profile
  */
