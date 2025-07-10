@@ -76,6 +76,13 @@ export function Header() {
               
               {isProductOpen && (
                 <div className="nav-dropdown show">
+                  <Link href="/painting-quote-software" className="nav-dropdown-item">
+                    <FileText className="nav-dropdown-icon nav-icon-purple" />
+                    <div className="nav-dropdown-content">
+                      <span className="nav-dropdown-title">Quote Software Guide</span>
+                      <span className="nav-dropdown-description">Complete guide for contractors</span>
+                    </div>
+                  </Link>
                   <Link href="/features" className="nav-dropdown-item">
                     <Zap className="nav-dropdown-icon nav-icon-blue" />
                     <div className="nav-dropdown-content">

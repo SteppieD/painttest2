@@ -8,6 +8,14 @@
     <priority>1.0</priority>
   </url>
   
+  <!-- Pillar Page -->
+  <url>
+    <loc>https://www.paintquoteapp.com/painting-quote-software</loc>
+    <lastmod>2025-01-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
   <!-- Core Features -->
   <url>
     <loc>https://www.paintquoteapp.com/features</loc>
