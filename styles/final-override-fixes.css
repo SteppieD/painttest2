@@ -1,0 +1,358 @@
+/* ================================================
+   FINAL OVERRIDE FIXES - July 2025
+   This file must be loaded LAST to fix persistent issues
+   ================================================ */
+
+/* 1. FIX PINK CTA BUTTON IN NAVIGATION */
+/* Force all navigation CTAs to be green, not pink */
+header .nav-cta-primary,
+header a[href="/trial-signup"],
+header button.nav-cta-primary,
+nav .nav-cta-primary,
+nav a[href="/trial-signup"],
+nav button.nav-cta-primary,
+.nav-cta-primary {
+  background: #16a34a !important;
+  background-color: #16a34a !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border-color: #16a34a !important;
+}
+
+header .nav-cta-primary:hover,
+header a[href="/trial-signup"]:hover,
+header button.nav-cta-primary:hover,
+nav .nav-cta-primary:hover,
+nav a[href="/trial-signup"]:hover,
+nav button.nav-cta-primary:hover,
+.nav-cta-primary:hover {
+  background: #15803d !important;
+  background-color: #15803d !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border-color: #15803d !important;
+}
+
+/* Remove any pink/red classes and gradients */
+.bg-pink-600,
+.bg-\[#ef2b70\],
+.bg-red-600,
+[class*="bg-pink"],
+[class*="bg-red"],
+.bg-gradient-to-r,
+[class*="from-[#ef2b70]"],
+[class*="to-[#ff6b9d]"] {
+  background: #16a34a !important;
+  background-color: #16a34a !important;
+  background-image: none !important;
+  color: #ffffff !important;
+}
+
+/* 2. FIX "SIMPLE, TRANSPARENT PRICING" DARK TEXT */
+/* Target the specific pricing section on homepage - ULTRA SPECIFIC */
+section.py-20.px-4.bg-gray-900 > div > h2,
+section.bg-gray-900 > div > h2,
+section.bg-gray-900 h2.text-4xl,
+section.bg-gray-900 h2.text-5xl,
+.bg-gray-900 > .container > h2,
+.bg-gray-900 h2:first-child,
+.bg-gray-900 .text-4xl.font-bold.text-white,
+.bg-gray-900 h2.text-white {
+  color: #ffffff !important;
+}
+
+/* Force all text in dark sections to be light */
+section.bg-gray-900,
+section.bg-gray-900 *,
+.bg-gray-900,
+.bg-gray-900 * {
+  color: #ffffff !important;
+}
+
+/* But keep pricing cards white with dark text */
+.bg-gray-900 .ac-pricing-card,
+.bg-gray-900 .bg-white,
+section.bg-gray-900 .ac-pricing-card,
+section.bg-gray-900 .bg-white {
+  background-color: #ffffff !important;
+}
+
+.bg-gray-900 .ac-pricing-card *,
+.bg-gray-900 .bg-white *,
+section.bg-gray-900 .ac-pricing-card *,
+section.bg-gray-900 .bg-white * {
+  color: #1f2937 !important;
+}
+
+/* Specific fix for the pricing heading and subtitle */
+.bg-gray-900 h2.text-4xl,
+.bg-gray-900 h2.text-5xl,
+.bg-gray-900 p.text-xl,
+.bg-gray-900 p.text-gray-300 {
+  color: #ffffff !important;
+}
+
+/* Fix links in pricing section */
+.bg-gray-900 a:not(.ac-btn):not(.ac-btn-primary):not(.ac-btn-secondary):not([class*="btn"]) {
+  color: #60a5fa !important; /* Light blue for links */
+  text-decoration: underline !important;
+}
+
+/* 3. ADDITIONAL FIXES */
+/* Ensure all CTAs are green */
+button[class*="bg-green"],
+a[class*="bg-green"],
+.bg-green-600,
+.bg-green-500 {
+  background-color: #16a34a !important;
+  color: #ffffff !important;
+}
+
+button[class*="bg-green"]:hover,
+a[class*="bg-green"]:hover,
+.bg-green-600:hover,
+.bg-green-500:hover {
+  background-color: #15803d !important;
+  color: #ffffff !important;
+}
+
+/* Fix any AdCreative.ai pink that might be sneaking in */
+.text-\[#ef2b70\],
+.text-pink-600,
+[class*="text-pink"] {
+  color: #16a34a !important; /* Change pink text to green */
+}
+
+/* Fix pricing section link button */
+.bg-gray-900 a[href="/pricing"] {
+  background-color: transparent !important;
+  color: #60a5fa !important;
+  padding: 0 !important;
+  text-decoration: underline !important;
+  display: inline !important;
+  font-weight: normal !important;
+  box-shadow: none !important;
+  margin-top: 0 !important;
+}
+
+.bg-gray-900 a[href="/pricing"]:hover {
+  color: #93bbfc !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure Check icons in pricing cards stay green */
+.ac-pricing-card .text-green-500,
+.bg-white .text-green-500 {
+  color: #22c55e !important;
+}
+
+/* ================================================
+   ADDITIONAL CONTRAST FIXES - VISIBILITY ISSUES
+   ================================================ */
+
+/* 4. FIX GREEN CTA SECTION CONTRAST */
+/* Fix buttons on green background - make them white/dark */
+section.bg-green-600 button,
+section.bg-green-500 button,
+.bg-green-600 button,
+.bg-green-500 button,
+section[style*="background"] button,
+/* Target the specific CTA section with green background */
+section[class*="py-20"][class*="px-4"][class*="gradient-pink-contrast"] button,
+section[class*="py-20"][class*="px-4"][class*="gradient-pink-contrast"] a,
+section[class*="py-20"][class*="px-4"][class*="gradient-pink-contrast"] .ac-btn,
+/* More aggressive targeting */
+[style*="background-color: rgb(34, 197, 94)"] button,
+[style*="background-color: rgb(22, 163, 74)"] button {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+  color: #1f2937 !important;
+  border: 2px solid #1f2937 !important;
+}
+
+section.bg-green-600 button:hover,
+section.bg-green-500 button:hover,
+.bg-green-600 button:hover,
+.bg-green-500 button:hover,
+section[style*="background"] button:hover,
+section[class*="py-20"][class*="px-4"][class*="gradient-pink-contrast"] button:hover,
+section[class*="py-20"][class*="px-4"][class*="gradient-pink-contrast"] a:hover,
+section[class*="py-20"][class*="px-4"][class*="gradient-pink-contrast"] .ac-btn:hover {
+  background: #f3f4f6 !important;
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+  border-color: #111827 !important;
+}
+
+/* Alternative buttons on green background - make them dark */
+section.bg-green-600 .btn-secondary,
+section.bg-green-500 .btn-secondary,
+.bg-green-600 .btn-secondary,
+.bg-green-500 .btn-secondary,
+section[class*="py-20"][class*="px-4"][class*="gradient-pink-contrast"] .ac-btn-secondary,
+section[class*="py-20"][class*="px-4"][class*="gradient-pink-contrast"] .ac-btn-ghost {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+/* 5. FIX TESTIMONIALS SECTION CONTRAST */
+/* Fix any green text in testimonials cards */
+.testimonial-card .text-green-600,
+.testimonial-card .text-green-500,
+[class*="testimonial"] .text-green-600,
+[class*="testimonial"] .text-green-500 {
+  color: #1f2937 !important; /* Dark gray instead of green */
+}
+
+/* Fix before/after stats that might be green on light background */
+.stats-comparison .text-green-600,
+.before-after .text-green-600,
+.results-stats .text-green-600 {
+  color: #059669 !important; /* Darker green for better contrast */
+}
+
+/* CRITICAL: Fix Before vs. After Results section specifically */
+/* Aggressive targeting for ALL green backgrounds with text */
+.bg-green-500,
+.bg-green-600,
+.bg-green-700,
+[class*="bg-green"] {
+  color: #ffffff !important; /* Force white text on any green background */
+}
+
+.bg-green-500 *,
+.bg-green-600 *,
+.bg-green-700 *,
+[class*="bg-green"] * {
+  color: #ffffff !important; /* Force white text on green backgrounds */
+}
+
+/* Override any green text classes on green backgrounds */
+.bg-green-500 .text-green-500,
+.bg-green-500 .text-green-600,
+.bg-green-500 .text-green-700,
+.bg-green-600 .text-green-500,
+.bg-green-600 .text-green-600,
+.bg-green-600 .text-green-700,
+.bg-green-700 .text-green-500,
+.bg-green-700 .text-green-600,
+.bg-green-700 .text-green-700,
+[class*="bg-green"] .text-green-500,
+[class*="bg-green"] .text-green-600,
+[class*="bg-green"] .text-green-700 {
+  color: #ffffff !important;
+}
+
+/* Target specific green background cards with inline styles */
+[style*="background-color: rgb(34, 197, 94)"],
+[style*="background-color: rgb(22, 163, 74)"],
+[style*="background-color: rgb(16, 185, 129)"] {
+  color: #ffffff !important;
+}
+
+[style*="background-color: rgb(34, 197, 94)"] *,
+[style*="background-color: rgb(22, 163, 74)"] *,
+[style*="background-color: rgb(16, 185, 129)"] * {
+  color: #ffffff !important;
+}
+
+/* Nuclear option: Override ALL text color classes on green backgrounds */
+[class*="bg-green"] [class*="text-green"],
+[class*="bg-green"] [class*="text-"],
+.bg-green-500 [class*="text-"],
+.bg-green-600 [class*="text-"],
+.bg-green-700 [class*="text-"] {
+  color: #ffffff !important;
+}
+
+/* ULTRA AGGRESSIVE: Target ANY element with green background by RGB value */
+[style*="background-color: rgb(22, 163, 74)"] *,
+[style*="background-color: rgb(34, 197, 94)"] *,
+[style*="background-color: rgb(16, 185, 129)"] *,
+[style*="background-color: rgb(5, 150, 105)"] *,
+[style*="background-color: rgb(4, 120, 87)"] *,
+/* Catch all green background variations */
+[style*="background-color: rgb(22,"] *,
+[style*="background-color: rgb(34,"] *,
+[style*="background-color: rgb(16,"] *,
+[style*="background-color: rgb(5,"] * {
+  color: #ffffff !important;
+  text-decoration-color: #ffffff !important;
+}
+
+/* Specific fix for the bottom section with blue text on green background */
+[style*="background-color: rgb(22, 163, 74)"] a,
+[style*="background-color: rgb(22, 163, 74)"] a *,
+[style*="background-color: rgb(22, 163, 74)"] span,
+[style*="background-color: rgb(22, 163, 74)"] div,
+[style*="color: rgb(37, 99, 235)"] {
+  color: #ffffff !important;
+  text-decoration-color: #ffffff !important;
+}
+
+/* Emergency override for ANY blue text on green backgrounds */
+[style*="background-color: rgb(22"][style*="color: rgb(37"],
+[style*="background-color: rgb(34"][style*="color: rgb(37"],
+[style*="background-color: rgb(16"][style*="color: rgb(37"] {
+  color: #ffffff !important;
+}
+
+/* 6. FIX FOOTER VISIBILITY ISSUES */
+/* Make footer headings clearly visible */
+footer h3,
+footer h4,
+footer .font-semibold,
+footer .font-bold,
+footer [class*="font-semibold"],
+footer [class*="font-bold"] {
+  color: #ffffff !important;
+}
+
+/* Fix footer links - make them light blue instead of green */
+footer a:not(.btn):not(.button),
+footer a[class*="text-green"],
+footer .text-green-600,
+footer .text-green-500 {
+  color: #60a5fa !important; /* Light blue for better contrast */
+  text-decoration: none !important;
+}
+
+footer a:hover:not(.btn):not(.button) {
+  color: #93c5fd !important;
+  text-decoration: underline !important;
+}
+
+/* Ensure footer stays dark with light text */
+footer {
+  background: #1f2937 !important;
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+/* 7. FIX ANY REMAINING GREEN ON GREEN ISSUES */
+/* General rule: no green text on green backgrounds */
+.bg-green-600 *:not(button):not(.btn),
+.bg-green-500 *:not(button):not(.btn),
+.bg-green-400 *:not(button):not(.btn) {
+  color: #ffffff !important;
+}
+
+/* Specific fix for CTA sections with green backgrounds */
+section[class*="bg-green"] h1,
+section[class*="bg-green"] h2,
+section[class*="bg-green"] h3,
+section[class*="bg-green"] p,
+section[class*="bg-green"] span {
+  color: #ffffff !important;
+}
+
+/* Fix checkmarks and success indicators */
+section[class*="bg-green"] svg,
+section[class*="bg-green"] .checkmark {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
