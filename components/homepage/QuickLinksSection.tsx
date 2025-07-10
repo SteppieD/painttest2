@@ -41,13 +41,13 @@ export function QuickLinksSection() {
     {
       category: "Software & Apps",
       links: [
-        { href: "/painting-estimating-software", text: "Estimating Software", icon: Smartphone },
-        { href: "/painting-estimate-software", text: "Estimate Software", icon: Smartphone },
-        { href: "/painting-business-software", text: "Business Software", icon: Smartphone },
-        { href: "/professional-painting-software", text: "Professional Software", icon: Smartphone },
-        { href: "/commercial-painting-estimating-software", text: "Commercial Software", icon: Building },
-        { href: "/mobile-painting-estimate-app", text: "Mobile Estimate App", icon: Smartphone },
-        { href: "/painting-contractor-app", text: "Contractor App", icon: Smartphone }
+        { href: "/painting-estimating-software", text: "Painting Estimating Software", icon: Smartphone },
+        { href: "/painting-estimate-software", text: "Paint Estimate Software", icon: Smartphone },
+        { href: "/painting-business-software", text: "Painting Business Software", icon: Smartphone },
+        { href: "/professional-painting-software", text: "Painting Contractor Software", icon: Smartphone },
+        { href: "/commercial-painting-estimating-software", text: "Commercial Painting Software", icon: Building },
+        { href: "/mobile-painting-estimate-app", text: "Mobile Painting Estimate App", icon: Smartphone },
+        { href: "/painting-contractor-app", text: "Painting Contractor App", icon: Smartphone }
       ]
     },
     {

@@ -510,3 +510,46 @@ html body div[style*="background-color: rgb(34, 197, 94)"] a {
   color: #ffffff !important;
   text-decoration: underline !important;
 }
+
+/* ================================================
+   ULTRA NUCLEAR - REMOVE ALL GREEN BACKGROUNDS
+   ================================================ */
+
+/* EMERGENCY: Remove ALL green backgrounds from ALL elements */
+html body *[style*="background-color: rgb(22, 163, 74)"] {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Specifically target list items and links with green backgrounds */
+html body li[style*="background-color: rgb(22, 163, 74)"],
+html body a[style*="background-color: rgb(22, 163, 74)"],
+html body span[style*="background-color: rgb(22, 163, 74)"],
+html body div[style*="background-color: rgb(22, 163, 74)"] {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Fix the blue text on (formerly) green backgrounds */
+html body *[style*="color: rgb(37, 99, 235)"] {
+  color: #3b82f6 !important; /* Keep it blue but ensure it's visible */
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Extra nuclear: strip ALL inline background-color styles containing green RGB values */
+html body [style*="background-color: rgb(22,"],
+html body [style*="background-color: rgb(34,"],
+html body [style*="background-color: rgb(16,"],
+html body [style*="background-color: rgb(5,"] {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Fix hover states for links */
+html body a[style*="background-color:"]:hover {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #2563eb !important; /* Darker blue on hover */
+  text-decoration: underline !important;
+}
