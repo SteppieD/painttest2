@@ -215,6 +215,22 @@ nav button:not([class*="bg-"]) {
    5. ADDITIONAL FIXES
    ======================================== */
 
+/* CRITICAL: Force white text on all dark backgrounds */
+[class*="bg-gray-9"] > div > h1,
+[class*="bg-gray-9"] > div > h2,
+[class*="bg-gray-9"] > div > h3,
+[class*="bg-gray-9"] > div > p,
+[class*="bg-gray-8"] > div > h1,
+[class*="bg-gray-8"] > div > h2,
+[class*="bg-gray-8"] > div > h3,
+[class*="bg-gray-8"] > div > p,
+.bg-\[\#1f2937\] > div > h1,
+.bg-\[\#1f2937\] > div > h2,
+.bg-\[\#1f2937\] > div > h3,
+.bg-\[\#1f2937\] > div > p {
+  color: #ffffff !important;
+}
+
 /* Fix feature card borders */
 .rounded-xl.border,
 .rounded-lg.border,
@@ -297,6 +313,77 @@ section.py-20.px-4 *,
 section.bg-gray-900 *,
 section[class*="bg-gray"] * {
   color: inherit;
+}
+
+/* PRICING SECTION COMPREHENSIVE FIX */
+/* Main pricing section container */
+section.py-20.px-4.bg-gray-900,
+section.bg-gray-900,
+.bg-gray-900.py-20 {
+  background-color: #111827 !important;
+}
+
+/* Pricing section main heading - "Simple, Transparent Pricing" */
+section.bg-gray-900 h2,
+.bg-gray-900 h2.text-4xl,
+.bg-gray-900 h2.text-center {
+  color: #ffffff !important;
+}
+
+/* Pricing section subtitle */
+section.bg-gray-900 p.text-xl,
+.bg-gray-900 p.text-gray-300,
+.bg-gray-900 p.text-center {
+  color: #e5e7eb !important;
+}
+
+/* Pricing card containers should stay white */
+.bg-gray-900 .ac-pricing-card,
+.bg-gray-900 .bg-white {
+  background-color: #ffffff !important;
+}
+
+/* Text inside pricing cards should be dark */
+.ac-pricing-card h3,
+.ac-pricing-card p,
+.ac-pricing-card span,
+.ac-pricing-card li {
+  color: #1f2937 !important;
+}
+
+/* Pricing numbers */
+.ac-pricing-price {
+  color: #111827 !important;
+}
+
+/* Muted text in cards */
+.ac-pricing-card .text-gray-600,
+.ac-pricing-card .text-gray-500 {
+  color: #6b7280 !important;
+}
+
+/* View pricing link - make it a proper button */
+.bg-gray-900 a[href="/pricing"],
+section.bg-gray-900 a,
+.bg-gray-900 .text-center a {
+  background-color: #16a34a !important;
+  color: #ffffff !important;
+  padding: 0.75rem 2rem !important;
+  border-radius: 0.5rem !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+  font-weight: 600 !important;
+  transition: all 0.2s !important;
+  margin-top: 1rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.bg-gray-900 a[href="/pricing"]:hover,
+section.bg-gray-900 a:hover,
+.bg-gray-900 .text-center a:hover {
+  background-color: #15803d !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
 /* Fix any gradient text issues */
