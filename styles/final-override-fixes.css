@@ -454,3 +454,59 @@ html body *[style*="background-color: rgb(16,"] * {
   color: #ffffff !important;
   text-decoration-color: #ffffff !important;
 }
+
+/* ================================================
+   FINAL NUCLEAR FIXES - REMOVE INLINE STYLES
+   ================================================ */
+
+/* Fix footer heading colors specifically */
+html body footer h1,
+html body footer h2,
+html body footer h3,
+html body footer h4,
+html body footer h5,
+html body footer h6,
+html body footer .font-semibold,
+html body footer .font-bold {
+  color: #ffffff !important;
+}
+
+/* Remove green backgrounds from links that shouldn't have them */
+html body a[style*="background-color: rgb(22, 163, 74)"],
+html body a[style*="background-color: rgb(34, 197, 94)"],
+html body a[style*="background-color: rgb(16, 185, 129)"],
+html body span[style*="background-color: rgb(22, 163, 74)"],
+html body span[style*="background-color: rgb(34, 197, 94)"],
+html body span[style*="background-color: rgb(16, 185, 129)"] {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #60a5fa !important; /* Light blue for links */
+  text-decoration: underline !important;
+}
+
+/* Fix any inline style that sets color to dark on dark backgrounds */
+html body footer *[style*="color: rgb(31, 41, 55)"],
+html body footer *[style*="color: rgb(55, 65, 81)"],
+html body footer *[style*="color: rgb(75, 85, 99)"] {
+  color: #ffffff !important;
+}
+
+/* Override the gray color on footer headings */
+html body footer h3[style*="color: rgb(31, 41, 55)"] {
+  color: #ffffff !important;
+}
+
+/* Extra nuclear option: remove ALL inline color styles from footer */
+html body footer [style*="color:"] {
+  color: #ffffff !important;
+}
+
+/* Make sure links in green sections are visible */
+html body section[style*="background-color: rgb(22, 163, 74)"] a,
+html body section[style*="background-color: rgb(34, 197, 94)"] a,
+html body div[style*="background-color: rgb(22, 163, 74)"] a,
+html body div[style*="background-color: rgb(34, 197, 94)"] a {
+  background-color: transparent !important;
+  color: #ffffff !important;
+  text-decoration: underline !important;
+}
