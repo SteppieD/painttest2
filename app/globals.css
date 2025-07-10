@@ -38,6 +38,12 @@
 @import '../styles/dark-mode-contrast-fixes.css';
 
 /* ================================================
+   FINAL OVERRIDE FIXES - MUST BE LAST
+   Fixes persistent pink CTA and dark pricing text
+   ================================================ */
+@import '../styles/final-override-fixes.css';
+
+/* ================================================
    OVERRIDE ORANGE BUTTON COLORS
    Force brand green on Try For Free button
    ================================================ */
