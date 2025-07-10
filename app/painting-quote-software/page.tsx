@@ -9,6 +9,8 @@ import { FeatureComparison } from '@/components/tables/FeatureComparison'
 import { SchemaMarkup } from '@/components/seo/SchemaMarkup'
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Painting Quote Software | #1 Contractor Tool | ProPaint Quote',
   description: 'Professional painting quote software that creates accurate quotes in 30 seconds. Win 40% more jobs. Free 14-day trial. Join 2,500+ contractors.',
@@ -698,12 +700,12 @@ export default function PaintingQuoteSoftwarePage() {
                       <h3 className="text-xl font-semibold">{week.title}</h3>
                     </div>
                     <ul className="space-y-2">
-                      {week.tasks.map((task, taskIndex) => (
+                      {week.tasks?.map((task, taskIndex) => (
                         <li key={taskIndex} className="flex items-center gap-3">
                           <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
                           <span className="text-gray-700">{task}</span>
                         </li>
-                      ))}
+                      )) || null}
                     </ul>
                   </Card>
                 ))}

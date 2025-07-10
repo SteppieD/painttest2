@@ -203,7 +203,7 @@ export function addInternalLinksReact(
   // Parse the HTML string into React elements
   const parts = linkedContent.split(/(<a\s+[^>]*>.*?<\/a>)/gi)
   
-  return parts.map((part, index) => {
+  return (parts || []).map((part, index) => {
     if (part.match(/<a\s+[^>]*>.*?<\/a>/i)) {
       // Extract href and text from anchor tag
       const hrefMatch = part.match(/href="([^"]+)"/)

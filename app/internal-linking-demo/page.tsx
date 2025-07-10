@@ -4,6 +4,8 @@ import React from 'react'
 import { InternalLinkedContent } from '@/components/seo/InternalLinkedContent'
 import { addInternalLinks, suggestInternalLinks, extractKeywords } from '@/lib/seo/internal-linking-engine'
 
+export const dynamic = 'force-dynamic'
+
 export default function InternalLinkingDemo() {
   // Sample content for demonstration
   const sampleContent = `
