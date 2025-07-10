@@ -88,7 +88,7 @@ const defaultRules: LinkingRule = {
     'exterior painting calculator'
   ],
   excludePatterns: [
-    /^https?:\/\//i, // Already has external links
+    /^https?:\/\//gi, // Already has external links
     /<a\s+[^>]*>.*?<\/a>/gi, // Already has anchor tags
     /\[.*?\]\(.*?\)/g, // Markdown links
   ]
