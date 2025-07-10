@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCompanyByAccessCode, createCompany } from "@/lib/database";
+import { subscriptionManager } from "@/lib/subscription-manager";
 
 interface Company {
   id: number;
@@ -38,6 +39,17 @@ export async function POST(request: NextRequest) {
         `✅ Valid access code: ${normalizedCode} for ${company.company_name}`,
       );
 
+      // Check if company has a subscription, create one if not
+      const subscription = await subscriptionManager.getCompanySubscription(company.id);
+      if (!subscription) {
+        try {
+          await subscriptionManager.createTrialSubscription(company.id, 'plan_free');
+          console.log(`✅ Created trial subscription for existing company ${company.id}`);
+        } catch (error) {
+          console.error('Failed to create trial subscription for existing company:', error);
+        }
+      }
+
       return NextResponse.json({
         success: true,
         companyName: company.company_name,
@@ -70,6 +82,15 @@ export async function POST(request: NextRequest) {
         console.log(
           `🆕 Auto-created company: ${companyName} with code ${normalizedCode}`,
         );
+
+        // Create a free trial subscription for the new company
+        try {
+          await subscriptionManager.createTrialSubscription(result.lastID as number, 'plan_free');
+          console.log(`✅ Created trial subscription for company ${result.lastID}`);
+        } catch (error) {
+          console.error('Failed to create trial subscription:', error);
+          // Continue anyway - company can still be created without subscription
+        }
 
         return NextResponse.json({
           success: true,

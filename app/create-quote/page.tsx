@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
+import { QuotaCounter } from "@/components/ui/quota-counter";
 import { 
   chatStyles, 
   renderMarkdown, 
@@ -1873,17 +1874,38 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
               </div>
             </div>
             
-            {quoteData.calculation && (
-              <div className="text-right">
-                <div className="text-sm text-gray-600">Total Quote</div>
-                <div className="text-lg font-bold text-blue-600">
-                  ${((quoteData.calculation as any).total_cost || quoteData.calculation.revenue?.total || 0).toFixed(2)}
+            <div className="flex items-center gap-4">
+              {companyData && (
+                <QuotaCounter 
+                  companyId={companyData.id}
+                  variant="header"
+                  className="hidden lg:flex"
+                />
+              )}
+              
+              {quoteData.calculation && (
+                <div className="text-right">
+                  <div className="text-sm text-gray-600">Total Quote</div>
+                  <div className="text-lg font-bold text-blue-600">
+                    ${((quoteData.calculation as any).total_cost || quoteData.calculation.revenue?.total || 0).toFixed(2)}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </header>
+      
+      {/* Mobile Quota Display */}
+      {companyData && (
+        <div className="lg:hidden bg-gray-50 border-b px-4 py-2">
+          <QuotaCounter 
+            companyId={companyData.id}
+            variant="compact"
+            className="w-full"
+          />
+        </div>
+      )}
 
       {/* Quick Actions Card - Shows after saving */}
       {savedQuoteId && conversationStage === 'complete' && (
