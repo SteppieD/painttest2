@@ -170,11 +170,11 @@ export function Header() {
                   <div className="nav-dropdown-section">
                     <h3 className="nav-dropdown-section-title">Free Tools</h3>
                   </div>
-                  <Link href="/painting-estimate-calculator-free" className="nav-dropdown-item">
+                  <Link href="/calculators" className="nav-dropdown-item">
                     <Calculator className="nav-dropdown-icon nav-icon-blue" />
                     <div className="nav-dropdown-content">
-                      <span className="nav-dropdown-title">Quote Calculator</span>
-                      <span className="nav-dropdown-description">Generate instant painting estimates</span>
+                      <span className="nav-dropdown-title">Painting Calculators</span>
+                      <span className="nav-dropdown-description">Interior, exterior, commercial & cabinet</span>
                     </div>
                   </Link>
                   <Link href="/paint-estimate-templates" className="nav-dropdown-item">
