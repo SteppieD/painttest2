@@ -32,6 +32,12 @@
 @import '../styles/contrast-fixes-july.css';
 
 /* ================================================
+   DARK MODE & CONTRAST FIXES
+   Fixes specific dark mode and contrast issues
+   ================================================ */
+@import '../styles/dark-mode-contrast-fixes.css';
+
+/* ================================================
    OVERRIDE ORANGE BUTTON COLORS
    Force brand green on Try For Free button
    ================================================ */

@@ -1,0 +1,241 @@
+/**
+ * Dark Mode & Contrast Fixes
+ * Fixes the following issues:
+ * 1. Footer dark text on dark background
+ * 2. "Start Free Trial" button pink background with black text
+ * 3. Pricing section dark background with dark heading text
+ * 4. Navigation menu unwanted bottom border
+ */
+
+/* Define missing CSS variables */
+:root {
+  --primary-pink: #ef2b70;
+  --primary-pink-dark: #d91e5a;
+}
+
+/* ========================================
+   1. FOOTER TEXT CONTRAST FIX
+   Already properly handled in footer component,
+   but reinforcing here for any edge cases
+   ======================================== */
+footer {
+  background-color: #111827 !important;
+  color: #f3f4f6 !important;
+}
+
+footer * {
+  color: inherit;
+}
+
+footer h3,
+footer .font-semibold {
+  color: #ffffff !important;
+}
+
+footer a,
+footer .text-gray-300 {
+  color: #d1d5db !important;
+}
+
+footer a:hover {
+  color: #ffffff !important;
+}
+
+footer .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+/* ========================================
+   2. START FREE TRIAL BUTTON FIX
+   Fix pink background with black text issue
+   ======================================== */
+
+/* Navigation CTA buttons */
+.nav-cta-primary,
+a[href="/trial-signup"].bg-green-600,
+a[href="/trial-signup"].ac-btn-primary,
+header a[href="/trial-signup"],
+nav a[href="/trial-signup"] {
+  background-color: #16a34a !important;
+  color: #ffffff !important;
+  border-color: #16a34a !important;
+}
+
+.nav-cta-primary:hover,
+a[href="/trial-signup"].bg-green-600:hover,
+a[href="/trial-signup"].ac-btn-primary:hover,
+header a[href="/trial-signup"]:hover,
+nav a[href="/trial-signup"]:hover {
+  background-color: #15803d !important;
+  color: #ffffff !important;
+  border-color: #15803d !important;
+}
+
+/* Fix any remaining pink buttons with black text */
+.bg-pink-600,
+.bg-\[#ef2b70\],
+[class*="bg-pink-"] {
+  color: #ffffff !important;
+}
+
+/* ========================================
+   3. PRICING SECTION HEADING FIX
+   Fix dark background with dark text
+   ======================================== */
+
+/* AC Hero sections (gradient backgrounds) */
+.ac-hero {
+  background: linear-gradient(135deg, #2f97e0 0%, #3db987 100%) !important;
+  color: #ffffff !important;
+}
+
+.ac-hero * {
+  color: #ffffff !important;
+}
+
+/* Specific fixes for pricing page hero */
+.ac-hero .ac-hero-title {
+  color: #ffffff !important;
+}
+
+.ac-hero .ac-hero-title span {
+  color: #fbbf24 !important; /* Yellow accent for better contrast */
+}
+
+.ac-hero .ac-hero-subtitle {
+  color: #e0e7ff !important;
+}
+
+/* Stats text in hero sections */
+.ac-hero .text-gray-300,
+.ac-hero .text-sm {
+  color: #e0e7ff !important;
+}
+
+/* Badge text in hero */
+.ac-hero .ac-hero-badge {
+  color: #ffffff !important;
+}
+
+.ac-hero .ac-hero-badge span {
+  color: #ffffff !important;
+}
+
+/* Fix gradient sections with poor contrast */
+.gradient-blue-contrast {
+  background: linear-gradient(135deg, #2f97e0 0%, #1e7cc8 100%) !important;
+  color: #ffffff !important;
+}
+
+.gradient-blue-contrast * {
+  color: #ffffff !important;
+}
+
+/* Fix pricing page specific gradient backgrounds */
+.bg-gradient-to-r.from-primary-pink.to-primary-pink-dark {
+  background: linear-gradient(135deg, #2f97e0 0%, #3db987 100%) !important;
+  color: #ffffff !important;
+}
+
+/* Fix inline style color variables on pricing page */
+[style*="color: var(--primary-pink)"] {
+  color: #2f97e0 !important; /* Use brand blue instead of pink for better contrast */
+}
+
+/* ========================================
+   4. NAVIGATION BOTTOM BORDER FIX
+   Remove unwanted border lines
+   ======================================== */
+
+/* Remove all navigation borders */
+header,
+nav,
+.nav-main-item,
+.nav-main-item button,
+.nav-main-item a {
+  border-bottom: none !important;
+  border: none !important;
+}
+
+/* Keep the header bottom border for definition */
+header {
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Remove borders from nav items specifically */
+header nav a,
+header nav button,
+nav a:not([class*="bg-"]),
+nav button:not([class*="bg-"]) {
+  border: none !important;
+  border-bottom: none !important;
+  text-decoration: none !important;
+}
+
+/* Remove any inherited borders from dropdowns */
+.nav-dropdown,
+.nav-dropdown-item {
+  border-bottom: none !important;
+}
+
+/* Fix mobile menu borders */
+@media (max-width: 1023px) {
+  nav .border-t,
+  nav .border-b,
+  nav [class*="border-"] {
+    border: none !important;
+  }
+  
+  /* Keep mobile menu container border */
+  .lg\:hidden.mt-4.pb-4.border-t {
+    border-top: 1px solid #e5e7eb !important;
+  }
+}
+
+/* ========================================
+   5. ADDITIONAL FIXES
+   ======================================== */
+
+/* Ensure all dark sections have light text */
+.bg-gray-900,
+.bg-gray-800,
+.bg-\[\#111827\],
+[class*="bg-gray-9"],
+[class*="bg-gray-8"] {
+  color: #f9fafb !important;
+}
+
+.bg-gray-900 *,
+.bg-gray-800 *,
+.bg-\[\#111827\] *,
+[class*="bg-gray-9"] *,
+[class*="bg-gray-8"] * {
+  color: inherit;
+}
+
+/* Fix any gradient text issues */
+.bg-gradient-to-r,
+[class*="gradient"] {
+  color: #ffffff !important;
+}
+
+/* Ensure proper contrast for all CTAs */
+.ac-btn-primary,
+.ac-btn-secondary {
+  color: #ffffff !important;
+}
+
+/* Fix hover states to maintain contrast */
+.hover\:text-white:hover {
+  color: #ffffff !important;
+}
+
+/* Remove any text shadows that might reduce readability */
+.text-shadow-none {
+  text-shadow: none !important;
+}
+
+/* Global text shadow removal for better contrast */
+h1, h2, h3, h4, h5, h6, p, span, div, a, button {
+  text-shadow: none !important;
+}
