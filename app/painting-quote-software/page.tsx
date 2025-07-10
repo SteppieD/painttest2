@@ -97,11 +97,14 @@ const faqSchema = {
 export default function PaintingQuoteSoftwarePage() {
   return (
     <>
-      <SchemaMarkup data={schemaData} />
-      <SchemaMarkup data={faqSchema} />
+      <SchemaMarkup type="SoftwareApplication" data={schemaData} />
+      <SchemaMarkup type="FAQPage" data={faqSchema} />
       
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-        <Breadcrumbs />
+        <Breadcrumbs items={[
+          { name: 'Home', url: '/' },
+          { name: 'Painting Quote Software' }
+        ]} />
         
         {/* Hero Section */}
         <section className="container mx-auto px-4 py-16">
