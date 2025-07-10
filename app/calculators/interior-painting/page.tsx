@@ -76,9 +76,9 @@ export default function InteriorPaintingCalculatorPage() {
   }
 
   const breadcrumbItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Calculators', href: '/calculators' },
-    { label: 'Interior Painting Calculator', href: '/calculators/interior-painting' }
+    { name: 'Home', url: '/' },
+    { name: 'Calculators', url: '/calculators' },
+    { name: 'Interior Painting Calculator', url: '/calculators/interior-painting' }
   ]
 
   return (

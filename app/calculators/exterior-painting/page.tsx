@@ -79,9 +79,9 @@ export default function ExteriorPaintingCalculatorPage() {
   }
 
   const breadcrumbItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Calculators', href: '/calculators' },
-    { label: 'Exterior Painting Calculator', href: '/calculators/exterior-painting' }
+    { name: 'Home', url: '/' },
+    { name: 'Calculators', url: '/calculators' },
+    { name: 'Exterior Painting Calculator', url: '/calculators/exterior-painting' }
   ]
 
   return (

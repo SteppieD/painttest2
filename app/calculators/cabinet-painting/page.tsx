@@ -79,9 +79,9 @@ export default function CabinetPaintingCalculatorPage() {
   }
 
   const breadcrumbItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Calculators', href: '/calculators' },
-    { label: 'Cabinet Painting Calculator', href: '/calculators/cabinet-painting' }
+    { name: 'Home', url: '/' },
+    { name: 'Calculators', url: '/calculators' },
+    { name: 'Cabinet Painting Calculator', url: '/calculators/cabinet-painting' }
   ]
 
   return (

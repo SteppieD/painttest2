@@ -79,9 +79,9 @@ export default function CommercialPaintingCalculatorPage() {
   }
 
   const breadcrumbItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Calculators', href: '/calculators' },
-    { label: 'Commercial Painting Calculator', href: '/calculators/commercial-painting' }
+    { name: 'Home', url: '/' },
+    { name: 'Calculators', url: '/calculators' },
+    { name: 'Commercial Painting Calculator', url: '/calculators/commercial-painting' }
   ]
 
   return (
