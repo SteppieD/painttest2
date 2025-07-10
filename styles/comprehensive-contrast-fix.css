@@ -1,483 +1,305 @@
-/**
- * Comprehensive Contrast Fix - July 2025
- * This file replaces ALL previous contrast fixes with a clean, WCAG-compliant solution
- * 
- * Design Principles:
- * 1. WCAG AA compliance (4.5:1 for normal text, 3:1 for large text)
- * 2. No light gradients behind text
- * 3. Consistent color system
- * 4. Clear hierarchy without !important abuse
- */
+/* COMPREHENSIVE CONTRAST FIX - July 10, 2025 */
+/* Fixes all identified contrast issues across the site */
 
-/* ========================================
-   1. HERO SECTION - Complete Redesign
-   ======================================== */
+/* ============================= */
+/* 1. ROI CALCULATOR FIXES */
+/* ============================= */
 
-/* Remove light gradient, use solid background */
-.hero-optimized {
-  background: #ffffff !important;
+/* Fix "Projected Monthly Revenue" on green background */
+.bg-green-50 p.text-2xl.font-bold.text-green-800 {
+  color: #14532d !important; /* Darker green for better contrast */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure all text in green revenue boxes is readable */
+.bg-green-50,
+.bg-green-100 {
+  background-color: #f0fdf4 !important;
+}
+
+.bg-green-50 *:not(.text-green-600):not(.text-green-700):not(.text-green-800),
+.bg-green-100 *:not(.text-green-600):not(.text-green-700):not(.text-green-800) {
   color: #1f2937 !important;
 }
 
-/* Alternative: If gradient is needed, make it subtle on the sides only */
-.hero-optimized.with-gradient {
-  background: linear-gradient(to right, rgba(251, 146, 60, 0.05) 0%, #ffffff 15%, #ffffff 85%, rgba(251, 146, 60, 0.05) 100%) !important;
+/* Dark green text for emphasis */
+.bg-green-50 .text-green-600,
+.bg-green-50 .text-green-700,
+.bg-green-50 .text-green-800 {
+  color: #14532d !important;
+  font-weight: 600;
 }
 
-/* Ensure all hero text is dark */
-.hero-optimized h1,
-.hero-optimized h2,
-.hero-optimized h3,
-.hero-optimized h4,
-.hero-optimized h5,
-.hero-optimized h6,
-.hero-optimized p,
-.hero-optimized span,
-.hero-optimized div,
-.hero-optimized strong,
-.hero-optimized em {
+/* ============================= */
+/* 2. TESTIMONIALS BEFORE/AFTER FIXES */
+/* ============================= */
+
+/* Fix green "After" text on green backgrounds */
+.bg-green-50 .text-green-600,
+.bg-green-50 .text-green-700 {
+  color: #14532d !important; /* Much darker green */
+  font-weight: 700;
+}
+
+/* Fix "Before" text on red backgrounds */
+.bg-red-50 .text-red-600,
+.bg-red-50 .text-red-700,
+.bg-red-50 .text-red-800 {
+  color: #7f1d1d !important; /* Much darker red */
+  font-weight: 700;
+}
+
+/* Revenue Increased sections - ensure contrast */
+.bg-green-50 .text-sm.text-green-700,
+.bg-green-50 .text-sm.text-green-600 {
+  color: #14532d !important;
+  font-weight: 600;
+}
+
+/* ============================= */
+/* 3. REMOVE DARK GREEN BACKGROUNDS */
+/* ============================= */
+
+/* Convert dark green to light backgrounds */
+.bg-green-900,
+.bg-green-800,
+.bg-green-700 {
+  background-color: #f0fdf4 !important; /* Light green */
   color: #1f2937 !important;
 }
 
-/* Hero accents stay vibrant */
-.hero-optimized .text-orange-600,
-.hero-optimized [class*="text-orange-6"] {
-  color: #ea580c !important;
-}
-
-/* Green checkmarks and icons */
-.hero-optimized .text-green-600,
-.hero-optimized .text-green-500 {
-  color: #059669 !important;
-}
-
-/* ========================================
-   2. BUTTONS - Proper Contrast
-   ======================================== */
-
-/* Primary buttons - Brand Blue */
-.bg-orange-600,
-.bg-orange-700,
-.bg-orange-800,
-[class*="bg-orange-"],
-.ac-btn-primary {
-  background-color: var(--brand-primary, #2f97e0) !important;
-  color: #ffffff !important;
-  border: 1px solid #1e7cc8 !important;
-}
-
-.bg-orange-600:hover,
-.bg-orange-700:hover,
-.bg-orange-800:hover,
-[class*="bg-orange-"]:hover,
-.ac-btn-primary:hover {
-  background-color: #1e7cc8 !important;
-  color: #ffffff !important;
-  border-color: #155e9f !important;
-}
-
-/* Secondary buttons - Brand Teal */
-.bg-pink-600,
-.bg-\[#ef2b70\],
-.bg-\[#d91e5a\],
-[class*="bg-pink-"] {
-  background-color: var(--brand-secondary, #3db987) !important;
-  color: #ffffff !important;
-  border: 1px solid #2ea670 !important;
-}
-
-.bg-pink-600:hover,
-.bg-\[#ef2b70\]:hover,
-.bg-\[#d91e5a\]:hover,
-[class*="bg-pink-"]:hover {
-  background-color: #2ea670 !important;
-  color: #ffffff !important;
-}
-
-/* White/Ghost buttons */
-.bg-white,
-.ac-btn-ghost {
-  background-color: #ffffff !important;
-  color: #1f2937 !important;
-  border: 2px solid #e5e7eb !important;
-}
-
-.bg-white:hover,
-.ac-btn-ghost:hover {
-  background-color: #f3f4f6 !important;
-  color: var(--brand-primary, #2f97e0) !important;
-  border-color: var(--brand-primary, #2f97e0) !important;
-}
-
-/* Transparent buttons with white border (on dark backgrounds) */
-.bg-transparent[class*="border-white"] {
-  background-color: transparent !important;
-  color: #ffffff !important;
-  border: 2px solid #ffffff !important;
-}
-
-.bg-transparent[class*="border-white"]:hover {
-  background-color: #ffffff !important;
-  color: var(--brand-primary, #2f97e0) !important;
-  border-color: #ffffff !important;
-}
-
-/* ========================================
-   3. CARDS & CONTAINERS
-   ======================================== */
-
-/* All cards have white background with dark text */
-.card,
-.ac-card,
-[class*="card"],
-.feature-card,
-.pricing-card,
-.ac-pricing-card {
-  background-color: #ffffff !important;
-  color: #1f2937 !important;
-  border: 1px solid #e5e7eb !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Card headings */
-.card h1, .card h2, .card h3, .card h4, .card h5, .card h6,
-.ac-card h1, .ac-card h2, .ac-card h3, .ac-card h4, .ac-card h5, .ac-card h6,
-[class*="card"] h1, [class*="card"] h2, [class*="card"] h3,
-[class*="card"] h4, [class*="card"] h5, [class*="card"] h6 {
-  color: #111827 !important;
-}
-
-/* Card body text */
-.card p, .card span, .card div,
-.ac-card p, .ac-card span, .ac-card div,
-[class*="card"] p, [class*="card"] span, [class*="card"] div {
+.bg-green-900 *,
+.bg-green-800 *,
+.bg-green-700 * {
   color: #1f2937 !important;
 }
 
-/* Muted text in cards */
-.card .text-gray-600, .card .text-gray-500,
-.ac-card .text-gray-600, .ac-card .text-gray-500,
-[class*="card"] .text-gray-600, [class*="card"] .text-gray-500 {
+/* Fix any gradient with dark green */
+[class*="from-green-700"],
+[class*="from-green-800"],
+[class*="from-green-900"],
+[class*="to-green-700"],
+[class*="to-green-800"],
+[class*="to-green-900"] {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  color: #1f2937 !important;
+}
+
+/* ============================= */
+/* 4. FOOTER FIXES */
+/* ============================= */
+
+/* Fix invisible footer headings */
+footer h3 {
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+/* Fix footer link colors */
+footer a {
+  color: #d1d5db !important; /* Light gray for links */
+}
+
+footer a:hover {
+  color: #60a5fa !important; /* Light blue on hover */
+  text-decoration: underline;
+}
+
+/* Fix "Free Trial" and "Live Demo" button backgrounds */
+footer a[href="/trial-signup"],
+footer a[href="/demo"] {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  text-decoration: none;
+  display: inline-block;
+}
+
+footer a[href="/trial-signup"]:hover,
+footer a[href="/demo"]:hover {
+  background-color: #1d4ed8 !important;
+}
+
+/* Ensure footer stats colors are vibrant */
+footer .text-blue-400 {
+  color: #60a5fa !important;
+}
+
+footer .text-green-400 {
+  color: #4ade80 !important;
+}
+
+footer .text-purple-400 {
+  color: #a78bfa !important;
+}
+
+footer .text-yellow-400 {
+  color: #facc15 !important;
+}
+
+/* ============================= */
+/* 5. SPECIFIC COMPONENT FIXES */
+/* ============================= */
+
+/* ROI Calculator specific overrides */
+.bg-green-50.rounded-lg.border.border-green-200 {
+  background-color: #f0fdf4 !important;
+  border-color: #86efac !important;
+}
+
+.bg-green-50.rounded-lg.border.border-green-200 .text-green-800 {
+  color: #14532d !important;
+}
+
+/* Blue revenue sections */
+.bg-blue-50.rounded-lg.border.border-blue-200 {
+  background-color: #eff6ff !important;
+  border-color: #93c5fd !important;
+}
+
+.bg-blue-50.rounded-lg.border.border-blue-200 .text-blue-800 {
+  color: #1e3a8a !important;
+}
+
+/* Purple time saved sections */
+.bg-purple-50.rounded-lg.border.border-purple-200 {
+  background-color: #faf5ff !important;
+  border-color: #d8b4fe !important;
+}
+
+.bg-purple-50.rounded-lg.border.border-purple-200 .text-purple-800 {
+  color: #581c87 !important;
+}
+
+/* ============================= */
+/* 6. CASE STUDY CARDS */
+/* ============================= */
+
+/* Ensure all Before/After sections have proper contrast */
+.bg-red-50 {
+  background-color: #fef2f2 !important;
+}
+
+.bg-red-50 span:contains("Before") {
+  color: #7f1d1d !important;
+  font-weight: 700;
+}
+
+.bg-green-50 span:contains("After") {
+  color: #14532d !important;
+  font-weight: 700;
+}
+
+/* Results cards in testimonials */
+.bg-green-50 .text-2xl.font-bold.text-green-600 {
+  color: #14532d !important;
+}
+
+.bg-blue-50 .text-2xl.font-bold.text-blue-600 {
+  color: #1e3a8a !important;
+}
+
+.bg-purple-50 .text-2xl.font-bold.text-purple-600 {
+  color: #581c87 !important;
+}
+
+/* ============================= */
+/* 7. ANNUAL REVENUE SECTIONS */
+/* ============================= */
+
+/* Fix blue/purple gradient sections */
+.bg-blue-600,
+[style*="background-color: #2563eb"] {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.bg-blue-600 *,
+[style*="background-color: #2563eb"] * {
+  color: #ffffff !important;
+}
+
+/* Inline style overrides for maximum specificity */
+p[style*="color: #ffffff"],
+h4[style*="color: #ffffff"] {
+  color: #ffffff !important;
+}
+
+/* ============================= */
+/* 8. GLOBAL ENHANCEMENTS */
+/* ============================= */
+
+/* Ensure minimum contrast ratios */
+.text-gray-500 {
   color: #6b7280 !important;
 }
 
-/* ========================================
-   4. PRICING SECTION - Complete Fix
-   ======================================== */
-
-/* Remove gradient backgrounds from pricing section */
-.pricing-section,
-[class*="pricing"] section {
-  background-color: #f9fafb !important;
-  color: #1f2937 !important;
+.text-gray-600 {
+  color: #4b5563 !important;
 }
 
-/* Pricing cards */
-.ac-pricing-card {
-  background-color: #ffffff !important;
-  color: #1f2937 !important;
-  border: 2px solid #e5e7eb !important;
-}
-
-/* Featured pricing card */
-.ac-pricing-card.featured {
-  border-color: var(--brand-primary, #2f97e0) !important;
-  box-shadow: 0 0 0 4px rgba(47, 151, 224, 0.1) !important;
-}
-
-/* Pricing badges */
-.ac-pricing-badge,
-.pricing-badge {
-  background-color: var(--brand-primary, #2f97e0) !important;
-  color: #ffffff !important;
-  padding: 0.25rem 0.75rem !important;
-  border-radius: 9999px !important;
-  font-size: 0.875rem !important;
-  font-weight: 600 !important;
-}
-
-/* Price display */
-.ac-pricing-price,
-.pricing-price {
-  color: #111827 !important;
-  font-weight: 700 !important;
-}
-
-/* Period text */
-.ac-pricing-period,
-.pricing-period {
+/* Fix any remaining light text on light backgrounds */
+.bg-white .text-gray-400,
+.bg-gray-50 .text-gray-400,
+.bg-gray-100 .text-gray-400 {
   color: #6b7280 !important;
-  font-weight: 400 !important;
 }
 
-/* ========================================
-   5. GRADIENTS - Proper Implementation
-   ======================================== */
-
-/* Primary gradient sections - Brand Blue */
-.gradient-orange-contrast,
-[class*="gradient-orange"] {
-  background: linear-gradient(135deg, var(--brand-primary, #2f97e0) 0%, #1e7cc8 100%) !important;
-  color: #ffffff !important;
+/* Ensure all headings are readable */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
 }
 
-/* Secondary gradient sections - Brand Teal */
-.gradient-pink-contrast,
-[class*="gradient-pink"] {
-  background: linear-gradient(135deg, var(--brand-secondary, #3db987) 0%, #2ea670 100%) !important;
-  color: #ffffff !important;
+/* Add subtle shadows to improve text readability */
+.bg-green-50 .font-bold,
+.bg-blue-50 .font-bold,
+.bg-purple-50 .font-bold,
+.bg-red-50 .font-bold {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
-/* Ensure all text in gradient sections is white */
-.gradient-orange-contrast *,
-.gradient-pink-contrast *,
-[class*="gradient-orange"] *,
-[class*="gradient-pink"] * {
-  color: #ffffff !important;
+/* ============================= */
+/* 9. BUTTON CONSISTENCY */
+/* ============================= */
+
+/* Ensure all CTA buttons have proper contrast */
+a[href="/trial-signup"],
+a[href="/demo"],
+button[type="submit"] {
+  min-height: 44px; /* Accessibility minimum */
+  font-weight: 600;
 }
 
-/* ========================================
-   6. FORMS - Visibility & Contrast
-   ======================================== */
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"],
-input[type="tel"],
-input[type="url"],
-textarea,
-select {
+/* Fix ghost/outline buttons on various backgrounds */
+.bg-green-50 button[variant="outline"],
+.bg-blue-50 button[variant="outline"],
+.bg-purple-50 button[variant="outline"] {
   background-color: #ffffff !important;
-  color: #1f2937 !important;
-  border: 2px solid #d1d5db !important;
-  padding: 0.75rem 1rem !important;
+  border: 2px solid currentColor !important;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="number"]:focus,
-input[type="tel"]:focus,
-input[type="url"]:focus,
-textarea:focus,
-select:focus {
-  border-color: var(--brand-primary, #2f97e0) !important;
-  outline: none !important;
-  box-shadow: 0 0 0 3px rgba(47, 151, 224, 0.1) !important;
-}
+/* ============================= */
+/* 10. OVERRIDE INLINE STYLES */
+/* ============================= */
 
-input::placeholder,
-textarea::placeholder {
-  color: #9ca3af !important;
-}
-
-/* ========================================
-   7. NAVIGATION - Proper Contrast
-   ======================================== */
-
-/* Main navigation background */
-nav,
-header {
-  background-color: #ffffff !important;
-  border-bottom: 1px solid #e5e7eb !important;
-}
-
-/* Navigation links */
-nav a:not([class*="bg-"]),
-header a:not([class*="bg-"]) {
-  color: #1f2937 !important;
-}
-
-nav a:not([class*="bg-"]):hover,
-header a:not([class*="bg-"]):hover {
-  color: var(--brand-primary, #2f97e0) !important;
-}
-
-/* Navigation CTAs maintain button styles */
-nav [class*="bg-"],
-header [class*="bg-"] {
-  /* Inherits from button styles above */
-}
-
-/* ========================================
-   8. BADGES & CHIPS
-   ======================================== */
-
-.badge,
-.chip,
-.tag,
-[class*="badge"] {
-  background-color: var(--brand-primary, #2f97e0) !important;
-  color: #ffffff !important;
-  padding: 0.25rem 0.75rem !important;
-  border-radius: 9999px !important;
-  font-size: 0.875rem !important;
-  font-weight: 500 !important;
-}
-
-/* Success badges */
-.badge-success,
-.badge.success {
-  background-color: var(--brand-secondary, #3db987) !important;
+/* Use attribute selectors for inline style overrides */
+[style*="color: rgb(255, 255, 255)"] {
   color: #ffffff !important;
 }
 
-/* Info badges */
-.badge-info,
-.badge.info {
-  background-color: var(--brand-primary, #2f97e0) !important;
+/* Ensure dark backgrounds keep white text */
+[style*="background-color: rgb(37, 99, 235)"] *,
+[style*="backgroundColor: '#2563eb'"] * {
   color: #ffffff !important;
 }
 
-/* ========================================
-   9. SECTIONS - Background Colors
-   ======================================== */
-
-/* White sections */
-section.bg-white,
-.section-white {
-  background-color: #ffffff !important;
-  color: #1f2937 !important;
+/* Final override for any missed elements */
+body {
+  color: #1f2937;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Gray sections */
-section.bg-gray-50,
-.section-gray {
-  background-color: #f9fafb !important;
-  color: #1f2937 !important;
-}
-
-/* Dark sections */
-section.bg-gray-900,
-.section-dark {
-  background-color: #111827 !important;
-  color: #f9fafb !important;
-}
-
-/* ========================================
-   10. UTILITY OVERRIDES
-   ======================================== */
-
-/* Text colors - ensure proper contrast */
-.text-white { color: #ffffff !important; }
-.text-black { color: #000000 !important; }
-.text-gray-900 { color: #111827 !important; }
-.text-gray-800 { color: #1f2937 !important; }
-.text-gray-700 { color: #374151 !important; }
-.text-gray-600 { color: #4b5563 !important; }
-.text-gray-500 { color: #6b7280 !important; }
-
-/* Never use these on white/light backgrounds */
-.text-gray-400 { color: #9ca3af !important; } /* Only on dark backgrounds */
-.text-gray-300 { color: #d1d5db !important; } /* Only on dark backgrounds */
-.text-gray-200 { color: #e5e7eb !important; } /* Only on dark backgrounds */
-.text-gray-100 { color: #f3f4f6 !important; } /* Only on dark backgrounds */
-
-/* ========================================
-   11. SPECIAL ELEMENTS
-   ======================================== */
-
-/* Quote generator mockup in hero */
-.hero-visual .bg-white {
-  background-color: #ffffff !important;
-  border: 2px solid #e5e7eb !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-}
-
-/* Stats in mockup */
-.hero-visual .bg-orange-50 {
-  background-color: #e8f3fc !important;
-  color: var(--brand-primary, #2f97e0) !important;
-  border: 1px solid #b8daf5 !important;
-}
-
-.hero-visual .bg-green-50 {
-  background-color: #e6f7f0 !important;
-  color: var(--brand-secondary, #3db987) !important;
-  border: 1px solid #a7e5ce !important;
-}
-
-/* ========================================
-   12. REMOVE PROBLEMATIC STYLES
-   ======================================== */
-
-/* Remove blanket opacity override */
-* {
-  opacity: unset !important;
-}
-
-/* Remove forced colors that break design */
-.hero-optimized * {
-  color: unset !important;
-}
-
-/* Then reapply proper colors */
-.hero-optimized {
-  color: #1f2937 !important;
-}
-
-.hero-optimized h1,
-.hero-optimized h2,
-.hero-optimized h3,
-.hero-optimized p {
-  color: #1f2937 !important;
-}
-
-/* Keep accent colors */
-.hero-optimized .text-orange-600 { color: var(--brand-primary, #2f97e0) !important; }
-.hero-optimized .text-green-600 { color: var(--brand-secondary, #3db987) !important; }
-
-/* ========================================
-   13. PRICING PAGE SPECIFIC FIXES
-   ======================================== */
-
-/* AC Hero sections - use brand gradient */
-.ac-hero {
-  background: linear-gradient(135deg, var(--brand-primary, #2f97e0) 0%, var(--brand-secondary, #3db987) 100%) !important;
-  color: #ffffff !important;
-}
-
-.ac-hero * {
-  color: #ffffff !important;
-}
-
-/* AC Hero title contrast fix */
-.ac-hero-title {
-  color: #ffffff !important;
-}
-
-.ac-hero-title span {
-  color: var(--brand-accent, #6ed174) !important; /* Green accent for contrast */
-}
-
-/* AC Hero subtitle */
-.ac-hero-subtitle {
-  color: #e0e7ff !important; /* Light blue-white for readability */
-}
-
-/* Stats in hero */
-.ac-hero .text-gray-300 {
-  color: #e0e7ff !important;
-}
-
-/* ========================================
-   14. FINAL OVERRIDES - USE SPARINGLY
-   ======================================== */
-
-/* Only for critical fixes where specificity is an issue */
-.text-white-important {
-  color: #ffffff !important;
-}
-
-.text-dark-important {
-  color: #1f2937 !important;
-}
-
-.bg-white-important {
-  background-color: #ffffff !important;
-}
-
-.bg-dark-important {
-  background-color: #111827 !important;
-}
+/* Ensure this CSS loads last */

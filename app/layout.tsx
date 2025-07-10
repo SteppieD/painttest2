@@ -4,6 +4,7 @@ import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 import { ConditionalNavbar } from '@/components/layout/conditional-navbar'
 import { SchemaMarkup } from '@/components/seo/SchemaMarkup'
+import Script from 'next/script'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -124,6 +125,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <ConditionalNavbar />
         {children}
         <Toaster />
+        
+        {/* Remove green backgrounds from links */}
+        <Script src="/js/remove-green-backgrounds.js" strategy="afterInteractive" />
       </body>
     </html>
   )

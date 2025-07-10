@@ -44,6 +44,12 @@
 @import '../styles/final-override-fixes.css';
 
 /* ================================================
+   NAVIGATION CONSISTENCY FIX - ABSOLUTE LAST
+   Ensures same menu on every page including gradient backgrounds
+   ================================================ */
+@import '../styles/navigation-consistency-fix.css';
+
+/* ================================================
    OVERRIDE ORANGE BUTTON COLORS
    Force brand green on Try For Free button
    ================================================ */

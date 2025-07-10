@@ -1,0 +1,252 @@
+/* ================================================
+   NAVIGATION CONSISTENCY FIX - ENSURE SAME MENU EVERYWHERE
+   ================================================ */
+
+/* 1. FORCE CONSISTENT HEADER STYLING ON ALL PAGES */
+header,
+html header,
+body header,
+.min-h-screen header,
+[class*="bg-gradient"] header {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+}
+
+/* 2. FIX DROPDOWN TRANSPARENCY ISSUES */
+.nav-dropdown,
+.nav-mega-menu,
+header .nav-dropdown,
+header .nav-mega-menu {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Ensure dropdowns are visible on hover */
+.nav-main-item:hover .nav-dropdown,
+.nav-main-item:hover .nav-mega-menu {
+  opacity: 1 !important;
+  visibility: visible !important;
+  background: #ffffff !important;
+}
+
+/* 3. CONSISTENT NAV ITEM STYLING */
+.nav-main-item,
+header .nav-main-item {
+  color: #4b5563 !important;
+}
+
+.nav-main-item:hover,
+header .nav-main-item:hover {
+  color: #111827 !important;
+}
+
+/* 4. DROPDOWN ITEM CONSISTENCY */
+.nav-dropdown-item,
+header .nav-dropdown-item {
+  background: transparent !important;
+  color: #111827 !important;
+}
+
+.nav-dropdown-item:hover,
+header .nav-dropdown-item:hover {
+  background-color: rgba(59, 130, 246, 0.04) !important;
+}
+
+.nav-dropdown-title {
+  color: #111827 !important;
+  font-weight: 500 !important;
+}
+
+.nav-dropdown-description {
+  color: #6b7280 !important;
+}
+
+/* 5. FIX CTA BUTTONS CONSISTENCY */
+.nav-cta-primary,
+header .nav-cta-primary {
+  background: #16a34a !important;
+  background-color: #16a34a !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2) !important;
+}
+
+.nav-cta-primary:hover,
+header .nav-cta-primary:hover {
+  background: #15803d !important;
+  background-color: #15803d !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3) !important;
+}
+
+.nav-cta-secondary,
+header .nav-cta-secondary {
+  color: #4b5563 !important;
+  background: transparent !important;
+}
+
+.nav-cta-secondary:hover,
+header .nav-cta-secondary:hover {
+  color: #111827 !important;
+}
+
+/* 6. MOBILE MENU CONSISTENCY */
+@media (max-width: 1024px) {
+  .mobile-menu,
+  .nav-mobile {
+    background: #ffffff !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .mobile-menu-item {
+    color: #4b5563 !important;
+    background: transparent !important;
+  }
+  
+  .mobile-menu-item:hover {
+    background: rgba(59, 130, 246, 0.04) !important;
+    color: #111827 !important;
+  }
+}
+
+/* 7. PREVENT GRADIENT BLEED-THROUGH */
+header > div,
+header nav,
+header .container {
+  background: transparent !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* 8. LOGO AND BRAND CONSISTENCY */
+header img[alt*="Paint Quote App"],
+header .text-2xl {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* 9. CHEVRON ICON CONSISTENCY */
+.nav-chevron,
+header .nav-chevron {
+  color: currentColor !important;
+  opacity: 0.8 !important;
+}
+
+.nav-main-item:hover .nav-chevron {
+  transform: rotate(180deg) !important;
+}
+
+/* 10. Z-INDEX HIERARCHY FIX */
+header {
+  z-index: 9999 !important;
+}
+
+.nav-dropdown,
+.nav-mega-menu {
+  z-index: 10000 !important;
+}
+
+/* 11. PREVENT TRANSPARENT DROPDOWNS ON GRADIENT PAGES */
+.min-h-screen .nav-dropdown,
+[class*="bg-gradient"] .nav-dropdown,
+.min-h-screen .nav-mega-menu,
+[class*="bg-gradient"] .nav-mega-menu {
+  background: #ffffff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* When dropdowns are hidden */
+.nav-main-item:not(:hover) .nav-dropdown,
+.nav-main-item:not(:hover) .nav-mega-menu {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* 12. SECTION DIVIDERS IN DROPDOWNS */
+.nav-dropdown-section {
+  border-top: 1px solid #f3f4f6 !important;
+  background: transparent !important;
+}
+
+.nav-dropdown-section-title {
+  color: #9ca3af !important;
+  background: transparent !important;
+}
+
+/* 13. ICON COLORS IN DROPDOWNS */
+.nav-dropdown-icon {
+  opacity: 1 !important;
+}
+
+.nav-icon-blue { color: #3b82f6 !important; }
+.nav-icon-green { color: #10b981 !important; }
+.nav-icon-purple { color: #8b5cf6 !important; }
+.nav-icon-red { color: #ef4444 !important; }
+
+/* 14. FEATURED SECTIONS IN MEGA MENUS */
+.nav-featured-section {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+  opacity: 1 !important;
+}
+
+/* 15. BADGE STYLING */
+.nav-badge {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* 16. TRANSITION CONSISTENCY */
+.nav-dropdown,
+.nav-mega-menu,
+.nav-dropdown-item,
+.nav-chevron {
+  transition: all 0.2s ease !important;
+}
+
+/* 17. FOCUS STATES FOR ACCESSIBILITY */
+.nav-dropdown-item:focus,
+.nav-main-item:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+  background: rgba(59, 130, 246, 0.04) !important;
+}
+
+/* 18. PREVENT LAYOUT SHIFT */
+header {
+  min-height: 72px !important;
+}
+
+.nav-main-item {
+  min-height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 19. HAMBURGER MENU BUTTON CONSISTENCY */
+button[aria-label="Toggle menu"] {
+  color: #4b5563 !important;
+  background: transparent !important;
+}
+
+button[aria-label="Toggle menu"]:hover {
+  color: #111827 !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 20. ENSURE DROPDOWNS WORK ON ALL PAGES */
+* .nav-dropdown,
+* .nav-mega-menu {
+  position: absolute !important;
+  top: 100% !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+}
