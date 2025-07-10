@@ -269,7 +269,7 @@ export function ContractorChargeRatesWizard({ accessCode, onComplete, onSkip, is
     
     // Update setup data
     const newSetupData = { ...setupData };
-    newSetupData[currentStepData.field as keyof ChargeRatesData] = processedValue;
+    (newSetupData as any)[currentStepData.field as keyof ChargeRatesData] = processedValue;
     setSetupData(newSetupData);
     setCurrentInput("");
 

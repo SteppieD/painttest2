@@ -3,12 +3,13 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 import { ConditionalNavbar } from '@/components/layout/conditional-navbar'
+import { SchemaMarkup } from '@/components/seo/SchemaMarkup'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'ProPaint Quote - Professional Painting Quote Software for Contractors',
-  description: 'Win 40-60% more painting jobs with professional quotes in 30 seconds. Trusted by 5,247+ painting contractors. Start free trial today.',
+  description: 'Save 3 hours per quote. Win 40% more jobs. Professional painting quote software with 30-second quotes. Free 14-day trial. No credit card required.',
   keywords: 'painting quote software, painting estimate software, contractor quoting app, painting business tools, professional painting quotes, painting calculator, painting estimator, contractor software',
   manifest: '/manifest.json',
   metadataBase: new URL('https://www.paintquoteapp.com'),
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'ProPaint Quote - Win More Painting Jobs with Professional Software',
-    description: 'Stop losing jobs to timing. Create professional painting quotes in 6 minutes, not 6 hours. 40-60% higher win rates guaranteed.',
+    description: 'Save 3 hours per quote. Win 40% more jobs. Professional painting software with 30-second quotes. Free trial - no credit card.',
     url: 'https://www.paintquoteapp.com',
     siteName: 'ProPaint Quote',
     type: 'website',
@@ -115,6 +116,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
+        
+        {/* Schema Markup for SaaS Application */}
+        <SchemaMarkup type="SoftwareApplication" data={{}} />
         
         <ConditionalNavbar />
         {children}

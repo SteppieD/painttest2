@@ -460,7 +460,7 @@ export function ComprehensiveContractorWizard({ accessCode, onComplete, onSkip, 
     
     // Update setup data
     const newSetupData = { ...setupData };
-    newSetupData[currentStepData.field as keyof ComprehensiveSetupData] = processedValue;
+    (newSetupData as any)[currentStepData.field as keyof ComprehensiveSetupData] = processedValue;
     setSetupData(newSetupData);
     setCurrentInput("");
 

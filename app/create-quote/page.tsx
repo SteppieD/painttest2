@@ -1901,7 +1901,7 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
         <div className="lg:hidden bg-gray-50 border-b px-4 py-2">
           <QuotaCounter 
             companyId={companyData.id}
-            variant="compact"
+            variant="badge"
             className="w-full"
           />
         </div>
