@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Settings, Palette, Plus, Trash2, Edit3, Upload, Building2, ImageIcon } from "lucide-react";
+import { ArrowLeft, Save, Settings, Palette, Plus, Trash2, Edit3, Upload, Building2, ImageIcon, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +15,23 @@ import SettingsNavigation from "@/components/ui/settings-navigation";
 export const dynamic = 'force-dynamic';
 
 interface CompanySettings {
+  // New Contractor-Focused Charge Rates
+  // Interior Charge Rates (includes labor + materials)
+  wall_charge_rate: number;         // Per sqft charge for walls
+  ceiling_charge_rate: number;      // Per sqft charge for ceilings
+  baseboard_charge_rate: number;    // Per linear foot charge for baseboards
+  crown_molding_charge_rate: number; // Per linear foot charge for crown moldings
+  door_charge_rate: number;         // Per unit charge for doors (includes jamb)
+  window_charge_rate: number;       // Per unit charge for windows
+  
+  // Exterior Charge Rates
+  exterior_wall_charge_rate: number;    // Per sqft charge for exterior walls
+  soffit_charge_rate: number;           // Per sqft charge for soffits
+  fascia_charge_rate: number;           // Per linear foot charge for fascia boards
+  exterior_door_charge_rate: number;    // Per unit charge for exterior doors
+  exterior_window_charge_rate: number;  // Per unit charge for exterior windows
+  
+  // Legacy rates (kept for compatibility)
   default_walls_rate: number;
   default_ceilings_rate: number;
   default_trim_rate: number;
@@ -114,7 +131,27 @@ export default function SettingsPage() {
     try {
       const response = await fetch(`/api/companies/settings?companyId=${companyId}`);
       const data = await response.json();
-      setSettings(data);
+      
+      // Initialize new charge rates if they don't exist
+      const enhancedSettings = {
+        ...data,
+        // Interior Charge Rates
+        wall_charge_rate: data.wall_charge_rate || data.wall_allin_rate_per_sqft || 1.50,
+        ceiling_charge_rate: data.ceiling_charge_rate || data.ceiling_allin_rate_per_sqft || 1.25,
+        baseboard_charge_rate: data.baseboard_charge_rate || 3.00,
+        crown_molding_charge_rate: data.crown_molding_charge_rate || 4.50,
+        door_charge_rate: data.door_charge_rate || data.door_allin_rate_each || 150,
+        window_charge_rate: data.window_charge_rate || data.window_allin_rate_each || 100,
+        
+        // Exterior Charge Rates
+        exterior_wall_charge_rate: data.exterior_wall_charge_rate || 2.00,
+        soffit_charge_rate: data.soffit_charge_rate || 2.50,
+        fascia_charge_rate: data.fascia_charge_rate || 3.50,
+        exterior_door_charge_rate: data.exterior_door_charge_rate || 175,
+        exterior_window_charge_rate: data.exterior_window_charge_rate || 125,
+      };
+      
+      setSettings(enhancedSettings);
     } catch (error) {
       console.error('Error loading settings:', error);
     } finally {
@@ -271,15 +308,19 @@ export default function SettingsPage() {
           </div>
           <div>
             <Label htmlFor="cost_per_gallon">Cost per Gallon *</Label>
-            <Input
-              id="cost_per_gallon"
-              type="number"
-              min="0"
-              step="0.01"
-              value={formData.cost_per_gallon}
-              onChange={(e) => setFormData({ ...formData, cost_per_gallon: Number(e.target.value) })}
-              required
-            />
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+              <Input
+                id="cost_per_gallon"
+                type="number"
+                min="0"
+                step="0.01"
+                value={formData.cost_per_gallon || ''}
+                onChange={(e) => setFormData({ ...formData, cost_per_gallon: Number(e.target.value) })}
+                className="pl-8"
+                required
+              />
+            </div>
           </div>
           <div>
             <Label htmlFor="quality_grade">Quality Grade</Label>
@@ -385,6 +426,216 @@ export default function SettingsPage() {
         {/* Settings Navigation */}
         <SettingsNavigation currentPage="general" />
         
+        {/* NEW: Interior Charge Rates */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <DollarSign className="w-5 h-5 text-green-600" />
+              Interior Charge Rates (Labor + Materials)
+            </CardTitle>
+            <p className="text-sm text-gray-600 mt-2">
+              These rates include both labor and material costs. Labor is automatically calculated as 30% of the total charge.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="wall-charge-rate">Wall Charge Rate (per sq ft)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="wall-charge-rate"
+                    type="number"
+                    min="0"
+                    step="0.05"
+                    value={settings.wall_charge_rate || ''}
+                    onChange={(e) => updateSetting('wall_charge_rate', Number(e.target.value))}
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Total charge per square foot for walls</p>
+              </div>
+              <div>
+                <Label htmlFor="ceiling-charge-rate">Ceiling Charge Rate (per sq ft)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="ceiling-charge-rate"
+                    type="number"
+                    min="0"
+                    step="0.05"
+                    value={settings.ceiling_charge_rate || ''}
+                    onChange={(e) => updateSetting('ceiling_charge_rate', Number(e.target.value))}
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Total charge per square foot for ceilings</p>
+              </div>
+              <div>
+                <Label htmlFor="baseboard-charge-rate">Baseboard Charge Rate (per linear ft)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="baseboard-charge-rate"
+                    type="number"
+                    min="0"
+                    step="0.05"
+                    value={settings.baseboard_charge_rate || ''}
+                    onChange={(e) => updateSetting('baseboard_charge_rate', Number(e.target.value))}
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Total charge per linear foot for baseboards</p>
+              </div>
+              <div>
+                <Label htmlFor="crown-molding-charge-rate">Crown Molding Charge Rate (per linear ft)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="crown-molding-charge-rate"
+                    type="number"
+                    min="0"
+                    step="0.05"
+                    value={settings.crown_molding_charge_rate || ''}
+                    onChange={(e) => updateSetting('crown_molding_charge_rate', Number(e.target.value))}
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Total charge per linear foot for crown molding</p>
+              </div>
+              <div>
+                <Label htmlFor="door-charge-rate">Door Charge Rate (per unit, includes jamb)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="door-charge-rate"
+                    type="number"
+                    min="0"
+                    step="5"
+                    value={settings.door_charge_rate || ''}
+                    onChange={(e) => updateSetting('door_charge_rate', Number(e.target.value))}
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Total charge per door (includes door jamb)</p>
+              </div>
+              <div>
+                <Label htmlFor="window-charge-rate">Window Charge Rate (per unit)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="window-charge-rate"
+                    type="number"
+                    min="0"
+                    step="5"
+                    value={settings.window_charge_rate || ''}
+                    onChange={(e) => updateSetting('window_charge_rate', Number(e.target.value))}
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Total charge per window</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* NEW: Exterior Charge Rates */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <DollarSign className="w-5 h-5 text-green-600" />
+              Exterior Charge Rates (Labor + Materials)
+            </CardTitle>
+            <p className="text-sm text-gray-600 mt-2">
+              These rates include both labor and material costs for exterior work.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="exterior-wall-charge-rate">Exterior Wall Charge Rate (per sq ft)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="exterior-wall-charge-rate"
+                    type="number"
+                    min="0"
+                    step="0.05"
+                    value={settings.exterior_wall_charge_rate || ''}
+                    onChange={(e) => updateSetting('exterior_wall_charge_rate', Number(e.target.value))}
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Total charge per square foot for exterior walls</p>
+              </div>
+              <div>
+                <Label htmlFor="soffit-charge-rate">Soffit Charge Rate (per sq ft)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="soffit-charge-rate"
+                    type="number"
+                    min="0"
+                    step="0.05"
+                    value={settings.soffit_charge_rate || ''}
+                    onChange={(e) => updateSetting('soffit_charge_rate', Number(e.target.value))}
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Total charge per square foot for soffits</p>
+              </div>
+              <div>
+                <Label htmlFor="fascia-charge-rate">Fascia Board Charge Rate (per linear ft)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="fascia-charge-rate"
+                    type="number"
+                    min="0"
+                    step="0.05"
+                    value={settings.fascia_charge_rate || ''}
+                    onChange={(e) => updateSetting('fascia_charge_rate', Number(e.target.value))}
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Total charge per linear foot for fascia boards</p>
+              </div>
+              <div>
+                <Label htmlFor="exterior-door-charge-rate">Exterior Door Charge Rate (per unit)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="exterior-door-charge-rate"
+                    type="number"
+                    min="0"
+                    step="5"
+                    value={settings.exterior_door_charge_rate || ''}
+                    onChange={(e) => updateSetting('exterior_door_charge_rate', Number(e.target.value))}
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Total charge per exterior door</p>
+              </div>
+              <div>
+                <Label htmlFor="exterior-window-charge-rate">Exterior Window Charge Rate (per unit)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="exterior-window-charge-rate"
+                    type="number"
+                    min="0"
+                    step="5"
+                    value={settings.exterior_window_charge_rate || ''}
+                    onChange={(e) => updateSetting('exterior_window_charge_rate', Number(e.target.value))}
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Total charge per exterior window</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Tax Settings */}
         <Card>
           <CardHeader>
@@ -573,40 +824,16 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium mb-2 block">Door & Window Constants</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="doors-per-gallon">Doors per Gallon</Label>
-                  <Input
-                    id="doors-per-gallon"
-                    type="number"
-                    min="1"
-                    max="10"
-                    step="0.5"
-                    value={settings.doors_per_gallon || 4.5}
-                    onChange={(e) => updateSetting('doors_per_gallon', Number(e.target.value))}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="windows-per-gallon">Windows per Gallon</Label>
-                  <Input
-                    id="windows-per-gallon"
-                    type="number"
-                    min="1"
-                    max="10"
-                    step="0.5"
-                    value={settings.windows_per_gallon || 2.5}
-                    onChange={(e) => updateSetting('windows_per_gallon', Number(e.target.value))}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
               <Label className="text-sm font-medium mb-2 block">Labor & Sundries</Label>
+              <div className="bg-yellow-50 p-4 rounded-lg mb-4">
+                <p className="text-sm text-yellow-800">
+                  Labor is now automatically calculated as 30% of the total charge for each surface type.
+                  The settings below are kept for legacy compatibility.
+                </p>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="labor-percentage">Labor Percentage (%)</Label>
+                  <Label htmlFor="labor-percentage">Legacy Labor Percentage (%)</Label>
                   <Input
                     id="labor-percentage"
                     type="number"
@@ -614,6 +841,7 @@ export default function SettingsPage() {
                     max="100"
                     value={settings.default_labor_percentage}
                     onChange={(e) => updateSetting('default_labor_percentage', Number(e.target.value))}
+                    disabled
                   />
                 </div>
                 <div>
@@ -625,258 +853,6 @@ export default function SettingsPage() {
                     max="50"
                     value={settings.default_sundries_percentage}
                     onChange={(e) => updateSetting('default_sundries_percentage', Number(e.target.value))}
-                  />
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Product-Specific Spread Rates */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="w-5 h-5 text-green-600" />
-              Product Spread Rates (From AI Conversations)
-            </CardTitle>
-            <p className="text-sm text-gray-600">Coverage rates for specific product types learned from your conversations</p>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="primer-spread-rate">Primer Spread Rate (sqft/gallon)</Label>
-                <Input
-                  id="primer-spread-rate"
-                  type="number"
-                  min="200"
-                  max="300"
-                  value={settings.primer_spread_rate || 250}
-                  onChange={(e) => updateSetting('primer_spread_rate', Number(e.target.value))}
-                />
-                <p className="text-xs text-gray-500 mt-1">Typical range: 200-300 sqft/gallon</p>
-              </div>
-              <div>
-                <Label htmlFor="wall-paint-spread-rate">Wall Paint Spread Rate (sqft/gallon)</Label>
-                <Input
-                  id="wall-paint-spread-rate"
-                  type="number"
-                  min="300"
-                  max="450"
-                  value={settings.wall_paint_spread_rate || 375}
-                  onChange={(e) => updateSetting('wall_paint_spread_rate', Number(e.target.value))}
-                />
-                <p className="text-xs text-gray-500 mt-1">Typical range: 350-400 sqft/gallon</p>
-              </div>
-              <div>
-                <Label htmlFor="ceiling-paint-spread-rate">Ceiling Paint Spread Rate (sqft/gallon)</Label>
-                <Input
-                  id="ceiling-paint-spread-rate"
-                  type="number"
-                  min="300"
-                  max="400"
-                  value={settings.ceiling_paint_spread_rate || 350}
-                  onChange={(e) => updateSetting('ceiling_paint_spread_rate', Number(e.target.value))}
-                />
-                <p className="text-xs text-gray-500 mt-1">Typical: 350 sqft/gallon</p>
-              </div>
-              <div>
-                <Label htmlFor="trim-doors-per-gallon">Trim: Doors per Gallon</Label>
-                <Input
-                  id="trim-doors-per-gallon"
-                  type="number"
-                  min="3"
-                  max="6"
-                  step="0.5"
-                  value={settings.trim_doors_per_gallon || 4.5}
-                  onChange={(e) => updateSetting('trim_doors_per_gallon', Number(e.target.value))}
-                />
-                <p className="text-xs text-gray-500 mt-1">Typical range: 4-5 doors/gallon</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* All-In Labor Rates */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="w-5 h-5 text-blue-600" />
-              All-In Labor Rates (Materials + Labor)
-            </CardTitle>
-            <p className="text-sm text-gray-600">Your rates that include both materials and labor costs</p>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="wall-allin-rate">Walls (per sqft, 2 coats + paint)</Label>
-                <Input
-                  id="wall-allin-rate"
-                  type="number"
-                  min="0.50"
-                  max="5.00"
-                  step="0.05"
-                  value={settings.wall_allin_rate_per_sqft || 1.50}
-                  onChange={(e) => updateSetting('wall_allin_rate_per_sqft', Number(e.target.value))}
-                />
-                <p className="text-xs text-gray-500 mt-1">Example: $1.50/sqft</p>
-              </div>
-              <div>
-                <Label htmlFor="ceiling-allin-rate">Ceilings (per sqft, 2 coats + paint)</Label>
-                <Input
-                  id="ceiling-allin-rate"
-                  type="number"
-                  min="0.50"
-                  max="5.00"
-                  step="0.05"
-                  value={settings.ceiling_allin_rate_per_sqft || 1.25}
-                  onChange={(e) => updateSetting('ceiling_allin_rate_per_sqft', Number(e.target.value))}
-                />
-                <p className="text-xs text-gray-500 mt-1">Example: $1.25/sqft</p>
-              </div>
-              <div>
-                <Label htmlFor="primer-allin-rate">Primer (per sqft, 1 coat)</Label>
-                <Input
-                  id="primer-allin-rate"
-                  type="number"
-                  min="0.25"
-                  max="2.00"
-                  step="0.05"
-                  value={settings.primer_allin_rate_per_sqft || 0.45}
-                  onChange={(e) => updateSetting('primer_allin_rate_per_sqft', Number(e.target.value))}
-                />
-                <p className="text-xs text-gray-500 mt-1">Example: $0.45/sqft</p>
-              </div>
-              <div>
-                <Label htmlFor="door-allin-rate">Doors + Trim (each, 2 coats)</Label>
-                <Input
-                  id="door-allin-rate"
-                  type="number"
-                  min="50"
-                  max="400"
-                  step="5"
-                  value={settings.door_allin_rate_each || 150}
-                  onChange={(e) => updateSetting('door_allin_rate_each', Number(e.target.value))}
-                />
-                <p className="text-xs text-gray-500 mt-1">Example: $150/door</p>
-              </div>
-              <div>
-                <Label htmlFor="window-allin-rate">Windows (each, 2 coats)</Label>
-                <Input
-                  id="window-allin-rate"
-                  type="number"
-                  min="25"
-                  max="300"
-                  step="5"
-                  value={settings.window_allin_rate_each || 100}
-                  onChange={(e) => updateSetting('window_allin_rate_each', Number(e.target.value))}
-                />
-                <p className="text-xs text-gray-500 mt-1">Example: $100/window</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Product Preferences */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Palette className="w-5 h-5 text-purple-600" />
-              Your Preferred Products (From AI Learning)
-            </CardTitle>
-            <p className="text-sm text-gray-600">Your go-to products learned from conversations - used to pre-fill quotes</p>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <Label className="text-sm font-medium mb-3 block">Primer Preferences</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="preferred-primer-brand">Preferred Primer Brand</Label>
-                  <Input
-                    id="preferred-primer-brand"
-                    value={settings.preferred_primer_brand || ''}
-                    onChange={(e) => updateSetting('preferred_primer_brand', e.target.value)}
-                    placeholder="e.g., Kilz, Zinsser"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="preferred-primer-product">Preferred Primer Product</Label>
-                  <Input
-                    id="preferred-primer-product"
-                    value={settings.preferred_primer_product || ''}
-                    onChange={(e) => updateSetting('preferred_primer_product', e.target.value)}
-                    placeholder="e.g., PVA Primer"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <Label className="text-sm font-medium mb-3 block">Wall Paint Preferences</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="preferred-wall-brand">Preferred Wall Paint Brand</Label>
-                  <Input
-                    id="preferred-wall-brand"
-                    value={settings.preferred_wall_paint_brand || ''}
-                    onChange={(e) => updateSetting('preferred_wall_paint_brand', e.target.value)}
-                    placeholder="e.g., Sherwin Williams"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="preferred-wall-product">Preferred Wall Paint Product</Label>
-                  <Input
-                    id="preferred-wall-product"
-                    value={settings.preferred_wall_paint_product || ''}
-                    onChange={(e) => updateSetting('preferred_wall_paint_product', e.target.value)}
-                    placeholder="e.g., ProClassic"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <Label className="text-sm font-medium mb-3 block">Ceiling Paint Preferences</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="preferred-ceiling-brand">Preferred Ceiling Paint Brand</Label>
-                  <Input
-                    id="preferred-ceiling-brand"
-                    value={settings.preferred_ceiling_paint_brand || ''}
-                    onChange={(e) => updateSetting('preferred_ceiling_paint_brand', e.target.value)}
-                    placeholder="e.g., Benjamin Moore"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="preferred-ceiling-product">Preferred Ceiling Paint Product</Label>
-                  <Input
-                    id="preferred-ceiling-product"
-                    value={settings.preferred_ceiling_paint_product || ''}
-                    onChange={(e) => updateSetting('preferred_ceiling_paint_product', e.target.value)}
-                    placeholder="e.g., Waterborne Ceiling"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <Label className="text-sm font-medium mb-3 block">Trim Paint Preferences</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="preferred-trim-brand">Preferred Trim Paint Brand</Label>
-                  <Input
-                    id="preferred-trim-brand"
-                    value={settings.preferred_trim_paint_brand || ''}
-                    onChange={(e) => updateSetting('preferred_trim_paint_brand', e.target.value)}
-                    placeholder="e.g., Sherwin Williams"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="preferred-trim-product">Preferred Trim Paint Product</Label>
-                  <Input
-                    id="preferred-trim-product"
-                    value={settings.preferred_trim_paint_product || ''}
-                    onChange={(e) => updateSetting('preferred_trim_paint_product', e.target.value)}
-                    placeholder="e.g., ProClassic Semi-Gloss"
                   />
                 </div>
               </div>

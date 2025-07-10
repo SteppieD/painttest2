@@ -23,6 +23,20 @@ export async function GET(request: NextRequest) {
     }
 
     const settings = {
+      // New Contractor-Focused Charge Rates
+      wall_charge_rate: company.wall_charge_rate || 1.50,
+      ceiling_charge_rate: company.ceiling_charge_rate || 1.25,
+      baseboard_charge_rate: company.baseboard_charge_rate || 2.50,
+      crown_molding_charge_rate: company.crown_molding_charge_rate || 3.50,
+      door_charge_rate: company.door_charge_rate || 150.00,
+      window_charge_rate: company.window_charge_rate || 100.00,
+      exterior_wall_charge_rate: company.exterior_wall_charge_rate || 2.00,
+      soffit_charge_rate: company.soffit_charge_rate || 1.75,
+      fascia_charge_rate: company.fascia_charge_rate || 3.50,
+      exterior_door_charge_rate: company.exterior_door_charge_rate || 200.00,
+      exterior_window_charge_rate: company.exterior_window_charge_rate || 125.00,
+      
+      // Legacy rates (kept for compatibility)
       default_walls_rate: company.default_walls_rate || 3.00,
       default_ceilings_rate: company.default_ceilings_rate || 2.00,
       default_trim_rate: company.default_trim_rate || 1.92,
@@ -91,9 +105,20 @@ export async function PUT(request: NextRequest) {
     
     const settings = await request.json();
 
-    // Update companies table (legacy format that exists)
+    // Update companies table with new charge rates and legacy fields
     const result = await dbRun(`
       UPDATE companies SET
+        wall_charge_rate = ?,
+        ceiling_charge_rate = ?,
+        baseboard_charge_rate = ?,
+        crown_molding_charge_rate = ?,
+        door_charge_rate = ?,
+        window_charge_rate = ?,
+        exterior_wall_charge_rate = ?,
+        soffit_charge_rate = ?,
+        fascia_charge_rate = ?,
+        exterior_door_charge_rate = ?,
+        exterior_window_charge_rate = ?,
         default_walls_rate = ?,
         default_ceilings_rate = ?,
         default_trim_rate = ?,
@@ -136,6 +161,17 @@ export async function PUT(request: NextRequest) {
         updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `, [
+      settings.wall_charge_rate || 1.50,
+      settings.ceiling_charge_rate || 1.25,
+      settings.baseboard_charge_rate || 2.50,
+      settings.crown_molding_charge_rate || 3.50,
+      settings.door_charge_rate || 150.00,
+      settings.window_charge_rate || 100.00,
+      settings.exterior_wall_charge_rate || 2.00,
+      settings.soffit_charge_rate || 1.75,
+      settings.fascia_charge_rate || 3.50,
+      settings.exterior_door_charge_rate || 200.00,
+      settings.exterior_window_charge_rate || 125.00,
       settings.default_walls_rate || 3.00,
       settings.default_ceilings_rate || 2.00,
       settings.default_trim_rate || 1.92,
