@@ -1,5 +1,5 @@
 export interface SchemaMarkupProps {
-  type: 'SoftwareApplication' | 'BreadcrumbList' | 'LocalBusiness' | 'Article' | 'FAQPage';
+  type: 'SoftwareApplication' | 'WebApplication' | 'BreadcrumbList' | 'LocalBusiness' | 'Article' | 'FAQPage';
   data: any;
 }
 
@@ -7,6 +7,7 @@ export function SchemaMarkup({ type, data }: SchemaMarkupProps) {
   const generateSchema = () => {
     switch (type) {
       case 'SoftwareApplication':
+      case 'WebApplication':
         return {
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
