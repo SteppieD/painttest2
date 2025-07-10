@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Cabinet Painting Calculator | Kitchen Cabinet Refinishing Cost | ProPaint Quote',
   description: 'Free cabinet painting calculator. Get accurate quotes for kitchen cabinets, bathroom vanities, and custom cabinetry. Professional pricing in 30 seconds.',

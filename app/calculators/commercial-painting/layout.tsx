@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Commercial Painting Calculator | Building & Office Painting Estimator | ProPaint Quote',
   description: 'Free commercial painting calculator for offices, warehouses, retail spaces. Get accurate quotes for large-scale painting projects in seconds. Trusted by commercial contractors.',

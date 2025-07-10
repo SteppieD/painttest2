@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Interior Painting Calculator | Instant Room Painting Quotes | ProPaint Quote',
   description: 'Free interior painting calculator. Get accurate room painting quotes in 30 seconds. Calculate walls, ceilings, trim costs instantly. Used by 2,500+ contractors.',
