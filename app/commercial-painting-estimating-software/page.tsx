@@ -17,6 +17,10 @@ import {
   Zap
 } from 'lucide-react';
 
+// Force dynamic rendering to prevent timeout
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'Commercial Painting Estimating Software | Large Project Quotes | ProPaint Quote',
   description: 'Professional commercial painting estimating software. Generate accurate quotes for office buildings, warehouses, and large projects. Advanced tools for commercial contractors.',

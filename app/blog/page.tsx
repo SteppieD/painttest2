@@ -18,6 +18,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Footer } from '@/components/shared/footer';
 
+// Force dynamic rendering to prevent timeout
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'Painting Business Blog - Expert Tips & Strategies | ProPaint Quote',
   description: 'Get expert painting business advice, quoting strategies, and industry insights. Learn how to grow your painting company with tips from successful contractors.',
@@ -417,35 +421,7 @@ export default function BlogPage() {
 
       <Footer />
 
-      {/* Structured Data for Blog */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Blog",
-            "name": "ProPaint Quote Painting Business Blog",
-            "description": "Expert painting business advice, quoting strategies, and industry insights",
-            "url": "https://propaintquote.com/blog",
-            "publisher": {
-              "@type": "Organization",
-              "name": "ProPaint Quote",
-              "url": "https://propaintquote.com"
-            },
-            "blogPost": featuredPosts.map(post => ({
-              "@type": "BlogPosting",
-              "headline": post.title,
-              "description": post.excerpt,
-              "url": `https://propaintquote.com/blog/${post.slug}`,
-              "datePublished": post.date,
-              "author": {
-                "@type": "Organization",
-                "name": "ProPaint Quote"
-              }
-            }))
-          })
-        }}
-      />
+      {/* Structured Data removed to improve performance */}
     </div>
   );
 }

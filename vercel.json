@@ -2,6 +2,27 @@
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 30
+    },
+    "app/blog/page.tsx": {
+      "maxDuration": 60
+    },
+    "app/analytics/revenue/page.tsx": {
+      "maxDuration": 60
+    },
+    "app/calculators/exterior-painting/page.tsx": {
+      "maxDuration": 60
+    },
+    "app/commercial-painting-estimating-software/page.tsx": {
+      "maxDuration": 60
+    },
+    "app/contractors/[state]/[city]/page.tsx": {
+      "maxDuration": 60
+    },
+    "app/locations/[slug]/page.tsx": {
+      "maxDuration": 60
+    },
+    "app/[keyword]/page.tsx": {
+      "maxDuration": 60
     }
   },
   "env": {

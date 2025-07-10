@@ -191,11 +191,16 @@ const cityData: Record<string, {
   },
 }
 
-export async function generateStaticParams() {
-  return Object.keys(cityData).map((slug) => ({
-    slug: slug,
-  }))
-}
+// Force dynamic rendering to prevent timeout
+export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // Revalidate every hour
+
+// Comment out static generation to prevent build timeout
+// export async function generateStaticParams() {
+//   return Object.keys(cityData).map((slug) => ({
+//     slug: slug,
+//   }))
+// }
 
 export async function generateMetadata(
   { params }: { params: { slug: string } }

@@ -24,6 +24,17 @@ const nextConfig = {
 
   // Enable standalone output for Docker
   output: 'standalone',
+  
+  // Experimental features to improve build performance
+  experimental: {
+    // Optimize package imports
+    optimizePackageImports: ['lucide-react', '@/components/ui'],
+    // Enable partial prerendering for better performance
+    // ppr: true, // Disabled - only available in canary builds
+  },
+  
+  // Static generation timeout (in seconds)
+  staticPageGenerationTimeout: 120,
 };
 
 module.exports = nextConfig;

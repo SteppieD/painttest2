@@ -209,9 +209,13 @@ export default function KeywordPage({ params }: { params: { keyword: string } })
   );
 }
 
-// Generate static params for all keyword pages
-export function generateStaticParams() {
-  return getAllKeywordPageSlugs().map((slug) => ({
-    keyword: slug,
-  }));
-}
+// Force dynamic rendering to prevent timeout
+export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // Revalidate every hour
+
+// Comment out static generation to prevent build timeout
+// export function generateStaticParams() {
+//   return getAllKeywordPageSlugs().map((slug) => ({
+//     keyword: slug,
+//   }));
+// }

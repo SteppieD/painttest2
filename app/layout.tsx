@@ -35,15 +35,6 @@ export const metadata: Metadata = {
   authors: [{ name: 'ProPaint Quote Team' }],
   generator: 'Next.js',
   referrer: 'origin-when-cross-origin',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#FF6B35' },
-    { media: '(prefers-color-scheme: dark)', color: '#FF6B35' }
-  ],
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
   verification: {
     google: 'your-google-site-verification-code',
   },
@@ -79,6 +70,16 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FF6B35' },
+    { media: '(prefers-color-scheme: dark)', color: '#FF6B35' }
+  ],
 }
 
 export default function RootLayout({

@@ -14,9 +14,14 @@ interface Props {
   }
 }
 
-export async function generateStaticParams() {
-  return getAllCityPaths()
-}
+// Force dynamic rendering to prevent timeout during build
+export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // Revalidate every hour
+
+// Comment out static generation to prevent build timeout
+// export async function generateStaticParams() {
+//   return getAllCityPaths()
+// }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cityData = getCityBySlug(params.state, params.city)
