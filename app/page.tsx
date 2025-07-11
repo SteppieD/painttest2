@@ -35,16 +35,16 @@ export default function HomePage() {
                 {COMPANY_INFO.tagline}
               </h1>
               <p className="text-xl lg:text-2xl text-gray-200 mb-10 leading-relaxed font-medium">
-                Chat with our AI assistant to get instant, accurate painting quotes. 
-                Just describe your project and get professional estimates in seconds.
+                Get professional painting quotes in 30 seconds, not 3 days. Our AI assistant 
+                understands your project description and creates detailed estimates instantly.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-6 mb-12">
                 <Button size="lg" asChild className="text-lg font-semibold h-14 px-10" variant="kofi">
-                  <Link href="/get-quote">🤖 Chat for Quote</Link>
+                  <Link href="/get-quote">🤖 Get Free Quote Now</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="text-lg font-semibold h-14 px-10 bg-white/10 backdrop-blur-sm text-white border-2 border-white/50 hover:bg-white hover:text-gray-900 hover:border-white">
-                  <Link href="/calculator">Try Quote Calculator</Link>
+                  <Link href="/pricing">View Pricing</Link>
                 </Button>
               </div>
               
@@ -56,7 +56,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center space-x-3 text-white/90 bg-white/10 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/20">
                   <Star className="w-6 h-6 fill-current text-yellow-300" />
-                  <span className="font-medium">4.9/5 Rating • 500+ Reviews</span>
+                  <span className="font-medium">2,000+ Contractors • 50,000+ Quotes</span>
                 </div>
                 <div className="flex items-center space-x-3 text-white/90 bg-white/10 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/20">
                   <Clock className="w-6 h-6 text-purple-300" />
@@ -132,8 +132,8 @@ export default function HomePage() {
                 </span>
               </h2>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-                Experience the future of painting quotes with our intelligent AI assistant. 
-                Get professional estimates instantly through natural conversation.
+                Stop spending hours on quotes that customers never accept. Our AI creates 
+                professional estimates in 30 seconds that win more jobs and save you time.
               </p>
             </div>
 
@@ -255,6 +255,114 @@ export default function HomePage() {
                   <div className="text-4xl font-bold">{COMPANY_INFO.projectsCompleted.toLocaleString()}+</div>
                   <div className="text-base font-medium opacity-90">Projects Completed</div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="py-20 lg:py-32 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="font-display text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+                What Our Customers Say
+              </h2>
+              <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+                See why thousands of painting contractors trust our AI quote system
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {/* Testimonial 1 */}
+              <Card className="bg-white border-none shadow-lg">
+                <CardContent className="p-8">
+                  <div className="flex mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-current text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 mb-6 italic">
+                    "This AI quote system saves me 3-4 hours every day. My customers get 
+                    professional quotes instantly and I win more jobs because I respond faster."
+                  </p>
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full flex items-center justify-center text-white font-bold">
+                      M
+                    </div>
+                    <div className="ml-4">
+                      <div className="font-semibold">Mike Rodriguez</div>
+                      <div className="text-sm text-gray-600">Rodriguez Painting Co.</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Testimonial 2 */}
+              <Card className="bg-white border-none shadow-lg">
+                <CardContent className="p-8">
+                  <div className="flex mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-current text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 mb-6 italic">
+                    "Increased my quote acceptance rate by 40%. The AI creates professional 
+                    estimates that clients trust and the speed gives me a huge advantage."
+                  </p>
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 bg-gradient-to-r from-secondary-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                      S
+                    </div>
+                    <div className="ml-4">
+                      <div className="font-semibold">Sarah Chen</div>
+                      <div className="text-sm text-gray-600">Elite Painting Solutions</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Testimonial 3 */}
+              <Card className="bg-white border-none shadow-lg">
+                <CardContent className="p-8">
+                  <div className="flex mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-current text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 mb-6 italic">
+                    "Game changer for my business. I used to spend all evening doing quotes, 
+                    now I finish them in minutes during the day and focus on actual painting."
+                  </p>
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 bg-gradient-to-r from-accent-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                      D
+                    </div>
+                    <div className="ml-4">
+                      <div className="font-semibold">David Thompson</div>
+                      <div className="text-sm text-gray-600">Thompson Painters</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Stats */}
+            <div className="grid md:grid-cols-4 gap-8 mt-16 text-center">
+              <div>
+                <div className="text-4xl font-bold text-primary-600 mb-2">50,000+</div>
+                <div className="text-gray-600">Quotes Generated</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-primary-600 mb-2">2,000+</div>
+                <div className="text-gray-600">Active Contractors</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-primary-600 mb-2">30 sec</div>
+                <div className="text-gray-600">Average Quote Time</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-primary-600 mb-2">95%</div>
+                <div className="text-gray-600">Customer Satisfaction</div>
               </div>
             </div>
           </div>

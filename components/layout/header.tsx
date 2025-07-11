@@ -99,6 +99,10 @@ export function Header() {
               Quote Calculator
             </Link>
             
+            <Link href="/pricing" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
+              Pricing
+            </Link>
+            
             <Link href="/about" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
               About
             </Link>
