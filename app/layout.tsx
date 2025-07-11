@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
+import { PWAProvider } from '@/components/pwa-provider'
 
 export const metadata: Metadata = {
   title: {
@@ -60,6 +61,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <PWAProvider />
+      </head>
       <body className="min-h-screen bg-background font-sans antialiased">
         {children}
         <Toaster />

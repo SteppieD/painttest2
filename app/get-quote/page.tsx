@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
@@ -11,6 +11,7 @@ import { formatCurrency } from '@/lib/utils'
 import { IntelligentQuoteParser } from '@/lib/services/intelligent-quote-parser'
 import { QuotePDFGenerator } from '@/lib/services/quote-pdf-generator'
 import { QuoteEmailTemplates } from '@/lib/services/quote-email-templates'
+import { MobileChatInterface } from '@/components/ui/mobile-chat-interface'
 
 interface Message {
   id: string
@@ -40,14 +41,46 @@ export default function GetQuotePage() {
   const [isLoading, setIsLoading] = useState(false)
   const [quoteEstimate, setQuoteEstimate] = useState<QuoteEstimate | null>(null)
   const [showQuoteActions, setShowQuoteActions] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [quotaInfo, setQuotaInfo] = useState<{ used: number; limit: number } | null>(null)
+  const [progressStage, setProgressStage] = useState(1)
 
-  const sendMessage = async () => {
-    if (!input.trim()) return
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  // Get quota info from session
+  useEffect(() => {
+    const authData = sessionStorage.getItem('paintQuoteAuth')
+    if (authData) {
+      try {
+        const session = JSON.parse(authData)
+        setQuotaInfo({
+          used: session.quotesUsed || 0,
+          limit: session.quotesLimit || 10
+        })
+      } catch (error) {
+        console.error('Failed to parse auth data:', error)
+      }
+    }
+  }, [])
+
+  const sendMessage = async (messageText?: string) => {
+    const textToSend = messageText || input
+    if (!textToSend.trim()) return
     
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: input,
+      content: textToSend,
       timestamp: new Date()
     }
     
@@ -55,9 +88,19 @@ export default function GetQuotePage() {
     setInput('')
     setIsLoading(true)
     
+    // Update progress based on message content
+    const lowerText = textToSend.toLowerCase()
+    if (lowerText.includes('interior') || lowerText.includes('exterior')) {
+      setProgressStage(2)
+    } else if (lowerText.includes('wall') || lowerText.includes('ceiling')) {
+      setProgressStage(3)
+    } else if (lowerText.includes('room') || lowerText.includes('linear')) {
+      setProgressStage(4)
+    }
+    
     // Process with intelligent parser
     setTimeout(() => {
-      const aiResponse = processWithIntelligentParser(input, messages)
+      const aiResponse = processWithIntelligentParser(textToSend, messages)
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -70,6 +113,7 @@ export default function GetQuotePage() {
       if (aiResponse.quote) {
         setQuoteEstimate(aiResponse.quote)
         setShowQuoteActions(true)
+        setProgressStage(5)
       }
       
       setIsLoading(false)
@@ -165,6 +209,61 @@ export default function GetQuotePage() {
     }
   }
 
+  const handleQuoteAction = (action: 'download' | 'email' | 'new') => {
+    if (action === 'download') {
+      const quoteData = JSON.parse(sessionStorage.getItem('latestQuote') || '{}')
+      const html = QuotePDFGenerator.generateHTML({
+        id: `QUOTE-${Date.now()}`,
+        ...quoteData,
+        customerEmail: ''
+      })
+      const blob = new Blob([html], { type: 'text/html' })
+      const url = URL.createObjectURL(blob)
+      window.open(url, '_blank')
+    } else if (action === 'email') {
+      const quoteData = JSON.parse(sessionStorage.getItem('latestQuote') || '{}')
+      const emailData = QuoteEmailTemplates.quoteDelivery({
+        customerName: quoteData.customerName || 'Customer',
+        customerEmail: 'customer@example.com',
+        quoteId: `QUOTE-${Date.now()}`,
+        total: quoteData.total,
+        projectType: quoteData.projectType,
+        area: quoteData.area,
+        quoteUrl: window.location.origin + '/quote/view'
+      })
+      alert('Email template ready! Subject: ' + emailData.subject)
+    } else if (action === 'new') {
+      setMessages([{
+        id: '1',
+        role: 'assistant',
+        content: "Hi! I'm your AI painting assistant. I'll help you get an instant quote for your painting project. Let's start with some basic information:\n\n• What type of project is this? (interior, exterior, or both)\n• How many rooms or which areas need painting?\n• What's the approximate size of the space?\n\nJust describe your project in your own words!",
+        timestamp: new Date()
+      }])
+      setQuoteEstimate(null)
+      setShowQuoteActions(false)
+      setProgressStage(1)
+    }
+  }
+
+  // Mobile interface
+  if (isMobile) {
+    return (
+      <div className="h-screen flex flex-col bg-gray-50">
+        <MobileChatInterface
+          messages={messages}
+          onSendMessage={sendMessage}
+          isLoading={isLoading}
+          quoteEstimate={quoteEstimate}
+          showQuoteActions={showQuoteActions}
+          quotaInfo={quotaInfo}
+          onQuoteAction={handleQuoteAction}
+          progressStage={progressStage}
+        />
+      </div>
+    )
+  }
+
+  // Desktop interface
   return (
     <>
       <Header />
@@ -260,7 +359,7 @@ export default function GetQuotePage() {
                       disabled={isLoading}
                     />
                     <Button 
-                      onClick={sendMessage} 
+                      onClick={() => sendMessage()} 
                       disabled={isLoading || !input.trim()}
                       className="bg-gradient-to-r from-primary-500 to-accent-500 text-white"
                     >
