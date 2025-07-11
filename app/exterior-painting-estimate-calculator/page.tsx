@@ -56,7 +56,7 @@ export default function ExteriorPaintingCalculatorPage() {
     // Paint requirements based on siding type and condition
     const coverageRates = {
       wood: { good: 400, fair: 350, poor: 300 },
-      vinyl: { good: 450, fair: 400, fair: 350 },
+      vinyl: { good: 450, fair: 400, poor: 350 },
       stucco: { good: 300, fair: 250, poor: 200 },
       brick: { good: 200, fair: 150, poor: 100 }
     }
