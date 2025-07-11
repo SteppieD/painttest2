@@ -137,7 +137,7 @@ export function useOptimizedDashboard(
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   // Performance tracking
-  const [performance, setPerformance] = useState({
+  const [performanceMetrics, setPerformanceMetrics] = useState({
     totalLoadTime: 0,
     cacheHitRate: 0,
     requestCount: 0
@@ -150,7 +150,7 @@ export function useOptimizedDashboard(
   const fetchDashboardData = useCallback(async () => {
     if (!companyId) return;
 
-    const startTime = performance.now();
+    const startTime = typeof performance !== 'undefined' ? performance.now() : Date.now();
     setIsLoading(true);
     setError(null);
     requestCountRef.current++;
@@ -195,13 +195,13 @@ export function useOptimizedDashboard(
       }
 
       // Check if this was a cache hit (very fast response)
-      const totalTime = performance.now() - startTime;
+      const totalTime = (typeof performance !== 'undefined' ? performance.now() : Date.now()) - startTime;
       if (totalTime < 50) { // Assume cache hit if under 50ms
         cacheHitsRef.current++;
       }
 
       // Update performance metrics
-      setPerformance({
+      setPerformanceMetrics({
         totalLoadTime: totalTime,
         cacheHitRate: requestCountRef.current > 0 ? 
           (cacheHitsRef.current / requestCountRef.current) * 100 : 0,
@@ -260,7 +260,7 @@ export function useOptimizedDashboard(
     error,
     lastUpdated,
     refresh,
-    performance
+    performance: performanceMetrics
   };
 }
 

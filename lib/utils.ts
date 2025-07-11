@@ -1,12 +1,11 @@
-// Utility functions
-// cn function removed - no styling needed
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 export function formatCurrency(amount: number): string {
-  // Handle NaN, undefined, or null values
-  if (!amount || isNaN(amount)) {
-    return '$0'
-  }
-  
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -15,35 +14,52 @@ export function formatCurrency(amount: number): string {
   }).format(amount)
 }
 
-export function formatDate(date: Date): string {
+export function formatDate(date: Date | string): string {
+  const d = typeof date === 'string' ? new Date(date) : date
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }).format(date)
+  }).format(d)
 }
 
-export function generateQuoteId(): string {
-  const timestamp = Date.now().toString(36)
-  const randomStr = Math.random().toString(36).substring(2, 8)
-  return `QUOTE-${timestamp}-${randomStr}`.toUpperCase()
+export function calculatePaintCoverage(squareFeet: number, coats: number = 2): number {
+  // Average paint covers 350-400 sq ft per gallon
+  const coveragePerGallon = 375
+  return Math.ceil((squareFeet * coats) / coveragePerGallon)
 }
 
-export function sanitizeInput(input: string): string {
-  return input.trim().replace(/[<>]/g, '')
+export function calculateLaborHours(squareFeet: number, complexity: 'simple' | 'moderate' | 'complex' = 'moderate'): number {
+  const hoursPerSqFt = {
+    simple: 0.008,
+    moderate: 0.012,
+    complex: 0.018
+  }
+  return Math.ceil(squareFeet * hoursPerSqFt[complexity])
 }
 
-export function calculateSquareFootage(length: number, width: number): number {
-  return Math.round(length * width)
+export function generateAccessCode(): string {
+  const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
+  const numbers = '23456789'
+  let code = ''
+  
+  // Format: XXX-NNNN
+  for (let i = 0; i < 3; i++) {
+    code += letters[Math.floor(Math.random() * letters.length)]
+  }
+  code += '-'
+  for (let i = 0; i < 4; i++) {
+    code += numbers[Math.floor(Math.random() * numbers.length)]
+  }
+  
+  return code
 }
 
-export function calculateRoomArea(rooms: Array<{ length: number; width: number; height: number }>): number {
-  return rooms.reduce((total, room) => {
-    const wallArea = 2 * (room.length + room.width) * room.height
-    return total + wallArea
-  }, 0)
-}
-
-export function validateAccessCode(code: string): boolean {
-  return /^[A-Z0-9]{6,12}$/.test(code.toUpperCase())
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/--+/g, '-')
+    .trim()
 }

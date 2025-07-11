@@ -1,12 +1,15 @@
 {
-  "buildCommand": "cd my-painting-app && npm install && npm run build",
-  "outputDirectory": "my-painting-app/.next",
-  "installCommand": "echo 'Skipping root install'",
-  "framework": null,
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/my-painting-app/$1"
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
     }
-  ]
+  },
+  "env": {
+    "NEXT_TELEMETRY_DISABLED": "1"
+  },
+  "build": {
+    "env": {
+      "NEXT_TELEMETRY_DISABLED": "1"
+    }
+  }
 }

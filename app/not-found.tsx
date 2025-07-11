@@ -1,57 +1,33 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Footer } from '@/components/shared/footer'
-import { ArrowRight, Home } from 'lucide-react'
+import { Header } from '@/components/layout/header'
+import { Footer } from '@/components/layout/footer'
 
 export default function NotFound() {
   return (
-    <div>
-      
-      <section>
-        <div>
-          <h1>404</h1>
-          <h2>Page Not Found</h2>
-          <p>
-            Sorry, we couldn't find the page you're looking for. But don't worry - 
-            we can help you get back on track with professional painting quotes!
+    <>
+      <Header />
+      <main className="min-h-screen flex items-center justify-center px-4 pt-16">
+        <div className="text-center">
+          <h1 className="text-6xl font-bold text-primary-600 mb-4">404</h1>
+          <h2 className="text-2xl font-bold text-secondary-900 mb-4">
+            Page not found
+          </h2>
+          <p className="text-gray-600 mb-8 max-w-md mx-auto">
+            Sorry, we couldn't find the page you're looking for. 
+            It might have been moved or doesn't exist.
           </p>
-          
-          <div>
-            <Button asChild size="lg">
-              <Link href="/trial-signup">
-                <ArrowRight />
-                Start Free Trial
-              </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild>
+              <Link href="/">Go to Homepage</Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link href="/">
-                <Home />
-                Back to Homepage
-              </Link>
+            <Button variant="outline" asChild>
+              <Link href="/contact">Contact Support</Link>
             </Button>
-          </div>
-          
-          <div>
-            <h3>Looking for something specific?</h3>
-            <div>
-              <Link href="/professional-painting-software">
-                Professional Software
-              </Link>
-              <Link href="/how-to-scale-painting-business">
-                Business Scaling Guide
-              </Link>
-              <Link href="/painting-business-profit-guide">
-                Profit Optimization
-              </Link>
-              <Link href="/digital-transformation-painting-contractors">
-                Digital Transformation
-              </Link>
-            </div>
           </div>
         </div>
-      </section>
-      
+      </main>
       <Footer />
-    </div>
+    </>
   )
 }
