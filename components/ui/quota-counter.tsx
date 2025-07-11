@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { FileText, Crown, AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useToast } from '@/components/ui/use-toast'
 
 interface QuotaCounterProps {
   companyId: string
@@ -29,6 +30,8 @@ export function QuotaCounter({
 }: QuotaCounterProps) {
   const [quotaData, setQuotaData] = useState<QuotaData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [hasShownWarning, setHasShownWarning] = useState(false)
+  const { toast } = useToast()
 
   useEffect(() => {
     const fetchQuota = async () => {
@@ -37,6 +40,33 @@ export function QuotaCounter({
         if (response.ok) {
           const data = await response.json()
           setQuotaData(data)
+          
+          // Check if we should show 80% warning
+          if (data.quote_limit > 0) {
+            const usagePercentage = (data.quotes_used / data.quote_limit) * 100
+            const warningKey = `quota_warning_shown_${companyId}_${data.quotes_used}`
+            const hasShownThisWarning = localStorage.getItem(warningKey)
+            
+            if (usagePercentage >= 80 && usagePercentage < 100 && !hasShownThisWarning && !hasShownWarning) {
+              setHasShownWarning(true)
+              localStorage.setItem(warningKey, 'true')
+              
+              toast({
+                title: "⚠️ Approaching Quote Limit",
+                description: `You've used ${data.quotes_used} of ${data.quote_limit} quotes (${Math.round(usagePercentage)}%). Consider upgrading to continue creating unlimited quotes.`,
+                duration: 8000,
+                action: showUpgrade ? (
+                  <Button
+                    size="sm"
+                    variant="default"
+                    onClick={() => window.location.href = '/pricing'}
+                  >
+                    Upgrade Now
+                  </Button>
+                ) : undefined,
+              })
+            }
+          }
         }
       } catch (error) {
         console.error('Failed to fetch quota:', error)
@@ -51,7 +81,7 @@ export function QuotaCounter({
       const interval = setInterval(fetchQuota, 30000)
       return () => clearInterval(interval)
     }
-  }, [companyId])
+  }, [companyId, toast, showUpgrade, hasShownWarning])
 
   if (isLoading || !quotaData) {
     return (
@@ -84,17 +114,20 @@ export function QuotaCounter({
             {isOverLimit ? "Limit Reached" : `${quotaData.quotes_remaining} left`}
           </Badge>
         )}
-        {showUpgrade && isOverLimit && (
+        {showUpgrade && (isOverLimit || isNearLimit) && (
           <Button 
             size="sm" 
-            variant="default"
-            className="h-6 px-2 text-xs bg-blue-600 hover:bg-blue-700"
+            variant={isOverLimit ? "default" : "outline"}
+            className={cn(
+              "h-6 px-2 text-xs",
+              isOverLimit && "bg-blue-600 hover:bg-blue-700"
+            )}
             onClick={() => {
               // Use router.push for better navigation experience
               window.location.href = '/pricing';
             }}
           >
-            Upgrade
+            {isOverLimit ? "Upgrade" : "80% Used"}
           </Button>
         )}
       </div>
@@ -149,21 +182,23 @@ export function QuotaCounter({
           <p className="text-sm text-gray-600">
             {isOverLimit 
               ? "Quote limit reached. Upgrade to create more quotes."
+              : isNearLimit 
+              ? `⚠️ Only ${quotaData.quotes_remaining} quotes remaining! Consider upgrading soon.`
               : `${quotaData.quotes_remaining} quotes remaining.`
             }
           </p>
         </div>
       </div>
-      {showUpgrade && isOverLimit && (
+      {showUpgrade && (isOverLimit || isNearLimit) && (
         <Button 
-          variant="default"
-          className="bg-blue-600 hover:bg-blue-700"
+          variant={isOverLimit ? "default" : "outline"}
+          className={isOverLimit ? "bg-blue-600 hover:bg-blue-700" : ""}
           onClick={() => {
             // Navigate to pricing page for upgrade
             window.location.href = '/pricing';
           }}
         >
-          Upgrade Now
+          {isOverLimit ? "Upgrade Now" : "View Plans"}
         </Button>
       )}
     </div>
