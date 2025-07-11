@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -32,6 +33,8 @@ const plans = [
     subtitle: "For growing businesses", 
     price: "$79",
     period: "month",
+    yearlyPrice: "$63",
+    yearlyTotal: "$756",
     description: "Unlimited quotes",
     features: [
       "Everything in Free",
@@ -44,13 +47,16 @@ const plans = [
     ctaVariant: "kofi" as const,
     popular: true,
     icon: Crown,
-    priceId: PRICE_IDS.PROFESSIONAL_MONTHLY
+    priceId: PRICE_IDS.PROFESSIONAL_MONTHLY,
+    yearlyPriceId: PRICE_IDS.PROFESSIONAL_YEARLY
   },
   {
     name: "Business",
     subtitle: "For teams & enterprises",
     price: "$149",
-    period: "month", 
+    period: "month",
+    yearlyPrice: "$119", 
+    yearlyTotal: "$1,428",
     description: "Everything included",
     features: [
       "Everything in Pro",
@@ -63,11 +69,14 @@ const plans = [
     ctaVariant: "outline" as const,
     popular: false,
     icon: Rocket,
-    priceId: PRICE_IDS.BUSINESS_MONTHLY
+    priceId: PRICE_IDS.BUSINESS_MONTHLY,
+    yearlyPriceId: PRICE_IDS.BUSINESS_YEARLY
   }
 ]
 
 export default function PricingPage() {
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly')
+
   return (
     <>
       <Header />
@@ -83,6 +92,33 @@ export default function PricingPage() {
               Choose the plan that fits your business. All plans include our AI-powered quote system 
               that saves you hours and impresses your clients.
             </p>
+            
+            {/* Billing toggle */}
+            <div className="flex items-center justify-center gap-4 mt-8 mb-8">
+              <span className={`font-medium ${billingCycle === 'monthly' ? 'text-primary-600' : 'text-gray-500'}`}>
+                Monthly
+              </span>
+              <button
+                onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  billingCycle === 'yearly' ? 'bg-primary-600' : 'bg-gray-200'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+              <span className={`font-medium ${billingCycle === 'yearly' ? 'text-primary-600' : 'text-gray-500'}`}>
+                Yearly
+              </span>
+              {billingCycle === 'yearly' && (
+                <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full">
+                  Save 20%
+                </span>
+              )}
+            </div>
             
             {/* Trust indicators */}
             <div className="flex items-center justify-center gap-8 mt-8">
@@ -129,8 +165,20 @@ export default function PricingPage() {
                       {plan.subtitle}
                     </CardDescription>
                     <div className="mt-4">
-                      <span className="text-4xl font-bold">{plan.price}</span>
-                      <span className="text-gray-600 ml-2">/{plan.period}</span>
+                      {billingCycle === 'yearly' && plan.yearlyPrice ? (
+                        <>
+                          <span className="text-4xl font-bold">{plan.yearlyPrice}</span>
+                          <span className="text-gray-600 ml-2">/month</span>
+                          <div className="text-sm text-gray-500 mt-1">
+                            Billed annually ({plan.yearlyTotal})
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-4xl font-bold">{plan.price}</span>
+                          <span className="text-gray-600 ml-2">/{plan.period}</span>
+                        </>
+                      )}
                     </div>
                     <CardDescription className="text-base mt-3 font-medium">
                       {plan.description}
@@ -173,7 +221,7 @@ export default function PricingPage() {
                       </Button>
                     ) : (
                       <CheckoutButton
-                        priceId={plan.priceId!}
+                        priceId={billingCycle === 'yearly' && plan.yearlyPriceId ? plan.yearlyPriceId : plan.priceId!}
                         planName={plan.name}
                         variant={plan.ctaVariant}
                         className="w-full h-12 text-lg font-semibold"

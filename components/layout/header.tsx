@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { COMPANY_INFO, SERVICE_AREAS, PAINTING_SERVICES } from '@/lib/constants'
@@ -11,6 +11,23 @@ import { cn } from '@/lib/utils'
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [quotaInfo, setQuotaInfo] = useState<{ used: number; limit: number } | null>(null)
+  
+  useEffect(() => {
+    // Check if user is logged in and get quota info
+    const authData = sessionStorage.getItem('paintQuoteAuth')
+    if (authData) {
+      try {
+        const session = JSON.parse(authData)
+        setQuotaInfo({
+          used: session.quotesUsed || 0,
+          limit: session.quotesLimit || 10
+        })
+      } catch (error) {
+        console.error('Failed to parse auth data:', error)
+      }
+    }
+  }, [])
 
   return (
     <header className="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-gray-100/50 z-50 shadow-sm">
@@ -114,6 +131,17 @@ export function Header() {
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
+            {quotaInfo && (
+              <div className={cn(
+                "text-sm font-medium px-3 py-1 rounded-full",
+                quotaInfo.limit === -1 ? "bg-green-100 text-green-700" :
+                quotaInfo.used >= quotaInfo.limit * 0.8 ? "bg-red-100 text-red-700" :
+                quotaInfo.used >= quotaInfo.limit * 0.5 ? "bg-yellow-100 text-yellow-700" :
+                "bg-gray-100 text-gray-700"
+              )}>
+                {quotaInfo.limit === -1 ? "Unlimited" : `${quotaInfo.used}/${quotaInfo.limit}`} quotes
+              </div>
+            )}
             <Button asChild variant="kofi" size="default">
               <Link href="/get-quote">Get Free Quote</Link>
             </Button>

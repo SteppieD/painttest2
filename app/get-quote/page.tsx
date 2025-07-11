@@ -6,8 +6,11 @@ import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Bot, User, Send, Sparkles, Calculator, Clock } from 'lucide-react'
+import { Bot, User, Send, Sparkles, Calculator, Clock, FileText, Mail, Download } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
+import { IntelligentQuoteParser } from '@/lib/services/intelligent-quote-parser'
+import { QuotePDFGenerator } from '@/lib/services/quote-pdf-generator'
+import { QuoteEmailTemplates } from '@/lib/services/quote-email-templates'
 
 interface Message {
   id: string
@@ -17,11 +20,11 @@ interface Message {
 }
 
 interface QuoteEstimate {
-  rooms: number
-  sqft: number
-  paintCost: number
-  laborCost: number
-  total: number
+  area?: number
+  paintGallons?: number
+  paintCost?: number
+  laborCost?: number
+  total?: number
 }
 
 export default function GetQuotePage() {
@@ -36,6 +39,7 @@ export default function GetQuotePage() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [quoteEstimate, setQuoteEstimate] = useState<QuoteEstimate | null>(null)
+  const [showQuoteActions, setShowQuoteActions] = useState(false)
 
   const sendMessage = async () => {
     if (!input.trim()) return
@@ -51,9 +55,9 @@ export default function GetQuotePage() {
     setInput('')
     setIsLoading(true)
     
-    // Simulate AI processing
+    // Process with intelligent parser
     setTimeout(() => {
-      const aiResponse = generateAIResponse(input)
+      const aiResponse = processWithIntelligentParser(input, messages)
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -65,79 +69,100 @@ export default function GetQuotePage() {
       
       if (aiResponse.quote) {
         setQuoteEstimate(aiResponse.quote)
+        setShowQuoteActions(true)
       }
       
       setIsLoading(false)
     }, 1500)
   }
 
-  const generateAIResponse = (userInput: string): { message: string; quote?: QuoteEstimate } => {
+  const processWithIntelligentParser = (userInput: string, previousMessages: Message[]): { message: string; quote?: QuoteEstimate } => {
+    try {
+      // Parse the input with intelligent parser
+      const parsedData = IntelligentQuoteParser.parse(userInput)
+      
+      // Check if we have enough information to generate a quote
+      const hasWallInfo = parsedData.surfaces.walls?.squareFeet || 
+                         (parsedData.surfaces.walls?.linearFeet && parsedData.surfaces.walls?.height)
+      const hasPaintInfo = parsedData.paint?.pricePerGallon && parsedData.paint?.coveragePerGallon
+      const hasLaborInfo = parsedData.laborRate || parsedData.chargeRates?.walls
+      
+      if (hasWallInfo && (hasPaintInfo || hasLaborInfo)) {
+        // We have enough info to calculate a quote
+        const result = IntelligentQuoteParser.calculateQuote(parsedData)
+        return {
+          message: result.summary,
+          quote: result.breakdown
+        }
+      }
+      
+      // We need more information - ask for what's missing
+      let missingInfo = []
+      
+      if (!hasWallInfo) {
+        if (!parsedData.surfaces.walls?.linearFeet) {
+          missingInfo.push('linear feet of walls')
+        }
+        if (!parsedData.surfaces.walls?.height) {
+          missingInfo.push('ceiling height')
+        }
+      }
+      
+      if (!hasPaintInfo && !hasLaborInfo) {
+        missingInfo.push('paint cost per gallon and coverage rate, or your charge rate per square foot')
+      }
+      
+      if (missingInfo.length > 0) {
+        let response = 'Got it! '
+        if (parsedData.customerName) {
+          response += `I'm preparing a quote for ${parsedData.customerName}. `
+        }
+        response += `I just need: ${missingInfo.join(', ')}.`
+        
+        return { message: response }
+      }
+      
+    } catch (error) {
+      // Fallback to simple responses if parsing fails
+      console.error('Parser error:', error)
+    }
+    
+    // Fallback responses for edge cases
     const input_lower = userInput.toLowerCase()
     
-    // Simple AI simulation based on keywords
     if (input_lower.includes('bedroom') || input_lower.includes('room')) {
       const roomCount = extractNumber(input_lower) || 2
       const sqft = roomCount * 150 // Average room size
       const quote: QuoteEstimate = {
-        rooms: roomCount,
-        sqft,
+        area: sqft,
+        paintGallons: Math.ceil(sqft / 350),
         paintCost: sqft * 0.85,
         laborCost: sqft * 1.50,
         total: sqft * 2.75
       }
       
       return {
-        message: `Great! Based on your description of ${roomCount} bedroom${roomCount > 1 ? 's' : ''}, I've calculated an estimate for approximately ${sqft} square feet.\n\nHere's your instant quote:\n• Paint & Materials: ${formatCurrency(quote.paintCost)}\n• Labor: ${formatCurrency(quote.laborCost)}\n• **Total Estimate: ${formatCurrency(quote.total)}**\n\nWould you like to adjust any details or get a more detailed breakdown?`,
+        message: `Great! Based on your description of ${roomCount} bedroom${roomCount > 1 ? 's' : ''}, I've calculated an estimate for approximately ${sqft} square feet.\n\n**Quote Summary:**\n• Area: ${sqft} sq ft\n• Paint & Materials: ${formatCurrency(quote.paintCost!)}\n• Labor: ${formatCurrency(quote.laborCost!)}\n• **Total Estimate: ${formatCurrency(quote.total!)}**\n\nWould you like to adjust any details or get a more detailed breakdown?`,
         quote
       }
     }
     
-    if (input_lower.includes('kitchen')) {
-      const quote: QuoteEstimate = {
-        rooms: 1,
-        sqft: 200,
-        paintCost: 170,
-        laborCost: 300,
-        total: 550
-      }
-      
-      return {
-        message: `Perfect! For a kitchen painting project (approximately 200 sq ft), here's your estimate:\n\n• Paint & Materials: ${formatCurrency(quote.paintCost)}\n• Labor: ${formatCurrency(quote.laborCost)}\n• **Total Estimate: ${formatCurrency(quote.total)}**\n\nKitchens require special paint that's moisture and grease resistant. Would you like to know more about paint options?`,
-        quote
-      }
-    }
-    
-    if (input_lower.includes('exterior') || input_lower.includes('outside')) {
-      const quote: QuoteEstimate = {
-        rooms: 1,
-        sqft: 1500,
-        paintCost: 600,
-        laborCost: 1200,
-        total: 2100
-      }
-      
-      return {
-        message: `Excellent! For exterior painting (approximately 1,500 sq ft), here's your estimate:\n\n• Paint & Materials: ${formatCurrency(quote.paintCost)}\n• Labor: ${formatCurrency(quote.laborCost)}\n• **Total Estimate: ${formatCurrency(quote.total)}**\n\nThis includes pressure washing, primer, and two coats of premium exterior paint. What type of siding do you have?`,
-        quote
-      }
-    }
-    
-    // Default responses for gathering more info
-    const responses = [
-      "That sounds like a great project! Can you tell me more about the size of the space? For example, how many bedrooms or the square footage?",
-      "Perfect! To give you the most accurate quote, I need a bit more detail. Are we talking about interior walls, ceilings, or exterior surfaces?",
-      "Great! Let me help you get an accurate estimate. What's the approximate size of the area you want painted?",
-      "Wonderful! I can definitely help with that. Could you describe the rooms or areas in more detail?"
-    ]
-    
+    // Default response for gathering more info
     return {
-      message: responses[Math.floor(Math.random() * responses.length)]
+      message: "That sounds like a great project! To give you the most accurate quote, I need a bit more detail. Could you provide:\n• Linear feet of walls or room dimensions\n• Ceiling height\n• Paint preferences and cost per gallon\n• Whether you're including labor or just materials?"
     }
   }
 
   const extractNumber = (text: string): number | null => {
     const match = text.match(/(\d+)/)
     return match ? parseInt(match[1]) : null
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      sendMessage()
+    }
   }
 
   return (
@@ -149,177 +174,231 @@ export default function GetQuotePage() {
           <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="text-center mb-8">
-              <div className="flex items-center justify-center mb-4">
-                <div className="p-3 bg-gradient-to-r from-primary-500 to-accent-500 rounded-2xl text-white">
-                  <Sparkles className="w-8 h-8" />
-                </div>
-              </div>
-              <h1 className="font-display text-4xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent mb-4">
-                AI-Powered Quote Assistant
+              <h1 className="font-display text-4xl lg:text-5xl font-bold bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-600 bg-clip-text text-transparent mb-4">
+                Paint Quote Assistant
               </h1>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Get an instant, accurate painting quote by simply describing your project. 
-                Our AI assistant will ask the right questions and provide a detailed estimate.
+              <p className="text-lg text-gray-600">
+                Powered by AI • Instant Quotes • Professional Accuracy
               </p>
             </div>
 
-            {/* Chat Interface */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Chat Messages */}
-              <div className="lg:col-span-2">
-                <Card className="h-[600px] flex flex-col">
-                  <CardHeader className="border-b bg-gradient-to-r from-primary-500 to-accent-500 text-white rounded-t-lg">
-                    <CardTitle className="flex items-center gap-2">
-                      <Bot className="w-5 h-5" />
-                      Paint Quote Assistant
-                    </CardTitle>
-                    <CardDescription className="text-primary-100">
-                      Powered by AI • Instant Quotes • Professional Accuracy
-                    </CardDescription>
-                  </CardHeader>
-                  
-                  <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {messages.map((message) => (
-                      <div
-                        key={message.id}
-                        className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        {message.role === 'assistant' && (
-                          <div className="p-2 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full text-white">
-                            <Bot className="w-4 h-4" />
-                          </div>
+            {/* Chat Container */}
+            <Card className="shadow-xl">
+              <CardContent className="p-0">
+                {/* Messages */}
+                <div className="h-[500px] overflow-y-auto p-6 space-y-4">
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`flex gap-3 ${
+                        message.role === 'user' ? 'flex-row-reverse' : ''
+                      }`}
+                    >
+                      <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                        message.role === 'user' 
+                          ? 'bg-gradient-to-br from-primary-500 to-accent-500' 
+                          : 'bg-gray-200'
+                      }`}>
+                        {message.role === 'user' ? (
+                          <User className="w-5 h-5 text-white" />
+                        ) : (
+                          <Bot className="w-5 h-5 text-gray-600" />
                         )}
-                        
-                        <div
-                          className={`max-w-[80%] p-4 rounded-2xl ${
-                            message.role === 'user'
-                              ? 'bg-gradient-to-r from-secondary-500 to-purple-500 text-white'
-                              : 'bg-gray-100 text-gray-900'
-                          }`}
-                        >
-                          <p className="whitespace-pre-wrap">{message.content}</p>
-                          <p className="text-xs opacity-70 mt-2">
-                            {message.timestamp.toLocaleTimeString()}
-                          </p>
-                        </div>
-                        
-                        {message.role === 'user' && (
-                          <div className="p-2 bg-gradient-to-r from-secondary-500 to-purple-500 rounded-full text-white">
-                            <User className="w-4 h-4" />
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                    
-                    {isLoading && (
-                      <div className="flex gap-3 justify-start">
-                        <div className="p-2 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full text-white">
-                          <Bot className="w-4 h-4" />
-                        </div>
-                        <div className="bg-gray-100 p-4 rounded-2xl">
-                          <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                  
-                  <div className="p-4 border-t">
-                    <div className="flex gap-2">
-                      <Input
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="Describe your painting project..."
-                        onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                        className="flex-1"
-                      />
-                      <Button onClick={sendMessage} disabled={isLoading}>
-                        <Send className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-
-              {/* Quote Summary & Features */}
-              <div className="space-y-6">
-                {/* Current Quote */}
-                {quoteEstimate && (
-                  <Card className="bg-gradient-to-br from-primary-50 to-accent-50 border-primary-200">
-                    <CardHeader>
-                      <CardTitle className="text-primary-700">Your Quote</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="flex justify-between">
-                          <span>Rooms:</span>
-                          <span className="font-medium">{quoteEstimate.rooms}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Square Feet:</span>
-                          <span className="font-medium">{quoteEstimate.sqft}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Paint & Materials:</span>
-                          <span className="font-medium">{formatCurrency(quoteEstimate.paintCost)}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Labor:</span>
-                          <span className="font-medium">{formatCurrency(quoteEstimate.laborCost)}</span>
-                        </div>
-                        <div className="border-t pt-3">
-                          <div className="flex justify-between text-xl font-bold text-primary-700">
-                            <span>Total:</span>
-                            <span>{formatCurrency(quoteEstimate.total)}</span>
-                          </div>
-                        </div>
                       </div>
                       
-                      <div className="mt-6 space-y-3">
-                        <Button className="w-full" variant="kofi">
-                          Book Consultation
-                        </Button>
-                        <Button className="w-full" variant="outline">
-                          Email Quote
-                        </Button>
+                      <div className={`flex-1 ${
+                        message.role === 'user' ? 'text-right' : ''
+                      }`}>
+                        <div className={`inline-block p-4 rounded-2xl max-w-[80%] ${
+                          message.role === 'user'
+                            ? 'bg-gradient-to-br from-primary-500 to-accent-500 text-white'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          <div 
+                            className="whitespace-pre-wrap"
+                            dangerouslySetInnerHTML={{ 
+                              __html: message.content
+                                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                .replace(/\n/g, '<br />')
+                            }}
+                          />
+                          <div className={`text-xs mt-2 ${
+                            message.role === 'user' ? 'text-white/70' : 'text-gray-500'
+                          }`}>
+                            {message.timestamp.toLocaleTimeString()}
+                          </div>
+                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                )}
+                    </div>
+                  ))}
+                  
+                  {isLoading && (
+                    <div className="flex gap-3">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                        <Bot className="w-5 h-5 text-gray-600" />
+                      </div>
+                      <div className="bg-gray-100 p-4 rounded-2xl">
+                        <div className="flex gap-1">
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
 
-                {/* Features */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Why Choose AI Quotes?</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <Clock className="w-5 h-5 text-primary-500 mt-0.5" />
-                      <div>
-                        <p className="font-medium">Instant Results</p>
-                        <p className="text-sm text-gray-600">Get accurate quotes in seconds, not days</p>
-                      </div>
+                {/* Input Area */}
+                <div className="border-t p-4">
+                  <div className="flex gap-3">
+                    <Input
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Describe your painting project..."
+                      className="flex-1"
+                      disabled={isLoading}
+                    />
+                    <Button 
+                      onClick={sendMessage} 
+                      disabled={isLoading || !input.trim()}
+                      className="bg-gradient-to-r from-primary-500 to-accent-500 text-white"
+                    >
+                      <Send className="w-5 h-5" />
+                    </Button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mt-3 text-sm text-gray-500">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4" />
+                      <span>AI-powered instant estimates</span>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <Calculator className="w-5 h-5 text-primary-500 mt-0.5" />
-                      <div>
-                        <p className="font-medium">Professional Accuracy</p>
-                        <p className="text-sm text-gray-600">Based on real contractor pricing data</p>
-                      </div>
+                    <button
+                      onClick={() => setInput("It's for Sarah at 123 Oak Street. 400 linear feet of interior walls, 10ft ceilings, $65/gal premium paint with 400 sqft coverage. Labor included at $1.75/sqft. No ceilings, doors, or trim.")}
+                      className="text-primary-600 hover:underline text-xs"
+                    >
+                      Try example →
+                    </button>
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      <span>Average response: 2 seconds</span>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <Sparkles className="w-5 h-5 text-primary-500 mt-0.5" />
-                      <div>
-                        <p className="font-medium">Smart Questions</p>
-                        <p className="text-sm text-gray-600">AI asks the right questions for accuracy</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Quote Actions */}
+            {showQuoteActions && quoteEstimate && (
+              <Card className="mt-6 border-green-200 bg-green-50">
+                <CardHeader>
+                  <CardTitle className="text-green-800 flex items-center gap-2">
+                    <FileText className="w-5 h-5" />
+                    Quote Ready!
+                  </CardTitle>
+                  <CardDescription>
+                    Your professional quote has been generated. What would you like to do next?
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <Button 
+                      variant="outline" 
+                      className="flex items-center gap-2"
+                      onClick={() => {
+                        const quoteData = JSON.parse(sessionStorage.getItem('latestQuote') || '{}')
+                        const html = QuotePDFGenerator.generateHTML({
+                          id: `QUOTE-${Date.now()}`,
+                          ...quoteData,
+                          customerEmail: ''
+                        })
+                        const blob = new Blob([html], { type: 'text/html' })
+                        const url = URL.createObjectURL(blob)
+                        window.open(url, '_blank')
+                      }}
+                    >
+                      <Download className="w-4 h-4" />
+                      Download PDF
+                    </Button>
+                    
+                    <Button 
+                      variant="outline" 
+                      className="flex items-center gap-2"
+                      onClick={() => {
+                        const quoteData = JSON.parse(sessionStorage.getItem('latestQuote') || '{}')
+                        const emailData = QuoteEmailTemplates.quoteDelivery({
+                          customerName: quoteData.customerName || 'Customer',
+                          customerEmail: 'customer@example.com',
+                          quoteId: `QUOTE-${Date.now()}`,
+                          total: quoteData.total,
+                          projectType: quoteData.projectType,
+                          area: quoteData.area,
+                          quoteUrl: window.location.origin + '/quote/view'
+                        })
+                        // In a real app, this would send the email
+                        alert('Email template ready! Subject: ' + emailData.subject)
+                      }}
+                    >
+                      <Mail className="w-4 h-4" />
+                      Email Quote
+                    </Button>
+                    
+                    <Button 
+                      variant="kofi" 
+                      className="flex items-center gap-2"
+                      onClick={() => {
+                        setInput("Let's create another quote")
+                        setShowQuoteActions(false)
+                      }}
+                    >
+                      <Calculator className="w-4 h-4" />
+                      New Quote
+                    </Button>
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm text-blue-800">
+                      <strong>Tip:</strong> You can add the customer's email address by saying "Send to john@example.com"
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Quick Tips */}
+            <div className="mt-8 grid md:grid-cols-3 gap-4">
+              <Card className="bg-blue-50 border-blue-200">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-blue-800">Pro Tip</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-blue-700">
+                    Include linear feet, ceiling height, and paint preferences for instant quotes
+                  </p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-green-50 border-green-200">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-green-800">Example</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-green-700">
+                    "500 linear feet of walls, 9ft ceilings, $50/gal paint, labor at $1.50/sqft"
+                  </p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-purple-50 border-purple-200">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-purple-800">Save Time</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-purple-700">
+                    Our AI understands contractor terminology and pricing structures
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
