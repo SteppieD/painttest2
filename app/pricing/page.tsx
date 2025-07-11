@@ -6,6 +6,8 @@ import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Check, Star, Zap, Crown, Rocket } from 'lucide-react'
+import { CheckoutButton } from '@/components/stripe/checkout-button'
+import { PRICE_IDS } from '@/lib/stripe'
 
 const plans = [
   {
@@ -47,7 +49,8 @@ const plans = [
     cta: "Start Professional",
     ctaVariant: "kofi" as const,
     popular: true,
-    icon: Crown
+    icon: Crown,
+    priceId: PRICE_IDS.PROFESSIONAL_MONTHLY
   },
   {
     name: "Business",
@@ -68,7 +71,8 @@ const plans = [
     cta: "Start Business",
     ctaVariant: "outline" as const,
     popular: false,
-    icon: Rocket
+    icon: Rocket,
+    priceId: PRICE_IDS.BUSINESS_MONTHLY
   }
 ]
 
@@ -163,15 +167,24 @@ export default function PricingPage() {
                       )}
                     </div>
                     
-                    <Button 
-                      asChild 
-                      variant={plan.ctaVariant} 
-                      className="w-full h-12 text-lg font-semibold"
-                    >
-                      <Link href={plan.name === "Free Trial" ? "/get-quote" : "/signup"}>
-                        {plan.cta}
-                      </Link>
-                    </Button>
+                    {plan.name === "Free Trial" ? (
+                      <Button 
+                        asChild 
+                        variant={plan.ctaVariant} 
+                        className="w-full h-12 text-lg font-semibold"
+                      >
+                        <Link href="/trial-signup">
+                          {plan.cta}
+                        </Link>
+                      </Button>
+                    ) : (
+                      <CheckoutButton
+                        priceId={plan.priceId!}
+                        planName={plan.name}
+                        variant={plan.ctaVariant}
+                        className="w-full h-12 text-lg font-semibold"
+                      />
+                    )}
                   </CardContent>
                 </Card>
               )
