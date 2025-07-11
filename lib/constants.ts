@@ -1,7 +1,6 @@
 export const COMPANY_INFO = {
   name: 'ProPaint Solutions',
   tagline: 'Transform Your Space with Professional Excellence',
-  phone: '1-800-PROPAINT',
   email: 'hello@propaintsolutions.com',
   address: {
     street: '123 Main Street',

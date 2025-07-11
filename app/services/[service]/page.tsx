@@ -5,7 +5,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { CheckCircle, Clock, Shield, Star, Phone } from 'lucide-react'
+import { CheckCircle, Clock, Shield, Star } from 'lucide-react'
 import { PAINTING_SERVICES, COMPANY_INFO } from '@/lib/constants'
 
 export async function generateStaticParams() {
@@ -139,10 +139,7 @@ export default function ServicePage({ params }: { params: { service: string } })
                   <Link href="/get-quote">Get Free Quote</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="bg-white/10 backdrop-blur-sm text-white border-white hover:bg-white hover:text-secondary-900">
-                  <a href={`tel:${COMPANY_INFO.phone}`}>
-                    <Phone className="w-4 h-4 mr-2" />
-                    Call Now
-                  </a>
+                  <Link href="/contact">Contact Us</Link>
                 </Button>
               </div>
             </div>

@@ -5,7 +5,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { MapPin, Phone, Clock, Shield, Star, Users } from 'lucide-react'
+import { MapPin, Clock, Shield, Star, Users } from 'lucide-react'
 import { SERVICE_AREAS, COMPANY_INFO, PAINTING_SERVICES } from '@/lib/constants'
 
 export async function generateStaticParams() {
@@ -64,7 +64,6 @@ export default function LocationPage({ params }: { params: { city: string, state
       "addressRegion": stateName,
       "addressCountry": "US"
     },
-    "telephone": COMPANY_INFO.phone,
     "url": `https://propaintsolutions.com/locations/${params.city}-${params.state}`,
     "priceRange": "$$",
     "aggregateRating": {
@@ -107,10 +106,7 @@ export default function LocationPage({ params }: { params: { city: string, state
                   <Link href="/get-quote">Get Free Quote</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <a href={`tel:${COMPANY_INFO.phone}`}>
-                    <Phone className="w-4 h-4 mr-2" />
-                    {COMPANY_INFO.phone}
-                  </a>
+                  <Link href="/contact">Contact Us</Link>
                 </Button>
               </div>
               
@@ -275,11 +271,10 @@ export default function LocationPage({ params }: { params: { city: string, state
               Contact us today for a free consultation and quote. 
               We're here to make your painting project a success.
             </p>
-            <div className="flex items-center justify-center space-x-2 text-2xl">
-              <Phone className="w-6 h-6" />
-              <a href={`tel:${COMPANY_INFO.phone}`} className="hover:text-primary-300">
-                {COMPANY_INFO.phone}
-              </a>
+            <div className="flex items-center justify-center">
+              <Button asChild variant="secondary">
+                <Link href="/contact">Contact Us Today</Link>
+              </Button>
             </div>
           </div>
         </section>

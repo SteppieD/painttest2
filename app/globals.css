@@ -11,19 +11,19 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 217 91% 60%;
+    --primary: 173 58% 39%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 217 19% 27%;
+    --secondary: 217 91% 60%;
     --secondary-foreground: 0 0% 100%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 47 92% 50%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 217 91% 60%;
+    --ring: 173 58% 39%;
     --radius: 0.5rem;
   }
 
@@ -34,19 +34,19 @@
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 173 58% 39%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217 33% 17%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 47 92% 50%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 217 33% 17%;
     --input: 217 33% 17%;
-    --ring: 217 91% 60%;
+    --ring: 173 58% 39%;
   }
 
   * {
@@ -64,19 +64,151 @@
 }
 
 @layer components {
+  /* AdCreative.ai inspired modern effects */
+  .adcreative-glow {
+    position: relative;
+  }
+  
+  .adcreative-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, #ef2b70, #9333ea, #1E1541);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+  }
+  
+  .tech-grid {
+    background-image: 
+      linear-gradient(rgba(239, 43, 112, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(239, 43, 112, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
   .text-balance {
     text-wrap: balance;
   }
   
   .gradient-text {
-    @apply bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary-600 via-blue-500 to-purple-600 bg-clip-text text-transparent;
+  }
+  
+  .gradient-text-kofi {
+    @apply bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent;
+  }
+  
+  .gradient-text-adcreative {
+    @apply bg-gradient-to-r from-adcreative-pink via-purple-500 to-adcreative-purple bg-clip-text text-transparent;
+  }
+  
+  .gradient-text-animated {
+    @apply bg-gradient-to-r from-adcreative-pink via-purple-500 to-adcreative-purple bg-clip-text text-transparent;
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease-in-out infinite;
   }
   
   .gradient-bg {
-    @apply bg-gradient-to-br from-blue-50 via-white to-gray-50;
+    @apply bg-gradient-to-br from-blue-50/50 via-white to-purple-50/30;
+  }
+  
+  .gradient-bg-kofi {
+    @apply bg-gradient-to-br from-blue-50 via-purple-50/30 to-pink-50/20;
+  }
+  
+  .gradient-bg-adcreative {
+    @apply bg-gradient-to-br from-pink-50/30 via-purple-50/20 to-blue-50/30;
+  }
+  
+  .gradient-bg-adcreative-dark {
+    @apply bg-gradient-to-br from-adcreative-purple via-purple-900 to-indigo-900;
+  }
+  
+  .gradient-primary {
+    @apply bg-gradient-to-r from-primary-500 to-primary-600;
+  }
+  
+  .gradient-secondary {
+    @apply bg-gradient-to-r from-secondary-500 to-secondary-600;
+  }
+  
+  .gradient-accent {
+    @apply bg-gradient-to-r from-accent-500 to-accent-600;
+  }
+  
+  .gradient-kofi {
+    @apply bg-gradient-to-r from-blue-500 to-purple-600;
+  }
+  
+  .gradient-kofi-soft {
+    @apply bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100;
+  }
+  
+  .gradient-adcreative {
+    @apply bg-gradient-to-r from-adcreative-pink to-adcreative-purple;
+  }
+  
+  .gradient-adcreative-soft {
+    @apply bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100;
   }
   
   .glass-effect {
-    @apply backdrop-blur-md bg-white/80 border border-white/20 shadow-lg;
+    @apply backdrop-blur-md bg-white/90 border border-white/20 shadow-xl shadow-gray-200/20;
+  }
+  
+  .glass-effect-kofi {
+    @apply backdrop-blur-lg bg-white/80 border border-blue-100/50 shadow-2xl shadow-blue-200/20;
+  }
+  
+  .glass-effect-adcreative {
+    @apply backdrop-blur-lg bg-white/90 border border-pink-100/50 shadow-2xl shadow-pink-200/20;
+  }
+  
+  .glass-effect-strong {
+    @apply backdrop-blur-xl bg-white/95 border border-white/30 shadow-2xl shadow-gray-200/30;
+  }
+  
+  .card-hover {
+    @apply hover:shadow-2xl hover:shadow-gray-200/30 hover:-translate-y-2 transition-all duration-300;
+  }
+  
+  .card-hover-adcreative {
+    @apply hover:shadow-card-hover hover:-translate-y-3 hover:scale-[1.02] transition-all duration-300;
+  }
+  
+  .card-glow-hover {
+    @apply hover:shadow-glow-pink hover:-translate-y-2 transition-all duration-300;
+  }
+  
+  .button-kofi {
+    @apply bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-2xl shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:from-blue-600 hover:to-purple-700 transition-all duration-200 active:scale-95;
+  }
+  
+  .button-adcreative {
+    @apply bg-gradient-to-r from-adcreative-pink to-adcreative-purple text-white font-semibold py-3 px-6 rounded-2xl shadow-lg shadow-pink-500/25 hover:shadow-glow-pink hover:from-pink-600 hover:to-purple-700 transition-all duration-200 active:scale-95;
+  }
+  
+  .button-glow {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700;
+  }
+  
+  .floating-element {
+    @apply animate-float;
+  }
+  
+  .modern-shadow {
+    @apply shadow-adcreative;
+  }
+  
+  .interactive-scale {
+    @apply hover:scale-105 active:scale-95 transition-transform duration-200;
+  }
+  
+  .gradient-border {
+    @apply relative before:absolute before:inset-0 before:rounded-xl before:p-[2px] before:bg-gradient-to-r before:from-adcreative-pink before:to-adcreative-purple before:-z-10;
   }
 }

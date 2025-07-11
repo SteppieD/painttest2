@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
-import { Menu, X, Phone, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { COMPANY_INFO, SERVICE_AREAS, PAINTING_SERVICES } from '@/lib/constants'
 import { cn } from '@/lib/utils'
@@ -13,29 +13,31 @@ export function Header() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
 
   return (
-    <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b z-50">
+    <header className="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-gray-100/50 z-50 shadow-sm">
       <div className="container mx-auto px-4">
-        <nav className="flex items-center justify-between h-16">
+        <nav className="flex items-center justify-between h-18 py-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <Image
-              src="/images/paint-logo-transparent.png"
-              alt={COMPANY_INFO.name}
-              width={40}
-              height={40}
-              className="w-10 h-10"
-            />
-            <span className="font-display font-bold text-xl text-primary-700">
+          <Link href="/" className="flex items-center space-x-3 group">
+            <div className="relative p-2 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary-500/20 group-hover:shadow-primary-500/30 transition-all duration-200">
+              <Image
+                src="/images/paint-logo-transparent.png"
+                alt={COMPANY_INFO.name}
+                width={28}
+                height={28}
+                className="w-7 h-7 filter brightness-0 invert"
+              />
+            </div>
+            <span className="font-display font-bold text-xl text-gray-900 group-hover:text-primary-600 transition-colors">
               {COMPANY_INFO.name}
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-10">
             {/* Services Dropdown */}
             <div className="relative">
               <button
-                className="flex items-center space-x-1 text-gray-700 hover:text-primary-600 transition-colors"
+                className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50"
                 onMouseEnter={() => setActiveDropdown('services')}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
@@ -45,7 +47,7 @@ export function Header() {
               
               {activeDropdown === 'services' && (
                 <div 
-                  className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border p-2"
+                  className="absolute top-full left-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border border-gray-100/50 p-3 backdrop-blur-lg"
                   onMouseEnter={() => setActiveDropdown('services')}
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
@@ -53,10 +55,10 @@ export function Header() {
                     <Link
                       key={service.id}
                       href={`/services/${service.id}`}
-                      className="block px-4 py-2 rounded hover:bg-primary-50 hover:text-primary-700 transition-colors"
+                      className="block px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-blue-50 hover:text-primary-700 transition-all duration-200 group"
                     >
-                      <div className="font-medium">{service.name}</div>
-                      <div className="text-sm text-gray-600">{service.description}</div>
+                      <div className="font-semibold text-gray-900 group-hover:text-primary-700">{service.name}</div>
+                      <div className="text-sm text-gray-500 group-hover:text-primary-600 mt-1">{service.description}</div>
                     </Link>
                   ))}
                 </div>
@@ -66,7 +68,7 @@ export function Header() {
             {/* Locations Dropdown */}
             <div className="relative">
               <button
-                className="flex items-center space-x-1 text-gray-700 hover:text-primary-600 transition-colors"
+                className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50"
                 onMouseEnter={() => setActiveDropdown('locations')}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
@@ -76,7 +78,7 @@ export function Header() {
               
               {activeDropdown === 'locations' && (
                 <div 
-                  className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-lg border p-2 max-h-96 overflow-y-auto"
+                  className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100/50 p-3 max-h-96 overflow-y-auto backdrop-blur-lg"
                   onMouseEnter={() => setActiveDropdown('locations')}
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
@@ -84,7 +86,7 @@ export function Header() {
                     <Link
                       key={`${area.city}-${area.state}`}
                       href={`/locations/${area.city.toLowerCase().replace(' ', '-')}-${area.state.toLowerCase()}`}
-                      className="block px-4 py-2 rounded hover:bg-primary-50 hover:text-primary-700 transition-colors"
+                      className="block px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-blue-50 hover:text-primary-700 transition-all duration-200 font-medium text-gray-700"
                     >
                       {area.city}, {area.state}
                     </Link>
@@ -93,30 +95,22 @@ export function Header() {
               )}
             </div>
 
-            <Link href="/calculator" className="text-gray-700 hover:text-primary-600 transition-colors">
+            <Link href="/calculator" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
               Quote Calculator
             </Link>
             
-            <Link href="/about" className="text-gray-700 hover:text-primary-600 transition-colors">
+            <Link href="/about" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
               About
             </Link>
             
-            <Link href="/blog" className="text-gray-700 hover:text-primary-600 transition-colors">
+            <Link href="/blog" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
               Blog
             </Link>
           </div>
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
-            <a
-              href={`tel:${COMPANY_INFO.phone}`}
-              className="flex items-center space-x-2 text-primary-600 hover:text-primary-700"
-            >
-              <Phone className="w-4 h-4" />
-              <span className="font-medium">{COMPANY_INFO.phone}</span>
-            </a>
-            
-            <Button asChild>
+            <Button asChild variant="kofi" size="default">
               <Link href="/get-quote">Get Free Quote</Link>
             </Button>
           </div>
@@ -172,14 +166,6 @@ export function Header() {
             </Link>
             
             <div className="pt-4 border-t space-y-4">
-              <a
-                href={`tel:${COMPANY_INFO.phone}`}
-                className="flex items-center space-x-2 text-primary-600"
-              >
-                <Phone className="w-4 h-4" />
-                <span className="font-medium">{COMPANY_INFO.phone}</span>
-              </a>
-              
               <Button asChild className="w-full">
                 <Link href="/get-quote" onClick={() => setIsMenuOpen(false)}>
                   Get Free Quote

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, Clock } from 'lucide-react'
+import { Facebook, Instagram, Twitter, Youtube, Mail, MapPin, Clock } from 'lucide-react'
 import { COMPANY_INFO, PAINTING_SERVICES, SERVICE_AREAS } from '@/lib/constants'
 
 export function Footer() {
@@ -103,14 +103,6 @@ export function Footer() {
           <div>
             <h3 className="font-display font-semibold text-lg mb-4">Get in Touch</h3>
             <ul className="space-y-3">
-              <li className="flex items-start space-x-3">
-                <Phone className="w-5 h-5 text-primary-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <a href={`tel:${COMPANY_INFO.phone}`} className="hover:text-primary-400 transition-colors">
-                    {COMPANY_INFO.phone}
-                  </a>
-                </div>
-              </li>
               <li className="flex items-start space-x-3">
                 <Mail className="w-5 h-5 text-primary-400 flex-shrink-0 mt-0.5" />
                 <div>

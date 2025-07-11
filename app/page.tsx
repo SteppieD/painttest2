@@ -12,9 +12,9 @@ export default function HomePage() {
     <>
       <Header />
       
-      <main className="pt-16">
+      <main className="pt-18">
         {/* Hero Section */}
-        <section className="relative min-h-[600px] lg:min-h-[700px] flex items-center">
+        <section className="relative min-h-[650px] lg:min-h-[750px] flex items-center overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -24,42 +24,43 @@ export default function HomePage() {
               className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-secondary-900/90 to-secondary-900/70" />
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900/85 via-blue-900/70 to-purple-900/60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           </div>
           
           {/* Content */}
           <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-2xl">
-              <h1 className="font-display text-4xl lg:text-6xl font-bold text-white mb-4">
+            <div className="max-w-3xl">
+              <h1 className="font-display text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
                 {COMPANY_INFO.tagline}
               </h1>
-              <p className="text-xl text-gray-200 mb-8">
+              <p className="text-xl lg:text-2xl text-gray-200 mb-10 leading-relaxed font-medium">
                 Get instant, AI-powered painting quotes for your home or business. 
                 Professional service, transparent pricing, exceptional results.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" asChild className="text-lg">
+              <div className="flex flex-col sm:flex-row gap-6 mb-12">
+                <Button size="lg" asChild className="text-lg font-semibold h-14 px-10" variant="kofi">
                   <Link href="/get-quote">Get Instant Quote</Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild className="text-lg bg-white/10 backdrop-blur-sm text-white border-white hover:bg-white hover:text-secondary-900">
+                <Button size="lg" variant="outline" asChild className="text-lg font-semibold h-14 px-10 bg-white/10 backdrop-blur-sm text-white border-2 border-white/50 hover:bg-white hover:text-gray-900 hover:border-white">
                   <Link href="/calculator">Try Quote Calculator</Link>
                 </Button>
               </div>
               
               {/* Trust Indicators */}
-              <div className="flex flex-wrap gap-6 mt-8">
-                <div className="flex items-center space-x-2 text-white">
-                  <Shield className="w-5 h-5" />
-                  <span>{COMPANY_INFO.licenses.join(' • ')}</span>
+              <div className="flex flex-wrap gap-8">
+                <div className="flex items-center space-x-3 text-white/90 bg-white/10 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/20">
+                  <Shield className="w-6 h-6 text-blue-300" />
+                  <span className="font-medium">{COMPANY_INFO.licenses.join(' • ')}</span>
                 </div>
-                <div className="flex items-center space-x-2 text-white">
-                  <Star className="w-5 h-5 fill-current" />
-                  <span>4.9/5 Rating • 500+ Reviews</span>
+                <div className="flex items-center space-x-3 text-white/90 bg-white/10 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/20">
+                  <Star className="w-6 h-6 fill-current text-yellow-300" />
+                  <span className="font-medium">4.9/5 Rating • 500+ Reviews</span>
                 </div>
-                <div className="flex items-center space-x-2 text-white">
-                  <Clock className="w-5 h-5" />
-                  <span>Est. {COMPANY_INFO.established}</span>
+                <div className="flex items-center space-x-3 text-white/90 bg-white/10 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/20">
+                  <Clock className="w-6 h-6 text-purple-300" />
+                  <span className="font-medium">Est. {COMPANY_INFO.established}</span>
                 </div>
               </div>
             </div>
@@ -67,19 +68,19 @@ export default function HomePage() {
         </section>
 
         {/* Services Section */}
-        <section className="py-16 lg:py-24 bg-gray-50">
+        <section className="py-20 lg:py-32 gradient-bg-kofi">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="font-display text-3xl lg:text-4xl font-bold text-secondary-900 mb-4">
+            <div className="text-center mb-16">
+              <h2 className="font-display text-4xl lg:text-5xl font-bold text-gray-900 mb-6 gradient-text-kofi">
                 Professional Painting Services
               </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed font-medium">
                 From single rooms to entire buildings, we deliver exceptional results 
                 with premium materials and expert craftsmanship.
               </p>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {PAINTING_SERVICES.map((service) => {
                 const icons = {
                   home: Home,
@@ -90,13 +91,13 @@ export default function HomePage() {
                 const Icon = icons[service.icon as keyof typeof icons] || Home
                 
                 return (
-                  <Card key={service.id} className="hover:shadow-lg transition-shadow">
+                  <Card key={service.id} className="group card-hover bg-gradient-to-br from-white to-blue-50/30 border-blue-100/50">
                     <CardHeader>
-                      <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-                        <Icon className="w-6 h-6 text-primary-600" />
+                      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all duration-300">
+                        <Icon className="w-8 h-8 text-white" />
                       </div>
-                      <CardTitle className="text-xl">{service.name}</CardTitle>
-                      <CardDescription>{service.description}</CardDescription>
+                      <CardTitle className="text-xl group-hover:text-blue-700 transition-colors">{service.name}</CardTitle>
+                      <CardDescription className="text-gray-600">{service.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2 mb-4">
@@ -107,10 +108,10 @@ export default function HomePage() {
                           </li>
                         ))}
                       </ul>
-                      <p className="text-sm font-medium text-primary-600 mb-4">
+                      <p className="text-base font-semibold text-blue-600 mb-6">
                         {service.priceRange}
                       </p>
-                      <Button asChild variant="outline" className="w-full">
+                      <Button asChild variant="outline" className="w-full group-hover:border-blue-300 group-hover:text-blue-700 group-hover:bg-blue-50">
                         <Link href={`/services/${service.id}`}>Learn More</Link>
                       </Button>
                     </CardContent>
@@ -122,48 +123,48 @@ export default function HomePage() {
         </section>
 
         {/* Why Choose Us Section */}
-        <section className="py-16 lg:py-24">
+        <section className="py-20 lg:py-32 bg-white">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <h2 className="font-display text-3xl lg:text-4xl font-bold text-secondary-900 mb-6">
+                <h2 className="font-display text-4xl lg:text-5xl font-bold text-gray-900 mb-8 gradient-text">
                   Why Choose {COMPANY_INFO.name}?
                 </h2>
                 
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Calculator className="w-6 h-6 text-primary-600" />
+                <div className="space-y-8">
+                  <div className="flex items-start space-x-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/20">
+                      <Calculator className="w-8 h-8 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg mb-2">Instant AI-Powered Quotes</h3>
-                      <p className="text-gray-600">
+                      <h3 className="font-bold text-xl mb-3 text-gray-900">Instant AI-Powered Quotes</h3>
+                      <p className="text-gray-700 text-lg leading-relaxed">
                         Get accurate quotes in minutes, not days. Our advanced AI system 
                         analyzes your project details to provide transparent, competitive pricing.
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Star className="w-6 h-6 text-primary-600" />
+                  <div className="flex items-start space-x-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/20">
+                      <Star className="w-8 h-8 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg mb-2">Premium Quality Guaranteed</h3>
-                      <p className="text-gray-600">
+                      <h3 className="font-bold text-xl mb-3 text-gray-900">Premium Quality Guaranteed</h3>
+                      <p className="text-gray-700 text-lg leading-relaxed">
                         We use only top-tier paints from trusted brands and employ skilled 
                         professionals who take pride in delivering flawless results.
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Shield className="w-6 h-6 text-primary-600" />
+                  <div className="flex items-start space-x-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-500/20">
+                      <Shield className="w-8 h-8 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg mb-2">Fully Licensed & Insured</h3>
-                      <p className="text-gray-600">
+                      <h3 className="font-bold text-xl mb-3 text-gray-900">Fully Licensed & Insured</h3>
+                      <p className="text-gray-700 text-lg leading-relaxed">
                         Rest easy knowing we're fully licensed, bonded, and insured. 
                         Your property and project are protected throughout the entire process.
                       </p>
@@ -171,8 +172,8 @@ export default function HomePage() {
                   </div>
                 </div>
                 
-                <div className="mt-8">
-                  <Button size="lg" asChild>
+                <div className="mt-10">
+                  <Button size="lg" asChild variant="kofi">
                     <Link href="/about">Learn More About Us</Link>
                   </Button>
                 </div>
@@ -184,11 +185,11 @@ export default function HomePage() {
                   alt="Happy contractor reviewing project"
                   width={600}
                   height={400}
-                  className="rounded-lg shadow-xl"
+                  className="rounded-3xl shadow-2xl shadow-gray-300/30"
                 />
-                <div className="absolute -bottom-6 -left-6 bg-primary-600 text-white p-6 rounded-lg shadow-lg">
-                  <div className="text-3xl font-bold">{COMPANY_INFO.projectsCompleted.toLocaleString()}+</div>
-                  <div className="text-sm">Projects Completed</div>
+                <div className="absolute -bottom-8 -left-8 bg-gradient-to-br from-blue-600 to-purple-700 text-white p-8 rounded-3xl shadow-2xl shadow-blue-500/30 border border-white/20">
+                  <div className="text-4xl font-bold">{COMPANY_INFO.projectsCompleted.toLocaleString()}+</div>
+                  <div className="text-base font-medium opacity-90">Projects Completed</div>
                 </div>
               </div>
             </div>
@@ -196,20 +197,24 @@ export default function HomePage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 lg:py-24 bg-primary-600">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="font-display text-3xl lg:text-4xl font-bold text-white mb-4">
+        <section className="py-20 lg:py-32 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
+          {/* Background decoration */}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90" />
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent)] opacity-50" />
+          
+          <div className="container mx-auto px-4 text-center relative z-10">
+            <h2 className="font-display text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Ready to Transform Your Space?
             </h2>
-            <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl lg:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
               Get your free, no-obligation quote in minutes. Our AI-powered system 
               ensures accurate pricing and our team delivers exceptional results.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" asChild className="text-lg">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Button size="lg" variant="secondary" asChild className="text-lg font-semibold h-14 px-10 bg-white text-gray-900 hover:bg-gray-100">
                 <Link href="/get-quote">Get Your Free Quote</Link>
               </Button>
-              <Button size="lg" variant="outline" asChild className="text-lg bg-transparent text-white border-white hover:bg-white hover:text-primary-600">
+              <Button size="lg" variant="outline" asChild className="text-lg font-semibold h-14 px-10 bg-transparent text-white border-2 border-white/50 hover:bg-white hover:text-gray-900 hover:border-white">
                 <Link href="/contact">Schedule Consultation</Link>
               </Button>
             </div>
