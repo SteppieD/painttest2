@@ -3,18 +3,59 @@
 ## 🏷️ Current Stable Versions
 
 ### Latest Stable Release
+- **Version**: `v1.1-critical-ux-fixes-2025-01-11`
+- **Date**: January 11, 2025
+- **Branch**: `stable/critical-ux-fixes-2025-01-11`
+- **Commit**: `779db7b`
+- **Description**: Critical UX improvements - auto-save, quota visibility, help tooltips
+
+### Previous Stable Releases
+
+#### v1.1-navigation-improvements-2025-01-09
 - **Version**: `v1.1-navigation-improvements-2025-01-09`
 - **Date**: January 9, 2025
 - **Branch**: `stable/navigation-improvements-2025-01-09`
 - **Commit**: `9723ad5`
 - **Description**: Navigation and UX improvements with contrast fixes
 
-### Previous Stable Release
+#### v1.0-seo-complete-2025-01-08
 - **Version**: `v1.0-seo-complete-2025-01-08`
 - **Date**: January 8, 2025
 - **Branch**: `stable/seo-complete-2025-01-08`
 - **Commit**: `945a22a`
 - **Description**: Complete SEO implementation with all features working
+
+## 📝 What's Included in v1.1-critical-ux-fixes-2025-01-11
+
+### Critical UX Improvements
+- ✅ **Quote Auto-Save**: Drafts save every 30 seconds to prevent data loss
+- ✅ **Quota Visibility**: Shows "7/10 quotes used" in header for logged-in users
+- ✅ **Title Consistency**: Fixed "Paint Quote Pro" vs "ProPaint Quote" inconsistency
+- ✅ **Help Tooltips**: Contextual help on hover + first-time user tutorial
+
+### Key Features
+1. **Auto-Save Functionality**
+   - Saves draft every 30 seconds when data exists
+   - Restores draft on page reload (within 24 hours)
+   - Shows "Draft saved at HH:MM" indicator
+   - Stores in localStorage with company scope
+
+2. **Quota Management**
+   - QuotaCounter component in header
+   - Shows current usage (e.g., "7/10 quotes used")
+   - Upgrade button when limit reached
+   - Color-coded warnings at 80% usage
+
+3. **Enhanced Help System**
+   - Help button with comprehensive guide
+   - Contextual tooltips on input field
+   - Stage-specific tips (customer info, dimensions, etc.)
+   - First-time user tutorial (shows once)
+
+4. **Brand Consistency**
+   - All instances now show "ProPaint Quote"
+   - Updated in headers, footers, and metadata
+   - Consistent across 50+ pages
 
 ## 📝 What's Included in v1.1-navigation-improvements-2025-01-09
 
