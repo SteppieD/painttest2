@@ -197,46 +197,46 @@ export default function FAQPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
       <KofiHeader />
 
       {/* Hero Section */}
-      <section className="py-16 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-4xl text-center">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <HelpCircle className="w-4 h-4" />
+      <section>
+        <div>
+          <div>
+            <HelpCircle />
             <span>Frequently Asked Questions</span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Get Answers to Your <span className="text-blue-600">Questions</span>
+          <h1>
+            Get Answers to Your <span>Questions</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p>
             Everything you need to know about ProPaint Quote painting contractor software. 
             Can't find what you're looking for? Contact our support team.
           </p>
           
           {/* Search Bar */}
-          <div className="relative max-w-xl mx-auto mb-8">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-gray-400" />
+          <div>
+            <div>
+              <Search />
             </div>
             <input
               type="text"
               placeholder="Search questions..."
-              className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+             
             />
           </div>
           
           {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div>
             {quickStats.map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <div key={index} className="text-center">
-                  <Icon className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-gray-900">{stat.number}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
+                <div key={index}>
+                  <Icon />
+                  <div>{stat.number}</div>
+                  <div>{stat.label}</div>
                 </div>
               );
             })}
@@ -245,42 +245,42 @@ export default function FAQPage() {
       </section>
 
       {/* FAQ Categories */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Common Questions by Category
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p>
               Find answers organized by topic to help you get the most out of ProPaint Quote
             </p>
           </div>
           
-          <div className="space-y-12">
+          <div>
             {faqCategories.map((category, categoryIndex) => {
               const CategoryIcon = category.icon;
               return (
-                <div key={categoryIndex} className="space-y-6">
+                <div key={categoryIndex}>
                   {/* Category Header */}
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className={`p-3 ${category.bgColor} rounded-lg`}>
-                      <CategoryIcon className={`w-6 h-6 ${category.color}`} />
+                  <div>
+                    <div rounded-lg`}>
+                      <CategoryIcon`} />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900">{category.title}</h3>
+                    <h3>{category.title}</h3>
                   </div>
                   
                   {/* Questions Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
                     {category.questions.map((faq, index) => (
-                      <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow">
+                      <Card key={index}>
                         <CardHeader>
-                          <CardTitle className="text-lg text-gray-900 flex items-start gap-3">
-                            <ChevronRight className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                          <CardTitle>
+                            <ChevronRight />
                             {faq.q}
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <p className="text-gray-600 leading-relaxed pl-8">{faq.a}</p>
+                          <p>{faq.a}</p>
                         </CardContent>
                       </Card>
                     ))}
@@ -293,18 +293,18 @@ export default function FAQPage() {
       </section>
 
       {/* Popular Questions */}
-      <section className="py-16 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Most Popular Questions
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               These are the questions we hear most from new contractors
             </p>
           </div>
           
-          <div className="space-y-4">
+          <div>
             {[
               {
                 q: "How long does it take to create a professional quote?",
@@ -323,13 +323,13 @@ export default function FAQPage() {
                 a: "No problem! We designed ProPaint Quote to be simple enough for anyone to use. We also provide free setup assistance and one-on-one training to get you started."
               }
             ].map((faq, index) => (
-              <details key={index} className="bg-white rounded-lg shadow-sm">
-                <summary className="p-6 cursor-pointer flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-gray-900">{faq.q}</h3>
-                  <ChevronDown className="w-5 h-5 text-gray-400" />
+              <details key={index}>
+                <summary>
+                  <h3>{faq.q}</h3>
+                  <ChevronDown />
                 </summary>
-                <div className="px-6 pb-6">
-                  <p className="text-gray-600 leading-relaxed">{faq.a}</p>
+                <div>
+                  <p>{faq.a}</p>
                 </div>
               </details>
             ))}
@@ -338,41 +338,41 @@ export default function FAQPage() {
       </section>
 
       {/* Still Have Questions CTA */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      <section>
+        <div>
+          <h2>
             Still Have Questions?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p>
             Our support team is here to help you succeed with ProPaint Quote
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white/10 rounded-lg p-6 text-center">
-              <MessageCircle className="w-12 h-12 text-white mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2">Live Chat</h3>
-              <p className="text-blue-100 mb-4">Get instant answers during business hours</p>
-              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
+          <div>
+            <div>
+              <MessageCircle />
+              <h3>Live Chat</h3>
+              <p>Get instant answers during business hours</p>
+              <Button variant="outline">
                 Start Chat
               </Button>
             </div>
             
-            <div className="bg-white/10 rounded-lg p-6 text-center">
-              <Clock className="w-12 h-12 text-white mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2">Schedule Call</h3>
-              <p className="text-blue-100 mb-4">Get personalized help with setup</p>
-              <Button variant="outline" asChild className="border-white text-white hover:bg-white hover:text-blue-600">
+            <div>
+              <Clock />
+              <h3>Schedule Call</h3>
+              <p>Get personalized help with setup</p>
+              <Button variant="outline" asChild>
                 <Link href="/contact">
                   Schedule Call
                 </Link>
               </Button>
             </div>
             
-            <div className="bg-white/10 rounded-lg p-6 text-center">
-              <HelpCircle className="w-12 h-12 text-white mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2">Help Center</h3>
-              <p className="text-blue-100 mb-4">Browse tutorials and guides</p>
-              <Button variant="outline" asChild className="border-white text-white hover:bg-white hover:text-blue-600">
+            <div>
+              <HelpCircle />
+              <h3>Help Center</h3>
+              <p>Browse tutorials and guides</p>
+              <Button variant="outline" asChild>
                 <Link href="/help">
                   Visit Help Center
                 </Link>
@@ -380,14 +380,14 @@ export default function FAQPage() {
             </div>
           </div>
           
-          <div className="text-center">
-            <Button size="lg" asChild className="bg-white text-blue-600 hover:bg-gray-100">
+          <div>
+            <Button size="lg" asChild>
               <Link href="/trial-signup">
                 Try ProPaint Quote Free
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight />
               </Link>
             </Button>
-            <p className="text-sm text-blue-200 mt-4">
+            <p>
               Start with 1 free quote • No credit card required
             </p>
           </div>

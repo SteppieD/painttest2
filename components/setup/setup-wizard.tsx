@@ -59,21 +59,21 @@ const SETUP_SECTIONS = [
     id: 'labor_rates',
     title: 'Labor Rates',
     description: 'Set your pricing for different types of work',
-    icon: <DollarSign className="w-5 h-5" />,
+    icon: <DollarSign />,
     fields: ['interior_wall_rate', 'ceiling_rate', 'trim_rate', 'door_rate']
   },
   {
     id: 'paint_preferences', 
     title: 'Paint Preferences',
     description: 'Your go-to paints and their costs',
-    icon: <Palette className="w-5 h-5" />,
+    icon: <Palette />,
     fields: ['preferred_wall_paint', 'wall_paint_cost', 'preferred_primer', 'primer_cost']
   },
   {
     id: 'business_settings',
     title: 'Business Settings', 
     description: 'How you structure your pricing',
-    icon: <Settings className="w-5 h-5" />,
+    icon: <Settings />,
     fields: ['labor_included_in_paint', 'material_markup_percent']
   }
 ]
@@ -168,32 +168,32 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
     const value = setupData[field as keyof SetupData] as number || range.avg
     
     return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
+      <div>
+        <div>
           <Label htmlFor={field}>{label}</Label>
-          <div className="flex items-center gap-2">
+          <div>
             <Input
               id={field}
               type="number"
               step="0.25"
               value={value}
               onChange={(e) => updateField(field, parseFloat(e.target.value) || 0)}
-              className="w-24 text-right"
+             
             />
-            <span className="text-sm text-gray-500">{unit}</span>
+            <span>{unit}</span>
           </div>
         </div>
         
-        <div className="space-y-2">
+        <div>
           <Slider
             value={[value]}
             onValueChange={(values) => updateField(field, values[0])}
             min={range.low}
             max={range.high}
             step={0.25}
-            className="w-full"
+           
           />
-          <div className="flex justify-between text-xs text-gray-500">
+          <div>
             <span>Low: {prefix}{range.low}{unit}</span>
             <span>Avg: {prefix}{range.avg}{unit}</span>
             <span>High: {prefix}{range.high}{unit}</span>
@@ -209,7 +209,7 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
     switch (section.id) {
       case 'labor_rates':
         return (
-          <div className="space-y-6">
+          <div>
             <RateSliderField
               field="interior_wall_rate"
               label="Interior wall painting"
@@ -236,8 +236,8 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
         
       case 'paint_preferences':
         return (
-          <div className="space-y-6">
-            <div className="space-y-2">
+          <div>
+            <div>
               <Label htmlFor="preferred_wall_paint">Preferred wall paint</Label>
               <Input
                 id="preferred_wall_paint"
@@ -247,8 +247,8 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
               />
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
+            <div>
+              <div>
                 <Label htmlFor="wall_paint_cost">Cost per gallon</Label>
                 <Input
                   id="wall_paint_cost"
@@ -258,7 +258,7 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
                   onChange={(e) => updateField('wall_paint_cost', parseFloat(e.target.value))}
                 />
               </div>
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="wall_paint_coverage">Coverage (sq ft)</Label>
                 <Input
                   id="wall_paint_coverage"
@@ -270,7 +270,7 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
               </div>
             </div>
             
-            <div className="space-y-2">
+            <div>
               <Label htmlFor="preferred_primer">Preferred primer</Label>
               <Input
                 id="preferred_primer"
@@ -280,7 +280,7 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
               />
             </div>
             
-            <div className="space-y-2">
+            <div>
               <Label htmlFor="primer_cost">Primer cost per gallon</Label>
               <Input
                 id="primer_cost"
@@ -295,11 +295,11 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
         
       case 'business_settings':
         return (
-          <div className="space-y-6">
-            <div className="space-y-4">
+          <div>
+            <div>
               <Label>How do you structure your pricing?</Label>
-              <div className="space-y-2">
-                <label className="flex items-center space-x-2 cursor-pointer">
+              <div>
+                <label>
                   <input
                     type="radio"
                     name="pricing_structure"
@@ -308,7 +308,7 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
                   />
                   <span>Labor included in paint pricing</span>
                 </label>
-                <label className="flex items-center space-x-2 cursor-pointer">
+                <label>
                   <input
                     type="radio"
                     name="pricing_structure"
@@ -320,18 +320,18 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
               </div>
             </div>
             
-            <div className="space-y-2">
+            <div>
               <Label htmlFor="material_markup_percent">Material markup percentage</Label>
-              <div className="flex items-center gap-2">
+              <div>
                 <Input
                   id="material_markup_percent"
                   type="number"
                   placeholder="15"
                   value={setupData.material_markup_percent || ''}
                   onChange={(e) => updateField('material_markup_percent', parseFloat(e.target.value))}
-                  className="w-20"
+                 
                 />
-                <span className="text-sm text-gray-500">%</span>
+                <span>%</span>
               </div>
             </div>
           </div>
@@ -346,52 +346,52 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
   const progress = calculateProgress()
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div>
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+          <div>
+            <div>
               {SETUP_SECTIONS[currentStep].icon}
               <div>
                 <CardTitle>{SETUP_SECTIONS[currentStep].title}</CardTitle>
-                <p className="text-sm text-gray-600">{SETUP_SECTIONS[currentStep].description}</p>
+                <p>{SETUP_SECTIONS[currentStep].description}</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div>
               <Badge variant="outline">{progress}% complete</Badge>
               {progress === 100 && (
-                <Badge className="bg-green-500">
-                  <Gift className="w-3 h-3 mr-1" />
+                <Badge>
+                  <Gift />
                   Bonus eligible!
                 </Badge>
               )}
             </div>
           </div>
           
-          <Progress value={progress} className="w-full" />
+          <Progress value={progress} />
         </CardHeader>
         
         <CardContent>
-          <div className="space-y-6">
+          <div>
             {renderCurrentSection()}
             
-            <div className="flex items-center justify-between pt-6 border-t">
-              <div className="flex gap-2">
+            <div>
+              <div>
                 {currentStep > 0 && (
                   <Button variant="outline" onClick={() => setCurrentStep(currentStep - 1)}>
-                    <ChevronLeft className="w-4 h-4 mr-2" />
+                    <ChevronLeft />
                     Back
                   </Button>
                 )}
                 
                 <Button variant="ghost" onClick={onSkip}>
-                  <ArrowRight className="w-4 h-4 mr-2" />
+                  <ArrowRight />
                   Skip Setup
                 </Button>
               </div>
               
-              <div className="flex gap-2">
+              <div>
                 <Button 
                   variant="outline" 
                   onClick={saveProgress}
@@ -404,18 +404,18 @@ export function SetupWizard({ companyId, onComplete, onSkip, existingData = {} }
                   <Button 
                     onClick={completeSetup}
                     disabled={isLoading}
-                    className="bg-green-600 hover:bg-green-700"
+                   
                   >
-                    <Check className="w-4 h-4 mr-2" />
+                    <Check />
                     Complete Setup
                     {progress === 100 && (
-                      <Gift className="w-4 h-4 ml-2" />
+                      <Gift />
                     )}
                   </Button>
                 ) : (
                   <Button onClick={() => setCurrentStep(currentStep + 1)}>
                     Continue
-                    <ChevronRight className="w-4 h-4 ml-2" />
+                    <ChevronRight />
                   </Button>
                 )}
               </div>

@@ -37,37 +37,37 @@ export const metadata: Metadata = {
 export default function PaintingEstimateSoftwarePage() {
   const softwareFeatures = [
     {
-      icon: <Calculator className="w-8 h-8 text-blue-600" />,
+      icon: <Calculator />,
       title: "Smart Quote Calculator",
       description: "Industry-standard formulas automatically calculate materials, labor, and markup. Never underestimate a job again.",
       benefit: "Protect profit margins with accurate pricing"
     },
     {
-      icon: <Smartphone className="w-8 h-8 text-green-600" />,
+      icon: <Smartphone />,
       title: "Mobile-First Design", 
       description: "Create estimates on your phone or tablet while at the customer's location. Perfect for walk-through quotes.",
       benefit: "Close deals while excitement is high"
     },
     {
-      icon: <Clock className="w-8 h-8 text-purple-600" />,
+      icon: <Clock />,
       title: "6-Minute Quote Generation",
       description: "Generate detailed, professional estimates in minutes instead of hours. Respond faster than competitors.",
       benefit: "Win more jobs with speed advantage"
     },
     {
-      icon: <Shield className="w-8 h-8 text-indigo-600" />,
+      icon: <Shield />,
       title: "Professional Branding",
       description: "Every estimate includes your logo, colors, and professional formatting that builds customer confidence.",
       benefit: "Stand out from handwritten estimates"
     },
     {
-      icon: <Target className="w-8 h-8 text-orange-600" />,
+      icon: <Target />,
       title: "Win Rate Analytics",
       description: "Track conversion rates, average job size, and identify your most profitable project types.",
       benefit: "Make data-driven pricing decisions"
     },
     {
-      icon: <DollarSign className="w-8 h-8 text-emerald-600" />,
+      icon: <DollarSign />,
       title: "Profit Optimization",
       description: "Built-in markup calculations ensure you maintain healthy profit margins on every project.",
       benefit: "Maximize revenue per job"
@@ -102,44 +102,44 @@ export default function PaintingEstimateSoftwarePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto text-center max-w-5xl">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            The #1 <span className="text-blue-600">Painting Estimate Software</span> for Contractors
+      <section>
+        <div>
+          <h1>
+            The #1 <span>Painting Estimate Software</span> for Contractors
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p>
             Stop losing jobs to slow estimates. Create professional painting quotes in <strong>6 minutes</strong> instead of 6 hours. 
             Trusted by <strong>5,000+ contractors</strong> with <strong>40-60% higher win rates</strong>.
           </p>
           
-          <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-12">
-            <Button size="lg" asChild className="text-lg px-12 py-6 bg-blue-600 hover:bg-blue-700">
+          <div>
+            <Button size="lg" asChild>
               <Link href="/trial-signup">
                 Try Free - 10 Estimates Included
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6">
+            <Button size="lg" variant="outline" asChild>
               <Link href="/demo">
                 See Live Demo
               </Link>
             </Button>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 text-sm text-gray-600">
-            <div className="flex items-center justify-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-500" />
+          <div>
+            <div>
+              <CheckCircle />
               <span>No credit card required</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <Clock className="w-5 h-5 text-green-500" />
+            <div>
+              <Clock />
               <span>Works on all devices</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <TrendingUp className="w-5 h-5 text-green-500" />
+            <div>
+              <TrendingUp />
               <span>Instant setup</span>
             </div>
           </div>
@@ -147,36 +147,36 @@ export default function PaintingEstimateSoftwarePage() {
       </section>
 
       {/* Traditional vs Software Comparison */}
-      <section className="py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Traditional Estimating vs. Modern Software
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p>
               See why smart contractors are switching from manual estimating to professional software
             </p>
           </div>
 
-          <div className="grid gap-8">
+          <div>
             {comparisonPoints.map((point, index) => (
-              <Card key={index} className="border-2 border-gray-100">
-                <CardContent className="p-6">
-                  <div className="grid md:grid-cols-4 gap-6 items-center">
+              <Card key={index}>
+                <CardContent>
+                  <div>
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900">{point.category}</h3>
+                      <h3>{point.category}</h3>
                     </div>
-                    <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
-                      <p className="text-sm text-red-700 font-medium">Traditional Method</p>
-                      <p className="text-red-800">{point.traditional}</p>
+                    <div>
+                      <p>Traditional Method</p>
+                      <p>{point.traditional}</p>
                     </div>
-                    <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
-                      <p className="text-sm text-green-700 font-medium">With Software</p>
-                      <p className="text-green-800">{point.software}</p>
+                    <div>
+                      <p>With Software</p>
+                      <p>{point.software}</p>
                     </div>
-                    <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-center">
-                      <p className="text-sm text-blue-700 font-medium">Improvement</p>
-                      <p className="text-blue-800 font-bold">{point.improvement}</p>
+                    <div>
+                      <p>Improvement</p>
+                      <p>{point.improvement}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -187,28 +187,28 @@ export default function PaintingEstimateSoftwarePage() {
       </section>
 
       {/* Software Features */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Everything You Need in Painting Estimate Software
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p>
               Professional features designed specifically for painting contractors
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div>
             {softwareFeatures.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+              <Card key={index}>
                 <CardHeader>
-                  <div className="mb-4">{feature.icon}</div>
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  <div>{feature.icon}</div>
+                  <CardTitle>{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">{feature.description}</p>
-                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                    <p className="text-sm font-semibold text-blue-800">
+                  <p>{feature.description}</p>
+                  <div>
+                    <p>
                       ✓ {feature.benefit}
                     </p>
                   </div>
@@ -220,100 +220,100 @@ export default function PaintingEstimateSoftwarePage() {
       </section>
 
       {/* Speed Comparison */}
-      <SpeedComparison className="bg-white" />
+      <SpeedComparison />
 
       {/* ROI Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Calculate Your Software ROI
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p>
               See exactly how much time and money you'll save with professional estimate software
             </p>
           </div>
           
-          <ROICalculator className="mb-8" />
+          <ROICalculator />
         </div>
       </section>
 
       {/* Software Selection Guide */}
-      <section className="py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               How to Choose Painting Estimate Software
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Key features to look for when selecting estimate software for your painting business
             </p>
           </div>
 
-          <div className="space-y-8">
-            <Card className="border-2 border-blue-100">
+          <div>
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <span className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">1</span>
+                <CardTitle>
+                  <span>1</span>
                   Mobile Compatibility
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-3">
+                <p>
                   Your software must work perfectly on phones and tablets. Most estimates happen on-site during customer consultations.
                 </p>
-                <p className="text-sm text-blue-700 font-medium">
+                <p>
                   ✓ ProPaint Quote is mobile-first designed for on-site estimating
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-green-100">
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <span className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold">2</span>
+                <CardTitle>
+                  <span>2</span>
                   Industry-Specific Calculations
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-3">
+                <p>
                   Generic estimate software doesn't understand painting. You need software with paint-specific formulas and material databases.
                 </p>
-                <p className="text-sm text-green-700 font-medium">
+                <p>
                   ✓ Built specifically for painting contractors with industry-standard formulas
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-purple-100">
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <span className="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">3</span>
+                <CardTitle>
+                  <span>3</span>
                   Professional Presentation
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-3">
+                <p>
                   Your estimates are often the first impression customers have of your business. They must look professional and branded.
                 </p>
-                <p className="text-sm text-purple-700 font-medium">
+                <p>
                   ✓ Every estimate includes your branding and professional formatting
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-orange-100">
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <span className="w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center font-bold">4</span>
+                <CardTitle>
+                  <span>4</span>
                   Speed & Efficiency
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-3">
+                <p>
                   If your software takes longer than manual methods, it's not worth using. Look for solutions that dramatically reduce estimate time.
                 </p>
-                <p className="text-sm text-orange-700 font-medium">
+                <p>
                   ✓ Create estimates in 6 minutes vs. 6 hours with manual methods
                 </p>
               </CardContent>
@@ -323,30 +323,30 @@ export default function PaintingEstimateSoftwarePage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-4 bg-blue-600">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+      <section>
+        <div>
+          <h2>
             Ready to Transform Your Estimating Process?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p>
             Join 5,000+ contractors who've switched to professional estimate software and increased their win rates by 40-60%
           </p>
           
-          <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-8">
-            <Button size="lg" variant="outline_white" asChild className="text-lg px-12 py-6">
+          <div>
+            <Button size="lg" variant="outline_white" asChild>
               <Link href="/trial-signup">
                 Start Free Trial - No Credit Card
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight />
               </Link>
             </Button>
-            <Button size="lg" variant="outline_white" asChild className="text-lg px-8 py-6">
+            <Button size="lg" variant="outline_white" asChild>
               <Link href="/pricing">
                 View Pricing Plans
               </Link>
             </Button>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 text-blue-200 text-sm">
+          <div>
             <div>✓ 10 free estimates included</div>
             <div>✓ Works on all devices</div>
             <div>✓ Professional support included</div>

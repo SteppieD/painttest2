@@ -40,10 +40,10 @@ export function CustomerPortalButton({ companyId, className }: CustomerPortalBut
     <Button
       onClick={handleClick}
       disabled={loading}
-      className={className}
+     
       variant="outline"
     >
-      {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {loading && <Loader2 />}
       Manage Subscription
     </Button>
   );

@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Send, Loader2, ArrowLeft, Save, Eye, Mail, Download, ExternalLink, HelpCircle } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { QuoteTrainingModal } from './quote-training-modal'
@@ -31,28 +30,28 @@ function QuoteActions({ extractedData }: { extractedData: any }) {
   if (!extractedData?.showQuoteActions) return null
 
   return (
-    <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-      <h4 className="font-semibold text-blue-900 mb-3">🎉 Quote Ready!</h4>
-      <div className="flex flex-wrap gap-2">
+    <div>
+      <h4>🎉 Quote Ready!</h4>
+      <div>
         <Button 
           onClick={() => router.push(extractedData.previewUrl)}
-          className="bg-blue-600 hover:bg-blue-700"
+         
         >
-          <Eye className="h-4 w-4 mr-2" />
+          <Eye />
           Preview Quote
         </Button>
         <Button 
           variant="outline"
           onClick={() => router.push(extractedData.sendUrl)}
         >
-          <Mail className="h-4 w-4 mr-2" />
+          <Mail />
           Send to Client
         </Button>
         <Button 
           variant="outline"
           onClick={() => window.open(`/quotes/${extractedData.quoteId}/view`, '_blank')}
         >
-          <ExternalLink className="h-4 w-4 mr-2" />
+          <ExternalLink />
           Public Link
         </Button>
         <Button 
@@ -347,27 +346,27 @@ export function FixedChatInterface({
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div>
       {/* Header */}
-      <header className="bg-white border-b">
-        <div className="px-4 py-3">
-          <div className="flex items-center gap-3">
+      <header>
+        <div>
+          <div>
             {onBack && (
               <Button variant="ghost" size="icon" onClick={onBack}>
-                <ArrowLeft className="h-5 w-5" />
+                <ArrowLeft />
               </Button>
             )}
-            <div className="flex-1">
-              <h1 className="text-lg font-semibold">Create Quote</h1>
+            <div>
+              <h1>Create Quote</h1>
               {customerName && (
-                <p className="text-sm text-gray-600">for {customerName}</p>
+                <p>for {customerName}</p>
               )}
             </div>
-            <div className="flex items-center gap-2">
+            <div>
               <QuotaCounter 
                 companyId={companyId}
                 variant="header"
-                className="hidden sm:flex"
+               
               />
               {currentQuote && (
                 <Button 
@@ -377,10 +376,10 @@ export function FixedChatInterface({
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 />
                   ) : (
                     <>
-                      <Save className="h-4 w-4 mr-2" />
+                      <Save />
                       Save Quote
                     </>
                   )}
@@ -392,7 +391,7 @@ export function FixedChatInterface({
                 onClick={() => setShowTrainingModal(true)}
                 title="Show training examples"
               >
-                <HelpCircle className="h-4 w-4" />
+                <HelpCircle />
               </Button>
             </div>
           </div>
@@ -400,31 +399,31 @@ export function FixedChatInterface({
       </header>
 
       {/* Mobile Quota Counter */}
-      <div className="sm:hidden px-4 py-2 bg-gray-50 border-b">
+      <div>
         <QuotaCounter 
           companyId={companyId}
           variant="badge"
-          className="w-full justify-center"
+         
         />
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div>
+        <div>
           {/* Simple help text for empty state */}
           {messages.length === 0 && (
-            <div className="text-center py-8">
-              <div className="max-w-lg mx-auto">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            <div>
+              <div>
+                <h3>
                   Welcome! Let's create a quote
                 </h3>
-                <p className="text-gray-600 text-sm mb-4">
+                <p>
                   Just tell me about your painting project. Include the customer name, 
                   project details, and any specific requirements.
                 </p>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-left">
-                  <p className="text-sm text-blue-800 font-medium mb-1">Example:</p>
-                  <p className="text-sm text-blue-700 italic">
+                <div>
+                  <p>Example:</p>
+                  <p>
                     "Quote for John Smith at 123 Main St. Interior painting - 
                     living room 15x20, 2 bedrooms 12x14 each, using Benjamin Moore paint"
                   </p>
@@ -433,7 +432,7 @@ export function FixedChatInterface({
                   variant="link"
                   size="sm"
                   onClick={() => setShowTrainingModal(true)}
-                  className="mt-4 text-blue-600"
+                 
                 >
                   See more examples →
                 </Button>
@@ -444,33 +443,25 @@ export function FixedChatInterface({
           {messages.map((message) => (
             <div
               key={message.id}
-              className={cn(
-                "flex gap-3",
-                message.role === 'user' ? "justify-end" : "justify-start"
-              )}
+             
             >
               <div
-                className={cn(
-                  "max-w-[80%] p-4 rounded-lg shadow-sm",
-                  message.role === 'user'
-                    ? "bg-blue-600 text-white rounded-br-sm"
-                    : "bg-white border rounded-bl-sm"
-                )}
+               
               >
-                <div className="whitespace-pre-wrap text-sm">
+                <div>
                   {message.content}
                 </div>
                 {message.role === 'assistant' && (message.content.includes('Total Quote:') || message.content.includes('Customer Price:')) && (
-                  <div className="mt-4 pt-3 border-t border-gray-200">
-                    <div className="text-xs text-gray-500 mb-3">Quote is ready!</div>
-                    <div className="flex gap-2">
+                  <div>
+                    <div>Quote is ready!</div>
+                    <div>
                       <Button 
                         size="sm"
                         onClick={saveQuote}
                         disabled={isLoading}
-                        className="bg-green-600 hover:bg-green-700"
+                       
                       >
-                        <Save className="h-4 w-4 mr-1" />
+                        <Save />
                         Save Quote
                       </Button>
                       <Button 
@@ -492,15 +483,15 @@ export function FixedChatInterface({
 
           {/* Thinking Indicator */}
           {isThinking && (
-            <div className="flex gap-3 justify-start">
-              <div className="bg-white border p-4 rounded-lg rounded-bl-sm shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            <div>
+              <div>
+                <div>
+                  <div>
+                    <div />
+                    <div />
+                    <div />
                   </div>
-                  <span className="text-sm text-gray-500">Processing...</span>
+                  <span>Processing...</span>
                 </div>
               </div>
             </div>
@@ -510,8 +501,8 @@ export function FixedChatInterface({
         </div>
 
         {/* Input Area */}
-        <div className="bg-white border-t p-4">
-          <div className="flex gap-2">
+        <div>
+          <div>
             <Input
               ref={inputRef}
               value={input}
@@ -519,7 +510,7 @@ export function FixedChatInterface({
               onKeyPress={handleKeyPress}
               placeholder="Type your message or complete quote information..."
               disabled={isLoading || isThinking}
-              className="flex-1"
+             
             />
             <Button
               onClick={() => sendMessage()}
@@ -527,9 +518,9 @@ export function FixedChatInterface({
               size="icon"
             >
               {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 />
               ) : (
-                <Send className="h-4 w-4" />
+                <Send />
               )}
             </Button>
           </div>

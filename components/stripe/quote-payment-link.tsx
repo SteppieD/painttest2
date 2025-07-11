@@ -61,24 +61,24 @@ export function QuotePaymentLink({ quoteId, existingLink, amount }: QuotePayment
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Link2 className="h-5 w-5" />
+          <CardTitle>
+            <Link2 />
             Payment Link
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-600 mb-4">
+          <p>
             Create a secure payment link to share with your customer.
           </p>
           <Button onClick={createPaymentLink} disabled={loading}>
             {loading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 />
                 Creating...
               </>
             ) : (
               <>
-                <Link2 className="mr-2 h-4 w-4" />
+                <Link2 />
                 Create Payment Link
               </>
             )}
@@ -91,35 +91,35 @@ export function QuotePaymentLink({ quoteId, existingLink, amount }: QuotePayment
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Link2 className="h-5 w-5" />
+        <CardTitle>
+          <Link2 />
           Payment Link Ready
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <p className="text-sm text-gray-600 mb-2">Share this link with your customer:</p>
-            <div className="flex items-center gap-2">
+        <div>
+          <div>
+            <p>Share this link with your customer:</p>
+            <div>
               <input
                 type="text"
                 value={paymentLink}
                 readOnly
-                className="flex-1 px-3 py-2 text-sm bg-white border rounded-md"
+               
               />
               <Button size="sm" variant="outline" onClick={copyToClipboard}>
-                <Copy className="h-4 w-4" />
+                <Copy />
               </Button>
             </div>
           </div>
           
-          <div className="flex gap-2">
+          <div>
             <Button
               variant="outline"
               size="sm"
               onClick={() => window.open(paymentLink, '_blank')}
             >
-              <ExternalLink className="mr-2 h-4 w-4" />
+              <ExternalLink />
               Preview Link
             </Button>
             <Button
@@ -130,7 +130,7 @@ export function QuotePaymentLink({ quoteId, existingLink, amount }: QuotePayment
             >
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 />
                   Regenerating...
                 </>
               ) : (

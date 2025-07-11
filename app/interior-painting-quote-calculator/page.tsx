@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 export default function InteriorPaintingQuoteCalculatorPage() {
   const roomTypes = [
     {
-      icon: <Home className="w-8 h-8 text-blue-600" />,
+      icon: <Home />,
       name: "Living Room",
       avgSize: "12' x 15'",
       avgCost: "$450 - $750",
@@ -49,7 +49,7 @@ export default function InteriorPaintingQuoteCalculatorPage() {
       considerations: ["High ceiling areas", "Multiple windows", "Built-in features"]
     },
     {
-      icon: <Palette className="w-8 h-8 text-purple-600" />,
+      icon: <Palette />,
       name: "Bedroom",
       avgSize: "10' x 12'", 
       avgCost: "$300 - $550",
@@ -57,7 +57,7 @@ export default function InteriorPaintingQuoteCalculatorPage() {
       considerations: ["Closet interiors", "Accent walls", "Ceiling fans"]
     },
     {
-      icon: <PaintBucket className="w-8 h-8 text-green-600" />,
+      icon: <PaintBucket />,
       name: "Bathroom",
       avgSize: "8' x 10'",
       avgCost: "$200 - $400", 
@@ -65,7 +65,7 @@ export default function InteriorPaintingQuoteCalculatorPage() {
       considerations: ["Moisture-resistant paint", "Ventilation", "Trim work"]
     },
     {
-      icon: <DollarSign className="w-8 h-8 text-orange-600" />,
+      icon: <DollarSign />,
       name: "Kitchen",
       avgSize: "10' x 12'",
       avgCost: "$350 - $600",
@@ -107,25 +107,25 @@ export default function InteriorPaintingQuoteCalculatorPage() {
 
   const calculationFactors = [
     {
-      icon: <Ruler className="w-6 h-6 text-blue-600" />,
+      icon: <Ruler />,
       factor: "Wall Area Calculation",
       formula: "Length × Width × Height - Doors & Windows",
       example: "12' × 15' × 9' = 1,620 sq ft - 120 sq ft = 1,500 sq ft"
     },
     {
-      icon: <PaintBucket className="w-6 h-6 text-green-600" />,
+      icon: <PaintBucket />,
       factor: "Paint Coverage",
       formula: "400 sq ft per gallon (average)",
       example: "1,500 sq ft ÷ 400 = 3.75 gallons needed"
     },
     {
-      icon: <DollarSign className="w-6 h-6 text-purple-600" />,
+      icon: <DollarSign />,
       factor: "Labor Costs",
       formula: "$1.50 - $3.50 per sq ft",
       example: "1,500 sq ft × $2.50 = $3,750 labor"
     },
     {
-      icon: <Clock className="w-6 h-6 text-orange-600" />,
+      icon: <Clock />,
       factor: "Time Estimation",
       formula: "200-300 sq ft per hour",
       example: "1,500 sq ft ÷ 250 = 6 hours work"
@@ -133,49 +133,49 @@ export default function InteriorPaintingQuoteCalculatorPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
       <KofiHeader />
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto text-center max-w-5xl">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Free <span className="text-blue-600">Interior Painting Quote</span> Calculator
+      <section>
+        <div>
+          <h1>
+            Free <span>Interior Painting Quote</span> Calculator
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p>
             Get accurate estimates for <strong>bedrooms, bathrooms, apartments, and house interiors</strong>. 
             Professional calculator used by <strong>5,000+ contractors</strong> for precise interior painting quotes.
           </p>
           
-          <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-12">
-            <Button size="lg" asChild className="text-lg px-12 py-6 bg-blue-600 hover:bg-blue-700">
+          <div>
+            <Button size="lg" asChild>
               <Link href="/trial-signup">
                 Try Professional Calculator Free
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6">
+            <Button size="lg" variant="outline" asChild>
               <Link href="#calculator">
                 Use Basic Calculator Below
               </Link>
             </Button>
           </div>
           
-          <div className="grid md:grid-cols-4 gap-6 text-sm text-gray-600">
-            <div className="flex items-center justify-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-500" />
+          <div>
+            <div>
+              <CheckCircle />
               <span>Instant estimates</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <Calculator className="w-5 h-5 text-green-500" />
+            <div>
+              <Calculator />
               <span>Industry-standard formulas</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <Home className="w-5 h-5 text-green-500" />
+            <div>
+              <Home />
               <span>All room types</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <Smartphone className="w-5 h-5 text-green-500" />
+            <div>
+              <Smartphone />
               <span>Mobile-friendly</span>
             </div>
           </div>
@@ -183,43 +183,43 @@ export default function InteriorPaintingQuoteCalculatorPage() {
       </section>
 
       {/* Room-by-Room Estimates */}
-      <section className="py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Interior Painting Quotes by Room Type
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p>
               Average costs and considerations for different interior spaces
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div>
             {roomTypes.map((room, index) => (
-              <Card key={index} className="border-2 hover:border-blue-200 transition-colors">
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+              <Card key={index}>
+                <CardHeader>
+                  <div>
                     {room.icon}
                   </div>
-                  <CardTitle className="text-xl">{room.name}</CardTitle>
-                  <p className="text-gray-600">Average: {room.avgSize}</p>
+                  <CardTitle>{room.name}</CardTitle>
+                  <p>Average: {room.avgSize}</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Cost Range:</span>
-                      <span className="font-bold text-green-600">{room.avgCost}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Time:</span>
-                      <span className="font-medium">{room.timeEstimate}</span>
+                  <div>
+                    <div>
+                      <span>Cost Range:</span>
+                      <span>{room.avgCost}</span>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Key Factors:</h4>
-                      <ul className="space-y-1">
+                      <span>Time:</span>
+                      <span>{room.timeEstimate}</span>
+                    </div>
+                    <div>
+                      <h4>Key Factors:</h4>
+                      <ul>
                         {room.considerations.map((factor, i) => (
-                          <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
-                            <span className="text-blue-500 mt-1">•</span>
+                          <li key={i}>
+                            <span>•</span>
                             {factor}
                           </li>
                         ))}
@@ -234,44 +234,44 @@ export default function InteriorPaintingQuoteCalculatorPage() {
       </section>
 
       {/* Apartment & House Interior Quotes */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Apartment & House Interior Painting Quotes
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p>
               Complete interior painting estimates by property size
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div>
             {apartmentSizes.map((property, index) => (
-              <Card key={index} className="border-2 border-blue-100">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-xl text-blue-900">{property.type}</CardTitle>
-                  <p className="text-gray-600">{property.sqft}</p>
+                  <CardTitle>{property.type}</CardTitle>
+                  <p>{property.sqft}</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Included Areas:</h4>
-                      <p className="text-gray-600">{property.rooms}</p>
+                      <h4>Included Areas:</h4>
+                      <p>{property.rooms}</p>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
-                        <p className="text-sm text-green-700 font-medium">Total Cost Range</p>
-                        <p className="text-lg font-bold text-green-800">{property.avgCost}</p>
+                    <div>
+                      <div>
+                        <p>Total Cost Range</p>
+                        <p>{property.avgCost}</p>
                       </div>
-                      <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                        <p className="text-sm text-blue-700 font-medium">Paint Needed</p>
-                        <p className="text-lg font-bold text-blue-800">{property.paintNeeded}</p>
+                      <div>
+                        <p>Paint Needed</p>
+                        <p>{property.paintNeeded}</p>
                       </div>
                     </div>
 
-                    <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
-                      <p className="text-sm text-yellow-800">
+                    <div>
+                      <p>
                         <strong>Pro Tip:</strong> Add 15-20% for primer, ceiling paint, and touch-ups
                       </p>
                     </div>
@@ -284,35 +284,35 @@ export default function InteriorPaintingQuoteCalculatorPage() {
       </section>
 
       {/* Calculation Guide */}
-      <section className="py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               How to Calculate Interior Painting Quotes
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p>
               Professional formulas contractors use for accurate interior paint estimates
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div>
             {calculationFactors.map((factor, index) => (
-              <Card key={index} className="border-2 border-gray-100">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-3">
+                  <CardTitle>
                     {factor.icon}
                     {factor.factor}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div>
                     <div>
-                      <p className="text-sm text-gray-600 font-medium">Formula:</p>
-                      <p className="text-blue-800 font-semibold">{factor.formula}</p>
+                      <p>Formula:</p>
+                      <p>{factor.formula}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600 font-medium">Example:</p>
-                      <p className="text-gray-700">{factor.example}</p>
+                      <p>Example:</p>
+                      <p>{factor.example}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -320,15 +320,15 @@ export default function InteriorPaintingQuoteCalculatorPage() {
             ))}
           </div>
 
-          <div className="mt-12 bg-blue-50 border border-blue-200 p-8 rounded-2xl">
-            <h3 className="text-2xl font-bold text-blue-900 mb-4 text-center">
+          <div>
+            <h3>
               Complete Interior Quote Formula
             </h3>
-            <div className="text-center text-lg">
-              <p className="text-blue-800 font-semibold mb-2">
+            <div>
+              <p>
                 Materials + Labor + Overhead (15%) + Profit (20%) = Total Quote
               </p>
-              <p className="text-blue-700">
+              <p>
                 Example: $200 materials + $750 labor + $143 overhead + $219 profit = <strong>$1,312 total</strong>
               </p>
             </div>
@@ -337,68 +337,68 @@ export default function InteriorPaintingQuoteCalculatorPage() {
       </section>
 
       {/* Basic Calculator Section */}
-      <section id="calculator" className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section id="calculator">
+        <div>
+          <div>
+            <h2>
               Quick Interior Paint Calculator
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Get an instant estimate for your interior painting project
             </p>
           </div>
           
-          <Card className="border-2 border-blue-200 shadow-xl">
-            <CardContent className="p-8">
-              <div className="bg-yellow-100 border border-yellow-300 p-6 rounded-lg mb-8">
-                <h3 className="text-lg font-bold text-yellow-800 mb-2">
+          <Card>
+            <CardContent>
+              <div>
+                <h3>
                   🎯 Want Professional Results?
                 </h3>
-                <p className="text-yellow-700 mb-4">
+                <p>
                   This basic calculator gives rough estimates. For accurate quotes that win jobs, 
                   contractors use our professional software with industry-standard formulas.
                 </p>
-                <Button asChild className="bg-yellow-600 hover:bg-yellow-700 text-white">
+                <Button asChild>
                   <Link href="/trial-signup">
                     Try Professional Calculator Free
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    <ArrowRight />
                   </Link>
                 </Button>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-8">
+              <div>
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Room Dimensions</h4>
-                  <div className="space-y-4">
+                  <h4>Room Dimensions</h4>
+                  <div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Length (feet)</label>
-                      <input type="number" className="w-full p-3 border border-gray-300 rounded-lg" placeholder="12" />
+                      <label>Length (feet)</label>
+                      <input type="number" placeholder="12" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Width (feet)</label>
-                      <input type="number" className="w-full p-3 border border-gray-300 rounded-lg" placeholder="15" />
+                      <label>Width (feet)</label>
+                      <input type="number" placeholder="15" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Height (feet)</label>
-                      <input type="number" className="w-full p-3 border border-gray-300 rounded-lg" placeholder="9" />
+                      <label>Height (feet)</label>
+                      <input type="number" placeholder="9" />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Project Details</h4>
-                  <div className="space-y-4">
+                  <h4>Project Details</h4>
+                  <div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Number of Doors</label>
-                      <input type="number" className="w-full p-3 border border-gray-300 rounded-lg" placeholder="2" />
+                      <label>Number of Doors</label>
+                      <input type="number" placeholder="2" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Number of Windows</label>
-                      <input type="number" className="w-full p-3 border border-gray-300 rounded-lg" placeholder="3" />
+                      <label>Number of Windows</label>
+                      <input type="number" placeholder="3" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Paint Quality</label>
-                      <select className="w-full p-3 border border-gray-300 rounded-lg">
+                      <label>Paint Quality</label>
+                      <select>
                         <option>Standard ($35/gallon)</option>
                         <option>Premium ($50/gallon)</option>
                         <option>Designer ($70/gallon)</option>
@@ -408,9 +408,9 @@ export default function InteriorPaintingQuoteCalculatorPage() {
                 </div>
               </div>
 
-              <Button className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-lg py-6">
+              <Button>
                 Calculate Interior Paint Quote
-                <Calculator className="w-5 h-5 ml-2" />
+                <Calculator />
               </Button>
             </CardContent>
           </Card>
@@ -418,27 +418,27 @@ export default function InteriorPaintingQuoteCalculatorPage() {
       </section>
 
       {/* Professional ROI Calculator */}
-      <section className="py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               For Contractors: Calculate Your Revenue Potential
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p>
               See how professional quote software increases your interior painting business revenue
             </p>
           </div>
           
-          <ROICalculator className="mb-8" />
+          <ROICalculator />
           
-          <div className="text-center mt-12">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+          <div>
+            <h3>
               Try Our Room-by-Room Calculator
             </h3>
-            <p className="text-gray-600 mb-8">
+            <p>
               See how professionals calculate interior paint costs room by room
             </p>
-            <div className="max-w-md mx-auto">
+            <div>
               <RoomCalculatorWidget title="Professional Room Calculator" />
             </div>
           </div>
@@ -446,85 +446,85 @@ export default function InteriorPaintingQuoteCalculatorPage() {
       </section>
 
       {/* Why Contractors Choose Our Calculator */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Why 5,000+ Contractors Trust Our Interior Paint Calculator
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Professional features that help you win more interior painting jobs
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card className="border-2 border-green-100">
+          <div>
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-green-800">
-                  <Target className="w-6 h-6" />
+                <CardTitle>
+                  <Target />
                   Accurate Pricing
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4">
+                <p>
                   Industry-standard formulas ensure your interior paint quotes are competitive yet profitable. 
                   Never underestimate bedroom, bathroom, or apartment painting jobs again.
                 </p>
-                <p className="text-sm font-semibold text-green-700">
+                <p>
                   ✓ Wall area calculations with door/window deductions
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-blue-100">
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-blue-800">
-                  <Clock className="w-6 h-6" />
+                <CardTitle>
+                  <Clock />
                   Save Time
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4">
+                <p>
                   Generate interior painting quotes in 6 minutes instead of hours. Perfect for apartment buildings, 
                   house interiors, and multi-room projects.
                 </p>
-                <p className="text-sm font-semibold text-blue-700">
+                <p>
                   ✓ Mobile calculator works on-site during consultations
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-purple-100">
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-purple-800">
-                  <TrendingUp className="w-6 h-6" />
+                <CardTitle>
+                  <TrendingUp />
                   Win More Jobs
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4">
+                <p>
                   Professional interior paint quotes increase win rates by 40-60%. Customers trust contractors 
                   who use modern tools and provide detailed estimates.
                 </p>
-                <p className="text-sm font-semibold text-purple-700">
+                <p>
                   ✓ Branded quotes with your company logo and colors
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-orange-100">
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-orange-800">
-                  <Smartphone className="w-6 h-6" />
+                <CardTitle>
+                  <Smartphone />
                   Work Anywhere
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4">
+                <p>
                   Calculate interior paint quotes on your phone or tablet while walking through bedrooms, 
                   bathrooms, and living spaces with customers.
                 </p>
-                <p className="text-sm font-semibold text-orange-700">
+                <p>
                   ✓ Close deals while excitement is high
                 </p>
               </CardContent>
@@ -534,30 +534,30 @@ export default function InteriorPaintingQuoteCalculatorPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-4 bg-blue-600">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+      <section>
+        <div>
+          <h2>
             Ready for Professional Interior Paint Quotes?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p>
             Join contractors who've increased their interior painting revenue by 40-60% with professional quote software
           </p>
           
-          <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-8">
-            <Button size="lg" variant="secondary" asChild className="text-lg px-12 py-6">
+          <div>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/trial-signup">
                 Start Free Trial - 10 Quotes Included
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6 border-white text-white hover:bg-white hover:text-blue-600">
+            <Button size="lg" variant="outline" asChild>
               <Link href="/painting-contractors">
                 Learn More About Our Software
               </Link>
             </Button>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 text-blue-200 text-sm">
+          <div>
             <div>✓ All room types covered</div>
             <div>✓ Professional presentation</div>
             <div>✓ Mobile-friendly calculator</div>

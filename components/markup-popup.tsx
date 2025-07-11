@@ -43,10 +43,10 @@ export function MarkupPopup({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-green-600" />
+          <DialogTitle>
+            <TrendingUp />
             Set Your Profit Margin
           </DialogTitle>
           <DialogDescription>
@@ -54,20 +54,20 @@ export function MarkupPopup({
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-4 py-4">
+        <div>
           {/* Preset Options */}
           {!customMode && (
-            <div className="grid grid-cols-4 gap-2">
+            <div>
               {presetOptions.map((preset) => (
                 <Button
                   key={preset}
                   variant={markup === preset ? "default" : "outline"}
                   onClick={() => setMarkup(preset)}
-                  className="h-auto py-3 px-2"
+                 
                 >
-                  <div className="text-center">
-                    <div className="font-bold text-lg">{preset}%</div>
-                    <div className="text-xs opacity-70">
+                  <div>
+                    <div>{preset}%</div>
+                    <div>
                       ${(baseCost * preset / 100).toFixed(0)}
                     </div>
                   </div>
@@ -78,9 +78,9 @@ export function MarkupPopup({
           
           {/* Custom Input */}
           {customMode && (
-            <div className="space-y-2">
+            <div>
               <Label htmlFor="custom-markup">Custom Markup Percentage</Label>
-              <div className="flex items-center gap-2">
+              <div>
                 <Input
                   id="custom-markup"
                   type="number"
@@ -88,9 +88,9 @@ export function MarkupPopup({
                   max="100"
                   value={markup}
                   onChange={(e) => setMarkup(Number(e.target.value))}
-                  className="flex-1"
+                 
                 />
-                <span className="text-sm text-gray-600">%</span>
+                <span>%</span>
               </div>
             </div>
           )}
@@ -100,49 +100,49 @@ export function MarkupPopup({
             variant="ghost"
             size="sm"
             onClick={() => setCustomMode(!customMode)}
-            className="w-full"
+           
           >
             {customMode ? "Use Preset Options" : "Enter Custom Percentage"}
           </Button>
           
           {/* Preview */}
-          <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Base Cost:</span>
+          <div>
+            <div>
+              <span>Base Cost:</span>
               <span>${baseCost.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Your Profit ({markup}%):</span>
-              <span className="text-green-600 font-medium">
+            <div>
+              <span>Your Profit ({markup}%):</span>
+              <span>
                 ${profit.toFixed(2).toLocaleString()}
               </span>
             </div>
-            <div className="border-t pt-2 flex justify-between font-medium">
+            <div>
               <span>Customer Price:</span>
-              <span className="text-lg">${total.toFixed(2).toLocaleString()}</span>
+              <span>${total.toFixed(2).toLocaleString()}</span>
             </div>
           </div>
           
           {/* Profit Margin Indicator */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs text-gray-600">
+          <div>
+            <div>
               <span>Profit Margin</span>
               <span>{((profit / total) * 100).toFixed(1)}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div>
               <div
-                className="bg-green-600 h-2 rounded-full transition-all duration-300"
+               
                 style={{ width: `${(profit / total) * 100}%` }}
               />
             </div>
           </div>
         </div>
         
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={onClose} className="flex-1">
+        <div>
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handleConfirm} className="flex-1">
+          <Button onClick={handleConfirm}>
             Apply {markup}% Markup
           </Button>
         </div>

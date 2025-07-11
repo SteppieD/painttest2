@@ -12,7 +12,7 @@ interface PaintCoverageWidgetProps {
 
 export function PaintCoverageWidget({ 
   title = "Paint Coverage Calculator",
-  className = ""
+ 
 }: PaintCoverageWidgetProps) {
   const [gallons, setGallons] = useState('')
   const [coats, setCoats] = useState('2')
@@ -57,18 +57,18 @@ export function PaintCoverageWidget({
   }
 
   return (
-    <Card className={`border-2 border-purple-100 ${className}`}>
-      <CardHeader className="text-center">
-        <div className="mx-auto mb-3 w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-          <Palette className="w-6 h-6 text-purple-600" />
+    <Card`}>
+      <CardHeader>
+        <div>
+          <Palette />
         </div>
-        <CardTitle className="text-lg">{title}</CardTitle>
-        <p className="text-sm text-gray-600">How much area will your paint cover?</p>
+        <CardTitle>{title}</CardTitle>
+        <p>How much area will your paint cover?</p>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
+        <div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label>
               Paint Gallons
             </label>
             <input
@@ -76,19 +76,19 @@ export function PaintCoverageWidget({
               step="0.5"
               value={gallons}
               onChange={(e) => setGallons(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+             
               placeholder="2.5"
             />
           </div>
           
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label>
               Number of Coats
             </label>
             <select
               value={coats}
               onChange={(e) => setCoats(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+             
             >
               <option value="1">1 coat</option>
               <option value="2">2 coats (recommended)</option>
@@ -97,13 +97,13 @@ export function PaintCoverageWidget({
           </div>
           
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label>
               Surface Type
             </label>
             <select
               value={surface}
               onChange={(e) => setSurface(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+             
             >
               {Object.entries(surfaceFactors).map(([key, data]) => (
                 <option key={key} value={key}>{data.name}</option>
@@ -113,32 +113,32 @@ export function PaintCoverageWidget({
           
           <Button 
             onClick={calculateCoverage}
-            className="w-full bg-purple-600 hover:bg-purple-700"
+           
             size="sm"
           >
             Calculate Coverage
-            <Droplets className="w-4 h-4 ml-2" />
+            <Droplets />
           </Button>
           
           {result && (
-            <div className="mt-4 space-y-2 bg-purple-50 border border-purple-200 p-3 rounded-md">
-              <div className="text-center">
-                <div className="text-lg font-bold text-purple-800">
+            <div>
+              <div>
+                <div>
                   {result.coverage.toLocaleString()} sq ft
                 </div>
-                <div className="text-sm text-purple-600">Total Coverage</div>
+                <div>Total Coverage</div>
               </div>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="text-center">
-                  <div className="font-semibold">~{result.rooms} rooms</div>
-                  <div className="text-gray-600">Estimated rooms</div>
+              <div>
+                <div>
+                  <div>~{result.rooms} rooms</div>
+                  <div>Estimated rooms</div>
                 </div>
-                <div className="text-center">
-                  <div className="font-semibold">${result.cost}</div>
-                  <div className="text-gray-600">Paint cost</div>
+                <div>
+                  <div>${result.cost}</div>
+                  <div>Paint cost</div>
                 </div>
               </div>
-              <div className="text-xs text-center text-gray-500 pt-2 border-t">
+              <div>
                 *Based on {surfaceFactors[surface as keyof typeof surfaceFactors].factor} sqft/gallon coverage
               </div>
             </div>

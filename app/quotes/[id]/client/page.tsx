@@ -128,12 +128,12 @@ export default function ClientQuotePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-64 mb-6"></div>
-          <div className="space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+      <div>
+        <div>
+          <div></div>
+          <div>
+            <div></div>
+            <div></div>
           </div>
         </div>
       </div>
@@ -142,32 +142,32 @@ export default function ClientQuotePage() {
 
   if (!quote) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Quote Not Found</h1>
-          <p className="text-gray-600">The quote you're looking for doesn't exist or has been removed.</p>
+      <div>
+        <div>
+          <h1>Quote Not Found</h1>
+          <p>The quote you're looking for doesn't exist or has been removed.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header with Company Branding */}
-      <header className="bg-white border-b shadow-sm">
-        <div className="max-w-4xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
+      <header>
+        <div>
+          <div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Professional Painting Quote</h1>
-              <p className="text-gray-600 mt-1">Elite Painting Services</p>
+              <h1>Professional Painting Quote</h1>
+              <p>Elite Painting Services</p>
             </div>
-            <div className="text-right">
-              <div className="flex items-center text-gray-600 mb-1">
-                <Phone className="w-4 h-4 mr-2" />
+            <div>
+              <div>
+                <Phone />
                 <span>(555) 123-4567</span>
               </div>
-              <div className="flex items-center text-gray-600">
-                <Mail className="w-4 h-4 mr-2" />
+              <div>
+                <Mail />
                 <span>contact@elitepainting.com</span>
               </div>
             </div>
@@ -175,38 +175,38 @@ export default function ClientQuotePage() {
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <div>
         {/* Quote Header */}
         <Card>
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xl">Project Quote</CardTitle>
-              <Badge variant="secondary" className="text-sm">
+          <CardHeader>
+            <div>
+              <CardTitle>Project Quote</CardTitle>
+              <Badge variant="secondary">
                 Quote #{quote.quote_id}
               </Badge>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Client Information</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center text-gray-700">
-                    <span className="font-medium">{quote.customer_name}</span>
+                <h3>Client Information</h3>
+                <div>
+                  <div>
+                    <span>{quote.customer_name}</span>
                   </div>
-                  <div className="flex items-center text-gray-600">
-                    <MapPin className="w-4 h-4 mr-2" />
+                  <div>
+                    <MapPin />
                     <span>{quote.address}</span>
                   </div>
-                  <div className="flex items-center text-gray-600">
-                    <Calendar className="w-4 h-4 mr-2" />
+                  <div>
+                    <Calendar />
                     <span>Quote Date: {new Date(quote.created_at).toLocaleDateString()}</span>
                   </div>
                 </div>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Project Details</h3>
-                <div className="space-y-2 text-gray-700">
+                <h3>Project Details</h3>
+                <div>
                   <p><strong>Project Type:</strong> Interior Painting</p>
                   <p><strong>Total Area:</strong> {quote.rooms?.[0]?.wall_sqft || 0} sq ft</p>
                   <p><strong>Estimated Duration:</strong> {quote.labor?.estimated_hours || 0} hours</p>
@@ -219,43 +219,43 @@ export default function ClientQuotePage() {
         {/* Scope of Work */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <FileText className="mr-2 h-5 w-5" />
+            <CardTitle>
+              <FileText />
               Scope of Work
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <p className="text-gray-700">
+            <div>
+              <p>
                 Includes full preparation, premium paint application, and final cleanup:
               </p>
               
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+              <ul>
+                <li>
+                  <CheckCircle />
                   <span>{quote.rooms?.[0]?.name || "Interior Space"} – {quote.rooms?.[0]?.wall_sqft || 0} sq ft walls</span>
                 </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <li>
+                  <CheckCircle />
                   <span>Premium {quote.materials?.wall_paint?.brand || "quality paint"} application</span>
                 </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <li>
+                  <CheckCircle />
                   <span>Professional surface preparation</span>
                 </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <li>
+                  <CheckCircle />
                   <span>Complete cleanup and protection of furnishings</span>
                 </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <li>
+                  <CheckCircle />
                   <span>Quality guarantee and touch-up warranty</span>
                 </li>
               </ul>
 
               {quote.scope_notes && (
-                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                  <p className="text-blue-900 text-sm">
+                <div>
+                  <p>
                     <strong>Specific Details:</strong> {quote.scope_notes}
                   </p>
                 </div>
@@ -270,21 +270,21 @@ export default function ClientQuotePage() {
             <CardTitle>Project Investment</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-              <div className="flex items-center justify-between">
+            <div>
+              <div>
                 <div>
-                  <h3 className="text-xl font-bold text-green-800">Total Project Cost</h3>
-                  <p className="text-green-700 mt-1">All materials, labor, and equipment included</p>
+                  <h3>Total Project Cost</h3>
+                  <p>All materials, labor, and equipment included</p>
                 </div>
-                <div className="text-right">
-                  <span className="text-3xl font-bold text-green-600">
+                <div>
+                  <span>
                     {formatCurrency(quote.total_quote || quote.quote_amount)}
                   </span>
                 </div>
               </div>
             </div>
             
-            <div className="mt-4 space-y-2 text-sm text-gray-600">
+            <div>
               <p>✓ Professional labor and supervision</p>
               <p>✓ All paint and materials</p>
               <p>✓ Surface preparation and cleanup</p>
@@ -300,24 +300,24 @@ export default function ClientQuotePage() {
             <CardTitle>Payment Terms</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Payment Schedule</h4>
-                <ul className="space-y-1 text-gray-700">
+                <h4>Payment Schedule</h4>
+                <ul>
                   <li>50% due at project start</li>
                   <li>50% upon completion</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Quote Validity</h4>
-                <p className="text-gray-700">
+                <h4>Quote Validity</h4>
+                <p>
                   This quote is valid until <strong>{getValidityDate()}</strong>
                 </p>
               </div>
             </div>
             
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600">
+            <div>
+              <p>
                 We accept cash, check, and all major credit cards. A detailed contract will be provided upon acceptance.
               </p>
             </div>
@@ -325,20 +325,20 @@ export default function ClientQuotePage() {
         </Card>
 
         {/* Action Buttons */}
-        <div className="flex flex-col md:flex-row gap-4">
+        <div>
           <Button 
             onClick={handleAcceptQuote}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-lg py-3"
+           
           >
-            <CheckCircle className="mr-2 h-5 w-5" />
+            <CheckCircle />
             Accept This Quote
           </Button>
           <Button 
             variant="outline"
             onClick={handleDownloadPDF}
-            className="flex-1 text-lg py-3"
+           
           >
-            <Download className="mr-2 h-5 w-5" />
+            <Download />
             Download PDF
           </Button>
         </div>
@@ -349,32 +349,32 @@ export default function ClientQuotePage() {
             <CardTitle>Questions? Get in Touch</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-              <div className="flex flex-col items-center p-4">
-                <Phone className="w-8 h-8 text-blue-600 mb-2" />
-                <h4 className="font-semibold">Call Us</h4>
-                <p className="text-gray-600">(555) 123-4567</p>
+            <div>
+              <div>
+                <Phone />
+                <h4>Call Us</h4>
+                <p>(555) 123-4567</p>
               </div>
-              <div className="flex flex-col items-center p-4">
-                <Mail className="w-8 h-8 text-blue-600 mb-2" />
-                <h4 className="font-semibold">Email Us</h4>
-                <p className="text-gray-600">contact@elitepainting.com</p>
+              <div>
+                <Mail />
+                <h4>Email Us</h4>
+                <p>contact@elitepainting.com</p>
               </div>
-              <div className="flex flex-col items-center p-4">
-                <Send className="w-8 h-8 text-blue-600 mb-2" />
-                <h4 className="font-semibold">Schedule Visit</h4>
-                <p className="text-gray-600">Free consultation</p>
+              <div>
+                <Send />
+                <h4>Schedule Visit</h4>
+                <p>Free consultation</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Footer */}
-        <div className="text-center py-6 border-t">
-          <p className="text-gray-600 text-sm">
+        <div>
+          <p>
             <strong>Elite Painting Services</strong> – Licensed, Bonded & Insured
           </p>
-          <p className="text-gray-500 text-xs mt-1">
+          <p>
             Thank you for considering our services for your painting project.
           </p>
         </div>

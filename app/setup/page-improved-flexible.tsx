@@ -163,52 +163,48 @@ function SetupWizardContent() {
 
   if (currentStep === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="max-w-4xl w-full">
-          <div className="text-center mb-8">
-            <div className="bg-white p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center shadow-lg">
-              <Palette className="w-10 h-10 text-blue-600" />
+      <div>
+        <div>
+          <div>
+            <div>
+              <Palette />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to Paint Quote Pro!</h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <h1>Welcome to Paint Quote Pro!</h1>
+            <p>
               Choose how you'd like to set up your account. Don't worry - you can always change these settings later.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div>
             {SETUP_PATHS.map((path) => (
               <Card 
                 key={path.id}
-                className={`cursor-pointer transition-all hover:shadow-lg border-2 ${
-                  path.recommended 
-                    ? 'border-blue-200 bg-blue-50 ring-2 ring-blue-100' 
-                    : 'border-gray-200 hover:border-blue-300'
-                } ${selectedPath === path.id ? 'ring-2 ring-blue-500' : ''}`}
+                ${selectedPath === path.id ? 'ring-2 ring-blue-500' : ''}`}
                 onClick={() => setSelectedPath(path.id)}
               >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg font-semibold">
+                <CardHeader>
+                  <div>
+                    <CardTitle>
                       {path.title}
                       {path.recommended && (
-                        <Badge className="ml-2 bg-blue-600 text-white">Recommended</Badge>
+                        <Badge>Recommended</Badge>
                       )}
                     </CardTitle>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Clock className="w-4 h-4 mr-1" />
+                    <div>
+                      <Clock />
                       {path.time}
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p>
                     {path.description}
                   </p>
                   
                   {path.id === 'quick' && (
-                    <div className="mt-3 p-3 bg-white rounded border">
-                      <p className="text-xs font-medium text-gray-700 mb-2">Includes:</p>
-                      <ul className="text-xs text-gray-600 space-y-1">
+                    <div>
+                      <p>Includes:</p>
+                      <ul>
                         <li>• Popular paint brands (Sherwin-Williams, Benjamin Moore, Kilz)</li>
                         <li>• Industry-standard pricing ($28-$85/gallon)</li>
                         <li>• 45% markup (typical for residential painting)</li>
@@ -218,10 +214,10 @@ function SetupWizardContent() {
                   )}
                   
                   {path.id === 'later' && (
-                    <div className="mt-3 p-3 bg-amber-50 rounded border border-amber-200">
-                      <div className="flex items-start">
-                        <AlertCircle className="w-4 h-4 text-amber-600 mr-2 mt-0.5" />
-                        <p className="text-xs text-amber-700">
+                    <div>
+                      <div>
+                        <AlertCircle />
+                        <p>
                           You'll need to set up products and pricing before creating quotes.
                         </p>
                       </div>
@@ -232,28 +228,28 @@ function SetupWizardContent() {
             ))}
           </div>
 
-          <div className="text-center">
+          <div>
             <Button
               onClick={() => handlePathSelection(selectedPath)}
               disabled={!selectedPath || isLoading}
               size="lg"
-              className="px-8"
+             
             >
               {isLoading ? (
                 <>Loading...</>
               ) : selectedPath === 'quick' ? (
-                <>Apply Quick Setup <ArrowRight className="w-4 h-4 ml-2" /></>
+                <>Apply Quick Setup <ArrowRight /></>
               ) : selectedPath === 'later' ? (
-                <>Skip Setup <ArrowRight className="w-4 h-4 ml-2" /></>
+                <>Skip Setup <ArrowRight /></>
               ) : selectedPath ? (
-                <>Continue <ArrowRight className="w-4 h-4 ml-2" /></>
+                <>Continue <ArrowRight /></>
               ) : (
                 'Select an option above'
               )}
             </Button>
             
             {selectedPath && (
-              <p className="text-sm text-gray-500 mt-3">
+              <p>
                 {selectedPath === 'quick' && "Perfect for getting started quickly with tested defaults"}
                 {selectedPath === 'guided' && "We'll help you pick from popular options"}
                 {selectedPath === 'custom' && "Full control over your product selection"}
@@ -262,9 +258,9 @@ function SetupWizardContent() {
             )}
           </div>
 
-          <div className="mt-8 text-center">
-            <div className="inline-flex items-center text-sm text-gray-500">
-              <Info className="w-4 h-4 mr-2" />
+          <div>
+            <div>
+              <Info />
               All settings can be changed anytime from your dashboard
             </div>
           </div>
@@ -275,17 +271,17 @@ function SetupWizardContent() {
 
   // For guided/custom setup, continue with existing flow...
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
+    <div>
+      <div>
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div>
               <CardTitle>
                 {selectedPath === 'guided' ? 'Guided Setup' : 'Custom Setup'}
               </CardTitle>
               <Badge variant="outline">Step {currentStep} of 4</Badge>
             </div>
-            <Progress value={getStepProgress()} className="mt-2" />
+            <Progress value={getStepProgress()} />
           </CardHeader>
           <CardContent>
             <p>Continue with {selectedPath} setup flow...</p>

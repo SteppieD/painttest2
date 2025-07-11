@@ -106,27 +106,27 @@ export default function CreateQuoteV2Page() {
 
   if (!companyData) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div>
       <QuoteWizard 
         onComplete={handleQuoteComplete} 
         onCancel={handleCancel}
       />
       
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 text-center">
-            <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Creating your quote...</p>
+        <div>
+          <div>
+            <div></div>
+            <p>Creating your quote...</p>
           </div>
         </div>
       )}

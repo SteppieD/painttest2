@@ -18,8 +18,6 @@ import {
   Star,
   Timer
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-
 interface OnboardingStep {
   id: string;
   title: string;
@@ -144,92 +142,92 @@ export function OnboardingTour({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4">
-      <Card className={cn("w-full max-w-2xl mx-auto", className)}>
-        <CardContent className="p-0">
+    <div>
+      <Card>
+        <CardContent>
           {/* Header */}
-          <div className="p-6 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg">
-            <div className="design-inline mb-4">
+          <div>
+            <div>
               <div>
-                <h2 className="text-2xl font-bold">Welcome, {companyName}!</h2>
-                <p className="text-blue-100">Let's explore your modern quoting interface</p>
+                <h2>Welcome, {companyName}!</h2>
+                <p>Let's explore your modern quoting interface</p>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleSkip}
-                className="text-white hover:bg-white hover:bg-opacity-20"
+               
               >
-                <X className="w-4 h-4" />
+                <X />
               </Button>
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full bg-blue-500 bg-opacity-30 rounded-full h-2">
+            <div>
               <div 
-                className="bg-white h-2 rounded-full transition-all duration-300"
+               
                 style={{ width: `${progress}%` }}
               />
             </div>
             
-            <div className="mt-2 text-sm text-blue-100">
+            <div>
               Step {currentStep + 1} of {ONBOARDING_STEPS.length}
             </div>
           </div>
 
           {/* Content */}
-          <div className="p-8">
-            <div className="text-center mb-6">
+          <div>
+            <div>
               {/* Step Icon */}
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                {currentStep === 0 && <Star className="w-8 h-8 text-blue-600" />}
-                {currentStep === 1 && <Zap className="w-8 h-8 text-blue-600" />}
-                {currentStep === 2 && <Lightbulb className="w-8 h-8 text-blue-600" />}
-                {currentStep === 3 && <Palette className="w-8 h-8 text-blue-600" />}
-                {currentStep === 4 && <Calculator className="w-8 h-8 text-blue-600" />}
-                {currentStep === 5 && <TrendingUp className="w-8 h-8 text-blue-600" />}
+              <div>
+                {currentStep === 0 && <Star />}
+                {currentStep === 1 && <Zap />}
+                {currentStep === 2 && <Lightbulb />}
+                {currentStep === 3 && <Palette />}
+                {currentStep === 4 && <Calculator />}
+                {currentStep === 5 && <TrendingUp />}
               </div>
 
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              <h3>
                 {currentStepData.title}
               </h3>
               
-              <p className="text-lg text-gray-600 mb-4">
+              <p>
                 {currentStepData.description}
               </p>
 
               {currentStepData.highlight && (
-                <Badge className="bg-green-100 text-green-700 mb-4">
-                  <CheckCircle2 className="w-4 h-4 mr-1" />
+                <Badge>
+                  <CheckCircle2 />
                   {currentStepData.highlight}
                 </Badge>
               )}
             </div>
 
-            <div className="space-y-4">
-              <p className="text-gray-700 leading-relaxed">
+            <div>
+              <p>
                 {currentStepData.content}
               </p>
 
               {currentStepData.tip && (
-                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <div className="design-inline">
-                    <Lightbulb className="w-5 h-5 text-yellow-600" />
+                <div>
+                  <div>
+                    <Lightbulb />
                     <div>
-                      <p className="font-medium text-yellow-800">Pro Tip</p>
-                      <p className="text-sm text-yellow-700">{currentStepData.tip}</p>
+                      <p>Pro Tip</p>
+                      <p>{currentStepData.tip}</p>
                     </div>
                   </div>
                 </div>
               )}
 
               {currentStepData.action && (
-                <div className="text-center">
+                <div>
                   <Button
                     onClick={currentStepData.action.onClick}
-                    className="design-button design-button-primary"
+                   
                   >
-                    <Play className="w-4 h-4 mr-2" />
+                    <Play />
                     {currentStepData.action.label}
                   </Button>
                 </div>
@@ -238,40 +236,40 @@ export function OnboardingTour({
           </div>
 
           {/* Navigation */}
-          <div className="px-8 pb-6">
-            <div className="design-inline">
+          <div>
+            <div>
               <Button
                 variant="outline"
                 onClick={handlePrevious}
                 disabled={currentStep === 0}
-                className="design-button design-button-secondary"
+               
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
+                <ArrowLeft />
                 Previous
               </Button>
 
-              <div className="design-inline">
+              <div>
                 <Button
                   variant="ghost"
                   onClick={handleSkip}
-                  className="text-gray-500 hover:text-gray-700"
+                 
                 >
                   Skip Tour
                 </Button>
 
                 <Button
                   onClick={handleNext}
-                  className="design-button design-button-primary"
+                 
                 >
                   {currentStep === ONBOARDING_STEPS.length - 1 ? (
                     <>
-                      <CheckCircle2 className="w-4 h-4 mr-2" />
+                      <CheckCircle2 />
                       Get Started
                     </>
                   ) : (
                     <>
                       Next
-                      <ArrowRight className="w-4 h-4 ml-2" />
+                      <ArrowRight />
                     </>
                   )}
                 </Button>
@@ -330,21 +328,21 @@ export function OnboardingChecklist({
   };
 
   return (
-    <Card className={cn("design-card border-green-200", className)}>
-      <CardContent className="p-6">
-        <div className="design-inline mb-4">
+    <Card>
+      <CardContent>
+        <div>
           <div>
-            <h3 className="font-semibold text-green-900">Get Started Checklist</h3>
-            <p className="text-sm text-green-700">
+            <h3>Get Started Checklist</h3>
+            <p>
               Complete these steps to master your new interface
             </p>
           </div>
-          <Badge className="bg-green-100 text-green-700">
+          <Badge>
             {completedSteps.size}/{checklistItems.length}
           </Badge>
         </div>
 
-        <div className="space-y-3">
+        <div>
           {checklistItems.map((item) => {
             const isCompleted = completedSteps.has(item.id);
             const IconComponent = item.icon;
@@ -352,31 +350,20 @@ export function OnboardingChecklist({
             return (
               <div
                 key={item.id}
-                className={cn(
-                  "design-inline p-3 rounded-lg border transition-all",
-                  isCompleted 
-                    ? "bg-green-50 border-green-200" 
-                    : "bg-gray-50 border-gray-200 hover:border-green-300"
-                )}
+               
               >
-                <div className="design-inline">
-                  <div className={cn(
-                    "p-2 rounded-lg",
-                    isCompleted ? "bg-green-100" : "bg-white"
-                  )}>
-                    <IconComponent className={cn(
-                      "w-4 h-4",
-                      isCompleted ? "text-green-600" : "text-gray-600"
-                    )} />
+                <div>
+                  <div>
+                    <IconComponent />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{item.title}</p>
-                    <p className="text-sm text-gray-600">{item.description}</p>
+                    <p>{item.title}</p>
+                    <p>{item.description}</p>
                   </div>
                 </div>
 
                 {isCompleted ? (
-                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                  <CheckCircle2 />
                 ) : (
                   <Button
                     size="sm"
@@ -384,9 +371,9 @@ export function OnboardingChecklist({
                       item.action();
                       handleStepComplete(item.id);
                     }}
-                    className="design-button design-button-small"
+                   
                   >
-                    <Timer className="w-3 h-3 mr-1" />
+                    <Timer />
                     Try Now
                   </Button>
                 )}

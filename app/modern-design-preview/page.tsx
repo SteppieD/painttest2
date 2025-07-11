@@ -81,52 +81,52 @@ export default function ModernDesignPreview() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
 
       {/* Hero Section with AdCreative.ai Style */}
-      <section className="ad-hero relative">
-        <div className="container mx-auto max-w-7xl px-4 relative z-10">
-          <div className="text-center">
+      <section>
+        <div>
+          <div>
             {/* Animated Badge */}
-            <div className="inline-flex items-center ad-badge ad-badge-pink mb-6 animate-pulse">
-              <Sparkles className="w-4 h-4" />
+            <div>
+              <Sparkles />
               <span>Introducing Our New Design</span>
             </div>
             
-            <h1 className="ad-heading-hero mb-6">
-              Create <span className="ad-gradient-text">Stunning Quotes</span><br />
+            <h1>
+              Create <span>Stunning Quotes</span><br />
               Win More Painting Jobs
             </h1>
             
-            <p className="ad-text-lg max-w-3xl mx-auto mb-8 text-gray-600">
+            <p>
               Join 5,000+ painting contractors using AI-powered quoting software. 
               Create professional estimates in 30 seconds, increase win rates by 40%, 
               and grow your business with data-driven insights.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <button className="ad-button ad-button-primary text-lg px-8 py-4">
+            <div>
+              <button>
                 Start Free Trial
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight />
               </button>
-              <button className="ad-button ad-button-secondary text-lg px-8 py-4">
+              <button>
                 Watch Demo
-                <Zap className="w-5 h-5" />
+                <Zap />
               </button>
             </div>
             
             {/* Trust Indicators */}
-            <div className="flex flex-wrap justify-center items-center gap-6 text-sm text-gray-500">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-500" />
+            <div>
+              <div>
+                <CheckCircle />
                 <span>No credit card required</span>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-500" />
+              <div>
+                <CheckCircle />
                 <span>5 minute setup</span>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-500" />
+              <div>
+                <CheckCircle />
                 <span>Cancel anytime</span>
               </div>
             </div>
@@ -135,18 +135,18 @@ export default function ModernDesignPreview() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-white to-purple-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section>
+        <div>
+          <div>
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <div key={index} className="text-center">
-                  <div className="ad-feature-icon mx-auto mb-4">
-                    <Icon className="w-6 h-6" />
+                <div key={index}>
+                  <div>
+                    <Icon />
                   </div>
-                  <div className="ad-heading-2 ad-gradient-text">{stat.number}</div>
-                  <div className="text-gray-600">{stat.label}</div>
+                  <div>{stat.number}</div>
+                  <div>{stat.label}</div>
                 </div>
               );
             })}
@@ -155,28 +155,28 @@ export default function ModernDesignPreview() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="ad-heading-1 mb-4">
-              Everything You Need to <span className="ad-gradient-text">Grow</span>
+      <section>
+        <div>
+          <div>
+            <h2>
+              Everything You Need to <span>Grow</span>
             </h2>
-            <p className="ad-text-lg max-w-2xl mx-auto">
+            <p>
               Professional tools designed specifically for painting contractors, 
               backed by AI and loved by thousands.
             </p>
           </div>
           
-          <div className="ad-feature-grid">
+          <div>
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div key={index} className="ad-feature-card">
-                  <div className="ad-feature-icon">
-                    <Icon className="w-6 h-6" />
+                <div key={index}>
+                  <div>
+                    <Icon />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
                 </div>
               );
             })}
@@ -185,29 +185,29 @@ export default function ModernDesignPreview() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 px-4 bg-gradient-to-b from-purple-50 to-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="ad-heading-1 mb-4">
-              Contractors <span className="ad-gradient-text">Love</span> ProPaint Quote
+      <section>
+        <div>
+          <div>
+            <h2>
+              Contractors <span>Love</span> ProPaint Quote
             </h2>
-            <p className="ad-text-lg">
+            <p>
               Real stories from painting professionals who transformed their business
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="ad-card">
-                <div className="flex gap-1 mb-4">
+              <div key={index}>
+                <div>
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                    <Star key={i} />
                   ))}
                 </div>
-                <p className="text-gray-700 mb-6 italic">"{testimonial.quote}"</p>
+                <p>"{testimonial.quote}"</p>
                 <div>
-                  <div className="font-semibold text-gray-900">{testimonial.author}</div>
-                  <div className="text-sm ad-gradient-text font-medium">{testimonial.company}</div>
+                  <div>{testimonial.author}</div>
+                  <div>{testimonial.company}</div>
                 </div>
               </div>
             ))}
@@ -216,33 +216,33 @@ export default function ModernDesignPreview() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-4xl text-center">
-          <div className="ad-card bg-gradient-to-br from-purple-50 to-pink-50 border-0">
-            <Rocket className="w-16 h-16 text-pink-500 mx-auto mb-6" />
-            <h2 className="ad-heading-1 mb-6">
-              Ready to <span className="ad-gradient-text">Transform</span> Your Business?
+      <section>
+        <div>
+          <div>
+            <Rocket />
+            <h2>
+              Ready to <span>Transform</span> Your Business?
             </h2>
-            <p className="ad-text-lg mb-8">
+            <p>
               Join 5,000+ contractors who are winning more jobs and growing faster with ProPaint Quote.
             </p>
             
-            <button className="ad-button ad-button-primary text-lg px-12 py-4">
+            <button>
               Start Your Free Trial
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight />
             </button>
             
-            <div className="flex justify-center items-center gap-8 mt-8 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
+            <div>
+              <div>
+                <CheckCircle />
                 <span>14-day free trial</span>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
+              <div>
+                <CheckCircle />
                 <span>No credit card</span>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
+              <div>
+                <CheckCircle />
                 <span>Full access</span>
               </div>
             </div>
@@ -251,67 +251,67 @@ export default function ModernDesignPreview() {
       </section>
 
       {/* Design System Preview */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="ad-heading-1 mb-4">Design System Elements</h2>
-            <p className="ad-text-lg">Preview of AdCreative.ai-inspired components</p>
+      <section>
+        <div>
+          <div>
+            <h2>Design System Elements</h2>
+            <p>Preview of AdCreative.ai-inspired components</p>
           </div>
           
-          <div className="space-y-8">
+          <div>
             {/* Buttons */}
-            <div className="ad-card">
-              <h3 className="text-xl font-bold mb-6">Buttons</h3>
-              <div className="flex flex-wrap gap-4">
-                <button className="ad-button ad-button-primary">Primary Button</button>
-                <button className="ad-button ad-button-secondary">Secondary Button</button>
-                <button className="ad-button ad-button-primary" disabled style={{opacity: 0.6, cursor: 'not-allowed'}}>
+            <div>
+              <h3>Buttons</h3>
+              <div>
+                <button>Primary Button</button>
+                <button>Secondary Button</button>
+                <button disabled>
                   Disabled Button
                 </button>
               </div>
             </div>
             
             {/* Badges */}
-            <div className="ad-card">
-              <h3 className="text-xl font-bold mb-6">Badges</h3>
-              <div className="flex flex-wrap gap-4">
-                <div className="ad-badge">
-                  <Sparkles className="w-4 h-4" />
+            <div>
+              <h3>Badges</h3>
+              <div>
+                <div>
+                  <Sparkles />
                   Default Badge
                 </div>
-                <div className="ad-badge ad-badge-pink">
-                  <Zap className="w-4 h-4" />
+                <div>
+                  <Zap />
                   Pink Badge
                 </div>
               </div>
             </div>
             
             {/* Typography */}
-            <div className="ad-card">
-              <h3 className="text-xl font-bold mb-6">Typography</h3>
-              <div className="space-y-4">
-                <h1 className="ad-heading-hero">Hero Heading</h1>
-                <h2 className="ad-heading-1">Heading 1</h2>
-                <h3 className="ad-heading-2">Heading 2</h3>
-                <p className="ad-text-lg">Large body text for important descriptions</p>
-                <p className="ad-gradient-text text-2xl font-bold">Gradient Text Effect</p>
+            <div>
+              <h3>Typography</h3>
+              <div>
+                <h1>Hero Heading</h1>
+                <h2>Heading 1</h2>
+                <h3>Heading 2</h3>
+                <p>Large body text for important descriptions</p>
+                <p>Gradient Text Effect</p>
               </div>
             </div>
             
             {/* Cards */}
-            <div className="ad-card">
-              <h3 className="text-xl font-bold mb-6">Card Styles</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="ad-feature-card">
-                  <div className="ad-feature-icon">
-                    <PaintBucket className="w-6 h-6" />
+            <div>
+              <h3>Card Styles</h3>
+              <div>
+                <div>
+                  <div>
+                    <PaintBucket />
                   </div>
-                  <h4 className="font-bold mb-2">Feature Card</h4>
-                  <p className="text-gray-600 text-sm">Hover me to see the effect</p>
+                  <h4>Feature Card</h4>
+                  <p>Hover me to see the effect</p>
                 </div>
-                <div className="ad-card" style={{padding: '1.5rem'}}>
-                  <h4 className="font-bold mb-2">Standard Card</h4>
-                  <p className="text-gray-600 text-sm">With top border on hover</p>
+                <div>
+                  <h4>Standard Card</h4>
+                  <p>With top border on hover</p>
                 </div>
               </div>
             </div>

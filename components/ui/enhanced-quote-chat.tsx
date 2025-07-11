@@ -16,8 +16,6 @@ import {
   FileText,
   Sparkles
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-
 interface QuoteData {
   customer_name?: string;
   address?: string;
@@ -87,47 +85,36 @@ export const EnhancedMessage: React.FC<EnhancedMessageProps> = ({
   };
 
   return (
-    <div className={cn(
-      "flex gap-3 animate-in fade-in-0 slide-in-from-bottom-2 duration-300",
-      role === 'user' ? "justify-end" : "justify-start"
-    )}>
+    <div>
       {/* Avatar for assistant */}
       {role === 'assistant' && (
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white flex-shrink-0 mt-1">
-          <Sparkles className="w-4 h-4" />
+        <div>
+          <Sparkles />
         </div>
       )}
       
-      <div className={cn(
-        "flex flex-col max-w-[85%] lg:max-w-[70%]",
-        role === 'user' ? "items-end" : "items-start"
-      )}>
+      <div>
         {/* Message bubble */}
         <div
-          className={cn(
-            "rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md",
-            role === 'user'
-              ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white px-4 py-3"
-              : "bg-white border border-gray-200 p-0 overflow-hidden"
-          )}
+         
         >
           {role === 'assistant' ? (
             <div>
               {/* Status indicator for assistant messages */}
               {metadata?.stage && (
-                <div className="px-4 pt-3 pb-2 border-b bg-gray-50">
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="text-xs">
+                <div>
+                  <div>
+                    <Badge variant="secondary">
                       {metadata.stage.replace(/_/g, ' ').toUpperCase()}
                     </Badge>
                     {metadata.confidence && metadata.confidence > 0.8 && (
-                      <CheckCircle className="w-3 h-3 text-green-500" />
+                      <CheckCircle />
                     )}
                   </div>
                 </div>
               )}
               
-              <div className="p-4">
+              <div>
                 {parseStructuredContent(content)}
               </div>
               
@@ -137,15 +124,12 @@ export const EnhancedMessage: React.FC<EnhancedMessageProps> = ({
               )}
             </div>
           ) : (
-            <div className="text-sm leading-relaxed">{content}</div>
+            <div>{content}</div>
           )}
         </div>
         
         {/* Timestamp */}
-        <div className={cn(
-          "text-xs mt-1 px-2",
-          role === 'user' ? "text-gray-500" : "text-gray-400"
-        )}>
+        <div>
           {new Date(timestamp).toLocaleTimeString([], { 
             hour: '2-digit', 
             minute: '2-digit' 
@@ -155,8 +139,8 @@ export const EnhancedMessage: React.FC<EnhancedMessageProps> = ({
       
       {/* Avatar for user */}
       {role === 'user' && (
-        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 flex-shrink-0 mt-1">
-          <User className="w-4 h-4" />
+        <div>
+          <User />
         </div>
       )}
     </div>
@@ -170,27 +154,27 @@ const QuoteDisplay: React.FC<{ content: string }> = ({ content }) => {
   const profitMatch = content.match(/\*\*Projected Profit: \$([0-9,]+\.?\d*)\*\*/);
   
   return (
-    <div className="space-y-4">
+    <div>
       {/* Summary cards */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-center gap-2">
-            <DollarSign className="w-5 h-5 text-blue-600" />
+      <div>
+        <div>
+          <div>
+            <DollarSign />
             <div>
-              <p className="text-xs text-blue-600 font-medium">Total Quote</p>
-              <p className="text-lg font-bold text-blue-900">
+              <p>Total Quote</p>
+              <p>
                 ${totalMatch ? totalMatch[1] : '0.00'}
               </p>
             </div>
           </div>
         </div>
         
-        <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-          <div className="flex items-center gap-2">
-            <Calculator className="w-5 h-5 text-green-600" />
+        <div>
+          <div>
+            <Calculator />
             <div>
-              <p className="text-xs text-green-600 font-medium">Projected Profit</p>
-              <p className="text-lg font-bold text-green-900">
+              <p>Projected Profit</p>
+              <p>
                 ${profitMatch ? profitMatch[1] : '0.00'}
               </p>
             </div>
@@ -199,18 +183,18 @@ const QuoteDisplay: React.FC<{ content: string }> = ({ content }) => {
       </div>
       
       {/* Detailed breakdown */}
-      <div className="text-sm space-y-2">
+      <div>
         <MarkdownContent content={content} />
       </div>
       
       {/* Action buttons */}
-      <div className="flex gap-2 pt-2">
-        <Button size="sm" variant="outline" className="text-xs">
-          <FileText className="w-3 h-3 mr-1" />
+      <div>
+        <Button size="sm" variant="outline">
+          <FileText />
           See Breakdown
         </Button>
-        <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white text-xs">
-          <CheckCircle className="w-3 h-3 mr-1" />
+        <Button size="sm">
+          <CheckCircle />
           Save Quote
         </Button>
       </div>
@@ -223,8 +207,8 @@ const RateConfirmationDisplay: React.FC<{ content: string }> = ({ content }) => 
   const rates = content.match(/• \*\*(.*?)\*\*: \$([\d.]+)(.*)/g) || [];
   
   return (
-    <div className="space-y-3">
-      <div className="grid gap-2">
+    <div>
+      <div>
         {rates.map((rate, index) => {
           const match = rate.match(/• \*\*(.*?)\*\*: \$([\d.]+)(.*)/);
           if (!match) return null;
@@ -232,9 +216,9 @@ const RateConfirmationDisplay: React.FC<{ content: string }> = ({ content }) => 
           const [_, label, price, unit] = match;
           
           return (
-            <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-              <span className="text-sm font-medium">{label}</span>
-              <span className="text-sm font-bold text-blue-600">
+            <div key={index}>
+              <span>{label}</span>
+              <span>
                 ${price}{unit}
               </span>
             </div>
@@ -242,18 +226,18 @@ const RateConfirmationDisplay: React.FC<{ content: string }> = ({ content }) => 
         })}
       </div>
       
-      <div className="pt-2 border-t">
-        <p className="text-sm text-gray-600 mb-2">
+      <div>
+        <p>
           Would you like to adjust any rates?
         </p>
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="outline" className="text-xs cursor-pointer hover:bg-gray-100">
+        <div>
+          <Badge variant="outline">
             "walls to $3.50"
           </Badge>
-          <Badge variant="outline" className="text-xs cursor-pointer hover:bg-gray-100">
+          <Badge variant="outline">
             "doors $120"
           </Badge>
-          <Badge variant="outline" className="text-xs cursor-pointer hover:bg-gray-100">
+          <Badge variant="outline">
             "looks good"
           </Badge>
         </div>
@@ -267,10 +251,10 @@ const ProductSelectionDisplay: React.FC<{ content: string }> = ({ content }) => 
   const productLines = content.match(/\*\*\d+\.\*\* .*$/gm) || [];
   
   return (
-    <div className="space-y-3">
-      <p className="text-sm text-gray-700">Select your paint product:</p>
+    <div>
+      <p>Select your paint product:</p>
       
-      <div className="grid gap-2">
+      <div>
         {productLines.map((line, index) => {
           const cleanLine = line.replace(/\*\*/g, '');
           const parts = cleanLine.match(/(\d+)\. (.+?) - \$(\d+)\/gallon(.*)/);
@@ -282,13 +266,13 @@ const ProductSelectionDisplay: React.FC<{ content: string }> = ({ content }) => 
             <Button
               key={index}
               variant="outline"
-              className="justify-start text-left h-auto p-3 hover:bg-blue-50 hover:border-blue-300"
+             
             >
-              <div className="flex items-start gap-3 w-full">
-                <Badge className="bg-blue-100 text-blue-700">{num}</Badge>
-                <div className="flex-1">
-                  <p className="font-medium text-sm">{productName}</p>
-                  <p className="text-xs text-gray-600">
+              <div>
+                <Badge>{num}</Badge>
+                <div>
+                  <p>{productName}</p>
+                  <p>
                     ${price}/gallon {extra}
                   </p>
                 </div>
@@ -298,7 +282,7 @@ const ProductSelectionDisplay: React.FC<{ content: string }> = ({ content }) => 
         })}
       </div>
       
-      <p className="text-xs text-gray-500 italic">
+      <p>
         Say the number or product name to select
       </p>
     </div>
@@ -327,17 +311,17 @@ const ParsedDataDisplay: React.FC<{ data: any }> = ({ data }) => {
   if (items.length === 0) return null;
   
   return (
-    <div className="px-4 pb-3 pt-2 bg-gray-50 border-t">
-      <div className="flex items-center gap-2 mb-2">
-        <Info className="w-3 h-3 text-gray-500" />
-        <span className="text-xs text-gray-600 font-medium">Information Captured</span>
+    <div>
+      <div>
+        <Info />
+        <span>Information Captured</span>
       </div>
-      <div className="grid grid-cols-2 gap-2">
+      <div>
         {items.map((item, index) => (
-          <div key={index} className="flex items-center gap-2 text-xs">
-            <item.icon className="w-3 h-3 text-gray-400" />
-            <span className="text-gray-600">{item.label}:</span>
-            <span className="font-medium text-gray-900">{item.value}</span>
+          <div key={index}>
+            <item.icon />
+            <span>{item.label}:</span>
+            <span>{item.value}</span>
           </div>
         ))}
       </div>
@@ -357,10 +341,10 @@ const MarkdownContent: React.FC<{ content: string }> = ({ content }) => {
     // Handle bullet points with better styling
     text = text.replace(/^• /gm, '<span class="inline-block w-4">•</span>');
     
-    return <div dangerouslySetInnerHTML={{ __html: text }} className="prose-sm" />;
+    return <div dangerouslySetInnerHTML={{ __html: text }} />;
   };
   
-  return <div className="text-sm leading-relaxed text-gray-700">{renderContent(content)}</div>;
+  return <div>{renderContent(content)}</div>;
 };
 
 export default EnhancedMessage;

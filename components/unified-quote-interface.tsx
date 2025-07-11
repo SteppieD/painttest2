@@ -212,10 +212,10 @@ export function UnifiedQuoteInterface({
 
   if (!auth?.isAuthenticated) {
     return (
-      <Card className="p-6 text-center">
-        <AlertCircle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold mb-2">Authentication Required</h3>
-        <p className="text-muted-foreground">
+      <Card>
+        <AlertCircle />
+        <h3>Authentication Required</h3>
+        <p>
           Please sign in to create quotes.
         </p>
       </Card>
@@ -225,105 +225,105 @@ export function UnifiedQuoteInterface({
   if (showModeSelector) {
     return (
       <ErrorBoundary>
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="text-center space-y-4">
-            <h1 className="text-3xl font-bold">Create a New Quote</h1>
-            <p className="text-lg text-muted-foreground">
+        <div>
+          <div>
+            <h1>Create a New Quote</h1>
+            <p>
               Choose your preferred method for creating a paint quote
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div>
             {/* Guided Chat Mode */}
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-2 border-primary/20">
+            <Card>
               <div 
-                className="text-center space-y-4"
+               
                 onClick={() => handleModeSelect('guided')}
               >
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                  <Sparkles className="w-8 h-8 text-primary" />
+                <div>
+                  <Sparkles />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold">AI-Guided Chat</h3>
-                  <Badge className="mt-2">Recommended</Badge>
+                  <h3>AI-Guided Chat</h3>
+                  <Badge>Recommended</Badge>
                 </div>
-                <p className="text-muted-foreground">
+                <p>
                   Have a conversation with our AI assistant to create your quote naturally.
                   Perfect for complex projects or when you're not sure about measurements.
                 </p>
-                <ul className="text-sm text-muted-foreground space-y-1">
+                <ul>
                   <li>✓ Natural conversation flow</li>
                   <li>✓ Smart measurement assistance</li>
                   <li>✓ Room-by-room guidance</li>
                   <li>✓ Automatic calculations</li>
                 </ul>
-                <Button className="w-full">Start AI Chat</Button>
+                <Button>Start AI Chat</Button>
               </div>
             </Card>
 
             {/* Chat Mode */}
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+            <Card>
               <div 
-                className="text-center space-y-4"
+               
                 onClick={() => handleModeSelect('chat')}
               >
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                  <MessageSquare className="w-8 h-8 text-blue-600" />
+                <div>
+                  <MessageSquare />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold">Simple Chat</h3>
+                  <h3>Simple Chat</h3>
                 </div>
-                <p className="text-muted-foreground">
+                <p>
                   Basic chat interface for quick quotes when you know what you need.
                   Faster for experienced users.
                 </p>
-                <ul className="text-sm text-muted-foreground space-y-1">
+                <ul>
                   <li>✓ Quick and simple</li>
                   <li>✓ Direct input</li>
                   <li>✓ Fast processing</li>
                   <li>✓ No extra questions</li>
                 </ul>
-                <Button variant="outline" className="w-full">Simple Chat</Button>
+                <Button variant="outline">Simple Chat</Button>
               </div>
             </Card>
 
             {/* Wizard Mode */}
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+            <Card>
               <div 
-                className="text-center space-y-4"
+               
                 onClick={() => handleModeSelect('wizard')}
               >
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                  <ClipboardList className="w-8 h-8 text-green-600" />
+                <div>
+                  <ClipboardList />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold">Step-by-Step Form</h3>
+                  <h3>Step-by-Step Form</h3>
                 </div>
-                <p className="text-muted-foreground">
+                <p>
                   Traditional form-based approach with clear steps and validation.
                   Great for precise control over all details.
                 </p>
-                <ul className="text-sm text-muted-foreground space-y-1">
+                <ul>
                   <li>✓ Structured approach</li>
                   <li>✓ Field validation</li>
                   <li>✓ Progress tracking</li>
                   <li>✓ Review before submit</li>
                 </ul>
-                <Button variant="outline" className="w-full">Step-by-Step</Button>
+                <Button variant="outline">Step-by-Step</Button>
               </div>
             </Card>
           </div>
 
           {/* Show draft notice if exists */}
           {state.quoteData && (
-            <Card className="p-4 border-amber-200 bg-amber-50">
-              <div className="flex items-center gap-3">
-                <AlertCircle className="w-5 h-5 text-amber-600" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-amber-800">
+            <Card>
+              <div>
+                <AlertCircle />
+                <div>
+                  <p>
                     You have a saved draft from your previous session.
                   </p>
-                  <p className="text-xs text-amber-600">
+                  <p>
                     It will be automatically loaded when you select a mode.
                   </p>
                 </div>
@@ -347,12 +347,12 @@ export function UnifiedQuoteInterface({
 
   return (
     <ErrorBoundary>
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div>
         {/* Header with progress */}
-        <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-bold">Create Quote</h1>
-            <div className="flex items-center gap-4">
+        <div>
+          <div>
+            <h1>Create Quote</h1>
+            <div>
               <Badge variant="outline">
                 {state.mode === 'guided' ? 'AI-Guided Chat' : 
                  state.mode === 'chat' ? 'Simple Chat' : 'Step-by-Step Form'}
@@ -363,7 +363,7 @@ export function UnifiedQuoteInterface({
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div>
             <Button variant="outline" size="sm" onClick={handleReset}>
               Start Over
             </Button>
@@ -375,23 +375,23 @@ export function UnifiedQuoteInterface({
 
         {/* Progress bar */}
         {state.progress > 0 && (
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
+          <div>
+            <div>
               <span>Progress</span>
               <span>{state.progress}%</span>
             </div>
-            <Progress value={state.progress} className="h-2" />
+            <Progress value={state.progress} />
           </div>
         )}
 
         {/* Error display */}
         {state.error && (
-          <Card className="p-4 border-red-200 bg-red-50">
-            <div className="flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-red-600" />
-              <div className="flex-1">
-                <p className="text-sm font-medium text-red-800">Error</p>
-                <p className="text-sm text-red-600">{state.error}</p>
+          <Card>
+            <div>
+              <AlertCircle />
+              <div>
+                <p>Error</p>
+                <p>{state.error}</p>
               </div>
               <Button 
                 size="sm" 
@@ -405,16 +405,16 @@ export function UnifiedQuoteInterface({
         )}
 
         {/* Main interface */}
-        <div className="min-h-[600px]">
+        <div>
           {state.mode === 'guided' && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">Guided mode temporarily unavailable</p>
+            <div>
+              <p>Guided mode temporarily unavailable</p>
             </div>
           )}
 
           {state.mode === 'chat' && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">Chat mode temporarily unavailable</p>
+            <div>
+              <p>Chat mode temporarily unavailable</p>
             </div>
           )}
 

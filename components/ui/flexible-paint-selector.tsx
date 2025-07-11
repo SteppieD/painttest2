@@ -8,7 +8,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from "./input";
 import { Label } from "./label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
-import { cn } from "@/lib/utils";
 import { CheckCircle, Settings, Plus, AlertCircle, Zap, Clock, Info } from "lucide-react";
 import { useToast } from "./use-toast";
 
@@ -228,21 +227,21 @@ export function FlexiblePaintSelector({
 
   if (isLoading) {
     return (
-      <div className={cn("animate-pulse", className)}>
-        <div className="h-6 bg-gray-200 rounded mb-2 w-1/3"></div>
-        <div className="h-16 bg-gray-200 rounded"></div>
+      <div>
+        <div></div>
+        <div></div>
       </div>
     );
   }
 
   return (
-    <div className={className}>
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-lg">{categoryIcons[category]}</span>
-        <h3 className="text-lg font-semibold">{categoryLabels[category]}</h3>
+    <div>
+      <div>
+        <span>{categoryIcons[category]}</span>
+        <h3>{categoryLabels[category]}</h3>
         {!hasSetup && (
-          <Badge variant="outline" className="text-amber-600 border-amber-300">
-            <AlertCircle className="w-3 h-3 mr-1" />
+          <Badge variant="outline">
+            <AlertCircle />
             Not Set Up
           </Badge>
         )}
@@ -250,26 +249,21 @@ export function FlexiblePaintSelector({
 
       {hasSetup && favorites.length > 0 ? (
         // Show configured favorites
-        <div className="space-y-2">
+        <div>
           {favorites.map((favorite) => (
             <Card
               key={favorite.id}
-              className={cn(
-                "cursor-pointer transition-all border-2",
-                selectedProduct?.id === favorite.id
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-200 hover:border-blue-300"
-              )}
+             
               onClick={() => onProductSelect(favorite)}
             >
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
+              <CardContent>
+                <div>
                   <div>
-                    <p className="font-medium">{favorite.supplier} {favorite.productName}</p>
-                    <p className="text-sm text-gray-600">${favorite.costPerGallon}/gallon</p>
+                    <p>{favorite.supplier} {favorite.productName}</p>
+                    <p>${favorite.costPerGallon}/gallon</p>
                   </div>
                   {selectedProduct?.id === favorite.id && (
-                    <CheckCircle className="w-5 h-5 text-blue-600" />
+                    <CheckCircle />
                   )}
                 </div>
               </CardContent>
@@ -279,44 +273,44 @@ export function FlexiblePaintSelector({
             variant="outline"
             size="sm"
             onClick={() => setShowFallbackOptions(true)}
-            className="w-full mt-2"
+           
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus />
             Add Another Option
           </Button>
         </div>
       ) : (
         // Show setup options for categories without favorites
-        <Card className="border-2 border-dashed border-gray-300">
-          <CardContent className="p-6 text-center">
-            <AlertCircle className="w-8 h-8 text-amber-500 mx-auto mb-3" />
-            <h4 className="font-medium mb-2">No {categoryLabels[category]} Products Set Up</h4>
-            <p className="text-sm text-gray-600 mb-4">
+        <Card>
+          <CardContent>
+            <AlertCircle />
+            <h4>No {categoryLabels[category]} Products Set Up</h4>
+            <p>
               Choose how you'd like to add {categoryLabels[category].toLowerCase()} options:
             </p>
             
-            <div className="space-y-2">
+            <div>
               <Button
                 onClick={() => setShowFallbackOptions(true)}
-                className="w-full"
+               
                 size="sm"
               >
-                <Zap className="w-4 h-4 mr-2" />
+                <Zap />
                 Quick Pick (Popular Options)
               </Button>
               
               <Button
                 onClick={() => setShowQuickSetup(true)}
                 variant="outline"
-                className="w-full"
+               
                 size="sm"
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus />
                 Add My Product
               </Button>
               
-              <div className="flex items-center justify-center text-xs text-gray-500 mt-3">
-                <Info className="w-3 h-3 mr-1" />
+              <div>
+                <Info />
                 Products you add will be saved for future quotes
               </div>
             </div>
@@ -326,7 +320,7 @@ export function FlexiblePaintSelector({
 
       {/* Quick Pick Dialog */}
       <Dialog open={showFallbackOptions} onOpenChange={setShowFallbackOptions}>
-        <DialogContent className="max-w-md">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Quick Pick: {categoryLabels[category]}</DialogTitle>
             <DialogDescription>
@@ -334,30 +328,30 @@ export function FlexiblePaintSelector({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-3">
+          <div>
             {(FALLBACK_OPTIONS[category] || []).map((option, index) => (
               <Card
                 key={index}
-                className="cursor-pointer hover:bg-gray-50 border-2 hover:border-blue-300"
+               
                 onClick={() => handleQuickSetupForCategory(option)}
               >
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{option.supplier} {option.name}</p>
+                <CardContent>
+                  <div>
+                    <div>
+                      <div>
+                        <p>{option.supplier} {option.name}</p>
                         <Badge 
                           variant={option.tier === 'best' ? 'default' : 'secondary'}
-                          className="text-xs"
+                         
                         >
                           {option.tier === 'good' ? 'Good' : option.tier === 'better' ? 'Better' : 'Best'}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600">{option.description}</p>
+                      <p>{option.description}</p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-green-600">${option.cost}</p>
-                      <p className="text-xs text-gray-500">per gallon</p>
+                    <div>
+                      <p>${option.cost}</p>
+                      <p>per gallon</p>
                     </div>
                   </div>
                 </CardContent>
@@ -369,7 +363,7 @@ export function FlexiblePaintSelector({
 
       {/* Custom Product Dialog */}
       <Dialog open={showQuickSetup} onOpenChange={setShowQuickSetup}>
-        <DialogContent className="max-w-md">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Your {categoryLabels[category]}</DialogTitle>
             <DialogDescription>
@@ -377,7 +371,7 @@ export function FlexiblePaintSelector({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4">
+          <div>
             <div>
               <Label htmlFor="supplier">Brand/Supplier</Label>
               <Input
@@ -408,20 +402,20 @@ export function FlexiblePaintSelector({
                 value={customProduct.cost}
                 onChange={(e) => setCustomProduct(prev => ({ ...prev, cost: e.target.value }))}
               />
-              <p className="text-xs text-gray-500 mt-1">Enter your actual cost - markup will be applied during quoting</p>
+              <p>Enter your actual cost - markup will be applied during quoting</p>
             </div>
             
-            <div className="flex gap-2 pt-2">
+            <div>
               <Button
                 variant="outline"
                 onClick={() => setShowQuickSetup(false)}
-                className="flex-1"
+               
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleCustomProductAdd}
-                className="flex-1"
+               
               >
                 Add Product
               </Button>

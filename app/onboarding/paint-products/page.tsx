@@ -160,10 +160,10 @@ export default function PaintProductsPage() {
   };
 
   const renderProductForm = (product: PaintProduct, index: number) => (
-    <Card key={index} className="mb-4">
-      <CardContent className="pt-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
+    <Card key={index}>
+      <CardContent>
+        <div>
+          <div>
             <Label>Supplier</Label>
             <Select
               value={product.supplier}
@@ -182,7 +182,7 @@ export default function PaintProductsPage() {
             </Select>
           </div>
 
-          <div className="space-y-2">
+          <div>
             <Label>Product Name *</Label>
             <Input
               value={product.productName}
@@ -192,7 +192,7 @@ export default function PaintProductsPage() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div>
             <Label>Product Line (optional)</Label>
             <Input
               value={product.productLine || ""}
@@ -201,16 +201,16 @@ export default function PaintProductsPage() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div>
             <Label>Cost per Gallon *</Label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+            <div>
+              <span>$</span>
               <Input
                 type="number"
                 step="0.01"
                 value={product.costPerGallon || ""}
                 onChange={(e) => updateProduct(index, { costPerGallon: parseFloat(e.target.value) || 0 })}
-                className="pl-8"
+               
                 placeholder="0.00"
                 required
               />
@@ -218,7 +218,7 @@ export default function PaintProductsPage() {
           </div>
 
           {product.productCategory !== "primer" && (
-            <div className="space-y-2">
+            <div>
               <Label>Sheen</Label>
               <Select
                 value={product.sheen || ""}
@@ -238,14 +238,14 @@ export default function PaintProductsPage() {
             </div>
           )}
 
-          <div className="flex items-end">
+          <div>
             <Button
               type="button"
               variant="destructive"
               size="sm"
               onClick={() => removeProduct(index)}
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 />
             </Button>
           </div>
         </div>
@@ -262,9 +262,9 @@ export default function PaintProductsPage() {
     );
 
     return (
-      <div key={category.value} className="mb-6">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-lg font-semibold">{category.label}</h3>
+      <div key={category.value}>
+        <div>
+          <h3>{category.label}</h3>
           <Button
             type="button"
             variant="outline"
@@ -272,16 +272,16 @@ export default function PaintProductsPage() {
             onClick={() => addProduct(projectType, category.value)}
             disabled={categoryProducts.length >= 3}
           >
-            <Plus className="h-4 w-4 mr-1" />
+            <Plus />
             Add Product
           </Button>
         </div>
         {categoryProducts.length === 0 ? (
-          <Card className="border-dashed">
-            <CardContent className="py-8 text-center text-gray-500">
-              <PaintBucket className="h-8 w-8 mx-auto mb-2 opacity-50" />
+          <Card>
+            <CardContent>
+              <PaintBucket />
               <p>No {category.label.toLowerCase()} products added yet.</p>
-              <p className="text-sm">Click "Add Product" to get started.</p>
+              <p>Click "Add Product" to get started.</p>
             </CardContent>
           </Card>
         ) : (
@@ -295,17 +295,17 @@ export default function PaintProductsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container max-w-6xl mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Paint Products Setup</h1>
-          <p className="text-gray-600 mt-2">
+    <div>
+      <div>
+        <div>
+          <h1>Paint Products Setup</h1>
+          <p>
             Configure your most commonly used paint products for quick quote generation.
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <Card className="mb-6">
+          <Card>
             <CardHeader>
               <CardTitle>Your Paint Product Catalog</CardTitle>
               <CardDescription>
@@ -313,25 +313,25 @@ export default function PaintProductsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="interior" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="interior" className="flex items-center gap-2">
-                    <Home className="h-4 w-4" />
+              <Tabs defaultValue="interior">
+                <TabsList>
+                  <TabsTrigger value="interior">
+                    <Home />
                     Interior Products
                   </TabsTrigger>
-                  <TabsTrigger value="exterior" className="flex items-center gap-2">
-                    <Building className="h-4 w-4" />
+                  <TabsTrigger value="exterior">
+                    <Building />
                     Exterior Products
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="interior" className="mt-6">
+                <TabsContent value="interior">
                   {INTERIOR_CATEGORIES.map((category) =>
                     renderCategorySection("interior", category)
                   )}
                 </TabsContent>
 
-                <TabsContent value="exterior" className="mt-6">
+                <TabsContent value="exterior">
                   {EXTERIOR_CATEGORIES.map((category) =>
                     renderCategorySection("exterior", category)
                   )}
@@ -340,7 +340,7 @@ export default function PaintProductsPage() {
             </CardContent>
           </Card>
 
-          <div className="flex justify-between">
+          <div>
             <Button
               type="button"
               variant="outline"
@@ -348,7 +348,7 @@ export default function PaintProductsPage() {
             >
               Back
             </Button>
-            <div className="space-x-2">
+            <div>
               <Button
                 type="button"
                 variant="outline"

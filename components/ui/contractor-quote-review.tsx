@@ -128,27 +128,24 @@ export function ContractorQuoteReview({ quote, onUpdate }: ContractorQuoteReview
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Header with Actions */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div>
             <div>
-              <CardTitle className="text-2xl text-gray-900">
+              <CardTitle>
                 Quote #{quote.quote_id}
               </CardTitle>
-              <p className="text-gray-600">{quote.customer_name} • {quote.address}</p>
+              <p>{quote.customer_name} • {quote.address}</p>
             </div>
-            <div className="flex items-center gap-3">
-              <Badge className={quote.status === 'draft' ? 'bg-gray-100 text-gray-800' : 
-                              quote.status === 'sent' ? 'bg-blue-100 text-blue-800' :
-                              quote.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                              'bg-red-100 text-red-800'}>
+            <div>
+              <Badge>
                 {quote.status}
               </Badge>
               {quote.status === 'draft' && (
-                <Button onClick={handleSendToCustomer} className="bg-blue-600 hover:bg-blue-700">
-                  <Send className="w-4 h-4 mr-2" />
+                <Button onClick={handleSendToCustomer}>
+                  <Send />
                   Send to Customer
                 </Button>
               )}
@@ -158,47 +155,47 @@ export function ContractorQuoteReview({ quote, onUpdate }: ContractorQuoteReview
       </Card>
 
       {/* Business Metrics - Contractor View */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div>
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <DollarSign className="w-4 h-4 text-green-600" />
-              <span className="text-sm font-medium text-gray-600">Quote Total</span>
+          <CardContent>
+            <div>
+              <DollarSign />
+              <span>Quote Total</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">${totals.total.toLocaleString()}</p>
+            <p>${totals.total.toLocaleString()}</p>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-blue-600" />
-              <span className="text-sm font-medium text-gray-600">Gross Profit</span>
+          <CardContent>
+            <div>
+              <TrendingUp />
+              <span>Gross Profit</span>
             </div>
-            <p className="text-2xl font-bold text-blue-600">{totals.grossProfit.toFixed(1)}%</p>
+            <p>{totals.grossProfit.toFixed(1)}%</p>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Calculator className="w-4 h-4 text-purple-600" />
-              <span className="text-sm font-medium text-gray-600">Markup Amount</span>
+          <CardContent>
+            <div>
+              <Calculator />
+              <span>Markup Amount</span>
             </div>
-            <p className="text-2xl font-bold text-purple-600">${totals.markupAmount.toLocaleString()}</p>
+            <p>${totals.markupAmount.toLocaleString()}</p>
           </CardContent>
         </Card>
         
-        <Card className={`border-2 ${getMarginHealthColor()}`}>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
+        <Card`}>
+          <CardContent>
+            <div>
               {totals.grossProfit >= 35 ? 
-                <CheckCircle className="w-4 h-4" /> : 
-                <AlertTriangle className="w-4 h-4" />
+                <CheckCircle /> : 
+                <AlertTriangle />
               }
-              <span className="text-sm font-medium">Margin Health</span>
+              <span>Margin Health</span>
             </div>
-            <p className="text-2xl font-bold">{getMarginHealthLabel()}</p>
+            <p>{getMarginHealthLabel()}</p>
           </CardContent>
         </Card>
       </div>
@@ -206,88 +203,88 @@ export function ContractorQuoteReview({ quote, onUpdate }: ContractorQuoteReview
       {/* Cost Breakdown */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div>
             <CardTitle>Cost Breakdown</CardTitle>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setIsEditing(!isEditing)}
             >
-              <Edit3 className="w-4 h-4 mr-2" />
+              <Edit3 />
               {isEditing ? 'Cancel' : 'Edit Markup'}
             </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Materials Cost:</span>
-              <span className="font-medium">${totals.materialCost.toLocaleString()}</span>
+          <div>
+            <div>
+              <span>Materials Cost:</span>
+              <span>${totals.materialCost.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Labor Cost:</span>
-              <span className="font-medium">${totals.laborCost.toLocaleString()}</span>
+            <div>
+              <span>Labor Cost:</span>
+              <span>${totals.laborCost.toLocaleString()}</span>
             </div>
             <hr />
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Subtotal:</span>
-              <span className="font-medium">${totals.subtotal.toLocaleString()}</span>
+            <div>
+              <span>Subtotal:</span>
+              <span>${totals.subtotal.toLocaleString()}</span>
             </div>
             
             {isEditing ? (
-              <div className="flex items-center gap-4">
-                <Label htmlFor="markup" className="text-gray-600">Markup:</Label>
-                <div className="flex items-center gap-2">
+              <div>
+                <Label htmlFor="markup">Markup:</Label>
+                <div>
                   <Input
                     id="markup"
                     type="number"
                     value={markupPercentage}
                     onChange={(e) => setMarkupPercentage(parseInt(e.target.value) || 0)}
-                    className="w-20"
+                   
                     min="0"
                     max="100"
                   />
-                  <span className="text-gray-600">%</span>
-                  <span className="font-medium">${totals.markupAmount.toLocaleString()}</span>
+                  <span>%</span>
+                  <span>${totals.markupAmount.toLocaleString()}</span>
                   <Button size="sm" onClick={handleUpdateMarkup}>
                     Save
                   </Button>
                 </div>
               </div>
             ) : (
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Markup ({markupPercentage}%):</span>
-                <span className="font-medium">${totals.markupAmount.toLocaleString()}</span>
+              <div>
+                <span>Markup ({markupPercentage}%):</span>
+                <span>${totals.markupAmount.toLocaleString()}</span>
               </div>
             )}
             
             <hr />
-            <div className="flex justify-between items-center text-lg font-bold">
+            <div>
               <span>Total Quote:</span>
-              <span className="text-green-600">${totals.total.toLocaleString()}</span>
+              <span>${totals.total.toLocaleString()}</span>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Project Details */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
         <Card>
           <CardHeader>
             <CardTitle>Room Measurements</CardTitle>
           </CardHeader>
           <CardContent>
             {rooms.length > 0 ? (
-              <div className="space-y-3">
+              <div>
                 {rooms.map((room: any) => (
-                  <div key={room.id} className="border-b pb-2">
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium">{room.name}</span>
-                      <span className="text-sm text-gray-500">
+                  <div key={room.id}>
+                    <div>
+                      <span>{room.name}</span>
+                      <span>
                         {room.length}' × {room.width}' × {room.height}'
                       </span>
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div>
                       Floor: {(room.length * room.width).toFixed(1)} sq ft • 
                       Doors: {room.doors} • Windows: {room.windows}
                     </div>
@@ -295,7 +292,7 @@ export function ContractorQuoteReview({ quote, onUpdate }: ContractorQuoteReview
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500">No room data available</p>
+              <p>No room data available</p>
             )}
           </CardContent>
         </Card>
@@ -306,21 +303,21 @@ export function ContractorQuoteReview({ quote, onUpdate }: ContractorQuoteReview
           </CardHeader>
           <CardContent>
             {Object.keys(paintSelections).length > 0 ? (
-              <div className="space-y-3">
+              <div>
                 {Object.entries(paintSelections).map(([surface, selection]: [string, any]) => (
-                  <div key={surface} className="border-b pb-2">
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium capitalize">{surface}</span>
-                      <span className="text-sm text-gray-500">{selection.quality}</span>
+                  <div key={surface}>
+                    <div>
+                      <span>{surface}</span>
+                      <span>{selection.quality}</span>
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div>
                       {selection.brand} • ${selection.pricePerGallon}/gal
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500">No paint selections available</p>
+              <p>No paint selections available</p>
             )}
           </CardContent>
         </Card>
@@ -328,26 +325,26 @@ export function ContractorQuoteReview({ quote, onUpdate }: ContractorQuoteReview
 
       {/* Customer Actions */}
       {quote.status === 'sent' && (
-        <Card className="bg-blue-50 border-blue-200">
-          <CardContent className="p-6 text-center">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">Quote Sent to Customer</h3>
-            <p className="text-blue-700 mb-4">
+        <Card>
+          <CardContent>
+            <h3>Quote Sent to Customer</h3>
+            <p>
               Your customer can view and respond to this quote using the link you shared.
             </p>
-            <div className="flex justify-center gap-3">
+            <div>
               <Button 
                 variant="outline" 
                 onClick={handleSendToCustomer}
-                className="border-blue-300 text-blue-700"
+               
               >
-                <Copy className="w-4 h-4 mr-2" />
+                <Copy />
                 Copy Link Again
               </Button>
               <Button 
                 onClick={() => window.open(`/quote/${quote.id}`, '_blank')}
-                className="bg-blue-600 hover:bg-blue-700"
+               
               >
-                <Eye className="w-4 h-4 mr-2" />
+                <Eye />
                 Preview Customer View
               </Button>
             </div>

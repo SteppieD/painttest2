@@ -503,10 +503,10 @@ export default function CostManagementLaboratory() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading cost analytics...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading cost analytics...</p>
         </div>
       </div>
     );
@@ -514,24 +514,24 @@ export default function CostManagementLaboratory() {
 
   if (!metrics) {
     return (
-      <div className="text-center py-12">
-        <p className="text-gray-600">Unable to load cost data</p>
+      <div>
+        <p>Unable to load cost data</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div>
       {/* Header with Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Cost Management Laboratory</h1>
-          <p className="text-gray-600">Comprehensive cost analysis and optimization insights</p>
+          <h1>Cost Management Laboratory</h1>
+          <p>Comprehensive cost analysis and optimization insights</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div>
           {/* View Mode Selector */}
-          <div className="flex bg-white rounded-lg border">
+          <div>
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'materials', label: 'Materials', icon: Package },
@@ -541,20 +541,16 @@ export default function CostManagementLaboratory() {
               <button
                 key={mode.id}
                 onClick={() => setViewMode(mode.id as any)}
-                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors ${
-                  viewMode === mode.id
-                    ? 'bg-blue-100 text-blue-700 border-blue-200'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
+               `}
               >
-                <mode.icon className="w-4 h-4" />
+                <mode.icon />
                 {mode.label}
               </button>
             ))}
           </div>
 
           {/* Time Range Selector */}
-          <div className="flex bg-white rounded-lg border">
+          <div>
             {[
               { id: 'month', label: 'Month' },
               { id: 'quarter', label: 'Quarter' },
@@ -563,11 +559,7 @@ export default function CostManagementLaboratory() {
               <button
                 key={range.id}
                 onClick={() => setTimeRange(range.id as any)}
-                className={`px-3 py-2 text-sm font-medium transition-colors ${
-                  timeRange === range.id
-                    ? 'bg-green-100 text-green-700 border-green-200'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
+               `}
               >
                 {range.label}
               </button>
@@ -575,109 +567,107 @@ export default function CostManagementLaboratory() {
           </div>
 
           {/* Export Button */}
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            <Download className="w-4 h-4" />
+          <button>
+            <Download />
             Export
           </button>
         </div>
       </div>
 
       {/* Key Cost Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-gradient-to-br from-red-50 to-rose-50 border-red-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-red-700 flex items-center gap-2">
-              <DollarSign className="w-4 h-4" />
+      <div>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <DollarSign />
               Total Costs
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-red-800">
+            <div>
+              <div>
                 {formatCurrency(metrics.overview.totalCosts)}
               </div>
-              <div className="flex items-center gap-2">
+              <div>
                 {metrics.overview.costTrend >= 0 ? (
-                  <ArrowUpRight className="w-4 h-4 text-red-600" />
+                  <ArrowUpRight />
                 ) : (
-                  <ArrowDownRight className="w-4 h-4 text-green-600" />
+                  <ArrowDownRight />
                 )}
-                <span className={`text-sm font-medium ${
-                  metrics.overview.costTrend >= 0 ? 'text-red-600' : 'text-green-600'
-                }`}>
+                <span`}>
                   {Math.abs(metrics.overview.costTrend).toFixed(1)}% vs last {timeRange}
                 </span>
               </div>
-              <div className="text-xs text-red-600">
+              <div>
                 {formatCurrency(metrics.overview.costPerProject)} per project
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-green-700 flex items-center gap-2">
-              <Target className="w-4 h-4" />
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Target />
               Profit Margin
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-green-800">
+            <div>
+              <div>
                 {metrics.overview.profitMargin.toFixed(1)}%
               </div>
-              <div className="text-sm text-green-600">
+              <div>
                 Target: 25%
               </div>
-              <div className="text-xs text-green-600">
+              <div>
                 {metrics.overview.profitMargin >= 25 ? 'Above target' : 'Below target'}
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-blue-700 flex items-center gap-2">
-              <Package className="w-4 h-4" />
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Package />
               Material Costs
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-blue-800">
+            <div>
+              <div>
                 {formatCurrency(metrics.materialCosts.totalSpend)}
               </div>
-              <div className="flex items-center gap-2">
-                <ArrowDownRight className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-green-600">
+              <div>
+                <ArrowDownRight />
+                <span>
                   {Math.abs(metrics.materialCosts.trend).toFixed(1)}% reduction
                 </span>
               </div>
-              <div className="text-xs text-blue-600">
+              <div>
                 {metrics.materialCosts.wastePercentage}% waste rate
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-purple-700 flex items-center gap-2">
-              <Users className="w-4 h-4" />
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Users />
               Labor Efficiency
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-purple-800">
+            <div>
+              <div>
                 {metrics.laborCosts.efficiency}%
               </div>
-              <div className="text-sm text-purple-600">
+              <div>
                 ${metrics.laborCosts.avgHourlyRate}/hour average
               </div>
-              <div className="text-xs text-purple-600">
+              <div>
                 {metrics.laborCosts.overtime}% overtime
               </div>
             </div>
@@ -687,37 +677,37 @@ export default function CostManagementLaboratory() {
 
       {/* Overview Mode */}
       {viewMode === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
           {/* Cost Breakdown */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <PieChart className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <PieChart />
                 Cost Breakdown
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {[
                   { name: 'Materials', value: metrics.overview.breakdown.materials, color: 'bg-blue-500', percentage: (metrics.overview.breakdown.materials / metrics.overview.totalCosts) * 100 },
                   { name: 'Labor', value: metrics.overview.breakdown.labor, color: 'bg-green-500', percentage: (metrics.overview.breakdown.labor / metrics.overview.totalCosts) * 100 },
                   { name: 'Overhead', value: metrics.overview.breakdown.overhead, color: 'bg-yellow-500', percentage: (metrics.overview.breakdown.overhead / metrics.overview.totalCosts) * 100 },
                   { name: 'Equipment', value: metrics.overview.breakdown.equipment, color: 'bg-purple-500', percentage: (metrics.overview.breakdown.equipment / metrics.overview.totalCosts) * 100 }
                 ].map((item, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
-                        <span className="text-sm font-medium text-gray-700">{item.name}</span>
+                  <div key={index}>
+                    <div>
+                      <div>
+                        <div`}></div>
+                        <span>{item.name}</span>
                       </div>
-                      <div className="text-right">
-                        <div className="text-sm font-semibold">{formatCurrency(item.value)}</div>
-                        <div className="text-xs text-gray-500">{item.percentage.toFixed(1)}%</div>
+                      <div>
+                        <div>{formatCurrency(item.value)}</div>
+                        <div>{item.percentage.toFixed(1)}%</div>
                       </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div>
                       <div 
-                        className={`h-2 rounded-full ${item.color}`}
+                       `}
                         style={{ width: `${item.percentage}%` }}
                       ></div>
                     </div>
@@ -730,39 +720,37 @@ export default function CostManagementLaboratory() {
           {/* Cost Variance Analysis */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="w-5 h-5 text-orange-600" />
+              <CardTitle>
+                <Activity />
                 Cost Variance Analysis
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-lg font-bold text-green-600">{metrics.variance.materialVariance.toFixed(1)}%</div>
-                    <div className="text-sm text-gray-600">Materials</div>
+              <div>
+                <div>
+                  <div>
+                    <div>{metrics.variance.materialVariance.toFixed(1)}%</div>
+                    <div>Materials</div>
                   </div>
-                  <div className="text-center p-4 bg-red-50 rounded-lg">
-                    <div className="text-lg font-bold text-red-600">+{metrics.variance.laborVariance.toFixed(1)}%</div>
-                    <div className="text-sm text-gray-600">Labor</div>
+                  <div>
+                    <div>+{metrics.variance.laborVariance.toFixed(1)}%</div>
+                    <div>Labor</div>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <h4 className="font-medium text-gray-900">Recent Project Variances:</h4>
+                <div>
+                  <h4>Recent Project Variances:</h4>
                   {metrics.variance.projects.slice(0, 3).map((project, index) => (
-                    <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div key={index}>
                       <div>
-                        <div className="font-medium text-gray-900">{project.customer}</div>
-                        <div className="text-sm text-gray-600">{project.category}</div>
+                        <div>{project.customer}</div>
+                        <div>{project.category}</div>
                       </div>
-                      <div className="text-right">
-                        <div className={`font-semibold ${
-                          project.variance >= 0 ? 'text-red-600' : 'text-green-600'
-                        }`}>
+                      <div>
+                        <div`}>
                           {project.variance >= 0 ? '+' : ''}{formatCurrency(project.variance)}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div>
                           {project.variancePercent.toFixed(1)}%
                         </div>
                       </div>
@@ -777,37 +765,35 @@ export default function CostManagementLaboratory() {
 
       {/* Materials Mode */}
       {viewMode === 'materials' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
           {/* Material Categories */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Package className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <Package />
                 Material Categories
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.materialCosts.categories.map((category, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-gray-700">{category.category}</span>
-                      <div className="text-right">
-                        <div className="text-sm font-semibold">{formatCurrency(category.spend)}</div>
-                        <div className={`text-xs ${
-                          category.trend < 0 ? 'text-green-600' : 'text-red-600'
-                        }`}>
+                  <div key={index}>
+                    <div>
+                      <span>{category.category}</span>
+                      <div>
+                        <div>{formatCurrency(category.spend)}</div>
+                        <div`}>
                           {category.trend >= 0 ? '+' : ''}{category.trend.toFixed(1)}%
                         </div>
                       </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div>
                       <div 
-                        className="bg-blue-600 h-2 rounded-full"
+                       
                         style={{ width: `${category.percentage}%` }}
                       ></div>
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div>
                       Waste rate: {category.wasteRate}%
                     </div>
                   </div>
@@ -819,33 +805,33 @@ export default function CostManagementLaboratory() {
           {/* Vendor Performance */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Truck className="w-5 h-5 text-green-600" />
+              <CardTitle>
+                <Truck />
                 Vendor Performance
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.materialCosts.vendors.map((vendor, index) => (
-                  <div key={index} className="p-4 border rounded-lg">
-                    <div className="flex justify-between items-start mb-3">
+                  <div key={index}>
+                    <div>
                       <div>
-                        <h3 className="font-medium text-gray-900">{vendor.vendor}</h3>
-                        <div className="text-sm text-gray-600">
+                        <h3>{vendor.vendor}</h3>
+                        <div>
                           {vendor.paymentTerms} • {vendor.volumeDiscount}% volume discount
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-gray-800">{formatCurrency(vendor.spend)}</div>
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-yellow-500" />
-                          <span className="text-sm font-medium">{vendor.rating}/5</span>
+                      <div>
+                        <div>{formatCurrency(vendor.spend)}</div>
+                        <div>
+                          <Star />
+                          <span>{vendor.rating}/5</span>
                         </div>
                       </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div>
                       <div 
-                        className="bg-green-500 h-2 rounded-full"
+                       
                         style={{ width: `${(vendor.spend / metrics.materialCosts.totalSpend) * 100}%` }}
                       ></div>
                     </div>
@@ -859,34 +845,34 @@ export default function CostManagementLaboratory() {
 
       {/* Labor Mode */}
       {viewMode === 'labor' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
           {/* Labor Breakdown */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-purple-600" />
+              <CardTitle>
+                <Users />
                 Labor Cost Breakdown
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.laborCosts.breakdown.map((role, index) => (
-                  <div key={index} className="p-4 bg-gray-50 rounded-lg">
-                    <div className="flex justify-between items-start mb-3">
+                  <div key={index}>
+                    <div>
                       <div>
-                        <h3 className="font-medium text-gray-900">{role.role}</h3>
-                        <div className="text-sm text-gray-600">
+                        <h3>{role.role}</h3>
+                        <div>
                           {role.headcount} employees • ${role.avgRate}/hour
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-gray-800">{formatCurrency(role.totalCost)}</div>
-                        <div className="text-sm text-purple-600">{role.efficiency}% efficiency</div>
+                      <div>
+                        <div>{formatCurrency(role.totalCost)}</div>
+                        <div>{role.efficiency}% efficiency</div>
                       </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div>
                       <div 
-                        className="bg-purple-600 h-2 rounded-full"
+                       
                         style={{ width: `${(role.totalCost / metrics.laborCosts.totalSpend) * 100}%` }}
                       ></div>
                     </div>
@@ -899,34 +885,32 @@ export default function CostManagementLaboratory() {
           {/* Productivity Metrics */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="w-5 h-5 text-green-600" />
+              <CardTitle>
+                <Activity />
                 Productivity Metrics
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.laborCosts.productivity.map((metric, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-gray-700">{metric.metric}</span>
-                      <div className="text-right">
-                        <div className="text-sm font-semibold">{metric.current}</div>
-                        <div className={`text-xs ${
-                          metric.trend >= 0 ? 'text-green-600' : 'text-red-600'
-                        }`}>
+                  <div key={index}>
+                    <div>
+                      <span>{metric.metric}</span>
+                      <div>
+                        <div>{metric.current}</div>
+                        <div`}>
                           {metric.trend >= 0 ? '+' : ''}{metric.trend.toFixed(1)}%
                         </div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div>
+                      <div>
                         <div 
-                          className="bg-blue-500 h-2 rounded-full"
+                         
                           style={{ width: `${(metric.current / metric.target) * 100}%` }}
                         ></div>
                       </div>
-                      <span className="text-xs text-gray-500">Target: {metric.target}</span>
+                      <span>Target: {metric.target}</span>
                     </div>
                   </div>
                 ))}
@@ -938,45 +922,36 @@ export default function CostManagementLaboratory() {
 
       {/* Optimization Mode */}
       {viewMode === 'optimization' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
           {/* Optimization Opportunities */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-yellow-600" />
+              <CardTitle>
+                <Zap />
                 Cost Optimization Opportunities
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.optimization.opportunities.map((opportunity) => (
-                  <div key={opportunity.id} className="border rounded-lg p-4">
-                    <div className="flex justify-between items-start mb-3">
+                  <div key={opportunity.id}>
+                    <div>
                       <div>
-                        <h3 className="font-medium text-gray-900">{opportunity.title}</h3>
-                        <p className="text-sm text-gray-600">{opportunity.description}</p>
+                        <h3>{opportunity.title}</h3>
+                        <p>{opportunity.description}</p>
                       </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-green-600">
+                      <div>
+                        <div>
                           {formatCurrency(opportunity.impact)}
                         </div>
-                        <div className="text-xs text-gray-500">{opportunity.timeframe}</div>
+                        <div>{opportunity.timeframe}</div>
                       </div>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        opportunity.category === 'materials' ? 'bg-blue-100 text-blue-800' :
-                        opportunity.category === 'labor' ? 'bg-purple-100 text-purple-800' :
-                        opportunity.category === 'overhead' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                    <div>
+                      <span`}>
                         {opportunity.category}
                       </span>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        opportunity.effort === 'low' ? 'bg-green-100 text-green-800' :
-                        opportunity.effort === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
+                      <span`}>
                         {opportunity.effort} effort
                       </span>
                     </div>
@@ -989,35 +964,27 @@ export default function CostManagementLaboratory() {
           {/* Implementation Recommendations */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Award className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <Award />
                 Implementation Recommendations
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.optimization.recommendations.map((rec, index) => (
-                  <div key={index} className={`p-4 rounded-lg border-l-4 ${
-                    rec.priority === 'high' ? 'border-l-red-500 bg-red-50' :
-                    rec.priority === 'medium' ? 'border-l-yellow-500 bg-yellow-50' :
-                    'border-l-green-500 bg-green-50'
-                  }`}>
-                    <div className="flex justify-between items-start mb-2">
+                  <div key={index}`}>
+                    <div>
                       <div>
-                        <h3 className="font-medium text-gray-900">{rec.title}</h3>
-                        <p className="text-sm text-gray-600 mt-1">{rec.description}</p>
+                        <h3>{rec.title}</h3>
+                        <p>{rec.description}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        rec.priority === 'high' ? 'bg-red-100 text-red-800' :
-                        rec.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-green-100 text-green-800'
-                      }`}>
+                      <span`}>
                         {rec.priority} priority
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">{rec.implementation}</span>
-                      <span className="font-semibold text-green-700">{formatCurrency(rec.savings)} savings</span>
+                    <div>
+                      <span>{rec.implementation}</span>
+                      <span>{formatCurrency(rec.savings)} savings</span>
                     </div>
                   </div>
                 ))}

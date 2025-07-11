@@ -15,22 +15,18 @@ interface ProcessStepProps {
 
 function ProcessStep({ step, title, time, description, isManual = false }: ProcessStepProps) {
   return (
-    <div className="flex items-start space-x-4 mb-6">
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
-        isManual ? 'bg-red-500' : 'bg-green-500'
-      }`}>
+    <div>
+      <div`}>
         {step}
       </div>
-      <div className="flex-1">
-        <div className="flex items-center space-x-2 mb-1">
-          <h4 className="font-semibold text-gray-800">{title}</h4>
-          <span className={`text-sm px-2 py-1 rounded ${
-            isManual ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
-          }`}>
+      <div>
+        <div>
+          <h4>{title}</h4>
+          <span`}>
             {time}
           </span>
         </div>
-        <p className="text-sm text-gray-600">{description}</p>
+        <p>{description}</p>
       </div>
     </div>
   )
@@ -102,28 +98,28 @@ export function SpeedComparison({ className }: SpeedComparisonProps) {
   ]
 
   return (
-    <section className={`py-20 px-4 ${className}`}>
-      <div className="container mx-auto max-w-7xl">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    <section`}>
+      <div>
+        <div>
+          <h2>
             The Speed Difference That Wins Jobs
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p>
             While competitors spend hours creating quotes, you can deliver professional estimates and close deals on-site
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 mb-16">
+        <div>
           {/* Manual Process */}
-          <Card className="border-2 border-red-200">
-            <CardHeader className="bg-red-50">
-              <CardTitle className="flex items-center space-x-2 text-red-800">
-                <X className="w-6 h-6" />
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                <X />
                 <span>Manual Process</span>
-                <span className="ml-auto text-2xl font-bold">3-6 Hours</span>
+                <span>3-6 Hours</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent>
               {manualProcess.map((step, index) => (
                 <ProcessStep
                   key={index}
@@ -135,9 +131,9 @@ export function SpeedComparison({ className }: SpeedComparisonProps) {
                 />
               ))}
               
-              <div className="mt-6 p-4 bg-red-50 rounded-lg border border-red-200">
-                <h5 className="font-semibold text-red-800 mb-2">Problems with Manual Process:</h5>
-                <ul className="text-sm text-red-700 space-y-1">
+              <div>
+                <h5>Problems with Manual Process:</h5>
+                <ul>
                   <li>• Customer loses interest during delay</li>
                   <li>• Competitors deliver quotes faster</li>
                   <li>• Time lost = money lost on other jobs</li>
@@ -148,15 +144,15 @@ export function SpeedComparison({ className }: SpeedComparisonProps) {
           </Card>
 
           {/* App Process */}
-          <Card className="border-2 border-green-200">
-            <CardHeader className="bg-green-50">
-              <CardTitle className="flex items-center space-x-2 text-green-800">
-                <CheckCircle className="w-6 h-6" />
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                <CheckCircle />
                 <span>With Our App</span>
-                <span className="ml-auto text-2xl font-bold">6 Minutes</span>
+                <span>6 Minutes</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent>
               {appProcess.map((step, index) => (
                 <ProcessStep
                   key={index}
@@ -168,9 +164,9 @@ export function SpeedComparison({ className }: SpeedComparisonProps) {
                 />
               ))}
               
-              <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
-                <h5 className="font-semibold text-green-800 mb-2">Benefits of App Process:</h5>
-                <ul className="text-sm text-green-700 space-y-1">
+              <div>
+                <h5>Benefits of App Process:</h5>
+                <ul>
                   <li>• Close deals while excitement is high</li>
                   <li>• Beat all competitors on speed</li>
                   <li>• Professional presentation builds trust</li>
@@ -182,40 +178,40 @@ export function SpeedComparison({ className }: SpeedComparisonProps) {
         </div>
 
         {/* Impact Summary */}
-        <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-300 text-gray-900 p-8 rounded-2xl">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
+        <div>
+          <div>
             <div>
-              <Clock className="w-12 h-12 mx-auto mb-4 text-blue-600" />
-              <div className="text-3xl font-bold mb-2 text-gray-900">4.5 Hours</div>
-              <p className="text-gray-700 font-medium">Saved per quote</p>
-              <p className="text-sm text-gray-600 mt-1">Worth $225 at $50/hour</p>
+              <Clock />
+              <div>4.5 Hours</div>
+              <p>Saved per quote</p>
+              <p>Worth $225 at $50/hour</p>
             </div>
             
             <div>
-              <DollarSign className="w-12 h-12 mx-auto mb-4 text-green-600" />
-              <div className="text-3xl font-bold mb-2 text-gray-900">40-60%</div>
-              <p className="text-gray-700 font-medium">Higher win rates</p>
-              <p className="text-sm text-gray-600 mt-1">From professional presentation</p>
+              <DollarSign />
+              <div>40-60%</div>
+              <p>Higher win rates</p>
+              <p>From professional presentation</p>
             </div>
             
             <div>
-              <Smartphone className="w-12 h-12 mx-auto mb-4 text-purple-600" />
-              <div className="text-3xl font-bold mb-2 text-gray-900">Same Day</div>
-              <p className="text-gray-700 font-medium">Quote delivery</p>
-              <p className="text-sm text-gray-600 mt-1">While competitors take days</p>
+              <Smartphone />
+              <div>Same Day</div>
+              <p>Quote delivery</p>
+              <p>While competitors take days</p>
             </div>
           </div>
         </div>
 
         {/* CTA */}
-        <div className="text-center mt-12">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">
+        <div>
+          <h3>
             Ready to Quote at Light Speed?
           </h3>
-          <p className="text-gray-600 mb-6">
+          <p>
             Join thousands of contractors who've made the switch to instant professional quoting
           </p>
-          <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700">
+          <Button size="lg" asChild>
             <Link href="/trial-signup">
               Start Free Trial - 10 Quotes Free
             </Link>

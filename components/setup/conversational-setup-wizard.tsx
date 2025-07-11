@@ -516,39 +516,35 @@ export function ConversationalSetupWizard({ accessCode, onComplete, onSkip, isUp
   const progress = ((currentStep + 1) / setupFlow.length) * 100;
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-2">
-          <Building className="w-5 h-5 text-blue-600" />
-          <h1 className="text-2xl font-bold">
+    <div>
+      <div>
+        <div>
+          <Building />
+          <h1>
             {isUpdate ? 'Update Products & Pricing' : 'Company Setup'}
           </h1>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div>
           <div 
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+            
             style={{ width: `${progress}%` }}
           />
         </div>
-        <p className="text-sm text-gray-600 mt-1">
+        <p>
           Step {currentStep + 1} of {setupFlow.length}
         </p>
       </div>
 
-      <Card className="mb-4">
-        <CardContent className="p-0">
-          <div className="h-96 overflow-y-auto p-4 space-y-4">
+      <Card>
+        <CardContent>
+          <div>
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+               `}
               >
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                    message.type === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-900'
-                  }`}
+                 `}
                 >
                   {message.content}
                 </div>
@@ -557,14 +553,14 @@ export function ConversationalSetupWizard({ accessCode, onComplete, onSkip, isUp
             
             {/* Suggestions */}
             {!isComplete && messages.length > 0 && messages[messages.length - 1].type === 'bot' && messages[messages.length - 1].suggestions && messages[messages.length - 1].suggestions!.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
+              <div>
                 {messages[messages.length - 1].suggestions!.map((suggestion, index) => (
                   <Button
                     key={index}
                     variant="outline"
                     size="sm"
                     onClick={() => handleSuggestionClick(suggestion)}
-                    className="text-xs"
+                   
                   >
                     {suggestion}
                   </Button>
@@ -578,7 +574,7 @@ export function ConversationalSetupWizard({ accessCode, onComplete, onSkip, isUp
       </Card>
 
       {!isComplete && (
-        <div className="flex gap-2">
+        <div>
           <Input
             value={currentInput}
             onChange={(e) => setCurrentInput(e.target.value)}
@@ -586,7 +582,7 @@ export function ConversationalSetupWizard({ accessCode, onComplete, onSkip, isUp
             placeholder="Type your response..."
             type={messages.length > 0 ? messages[messages.length - 1].inputType || 'text' : 'text'}
             disabled={isLoading}
-            className="flex-1"
+           
           />
           <Button 
             onClick={handleSubmit} 
@@ -594,24 +590,24 @@ export function ConversationalSetupWizard({ accessCode, onComplete, onSkip, isUp
             size="icon"
           >
             {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 />
             ) : (
-              <Send className="w-4 h-4" />
+              <Send />
             )}
           </Button>
         </div>
       )}
 
       {isComplete && (
-        <div className="text-center">
-          <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-green-700 mb-2">Setup Complete!</h3>
-          <p className="text-gray-600">You can update these settings anytime in your dashboard.</p>
+        <div>
+          <CheckCircle />
+          <h3>Setup Complete!</h3>
+          <p>You can update these settings anytime in your dashboard.</p>
         </div>
       )}
 
-      <div className="mt-4 text-center">
-        <Button variant="ghost" onClick={onSkip} className="text-gray-500">
+      <div>
+        <Button variant="ghost" onClick={onSkip}>
           {isUpdate ? 'Cancel update' : 'Skip setup for now'}
         </Button>
       </div>

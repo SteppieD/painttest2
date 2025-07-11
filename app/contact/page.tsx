@@ -120,85 +120,85 @@ export default function ContactPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
       <KofiHeader />
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto text-center max-w-5xl">
+      <section>
+        <div>
           {/* Trust Badge */}
-          <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <Star className="w-4 h-4 fill-current" />
+          <div>
+            <Star />
             <span>Rated 4.9/5 by 5,000+ Professional Contractors</span>
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Get Expert <span className="text-blue-600">Support</span> & Guidance
+          <h1>
+            Get Expert <span>Support</span> & Guidance
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p>
             Talk to painting industry experts who understand your business. Get personalized help with software, 
             business strategy, or technical support. We're here to help you succeed.
           </p>
           
           {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+          <div>
             {supportStats.map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <div key={index} className="text-center">
-                  <Icon className={`w-8 h-8 ${stat.color} mx-auto mb-2`} />
-                  <div className="text-2xl md:text-3xl font-bold text-gray-900">{stat.number}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
+                <div key={index}>
+                  <Icon mx-auto mb-2`} />
+                  <div>{stat.number}</div>
+                  <div>{stat.label}</div>
                 </div>
               );
             })}
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700">
-              <Phone className="w-5 h-5 mr-2" />
+          <div>
+            <Button size="lg">
+              <Phone />
               Call 1-800-PROPAINT
             </Button>
-            <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6">
+            <Button size="lg" variant="outline" asChild>
               <Link href="/demo">
                 Schedule Free Demo
-                <Calendar className="w-5 h-5 ml-2" />
+                <Calendar />
               </Link>
             </Button>
           </div>
           
-          <p className="text-sm text-gray-500 mt-4">
+          <p>
             ⚡ Average 4-hour response time • Expert contractor support • Free demos available
           </p>
         </div>
       </section>
 
       {/* Contact Methods */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Choose How You'd Like to Connect
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Multiple ways to get help from painting industry experts
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          <div>
             {contactMethods.map((method, index) => {
               const Icon = method.icon;
               return (
-                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                  <CardContent className="p-6 text-center">
-                    <div className={`w-16 h-16 ${method.bgColor} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                      <Icon className={`w-8 h-8 ${method.color}`} />
+                <Card key={index}>
+                  <CardContent>
+                    <div rounded-full flex items-center justify-center mx-auto mb-4`}>
+                      <Icon`} />
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-2">{method.title}</h3>
-                    <p className="text-gray-600 text-sm mb-4">{method.description}</p>
-                    <p className={`font-semibold ${method.color} mb-2`}>{method.contact}</p>
-                    <p className="text-xs text-gray-500 mb-4">{method.details}</p>
-                    <Button variant="outline" size="sm" className="w-full">
+                    <h3>{method.title}</h3>
+                    <p>{method.description}</p>
+                    <p mb-2`}>{method.contact}</p>
+                    <p>{method.details}</p>
+                    <Button variant="outline" size="sm">
                       {method.buttonText}
                     </Button>
                   </CardContent>
@@ -210,86 +210,86 @@ export default function ContactPage() {
       </section>
 
       {/* Support Team Section */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Meet Our Support Team
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Real contractors and technical experts who understand your business
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <Card className="border-0 shadow-lg">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
+          <div>
+            <Card>
+              <CardContent>
+                <div>
                   JD
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-1">John Davis</h3>
-                <p className="text-blue-600 text-sm mb-3">Lead Support Specialist</p>
-                <p className="text-gray-600 text-sm mb-4">15 years painting contractor, helps with business strategy and software setup</p>
-                <div className="flex justify-center">
+                <h3>John Davis</h3>
+                <p>Lead Support Specialist</p>
+                <p>15 years painting contractor, helps with business strategy and software setup</p>
+                <div>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                    <Star key={i} />
                   ))}
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="border-0 shadow-lg">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
+            <Card>
+              <CardContent>
+                <div>
                   AM
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Anna Martinez</h3>
-                <p className="text-green-600 text-sm mb-3">Technical Support Lead</p>
-                <p className="text-gray-600 text-sm mb-4">Software engineer specializing in mobile quote creation and integrations</p>
-                <div className="flex justify-center">
+                <h3>Anna Martinez</h3>
+                <p>Technical Support Lead</p>
+                <p>Software engineer specializing in mobile quote creation and integrations</p>
+                <div>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                    <Star key={i} />
                   ))}
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="border-0 shadow-lg">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
+            <Card>
+              <CardContent>
+                <div>
                   RC
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Robert Chen</h3>
-                <p className="text-purple-600 text-sm mb-3">Customer Success Manager</p>
-                <p className="text-gray-600 text-sm mb-4">Former commercial painter, specializes in large project quoting and team training</p>
-                <div className="flex justify-center">
+                <h3>Robert Chen</h3>
+                <p>Customer Success Manager</p>
+                <p>Former commercial painter, specializes in large project quoting and team training</p>
+                <div>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                    <Star key={i} />
                   ))}
                 </div>
               </CardContent>
             </Card>
           </div>
           
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <div className="text-center">
-              <Shield className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Our Support Commitment</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <CheckCircle className="w-6 h-6 text-green-600 mx-auto mb-2" />
-                  <p className="font-semibold text-gray-900">Response Guarantee</p>
-                  <p className="text-sm text-gray-600">Under 4 hours, every time</p>
+          <div>
+            <div>
+              <Shield />
+              <h3>Our Support Commitment</h3>
+              <div>
+                <div>
+                  <CheckCircle />
+                  <p>Response Guarantee</p>
+                  <p>Under 4 hours, every time</p>
                 </div>
-                <div className="text-center">
-                  <CheckCircle className="w-6 h-6 text-green-600 mx-auto mb-2" />
-                  <p className="font-semibold text-gray-900">Industry Expertise</p>
-                  <p className="text-sm text-gray-600">Real contractor experience</p>
+                <div>
+                  <CheckCircle />
+                  <p>Industry Expertise</p>
+                  <p>Real contractor experience</p>
                 </div>
-                <div className="text-center">
-                  <CheckCircle className="w-6 h-6 text-green-600 mx-auto mb-2" />
-                  <p className="font-semibold text-gray-900">Continuous Support</p>
-                  <p className="text-sm text-gray-600">Ongoing success partnership</p>
+                <div>
+                  <CheckCircle />
+                  <p>Continuous Support</p>
+                  <p>Ongoing success partnership</p>
                 </div>
               </div>
             </div>
@@ -298,21 +298,21 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Form & Info */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+      <section>
+        <div>
+          <div>
             {/* Contact Form */}
             <div>
-              <Card className="border-0 shadow-lg">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Send Us a Message</CardTitle>
-                  <p className="text-gray-600">
+                  <CardTitle>Send Us a Message</CardTitle>
+                  <p>
                     Get personalized help from our expert team. Average response time: 4 hours.
                   </p>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <form className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <CardContent>
+                  <form>
+                    <div>
                       <TouchFriendlyInput
                         label="First Name *"
                         placeholder="John"
@@ -343,12 +343,12 @@ export default function ContactPage() {
                       placeholder="(555) 123-4567"
                     />
 
-                    <div className="space-y-2">
+                    <div>
                       <Label htmlFor="subject">How can we help? *</Label>
                       <select 
                         id="subject" 
                         required
-                        className="w-full px-4 py-3 min-h-[44px] text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       
                       >
                         <option value="">Select your need</option>
                         <option value="demo">Schedule a Demo</option>
@@ -363,7 +363,7 @@ export default function ContactPage() {
                       </select>
                     </div>
 
-                    <div className="space-y-2">
+                    <div>
                       <Label htmlFor="message">Tell us more *</Label>
                       <Textarea 
                         id="message" 
@@ -373,12 +373,12 @@ export default function ContactPage() {
                       />
                     </div>
 
-                    <Button type="submit" size="lg" className="w-full bg-blue-600 hover:bg-blue-700">
+                    <Button type="submit" size="lg">
                       Send Message
-                      <ArrowRight className="w-5 h-5 ml-2" />
+                      <ArrowRight />
                     </Button>
                     
-                    <p className="text-xs text-gray-500 text-center">
+                    <p>
                       * Required fields. We'll respond within 4 hours during business hours.
                     </p>
                   </form>
@@ -387,78 +387,78 @@ export default function ContactPage() {
             </div>
 
             {/* Contact Info & Quick Actions */}
-            <div className="space-y-6">
-              <Card className="border-0 shadow-lg">
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Need Help Right Now?</h3>
+            <div>
+              <Card>
+                <CardContent>
+                  <h3>Need Help Right Now?</h3>
                   
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4 p-4 bg-blue-50 rounded-lg">
-                      <Phone className="w-6 h-6 text-blue-600" />
+                  <div>
+                    <div>
+                      <Phone />
                       <div>
-                        <p className="font-semibold text-gray-900">Call Us Immediately</p>
-                        <p className="text-blue-600 font-bold">1-800-PROPAINT</p>
-                        <p className="text-sm text-gray-600">Mon-Fri, 8AM-6PM EST</p>
+                        <p>Call Us Immediately</p>
+                        <p>1-800-PROPAINT</p>
+                        <p>Mon-Fri, 8AM-6PM EST</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-4 p-4 bg-green-50 rounded-lg">
-                      <Video className="w-6 h-6 text-green-600" />
+                    <div>
+                      <Video />
                       <div>
-                        <p className="font-semibold text-gray-900">Book a Demo</p>
-                        <p className="text-green-600 font-bold">15-minute walkthrough</p>
-                        <p className="text-sm text-gray-600">Available today</p>
+                        <p>Book a Demo</p>
+                        <p>15-minute walkthrough</p>
+                        <p>Available today</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-4 p-4 bg-purple-50 rounded-lg">
-                      <MessageSquare className="w-6 h-6 text-purple-600" />
+                    <div>
+                      <MessageSquare />
                       <div>
-                        <p className="font-semibold text-gray-900">Live Chat</p>
-                        <p className="text-purple-600 font-bold">Instant answers</p>
-                        <p className="text-sm text-gray-600">Business hours only</p>
+                        <p>Live Chat</p>
+                        <p>Instant answers</p>
+                        <p>Business hours only</p>
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-lg">
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Company Information</h3>
+              <Card>
+                <CardContent>
+                  <h3>Company Information</h3>
                   
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-center gap-3">
-                      <MapPin className="w-5 h-5 text-gray-400" />
-                      <span className="text-gray-600">Headquarters: Austin, Texas</span>
+                  <div>
+                    <div>
+                      <MapPin />
+                      <span>Headquarters: Austin, Texas</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <Globe className="w-5 h-5 text-gray-400" />
-                      <span className="text-gray-600">Serving all 50 states</span>
+                    <div>
+                      <Globe />
+                      <span>Serving all 50 states</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <Mail className="w-5 h-5 text-gray-400" />
-                      <span className="text-gray-600">support@propaintquote.com</span>
+                    <div>
+                      <Mail />
+                      <span>support@propaintquote.com</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <LifeBuoy className="w-5 h-5 text-gray-400" />
-                      <span className="text-gray-600">24/7 system uptime monitoring</span>
+                    <div>
+                      <LifeBuoy />
+                      <span>24/7 system uptime monitoring</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-lg bg-gradient-to-r from-blue-50 to-purple-50">
-                <CardContent className="p-6 text-center">
-                  <Zap className="w-12 h-12 text-blue-600 mx-auto mb-3" />
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">Try ProPaint Quote Free</h3>
-                  <p className="text-gray-600 text-sm mb-4">
+              <Card>
+                <CardContent>
+                  <Zap />
+                  <h3>Try ProPaint Quote Free</h3>
+                  <p>
                     Start creating professional quotes in 5 minutes. No credit card required.
                   </p>
-                  <Button asChild className="w-full">
+                  <Button asChild>
                     <Link href="/trial-signup">
                       Start Free Trial
-                      <ArrowRight className="w-5 h-5 ml-2" />
+                      <ArrowRight />
                     </Link>
                   </Button>
                 </CardContent>
@@ -469,32 +469,32 @@ export default function ContactPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+      <section>
+        <div>
+          <div>
+            <h2>
               Common Questions & Expert Answers
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Get answers from painting industry professionals
             </p>
           </div>
 
-          <div className="space-y-6">
+          <div>
             {faqs.map((faq, index) => (
-              <Card key={index} className="border-0 shadow-lg">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">{faq.question}</h3>
-                  <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              <Card key={index}>
+                <CardContent>
+                  <h3>{faq.question}</h3>
+                  <p>{faq.answer}</p>
                 </CardContent>
               </Card>
             ))}
           </div>
           
-          <div className="text-center mt-12">
-            <p className="text-gray-600 mb-4">Still have questions?</p>
+          <div>
+            <p>Still have questions?</p>
             <Button size="lg" variant="outline">
-              <Phone className="w-5 h-5 mr-2" />
+              <Phone />
               Call 1-800-PROPAINT for Instant Answers
             </Button>
           </div>
@@ -502,26 +502,26 @@ export default function ContactPage() {
       </section>
 
       {/* Success Stories Testimonial */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-50 to-purple-50">
-            <CardContent className="p-8 text-center">
-              <div className="flex justify-center mb-4">
+      <section>
+        <div>
+          <Card>
+            <CardContent>
+              <div>
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-6 h-6 text-yellow-400 fill-current" />
+                  <Star key={i} />
                 ))}
               </div>
-              <blockquote className="text-xl text-gray-700 italic mb-6">
+              <blockquote>
                 "The ProPaint Quote support team helped me set up everything perfectly. Within an hour of my first call, 
                 I was creating professional quotes that helped me win my biggest job yet - a $25,000 commercial project!"
               </blockquote>
-              <div className="flex items-center justify-center gap-4">
-                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+              <div>
+                <div>
                   TM
                 </div>
-                <div className="text-left">
-                  <div className="font-semibold text-gray-900">Tom Martinez</div>
-                  <div className="text-sm text-gray-600">Elite Commercial Painting, Houston TX</div>
+                <div>
+                  <div>Tom Martinez</div>
+                  <div>Elite Commercial Painting, Houston TX</div>
                 </div>
               </div>
             </CardContent>
@@ -530,31 +530,31 @@ export default function ContactPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+      <section>
+        <div>
+          <h2>
             Ready to Get the Support You Deserve?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p>
             Join 5,000+ contractors who trust ProPaint Quote for expert support and business growth
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6">
+          <div>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/trial-signup">
                 Start Free Trial Today
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6 border-white text-white hover:bg-white hover:text-blue-600">
+            <Button size="lg" variant="outline" asChild>
               <Link href="/demo">
                 Schedule Free Demo
-                <Calendar className="w-5 h-5 ml-2" />
+                <Calendar />
               </Link>
             </Button>
           </div>
           
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 text-blue-200 text-sm">
+          <div>
             <span>✓ Expert contractor support</span>
             <span>✓ 4-hour response guarantee</span>
             <span>✓ Free onboarding & training</span>

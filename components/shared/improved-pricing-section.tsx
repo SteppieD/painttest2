@@ -103,38 +103,36 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
   ];
 
   return (
-    <div className="bg-white py-20">
-      <div className="container mx-auto max-w-7xl px-4">
+    <div>
+      <div>
         {/* Header Section - Bright & Engaging */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-              <Palette className="w-6 h-6 text-white" />
+        <div>
+          <div>
+            <div>
+              <Palette />
             </div>
             <div>
-              <h2 className="text-4xl font-bold text-gray-900">Simple, Transparent Pricing</h2>
-              <p className="text-lg text-gray-600 mt-2">Choose the perfect plan for your painting business</p>
+              <h2>Simple, Transparent Pricing</h2>
+              <p>Choose the perfect plan for your painting business</p>
             </div>
           </div>
 
           {/* Trust Indicator */}
-          <div className="inline-flex items-center gap-2 bg-green-50 text-green-800 px-4 py-2 rounded-full mb-8">
-            <div className="flex items-center gap-1">
+          <div>
+            <div>
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 text-yellow-500 fill-current" />
+                <Star key={i} />
               ))}
             </div>
-            <span className="font-medium">Trusted by 5,000+ contractors</span>
+            <span>Trusted by 5,000+ contractors</span>
           </div>
 
           {/* Billing Toggle - Bright Design */}
-          <div className="flex justify-center mb-8">
-            <div className="bg-gray-50 p-2 rounded-2xl inline-flex items-center gap-3 border-2 border-gray-100">
+          <div>
+            <div>
               <Label
                 htmlFor="billing-toggle"
-                className={`px-6 py-3 rounded-xl font-semibold transition-all cursor-pointer ${
-                  !isYearly ? 'bg-white text-gray-900 shadow-md border-2 border-blue-100' : 'text-gray-600 hover:text-gray-900'
-                }`}
+               `}
               >
                 Monthly
               </Label>
@@ -142,16 +140,14 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
                 id="billing-toggle"
                 checked={isYearly}
                 onCheckedChange={setIsYearly}
-                className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-blue-600 data-[state=checked]:to-purple-600"
+               
               />
               <Label
                 htmlFor="billing-toggle"
-                className={`px-6 py-3 rounded-xl font-semibold transition-all cursor-pointer flex items-center gap-2 ${
-                  isYearly ? 'bg-white text-gray-900 shadow-md border-2 border-green-100' : 'text-gray-600 hover:text-gray-900'
-                }`}
+               `}
               >
                 Yearly
-                <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0">
+                <Badge>
                   Save 20%
                 </Badge>
               </Label>
@@ -165,11 +161,11 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="text-center mb-8"
+               
               >
-                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-blue-50 text-green-800 px-6 py-3 rounded-2xl border-2 border-green-100">
-                  <Zap className="w-5 h-5 text-green-600" />
-                  <span className="font-semibold">Get 2 months free with yearly billing!</span>
+                <div>
+                  <Zap />
+                  <span>Get 2 months free with yearly billing!</span>
                 </div>
               </motion.div>
             )}
@@ -177,7 +173,7 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
         </div>
 
         {/* Pricing Cards - Bright & Modern */}
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div>
           {plans.map((plan, index) => {
             const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
             const IconComponent = plan.icon;
@@ -188,55 +184,48 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`relative ${plan.popular ? 'lg:-mt-4 lg:scale-105' : ''}`}
+               `}
               >
                 <Card
-                  className={`relative h-full bg-white border-2 transition-all duration-300 hover:shadow-xl ${
-                    plan.popular
-                      ? 'border-blue-300 shadow-2xl ring-4 ring-blue-100'
-                      : `${plan.borderColor} hover:${plan.borderColor.replace('200', '300')} hover:shadow-lg`
+                  hover:${plan.borderColor.replace('200', '300')} hover:shadow-lg`
                   }`}
                 >
                   {/* Popular Badge */}
                   {plan.badge && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                      <Badge className={`px-6 py-2 text-sm font-bold shadow-lg ${
-                        plan.popular 
-                          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-                          : 'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
-                      }`}>
-                        <Star className="w-4 h-4 mr-1.5 fill-current" />
+                    <div>
+                      <Badge`}>
+                        <Star />
                         {plan.badge}
                       </Badge>
                     </div>
                   )}
 
                   {/* Card Header - Colorful */}
-                  <div className={`p-8 text-center ${plan.headerGradient} rounded-t-lg border-b-2 ${plan.borderColor}`}>
-                    <div className="flex items-center justify-center mb-4">
-                      <div className={`w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-md border-2 ${plan.borderColor}`}>
-                        <IconComponent className={`w-8 h-8 ${plan.iconColor}`} />
+                  <div rounded-t-lg border-b-2 ${plan.borderColor}`}>
+                    <div>
+                      <div`}>
+                        <IconComponent`} />
                       </div>
                     </div>
                     
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                    <p className="text-gray-600 mb-6">{plan.description}</p>
+                    <h3>{plan.name}</h3>
+                    <p>{plan.description}</p>
 
                     {/* Pricing Display */}
-                    <div className="mb-4">
+                    <div>
                       <AnimatePresence mode="wait">
                         <motion.div
                           key={isYearly ? 'yearly' : 'monthly'}
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.9 }}
-                          className="flex items-baseline justify-center gap-1"
+                         
                         >
-                          <span className="text-5xl font-bold text-gray-900">
+                          <span>
                             ${isYearly && plan.yearlyMonthlyPrice ? Math.floor(plan.yearlyMonthlyPrice) : price}
                           </span>
                           {price > 0 && (
-                            <span className="text-lg text-gray-600">/month</span>
+                            <span>/month</span>
                           )}
                         </motion.div>
                       </AnimatePresence>
@@ -247,13 +236,13 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="space-y-2"
+                       
                       >
-                        <p className="text-sm text-gray-600">
-                          <span className="line-through">${plan.monthlyPrice * 12}</span>
-                          <span className="ml-2 font-semibold text-gray-900">${plan.yearlyPrice}/year</span>
+                        <p>
+                          <span>${plan.monthlyPrice * 12}</span>
+                          <span>${plan.yearlyPrice}/year</span>
                         </p>
-                        <Badge className="bg-green-100 text-green-700 border-green-200">
+                        <Badge>
                           You save ${plan.savings}
                         </Badge>
                       </motion.div>
@@ -261,38 +250,26 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
 
                     {/* Free Plan Note */}
                     {plan.id === 'free' && (
-                      <p className="text-sm font-semibold mt-3 text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
+                      <p>
                         10 Quotes/Month Limit
                       </p>
                     )}
                   </div>
 
                   {/* Features List */}
-                  <div className="p-8 space-y-4">
-                    <ul className="space-y-3">
+                  <div>
+                    <ul>
                       {plan.features.map((feature, featureIndex) => (
                         <li
                           key={featureIndex}
-                          className={`flex items-start gap-3 ${
-                            feature.highlighted ? 'font-semibold' : ''
-                          }`}
+                         `}
                         >
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                            feature.highlighted
-                              ? 'bg-blue-100'
-                              : 'bg-green-100'
-                          }`}>
+                          <div`}>
                             <Check
-                              className={`w-4 h-4 ${
-                                feature.highlighted
-                                  ? 'text-blue-600'
-                                  : 'text-green-600'
-                              }`}
+                             `}
                             />
                           </div>
-                          <span className={`text-sm ${
-                            feature.highlighted ? 'text-gray-900' : 'text-gray-700'
-                          }`}>
+                          <span`}>
                             {feature.text}
                           </span>
                         </li>
@@ -300,10 +277,10 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
                     </ul>
 
                     {/* CTA Button */}
-                    <div className="pt-6">
+                    <div>
                       <Button
                         size="lg"
-                        className={`w-full text-base font-semibold py-6 transition-all ${plan.ctaClass}`}
+                       `}
                         onClick={() => {
                           if (plan.id === 'free') {
                             window.location.href = '/trial-signup';
@@ -316,7 +293,7 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
                         }}
                       >
                         {plan.cta}
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                        <ArrowRight />
                       </Button>
                     </div>
                   </div>
@@ -331,31 +308,31 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="text-center mt-16 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 py-12 rounded-3xl border-2 border-blue-100"
+         
         >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-1 mb-3">
+          <div>
+            <div>
+              <div>
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-yellow-500 fill-current" />
+                  <Star key={i} />
                 ))}
               </div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">4.9/5</div>
-              <div className="text-gray-700 font-medium">Customer Rating</div>
+              <div>4.9/5</div>
+              <div>Customer Rating</div>
             </div>
             
-            <div className="text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">5,000+</div>
-              <div className="text-gray-700 font-medium">Active Contractors</div>
+            <div>
+              <div>5,000+</div>
+              <div>Active Contractors</div>
             </div>
             
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">278%</div>
-              <div className="text-gray-700 font-medium">Average ROI in 90 days</div>
+            <div>
+              <div>278%</div>
+              <div>Average ROI in 90 days</div>
             </div>
           </div>
           
-          <p className="text-lg text-gray-700 font-medium">
+          <p>
             Join thousands of contractors who've increased their win rates
           </p>
         </motion.div>

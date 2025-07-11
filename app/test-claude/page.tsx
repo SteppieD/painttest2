@@ -52,30 +52,30 @@ export default function TestClaudePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div>
+      <div>
         <Card>
           <CardHeader>
             <CardTitle>Claude 3.5 Haiku vs Current System Comparison</CardTitle>
-            <p className="text-sm text-gray-600">
+            <p>
               See how Claude understands contractor language compared to our current parsing
             </p>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent>
             {!hasApiKey && (
-              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-                <p className="text-sm text-yellow-800">
+              <div>
+                <p>
                   <strong>OpenRouter API Key Required:</strong> Add OPENROUTER_API_KEY to your .env file
                 </p>
-                <p className="text-xs text-yellow-700 mt-1">
-                  Get one at <a href="https://openrouter.ai" className="underline" target="_blank">openrouter.ai</a>
+                <p>
+                  Get one at <a href="https://openrouter.ai" target="_blank">openrouter.ai</a>
                 </p>
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
               <div>
-                <label className="text-sm font-medium">Category</label>
+                <label>Category</label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger>
                     <SelectValue />
@@ -91,7 +91,7 @@ export default function TestClaudePage() {
               </div>
 
               <div>
-                <label className="text-sm font-medium">Contractor Input</label>
+                <label>Contractor Input</label>
                 <Input 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -99,15 +99,15 @@ export default function TestClaudePage() {
                 />
               </div>
 
-              <div className="flex items-end">
+              <div>
                 <Button 
                   onClick={runComparison}
                   disabled={loading}
-                  className="w-full"
+                 
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 />
                       Comparing...
                     </>
                   ) : (
@@ -118,9 +118,9 @@ export default function TestClaudePage() {
             </div>
 
             {/* Quick Examples */}
-            <div className="border-t pt-4">
-              <p className="text-sm font-medium mb-2">Quick Examples:</p>
-              <div className="flex flex-wrap gap-2">
+            <div>
+              <p>Quick Examples:</p>
+              <div>
                 {testExamples.map((example, idx) => (
                   <Button
                     key={idx}
@@ -141,22 +141,22 @@ export default function TestClaudePage() {
 
         {/* Comparison Results */}
         {comparison && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
             {/* Parsing Comparison */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Parsing Comparison</CardTitle>
+                <CardTitle>Parsing Comparison</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent>
                 <div>
-                  <h4 className="font-medium text-sm text-gray-700">Current Parser Output:</h4>
-                  <pre className="mt-1 p-3 bg-gray-100 rounded text-xs overflow-auto">
+                  <h4>Current Parser Output:</h4>
+                  <pre>
                     {JSON.stringify(comparison.comparison?.parsing?.current || {}, null, 2)}
                   </pre>
                 </div>
                 <div>
-                  <h4 className="font-medium text-sm text-gray-700">Claude 3.5 Haiku Output:</h4>
-                  <pre className="mt-1 p-3 bg-blue-50 rounded text-xs overflow-auto">
+                  <h4>Claude 3.5 Haiku Output:</h4>
+                  <pre>
                     {JSON.stringify(comparison.comparison?.parsing?.claude || 'API Key Required', null, 2)}
                   </pre>
                 </div>
@@ -166,19 +166,19 @@ export default function TestClaudePage() {
             {/* Response Comparison */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Response Comparison</CardTitle>
+                <CardTitle>Response Comparison</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent>
                 <div>
-                  <h4 className="font-medium text-sm text-gray-700">Current Response:</h4>
-                  <div className="mt-1 p-3 bg-gray-100 rounded">
-                    <p className="text-sm whitespace-pre-wrap">{comparison.comparison?.responses?.current}</p>
+                  <h4>Current Response:</h4>
+                  <div>
+                    <p>{comparison.comparison?.responses?.current}</p>
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-medium text-sm text-gray-700">Claude 3.5 Haiku Response:</h4>
-                  <div className="mt-1 p-3 bg-blue-50 rounded">
-                    <p className="text-sm whitespace-pre-wrap">
+                  <h4>Claude 3.5 Haiku Response:</h4>
+                  <div>
+                    <p>
                       {comparison.comparison?.responses?.claude || 'Set OPENROUTER_API_KEY to see Claude responses'}
                     </p>
                   </div>
@@ -192,24 +192,24 @@ export default function TestClaudePage() {
         {comparison && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Analysis</CardTitle>
+              <CardTitle>Analysis</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-gray-400 mt-1.5"></div>
+              <div>
+                <div>
+                  <div></div>
                   <div>
-                    <p className="font-medium text-sm">Current System</p>
-                    <p className="text-sm text-gray-600">
+                    <p>Current System</p>
+                    <p>
                       Template-based responses, rigid parsing patterns, sometimes misses context
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5"></div>
+                <div>
+                  <div></div>
                   <div>
-                    <p className="font-medium text-sm">Claude 3.5 Haiku</p>
-                    <p className="text-sm text-gray-600">
+                    <p>Claude 3.5 Haiku</p>
+                    <p>
                       Natural conversation flow, understands context and contractor language, adapts responses
                     </p>
                   </div>

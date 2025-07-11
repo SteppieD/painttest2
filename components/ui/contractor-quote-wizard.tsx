@@ -175,7 +175,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-4">
+          <div>
             <div>
               <Label htmlFor="customerName">Customer Name *</Label>
               <Input
@@ -194,7 +194,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                 placeholder="123 Main St, City, State 12345"
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
               <div>
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -220,10 +220,10 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
 
       case 2:
         return (
-          <div className="space-y-6">
+          <div>
             <div>
-              <Label className="text-base font-medium mb-4 block">Project Type *</Label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <Label>Project Type *</Label>
+              <div>
                 {[
                   { value: 'interior', label: 'Interior Only', desc: 'Inside walls, ceilings, trim' },
                   { value: 'exterior', label: 'Exterior Only', desc: 'Siding, trim, doors, windows' },
@@ -232,22 +232,18 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                   <button
                     key={type.value}
                     onClick={() => updateQuoteData('projectType', type.value)}
-                    className={`p-4 border rounded-lg text-center transition-colors ${
-                      quoteData.projectType === type.value
-                        ? 'border-green-500 bg-green-50 text-green-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                   `}
                   >
-                    <div className="font-medium">{type.label}</div>
-                    <div className="text-sm text-gray-500 mt-1">{type.desc}</div>
+                    <div>{type.label}</div>
+                    <div>{type.desc}</div>
                   </button>
                 ))}
               </div>
             </div>
             
             <div>
-              <Label className="text-base font-medium mb-4 block">Surfaces to Paint *</Label>
-              <div className="grid grid-cols-2 gap-3">
+              <Label>Surfaces to Paint *</Label>
+              <div>
                 {getAvailableSurfaces().map((surface) => {
                   const isSelected = quoteData.surfaces[surface as keyof typeof quoteData.surfaces];
                   const surfaceLabels: { [key: string]: string } = {
@@ -271,11 +267,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                         };
                         updateQuoteData('surfaces', newSurfaces);
                       }}
-                      className={`p-3 border rounded-lg text-sm transition-colors ${
-                        isSelected
-                          ? 'border-green-500 bg-green-50 text-green-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                     `}
                     >
                       {surfaceLabels[surface]}
                     </button>
@@ -288,46 +280,46 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
 
       case 3:
         return (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <Label className="text-base font-medium">Room Measurements *</Label>
+          <div>
+            <div>
+              <Label>Room Measurements *</Label>
               <Button onClick={addRoom} size="sm" variant="outline">
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus />
                 Add Room
               </Button>
             </div>
             
             {quoteData.rooms.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                <Home className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <div>
+                <Home />
                 <p>No rooms added yet. Click "Add Room" to start measuring.</p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div>
                 {quoteData.rooms.map((room) => (
-                  <Card key={room.id} className="border-gray-200">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
+                  <Card key={room.id}>
+                    <CardHeader>
+                      <div>
                         <Input
                           value={room.name}
                           onChange={(e) => updateRoom(room.id, 'name', e.target.value)}
-                          className="text-base font-medium border-none p-0 h-auto focus:ring-0"
+                         
                           placeholder="Room name"
                         />
                         <Button
                           onClick={() => removeRoom(room.id)}
                           size="sm"
                           variant="ghost"
-                          className="text-red-500"
+                         
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 />
                         </Button>
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                      <div>
                         <div>
-                          <Label className="text-xs">Length (ft)</Label>
+                          <Label>Length (ft)</Label>
                           <Input
                             type="number"
                             value={room.length || ''}
@@ -337,7 +329,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                           />
                         </div>
                         <div>
-                          <Label className="text-xs">Width (ft)</Label>
+                          <Label>Width (ft)</Label>
                           <Input
                             type="number"
                             value={room.width || ''}
@@ -347,7 +339,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                           />
                         </div>
                         <div>
-                          <Label className="text-xs">Height (ft)</Label>
+                          <Label>Height (ft)</Label>
                           <Input
                             type="number"
                             value={room.height || ''}
@@ -357,7 +349,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                           />
                         </div>
                         <div>
-                          <Label className="text-xs">Doors</Label>
+                          <Label>Doors</Label>
                           <Input
                             type="number"
                             value={room.doors || ''}
@@ -367,7 +359,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                           />
                         </div>
                         <div>
-                          <Label className="text-xs">Windows</Label>
+                          <Label>Windows</Label>
                           <Input
                             type="number"
                             value={room.windows || ''}
@@ -377,10 +369,10 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                           />
                         </div>
                       </div>
-                      <div className="mt-3 text-xs text-gray-500">
+                      <div>
                         Floor area: {(room.length * room.width).toFixed(1)} sq ft
                         {room.length > 0 && room.width > 0 && room.height > 0 && (
-                          <span className="ml-4">
+                          <span>
                             Wall area: {(2 * (room.length + room.width) * room.height - (room.doors * 20) - (room.windows * 15)).toFixed(1)} sq ft
                           </span>
                         )}
@@ -399,8 +391,8 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
           .map(([surface, _]) => surface);
 
         return (
-          <div className="space-y-6">
-            <Label className="text-base font-medium">Paint Products for Selected Surfaces</Label>
+          <div>
+            <Label>Paint Products for Selected Surfaces</Label>
             
             {selectedSurfaces.map((surface) => {
               const surfaceLabels: { [key: string]: string } = {
@@ -415,14 +407,14 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
               };
 
               return (
-                <Card key={surface} className="border-gray-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">{surfaceLabels[surface]}</CardTitle>
+                <Card key={surface}>
+                  <CardHeader>
+                    <CardTitle>{surfaceLabels[surface]}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
                       <div>
-                        <Label className="text-sm">Brand</Label>
+                        <Label>Brand</Label>
                         <select
                           value={quoteData.paintSelections[surface]?.brand || ''}
                           onChange={(e) => {
@@ -436,7 +428,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                             };
                             updateQuoteData('paintSelections', newSelections);
                           }}
-                          className="w-full p-2 border border-gray-300 rounded-md"
+                         
                         >
                           <option value="">Select Brand</option>
                           <option value="Sherwin-Williams">Sherwin-Williams</option>
@@ -447,7 +439,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                       </div>
                       
                       <div>
-                        <Label className="text-sm">Quality Level</Label>
+                        <Label>Quality Level</Label>
                         <select
                           value={quoteData.paintSelections[surface]?.quality || 'better'}
                           onChange={(e) => {
@@ -469,7 +461,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                             };
                             updateQuoteData('paintSelections', newSelections);
                           }}
-                          className="w-full p-2 border border-gray-300 rounded-md"
+                         
                         >
                           <option value="good">Good ($45/gal)</option>
                           <option value="better">Better ($65/gal)</option>
@@ -482,9 +474,9 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
               );
             })}
             
-            <Card className="bg-blue-50 border-blue-200">
-              <CardContent className="p-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card>
+              <CardContent>
+                <div>
                   <div>
                     <Label htmlFor="markup">Markup Percentage</Label>
                     <Input
@@ -495,7 +487,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                       min="0"
                       max="100"
                     />
-                    <p className="text-xs text-gray-600 mt-1">Industry standard: 25-45%</p>
+                    <p>Industry standard: 25-45%</p>
                   </div>
                   <div>
                     <Label htmlFor="laborRate">Labor Rate ($/hour)</Label>
@@ -506,7 +498,7 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                       onChange={(e) => updateQuoteData('laborRate', parseInt(e.target.value) || 45)}
                       min="0"
                     />
-                    <p className="text-xs text-gray-600 mt-1">Your hourly rate</p>
+                    <p>Your hourly rate</p>
                   </div>
                 </div>
               </CardContent>
@@ -528,44 +520,44 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
         const total = subtotal + markupAmount;
 
         return (
-          <div className="space-y-6">
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-green-900 mb-4">Professional Quote Summary</h3>
+          <div>
+            <div>
+              <h3>Professional Quote Summary</h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Project Details</h4>
-                  <div className="space-y-1 text-sm">
-                    <div><span className="text-gray-500">Customer:</span> {quoteData.customerName}</div>
-                    <div><span className="text-gray-500">Address:</span> {quoteData.address}</div>
-                    <div><span className="text-gray-500">Project Type:</span> {quoteData.projectType}</div>
-                    <div><span className="text-gray-500">Rooms:</span> {quoteData.rooms.length}</div>
-                    <div><span className="text-gray-500">Total Floor Area:</span> {totalRoomSqFt.toFixed(1)} sq ft</div>
-                    <div><span className="text-gray-500">Wall Area:</span> {totalWallSqFt.toFixed(1)} sq ft</div>
+                  <h4>Project Details</h4>
+                  <div>
+                    <div><span>Customer:</span> {quoteData.customerName}</div>
+                    <div><span>Address:</span> {quoteData.address}</div>
+                    <div><span>Project Type:</span> {quoteData.projectType}</div>
+                    <div><span>Rooms:</span> {quoteData.rooms.length}</div>
+                    <div><span>Total Floor Area:</span> {totalRoomSqFt.toFixed(1)} sq ft</div>
+                    <div><span>Wall Area:</span> {totalWallSqFt.toFixed(1)} sq ft</div>
                   </div>
                 </div>
                 
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Cost Breakdown</h4>
-                  <div className="space-y-1 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Materials:</span>
+                  <h4>Cost Breakdown</h4>
+                  <div>
+                    <div>
+                      <span>Materials:</span>
                       <span>${estimatedMaterialCost.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Labor ({estimatedLaborHours.toFixed(1)} hrs @ ${quoteData.laborRate}/hr):</span>
+                    <div>
+                      <span>Labor ({estimatedLaborHours.toFixed(1)} hrs @ ${quoteData.laborRate}/hr):</span>
                       <span>${estimatedLaborCost.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Subtotal:</span>
+                    <div>
+                      <span>Subtotal:</span>
                       <span>${subtotal.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Markup ({quoteData.markup}%):</span>
+                    <div>
+                      <span>Markup ({quoteData.markup}%):</span>
                       <span>${markupAmount.toFixed(2)}</span>
                     </div>
-                    <hr className="my-2" />
-                    <div className="flex justify-between text-lg font-bold text-green-900">
+                    <hr />
+                    <div>
                       <span>Total Quote:</span>
                       <span>${total.toFixed(2)}</span>
                     </div>
@@ -573,12 +565,12 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
                 </div>
               </div>
 
-              <div className="border-t pt-4">
-                <h4 className="font-medium text-gray-900 mb-2">Room Details</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+              <div>
+                <h4>Room Details</h4>
+                <div>
                   {quoteData.rooms.map((room) => (
-                    <div key={room.id} className="flex justify-between">
-                      <span className="text-gray-500">{room.name}:</span>
+                    <div key={room.id}>
+                      <span>{room.name}:</span>
                       <span>{room.length}' × {room.width}' × {room.height}' ({(room.length * room.width).toFixed(1)} sq ft)</span>
                     </div>
                   ))}
@@ -594,51 +586,43 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div>
       {/* Progress Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">Professional Quote Builder</h1>
+      <div>
+        <div>
+          <h1>Professional Quote Builder</h1>
           <button
             onClick={onCancel}
-            className="text-gray-500 hover:text-gray-700 text-sm"
+           
           >
             Cancel
           </button>
         </div>
         
-        <div className="mb-4">
-          <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+        <div>
+          <div>
             <span>Step {currentStep} of {steps.length}</span>
             <span>{Math.round(progress)}% Complete</span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress value={progress} />
         </div>
         
-        <div className="flex items-center justify-between">
+        <div>
           {steps.map((step) => {
             const StepIcon = step.icon;
             const isActive = currentStep === step.number;
             const isCompleted = currentStep > step.number;
             
             return (
-              <div key={step.number} className="flex flex-col items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors ${
-                  isCompleted
-                    ? 'bg-green-500 border-green-500 text-white'
-                    : isActive
-                    ? 'bg-green-500 border-green-500 text-white'
-                    : 'bg-gray-100 border-gray-300 text-gray-400'
-                }`}>
+              <div key={step.number}>
+                <div`}>
                   {isCompleted ? (
-                    <CheckCircle className="w-5 h-5" />
+                    <CheckCircle />
                   ) : (
-                    <StepIcon className="w-5 h-5" />
+                    <StepIcon />
                   )}
                 </div>
-                <span className={`text-xs mt-1 text-center ${
-                  isActive ? 'text-green-600 font-medium' : 'text-gray-500'
-                }`}>
+                <span`}>
                   {step.title}
                 </span>
               </div>
@@ -658,13 +642,13 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
       </Card>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between mt-6">
+      <div>
         <Button
           variant="outline"
           onClick={prevStep}
           disabled={currentStep === 1}
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft />
           Previous
         </Button>
         
@@ -672,19 +656,19 @@ export function ContractorQuoteWizard({ onComplete, onCancel }: ContractorQuoteW
           <Button
             onClick={() => onComplete(quoteData)}
             disabled={!canProceed()}
-            className="bg-green-600 hover:bg-green-700"
+           
           >
             Generate Professional Quote
-            <FileText className="w-4 h-4 ml-2" />
+            <FileText />
           </Button>
         ) : (
           <Button
             onClick={nextStep}
             disabled={!canProceed()}
-            className="bg-green-600 hover:bg-green-700"
+           
           >
             Next
-            <ArrowRight className="w-4 h-4 ml-2" />
+            <ArrowRight />
           </Button>
         )}
       </div>

@@ -103,11 +103,11 @@ export default function QuotePreviewPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded mb-4"></div>
-            <div className="h-64 bg-gray-200 rounded"></div>
+      <div>
+        <div>
+          <div>
+            <div></div>
+            <div></div>
           </div>
         </div>
       </div>
@@ -116,12 +116,12 @@ export default function QuotePreviewPage() {
 
   if (!quote) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
-        <div className="max-w-4xl mx-auto">
+      <div>
+        <div>
           <Card>
-            <CardContent className="p-8 text-center">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Quote Not Found</h2>
-              <p className="text-gray-600 mb-4">The quote you're looking for doesn't exist or has been removed.</p>
+            <CardContent>
+              <h2>Quote Not Found</h2>
+              <p>The quote you're looking for doesn't exist or has been removed.</p>
               <Button onClick={() => router.push('/dashboard')}>
                 Return to Dashboard
               </Button>
@@ -311,41 +311,41 @@ export default function QuotePreviewPage() {
   const projectSpecs = extractProjectSpecs();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header with Actions */}
-      <div className="bg-white border-b">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+      <div>
+        <div>
+          <div>
+            <div>
               <Button 
                 variant="ghost" 
                 onClick={() => router.push('/dashboard')}
-                className="text-gray-600"
+               
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
+                <ArrowLeft />
                 Back to Dashboard
               </Button>
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">Quote Preview</h1>
-                <p className="text-sm text-gray-600">{quote.quote_id}</p>
+                <h1>Quote Preview</h1>
+                <p>{quote.quote_id}</p>
               </div>
             </div>
             
-            <div className="flex space-x-2">
+            <div>
               <Button variant="outline" onClick={copyQuoteLink}>
-                {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
+                {copied ? <Check /> : <Copy />}
                 {copied ? 'Copied!' : 'Copy Link'}
               </Button>
               <Button variant="outline" onClick={downloadPDF}>
-                <Download className="h-4 w-4 mr-2" />
+                <Download />
                 PDF
               </Button>
               <Button variant="outline" onClick={sendText}>
-                <MessageSquare className="h-4 w-4 mr-2" />
+                <MessageSquare />
                 Text
               </Button>
               <Button onClick={sendEmail}>
-                <Mail className="h-4 w-4 mr-2" />
+                <Mail />
                 Email Quote
               </Button>
             </div>
@@ -354,18 +354,18 @@ export default function QuotePreviewPage() {
       </div>
 
       {/* Quote Preview */}
-      <div className="max-w-4xl mx-auto p-4">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div>
+        <div>
           {/* Quote Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
-            <div className="flex justify-between items-start">
+          <div>
+            <div>
               <div>
-                <h2 className="text-2xl font-bold mb-2">Painting Quote</h2>
-                <p className="text-blue-100">Professional Estimate</p>
+                <h2>Painting Quote</h2>
+                <p>Professional Estimate</p>
               </div>
-              <div className="text-right">
-                <div className="text-3xl font-bold">${(quote.quote_amount || (quote as any).final_price || (quote as any).total_revenue || (quote as any).total_cost || 0).toLocaleString()}</div>
-                <Badge variant="secondary" className="mt-2">
+              <div>
+                <div>${(quote.quote_amount || (quote as any).final_price || (quote as any).total_revenue || (quote as any).total_cost || 0).toLocaleString()}</div>
+                <Badge variant="secondary">
                   {quote.status.charAt(0).toUpperCase() + quote.status.slice(1)}
                 </Badge>
               </div>
@@ -373,29 +373,29 @@ export default function QuotePreviewPage() {
           </div>
 
           {/* Quote Content */}
-          <div className="p-6">
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <div>
               {/* Customer Information */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <MapPin className="h-5 w-5 mr-2 text-blue-600" />
+                  <CardTitle>
+                    <MapPin />
                     Customer Information
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div>
                     <div>
-                      <label className="text-sm font-medium text-gray-600">Customer</label>
-                      <p className="text-gray-900">{processedQuote.customer_name}</p>
+                      <label>Customer</label>
+                      <p>{processedQuote.customer_name}</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-600">Property Address</label>
-                      <p className="text-gray-900">{processedQuote.address}</p>
+                      <label>Property Address</label>
+                      <p>{processedQuote.address}</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-600">Project Type</label>
-                      <p className="text-gray-900 capitalize">{quote.project_type} Painting</p>
+                      <label>Project Type</label>
+                      <p>{quote.project_type} Painting</p>
                     </div>
                   </div>
                 </CardContent>
@@ -404,20 +404,20 @@ export default function QuotePreviewPage() {
               {/* Quote Details */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <Calendar className="h-5 w-5 mr-2 text-blue-600" />
+                  <CardTitle>
+                    <Calendar />
                     Quote Details
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div>
                     <div>
-                      <label className="text-sm font-medium text-gray-600">Quote ID</label>
-                      <p className="text-gray-900 font-mono">{quote.quote_id}</p>
+                      <label>Quote ID</label>
+                      <p>{quote.quote_id}</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-600">Date Created</label>
-                      <p className="text-gray-900">
+                      <label>Date Created</label>
+                      <p>
                         {new Date(quote.created_at).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
@@ -426,8 +426,8 @@ export default function QuotePreviewPage() {
                       </p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-600">Contractor</label>
-                      <p className="text-gray-900">{quote.company_name}</p>
+                      <label>Contractor</label>
+                      <p>{quote.company_name}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -436,52 +436,52 @@ export default function QuotePreviewPage() {
 
             {/* Project Specifications */}
             {(projectSpecs.linearFeet || projectSpecs.paintType || projectSpecs.exclusions.length > 0) && (
-              <Card className="mb-6">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <FileText className="h-5 w-5 mr-2 text-blue-600" />
+                  <CardTitle>
+                    <FileText />
                     Project Specifications
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-3">
+                  <div>
+                    <div>
                       {projectSpecs.linearFeet && (
                         <div>
-                          <label className="text-sm font-medium text-gray-600">Linear Footage</label>
-                          <p className="text-gray-900">{projectSpecs.linearFeet} feet</p>
+                          <label>Linear Footage</label>
+                          <p>{projectSpecs.linearFeet} feet</p>
                         </div>
                       )}
                       {projectSpecs.area && (
                         <div>
-                          <label className="text-sm font-medium text-gray-600">Total Area</label>
-                          <p className="text-gray-900">{projectSpecs.area.toLocaleString()} sq ft</p>
+                          <label>Total Area</label>
+                          <p>{projectSpecs.area.toLocaleString()} sq ft</p>
                         </div>
                       )}
                       {projectSpecs.ceilingHeight && (
                         <div>
-                          <label className="text-sm font-medium text-gray-600">Ceiling Height</label>
-                          <p className="text-gray-900">{projectSpecs.ceilingHeight} feet</p>
+                          <label>Ceiling Height</label>
+                          <p>{projectSpecs.ceilingHeight} feet</p>
                         </div>
                       )}
                     </div>
-                    <div className="space-y-3">
+                    <div>
                       {projectSpecs.paintType && (
                         <div>
-                          <label className="text-sm font-medium text-gray-600">Paint Specification</label>
-                          <p className="text-gray-900">{projectSpecs.paintType}</p>
+                          <label>Paint Specification</label>
+                          <p>{projectSpecs.paintType}</p>
                         </div>
                       )}
                       {projectSpecs.surfaces.length > 0 && (
                         <div>
-                          <label className="text-sm font-medium text-gray-600">Surfaces Included</label>
-                          <p className="text-gray-900 capitalize">{projectSpecs.surfaces.join(', ')}</p>
+                          <label>Surfaces Included</label>
+                          <p>{projectSpecs.surfaces.join(', ')}</p>
                         </div>
                       )}
                       {projectSpecs.exclusions.length > 0 && (
                         <div>
-                          <label className="text-sm font-medium text-gray-600">Exclusions</label>
-                          <p className="text-gray-900 capitalize">No {projectSpecs.exclusions.join(', ')}</p>
+                          <label>Exclusions</label>
+                          <p>No {projectSpecs.exclusions.join(', ')}</p>
                         </div>
                       )}
                     </div>
@@ -491,32 +491,32 @@ export default function QuotePreviewPage() {
             )}
 
             {/* Professional Investment Summary */}
-            <Card className="mb-6">
+            <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <DollarSign className="h-5 w-5 mr-2 text-blue-600" />
+                  <CardTitle>
+                    <DollarSign />
                     Investment Summary
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-600">Materials & Premium Paint</span>
-                      <span className="font-semibold">${breakdown.materials.toLocaleString()}</span>
+                  <div>
+                    <div>
+                      <span>Materials & Premium Paint</span>
+                      <span>${breakdown.materials.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-600">Professional Labor & Installation</span>
-                      <span className="font-semibold">${breakdown.labor.toLocaleString()}</span>
+                    <div>
+                      <span>Professional Labor & Installation</span>
+                      <span>${breakdown.labor.toLocaleString()}</span>
                     </div>
                     
                     <Separator />
                     
-                    <div className="flex justify-between items-center py-3 text-xl font-bold bg-blue-50 px-4 rounded-lg">
-                      <span className="text-blue-900">Total Investment</span>
-                      <span className="text-blue-600">${(quote.quote_amount || (quote as any).final_price || (quote as any).total_revenue || (quote as any).total_cost || 0).toLocaleString()}</span>
+                    <div>
+                      <span>Total Investment</span>
+                      <span>${(quote.quote_amount || (quote as any).final_price || (quote as any).total_revenue || (quote as any).total_cost || 0).toLocaleString()}</span>
                     </div>
                     
-                    <div className="text-sm text-gray-600 text-center mt-3">
+                    <div>
                       <p>✓ All materials, labor, and project management included</p>
                       <p>✓ No hidden fees or surprise costs</p>
                     </div>
@@ -527,16 +527,16 @@ export default function QuotePreviewPage() {
             {/* Professional Guarantee & Next Steps */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center text-lg">
-                  <FileText className="h-5 w-5 mr-2 text-blue-600" />
+                <CardTitle>
+                  <FileText />
                   Our Guarantee & Next Steps
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">🛡️ Quality Guarantee</h4>
-                    <div className="text-sm text-gray-600 space-y-1 ml-4">
+                    <h4>🛡️ Quality Guarantee</h4>
+                    <div>
                       <p>• 2-year warranty on all workmanship</p>
                       <p>• Premium quality paints and materials</p>
                       <p>• Professional surface preparation included</p>
@@ -545,8 +545,8 @@ export default function QuotePreviewPage() {
                   </div>
                   
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">💰 Payment Terms</h4>
-                    <div className="text-sm text-gray-600 space-y-1 ml-4">
+                    <h4>💰 Payment Terms</h4>
+                    <div>
                       <p>• No payment required until work begins</p>
                       <p>• 50% deposit secures your project start date</p>
                       <p>• Final payment due upon your complete satisfaction</p>
@@ -554,8 +554,8 @@ export default function QuotePreviewPage() {
                   </div>
                   
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">⏰ Important Details</h4>
-                    <div className="text-sm text-gray-600 space-y-1 ml-4">
+                    <h4>⏰ Important Details</h4>
+                    <div>
                       <p>• This investment is valid for 30 days</p>
                       <p>• Scheduling typically within 2-3 weeks</p>
                       <p>• Weather-dependent for exterior projects</p>
@@ -567,18 +567,18 @@ export default function QuotePreviewPage() {
           </div>
 
           {/* Action Footer */}
-          <div className="bg-gray-50 px-6 py-4">
-            <div className="flex justify-between items-center">
-              <p className="text-sm text-gray-600">
+          <div>
+            <div>
+              <p>
                 Questions? Contact {quote.company_name} for more information.
               </p>
-              <div className="flex space-x-2">
+              <div>
                 <Button variant="outline" onClick={() => router.push(`/quotes/${params.id}/view`)}>
-                  <Share2 className="h-4 w-4 mr-2" />
+                  <Share2 />
                   View Public Link
                 </Button>
                 <Button onClick={sendEmail}>
-                  <Send className="h-4 w-4 mr-2" />
+                  <Send />
                   Send to Client
                 </Button>
               </div>

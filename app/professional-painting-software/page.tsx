@@ -128,54 +128,54 @@ const pricingPlans = [
 
 export default function ProfessionalPaintingSoftwarePage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section>
+        <div>
+          <div>
             <div>
-              <h1 className="text-4xl lg:text-6xl font-bold mb-6">
+              <h1>
                 Professional Painting Software for Serious Contractors
               </h1>
-              <p className="text-xl mb-8 text-blue-100">
+              <p>
                 Complete business management platform trusted by 10,000+ painting contractors. 
                 Quotes, customers, analytics, and growth tools in one professional suite.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
+              <div>
+                <Button asChild size="lg">
                   <Link href="/trial-signup">
-                    <Zap className="h-5 w-5 mr-2" />
+                    <Zap />
                     Start Free Trial
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
+                <Button asChild variant="outline" size="lg">
                   <Link href="/features">
                     View All Features
-                    <ArrowRight className="h-5 w-5 ml-2" />
+                    <ArrowRight />
                   </Link>
                 </Button>
               </div>
-              <div className="grid grid-cols-3 gap-6 text-center">
+              <div>
                 <div>
-                  <div className="text-3xl font-bold">10,000+</div>
-                  <div className="text-blue-200">Active Contractors</div>
+                  <div>10,000+</div>
+                  <div>Active Contractors</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold">$50M+</div>
-                  <div className="text-blue-200">Quotes Generated</div>
+                  <div>$50M+</div>
+                  <div>Quotes Generated</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold">340%</div>
-                  <div className="text-blue-200">Avg Revenue Growth</div>
+                  <div>340%</div>
+                  <div>Avg Revenue Growth</div>
                 </div>
               </div>
             </div>
-            <div className="lg:text-center">
+            <div>
               <img 
                 src="/api/placeholder/600/400" 
                 alt="Professional Painting Software Dashboard"
-                className="rounded-lg shadow-2xl border border-blue-300"
+               
               />
             </div>
           </div>
@@ -183,32 +183,32 @@ export default function ProfessionalPaintingSoftwarePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Everything You Need to Run a Professional Painting Business
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p>
               From your first quote to scaling a multi-crew operation, our platform grows with your business.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div>
             {features.map((feature, index) => (
-              <Card key={index} className="h-full border-2 hover:border-blue-200 transition-colors">
+              <Card key={index}>
                 <CardHeader>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-blue-600" />
+                  <div>
+                    <feature.icon />
                   </div>
-                  <CardTitle className="text-xl font-bold">{feature.title}</CardTitle>
+                  <CardTitle>{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">{feature.description}</p>
-                  <ul className="space-y-2">
+                  <p>{feature.description}</p>
+                  <ul>
                     {feature.benefits.map((benefit, idx) => (
-                      <li key={idx} className="flex items-center text-sm">
-                        <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                      <li key={idx}>
+                        <CheckCircle />
                         {benefit}
                       </li>
                     ))}
@@ -221,33 +221,33 @@ export default function ProfessionalPaintingSoftwarePage() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Trusted by Successful Painting Contractors
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               See how professional painting software transforms businesses
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div>
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="h-full">
+              <Card key={index}>
                 <CardHeader>
-                  <div className="flex items-center mb-4">
+                  <div>
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                      <Star key={i} />
                     ))}
                   </div>
-                  <p className="text-gray-600 italic">"{testimonial.quote}"</p>
+                  <p>"{testimonial.quote}"</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="border-t pt-4">
-                    <div className="font-semibold">{testimonial.name}</div>
-                    <div className="text-sm text-gray-600">{testimonial.company}</div>
-                    <div className="text-sm font-medium text-green-600 mt-2">{testimonial.results}</div>
+                  <div>
+                    <div>{testimonial.name}</div>
+                    <div>{testimonial.company}</div>
+                    <div>{testimonial.results}</div>
                   </div>
                 </CardContent>
               </Card>
@@ -257,44 +257,44 @@ export default function ProfessionalPaintingSoftwarePage() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Professional Plans for Every Business Size
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Start with a 14-day free trial. No contracts, cancel anytime.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div>
             {pricingPlans.map((plan, index) => (
-              <Card key={index} className={`h-full ${plan.popular ? 'border-2 border-blue-500 relative' : ''}`}>
+              <Card key={index}`}>
                 {plan.popular && (
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                  <div>
+                    <span>
                       Most Popular
                     </span>
                   </div>
                 )}
-                <CardHeader className="text-center">
-                  <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
-                  <div className="text-4xl font-bold text-blue-600">
-                    {plan.price}<span className="text-lg text-gray-600">/{plan.period}</span>
+                <CardHeader>
+                  <CardTitle>{plan.name}</CardTitle>
+                  <div>
+                    {plan.price}<span>/{plan.period}</span>
                   </div>
-                  <p className="text-gray-600">{plan.description}</p>
+                  <p>{plan.description}</p>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-3 mb-8">
+                  <ul>
                     {plan.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                      <li key={idx}>
+                        <CheckCircle />
                         <span>{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <Button asChild className="w-full" size="lg">
+                  <Button asChild size="lg">
                     <Link href="/trial-signup">
                       Start Free Trial
                     </Link>
@@ -307,21 +307,21 @@ export default function ProfessionalPaintingSoftwarePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-blue-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+      <section>
+        <div>
+          <h2>
             Ready to Grow Your Painting Business?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p>
             Join 10,000+ successful painting contractors using professional software to scale their business.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
+          <div>
+            <Button asChild size="lg">
               <Link href="/trial-signup">
                 Start 14-Day Free Trial
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
+            <Button asChild variant="outline" size="lg">
               <Link href="/contact">
                 Schedule Demo
               </Link>

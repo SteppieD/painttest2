@@ -174,19 +174,19 @@ export default function AccessCodesPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Access Code Management</h1>
-          <p className="text-gray-600 mt-2">Manage customer access codes and company accounts</p>
+          <h1>Access Code Management</h1>
+          <p>Manage customer access codes and company accounts</p>
         </div>
         
-        <div className="grid grid-cols-1 gap-4">
+        <div>
           {[1, 2, 3].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <CardContent className="p-6">
-                <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                <div className="h-8 bg-gray-200 rounded mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <Card key={i}>
+              <CardContent>
+                <div></div>
+                <div></div>
+                <div></div>
               </CardContent>
             </Card>
           ))}
@@ -196,18 +196,18 @@ export default function AccessCodesPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Header */}
-      <div className="flex justify-between items-start">
+      <div>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Access Code Management</h1>
-          <p className="text-gray-600 mt-2">
+          <h1>Access Code Management</h1>
+          <p>
             Manage customer access codes and company accounts ({accessCodes.length} total)
           </p>
         </div>
         
-        <Button onClick={() => setShowCreateForm(true)} className="gap-2">
-          <Plus className="w-4 h-4" />
+        <Button onClick={() => setShowCreateForm(true)}>
+          <Plus />
           Create Access Code
         </Button>
       </div>
@@ -216,14 +216,14 @@ export default function AccessCodesPage() {
       {showCreateForm && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Key className="w-5 h-5" />
+            <CardTitle>
+              <Key />
               Create New Access Code
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleCreateAccessCode} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleCreateAccessCode}>
+              <div>
                 <div>
                   <Label htmlFor="accessCode">Access Code *</Label>
                   <Input
@@ -231,7 +231,7 @@ export default function AccessCodesPage() {
                     value={newCode.accessCode}
                     onChange={(e) => setNewCode({...newCode, accessCode: e.target.value.toUpperCase()})}
                     placeholder="e.g., PAINTER2024"
-                    className="uppercase"
+                   
                     disabled={isCreating}
                     required
                   />
@@ -270,7 +270,7 @@ export default function AccessCodesPage() {
                 </div>
               </div>
               
-              <div className="flex gap-2 pt-4">
+              <div>
                 <Button type="submit" disabled={isCreating}>
                   {isCreating ? 'Creating...' : 'Create Access Code'}
                 </Button>
@@ -289,72 +289,72 @@ export default function AccessCodesPage() {
       )}
 
       {/* Access Codes List */}
-      <div className="grid grid-cols-1 gap-4">
+      <div>
         {accessCodes.length === 0 ? (
           <Card>
-            <CardContent className="text-center py-12">
-              <Key className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No Access Codes</h3>
-              <p className="text-gray-600 mb-4">Create your first access code to get started</p>
-              <Button onClick={() => setShowCreateForm(true)} className="gap-2">
-                <Plus className="w-4 h-4" />
+            <CardContent>
+              <Key />
+              <h3>No Access Codes</h3>
+              <p>Create your first access code to get started</p>
+              <Button onClick={() => setShowCreateForm(true)}>
+                <Plus />
                 Create Access Code
               </Button>
             </CardContent>
           </Card>
         ) : (
           accessCodes.map((code) => (
-            <Card key={code.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="font-mono text-lg font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded">
+            <Card key={code.id}>
+              <CardContent>
+                <div>
+                  <div>
+                    <div>
+                      <div>
                         {code.access_code}
                       </div>
                       <div>
-                        <h3 className="font-semibold text-lg">{code.company_name}</h3>
-                        <p className="text-sm text-gray-500">
+                        <h3>{code.company_name}</h3>
+                        <p>
                           Created {formatDate(code.created_at)}
                         </p>
                       </div>
                     </div>
                     
                     {(code.phone || code.email) && (
-                      <div className="text-sm text-gray-600 mb-3">
+                      <div>
                         {code.phone && <div>📞 {code.phone}</div>}
                         {code.email && <div>📧 {code.email}</div>}
                       </div>
                     )}
                     
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div className="flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-gray-400" />
+                    <div>
+                      <div>
+                        <FileText />
                         <span>{code.quote_count} quotes</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <DollarSign className="w-4 h-4 text-green-500" />
+                      <div>
+                        <DollarSign />
                         <span>{formatCurrency(code.total_revenue)}</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Users className="w-4 h-4 text-blue-500" />
+                      <div>
+                        <Users />
                         <span>{code.pending_quotes} pending</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-purple-500" />
+                      <div>
+                        <Calendar />
                         <span>{formatDate(code.last_quote_date)}</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-2">
+                  <div>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleDeleteAccessCode(code.id, code.access_code, code.company_name)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                     
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 />
                     </Button>
                   </div>
                 </div>

@@ -14,8 +14,6 @@ import {
   HelpCircle,
   X
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-
 interface QuickAction {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
@@ -149,22 +147,22 @@ export const EnhancedChatInput: React.FC<EnhancedChatInputProps> = ({
   };
   
   return (
-    <div className="relative">
+    <div>
       {/* Quick actions bar */}
       {showQuickActions && quickActions.length > 0 && (
-        <div className="absolute bottom-full left-0 right-0 mb-2 p-2 bg-white border rounded-lg shadow-sm">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs text-gray-500">Quick actions:</span>
+        <div>
+          <div>
+            <span>Quick actions:</span>
             {quickActions.map((action, index) => (
               <Button
                 key={index}
                 variant="outline"
                 size="sm"
                 onClick={() => onChange(action.value)}
-                className="h-7 text-xs gap-1 hover:bg-blue-50 hover:border-blue-300"
+               
                 disabled={isLoading}
               >
-                <action.icon className="w-3 h-3" />
+                <action.icon />
                 {action.label}
               </Button>
             ))}
@@ -173,37 +171,37 @@ export const EnhancedChatInput: React.FC<EnhancedChatInputProps> = ({
       )}
       
       {/* Input area */}
-      <div className="bg-white rounded-lg border shadow-sm">
-        <div className="flex items-end gap-2 p-3">
-          <div className="flex-1 relative">
+      <div>
+        <div>
+          <div>
             <Textarea
               value={value}
               onChange={(e) => onChange(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={placeholder}
               disabled={isLoading}
-              className="min-h-[60px] max-h-[200px] resize-none border-0 focus:ring-0 p-0 text-sm"
+             
               rows={2}
             />
             
             {/* Character count for long messages */}
             {value.length > 100 && (
-              <div className="absolute bottom-0 right-0 text-xs text-gray-400">
+              <div>
                 {value.length} chars
               </div>
             )}
           </div>
           
-          <div className="flex gap-2">
+          <div>
             {/* Help button */}
             <Button
               type="button"
               variant="ghost"
               size="icon"
               onClick={() => setShowHelp(!showHelp)}
-              className="h-9 w-9 text-gray-500 hover:text-gray-700"
+             
             >
-              <HelpCircle className="w-4 h-4" />
+              <HelpCircle />
             </Button>
             
             {/* Send button */}
@@ -211,30 +209,25 @@ export const EnhancedChatInput: React.FC<EnhancedChatInputProps> = ({
               onClick={onSend}
               disabled={!value.trim() || isLoading}
               size="icon"
-              className={cn(
-                "h-9 w-9 transition-all duration-200",
-                value.trim() && !isLoading
-                  ? "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
-                  : "bg-gray-100 text-gray-400"
-              )}
+             
             >
               {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div />
               ) : (
-                <Send className="w-4 h-4" />
+                <Send />
               )}
             </Button>
           </div>
         </div>
         
         {/* AI indicator */}
-        <div className="px-3 pb-2 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <Sparkles className="w-3 h-3" />
+        <div>
+          <div>
+            <Sparkles />
             <span>Powered by Claude Sonnet 4</span>
           </div>
           
-          <div className="text-xs text-gray-400">
+          <div>
             Press Enter to send, Shift+Enter for new line
           </div>
         </div>
@@ -242,23 +235,23 @@ export const EnhancedChatInput: React.FC<EnhancedChatInputProps> = ({
       
       {/* Help panel */}
       {showHelp && (
-        <div className="absolute bottom-full right-0 mb-2 w-80 p-4 bg-white border rounded-lg shadow-lg">
-          <div className="flex items-start justify-between mb-3">
+        <div>
+          <div>
             <div>
-              <h3 className="font-semibold text-sm">{getHelpContent().title}</h3>
-              <p className="text-xs text-gray-500 mt-1">Example formats</p>
+              <h3>{getHelpContent().title}</h3>
+              <p>Example formats</p>
             </div>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setShowHelp(false)}
-              className="h-6 w-6 -mr-2 -mt-2"
+             
             >
-              <X className="w-3 h-3" />
+              <X />
             </Button>
           </div>
           
-          <div className="space-y-2">
+          <div>
             {getHelpContent().examples.map((example, index) => (
               <button
                 key={index}
@@ -266,15 +259,15 @@ export const EnhancedChatInput: React.FC<EnhancedChatInputProps> = ({
                   onChange(example);
                   setShowHelp(false);
                 }}
-                className="w-full text-left p-2 text-xs bg-gray-50 hover:bg-gray-100 rounded transition-colors"
+               
               >
-                <code className="text-blue-600">{example}</code>
+                <code>{example}</code>
               </button>
             ))}
           </div>
           
-          <div className="mt-3 pt-3 border-t">
-            <p className="text-xs text-gray-500">
+          <div>
+            <p>
               💡 Pro tip: Include all details in one message for faster quotes!
             </p>
           </div>

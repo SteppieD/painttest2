@@ -247,8 +247,8 @@ export default function SettingsPage() {
     };
 
     return (
-      <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-lg bg-gray-50">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit}>
+        <div>
           <div>
             <Label htmlFor="brand_name">Brand Name *</Label>
             <Input
@@ -287,7 +287,7 @@ export default function SettingsPage() {
               id="quality_grade"
               value={formData.quality_grade}
               onChange={(e) => setFormData({ ...formData, quality_grade: e.target.value as 'good' | 'better' | 'best' })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+             
             >
               <option value="good">Good</option>
               <option value="better">Better</option>
@@ -315,8 +315,8 @@ export default function SettingsPage() {
             />
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+        <div>
+          <Button type="submit">
             {paint ? 'Update Paint' : 'Add Paint'}
           </Button>
           <Button type="button" variant="outline" onClick={onCancel}>
@@ -329,17 +329,17 @@ export default function SettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+      <div>
+        <div></div>
       </div>
     );
   }
 
   if (!settings) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">Settings not found</p>
+      <div>
+        <div>
+          <p>Settings not found</p>
           <Button onClick={() => router.push("/dashboard")}>
             Return to Dashboard
           </Button>
@@ -349,31 +349,31 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <header className="bg-white border-b shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+      <header>
+        <div>
+          <div>
+            <div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => router.push("/dashboard")}
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft />
               </Button>
               <div>
-                <h1 className="text-xl font-bold">Company Settings</h1>
-                <p className="text-sm text-gray-500">{companyData?.company_name}</p>
+                <h1>Company Settings</h1>
+                <p>{companyData?.company_name}</p>
               </div>
             </div>
             
             <Button
               onClick={saveSettings}
               disabled={isSaving}
-              className="bg-blue-600 hover:bg-blue-700"
+             
             >
-              <Save className="w-4 h-4 mr-2" />
+              <Save />
               {isSaving ? 'Saving...' : 'Save Settings'}
             </Button>
           </div>
@@ -381,20 +381,20 @@ export default function SettingsPage() {
       </header>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto p-4 space-y-6">
+      <div>
         {/* Settings Navigation */}
         <SettingsNavigation currentPage="general" />
         
         {/* Tax Settings */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="w-5 h-5 text-blue-600" />
+            <CardTitle>
+              <Settings />
               Tax Configuration
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <CardContent>
+            <div>
               <div>
                 <Label htmlFor="tax-rate">Tax Rate (%)</Label>
                 <Input
@@ -418,7 +418,7 @@ export default function SettingsPage() {
               </div>
             </div>
             
-            <div className="flex items-center space-x-2">
+            <div>
               <Checkbox
                 id="tax-materials-only"
                 checked={settings.tax_on_materials_only}
@@ -434,12 +434,12 @@ export default function SettingsPage() {
         {/* Company Branding */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-blue-600" />
+            <CardTitle>
+              <Building2 />
               Company Branding
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent>
             <div>
               <Label htmlFor="logo-url">Company Logo URL</Label>
               <Input
@@ -449,42 +449,42 @@ export default function SettingsPage() {
                 onChange={(e) => updateSetting('logo_url', e.target.value)}
                 placeholder="https://example.com/your-logo.png"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p>
                 Enter a URL to your company logo. This will appear on customer quotes and make your business look more professional.
               </p>
             </div>
             
             {/* Logo Preview */}
             {settings.logo_url && (
-              <div className="space-y-2">
+              <div>
                 <Label>Logo Preview</Label>
-                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="w-16 h-16 shrink-0">
+                <div>
+                  <div>
                     <img 
                       src={settings.logo_url} 
                       alt="Company Logo Preview"
-                      className="w-16 h-16 rounded-lg object-cover border shadow-sm"
+                     
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.style.display = 'none';
                         target.nextElementSibling?.classList.remove('hidden');
                       }}
                     />
-                    <div className="hidden w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                      <ImageIcon className="w-8 h-8 text-white" />
+                    <div>
+                      <ImageIcon />
                     </div>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{companyData?.company_name}</p>
-                    <p className="text-sm text-gray-600">This is how your logo will appear on customer quotes</p>
+                    <p>{companyData?.company_name}</p>
+                    <p>This is how your logo will appear on customer quotes</p>
                   </div>
                 </div>
               </div>
             )}
             
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h4 className="font-medium text-blue-900 mb-2">Tips for best results:</h4>
-              <ul className="text-sm text-blue-800 space-y-1">
+            <div>
+              <h4>Tips for best results:</h4>
+              <ul>
                 <li>• Use a square or rectangular logo (recommended: 200x200px or larger)</li>
                 <li>• Ensure the image URL is publicly accessible</li>
                 <li>• PNG or JPG formats work best</li>
@@ -499,10 +499,10 @@ export default function SettingsPage() {
           <CardHeader>
             <CardTitle>Contractor Constants</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent>
             <div>
-              <Label className="text-sm font-medium mb-2 block">Business Settings</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Label>Business Settings</Label>
+              <div>
                 <div>
                   <Label htmlFor="overhead-percentage">Overhead Percentage (%)</Label>
                   <Input
@@ -513,7 +513,7 @@ export default function SettingsPage() {
                     value={settings.overhead_percentage || 10}
                     onChange={(e) => updateSetting('overhead_percentage', Number(e.target.value))}
                   />
-                  <p className="text-xs text-gray-500 mt-1">Applied to materials + labor</p>
+                  <p>Applied to materials + labor</p>
                 </div>
                 <div>
                   <Label htmlFor="default-markup">Default Markup (%)</Label>
@@ -525,14 +525,14 @@ export default function SettingsPage() {
                     value={settings.default_markup_percentage || 20}
                     onChange={(e) => updateSetting('default_markup_percentage', Number(e.target.value))}
                   />
-                  <p className="text-xs text-gray-500 mt-1">Your standard profit margin</p>
+                  <p>Your standard profit margin</p>
                 </div>
               </div>
             </div>
 
             <div>
-              <Label className="text-sm font-medium mb-2 block">Project Constants</Label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Label>Project Constants</Label>
+              <div>
                 <div>
                   <Label htmlFor="ceiling-height">Standard Ceiling Height (ft)</Label>
                   <Input
@@ -556,7 +556,7 @@ export default function SettingsPage() {
                     value={settings.paint_multiplier || 1.8}
                     onChange={(e) => updateSetting('paint_multiplier', Number(e.target.value))}
                   />
-                  <p className="text-xs text-gray-500 mt-1">For 2-coat coverage</p>
+                  <p>For 2-coat coverage</p>
                 </div>
                 <div>
                   <Label htmlFor="paint-coverage">Paint Coverage (sq ft/gallon)</Label>
@@ -573,8 +573,8 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium mb-2 block">Door & Window Constants</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Label>Door & Window Constants</Label>
+              <div>
                 <div>
                   <Label htmlFor="doors-per-gallon">Doors per Gallon</Label>
                   <Input
@@ -603,8 +603,8 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium mb-2 block">Labor & Sundries</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Label>Labor & Sundries</Label>
+              <div>
                 <div>
                   <Label htmlFor="labor-percentage">Labor Percentage (%)</Label>
                   <Input
@@ -635,14 +635,14 @@ export default function SettingsPage() {
         {/* Product-Specific Spread Rates */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="w-5 h-5 text-green-600" />
+            <CardTitle>
+              <Settings />
               Product Spread Rates (From AI Conversations)
             </CardTitle>
-            <p className="text-sm text-gray-600">Coverage rates for specific product types learned from your conversations</p>
+            <p>Coverage rates for specific product types learned from your conversations</p>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <CardContent>
+            <div>
               <div>
                 <Label htmlFor="primer-spread-rate">Primer Spread Rate (sqft/gallon)</Label>
                 <Input
@@ -653,7 +653,7 @@ export default function SettingsPage() {
                   value={settings.primer_spread_rate || 250}
                   onChange={(e) => updateSetting('primer_spread_rate', Number(e.target.value))}
                 />
-                <p className="text-xs text-gray-500 mt-1">Typical range: 200-300 sqft/gallon</p>
+                <p>Typical range: 200-300 sqft/gallon</p>
               </div>
               <div>
                 <Label htmlFor="wall-paint-spread-rate">Wall Paint Spread Rate (sqft/gallon)</Label>
@@ -665,7 +665,7 @@ export default function SettingsPage() {
                   value={settings.wall_paint_spread_rate || 375}
                   onChange={(e) => updateSetting('wall_paint_spread_rate', Number(e.target.value))}
                 />
-                <p className="text-xs text-gray-500 mt-1">Typical range: 350-400 sqft/gallon</p>
+                <p>Typical range: 350-400 sqft/gallon</p>
               </div>
               <div>
                 <Label htmlFor="ceiling-paint-spread-rate">Ceiling Paint Spread Rate (sqft/gallon)</Label>
@@ -677,7 +677,7 @@ export default function SettingsPage() {
                   value={settings.ceiling_paint_spread_rate || 350}
                   onChange={(e) => updateSetting('ceiling_paint_spread_rate', Number(e.target.value))}
                 />
-                <p className="text-xs text-gray-500 mt-1">Typical: 350 sqft/gallon</p>
+                <p>Typical: 350 sqft/gallon</p>
               </div>
               <div>
                 <Label htmlFor="trim-doors-per-gallon">Trim: Doors per Gallon</Label>
@@ -690,7 +690,7 @@ export default function SettingsPage() {
                   value={settings.trim_doors_per_gallon || 4.5}
                   onChange={(e) => updateSetting('trim_doors_per_gallon', Number(e.target.value))}
                 />
-                <p className="text-xs text-gray-500 mt-1">Typical range: 4-5 doors/gallon</p>
+                <p>Typical range: 4-5 doors/gallon</p>
               </div>
             </div>
           </CardContent>
@@ -699,14 +699,14 @@ export default function SettingsPage() {
         {/* All-In Labor Rates */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="w-5 h-5 text-blue-600" />
+            <CardTitle>
+              <Settings />
               All-In Labor Rates (Materials + Labor)
             </CardTitle>
-            <p className="text-sm text-gray-600">Your rates that include both materials and labor costs</p>
+            <p>Your rates that include both materials and labor costs</p>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <CardContent>
+            <div>
               <div>
                 <Label htmlFor="wall-allin-rate">Walls (per sqft, 2 coats + paint)</Label>
                 <Input
@@ -718,7 +718,7 @@ export default function SettingsPage() {
                   value={settings.wall_allin_rate_per_sqft || 1.50}
                   onChange={(e) => updateSetting('wall_allin_rate_per_sqft', Number(e.target.value))}
                 />
-                <p className="text-xs text-gray-500 mt-1">Example: $1.50/sqft</p>
+                <p>Example: $1.50/sqft</p>
               </div>
               <div>
                 <Label htmlFor="ceiling-allin-rate">Ceilings (per sqft, 2 coats + paint)</Label>
@@ -731,7 +731,7 @@ export default function SettingsPage() {
                   value={settings.ceiling_allin_rate_per_sqft || 1.25}
                   onChange={(e) => updateSetting('ceiling_allin_rate_per_sqft', Number(e.target.value))}
                 />
-                <p className="text-xs text-gray-500 mt-1">Example: $1.25/sqft</p>
+                <p>Example: $1.25/sqft</p>
               </div>
               <div>
                 <Label htmlFor="primer-allin-rate">Primer (per sqft, 1 coat)</Label>
@@ -744,7 +744,7 @@ export default function SettingsPage() {
                   value={settings.primer_allin_rate_per_sqft || 0.45}
                   onChange={(e) => updateSetting('primer_allin_rate_per_sqft', Number(e.target.value))}
                 />
-                <p className="text-xs text-gray-500 mt-1">Example: $0.45/sqft</p>
+                <p>Example: $0.45/sqft</p>
               </div>
               <div>
                 <Label htmlFor="door-allin-rate">Doors + Trim (each, 2 coats)</Label>
@@ -757,7 +757,7 @@ export default function SettingsPage() {
                   value={settings.door_allin_rate_each || 150}
                   onChange={(e) => updateSetting('door_allin_rate_each', Number(e.target.value))}
                 />
-                <p className="text-xs text-gray-500 mt-1">Example: $150/door</p>
+                <p>Example: $150/door</p>
               </div>
               <div>
                 <Label htmlFor="window-allin-rate">Windows (each, 2 coats)</Label>
@@ -770,7 +770,7 @@ export default function SettingsPage() {
                   value={settings.window_allin_rate_each || 100}
                   onChange={(e) => updateSetting('window_allin_rate_each', Number(e.target.value))}
                 />
-                <p className="text-xs text-gray-500 mt-1">Example: $100/window</p>
+                <p>Example: $100/window</p>
               </div>
             </div>
           </CardContent>
@@ -779,16 +779,16 @@ export default function SettingsPage() {
         {/* Product Preferences */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Palette className="w-5 h-5 text-purple-600" />
+            <CardTitle>
+              <Palette />
               Your Preferred Products (From AI Learning)
             </CardTitle>
-            <p className="text-sm text-gray-600">Your go-to products learned from conversations - used to pre-fill quotes</p>
+            <p>Your go-to products learned from conversations - used to pre-fill quotes</p>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent>
             <div>
-              <Label className="text-sm font-medium mb-3 block">Primer Preferences</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Label>Primer Preferences</Label>
+              <div>
                 <div>
                   <Label htmlFor="preferred-primer-brand">Preferred Primer Brand</Label>
                   <Input
@@ -811,8 +811,8 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium mb-3 block">Wall Paint Preferences</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Label>Wall Paint Preferences</Label>
+              <div>
                 <div>
                   <Label htmlFor="preferred-wall-brand">Preferred Wall Paint Brand</Label>
                   <Input
@@ -835,8 +835,8 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium mb-3 block">Ceiling Paint Preferences</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Label>Ceiling Paint Preferences</Label>
+              <div>
                 <div>
                   <Label htmlFor="preferred-ceiling-brand">Preferred Ceiling Paint Brand</Label>
                   <Input
@@ -859,8 +859,8 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium mb-3 block">Trim Paint Preferences</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Label>Trim Paint Preferences</Label>
+              <div>
                 <div>
                   <Label htmlFor="preferred-trim-brand">Preferred Trim Paint Brand</Label>
                   <Input
@@ -887,14 +887,14 @@ export default function SettingsPage() {
         {/* AI Learning Settings */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="w-5 h-5 text-orange-600" />
+            <CardTitle>
+              <Settings />
               AI Learning Preferences
             </CardTitle>
-            <p className="text-sm text-gray-600">Control how the AI learns and saves information from your conversations</p>
+            <p>Control how the AI learns and saves information from your conversations</p>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center space-x-2">
+          <CardContent>
+            <div>
               <Checkbox
                 id="ai-learning-enabled"
                 checked={settings.ai_learning_enabled !== false}
@@ -904,9 +904,9 @@ export default function SettingsPage() {
                 Enable AI learning from conversations
               </Label>
             </div>
-            <p className="text-xs text-gray-500 ml-6">Allow AI to automatically detect and save new products, rates, and preferences from quote conversations</p>
+            <p>Allow AI to automatically detect and save new products, rates, and preferences from quote conversations</p>
             
-            <div className="flex items-center space-x-2">
+            <div>
               <Checkbox
                 id="ai-ask-before-saving"
                 checked={settings.ai_ask_before_saving !== false}
@@ -916,29 +916,29 @@ export default function SettingsPage() {
                 Ask before saving new preferences
               </Label>
             </div>
-            <p className="text-xs text-gray-500 ml-6">AI will ask for confirmation before saving new products or changing existing preferences</p>
+            <p>AI will ask for confirmation before saving new products or changing existing preferences</p>
           </CardContent>
         </Card>
 
         {/* Paint Collection */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <Palette className="w-5 h-5 text-blue-600" />
+            <CardTitle>
+              <span>
+                <Palette />
                 Your Paint Collection
               </span>
               <Button
                 onClick={() => setShowAddPaint(true)}
-                className="bg-blue-600 hover:bg-blue-700"
+               
                 size="sm"
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus />
                 Add Paint
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent>
             {showAddPaint && (
               <PaintForm
                 onSave={savePaint}
@@ -955,53 +955,53 @@ export default function SettingsPage() {
             )}
 
             {paints.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                <Palette className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <div>
+                <Palette />
                 <p>No paints in your collection yet.</p>
-                <p className="text-sm">Add your most-used paints for quick reference.</p>
+                <p>Add your most-used paints for quick reference.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
                 {paints.map((paint) => (
-                  <div key={paint.id} className="border rounded-lg p-4 bg-white">
-                    <div className="flex items-start justify-between mb-2">
+                  <div key={paint.id}>
+                    <div>
                       <div>
-                        <h3 className="font-semibold">{paint.brand_name}</h3>
-                        <p className="text-sm text-gray-600">{paint.product_name}</p>
+                        <h3>{paint.brand_name}</h3>
+                        <p>{paint.product_name}</p>
                       </div>
-                      <div className="flex gap-1">
+                      <div>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => setEditingPaint(paint)}
                         >
-                          <Edit3 className="w-4 h-4" />
+                          <Edit3 />
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => deletePaint(paint.id)}
-                          className="text-red-600 hover:text-red-700"
+                         
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 />
                         </Button>
                       </div>
                     </div>
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
+                    <div>
+                      <div>
                         <span>Cost:</span>
-                        <span className="font-medium">${paint.cost_per_gallon}/gal</span>
+                        <span>${paint.cost_per_gallon}/gal</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div>
                         <span>Quality:</span>
-                        <span className="capitalize">{paint.quality_grade}</span>
+                        <span>{paint.quality_grade}</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div>
                         <span>Coverage:</span>
                         <span>{paint.coverage_sqft} sq ft/gal</span>
                       </div>
                       {paint.notes && (
-                        <div className="pt-2 text-xs text-gray-500">
+                        <div>
                           {paint.notes}
                         </div>
                       )}

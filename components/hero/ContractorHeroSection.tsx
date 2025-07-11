@@ -6,64 +6,64 @@ import { ArrowRight, Check, Star, TrendingUp, Shield, Users, Clock, Award, Dolla
 
 export function ContractorHeroSection() {
   return (
-    <section className="contractor-hero">
-      <div className="contractor-hero-container">
-        <div className="contractor-hero-content">
+    <section>
+      <div>
+        <div>
           {/* Urgency/Scarcity Badge - CIALDINI */}
-          <div className="contractor-hero-badge urgent">
+          <div>
             <Clock size={16} />
             <span>Limited Time: Lock in 2024 Pricing (Increases Jan 1st)</span>
           </div>
 
           {/* Main Headline - Loss Aversion + Clear Value */}
-          <h1 className="contractor-hero-title">
+          <h1>
             Stop Losing $50,000+ in Jobs
             <br />
             to Contractors Who Quote
             <br />
-            <span className="highlight-orange">3 Days Faster</span>
+            <span>3 Days Faster</span>
           </h1>
 
           {/* Specific Problem/Solution Statement */}
-          <p className="contractor-hero-subtitle">
+          <p>
             Your competitors use AI to send quotes in 30 seconds while you're 
             still measuring. <strong>Join 5,247 contractors</strong> who now win 
             40% more bids with instant, accurate quotes.
           </p>
 
           {/* Social Proof Numbers - CIALDINI */}
-          <div className="contractor-stats-grid">
-            <div className="contractor-stat">
-              <div className="stat-icon">
+          <div>
+            <div>
+              <div>
                 <TrendingUp size={24} />
               </div>
-              <div className="stat-content">
-                <div className="stat-value">$2.4M+</div>
-                <div className="stat-label">Additional Revenue Generated</div>
+              <div>
+                <div>$2.4M+</div>
+                <div>Additional Revenue Generated</div>
               </div>
             </div>
-            <div className="contractor-stat">
-              <div className="stat-icon">
+            <div>
+              <div>
                 <Users size={24} />
               </div>
-              <div className="stat-content">
-                <div className="stat-value">5,247</div>
-                <div className="stat-label">Active Contractors</div>
+              <div>
+                <div>5,247</div>
+                <div>Active Contractors</div>
               </div>
             </div>
-            <div className="contractor-stat">
-              <div className="stat-icon">
+            <div>
+              <div>
                 <Award size={24} />
               </div>
-              <div className="stat-content">
-                <div className="stat-value">4.9/5</div>
-                <div className="stat-label">Contractor Rating</div>
+              <div>
+                <div>4.9/5</div>
+                <div>Contractor Rating</div>
               </div>
             </div>
           </div>
 
           {/* Clear Benefits List */}
-          <ul className="contractor-benefits">
+          <ul>
             <li>
               <Check size={20} />
               <span><strong>30-second quotes</strong> vs. 3 days (win jobs before competitors even measure)</span>
@@ -83,13 +83,13 @@ export function ContractorHeroSection() {
           </ul>
 
           {/* CTA with Reciprocity - CIALDINI */}
-          <div className="contractor-cta-section">
-            <div className="contractor-cta-buttons">
-              <Link href="/trial-signup" className="contractor-btn contractor-btn-primary">
+          <div>
+            <div>
+              <Link href="/trial-signup">
                 Start Free - No Card Required
                 <ArrowRight size={20} />
               </Link>
-              <Link href="/demo" className="contractor-btn contractor-btn-secondary">
+              <Link href="/demo">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" strokeWidth="2"/>
                   <path d="M10 8L16 12L10 16V8Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
@@ -97,80 +97,80 @@ export function ContractorHeroSection() {
                 See 2-Min Demo
               </Link>
             </div>
-            <p className="contractor-guarantee">
+            <p>
               <Shield size={16} />
               30-day money back + We'll pay you $500 if it doesn't save you time
             </p>
           </div>
 
           {/* Testimonial - CIALDINI Liking */}
-          <div className="contractor-testimonial">
-            <div className="testimonial-stars">
+          <div>
+            <div>
               {[...Array(5)].map((_, i) => (
                 <Star key={i} size={16} fill="#f59e0b" color="#f59e0b" />
               ))}
             </div>
-            <p className="testimonial-quote">
+            <p>
               "Was losing 2-3 jobs a week to faster competitors. Now I send quotes 
               before leaving the driveway. <strong>Made back the yearly cost in my first job.</strong>"
             </p>
-            <div className="testimonial-author">
+            <div>
               <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='18' font-weight='bold'%3EMJ%3C/text%3E%3C/svg%3E" alt="Mike Johnson" />
               <div>
-                <p className="author-name">Mike Johnson</p>
-                <p className="author-company">Johnson Painting, LLC • Dallas, TX</p>
+                <p>Mike Johnson</p>
+                <p>Johnson Painting, LLC • Dallas, TX</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Hero Visual - Show the actual product */}
-        <div className="contractor-hero-visual">
-          <div className="contractor-mockup">
+        <div>
+          <div>
             {/* ROI Calculator Preview */}
-            <div className="roi-calculator-preview">
-              <div className="calculator-header">
+            <div>
+              <div>
                 <DollarSign size={20} />
                 <h3>Your Monthly Savings</h3>
               </div>
               
-              <div className="calculator-metrics">
-                <div className="metric-row">
-                  <span className="metric-label">Time Saved:</span>
-                  <span className="metric-value">32 hours</span>
+              <div>
+                <div>
+                  <span>Time Saved:</span>
+                  <span>32 hours</span>
                 </div>
-                <div className="metric-row">
-                  <span className="metric-label">Extra Jobs Won:</span>
-                  <span className="metric-value">8-12 jobs</span>
+                <div>
+                  <span>Extra Jobs Won:</span>
+                  <span>8-12 jobs</span>
                 </div>
-                <div className="metric-row highlight">
-                  <span className="metric-label">Revenue Increase:</span>
-                  <span className="metric-value">$18,500</span>
+                <div>
+                  <span>Revenue Increase:</span>
+                  <span>$18,500</span>
                 </div>
               </div>
 
-              <div className="calculator-comparison">
-                <div className="comparison-item old">
-                  <span className="comparison-label">Old Way</span>
-                  <span className="comparison-time">3 days/quote</span>
+              <div>
+                <div>
+                  <span>Old Way</span>
+                  <span>3 days/quote</span>
                 </div>
-                <div className="comparison-arrow">→</div>
-                <div className="comparison-item new">
-                  <span className="comparison-label">With AI</span>
-                  <span className="comparison-time">30 seconds</span>
+                <div>→</div>
+                <div>
+                  <span>With AI</span>
+                  <span>30 seconds</span>
                 </div>
               </div>
             </div>
 
             {/* Floating proof elements */}
-            <div className="floating-badge verified">
+            <div>
               <Shield size={16} />
               <span>BBB A+ Rated</span>
             </div>
             
-            <div className="floating-counter">
-              <div className="counter-value">12,847</div>
-              <div className="counter-label">Quotes Today</div>
+            <div>
+              <div>12,847</div>
+              <div>Quotes Today</div>
             </div>
           </div>
         </div>

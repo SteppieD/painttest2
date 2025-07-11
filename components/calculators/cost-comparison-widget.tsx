@@ -13,7 +13,7 @@ interface CostComparisonWidgetProps {
 
 export function CostComparisonWidget({ 
   title = "DIY vs Professional Cost Calculator",
-  className = ""
+ 
 }: CostComparisonWidgetProps) {
   const [sqft, setSqft] = useState('')
   const [paintQuality, setPaintQuality] = useState('standard')
@@ -83,37 +83,37 @@ export function CostComparisonWidget({
   }
 
   return (
-    <Card className={`border-2 border-orange-100 ${className}`}>
-      <CardHeader className="text-center">
-        <div className="mx-auto mb-3 w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-          <DollarSign className="w-6 h-6 text-orange-600" />
+    <Card`}>
+      <CardHeader>
+        <div>
+          <DollarSign />
         </div>
-        <CardTitle className="text-lg">{title}</CardTitle>
-        <p className="text-sm text-gray-600">Compare DIY vs hiring professionals</p>
+        <CardTitle>{title}</CardTitle>
+        <p>Compare DIY vs hiring professionals</p>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
+        <div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label>
               Square Footage to Paint
             </label>
             <input
               type="number"
               value={sqft}
               onChange={(e) => setSqft(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+             
               placeholder="1000"
             />
           </div>
           
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label>
               Paint Quality
             </label>
             <select
               value={paintQuality}
               onChange={(e) => setPaintQuality(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+             
             >
               {Object.entries(paintPrices).map(([key, data]) => (
                 <option key={key} value={key}>{data.name} (${data.price}/gal)</option>
@@ -123,57 +123,57 @@ export function CostComparisonWidget({
           
           <Button 
             onClick={calculateComparison}
-            className="w-full bg-orange-600 hover:bg-orange-700"
+           
             size="sm"
           >
             Compare Costs
-            <TrendingUp className="w-4 h-4 ml-2" />
+            <TrendingUp />
           </Button>
           
           {result && (
-            <div className="mt-4 space-y-3">
+            <div>
               {/* DIY Option */}
-              <div className="bg-red-50 border border-red-200 p-3 rounded-md">
-                <div className="text-center mb-2">
-                  <div className="text-sm font-semibold text-red-800">DIY Option</div>
-                  <div className="text-lg font-bold text-red-900">${result.diy.total}</div>
+              <div>
+                <div>
+                  <div>DIY Option</div>
+                  <div>${result.diy.total}</div>
                 </div>
-                <div className="grid grid-cols-2 gap-2 text-xs">
+                <div>
                   <div>Materials: ${result.diy.materials}</div>
                   <div>Tools: ${result.diy.tools}</div>
-                  <div className="col-span-2 text-center border-t pt-1">
+                  <div>
                     Time: {result.diy.time} hours
                   </div>
                 </div>
               </div>
               
               {/* Professional Option */}
-              <div className="bg-green-50 border border-green-200 p-3 rounded-md">
-                <div className="text-center mb-2">
-                  <div className="text-sm font-semibold text-green-800">Professional</div>
-                  <div className="text-lg font-bold text-green-900">${result.professional.total}</div>
+              <div>
+                <div>
+                  <div>Professional</div>
+                  <div>${result.professional.total}</div>
                 </div>
-                <div className="grid grid-cols-2 gap-2 text-xs">
+                <div>
                   <div>Materials: ${result.professional.materials}</div>
                   <div>Labor: ${result.professional.labor}</div>
-                  <div className="col-span-2 text-center border-t pt-1">
+                  <div>
                     Time: {result.professional.time} hours
                   </div>
                 </div>
               </div>
               
               {/* Comparison */}
-              <div className="bg-blue-50 border border-blue-200 p-3 rounded-md text-center">
-                <div className="text-sm font-semibold text-blue-800">
+              <div>
+                <div>
                   {result.savings > 0 ? 'DIY Saves' : 'Professional Saves'}: ${Math.abs(result.savings)}
                 </div>
-                <div className="text-xs text-blue-600">
+                <div>
                   Professional saves {result.timeSavings} hours
                 </div>
-                <Button asChild size="sm" className="mt-2 bg-blue-600 hover:bg-blue-700">
+                <Button asChild size="sm">
                   <Link href="/trial-signup">
                     Get Professional Quote
-                    <ArrowRight className="w-3 h-3 ml-1" />
+                    <ArrowRight />
                   </Link>
                 </Button>
               </div>

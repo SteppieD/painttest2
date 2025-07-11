@@ -195,51 +195,51 @@ export default function PaintingInvoiceTemplatePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
       <KofiHeader />
       
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 px-4 py-1 text-sm font-semibold bg-blue-100 text-blue-800 border-blue-200">
+      <section>
+        <div>
+          <div>
+            <Badge>
               Free Professional Templates
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1>
               Painting Invoice Template for Professional Contractors
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p>
               Painting invoice template free download in Excel, PDF, and Word formats. 
               Professional invoices that get you paid 3x faster with proper formatting, 
               payment terms, and legal protection.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-              <Button size="lg" className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700" asChild>
+            <div>
+              <Button size="lg" asChild>
                 <Link href="/trial-signup">
                   Download Invoice Templates
-                  <Download className="ml-2 w-5 h-5" />
+                  <Download />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
+              <Button size="lg" variant="outline" asChild>
                 <Link href="#templates">
                   View Template Examples
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight />
                 </Link>
               </Button>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
-              <span className="flex items-center gap-1">
-                <FileText className="w-4 h-4 text-green-500" />
+            <div>
+              <span>
+                <FileText />
                 Professional formats
               </span>
-              <span className="flex items-center gap-1">
-                <Download className="w-4 h-4 text-green-500" />
+              <span>
+                <Download />
                 Instant download
               </span>
-              <span className="flex items-center gap-1">
-                <Shield className="w-4 h-4 text-green-500" />
+              <span>
+                <Shield />
                 Legal compliance
               </span>
             </div>
@@ -248,13 +248,13 @@ export default function PaintingInvoiceTemplatePage() {
       </section>
 
       {/* Payment Statistics */}
-      <section className="py-12 px-4 bg-gray-900">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+      <section>
+        <div>
+          <div>
             {paymentStats.map((stat, index) => (
               <div key={index}>
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2">{stat.stat}</div>
-                <div className="text-gray-400 text-sm">{stat.description}</div>
+                <div>{stat.stat}</div>
+                <div>{stat.description}</div>
               </div>
             ))}
           </div>
@@ -262,29 +262,29 @@ export default function PaintingInvoiceTemplatePage() {
       </section>
 
       {/* Invoice Components */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               What Makes a Professional Painting Invoice
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Essential components every invoice must include
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div>
             {invoiceComponents.map((component, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-lg">{component.component}</CardTitle>
-                  <Badge variant="outline" className="w-fit">{component.importance}</Badge>
+                  <CardTitle>{component.component}</CardTitle>
+                  <Badge variant="outline">{component.importance}</Badge>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2">
+                  <ul>
                     {component.includes.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                      <li key={idx}>
+                        <CheckCircle />
                         {item}
                       </li>
                     ))}
@@ -297,41 +297,41 @@ export default function PaintingInvoiceTemplatePage() {
       </section>
 
       {/* Invoice Formats */}
-      <section id="templates" className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section id="templates">
+        <div>
+          <div>
+            <h2>
               Choose Your Painting Invoice Format
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Professional templates for every contractor's needs
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div>
             {invoiceFormats.map((format, index) => (
-              <Card key={index} className="hover:shadow-xl transition-shadow">
-                <CardHeader className="text-center">
-                  <div className="text-4xl mb-4">{format.icon}</div>
-                  <CardTitle className="text-xl">{format.format}</CardTitle>
-                  <p className="text-sm text-gray-600 mt-2">{format.description}</p>
+              <Card key={index}>
+                <CardHeader>
+                  <div>{format.icon}</div>
+                  <CardTitle>{format.format}</CardTitle>
+                  <p>{format.description}</p>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2 mb-6">
+                  <ul>
                     {format.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-sm">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
+                      <li key={idx}>
+                        <CheckCircle />
                         {feature}
                       </li>
                     ))}
                   </ul>
-                  <p className="text-sm font-semibold text-blue-600 mb-4">
+                  <p>
                     Best for: {format.bestFor}
                   </p>
-                  <Button className="w-full" asChild>
+                  <Button asChild>
                     <Link href="/trial-signup">
                       Download Template
-                      <Download className="ml-2 w-4 h-4" />
+                      <Download />
                     </Link>
                   </Button>
                 </CardContent>
@@ -342,115 +342,115 @@ export default function PaintingInvoiceTemplatePage() {
       </section>
 
       {/* Sample Invoice Preview */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Sample Painting Invoice
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               See what a professional invoice looks like
             </p>
           </div>
           
-          <Card className="shadow-2xl overflow-hidden">
-            <div className="bg-blue-600 text-white p-8">
-              <div className="flex justify-between items-start">
+          <Card>
+            <div>
+              <div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-2">Pro Paint Services LLC</h3>
-                  <p className="text-blue-100">123 Main Street, Austin, TX 78701</p>
-                  <p className="text-blue-100">Phone: (512) 555-0123 | License: #TX123456</p>
+                  <h3>Pro Paint Services LLC</h3>
+                  <p>123 Main Street, Austin, TX 78701</p>
+                  <p>Phone: (512) 555-0123 | License: #TX123456</p>
                 </div>
-                <div className="text-right">
-                  <p className="text-3xl font-bold">INVOICE</p>
-                  <p className="text-blue-100">#2024-0156</p>
-                  <p className="text-blue-100">Date: March 15, 2024</p>
+                <div>
+                  <p>INVOICE</p>
+                  <p>#2024-0156</p>
+                  <p>Date: March 15, 2024</p>
                 </div>
               </div>
             </div>
             
-            <CardContent className="p-8">
-              <div className="grid md:grid-cols-2 gap-8 mb-8">
+            <CardContent>
+              <div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Bill To:</h4>
-                  <p className="text-gray-600">Sarah Johnson</p>
-                  <p className="text-gray-600">456 Oak Avenue</p>
-                  <p className="text-gray-600">Austin, TX 78702</p>
-                  <p className="text-gray-600">(512) 555-0456</p>
+                  <h4>Bill To:</h4>
+                  <p>Sarah Johnson</p>
+                  <p>456 Oak Avenue</p>
+                  <p>Austin, TX 78702</p>
+                  <p>(512) 555-0456</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Job Details:</h4>
-                  <p className="text-gray-600">Interior Painting - 3 Bedroom Home</p>
-                  <p className="text-gray-600">Start Date: March 10, 2024</p>
-                  <p className="text-gray-600">Completion: March 13, 2024</p>
+                  <h4>Job Details:</h4>
+                  <p>Interior Painting - 3 Bedroom Home</p>
+                  <p>Start Date: March 10, 2024</p>
+                  <p>Completion: March 13, 2024</p>
                 </div>
               </div>
               
-              <table className="w-full mb-8">
+              <table>
                 <thead>
-                  <tr className="border-b-2 border-gray-300">
-                    <th className="text-left py-2">Description</th>
-                    <th className="text-right py-2">Qty</th>
-                    <th className="text-right py-2">Rate</th>
-                    <th className="text-right py-2">Amount</th>
+                  <tr>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
                   </tr>
                 </thead>
-                <tbody className="text-gray-700">
-                  <tr className="border-b">
-                    <td className="py-3">Interior Painting - Labor</td>
-                    <td className="text-right">32 hrs</td>
-                    <td className="text-right">$65/hr</td>
-                    <td className="text-right font-semibold">$2,080.00</td>
+                <tbody>
+                  <tr>
+                    <td>Interior Painting - Labor</td>
+                    <td>32 hrs</td>
+                    <td>$65/hr</td>
+                    <td>$2,080.00</td>
                   </tr>
-                  <tr className="border-b">
-                    <td className="py-3">Premium Paint (Sherwin Williams)</td>
-                    <td className="text-right">12 gal</td>
-                    <td className="text-right">$45/gal</td>
-                    <td className="text-right font-semibold">$540.00</td>
+                  <tr>
+                    <td>Premium Paint (Sherwin Williams)</td>
+                    <td>12 gal</td>
+                    <td>$45/gal</td>
+                    <td>$540.00</td>
                   </tr>
-                  <tr className="border-b">
-                    <td className="py-3">Primer</td>
-                    <td className="text-right">3 gal</td>
-                    <td className="text-right">$35/gal</td>
-                    <td className="text-right font-semibold">$105.00</td>
+                  <tr>
+                    <td>Primer</td>
+                    <td>3 gal</td>
+                    <td>$35/gal</td>
+                    <td>$105.00</td>
                   </tr>
-                  <tr className="border-b">
-                    <td className="py-3">Supplies & Materials</td>
-                    <td className="text-right">1</td>
-                    <td className="text-right">$125</td>
-                    <td className="text-right font-semibold">$125.00</td>
+                  <tr>
+                    <td>Supplies & Materials</td>
+                    <td>1</td>
+                    <td>$125</td>
+                    <td>$125.00</td>
                   </tr>
                 </tbody>
                 <tfoot>
-                  <tr className="border-t-2 border-gray-300">
-                    <td colSpan={3} className="text-right py-3 font-semibold">Subtotal:</td>
-                    <td className="text-right font-semibold">$2,850.00</td>
+                  <tr>
+                    <td colSpan={3}>Subtotal:</td>
+                    <td>$2,850.00</td>
                   </tr>
                   <tr>
-                    <td colSpan={3} className="text-right py-3 font-semibold">Tax (8.25%):</td>
-                    <td className="text-right font-semibold">$235.13</td>
+                    <td colSpan={3}>Tax (8.25%):</td>
+                    <td>$235.13</td>
                   </tr>
-                  <tr className="text-xl">
-                    <td colSpan={3} className="text-right py-3 font-bold">Total Due:</td>
-                    <td className="text-right font-bold text-blue-600">$3,085.13</td>
+                  <tr>
+                    <td colSpan={3}>Total Due:</td>
+                    <td>$3,085.13</td>
                   </tr>
                 </tfoot>
               </table>
               
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h4 className="font-semibold mb-2">Payment Terms:</h4>
-                <p className="text-sm text-gray-600 mb-2">Payment due within 15 days of invoice date</p>
-                <p className="text-sm text-gray-600 mb-2">Late payments subject to 1.5% monthly interest</p>
-                <p className="text-sm text-gray-600">Accepted payment methods: Check, Cash, Credit Card, Zelle</p>
+              <div>
+                <h4>Payment Terms:</h4>
+                <p>Payment due within 15 days of invoice date</p>
+                <p>Late payments subject to 1.5% monthly interest</p>
+                <p>Accepted payment methods: Check, Cash, Credit Card, Zelle</p>
               </div>
             </CardContent>
           </Card>
           
-          <div className="text-center mt-8">
+          <div>
             <Button size="lg" asChild>
               <Link href="/trial-signup">
                 Get This Template
-                <Download className="ml-2 w-5 h-5" />
+                <Download />
               </Link>
             </Button>
           </div>
@@ -458,32 +458,32 @@ export default function PaintingInvoiceTemplatePage() {
       </section>
 
       {/* Common Mistakes */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Avoid These Invoice Mistakes
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Common errors that delay payment
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div>
             {invoiceMistakes.map((mistake, index) => (
-              <Card key={index} className="border-l-4 border-red-500">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5 text-red-500" />
+                  <CardTitle>
+                    <AlertCircle />
                     {mistake.mistake}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-600 mb-2">
-                    <span className="font-semibold">Consequence:</span> {mistake.consequence}
+                  <p>
+                    <span>Consequence:</span> {mistake.consequence}
                   </p>
-                  <p className="text-sm text-green-600">
-                    <span className="font-semibold">Fix:</span> {mistake.solution}
+                  <p>
+                    <span>Fix:</span> {mistake.solution}
                   </p>
                 </CardContent>
               </Card>
@@ -493,30 +493,30 @@ export default function PaintingInvoiceTemplatePage() {
       </section>
 
       {/* Best Practices */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Invoice Best Practices for Faster Payment
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Professional tips from successful contractors
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8">
+          <div>
             {bestPractices.map((practice, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Star className="w-5 h-5 text-yellow-500" />
+                  <CardTitle>
+                    <Star />
                     {practice.practice}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-3">{practice.reason}</p>
-                  <div className="p-3 bg-blue-50 rounded">
-                    <p className="text-sm font-semibold text-blue-800">
+                  <p>{practice.reason}</p>
+                  <div>
+                    <p>
                       💡 Pro Tip: {practice.tip}
                     </p>
                   </div>
@@ -528,33 +528,33 @@ export default function PaintingInvoiceTemplatePage() {
       </section>
 
       {/* Legal Requirements */}
-      <section className="py-20 px-4 bg-blue-50">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Legal Requirements for Painting Invoices
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Stay compliant and protect your business
             </p>
           </div>
           
-          <Card className="overflow-hidden shadow-xl">
-            <div className="overflow-x-auto">
-              <table className="w-full">
+          <Card>
+            <div>
+              <table>
                 <thead>
-                  <tr className="bg-gray-800 text-white">
-                    <th className="px-6 py-4 text-left">Invoice Element</th>
-                    <th className="px-6 py-4 text-left">Required By</th>
-                    <th className="px-6 py-4 text-left">Purpose</th>
+                  <tr>
+                    <th>Invoice Element</th>
+                    <th>Required By</th>
+                    <th>Purpose</th>
                   </tr>
                 </thead>
                 <tbody>
                   {legalRequirements.map((req, index) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
-                      <td className="px-6 py-4 font-medium">{req.element}</td>
-                      <td className="px-6 py-4">{req.required}</td>
-                      <td className="px-6 py-4 text-gray-600">{req.purpose}</td>
+                    <tr key={index}>
+                      <td>{req.element}</td>
+                      <td>{req.required}</td>
+                      <td>{req.purpose}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -565,67 +565,67 @@ export default function PaintingInvoiceTemplatePage() {
       </section>
 
       {/* Digital Invoice Benefits */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <Card className="overflow-hidden shadow-xl">
-            <div className="grid md:grid-cols-2">
-              <div className="bg-gradient-to-br from-blue-600 to-purple-600 text-white p-8 md:p-12">
-                <h2 className="text-3xl font-bold mb-4">
+      <section>
+        <div>
+          <Card>
+            <div>
+              <div>
+                <h2>
                   Go Digital with Smart Invoicing
                 </h2>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <Smartphone className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <div>
+                  <div>
+                    <Smartphone />
                     <div>
-                      <h3 className="font-semibold mb-1">Send from Job Site</h3>
-                      <p className="text-blue-100 text-sm">Invoice immediately after completion</p>
+                      <h3>Send from Job Site</h3>
+                      <p>Invoice immediately after completion</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Mail className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <Mail />
                     <div>
-                      <h3 className="font-semibold mb-1">Automatic Reminders</h3>
-                      <p className="text-blue-100 text-sm">Never chase payments again</p>
+                      <h3>Automatic Reminders</h3>
+                      <p>Never chase payments again</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <DollarSign className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <DollarSign />
                     <div>
-                      <h3 className="font-semibold mb-1">Online Payments</h3>
-                      <p className="text-blue-100 text-sm">Get paid 3x faster</p>
+                      <h3>Online Payments</h3>
+                      <p>Get paid 3x faster</p>
                     </div>
                   </div>
                 </div>
               </div>
               
-              <div className="p-8 md:p-12">
-                <h3 className="text-2xl font-bold mb-6">Digital Invoice Features</h3>
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+              <div>
+                <h3>Digital Invoice Features</h3>
+                <ul>
+                  <li>
+                    <CheckCircle />
                     <span>Create invoices in 2 minutes</span>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  <li>
+                    <CheckCircle />
                     <span>Track payment status</span>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  <li>
+                    <CheckCircle />
                     <span>Accept credit cards</span>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  <li>
+                    <CheckCircle />
                     <span>Export to QuickBooks</span>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  <li>
+                    <CheckCircle />
                     <span>Store client history</span>
                   </li>
                 </ul>
-                <Button className="w-full" asChild>
+                <Button asChild>
                   <Link href="/trial-signup">
                     Try Digital Invoicing
-                    <ArrowRight className="ml-2 w-4 h-4" />
+                    <ArrowRight />
                   </Link>
                 </Button>
               </div>
@@ -635,42 +635,42 @@ export default function PaintingInvoiceTemplatePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      <section>
+        <div>
+          <h2>
             Get Professional Painting Invoice Templates
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p>
             Download free painting invoice templates or upgrade to digital invoicing. 
             Join 5,000+ contractors getting paid faster with professional invoices.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-6" asChild>
+          <div>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/trial-signup">
                 Download Templates Free
-                <Download className="ml-2 w-5 h-5" />
+                <Download />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 text-white border-white hover:bg-white hover:text-blue-600" asChild>
+            <Button size="lg" variant="outline" asChild>
               <Link href="/painting-contractor-app">
                 Try Mobile Invoicing
-                <Smartphone className="ml-2 w-5 h-5" />
+                <Smartphone />
               </Link>
             </Button>
           </div>
           
-          <div className="mt-8 flex items-center justify-center gap-8 text-sm text-blue-100">
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+          <div>
+            <span>
+              <CheckCircle />
               Excel, PDF, Word formats
             </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+            <span>
+              <CheckCircle />
               Legal compliance
             </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+            <span>
+              <CheckCircle />
               Get paid faster
             </span>
           </div>

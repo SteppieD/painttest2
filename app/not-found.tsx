@@ -5,45 +5,45 @@ import { ArrowRight, Home } from 'lucide-react'
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-2xl text-center">
-          <h1 className="text-6xl font-bold text-gray-900 mb-4">404</h1>
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">Page Not Found</h2>
-          <p className="text-xl text-gray-600 mb-8">
+      <section>
+        <div>
+          <h1>404</h1>
+          <h2>Page Not Found</h2>
+          <p>
             Sorry, we couldn't find the page you're looking for. But don't worry - 
             we can help you get back on track with professional painting quotes!
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700">
+          <div>
+            <Button asChild size="lg">
               <Link href="/trial-signup">
-                <ArrowRight className="h-5 w-5 mr-2" />
+                <ArrowRight />
                 Start Free Trial
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
               <Link href="/">
-                <Home className="h-5 w-5 mr-2" />
+                <Home />
                 Back to Homepage
               </Link>
             </Button>
           </div>
           
-          <div className="mt-12 p-6 bg-blue-50 rounded-lg">
-            <h3 className="font-semibold text-blue-800 mb-2">Looking for something specific?</h3>
-            <div className="grid sm:grid-cols-2 gap-4 text-sm">
-              <Link href="/professional-painting-software" className="text-blue-600 hover:text-blue-800">
+          <div>
+            <h3>Looking for something specific?</h3>
+            <div>
+              <Link href="/professional-painting-software">
                 Professional Software
               </Link>
-              <Link href="/how-to-scale-painting-business" className="text-blue-600 hover:text-blue-800">
+              <Link href="/how-to-scale-painting-business">
                 Business Scaling Guide
               </Link>
-              <Link href="/painting-business-profit-guide" className="text-blue-600 hover:text-blue-800">
+              <Link href="/painting-business-profit-guide">
                 Profit Optimization
               </Link>
-              <Link href="/digital-transformation-painting-contractors" className="text-blue-600 hover:text-blue-800">
+              <Link href="/digital-transformation-painting-contractors">
                 Digital Transformation
               </Link>
             </div>

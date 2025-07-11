@@ -175,75 +175,75 @@ export default function CompanyBrandingSetup({
   const preview = CompanyBrandingManager.generateBrandingPreview(brandingData);
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Company Branding</h2>
-          <p className="text-gray-600">Customize your logo and colors for professional quotes</p>
+          <h2>Company Branding</h2>
+          <p>Customize your logo and colors for professional quotes</p>
         </div>
         {onClose && (
           <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="w-5 h-5" />
+            <X />
           </Button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div>
         {/* Configuration Panel */}
-        <div className="space-y-6">
+        <div>
           {/* Logo Upload */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Camera className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <Camera />
                 Company Logo
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-4">
+            <CardContent>
+              <div>
                 {brandingData.logo_url ? (
-                  <div className="relative">
+                  <div>
                     <img 
                       src={brandingData.logo_url} 
                       alt="Company Logo" 
-                      className="w-16 h-16 object-contain border border-gray-200 rounded-lg bg-white"
+                     
                     />
                     <Button
                       variant="destructive"
                       size="icon"
-                      className="absolute -top-2 -right-2 w-6 h-6"
+                     
                       onClick={() => setBrandingData(prev => ({ ...prev, logo_url: '' }))}
                     >
-                      <X className="w-3 h-3" />
+                      <X />
                     </Button>
                   </div>
                 ) : (
-                  <div className="w-16 h-16 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
-                    <Camera className="w-6 h-6 text-gray-400" />
+                  <div>
+                    <Camera />
                   </div>
                 )}
                 
-                <div className="flex-1">
+                <div>
                   <Button
                     variant="outline"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploading}
-                    className="w-full"
+                   
                   >
                     {isUploading ? (
                       <>
-                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        <RefreshCw />
                         Uploading...
                       </>
                     ) : (
                       <>
-                        <Upload className="w-4 h-4 mr-2" />
+                        <Upload />
                         Upload Logo
                       </>
                     )}
                   </Button>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p>
                     JPG, PNG, WebP, or SVG (max 5MB)
                   </p>
                 </div>
@@ -254,7 +254,7 @@ export default function CompanyBrandingSetup({
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/svg+xml"
                 onChange={handleFileUpload}
-                className="hidden"
+               
               />
             </CardContent>
           </Card>
@@ -264,7 +264,7 @@ export default function CompanyBrandingSetup({
             <CardHeader>
               <CardTitle>Company Information</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
               <div>
                 <Label htmlFor="company_name">Company Name</Label>
                 <Input
@@ -296,16 +296,16 @@ export default function CompanyBrandingSetup({
           {/* Color Customization */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Paintbrush className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <Paintbrush />
                 Brand Colors
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
+            <CardContent>
+              <div>
                 <div>
                   <Label htmlFor="primary_color">Primary Color</Label>
-                  <div className="flex gap-2 mt-1">
+                  <div>
                     <input
                       type="color"
                       id="primary_color"
@@ -314,7 +314,7 @@ export default function CompanyBrandingSetup({
                         ...prev, 
                         primary_color: e.target.value 
                       }))}
-                      className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                     
                     />
                     <Input
                       value={brandingData.primary_color || '#3182ce'}
@@ -322,7 +322,7 @@ export default function CompanyBrandingSetup({
                         ...prev, 
                         primary_color: e.target.value 
                       }))}
-                      className="flex-1"
+                     
                       placeholder="#3182ce"
                     />
                   </div>
@@ -330,7 +330,7 @@ export default function CompanyBrandingSetup({
                 
                 <div>
                   <Label htmlFor="secondary_color">Secondary Color</Label>
-                  <div className="flex gap-2 mt-1">
+                  <div>
                     <input
                       type="color"
                       id="secondary_color"
@@ -339,7 +339,7 @@ export default function CompanyBrandingSetup({
                         ...prev, 
                         secondary_color: e.target.value 
                       }))}
-                      className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                     
                     />
                     <Input
                       value={brandingData.secondary_color || '#2d3748'}
@@ -347,7 +347,7 @@ export default function CompanyBrandingSetup({
                         ...prev, 
                         secondary_color: e.target.value 
                       }))}
-                      className="flex-1"
+                     
                       placeholder="#2d3748"
                     />
                   </div>
@@ -355,7 +355,7 @@ export default function CompanyBrandingSetup({
                 
                 <div>
                   <Label htmlFor="accent_color">Accent Color</Label>
-                  <div className="flex gap-2 mt-1">
+                  <div>
                     <input
                       type="color"
                       id="accent_color"
@@ -364,7 +364,7 @@ export default function CompanyBrandingSetup({
                         ...prev, 
                         accent_color: e.target.value 
                       }))}
-                      className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                     
                     />
                     <Input
                       value={brandingData.accent_color || '#38a169'}
@@ -372,7 +372,7 @@ export default function CompanyBrandingSetup({
                         ...prev, 
                         accent_color: e.target.value 
                       }))}
-                      className="flex-1"
+                     
                       placeholder="#38a169"
                     />
                   </div>
@@ -381,32 +381,32 @@ export default function CompanyBrandingSetup({
 
               {/* Color Scheme Suggestions */}
               <div>
-                <Label className="text-sm font-medium">Quick Color Schemes</Label>
-                <div className="grid grid-cols-2 gap-2 mt-2">
+                <Label>Quick Color Schemes</Label>
+                <div>
                   {colorSuggestions.slice(0, 6).map((scheme, index) => (
                     <Button
                       key={index}
                       variant="outline"
                       size="sm"
                       onClick={() => applyColorScheme(scheme)}
-                      className="justify-start h-auto p-2"
+                     
                     >
-                      <div className="flex items-center gap-2">
-                        <div className="flex">
+                      <div>
+                        <div>
                           <div 
-                            className="w-3 h-3 rounded-l"
-                            style={{ backgroundColor: scheme.primary }}
+                           
+                           
                           />
                           <div 
-                            className="w-3 h-3"
-                            style={{ backgroundColor: scheme.secondary }}
+                           
+                           
                           />
                           <div 
-                            className="w-3 h-3 rounded-r"
-                            style={{ backgroundColor: scheme.accent }}
+                           
+                           
                           />
                         </div>
-                        <span className="text-xs">{scheme.name}</span>
+                        <span>{scheme.name}</span>
                       </div>
                     </Button>
                   ))}
@@ -417,37 +417,37 @@ export default function CompanyBrandingSetup({
         </div>
 
         {/* Preview Panel */}
-        <div className="space-y-6">
+        <div>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Eye className="w-5 h-5 text-green-600" />
+              <CardTitle>
+                <Eye />
                 Live Preview
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div 
                 dangerouslySetInnerHTML={{ __html: preview.sampleCard }}
-                className="[&>div]:!margin-0"
+               
               />
             </CardContent>
           </Card>
 
           {/* Save Button */}
-          <div className="flex gap-3">
+          <div>
             <Button
               onClick={handleSave}
               disabled={isLoading}
-              className="flex-1"
+             
             >
               {isLoading ? (
                 <>
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                  <RefreshCw />
                   Saving...
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 mr-2" />
+                  <Save />
                   Save Branding
                 </>
               )}

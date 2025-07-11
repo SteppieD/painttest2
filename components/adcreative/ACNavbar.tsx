@@ -72,41 +72,41 @@ export function ACNavbar() {
 
   return (
     <>
-      <nav className={`ac-navbar ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="ac-navbar-container">
+      <nav`}>
+        <div>
           {/* Logo */}
-          <Link href="/" className="ac-navbar-logo">
+          <Link href="/">
             <Image 
               src="/paint-quote-logo.png" 
               alt="Paint Quote Pro" 
               width={32}
               height={32}
-              className="h-8 w-8"
+             
             />
             <span>Paint Quote Pro</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <ul className="ac-navbar-menu">
+          <ul>
             {navItems.map((item) => (
-              <li key={item.label} className="ac-navbar-item">
+              <li key={item.label}>
                 {item.dropdown ? (
                   <div
-                    className="ac-navbar-dropdown"
+                   
                     onMouseEnter={() => setOpenDropdown(item.label)}
                     onMouseLeave={() => setOpenDropdown(null)}
                   >
-                    <button className="ac-navbar-link ac-navbar-dropdown-trigger">
+                    <button>
                       {item.label}
                       <ChevronDown size={16} />
                     </button>
                     {openDropdown === item.label && (
-                      <div className="ac-navbar-dropdown-menu">
+                      <div>
                         {item.dropdown.map((subItem) => (
                           <Link
                             key={subItem.href}
                             href={subItem.href}
-                            className="ac-navbar-dropdown-link"
+                           
                           >
                             {subItem.label}
                           </Link>
@@ -117,7 +117,7 @@ export function ACNavbar() {
                 ) : (
                   <Link
                     href={item.href}
-                    className={`ac-navbar-link ${pathname === item.href ? 'active' : ''}`}
+                   `}
                   >
                     {item.label}
                   </Link>
@@ -127,20 +127,20 @@ export function ACNavbar() {
           </ul>
 
           {/* CTA Buttons */}
-          <div className="ac-navbar-cta">
+          <div>
             {isLoggedIn ? (
-              <Link href="/dashboard" className="ac-btn ac-btn-ghost ac-btn-sm">
+              <Link href="/dashboard">
                 Dashboard
               </Link>
             ) : (
               <>
                 <button 
                   onClick={() => setShowLoginPopup(true)} 
-                  className="ac-btn ac-btn-ghost ac-btn-sm"
+                 
                 >
                   Login
                 </button>
-                <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-sm" style={{ backgroundColor: '#2f97e0', borderColor: '#2f97e0' }}>
+                <Link href="/trial-signup">
                   Try For Free
                 </Link>
               </>
@@ -148,7 +148,7 @@ export function ACNavbar() {
             
             {/* Mobile Menu Toggle */}
             <button
-              className="ac-mobile-menu-toggle"
+             
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle mobile menu"
             >
@@ -160,22 +160,22 @@ export function ACNavbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="ac-mobile-menu">
-          <div className="ac-mobile-menu-backdrop" onClick={() => setIsMobileMenuOpen(false)} />
-          <div className="ac-mobile-menu-content">
-            <div className="ac-mobile-menu-header">
-              <Link href="/" className="ac-navbar-logo" onClick={() => setIsMobileMenuOpen(false)}>
+        <div>
+          <div onClick={() => setIsMobileMenuOpen(false)} />
+          <div>
+            <div>
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
                 <Image 
                   src="/paint-quote-logo.png" 
                   alt="Paint Quote Pro" 
                   width={32}
                   height={32}
-                  className="h-8 w-8"
+                 
                 />
                 <span>Paint Quote Pro</span>
               </Link>
               <button
-                className="ac-mobile-menu-close"
+               
                 onClick={() => setIsMobileMenuOpen(false)}
                 aria-label="Close mobile menu"
               >
@@ -183,25 +183,25 @@ export function ACNavbar() {
               </button>
             </div>
             
-            <ul className="ac-mobile-menu-list">
+            <ul>
               {navItems.map((item) => (
-                <li key={item.label} className="ac-mobile-menu-item">
+                <li key={item.label}>
                   {item.dropdown ? (
-                    <div className="ac-mobile-menu-dropdown">
+                    <div>
                       <button
-                        className="ac-mobile-menu-link ac-mobile-menu-dropdown-trigger"
+                       
                         onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
                       >
                         {item.label}
-                        <ChevronDown size={16} className={openDropdown === item.label ? 'rotate-180' : ''} />
+                        <ChevronDown size={16} />
                       </button>
                       {openDropdown === item.label && (
-                        <div className="ac-mobile-menu-dropdown-content">
+                        <div>
                           {item.dropdown.map((subItem) => (
                             <Link
                               key={subItem.href}
                               href={subItem.href}
-                              className="ac-mobile-menu-dropdown-link"
+                             
                               onClick={() => setIsMobileMenuOpen(false)}
                             >
                               {subItem.label}
@@ -213,7 +213,7 @@ export function ACNavbar() {
                   ) : (
                     <Link
                       href={item.href}
-                      className={`ac-mobile-menu-link ${pathname === item.href ? 'active' : ''}`}
+                     `}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.label}
@@ -223,9 +223,9 @@ export function ACNavbar() {
               ))}
             </ul>
             
-            <div className="ac-mobile-menu-footer">
+            <div>
               {isLoggedIn ? (
-                <Link href="/dashboard" className="ac-btn ac-btn-ghost ac-btn-lg" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
                   Dashboard
                 </Link>
               ) : (
@@ -235,11 +235,11 @@ export function ACNavbar() {
                       setIsMobileMenuOpen(false);
                       setShowLoginPopup(true);
                     }} 
-                    className="ac-btn ac-btn-ghost ac-btn-lg w-full"
+                   
                   >
                     Login
                   </button>
-                  <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-lg" style={{ backgroundColor: '#2f97e0', borderColor: '#2f97e0' }} onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href="/trial-signup" onClick={() => setIsMobileMenuOpen(false)}>
                     Try For Free
                   </Link>
                 </>

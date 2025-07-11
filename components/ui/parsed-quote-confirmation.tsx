@@ -92,30 +92,30 @@ export function ParsedQuoteConfirmation({
     const isEmpty = value === null || value === undefined || value === '';
     
     return (
-      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-        <div className="flex-1">
-          <div className="font-medium text-sm text-gray-700">{label}</div>
+      <div>
+        <div>
+          <div>{label}</div>
           {editingField === field ? (
-            <div className="flex items-center gap-2 mt-1">
+            <div>
               <Input
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
                 placeholder={`Enter ${label.toLowerCase()}`}
-                className="h-8 text-sm"
+               
               />
               <Button size="sm" onClick={handleSaveEdit}>Save</Button>
               <Button size="sm" variant="outline" onClick={() => setEditingField(null)}>Cancel</Button>
             </div>
           ) : (
-            <div className="text-sm mt-1">
+            <div>
               {isEmpty ? (
-                <span className="text-gray-400 italic">Not specified</span>
+                <span>Not specified</span>
               ) : type === 'boolean' ? (
                 <Badge variant={value ? 'default' : 'secondary'}>
                   {value ? 'Yes' : 'No'}
                 </Badge>
               ) : (
-                <span className="text-gray-900">{String(value)}</span>
+                <span>{String(value)}</span>
               )}
             </div>
           )}
@@ -126,7 +126,7 @@ export function ParsedQuoteConfirmation({
             size="sm"
             onClick={() => handleEdit(field, value)}
           >
-            <Edit2 className="w-4 h-4" />
+            <Edit2 />
           </Button>
         )}
       </div>
@@ -134,31 +134,31 @@ export function ParsedQuoteConfirmation({
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Confidence Score */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CheckCircle className="w-5 h-5" />
+          <CardTitle>
+            <CheckCircle />
             Extraction Results
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-4">
-            <Badge className={getConfidenceColor(parsedData.confidence_score)}>
+          <div>
+            <Badge>
               {parsedData.confidence_score}% Confidence
             </Badge>
-            <span className="text-sm text-gray-600">
+            <span>
               {parsedData.missing_fields.length} fields missing
             </span>
           </div>
           
           {parsedData.assumptions_made.length > 0 && (
-            <div className="mt-4">
-              <h4 className="font-medium text-sm mb-2">Assumptions Made:</h4>
-              <ul className="list-disc list-inside space-y-1">
+            <div>
+              <h4>Assumptions Made:</h4>
+              <ul>
                 {parsedData.assumptions_made.map((assumption, index) => (
-                  <li key={index} className="text-sm text-gray-600">{assumption}</li>
+                  <li key={index}>{assumption}</li>
                 ))}
               </ul>
             </div>
@@ -171,7 +171,7 @@ export function ParsedQuoteConfirmation({
         <CardHeader>
           <CardTitle>Customer Information</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent>
           {renderField('Customer Name', 'customer_name', parsedData.customer_name)}
           {renderField('Property Address', 'property_address', parsedData.property_address)}
         </CardContent>
@@ -182,7 +182,7 @@ export function ParsedQuoteConfirmation({
         <CardHeader>
           <CardTitle>Project Scope</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent>
           {renderField('Project Type', 'project_type', parsedData.project_type)}
           {renderField('Include Ceilings', 'ceiling_included', parsedData.ceiling_included, 'boolean')}
           {renderField('Include Doors', 'doors_included', parsedData.doors_included, 'boolean')}
@@ -197,7 +197,7 @@ export function ParsedQuoteConfirmation({
         <CardHeader>
           <CardTitle>Measurements</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent>
           {renderField('Linear Feet', 'linear_feet', parsedData.linear_feet, 'number')}
           {renderField('Wall Height (ft)', 'wall_height_ft', parsedData.wall_height_ft, 'number')}
           {renderField('Wall Square Feet', 'walls_sqft', parsedData.walls_sqft, 'number')}
@@ -207,12 +207,12 @@ export function ParsedQuoteConfirmation({
           {renderField('Number of Windows', 'windows_count', parsedData.windows_count, 'number')}
           
           {parsedData.calculated_wall_area_sqft && (
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="font-medium text-sm text-blue-800">Calculated Wall Area</div>
-              <div className="text-sm text-blue-700 mt-1">
+            <div>
+              <div>Calculated Wall Area</div>
+              <div>
                 {parsedData.calculated_wall_area_sqft} sq ft 
                 {parsedData.linear_feet && parsedData.wall_height_ft && (
-                  <span className="ml-2 text-xs">
+                  <span>
                     ({parsedData.linear_feet} linear ft × {parsedData.wall_height_ft} ft height)
                   </span>
                 )}
@@ -227,7 +227,7 @@ export function ParsedQuoteConfirmation({
         <CardHeader>
           <CardTitle>Paint Specifications</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent>
           {renderField('Paint Brand', 'paint_brand', parsedData.paint_brand)}
           {renderField('Paint Product', 'paint_product', parsedData.paint_product)}
           {renderField('Paint Sheen', 'paint_sheen', parsedData.paint_sheen)}
@@ -242,7 +242,7 @@ export function ParsedQuoteConfirmation({
         <CardHeader>
           <CardTitle>Pricing</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent>
           {renderField('Labor Cost per Sq Ft ($)', 'labor_cost_per_sqft', parsedData.labor_cost_per_sqft, 'number')}
           {renderField('Markup Percentage (%)', 'markup_percent', parsedData.markup_percent, 'number')}
         </CardContent>
@@ -252,40 +252,40 @@ export function ParsedQuoteConfirmation({
       {canCalculate && quoteCalculation && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calculator className="w-5 h-5" />
+            <CardTitle>
+              <Calculator />
               Quote Calculation
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-4">
+            <div>
               <div>
-                <div className="text-sm text-gray-600">Paint Needed</div>
-                <div className="font-semibold">{quoteCalculation.paint_gallons_needed} gallons</div>
+                <div>Paint Needed</div>
+                <div>{quoteCalculation.paint_gallons_needed} gallons</div>
               </div>
               <div>
-                <div className="text-sm text-gray-600">Materials Cost</div>
-                <div className="font-semibold">${quoteCalculation.materials_cost.toFixed(2)}</div>
+                <div>Materials Cost</div>
+                <div>${quoteCalculation.materials_cost.toFixed(2)}</div>
               </div>
               {quoteCalculation.primer_cost > 0 && (
                 <div>
-                  <div className="text-sm text-gray-600">Primer Cost</div>
-                  <div className="font-semibold">${quoteCalculation.primer_cost.toFixed(2)}</div>
+                  <div>Primer Cost</div>
+                  <div>${quoteCalculation.primer_cost.toFixed(2)}</div>
                 </div>
               )}
               <div>
-                <div className="text-sm text-gray-600">Labor Cost</div>
-                <div className="font-semibold">${quoteCalculation.labor_cost.toFixed(2)}</div>
+                <div>Labor Cost</div>
+                <div>${quoteCalculation.labor_cost.toFixed(2)}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-600">Markup</div>
-                <div className="font-semibold">${quoteCalculation.markup_amount.toFixed(2)}</div>
+                <div>Markup</div>
+                <div>${quoteCalculation.markup_amount.toFixed(2)}</div>
               </div>
             </div>
-            <div className="border-t mt-4 pt-4">
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-lg">Final Quote</span>
-                <span className="font-bold text-xl text-green-600">
+            <div>
+              <div>
+                <span>Final Quote</span>
+                <span>
                   ${quoteCalculation.final_quote.toFixed(2)}
                 </span>
               </div>
@@ -298,25 +298,25 @@ export function ParsedQuoteConfirmation({
       {parsedData.missing_fields.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-yellow-600">
-              <AlertTriangle className="w-5 h-5" />
+            <CardTitle>
+              <AlertTriangle />
               Missing Information
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
+            <div>
               {parsedData.missing_fields.map((field, index) => (
-                <Badge key={index} variant="outline" className="mr-2">
+                <Badge key={index} variant="outline">
                   {field}
                 </Badge>
               ))}
             </div>
             {clarificationQuestions.length > 0 && (
-              <div className="mt-4">
-                <h4 className="font-medium text-sm mb-2">Clarification Questions:</h4>
-                <ul className="list-disc list-inside space-y-1">
+              <div>
+                <h4>Clarification Questions:</h4>
+                <ul>
                   {clarificationQuestions.map((question, index) => (
-                    <li key={index} className="text-sm text-gray-600">{question}</li>
+                    <li key={index}>{question}</li>
                   ))}
                 </ul>
               </div>
@@ -326,14 +326,14 @@ export function ParsedQuoteConfirmation({
       )}
 
       {/* Action Buttons */}
-      <div className="flex gap-4">
+      <div>
         {canCalculate ? (
-          <Button onClick={onConfirm} className="flex-1">
-            <CheckCircle className="w-4 h-4 mr-2" />
+          <Button onClick={onConfirm}>
+            <CheckCircle />
             Confirm & Generate Quote
           </Button>
         ) : (
-          <Button onClick={() => onRequestClarification(clarificationQuestions)} className="flex-1">
+          <Button onClick={() => onRequestClarification(clarificationQuestions)}>
             Request Missing Information
           </Button>
         )}

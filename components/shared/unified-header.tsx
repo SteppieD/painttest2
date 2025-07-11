@@ -57,51 +57,51 @@ export function UnifiedHeader() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="unified-header">
-      <div className="unified-nav">
+    <header>
+      <div>
         {/* Logo */}
-        <Link href="/" className="unified-logo">
-          <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-            <Palette className="w-5 h-5 text-white" />
+        <Link href="/">
+          <div>
+            <Palette />
           </div>
           <span>ProPaint Quote</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="unified-nav-links">
+        <nav>
           {/* Features */}
           <Link 
             href="/features" 
-            className={`unified-nav-link ${isActive('/features') ? 'active' : ''}`}
+           `}
           >
             Features
           </Link>
 
           {/* Solutions Dropdown */}
           <div 
-            className="unified-dropdown"
+           
             onMouseEnter={() => setActiveDropdown('solutions')}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button className="unified-nav-link flex items-center gap-1">
+            <button>
               Solutions
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown />
             </button>
             
             {activeDropdown === 'solutions' && (
-              <div className="unified-dropdown-menu">
-                <Link href="/painting-contractors" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50">
-                  <Users className="w-5 h-5 text-blue-600 mt-0.5" />
+              <div>
+                <Link href="/painting-contractors">
+                  <Users />
                   <div>
-                    <div className="font-medium text-gray-900">For Contractors</div>
-                    <div className="text-sm text-gray-600">Tailored for painting businesses</div>
+                    <div>For Contractors</div>
+                    <div>Tailored for painting businesses</div>
                   </div>
                 </Link>
-                <Link href="/enterprise" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50">
-                  <Building2 className="w-5 h-5 text-purple-600 mt-0.5" />
+                <Link href="/enterprise">
+                  <Building2 />
                   <div>
-                    <div className="font-medium text-gray-900">Enterprise</div>
-                    <div className="text-sm text-gray-600">Solutions for large teams</div>
+                    <div>Enterprise</div>
+                    <div>Solutions for large teams</div>
                   </div>
                 </Link>
               </div>
@@ -110,36 +110,36 @@ export function UnifiedHeader() {
 
           {/* Resources Dropdown */}
           <div 
-            className="unified-dropdown"
+           
             onMouseEnter={() => setActiveDropdown('resources')}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button className="unified-nav-link flex items-center gap-1">
+            <button>
               Resources
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown />
             </button>
             
             {activeDropdown === 'resources' && (
-              <div className="unified-dropdown-menu">
-                <Link href="/painting-estimate-calculator-free" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50">
-                  <Calculator className="w-5 h-5 text-blue-600 mt-0.5" />
+              <div>
+                <Link href="/painting-estimate-calculator-free">
+                  <Calculator />
                   <div>
-                    <div className="font-medium text-gray-900">Quote Calculator</div>
-                    <div className="text-sm text-gray-600">Free estimation tool</div>
+                    <div>Quote Calculator</div>
+                    <div>Free estimation tool</div>
                   </div>
                 </Link>
-                <Link href="/painting-quote-templates-free" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50">
-                  <FileText className="w-5 h-5 text-green-600 mt-0.5" />
+                <Link href="/painting-quote-templates-free">
+                  <FileText />
                   <div>
-                    <div className="font-medium text-gray-900">Quote Templates</div>
-                    <div className="text-sm text-gray-600">Professional templates</div>
+                    <div>Quote Templates</div>
+                    <div>Professional templates</div>
                   </div>
                 </Link>
-                <Link href="/how-to-quote-painting-jobs-professionally" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50">
-                  <BookOpen className="w-5 h-5 text-indigo-600 mt-0.5" />
+                <Link href="/how-to-quote-painting-jobs-professionally">
+                  <BookOpen />
                   <div>
-                    <div className="font-medium text-gray-900">Quoting Guide</div>
-                    <div className="text-sm text-gray-600">Expert strategies</div>
+                    <div>Quoting Guide</div>
+                    <div>Expert strategies</div>
                   </div>
                 </Link>
               </div>
@@ -148,41 +148,41 @@ export function UnifiedHeader() {
 
           <Link 
             href="/pricing" 
-            className={`unified-nav-link ${isActive('/pricing') ? 'active' : ''}`}
+           `}
           >
             Pricing
           </Link>
 
           <Link 
             href="/about" 
-            className={`unified-nav-link ${isActive('/about') ? 'active' : ''}`}
+           `}
           >
             About
           </Link>
         </nav>
 
         {/* Desktop CTA Buttons */}
-        <div className="hidden lg:flex items-center gap-3">
+        <div>
           {/* Show quota counter if logged in */}
           {companyId && (
             <QuotaCounter 
               companyId={companyId} 
               variant="header" 
               showUpgrade={true}
-              className="mr-3"
+             
             />
           )}
           
           {companyId ? (
-            <Link href="/dashboard" className="unified-btn unified-btn-ghost">
+            <Link href="/dashboard">
               Dashboard
             </Link>
           ) : (
             <>
-              <Link href="/access-code" className="unified-btn unified-btn-ghost">
+              <Link href="/access-code">
                 Sign In
               </Link>
-              <Link href="/trial-signup" className="unified-btn unified-btn-primary">
+              <Link href="/trial-signup">
                 Start Free Trial
               </Link>
             </>
@@ -192,23 +192,23 @@ export function UnifiedHeader() {
         {/* Mobile Menu Button */}
         <button
           onClick={toggleMobileMenu}
-          className="unified-mobile-toggle lg:hidden"
+         
           aria-label="Toggle menu"
         >
           {isMobileMenuOpen ? (
-            <X className="w-6 h-6" />
+            <X />
           ) : (
-            <Menu className="w-6 h-6" />
+            <Menu />
           )}
         </button>
       </div>
 
       {/* Mobile Navigation Menu */}
-      <div className={`unified-mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
-        <nav className="space-y-4">
+      <div`}>
+        <nav>
           <Link 
             href="/features" 
-            className="block py-2 text-gray-700 font-medium"
+           
             onClick={toggleMobileMenu}
           >
             Features
@@ -217,17 +217,17 @@ export function UnifiedHeader() {
           <div>
             <button
               onClick={() => setActiveDropdown(activeDropdown === 'mobile-solutions' ? null : 'mobile-solutions')}
-              className="flex items-center justify-between w-full py-2 text-gray-700 font-medium"
+             
             >
               Solutions
-              <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === 'mobile-solutions' ? 'rotate-180' : ''}`} />
+              <ChevronDown`} />
             </button>
             {activeDropdown === 'mobile-solutions' && (
-              <div className="mt-2 pl-4 space-y-2">
-                <Link href="/painting-contractors" className="block py-2 text-gray-600" onClick={toggleMobileMenu}>
+              <div>
+                <Link href="/painting-contractors" onClick={toggleMobileMenu}>
                   For Contractors
                 </Link>
-                <Link href="/enterprise" className="block py-2 text-gray-600" onClick={toggleMobileMenu}>
+                <Link href="/enterprise" onClick={toggleMobileMenu}>
                   Enterprise
                 </Link>
               </div>
@@ -237,46 +237,46 @@ export function UnifiedHeader() {
           <div>
             <button
               onClick={() => setActiveDropdown(activeDropdown === 'mobile-resources' ? null : 'mobile-resources')}
-              className="flex items-center justify-between w-full py-2 text-gray-700 font-medium"
+             
             >
               Resources
-              <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === 'mobile-resources' ? 'rotate-180' : ''}`} />
+              <ChevronDown`} />
             </button>
             {activeDropdown === 'mobile-resources' && (
-              <div className="mt-2 pl-4 space-y-2">
-                <Link href="/painting-estimate-calculator-free" className="block py-2 text-gray-600" onClick={toggleMobileMenu}>
+              <div>
+                <Link href="/painting-estimate-calculator-free" onClick={toggleMobileMenu}>
                   Quote Calculator
                 </Link>
-                <Link href="/painting-quote-templates-free" className="block py-2 text-gray-600" onClick={toggleMobileMenu}>
+                <Link href="/painting-quote-templates-free" onClick={toggleMobileMenu}>
                   Quote Templates
                 </Link>
-                <Link href="/how-to-quote-painting-jobs-professionally" className="block py-2 text-gray-600" onClick={toggleMobileMenu}>
+                <Link href="/how-to-quote-painting-jobs-professionally" onClick={toggleMobileMenu}>
                   Quoting Guide
                 </Link>
               </div>
             )}
           </div>
 
-          <Link href="/pricing" className="block py-2 text-gray-700 font-medium" onClick={toggleMobileMenu}>
+          <Link href="/pricing" onClick={toggleMobileMenu}>
             Pricing
           </Link>
           
-          <Link href="/about" className="block py-2 text-gray-700 font-medium" onClick={toggleMobileMenu}>
+          <Link href="/about" onClick={toggleMobileMenu}>
             About
           </Link>
 
           {/* Mobile CTA Buttons */}
-          <div className="pt-4 space-y-3">
+          <div>
             {companyId ? (
-              <Link href="/dashboard" className="unified-btn unified-btn-ghost w-full" onClick={toggleMobileMenu}>
+              <Link href="/dashboard" onClick={toggleMobileMenu}>
                 Dashboard
               </Link>
             ) : (
               <>
-                <Link href="/access-code" className="unified-btn unified-btn-ghost w-full" onClick={toggleMobileMenu}>
+                <Link href="/access-code" onClick={toggleMobileMenu}>
                   Sign In
                 </Link>
-                <Link href="/trial-signup" className="unified-btn unified-btn-primary w-full" onClick={toggleMobileMenu}>
+                <Link href="/trial-signup" onClick={toggleMobileMenu}>
                   Start Free Trial
                 </Link>
               </>

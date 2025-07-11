@@ -112,63 +112,63 @@ export default function FreeCalculatorPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
       <Header />
       
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 px-4 py-1 text-sm font-semibold bg-green-100 text-green-800 border-green-200">
+      <section>
+        <div>
+          <div>
+            <Badge>
               100% FREE - No Credit Card Required
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1>
               Free Painting Estimate Calculator for Professional Contractors
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p>
               Free painting estimate calculator creates instant, accurate quotes in 60 seconds. 
               Join 5,000+ contractors saving hours on every estimate with our professional calculator.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-              <Button size="lg" className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700" asChild>
+            <div>
+              <Button size="lg" asChild>
                 <Link href="/painting-estimate-calculator-free">
                   Start Free Calculator Now
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
+              <Button size="lg" variant="outline" asChild>
                 <Link href="/demo">
                   Watch 2-Min Demo
                 </Link>
               </Button>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
-              <span className="flex items-center gap-1">
-                <CheckCircle className="w-4 h-4 text-green-500" />
+            <div>
+              <span>
+                <CheckCircle />
                 No signup required
               </span>
-              <span className="flex items-center gap-1">
-                <CheckCircle className="w-4 h-4 text-green-500" />
+              <span>
+                <CheckCircle />
                 Works on all devices
               </span>
-              <span className="flex items-center gap-1">
-                <CheckCircle className="w-4 h-4 text-green-500" />
+              <span>
+                <CheckCircle />
                 Professional PDFs
               </span>
             </div>
           </div>
           
           {/* Success Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div>
             {successMetrics.map((metric, index) => {
               const Icon = metric.icon;
               return (
-                <div key={index} className="text-center bg-white rounded-lg p-6 shadow-sm">
-                  <Icon className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-gray-900">{metric.number}</div>
-                  <div className="text-sm text-gray-600">{metric.label}</div>
+                <div key={index}>
+                  <Icon />
+                  <div>{metric.number}</div>
+                  <div>{metric.label}</div>
                 </div>
               );
             })}
@@ -177,31 +177,31 @@ export default function FreeCalculatorPage() {
       </section>
 
       {/* Calculator Features */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Why Contractors Love Our Free Painting Calculator
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p>
               Professional painting estimate calculator designed by contractors, for contractors
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div>
             {calculatorFeatures.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+                <Card key={index}>
                   <CardHeader>
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                      <Icon className="w-6 h-6 text-blue-600" />
+                    <div>
+                      <Icon />
                     </div>
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
+                    <CardTitle>{feature.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-3">{feature.description}</p>
-                    <Badge variant="secondary" className="bg-green-100 text-green-800">
+                    <p>{feature.description}</p>
+                    <Badge variant="secondary">
                       {feature.highlight}
                     </Badge>
                   </CardContent>
@@ -213,36 +213,36 @@ export default function FreeCalculatorPage() {
       </section>
 
       {/* Comparison Table */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Free Calculator vs. Traditional Estimating
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               See why 5,000+ contractors switched to our free painting calculator
             </p>
           </div>
           
-          <Card className="overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-100 border-b">
+          <Card>
+            <div>
+              <table>
+                <thead>
                   <tr>
-                    <th className="text-left p-4 font-semibold text-gray-900">Feature</th>
-                    <th className="text-center p-4 font-semibold text-gray-600">Traditional Method</th>
-                    <th className="text-center p-4 font-semibold text-blue-600">With Free Calculator</th>
-                    <th className="text-center p-4 font-semibold text-green-600">Improvement</th>
+                    <th>Feature</th>
+                    <th>Traditional Method</th>
+                    <th>With Free Calculator</th>
+                    <th>Improvement</th>
                   </tr>
                 </thead>
                 <tbody>
                   {comparisonData.map((row, index) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
-                      <td className="p-4 font-medium">{row.feature}</td>
-                      <td className="p-4 text-center text-gray-600">{row.traditional}</td>
-                      <td className="p-4 text-center font-semibold text-blue-600">{row.withCalculator}</td>
-                      <td className="p-4 text-center">
-                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    <tr key={index}>
+                      <td>{row.feature}</td>
+                      <td>{row.traditional}</td>
+                      <td>{row.withCalculator}</td>
+                      <td>
+                        <Badge variant="outline">
                           {row.improvement}
                         </Badge>
                       </td>
@@ -256,42 +256,42 @@ export default function FreeCalculatorPage() {
       </section>
 
       {/* Calculator Types */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Choose Your Free Painting Calculator
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Specialized calculators for every painting project type
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div>
             {calculatorTypes.map((calc, index) => {
               const Icon = calc.icon;
               return (
-                <Card key={index} className="hover:shadow-xl transition-shadow">
+                <Card key={index}>
                   <CardHeader>
-                    <div className={`w-12 h-12 ${calc.color} mb-4`}>
-                      <Icon className="w-full h-full" />
+                    <div mb-4`}>
+                      <Icon />
                     </div>
-                    <CardTitle className="text-xl">{calc.title}</CardTitle>
-                    <p className="text-gray-600">{calc.description}</p>
+                    <CardTitle>{calc.title}</CardTitle>
+                    <p>{calc.description}</p>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2 mb-6">
+                    <ul>
                       {calc.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                          <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                        <li key={idx}>
+                          <CheckCircle />
                           {feature}
                         </li>
                       ))}
                     </ul>
-                    <Button className="w-full" variant="outline" asChild>
+                    <Button variant="outline" asChild>
                       <Link href={calc.link}>
                         Try {calc.title.split(' ')[0]} Calculator
-                        <ArrowRight className="ml-2 w-4 h-4" />
+                        <ArrowRight />
                       </Link>
                     </Button>
                   </CardContent>
@@ -303,18 +303,18 @@ export default function FreeCalculatorPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 px-4 bg-blue-50">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               How the Free Painting Calculator Works
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Create professional painting estimates in 3 simple steps
             </p>
           </div>
           
-          <div className="space-y-8">
+          <div>
             {[
               {
                 step: 1,
@@ -338,24 +338,24 @@ export default function FreeCalculatorPage() {
                 items: ["Professional formatting", "Your logo & branding", "Detailed breakdown", "Terms & conditions"]
               }
             ].map((step, index) => (
-              <div key={index} className="flex gap-6 bg-white rounded-lg p-6 shadow-sm">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+              <div key={index}>
+                <div>
+                  <div>
                     {step.step}
                   </div>
                 </div>
-                <div className="flex-grow">
-                  <div className="flex items-center gap-4 mb-3">
-                    <h3 className="text-xl font-bold text-gray-900">{step.title}</h3>
-                    <Badge variant="outline" className="text-sm">
+                <div>
+                  <div>
+                    <h3>{step.title}</h3>
+                    <Badge variant="outline">
                       {step.time}
                     </Badge>
                   </div>
-                  <p className="text-gray-600 mb-4">{step.description}</p>
-                  <div className="grid grid-cols-2 gap-2">
+                  <p>{step.description}</p>
+                  <div>
                     {step.items.map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
+                      <div key={idx}>
+                        <CheckCircle />
                         {item}
                       </div>
                     ))}
@@ -368,18 +368,18 @@ export default function FreeCalculatorPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Free Painting Calculator FAQ
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Common questions about our free estimating tool
             </p>
           </div>
           
-          <div className="space-y-6">
+          <div>
             {[
               {
                 q: "Is the painting calculator really free?",
@@ -406,12 +406,12 @@ export default function FreeCalculatorPage() {
                 a: "Love the free calculator? Upgrade to Professional ($79/month) for unlimited quotes, advanced features, customer management, and priority support."
               }
             ].map((faq, index) => (
-              <Card key={index} className="border-0 shadow-sm">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-lg">{faq.q}</CardTitle>
+                  <CardTitle>{faq.q}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">{faq.a}</p>
+                  <p>{faq.a}</p>
                 </CardContent>
               </Card>
             ))}
@@ -420,42 +420,42 @@ export default function FreeCalculatorPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      <section>
+        <div>
+          <h2>
             Start Using the Free Painting Calculator Today
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p>
             Join 5,000+ painting contractors creating faster, more accurate quotes. 
             No credit card required - start calculating in seconds.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-6" asChild>
+          <div>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/painting-estimate-calculator-free">
                 Launch Free Calculator
-                <Calculator className="ml-2 w-5 h-5" />
+                <Calculator />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 text-white border-white hover:bg-white hover:text-blue-600" asChild>
+            <Button size="lg" variant="outline" asChild>
               <Link href="/pricing">
                 View Pro Features
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight />
               </Link>
             </Button>
           </div>
           
-          <div className="flex flex-wrap justify-center gap-6 text-sm text-blue-100">
-            <span className="flex items-center gap-1">
-              <Shield className="w-4 h-4" />
+          <div>
+            <span>
+              <Shield />
               No credit card required
             </span>
-            <span className="flex items-center gap-1">
-              <Users className="w-4 h-4" />
+            <span>
+              <Users />
               5,000+ contractors trust us
             </span>
-            <span className="flex items-center gap-1">
-              <BarChart3 className="w-4 h-4" />
+            <span>
+              <BarChart3 />
               250,000+ quotes created
             </span>
           </div>

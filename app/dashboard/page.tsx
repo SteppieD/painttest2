@@ -272,32 +272,32 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white border-b shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <Palette className="w-8 h-8 text-blue-600" />
+      <div>
+        <div>
+          <div>
+            <div>
+              <Palette />
               <div>
-                <h1 className="text-xl font-bold text-gray-900">ProPaint Quote Assistant</h1>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm text-gray-500">{companyInfo?.company_name}</p>
+                <h1>ProPaint Quote Assistant</h1>
+                <div>
+                  <p>{companyInfo?.company_name}</p>
                   {companyInfo?.access_code && (
                     <>
-                      <span className="text-sm text-gray-400">•</span>
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm text-gray-500">Code: {companyInfo.access_code}</span>
+                      <span>•</span>
+                      <div>
+                        <span>Code: {companyInfo.access_code}</span>
                         <Button
                           size="sm"
                           variant="ghost"
@@ -305,9 +305,9 @@ export default function DashboardPage() {
                             navigator.clipboard.writeText(companyInfo.access_code);
                             alert('Access code copied to clipboard!');
                           }}
-                          className="h-6 w-6 p-0 hover:bg-gray-100"
+                         
                         >
-                          <Copy className="h-3 w-3" />
+                          <Copy />
                         </Button>
                       </div>
                     </>
@@ -316,12 +316,12 @@ export default function DashboardPage() {
               </div>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div>
               {companyInfo && (
                 <QuotaCounter 
                   companyId={companyInfo.id}
                   variant="header"
-                  className="hidden lg:flex"
+                 
                 />
               )}
               <Button
@@ -329,44 +329,44 @@ export default function DashboardPage() {
                   trackFeatureUsed('create_quote_button', { from: 'dashboard' });
                   router.push("/create-quote");
                 }}
-                className="btn-flat-primary mobile-flat-button"
+               
               >
-                <Calculator className="icon-flat mr-2" />
-                <span className="hidden sm:inline">New Quote</span>
-                <span className="sm:hidden">Quote</span>
+                <Calculator />
+                <span>New Quote</span>
+                <span>Quote</span>
               </Button>
               
               <Button
                 variant="ghost"
                 onClick={handleLogout}
-                className="btn-flat text-flat-gray-600 hover:text-flat-gray-800 mobile-flat-button"
+               
               >
-                <LogOut className="icon-flat mr-2" />
-                <span className="hidden sm:inline">Logout</span>
+                <LogOut />
+                <span>Logout</span>
               </Button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div>
         {/* Upgrade Banner for Trial/Freemium Users */}
         {!isCheckingOnboarding && quotaInfo.isTrial && quotaInfo.quotesAllowed && quotaInfo.quotesUsed >= quotaInfo.quotesAllowed * 0.5 && (
-          <div className="mb-8">
-            <Card className="card-flat bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-flat-lg">
-              <CardContent className="p-6">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-flat-lg flex items-center justify-center">
-                      <Crown className="w-6 h-6 text-white" />
+          <div>
+            <Card>
+              <CardContent>
+                <div>
+                  <div>
+                    <div>
+                      <Crown />
                     </div>
                     <div>
-                      <h3 className="text-flat-xl font-bold mb-1">
+                      <h3>
                         {quotaInfo.quotesUsed >= quotaInfo.quotesAllowed 
                           ? "You've reached your quote limit!" 
                           : `You've used ${quotaInfo.quotesUsed} of ${quotaInfo.quotesAllowed} free quotes`}
                       </h3>
-                      <p className="text-white/90">
+                      <p>
                         Upgrade to Professional for unlimited quotes and premium features
                       </p>
                     </div>
@@ -375,9 +375,9 @@ export default function DashboardPage() {
                     size="lg"
                     variant="secondary"
                     onClick={() => router.push('/pricing')}
-                    className="bg-white text-blue-600 hover:bg-gray-100"
+                   
                   >
-                    <Sparkles className="w-4 h-4 mr-2" />
+                    <Sparkles />
                     Upgrade Now - Save 20%
                   </Button>
                 </div>
@@ -388,32 +388,32 @@ export default function DashboardPage() {
 
         {/* Setup Completion Prompt - Flat Design */}
         {!isCheckingOnboarding && needsOnboarding && (
-          <div className="mb-8">
-            <Card className="card-flat bg-paint-primer/10 border-2 border-paint-primer shadow-flat-lg">
-              <CardContent className="p-6 sm:p-8 text-center">
-                <div className="w-20 h-20 bg-paint-primer rounded-flat-xl flex items-center justify-center mx-auto mb-5">
-                  <Palette className="w-10 h-10 text-white" />
+          <div>
+            <Card>
+              <CardContent>
+                <div>
+                  <Palette />
                 </div>
-                <h2 className="text-flat-3xl font-bold text-flat-gray-900 mb-3">
+                <h2>
                   Complete Your Setup
                 </h2>
-                <p className="text-flat-lg text-flat-gray-700 mb-6 max-w-md mx-auto font-medium">
+                <p>
                   Set up your favorite paint products and pricing to create quotes quickly. 
                   This takes just 2 minutes and you'll be ready to start quoting!
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div>
                   <Button 
                     onClick={() => router.push("/setup")}
-                    className="btn-flat-primary mobile-flat-button px-8"
+                   
                     size="lg"
                   >
-                    <ArrowRight className="icon-flat mr-2" />
+                    <ArrowRight />
                     Complete Setup
                   </Button>
                   <Button 
                     variant="outline"
                     onClick={() => setNeedsOnboarding(false)}
-                    className="btn-flat mobile-flat-button"
+                   
                     size="lg"
                   >
                     Skip for Now
@@ -426,32 +426,32 @@ export default function DashboardPage() {
 
         {/* Quick Settings Access - Flat Design */}
         {!isCheckingOnboarding && !needsOnboarding && (
-          <div className="mb-6">
-            <Card className="card-flat bg-paint-wall/5 border border-paint-wall/20 shadow-flat">
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-paint-wall/10 rounded-flat-lg flex items-center justify-center">
-                      <Palette className="icon-flat-lg text-paint-wall" />
+          <div>
+            <Card>
+              <CardContent>
+                <div>
+                  <div>
+                    <div>
+                      <Palette />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-flat-lg font-bold text-flat-gray-900">Customize Your Products & Pricing</h3>
-                      <p className="text-flat-base text-flat-gray-700 font-medium">Set up paint products and costs for accurate quotes</p>
+                    <div>
+                      <h3>Customize Your Products & Pricing</h3>
+                      <p>Set up paint products and costs for accurate quotes</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div>
                     <Button 
                       variant="ghost"
                       onClick={() => router.push("/setup?update=true")}
-                      className="btn-flat-wall mobile-flat-button flex items-center gap-2 text-sm"
+                     
                     >
-                      <MessageSquare className="w-4 h-4" />
-                      <span className="hidden sm:inline">Quick Update</span>
+                      <MessageSquare />
+                      <span>Quick Update</span>
                     </Button>
                     <Button 
                       variant="outline"
                       onClick={() => router.push("/settings/products")}
-                      className="btn-flat-wall mobile-flat-button flex items-center gap-2"
+                     
                     >
                       Settings
                     </Button>
@@ -463,24 +463,24 @@ export default function DashboardPage() {
         )}
 
         {/* Primary Action - Create Quote - Mobile-First Flat Design */}
-        <div className="mb-8">
+        <div>
           <Card 
-            className="cursor-pointer card-flat bg-business-success/10 border-2 border-business-success/30 hover:shadow-flat-lg transition-all duration-200 interactive-flat" 
+            
             onClick={() => router.push("/create-quote")}
           >
-            <CardContent className="p-6 sm:p-8">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-5">
-                  <div className="w-20 h-20 bg-business-success rounded-flat-xl flex items-center justify-center shadow-flat">
-                    <Calculator className="w-10 h-10 text-white" />
+            <CardContent>
+              <div>
+                <div>
+                  <div>
+                    <Calculator />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-flat-2xl font-bold text-business-success mb-2">Create Professional Quote</h3>
-                    <p className="text-flat-lg font-medium text-flat-gray-700">Room-by-room measurements • Industry pricing • Customer-ready output</p>
+                  <div>
+                    <h3>Create Professional Quote</h3>
+                    <p>Room-by-room measurements • Industry pricing • Customer-ready output</p>
                   </div>
                 </div>
-                <div className="text-business-success">
-                  <ArrowRight className="icon-flat-lg" />
+                <div>
+                  <ArrowRight />
                 </div>
               </div>
             </CardContent>
@@ -489,7 +489,7 @@ export default function DashboardPage() {
 
         {/* Quota Counter */}
         {companyInfo && (
-          <div className="mb-6">
+          <div>
             <QuotaCounter 
               companyId={companyInfo.id}
               variant="full"
@@ -499,104 +499,104 @@ export default function DashboardPage() {
         )}
 
         {/* Business Metrics - Flat Design Mobile-First */}
-        <div className="mb-8">
-          <div className="card-flat shadow-flat-lg p-6 sm:p-8">
-            <h2 className="text-flat-2xl font-bold text-flat-gray-900 mb-6">Business Performance</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div>
+          <div>
+            <h2>Business Performance</h2>
+            <div>
               {/* Total Quotes Card */}
-              <div className="card-flat bg-paint-primer/5 border border-paint-primer/20 p-4 text-center">
-                <div className="w-12 h-12 bg-paint-primer rounded-flat-lg flex items-center justify-center mx-auto mb-3">
-                  <FileText className="icon-flat text-white" />
+              <div>
+                <div>
+                  <FileText />
                 </div>
-                <div className="text-flat-3xl font-bold text-flat-gray-900 mb-1">{analytics.totalQuotes}</div>
-                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Total Quotes</div>
-                <div className="text-flat-sm font-medium text-business-success">
+                <div>{analytics.totalQuotes}</div>
+                <div>Total Quotes</div>
+                <div>
                   {analytics.acceptedQuotes} won ({analytics.totalQuotes > 0 ? Math.round((analytics.acceptedQuotes / analytics.totalQuotes) * 100) : 0}%)
                 </div>
               </div>
 
               {/* Revenue Card */}
-              <div className="card-flat bg-business-success/5 border border-business-success/20 p-4 text-center">
-                <div className="w-12 h-12 bg-business-success rounded-flat-lg flex items-center justify-center mx-auto mb-3">
-                  <DollarSign className="icon-flat text-white" />
+              <div>
+                <div>
+                  <DollarSign />
                 </div>
-                <div className="text-flat-3xl font-bold text-business-success mb-1">{formatCurrency(analytics.totalRevenue)}</div>
-                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Revenue Generated</div>
-                <div className="text-flat-sm font-medium text-flat-gray-600">All time</div>
+                <div>{formatCurrency(analytics.totalRevenue)}</div>
+                <div>Revenue Generated</div>
+                <div>All time</div>
               </div>
 
               {/* Average Quote Card */}
-              <div className="card-flat bg-paint-wall/5 border border-paint-wall/20 p-4 text-center">
-                <div className="w-12 h-12 bg-paint-wall rounded-flat-lg flex items-center justify-center mx-auto mb-3">
-                  <TrendingUp className="icon-flat text-white" />
+              <div>
+                <div>
+                  <TrendingUp />
                 </div>
-                <div className="text-flat-3xl font-bold text-paint-wall mb-1">{formatCurrency(analytics.averageQuote)}</div>
-                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Average Job Value</div>
-                <div className="text-flat-sm font-medium text-flat-gray-600">Per quote</div>
+                <div>{formatCurrency(analytics.averageQuote)}</div>
+                <div>Average Job Value</div>
+                <div>Per quote</div>
               </div>
 
               {/* Pending Quotes Card */}
-              <div className="card-flat bg-paint-trim/5 border border-paint-trim/20 p-4 text-center">
-                <div className="w-12 h-12 bg-paint-trim rounded-flat-lg flex items-center justify-center mx-auto mb-3">
-                  <Calendar className="icon-flat text-white" />
+              <div>
+                <div>
+                  <Calendar />
                 </div>
-                <div className="text-flat-3xl font-bold text-paint-trim mb-1">{analytics.pendingQuotes}</div>
-                <div className="text-flat-base font-semibold text-flat-gray-700 mb-2">Awaiting Response</div>
-                <div className="text-flat-sm font-medium text-flat-gray-600">Follow up needed</div>
+                <div>{analytics.pendingQuotes}</div>
+                <div>Awaiting Response</div>
+                <div>Follow up needed</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Secondary Navigation - Mobile-First Flat Design */}
-        <div className="mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+          <div>
             <Button
               variant="outline"
               onClick={() => router.push("/quotes")}
-              className="btn-flat-primary mobile-flat-button flex items-center justify-center gap-2"
+             
             >
-              <FileText className="icon-flat" />
-              <span className="font-semibold">View All Quotes</span>
+              <FileText />
+              <span>View All Quotes</span>
             </Button>
             <Button
               variant="outline"
               onClick={() => router.push("/insights")}
-              className="btn-flat-wall mobile-flat-button flex items-center justify-center gap-2"
+             
             >
-              <TrendingUp className="icon-flat" />
-              <span className="font-semibold">Analytics</span>
+              <TrendingUp />
+              <span>Analytics</span>
             </Button>
             <Button
               variant="outline"
               onClick={() => router.push("/settings")}
-              className="btn-flat-ceiling mobile-flat-button flex items-center justify-center gap-2"
+             
             >
-              <MessageSquare className="icon-flat" />
-              <span className="font-semibold">Settings</span>
+              <MessageSquare />
+              <span>Settings</span>
             </Button>
           </div>
         </div>
 
         {/* Quotes List - Flat Design */}
-        <Card className="card-flat shadow-flat-lg">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <span className="text-flat-2xl font-bold text-flat-gray-900">Recent Quotes ({filteredQuotes.length})</span>
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                <div className="relative">
-                  <Search className="icon-flat absolute left-3 top-1/2 transform -translate-y-1/2 text-flat-gray-400" />
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <span>Recent Quotes ({filteredQuotes.length})</span>
+              <div>
+                <div>
+                  <Search />
                   <Input
                     placeholder="Search quotes..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-full sm:w-48"
+                   
                   />
                 </div>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                 
                 >
                   <option value="all">All Status</option>
                   <option value="pending">Pending</option>
@@ -610,48 +610,48 @@ export default function DashboardPage() {
           
           <CardContent>
             {filteredQuotes.length === 0 ? (
-              <div className="text-center py-8">
-                <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 mb-4">
+              <div>
+                <FileText />
+                <p>
                   {quotes.length === 0 ? "No quotes yet" : "No quotes match your filters"}
                 </p>
                 {quotes.length === 0 && (
-                  <Button onClick={() => router.push("/create-quote")} className="bg-green-600 hover:bg-green-700">
-                    <Calculator className="w-4 h-4 mr-2" />
+                  <Button onClick={() => router.push("/create-quote")}>
+                    <Calculator />
                     Create Your First Professional Quote
                   </Button>
                 )}
               </div>
             ) : (
-              <div className="space-y-4">
+              <div>
                 {filteredQuotes.map((quote) => (
-                  <div key={quote.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
-                          <h3 className="font-semibold text-lg sm:text-base">{quote.customer_name}</h3>
-                          <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(quote.status)}`}>
+                  <div key={quote.id}>
+                    <div>
+                      <div>
+                        <div>
+                          <h3>{quote.customer_name}</h3>
+                          <span`}>
                             {quote.status || 'pending'}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600 mb-1">{quote.address}</p>
-                        <p className="text-xs text-gray-500">
+                        <p>{quote.address}</p>
+                        <p>
                           {formatDate(new Date(quote.created_at))} • {quote.time_estimate || 'Time estimate pending'}
                         </p>
                       </div>
                       
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                        <div className="text-right sm:text-left">
-                          <div className="text-xl font-bold text-green-600">
+                      <div>
+                        <div>
+                          <div>
                             {formatCurrency(quote.final_price || quote.quote_amount || 0)}
                           </div>
                         </div>
                         
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                        <div>
                           <select
                             value={quote.status || "pending"}
                             onChange={(e) => updateQuoteStatus(quote.id, e.target.value)}
-                            className="text-xs px-2 py-2 border rounded w-full sm:w-auto"
+                           
                           >
                             <option value="pending">Pending</option>
                             <option value="accepted">Accepted</option>
@@ -659,7 +659,7 @@ export default function DashboardPage() {
                             <option value="cancelled">Cancelled</option>
                           </select>
                           
-                          <div className="flex gap-2">
+                          <div>
                             <Button
                               size="sm"
                               variant="outline"
@@ -675,20 +675,20 @@ export default function DashboardPage() {
                                 }, 1500);
                               }}
                               title="Copy customer quote link"
-                              className="flex-1 sm:flex-none"
+                             
                             >
-                              <Copy className="w-4 h-4 sm:mr-0 mr-2" />
-                              <span className="sm:hidden">Copy Link</span>
+                              <Copy />
+                              <span>Copy Link</span>
                             </Button>
                             <Button
                               size="sm"
                               variant="outline"
                               onClick={() => router.push(`/quotes/${quote.id}`)}
                               title="View quote details"
-                              className="flex-1 sm:flex-none"
+                             
                             >
-                              <Eye className="w-4 h-4 sm:mr-0 mr-2" />
-                              <span className="sm:hidden">View</span>
+                              <Eye />
+                              <span>View</span>
                             </Button>
                           </div>
                         </div>

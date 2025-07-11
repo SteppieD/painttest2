@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
 import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
 import { 
   chatStyles, 
@@ -57,14 +56,14 @@ const MessageContent: React.FC<{ content: string }> = ({ content }) => {
           <a
             key={index}
             href={linkUrl}
-            className="text-blue-600 hover:text-blue-700 underline font-medium inline-flex items-center gap-1"
+           
             onClick={(e) => {
               e.preventDefault();
               window.open(linkUrl, '_blank');
             }}
           >
             {linkText}
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink />
           </a>
         );
       } else if (index % 3 === 2) {
@@ -72,12 +71,12 @@ const MessageContent: React.FC<{ content: string }> = ({ content }) => {
         return null;
       } else {
         // Regular text with markdown
-        return <MarkdownRenderer key={index} content={part} className="inline" />;
+        return <MarkdownRenderer key={index} content={part} />;
       }
     });
   };
   
-  return <div className="whitespace-pre-wrap text-sm">{renderContent(content)}</div>;
+  return <div>{renderContent(content)}</div>;
 };
 
 interface Message {
@@ -1934,47 +1933,47 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
 
   if (!companyData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div>
       {/* Header */}
-      <header className="bg-white border-b shadow-sm relative z-20">
-        <div className="px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+      <header>
+        <div>
+          <div>
+            <div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => router.push("/dashboard")}
-                className="w-10 h-10 hover:bg-gray-100"
+               
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft />
               </Button>
               
-              <div className="flex items-center gap-2">
-                <Calculator className="w-6 h-6 text-blue-600" />
-                <h1 className="text-lg font-semibold">Spreadsheet Calculator</h1>
+              <div>
+                <Calculator />
+                <h1>Spreadsheet Calculator</h1>
               </div>
               
               {/* Draft Save Indicator */}
               {draftSaved && (
-                <div className="flex items-center gap-2 text-sm text-gray-500 ml-4">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <div>
+                  <div />
                   <span>Draft saved {lastSaveTime ? `at ${lastSaveTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}</span>
                 </div>
               )}
             </div>
             
             {/* Help Button */}
-            <div className="flex items-center gap-2">
+            <div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -2005,17 +2004,17 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
                   };
                   setMessages(prev => [...prev, helpMessage]);
                 }}
-                className="flex items-center gap-2"
+               
               >
-                <HelpCircle className="w-4 h-4" />
-                <span className="hidden sm:inline">Help</span>
+                <HelpCircle />
+                <span>Help</span>
               </Button>
             </div>
             
             {quoteData.calculation && (
-              <div className="text-right">
-                <div className="text-sm text-gray-600">Total Quote</div>
-                <div className="text-lg font-bold text-blue-600">
+              <div>
+                <div>Total Quote</div>
+                <div>
                   ${((quoteData.calculation as any).total_cost || quoteData.calculation.revenue?.total || 0).toFixed(2)}
                 </div>
               </div>
@@ -2026,44 +2025,44 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
 
       {/* Quick Actions Card - Shows after saving */}
       {savedQuoteId && conversationStage === 'complete' && (
-        <div className="bg-green-50 border-b border-green-200 p-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                  <Save className="w-4 h-4 text-green-600" />
+        <div>
+          <div>
+            <div>
+              <div>
+                <div>
+                  <Save />
                 </div>
                 <div>
-                  <p className="font-medium text-green-900">Quote Saved Successfully!</p>
-                  <p className="text-sm text-green-700">Quote ID: {savedQuoteId}</p>
+                  <p>Quote Saved Successfully!</p>
+                  <p>Quote ID: {savedQuoteId}</p>
                 </div>
               </div>
-              <div className="flex gap-2 flex-wrap">
+              <div>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => router.push(`/quotes/${savedQuoteId}/review`)}
-                  className="flex items-center gap-2"
+                 
                 >
-                  <FileText className="w-4 h-4" />
+                  <FileText />
                   Review & Edit
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => router.push(`/quotes/${savedQuoteId}/customer`)}
-                  className="flex items-center gap-2"
+                 
                 >
-                  <Users className="w-4 h-4" />
+                  <Users />
                   Customer View
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => window.open(`/api/quotes/${savedQuoteId}/pdf`, '_blank')}
-                  className="flex items-center gap-2"
+                 
                 >
-                  <ExternalLink className="w-4 h-4" />
+                  <ExternalLink />
                   Download PDF
                 </Button>
               </div>
@@ -2073,11 +2072,11 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
       )}
 
       {/* Progress Indicator */}
-      <div className={chatStyles.progressContainer}>
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-3">
-            <Progress value={getProgressPercentage(conversationStage)} className="flex-1 h-2" />
-            <span className="text-sm text-gray-600 min-w-fit">
+      <div>
+        <div>
+          <div>
+            <Progress value={getProgressPercentage(conversationStage)} />
+            <span>
               {getStageLabel(conversationStage)}
             </span>
           </div>
@@ -2085,47 +2084,36 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 max-w-4xl mx-auto w-full">
+      <div>
+        <div>
           {messages.map((message) => (
-            <div key={message.id} className={chatStyles.messageContainer}>
+            <div key={message.id}>
               {/* Avatar for assistant */}
               {message.role === 'assistant' && (
-                <div className={chatStyles.assistantAvatar}>
-                  <Sparkles className="w-4 h-4" />
+                <div>
+                  <Sparkles />
                 </div>
               )}
               
-              <div className={cn(
-                "flex flex-col max-w-[85%] lg:max-w-[70%]",
-                message.role === 'user' ? "items-end" : "items-start"
-              )}>
+              <div>
                 {/* Message bubble */}
                 <div
-                  className={cn(
-                    "transition-all duration-200 hover:shadow-md",
-                    message.role === 'user'
-                      ? chatStyles.userMessage
-                      : chatStyles.assistantMessage
-                  )}
+                 
                 >
                   {message.role === 'assistant' ? (
-                    <div className="p-4">
+                    <div>
                       <div 
                         dangerouslySetInnerHTML={{ __html: renderMarkdown(message.content) }} 
-                        className="prose-sm text-gray-700 [&_strong]:font-semibold [&_strong]:text-gray-900"
+                       
                       />
                     </div>
                   ) : (
-                    <div className="text-sm leading-relaxed">{message.content}</div>
+                    <div>{message.content}</div>
                   )}
                 </div>
                 
                 {/* Timestamp */}
-                <div className={cn(
-                  "text-xs mt-1 px-2",
-                  message.role === 'user' ? "text-gray-500" : "text-gray-400"
-                )}>
+                <div>
                   {new Date(message.timestamp).toLocaleTimeString([], { 
                     hour: '2-digit', 
                     minute: '2-digit' 
@@ -2135,19 +2123,19 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
               
               {/* Avatar for user */}
               {message.role === 'user' && (
-                <div className={chatStyles.userAvatar}>
-                  <User className="w-4 h-4" />
+                <div>
+                  <User />
                 </div>
               )}
             </div>
           ))}
           
           {isLoading && (
-            <div className="flex gap-3 justify-start">
-              <div className="bg-white border p-4 rounded-lg rounded-bl-sm shadow-sm">
-                <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="text-sm text-gray-500">Calculating...</span>
+            <div>
+              <div>
+                <div>
+                  <Loader2 />
+                  <span>Calculating...</span>
                 </div>
               </div>
             </div>
@@ -2157,20 +2145,20 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
         </div>
 
         {/* Input Area */}
-        <div className="bg-white border-t p-4">
-          <div className="max-w-4xl mx-auto">
+        <div>
+          <div>
             {/* Quick actions */}
             {getQuickActions(conversationStage).length > 0 && (
-              <div className="mb-2 p-2 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs text-gray-500">Quick actions:</span>
+              <div>
+                <div>
+                  <span>Quick actions:</span>
                   {getQuickActions(conversationStage).map((action, index) => (
                     <Button
                       key={index}
                       variant="outline"
                       size="sm"
                       onClick={() => setInputValue(action.value)}
-                      className={chatStyles.quickActionButton}
+                     
                       disabled={isLoading}
                     >
                       {action.label}
@@ -2181,24 +2169,24 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
             )}
             
             {/* Input field with contextual help */}
-            <div className={chatStyles.inputContainer}>
-              <div className="flex items-end gap-2">
-                <div className="relative flex-1">
+            <div>
+              <div>
+                <div>
                   <Input
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder={getInputPlaceholder(conversationStage)}
                     disabled={isLoading}
-                    className="border-0 focus:ring-0 p-0 pr-8 text-sm"
+                   
                   />
                   
                   {/* Contextual help tooltip */}
                   {conversationStage !== 'complete' && (
-                    <div className="absolute right-2 top-1/2 -translate-y-1/2 group">
-                      <HelpCircle className="w-4 h-4 text-gray-400 cursor-help" />
-                      <div className="absolute right-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto z-50">
-                        <div className="font-semibold mb-1">💡 Tip for this step:</div>
+                    <div>
+                      <HelpCircle />
+                      <div>
+                        <div>💡 Tip for this step:</div>
                         {conversationStage === 'greeting' && (
                           <div>Start by telling me the customer name and address. Example: "John Smith at 123 Main Street"</div>
                         )}
@@ -2223,7 +2211,7 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
                         {conversationStage === 'quote_review' && (
                           <div>Review the quote and tell me if you need any changes!</div>
                         )}
-                        <div className="absolute bottom-[-6px] right-4 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-gray-900"></div>
+                        <div></div>
                       </div>
                     </div>
                   )}
@@ -2233,28 +2221,23 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
                   onClick={handleSend}
                   disabled={!inputValue.trim() || isLoading}
                   size="icon"
-                  className={cn(
-                    "h-9 w-9 transition-all duration-200",
-                    inputValue.trim() && !isLoading
-                      ? "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
-                      : "bg-gray-100 text-gray-400"
-                  )}
+                 
                 >
                   {isLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 />
                   ) : (
-                    <Send className="w-4 h-4" />
+                    <Send />
                   )}
                 </Button>
               </div>
               
               {/* AI indicator */}
-              <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-3 h-3" />
+              <div>
+                <div>
+                  <Sparkles />
                   <span>Powered by Claude Sonnet 4</span>
                 </div>
-                <span className="text-gray-400">
+                <span>
                   Press Enter to send
                 </span>
               </div>

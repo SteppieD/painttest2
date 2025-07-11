@@ -150,10 +150,10 @@ export default function QuoteAdminPage({ params }: { params: { id: string } }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading quote...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading quote...</p>
         </div>
       </div>
     );
@@ -161,11 +161,11 @@ export default function QuoteAdminPage({ params }: { params: { id: string } }) {
 
   if (!quote) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="p-8 text-center">
-            <h2 className="text-xl font-semibold mb-2">Quote Not Found</h2>
-            <p className="text-gray-600 mb-4">The quote you're looking for doesn't exist.</p>
+      <div>
+        <Card>
+          <CardContent>
+            <h2>Quote Not Found</h2>
+            <p>The quote you're looking for doesn't exist.</p>
             <Button onClick={() => router.back()}>Go Back</Button>
           </CardContent>
         </Card>
@@ -176,32 +176,32 @@ export default function QuoteAdminPage({ params }: { params: { id: string } }) {
   const finalPrice = quote.final_price || quote.total_cost || 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+      <div>
+        <div>
+          <div>
+            <div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => router.push('/admin')}
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft />
               </Button>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Quote Management</h1>
-                <p className="text-sm text-gray-500">Quote #{quote.quote_id}</p>
+                <h1>Quote Management</h1>
+                <p>Quote #{quote.quote_id}</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={copyCustomerLink}
               >
-                <Copy className="w-4 h-4 mr-2" />
+                <Copy />
                 Customer Link
               </Button>
               <Button
@@ -209,7 +209,7 @@ export default function QuoteAdminPage({ params }: { params: { id: string } }) {
                 size="sm"
                 onClick={() => window.open(`/quotes/${quote.quote_id}/customer`, '_blank')}
               >
-                <Eye className="w-4 h-4 mr-2" />
+                <Eye />
                 Preview
               </Button>
             </div>
@@ -217,38 +217,38 @@ export default function QuoteAdminPage({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto p-4 py-8">
+      <div>
         {/* Quote Overview */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div>
           {/* Customer Info */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <User />
                 Customer Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4 text-gray-400" />
-                <span className="font-medium">{quote.customer_name}</span>
+            <CardContent>
+              <div>
+                <User />
+                <span>{quote.customer_name}</span>
               </div>
-              <div className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-gray-400 mt-0.5" />
-                <span className="text-sm text-gray-600">{quote.address}</span>
+              <div>
+                <MapPin />
+                <span>{quote.address}</span>
               </div>
               {quote.customer_email && (
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-gray-400" />
-                  <a href={`mailto:${quote.customer_email}`} className="text-sm text-blue-600 hover:underline">
+                <div>
+                  <Mail />
+                  <a href={`mailto:${quote.customer_email}`}>
                     {quote.customer_email}
                   </a>
                 </div>
               )}
               {quote.customer_phone && (
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-gray-400" />
-                  <a href={`tel:${quote.customer_phone}`} className="text-sm text-blue-600 hover:underline">
+                <div>
+                  <Phone />
+                  <a href={`tel:${quote.customer_phone}`}>
                     {quote.customer_phone}
                   </a>
                 </div>
@@ -259,27 +259,27 @@ export default function QuoteAdminPage({ params }: { params: { id: string } }) {
           {/* Project Info */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-green-600" />
+              <CardTitle>
+                <FileText />
                 Project Details
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-gray-400" />
-                <span className="font-medium capitalize">{quote.project_type} Painting</span>
+            <CardContent>
+              <div>
+                <FileText />
+                <span>{quote.project_type} Painting</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-gray-400" />
-                <span className="text-sm text-gray-600">{quote.timeline || '3-5 Business Days'}</span>
+              <div>
+                <Calendar />
+                <span>{quote.timeline || '3-5 Business Days'}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-gray-400" />
-                <span className="text-sm text-gray-600">Created {formatDate(quote.created_at)}</span>
+              <div>
+                <Clock />
+                <span>Created {formatDate(quote.created_at)}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-4 h-4 text-gray-400" />
-                <span className="font-bold text-lg text-green-600">{formatCurrency(finalPrice)}</span>
+              <div>
+                <DollarSign />
+                <span>{formatCurrency(finalPrice)}</span>
               </div>
             </CardContent>
           </Card>
@@ -287,19 +287,19 @@ export default function QuoteAdminPage({ params }: { params: { id: string } }) {
           {/* Status */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Badge className="w-5 h-5" />
+              <CardTitle>
+                <Badge />
                 Quote Status
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Status:</span>
+            <CardContent>
+              <div>
+                <span>Status:</span>
                 <Badge variant={quote.status === 'accepted' ? 'default' : 'secondary'}>
                   {quote.status || 'Pending'}
                 </Badge>
               </div>
-              <div className="text-sm text-gray-600">
+              <div>
                 Quote expires: {new Date(new Date(quote.created_at).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}
               </div>
             </CardContent>
@@ -307,17 +307,17 @@ export default function QuoteAdminPage({ params }: { params: { id: string } }) {
         </div>
 
         {/* Email Delivery Section */}
-        <Card className="mb-6">
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Mail className="w-5 h-5 text-blue-600" />
+            <CardTitle>
+              <Mail />
               Email Quote Delivery
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+          <CardContent>
+            <div>
+              <div>
+                <label>
                   Recipient Email Address
                 </label>
                 <Input
@@ -325,27 +325,27 @@ export default function QuoteAdminPage({ params }: { params: { id: string } }) {
                   value={emailAddress}
                   onChange={(e) => setEmailAddress(e.target.value)}
                   placeholder="customer@example.com"
-                  className="w-full"
+                 
                 />
               </div>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
               {/* Send Quote Email */}
-              <div className="space-y-2">
+              <div>
                 <Button
                   onClick={() => sendEmail('send_quote')}
                   disabled={isSendingEmail || !emailAddress.trim()}
-                  className="w-full bg-blue-600 hover:bg-blue-700"
+                 
                 >
                   {isSendingEmail ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                      <div />
                       Sending...
                     </>
                   ) : (
                     <>
-                      <Send className="w-4 h-4 mr-2" />
+                      <Send />
                       Send Quote
                     </>
                   )}
@@ -354,53 +354,53 @@ export default function QuoteAdminPage({ params }: { params: { id: string } }) {
                   variant="outline"
                   size="sm"
                   onClick={() => previewEmail('send_quote')}
-                  className="w-full"
+                 
                 >
-                  <Eye className="w-4 h-4 mr-2" />
+                  <Eye />
                   Preview
                 </Button>
               </div>
 
               {/* Send Follow-up */}
-              <div className="space-y-2">
+              <div>
                 <Button
                   onClick={() => sendEmail('follow_up')}
                   disabled={isSendingEmail || !emailAddress.trim()}
                   variant="outline"
-                  className="w-full"
+                 
                 >
-                  <Mail className="w-4 h-4 mr-2" />
+                  <Mail />
                   Follow-up
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => previewEmail('follow_up')}
-                  className="w-full"
+                 
                 >
-                  <Eye className="w-4 h-4 mr-2" />
+                  <Eye />
                   Preview
                 </Button>
               </div>
 
               {/* Acceptance Confirmation */}
-              <div className="space-y-2">
+              <div>
                 <Button
                   onClick={() => sendEmail('acceptance_confirmation')}
                   disabled={isSendingEmail || !emailAddress.trim()}
                   variant="outline"
-                  className="w-full"
+                 
                 >
-                  <Mail className="w-4 h-4 mr-2" />
+                  <Mail />
                   Confirmation
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => previewEmail('acceptance_confirmation')}
-                  className="w-full"
+                 
                 >
-                  <Eye className="w-4 h-4 mr-2" />
+                  <Eye />
                   Preview
                 </Button>
               </div>
@@ -411,37 +411,37 @@ export default function QuoteAdminPage({ params }: { params: { id: string } }) {
         {/* Document Actions */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Download className="w-5 h-5 text-green-600" />
+            <CardTitle>
+              <Download />
               Document Actions
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
               <Button
                 onClick={downloadPDF}
                 variant="outline"
-                className="flex items-center justify-center gap-2"
+               
               >
-                <Download className="w-4 h-4" />
+                <Download />
                 Download PDF
               </Button>
               
               <Button
                 onClick={() => window.open(`/quotes/${quote.quote_id}/customer`, '_blank')}
                 variant="outline"
-                className="flex items-center justify-center gap-2"
+               
               >
-                <Eye className="w-4 h-4" />
+                <Eye />
                 Customer View
               </Button>
               
               <Button
                 onClick={copyCustomerLink}
                 variant="outline"
-                className="flex items-center justify-center gap-2"
+               
               >
-                <Copy className="w-4 h-4" />
+                <Copy />
                 Copy Link
               </Button>
             </div>

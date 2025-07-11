@@ -147,48 +147,48 @@ export default function BlogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
       <KofiHeader />
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto text-center max-w-4xl">
-          <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <BookOpen className="w-4 h-4" />
+      <section>
+        <div>
+          <div>
+            <BookOpen />
             <span>Expert Painting Business Insights</span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Painting Business <span className="text-blue-600">Success Stories</span> & Expert Tips
+          <h1>
+            Painting Business <span>Success Stories</span> & Expert Tips
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
+          <p>
             Learn from successful painting contractors who've grown their businesses. 
             Get practical advice, proven strategies, and industry insights delivered weekly.
           </p>
           
           {/* Search Bar */}
-          <div className="max-w-md mx-auto mb-8">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <div>
+            <div>
+              <Search />
               <Input 
                 type="text" 
                 placeholder="Search painting business topics..."
-                className="pl-10 pr-4 py-3 rounded-full border-2 border-gray-200 focus:border-blue-500"
+               
               />
             </div>
           </div>
           
-          <div className="flex items-center justify-center gap-8 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-green-500" />
+          <div>
+            <div>
+              <TrendingUp />
               <span>48 Business Growth Articles</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Star className="w-5 h-5 text-yellow-500" />
+            <div>
+              <Star />
               <span>Expert-Vetted Content</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-blue-500" />
+            <div>
+              <Calendar />
               <span>Updated Weekly</span>
             </div>
           </div>
@@ -196,47 +196,47 @@ export default function BlogPage() {
       </section>
 
       {/* Featured Posts Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Featured Articles
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Most popular insights from successful painting contractors
             </p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div>
             {featuredPosts.map((post, index) => (
-              <Card key={post.id} className={`border-0 shadow-lg hover:shadow-xl transition-shadow ${index === 0 ? 'lg:col-span-2 lg:row-span-2' : ''}`}>
-                <div className="relative">
+              <Card key={post.id}`}>
+                <div>
                   {/* Category Badge */}
-                  <div className="absolute top-4 left-4 z-10">
-                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  <div>
+                    <span>
                       Featured
                     </span>
                   </div>
                   
                   {/* Featured Image Placeholder */}
-                  <div className={`bg-gradient-to-br from-blue-100 to-indigo-100 ${index === 0 ? 'h-64' : 'h-48'} flex items-center justify-center`}>
-                    <BookOpen className="w-16 h-16 text-blue-600" />
+                  <div flex items-center justify-center`}>
+                    <BookOpen />
                   </div>
                 </div>
                 
                 <CardHeader>
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-2">
-                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+                  <div>
+                    <span>
                       {post.category}
                     </span>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
+                    <div>
+                      <Clock />
                       <span>{post.readTime}</span>
                     </div>
                     <span>{formatDate(post.date)}</span>
                   </div>
                   
-                  <CardTitle className={`${index === 0 ? 'text-2xl' : 'text-xl'} hover:text-blue-600 transition-colors`}>
+                  <CardTitle hover:text-blue-600 transition-colors`}>
                     <Link href={`/blog/${post.slug}`}>
                       {post.title}
                     </Link>
@@ -244,11 +244,11 @@ export default function BlogPage() {
                 </CardHeader>
                 
                 <CardContent>
-                  <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                  <Button variant="outline" asChild className="w-full">
+                  <p>{post.excerpt}</p>
+                  <Button variant="outline" asChild>
                     <Link href={`/blog/${post.slug}`}>
                       Read Full Article
-                      <ArrowRight className="w-4 h-4 ml-2" />
+                      <ArrowRight />
                     </Link>
                   </Button>
                 </CardContent>
@@ -259,16 +259,16 @@ export default function BlogPage() {
       </section>
 
       {/* Main Content Grid */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <section>
+        <div>
+          <div>
             {/* Recent Posts */}
-            <div className="lg:col-span-3">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">Recent Articles</h2>
-                <div className="flex items-center gap-2">
-                  <Filter className="w-5 h-5 text-gray-400" />
-                  <select className="border rounded-lg px-3 py-2 text-sm">
+            <div>
+              <div>
+                <h2>Recent Articles</h2>
+                <div>
+                  <Filter />
+                  <select>
                     <option>All Categories</option>
                     <option>Business Growth</option>
                     <option>Pricing Strategy</option>
@@ -278,44 +278,44 @@ export default function BlogPage() {
                 </div>
               </div>
               
-              <div className="space-y-6">
+              <div>
                 {recentPosts.map((post) => (
-                  <Card key={post.id} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <Card key={post.id}>
+                    <div>
                       {/* Image */}
-                      <div className="md:col-span-1">
-                        <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-48 md:h-full rounded-lg flex items-center justify-center">
-                          <BookOpen className="w-8 h-8 text-gray-400" />
+                      <div>
+                        <div>
+                          <BookOpen />
                         </div>
                       </div>
                       
                       {/* Content */}
-                      <div className="md:col-span-3 p-6">
-                        <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
+                      <div>
+                        <div>
+                          <span>
                             {post.category}
                           </span>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
+                          <div>
+                            <Clock />
                             <span>{post.readTime}</span>
                           </div>
                           <span>{formatDate(post.date)}</span>
                         </div>
                         
-                        <h3 className="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
+                        <h3>
                           <Link href={`/blog/${post.slug}`}>
                             {post.title}
                           </Link>
                         </h3>
                         
-                        <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                        <p>{post.excerpt}</p>
                         
                         <Link 
                           href={`/blog/${post.slug}`}
-                          className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
+                         
                         >
                           Read More
-                          <ChevronRight className="w-4 h-4 ml-1" />
+                          <ChevronRight />
                         </Link>
                       </div>
                     </div>
@@ -325,43 +325,43 @@ export default function BlogPage() {
             </div>
 
             {/* Sidebar */}
-            <div className="lg:col-span-1 space-y-8">
+            <div>
               {/* Newsletter Signup */}
-              <Card className="border-0 shadow-lg">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-xl">Weekly Business Tips</CardTitle>
+                  <CardTitle>Weekly Business Tips</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">
+                  <p>
                     Get expert painting business advice delivered to your inbox every Tuesday.
                   </p>
-                  <div className="space-y-3">
+                  <div>
                     <Input type="email" placeholder="Your email address" />
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    <Button>
                       Subscribe Free
                     </Button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p>
                     Join 2,500+ contractors. Unsubscribe anytime.
                   </p>
                 </CardContent>
               </Card>
 
               {/* Categories */}
-              <Card className="border-0 shadow-lg">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-xl">Categories</CardTitle>
+                  <CardTitle>Categories</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div>
                     {categories.map((category) => (
                       <Link 
                         key={category.name}
                         href={`/blog/category/${category.name.toLowerCase().replace(' ', '-')}`}
-                        className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                       
                       >
-                        <span className="font-medium text-gray-900">{category.name}</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${category.color}`}>
+                        <span>{category.name}</span>
+                        <span`}>
                           {category.count}
                         </span>
                       </Link>
@@ -371,19 +371,19 @@ export default function BlogPage() {
               </Card>
 
               {/* Popular Tags */}
-              <Card className="border-0 shadow-lg">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-xl">Popular Topics</CardTitle>
+                  <CardTitle>Popular Topics</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-wrap gap-2">
+                  <div>
                     {['Pricing', 'Quotes', 'Marketing', 'Software', 'Business Growth', 'Customer Service', 'Mobile Apps', 'Profit Margins'].map((tag) => (
                       <Link 
                         key={tag}
                         href={`/blog/tag/${tag.toLowerCase()}`}
-                        className="inline-flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm transition-colors"
+                       
                       >
-                        <Tag className="w-3 h-3" />
+                        <Tag />
                         {tag}
                       </Link>
                     ))}
@@ -396,22 +396,22 @@ export default function BlogPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-blue-600">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+      <section>
+        <div>
+          <h2>
             Ready to Put These Tips Into Action?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p>
             Start creating professional quotes that win more jobs. 
             Join thousands of contractors who've transformed their businesses.
           </p>
-          <Button size="lg" variant="outline_white" asChild className="text-lg px-8 py-6">
+          <Button size="lg" variant="outline_white" asChild>
             <Link href="/trial-signup">
               Start Free Trial Today
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <ArrowRight />
             </Link>
           </Button>
-          <p className="text-blue-200 mt-4 text-sm">
+          <p>
             1 Free Quote • No credit card required • Setup in 5 minutes
           </p>
         </div>

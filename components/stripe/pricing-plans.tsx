@@ -45,28 +45,28 @@ export function PricingPlans({
   ];
 
   return (
-    <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+    <div>
       {plans.map((plan) => (
-        <Card key={plan.planType} className={plan.badge ? 'border-2 border-blue-500' : ''}>
+        <Card key={plan.planType}>
           {plan.badge && (
-            <div className="bg-blue-500 text-white text-center py-2 text-sm font-semibold">
+            <div>
               {plan.badge}
             </div>
           )}
           <CardHeader>
-            <CardTitle className="text-2xl">{plan.name}</CardTitle>
+            <CardTitle>{plan.name}</CardTitle>
             <CardDescription>{plan.description}</CardDescription>
-            <div className="mt-4">
-              <span className="text-4xl font-bold">${plan.price}</span>
-              <span className="text-gray-600">/{plan.period}</span>
+            <div>
+              <span>${plan.price}</span>
+              <span>/{plan.period}</span>
             </div>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-3">
+            <ul>
               {features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-sm">{feature}</span>
+                <li key={index}>
+                  <CheckCircle />
+                  <span>{feature}</span>
                 </li>
               ))}
             </ul>
@@ -79,7 +79,7 @@ export function PricingPlans({
                 buttonText={`Start ${plan.name} Plan`}
               />
             ) : (
-              <p className="text-center text-sm text-gray-600 w-full">
+              <p>
                 Sign in to subscribe
               </p>
             )}

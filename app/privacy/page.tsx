@@ -10,25 +10,25 @@ export const metadata = generatePageMetadata({
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       <KofiHeader />
       
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className="bg-white rounded-lg shadow-sm p-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-6">Privacy Policy</h1>
-            <p className="text-gray-600 mb-8">Last updated: January 2, 2025</p>
+      <section>
+        <div>
+          <div>
+            <h1>Privacy Policy</h1>
+            <p>Last updated: January 2, 2025</p>
             
-            <div className="prose prose-lg max-w-none">
-              <p className="text-lg text-gray-700 mb-8">
+            <div>
+              <p>
                 At ProPaint Quote (paintquoteapp.com), we are committed to protecting your privacy and personal information. 
                 This Privacy Policy explains how we collect, use, store, and protect your information when you use our painting contractor software platform.
               </p>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">1. Information We Collect</h2>
+              <h2>1. Information We Collect</h2>
               
-              <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-3">1.1 Information You Provide</h3>
-              <ul className="list-disc pl-6 mb-4 text-gray-700">
+              <h3>1.1 Information You Provide</h3>
+              <ul>
                 <li>Account information (name, email address, company details)</li>
                 <li>Profile information (business location, services offered)</li>
                 <li>Quote and project data you create</li>
@@ -37,8 +37,8 @@ export default function PrivacyPage() {
                 <li>Communications with our support team</li>
               </ul>
 
-              <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-3">1.2 Information We Collect Automatically</h3>
-              <ul className="list-disc pl-6 mb-4 text-gray-700">
+              <h3>1.2 Information We Collect Automatically</h3>
+              <ul>
                 <li>Usage data (features used, time spent, clicks)</li>
                 <li>Device information (browser type, operating system)</li>
                 <li>Log data (IP address, access times, pages viewed)</li>
@@ -46,8 +46,8 @@ export default function PrivacyPage() {
                 <li>Performance and analytics data</li>
               </ul>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">2. How We Use Your Information</h2>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
+              <h2>2. How We Use Your Information</h2>
+              <ul>
                 <li>Provide and maintain our painting quote software</li>
                 <li>Process your quotes and manage your account</li>
                 <li>Improve our services and develop new features</li>
@@ -58,10 +58,10 @@ export default function PrivacyPage() {
                 <li>Comply with legal obligations</li>
               </ul>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">3. Information Sharing and Disclosure</h2>
+              <h2>3. Information Sharing and Disclosure</h2>
               
-              <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-3">We do NOT sell your personal information. We may share information only in these circumstances:</h3>
-              <ul className="list-disc pl-6 mb-4 text-gray-700">
+              <h3>We do NOT sell your personal information. We may share information only in these circumstances:</h3>
+              <ul>
                 <li><strong>Service Providers:</strong> Trusted third parties who help us operate our service (hosting, analytics, payment processing)</li>
                 <li><strong>Legal Requirements:</strong> When required by law, court order, or government regulation</li>
                 <li><strong>Business Transfers:</strong> In connection with mergers, acquisitions, or asset sales</li>
@@ -69,8 +69,8 @@ export default function PrivacyPage() {
                 <li><strong>With Your Consent:</strong> When you explicitly authorize us to share information</li>
               </ul>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">4. Data Storage and Security</h2>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
+              <h2>4. Data Storage and Security</h2>
+              <ul>
                 <li>We use industry-standard security measures including encryption</li>
                 <li>Data is stored on secure servers with restricted access</li>
                 <li>Regular security audits and updates</li>
@@ -78,8 +78,8 @@ export default function PrivacyPage() {
                 <li>While we implement strong security measures, no system is 100% secure</li>
               </ul>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">5. Data Retention</h2>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
+              <h2>5. Data Retention</h2>
+              <ul>
                 <li>Account data: Retained while your account is active</li>
                 <li>Quote data: Retained for 7 years for business records</li>
                 <li>Usage logs: Retained for 90 days for performance analysis</li>
@@ -87,10 +87,10 @@ export default function PrivacyPage() {
                 <li>Legal requirements may require longer retention periods</li>
               </ul>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">6. Your Rights and Choices</h2>
+              <h2>6. Your Rights and Choices</h2>
               
-              <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-3">You have the right to:</h3>
-              <ul className="list-disc pl-6 mb-4 text-gray-700">
+              <h3>You have the right to:</h3>
+              <ul>
                 <li>Access your personal information</li>
                 <li>Correct inaccurate information</li>
                 <li>Delete your account and associated data</li>
@@ -100,58 +100,58 @@ export default function PrivacyPage() {
                 <li>Data portability (receive your data in a standard format)</li>
               </ul>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">7. Cookies and Tracking</h2>
-              <p className="text-gray-700 mb-4">
+              <h2>7. Cookies and Tracking</h2>
+              <p>
                 We use cookies and similar technologies to enhance your experience:
               </p>
-              <ul className="list-disc pl-6 mb-4 text-gray-700">
+              <ul>
                 <li><strong>Essential Cookies:</strong> Required for the service to function</li>
                 <li><strong>Analytics Cookies:</strong> Help us understand how you use our service</li>
                 <li><strong>Preference Cookies:</strong> Remember your settings and preferences</li>
               </ul>
-              <p className="text-gray-700 mb-6">
+              <p>
                 You can control cookies through your browser settings, though this may affect functionality.
               </p>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">8. International Data Transfers</h2>
-              <p className="text-gray-700 mb-6">
+              <h2>8. International Data Transfers</h2>
+              <p>
                 Our services are hosted in the United States. If you access our service from outside the US, 
                 your information may be transferred to and stored in the US. We ensure appropriate safeguards 
                 are in place for international transfers.
               </p>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">9. Compliance with Privacy Laws</h2>
-              <p className="text-gray-700 mb-4">We comply with applicable privacy laws including:</p>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
+              <h2>9. Compliance with Privacy Laws</h2>
+              <p>We comply with applicable privacy laws including:</p>
+              <ul>
                 <li>General Data Protection Regulation (GDPR) for EU users</li>
                 <li>California Consumer Privacy Act (CCPA) for California residents</li>
                 <li>Other applicable state and federal privacy laws</li>
               </ul>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">10. Children's Privacy</h2>
-              <p className="text-gray-700 mb-6">
+              <h2>10. Children's Privacy</h2>
+              <p>
                 Our service is designed for business use and is not intended for children under 13. 
                 We do not knowingly collect personal information from children under 13.
               </p>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">11. Changes to This Policy</h2>
-              <p className="text-gray-700 mb-6">
+              <h2>11. Changes to This Policy</h2>
+              <p>
                 We may update this Privacy Policy periodically. We will notify you of significant changes 
                 via email or through our service. Your continued use constitutes acceptance of the updated policy.
               </p>
 
-              <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">12. Contact Us</h2>
-              <p className="text-gray-700 mb-4">
+              <h2>12. Contact Us</h2>
+              <p>
                 If you have questions about this Privacy Policy or want to exercise your rights, contact us:
               </p>
-              <ul className="list-none mb-6 text-gray-700">
+              <ul>
                 <li>Email: hello@paintquoteapp.com</li>
                 <li>Website: paintquoteapp.com/contact</li>
               </ul>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
-                <h3 className="text-lg font-semibold text-blue-800 mb-2">Quick Summary</h3>
-                <p className="text-blue-700">
+              <div>
+                <h3>Quick Summary</h3>
+                <p>
                   We collect only necessary information to provide our painting quote software, 
                   protect your data with industry-standard security, never sell your information, 
                   and give you full control over your data. You can delete your account anytime.

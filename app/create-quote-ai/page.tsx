@@ -284,44 +284,40 @@ export default function CreateQuoteAIPage() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div>
       {/* Header */}
-      <header className="bg-white border-b shadow-sm">
-        <div className="px-4 py-3">
-          <div className="flex items-center gap-3">
+      <header>
+        <div>
+          <div>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => router.push("/dashboard")}
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft />
             </Button>
             <div>
-              <h1 className="text-xl font-semibold">AI Quote Assistant</h1>
-              <p className="text-xs text-gray-500">Powered by GPT-4o mini</p>
+              <h1>AI Quote Assistant</h1>
+              <p>Powered by GPT-4o mini</p>
             </div>
           </div>
         </div>
       </header>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="max-w-2xl mx-auto space-y-4">
+      <div>
+        <div>
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+             `}
             >
               <div
-                className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-                  message.role === 'user'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-white border'
-                }`}
+               `}
               >
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                <p>{message.content}</p>
                 {message.data && (
-                  <p className="text-xs opacity-70 mt-1">
+                  <p>
                     {JSON.stringify(message.data)}
                   </p>
                 )}
@@ -331,12 +327,12 @@ export default function CreateQuoteAIPage() {
 
           {/* Typing indicator */}
           {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-white border rounded-2xl px-4 py-2">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            <div>
+              <div>
+                <div>
+                  <div />
+                  <div />
+                  <div />
                 </div>
               </div>
             </div>
@@ -344,7 +340,7 @@ export default function CreateQuoteAIPage() {
 
           {/* Quick suggestions */}
           {showSuggestions && quickSuggestions[stage as keyof typeof quickSuggestions] && (
-            <div className="flex flex-wrap gap-2">
+            <div>
               {quickSuggestions[stage as keyof typeof quickSuggestions].map((suggestion, idx) => (
                 <button
                   key={idx}
@@ -352,7 +348,7 @@ export default function CreateQuoteAIPage() {
                     setInput(suggestion);
                     handleSend();
                   }}
-                  className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+                 
                 >
                   {suggestion}
                 </button>
@@ -365,9 +361,9 @@ export default function CreateQuoteAIPage() {
       </div>
 
       {/* Input */}
-      <div className="bg-white border-t p-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex gap-2">
+      <div>
+        <div>
+          <div>
             <input
               ref={inputRef}
               type="text"
@@ -375,18 +371,18 @@ export default function CreateQuoteAIPage() {
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Type your message..."
-              className="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+             
               disabled={isLoading}
             />
             <Button
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
-              className="rounded-full w-10 h-10 p-0"
+             
             >
               {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 />
               ) : (
-                <Send className="w-4 h-4" />
+                <Send />
               )}
             </Button>
           </div>

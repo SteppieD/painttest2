@@ -140,82 +140,78 @@ Anyone interested? Drop a comment or DM me!`
   const completionRate = (completedTasks.length / 25) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+    <div>
+      <div>
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold text-gray-900">Contractor Outreach Plan</h1>
-            <Link href="/dashboard" className="text-orange-600 hover:text-orange-700">
+        <div>
+          <div>
+            <h1>Contractor Outreach Plan</h1>
+            <Link href="/dashboard">
               Back to Dashboard
             </Link>
           </div>
           
           {/* Progress Bar */}
-          <div className="mb-4">
-            <div className="flex justify-between text-sm text-gray-600 mb-2">
+          <div>
+            <div>
               <span>Progress</span>
               <span>{completedTasks.length}/25 Tasks Complete</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
+            <div>
               <div 
-                className="bg-orange-600 h-3 rounded-full transition-all duration-300"
+               
                 style={{ width: `${completionRate}%` }}
               />
             </div>
           </div>
 
           {/* Key Metrics Goals */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-            <div className="bg-orange-50 p-4 rounded-lg">
-              <Target className="text-orange-600 mb-2" size={24} />
-              <div className="text-2xl font-bold text-gray-900">20</div>
-              <div className="text-sm text-gray-600">Beta Users Goal</div>
+          <div>
+            <div>
+              <Target size={24} />
+              <div>20</div>
+              <div>Beta Users Goal</div>
             </div>
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <Users className="text-blue-600 mb-2" size={24} />
-              <div className="text-2xl font-bold text-gray-900">50</div>
-              <div className="text-sm text-gray-600">Contractors to Contact</div>
+            <div>
+              <Users size={24} />
+              <div>50</div>
+              <div>Contractors to Contact</div>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <TrendingUp className="text-green-600 mb-2" size={24} />
-              <div className="text-2xl font-bold text-gray-900">25%</div>
-              <div className="text-sm text-gray-600">Target Conversion</div>
+            <div>
+              <TrendingUp size={24} />
+              <div>25%</div>
+              <div>Target Conversion</div>
             </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <DollarSign className="text-purple-600 mb-2" size={24} />
-              <div className="text-2xl font-bold text-gray-900">$1,580</div>
-              <div className="text-sm text-gray-600">Potential MRR</div>
+            <div>
+              <DollarSign size={24} />
+              <div>$1,580</div>
+              <div>Potential MRR</div>
             </div>
           </div>
         </div>
 
         {/* Task Categories */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div>
           {outreachTasks.map(category => (
-            <div key={category.id} className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">{category.category}</h2>
-              <div className="space-y-3">
+            <div key={category.id}>
+              <h2>{category.category}</h2>
+              <div>
                 {category.tasks.map(task => (
                   <div 
                     key={task.id}
-                    className="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                   
                     onClick={() => toggleTask(task.id)}
                   >
                     {completedTasks.includes(task.id) ? (
-                      <CheckCircle2 className="text-green-600 mt-0.5" size={20} />
+                      <CheckCircle2 size={20} />
                     ) : (
-                      <Circle className="text-gray-400 mt-0.5" size={20} />
+                      <Circle size={20} />
                     )}
-                    <div className="flex-1">
-                      <p className={`${completedTasks.includes(task.id) ? 'line-through text-gray-400' : 'text-gray-700'}`}>
+                    <div>
+                      <p`}>
                         {task.task}
                       </p>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${
-                        task.priority === 'high' ? 'bg-red-100 text-red-700' :
-                        task.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-gray-100 text-gray-700'
-                      }`}>
+                      <span`}>
                         {task.priority} priority
                       </span>
                     </div>
@@ -227,36 +223,36 @@ Anyone interested? Drop a comment or DM me!`
         </div>
 
         {/* Email Templates */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Email Templates</h2>
+        <div>
+          <h2>Email Templates</h2>
           
-          <div className="space-y-6">
+          <div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+              <h3>
                 <Mail size={20} />
                 Initial Outreach Email
               </h3>
-              <pre className="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap font-sans">
+              <pre>
                 {emailTemplates.initial}
               </pre>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+              <h3>
                 <Mail size={20} />
                 Follow-up Email (Day 3)
               </h3>
-              <pre className="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap font-sans">
+              <pre>
                 {emailTemplates.followUp}
               </pre>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+              <h3>
                 <MessageSquare size={20} />
                 Facebook Group Post
               </h3>
-              <pre className="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap font-sans">
+              <pre>
                 {emailTemplates.facebook}
               </pre>
             </div>
@@ -264,50 +260,50 @@ Anyone interested? Drop a comment or DM me!`
         </div>
 
         {/* Key Talking Points */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Key Talking Points</h2>
+        <div>
+          <h2>Key Talking Points</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-3">Pain Points to Address</h3>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2">
-                  <Clock className="text-orange-600 mt-0.5" size={16} />
-                  <span className="text-gray-700">Spending 2-3 hours per quote</span>
+              <h3>Pain Points to Address</h3>
+              <ul>
+                <li>
+                  <Clock size={16} />
+                  <span>Spending 2-3 hours per quote</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <DollarSign className="text-orange-600 mt-0.5" size={16} />
-                  <span className="text-gray-700">Losing jobs to faster competitors</span>
+                <li>
+                  <DollarSign size={16} />
+                  <span>Losing jobs to faster competitors</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <Users className="text-orange-600 mt-0.5" size={16} />
-                  <span className="text-gray-700">Customers shopping quotes around</span>
+                <li>
+                  <Users size={16} />
+                  <span>Customers shopping quotes around</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <Briefcase className="text-orange-600 mt-0.5" size={16} />
-                  <span className="text-gray-700">Looking unprofessional with handwritten quotes</span>
+                <li>
+                  <Briefcase size={16} />
+                  <span>Looking unprofessional with handwritten quotes</span>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-3">Value Props to Highlight</h3>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2">
-                  <Star className="text-green-600 mt-0.5" size={16} />
-                  <span className="text-gray-700">30-second professional quotes</span>
+              <h3>Value Props to Highlight</h3>
+              <ul>
+                <li>
+                  <Star size={16} />
+                  <span>30-second professional quotes</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <Star className="text-green-600 mt-0.5" size={16} />
-                  <span className="text-gray-700">Win more jobs with instant responses</span>
+                <li>
+                  <Star size={16} />
+                  <span>Win more jobs with instant responses</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <Star className="text-green-600 mt-0.5" size={16} />
-                  <span className="text-gray-700">Close deals on-site before leaving</span>
+                <li>
+                  <Star size={16} />
+                  <span>Close deals on-site before leaving</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <Star className="text-green-600 mt-0.5" size={16} />
-                  <span className="text-gray-700">Professional quotes that impress</span>
+                <li>
+                  <Star size={16} />
+                  <span>Professional quotes that impress</span>
                 </li>
               </ul>
             </div>
@@ -315,25 +311,25 @@ Anyone interested? Drop a comment or DM me!`
         </div>
 
         {/* Week-by-Week Timeline */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">4-Week Execution Timeline</h2>
+        <div>
+          <h2>4-Week Execution Timeline</h2>
           
-          <div className="space-y-4">
-            <div className="border-l-4 border-orange-600 pl-4">
-              <h3 className="font-semibold text-gray-900">Week 1: Research & Preparation</h3>
-              <p className="text-gray-600">Build contractor list, create content, set up systems</p>
+          <div>
+            <div>
+              <h3>Week 1: Research & Preparation</h3>
+              <p>Build contractor list, create content, set up systems</p>
             </div>
-            <div className="border-l-4 border-blue-600 pl-4">
-              <h3 className="font-semibold text-gray-900">Week 2: Initial Outreach</h3>
-              <p className="text-gray-600">Contact first 25 contractors via email and phone</p>
+            <div>
+              <h3>Week 2: Initial Outreach</h3>
+              <p>Contact first 25 contractors via email and phone</p>
             </div>
-            <div className="border-l-4 border-green-600 pl-4">
-              <h3 className="font-semibold text-gray-900">Week 3: Follow-up & Demos</h3>
-              <p className="text-gray-600">Schedule demos, onboard beta users, collect feedback</p>
+            <div>
+              <h3>Week 3: Follow-up & Demos</h3>
+              <p>Schedule demos, onboard beta users, collect feedback</p>
             </div>
-            <div className="border-l-4 border-purple-600 pl-4">
-              <h3 className="font-semibold text-gray-900">Week 4: Convert & Scale</h3>
-              <p className="text-gray-600">Convert trials to paid, get testimonials, expand outreach</p>
+            <div>
+              <h3>Week 4: Convert & Scale</h3>
+              <p>Convert trials to paid, get testimonials, expand outreach</p>
             </div>
           </div>
         </div>

@@ -7,8 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "./card";
 import { Badge } from "./badge";
 import { SmartSuggestionWidget } from "./smart-suggestion-widget";
 import { Calculator, Clock, Home, Users } from "lucide-react";
-import { cn } from "@/lib/utils";
-
 interface Customer {
   id: string;
   name: string;
@@ -175,34 +173,25 @@ export function ExpressQuoteCreator({ onQuoteCreated, onFallbackToChat, companyD
   };
 
   return (
-    <div className="design-container max-w-4xl mx-auto p-4">
+    <div>
       {/* Header */}
-      <div className="mb-8 text-center">
-        <h1 className="design-heading-1">Express Quote</h1>
-        <p className="design-body">Create professional quotes in 30 seconds for standard jobs</p>
+      <div>
+        <h1>Express Quote</h1>
+        <p>Create professional quotes in 30 seconds for standard jobs</p>
       </div>
 
       {/* Progress Indicator */}
-      <div className="flex items-center justify-center mb-8">
-        <div className="flex items-center space-x-4">
-          <div className={cn(
-            "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
-            step === 'customer' ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-600"
-          )}>
+      <div>
+        <div>
+          <div>
             1
           </div>
-          <div className="w-8 h-1 bg-gray-200"></div>
-          <div className={cn(
-            "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
-            step === 'template' ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-600"
-          )}>
+          <div></div>
+          <div>
             2
           </div>
-          <div className="w-8 h-1 bg-gray-200"></div>
-          <div className={cn(
-            "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
-            step === 'generate' ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-600"
-          )}>
+          <div></div>
+          <div>
             3
           </div>
         </div>
@@ -210,39 +199,39 @@ export function ExpressQuoteCreator({ onQuoteCreated, onFallbackToChat, companyD
 
       {/* Step 1: Customer Selection */}
       {step === 'customer' && (
-        <div className="design-stack">
-          <Card className="design-card">
+        <div>
+          <Card>
             <CardHeader>
-              <CardTitle className="design-heading-3">Select Customer</CardTitle>
+              <CardTitle>Select Customer</CardTitle>
             </CardHeader>
-            <CardContent className="design-stack">
+            <CardContent>
               {/* Search for existing customers */}
               <Input
                 placeholder="Search customers..."
                 value={searchCustomer}
                 onChange={(e) => setSearchCustomer(e.target.value)}
-                className="design-input"
+               
               />
 
               {/* Recent customers */}
               {filteredCustomers.length > 0 && (
-                <div className="design-stack">
-                  <h4 className="font-medium text-gray-700">Recent Customers</h4>
-                  <div className="design-grid design-grid-2">
+                <div>
+                  <h4>Recent Customers</h4>
+                  <div>
                     {filteredCustomers.map((customer) => (
                       <Card 
                         key={customer.id}
-                        className="design-card design-card-interactive cursor-pointer hover:border-blue-300"
+                       
                         onClick={() => handleCustomerSelect(customer)}
                       >
-                        <CardContent className="p-4">
-                          <div className="design-inline">
-                            <Users className="w-5 h-5 text-gray-400" />
+                        <CardContent>
+                          <div>
+                            <Users />
                             <div>
-                              <p className="font-medium">{customer.name}</p>
-                              <p className="text-sm text-gray-500">{customer.address}</p>
+                              <p>{customer.name}</p>
+                              <p>{customer.address}</p>
                               {customer.lastQuoteDate && (
-                                <Badge variant="outline" className="mt-1">
+                                <Badge variant="outline">
                                   Last quote: {customer.lastQuoteDate}
                                 </Badge>
                               )}
@@ -256,26 +245,26 @@ export function ExpressQuoteCreator({ onQuoteCreated, onFallbackToChat, companyD
               )}
 
               {/* New customer form */}
-              <div className="design-stack">
-                <h4 className="font-medium text-gray-700">New Customer</h4>
-                <div className="design-grid design-grid-2">
+              <div>
+                <h4>New Customer</h4>
+                <div>
                   <Input
                     placeholder="Customer name"
                     value={newCustomerName}
                     onChange={(e) => setNewCustomerName(e.target.value)}
-                    className="design-input"
+                   
                   />
                   <Input
                     placeholder="Property address"
                     value={newCustomerAddress}
                     onChange={(e) => setNewCustomerAddress(e.target.value)}
-                    className="design-input"
+                   
                   />
                 </div>
                 <Button 
                   onClick={handleNewCustomer}
                   disabled={!newCustomerName.trim() || !newCustomerAddress.trim()}
-                  className="design-button design-button-primary w-full"
+                 
                 >
                   Continue with New Customer
                 </Button>
@@ -284,11 +273,11 @@ export function ExpressQuoteCreator({ onQuoteCreated, onFallbackToChat, companyD
           </Card>
 
           {/* Fallback to chat */}
-          <div className="text-center">
+          <div>
             <Button 
               variant="outline" 
               onClick={onFallbackToChat}
-              className="design-button design-button-secondary"
+             
             >
               Need custom quote? Use full chat interface
             </Button>
@@ -298,42 +287,42 @@ export function ExpressQuoteCreator({ onQuoteCreated, onFallbackToChat, companyD
 
       {/* Step 2: Template Selection */}
       {step === 'template' && (
-        <div className="design-stack">
-          <Card className="design-card">
+        <div>
+          <Card>
             <CardHeader>
-              <CardTitle className="design-heading-3">
+              <CardTitle>
                 Choose Job Type for {selectedCustomer?.name}
               </CardTitle>
-              <p className="design-caption">{selectedCustomer?.address}</p>
+              <p>{selectedCustomer?.address}</p>
             </CardHeader>
             <CardContent>
-              <div className="design-grid design-grid-2">
+              <div>
                 {QUOTE_TEMPLATES.map((template) => (
                   <Card 
                     key={template.id}
-                    className="design-card design-card-interactive cursor-pointer hover:border-blue-300"
+                   
                     onClick={() => handleTemplateSelect(template)}
                   >
-                    <CardContent className="p-6">
-                      <div className="design-stack">
-                        <div className="design-inline">
-                          <span className="text-2xl">{template.icon}</span>
+                    <CardContent>
+                      <div>
+                        <div>
+                          <span>{template.icon}</span>
                           <div>
-                            <h4 className="font-semibold">{template.name}</h4>
-                            <p className="text-sm text-gray-500">{template.description}</p>
+                            <h4>{template.name}</h4>
+                            <p>{template.description}</p>
                           </div>
                         </div>
                         
-                        <div className="design-inline">
-                          <Clock className="w-4 h-4 text-gray-400" />
-                          <span className="text-sm text-gray-600">{template.estimatedTime}</span>
+                        <div>
+                          <Clock />
+                          <span>{template.estimatedTime}</span>
                         </div>
                         
-                        <div className="flex items-center justify-between">
+                        <div>
                           <Badge variant="secondary">
                             {template.rooms.length} room{template.rooms.length !== 1 ? 's' : ''}
                           </Badge>
-                          <span className="text-sm font-medium text-green-600">
+                          <span>
                             ~${calculateEstimatedPrice(template).toLocaleString()}
                           </span>
                         </div>
@@ -363,7 +352,7 @@ export function ExpressQuoteCreator({ onQuoteCreated, onFallbackToChat, companyD
           <Button 
             variant="outline" 
             onClick={() => setStep('customer')}
-            className="design-button design-button-secondary w-full"
+           
           >
             Back to Customer Selection
           </Button>
@@ -372,26 +361,26 @@ export function ExpressQuoteCreator({ onQuoteCreated, onFallbackToChat, companyD
 
       {/* Step 3: Generate Quote */}
       {step === 'generate' && (
-        <div className="design-stack">
-          <Card className="design-card">
+        <div>
+          <Card>
             <CardHeader>
-              <CardTitle className="design-heading-3">Generate Quote</CardTitle>
+              <CardTitle>Generate Quote</CardTitle>
             </CardHeader>
-            <CardContent className="design-stack">
-              <div className="p-6 bg-gray-50 rounded-lg">
-                <h4 className="font-semibold mb-4">Quote Summary</h4>
-                <div className="design-stack">
-                  <div className="design-inline">
-                    <Users className="w-5 h-5 text-gray-400" />
+            <CardContent>
+              <div>
+                <h4>Quote Summary</h4>
+                <div>
+                  <div>
+                    <Users />
                     <span><strong>{selectedCustomer?.name}</strong> at {selectedCustomer?.address}</span>
                   </div>
-                  <div className="design-inline">
-                    <Home className="w-5 h-5 text-gray-400" />
+                  <div>
+                    <Home />
                     <span>{selectedTemplate?.name} - {selectedTemplate?.description}</span>
                   </div>
-                  <div className="design-inline">
-                    <Calculator className="w-5 h-5 text-gray-400" />
-                    <span className="text-lg font-semibold text-green-600">
+                  <div>
+                    <Calculator />
+                    <span>
                       ${selectedTemplate ? calculateEstimatedPrice(selectedTemplate).toLocaleString() : '0'}
                     </span>
                   </div>
@@ -401,16 +390,16 @@ export function ExpressQuoteCreator({ onQuoteCreated, onFallbackToChat, companyD
               <Button 
                 onClick={handleGenerate}
                 disabled={isGenerating}
-                className="design-button design-button-primary design-button-large w-full"
+               
               >
                 {isGenerating ? (
-                  <div className="design-inline">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <div>
+                    <div></div>
                     <span>Generating Professional Quote...</span>
                   </div>
                 ) : (
-                  <div className="design-inline">
-                    <Calculator className="w-5 h-5" />
+                  <div>
+                    <Calculator />
                     <span>Generate Professional Quote</span>
                   </div>
                 )}
@@ -420,7 +409,7 @@ export function ExpressQuoteCreator({ onQuoteCreated, onFallbackToChat, companyD
                 variant="outline" 
                 onClick={() => setStep('template')}
                 disabled={isGenerating}
-                className="design-button design-button-secondary w-full"
+               
               >
                 Back to Templates
               </Button>

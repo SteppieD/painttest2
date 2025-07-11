@@ -301,10 +301,10 @@ export default function RevenuePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading revenue analytics...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading revenue analytics...</p>
         </div>
       </div>
     );
@@ -315,52 +315,52 @@ export default function RevenuePage() {
   const totalProjectRevenue = projectTypeRevenue.reduce((sum, type) => sum + type.revenue, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white border-b shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-4 h-16">
+      <div>
+        <div>
+          <div>
             <Button
               variant="ghost"
               onClick={() => router.push("/dashboard")}
-              className="gap-2"
+             
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft />
               Back to Dashboard
             </Button>
-            <div className="flex-1">
-              <h1 className="text-xl font-bold text-gray-900">Revenue Analysis</h1>
+            <div>
+              <h1>Revenue Analysis</h1>
             </div>
             <Button
               variant="outline"
               onClick={exportData}
-              className="gap-2"
+             
             >
-              <Download className="w-4 h-4" />
+              <Download />
               Export Data
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div>
         {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div>
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Total Revenue
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-green-600">{formatCurrency(stats.totalRevenue)}</div>
-              <div className="flex items-center gap-2 mt-2">
+              <div>{formatCurrency(stats.totalRevenue)}</div>
+              <div>
                 {stats.monthlyGrowth > 0 ? (
-                  <TrendingUp className="w-4 h-4 text-green-600" />
+                  <TrendingUp />
                 ) : (
-                  <TrendingDown className="w-4 h-4 text-red-600" />
+                  <TrendingDown />
                 )}
-                <span className={`text-sm ${stats.monthlyGrowth > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <span`}>
                   {Math.abs(stats.monthlyGrowth).toFixed(1)}% monthly
                 </span>
               </div>
@@ -368,42 +368,42 @@ export default function RevenuePage() {
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Average Quote Value
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{formatCurrency(stats.averageQuoteValue)}</div>
-              <div className="text-sm text-gray-500 mt-2">
+              <div>{formatCurrency(stats.averageQuoteValue)}</div>
+              <div>
                 per quote
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Conversion Rate
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{stats.conversionRate.toFixed(1)}%</div>
-              <div className="text-sm text-gray-500 mt-2">
+              <div>{stats.conversionRate.toFixed(1)}%</div>
+              <div>
                 quotes accepted
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Pending Revenue
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-yellow-600">{formatCurrency(stats.pendingRevenue)}</div>
-              <div className="text-sm text-gray-500 mt-2">
+              <div>{formatCurrency(stats.pendingRevenue)}</div>
+              <div>
                 awaiting decision
               </div>
             </CardContent>
@@ -411,39 +411,39 @@ export default function RevenuePage() {
         </div>
 
         {/* Revenue by Status */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>Revenue by Status</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-6 bg-yellow-50 rounded-lg">
-                <DollarSign className="w-10 h-10 text-yellow-600 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-yellow-600">
+            <div>
+              <div>
+                <DollarSign />
+                <div>
                   {formatCurrency(stats.pendingRevenue)}
                 </div>
-                <div className="text-sm text-gray-600">Pending</div>
-                <div className="text-xs text-gray-500 mt-1">
+                <div>Pending</div>
+                <div>
                   {((stats.pendingRevenue / stats.totalRevenue) * 100).toFixed(1)}% of total
                 </div>
               </div>
-              <div className="text-center p-6 bg-green-50 rounded-lg">
-                <DollarSign className="w-10 h-10 text-green-600 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-green-600">
+              <div>
+                <DollarSign />
+                <div>
                   {formatCurrency(stats.acceptedRevenue)}
                 </div>
-                <div className="text-sm text-gray-600">Accepted</div>
-                <div className="text-xs text-gray-500 mt-1">
+                <div>Accepted</div>
+                <div>
                   {((stats.acceptedRevenue / stats.totalRevenue) * 100).toFixed(1)}% of total
                 </div>
               </div>
-              <div className="text-center p-6 bg-blue-50 rounded-lg">
-                <DollarSign className="w-10 h-10 text-blue-600 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-blue-600">
+              <div>
+                <DollarSign />
+                <div>
                   {formatCurrency(stats.completedRevenue)}
                 </div>
-                <div className="text-sm text-gray-600">Completed</div>
-                <div className="text-xs text-gray-500 mt-1">
+                <div>Completed</div>
+                <div>
                   {((stats.completedRevenue / stats.totalRevenue) * 100).toFixed(1)}% of total
                 </div>
               </div>
@@ -452,25 +452,25 @@ export default function RevenuePage() {
         </Card>
 
         {/* Monthly Revenue Trend */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>Monthly Revenue Trend</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-end gap-2">
+            <div>
               {monthlyRevenue.map((data, index) => (
-                <div key={index} className="flex-1 flex flex-col items-center">
-                  <div className="text-xs font-semibold mb-2">
+                <div key={index}>
+                  <div>
                     {formatCurrency(data.revenue)}
                   </div>
                   <div 
-                    className="w-full bg-green-600 rounded-t transition-all duration-300"
+                   
                     style={{ 
                       height: `${maxRevenue > 0 ? (data.revenue / maxRevenue) * 180 : 0}px`,
                       minHeight: data.revenue > 0 ? '20px' : '0'
                     }}
                   />
-                  <div className="text-xs text-gray-600 mt-2 rotate-45 origin-left whitespace-nowrap">
+                  <div>
                     {data.month}
                   </div>
                 </div>
@@ -480,27 +480,27 @@ export default function RevenuePage() {
         </Card>
 
         {/* Revenue by Project Type */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>Revenue by Project Type</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div>
               {projectTypeRevenue.map((type, index) => (
                 <div key={index}>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-medium">{type.type}</span>
-                    <div className="text-right">
-                      <span className="font-semibold">{formatCurrency(type.revenue)}</span>
-                      <span className="text-sm text-gray-500 ml-2">({type.count} quotes)</span>
+                  <div>
+                    <span>{type.type}</span>
+                    <div>
+                      <span>{formatCurrency(type.revenue)}</span>
+                      <span>({type.count} quotes)</span>
                     </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-6">
+                  <div>
                     <div 
-                      className="bg-green-600 h-6 rounded-full transition-all duration-300 flex items-center justify-end pr-2"
+                     
                       style={{ width: `${(type.revenue / totalProjectRevenue) * 100}%` }}
                     >
-                      <span className="text-xs text-white font-semibold">
+                      <span>
                         {((type.revenue / totalProjectRevenue) * 100).toFixed(1)}%
                       </span>
                     </div>
@@ -514,22 +514,22 @@ export default function RevenuePage() {
         {/* Top Quotes */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle>
               <span>Top Revenue Quotes</span>
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <div>
+                <div>
+                  <Search />
                   <Input
                     placeholder="Search quotes..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-64"
+                   
                   />
                 </div>
                 <select
                   value={timeFilter}
                   onChange={(e) => setTimeFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                 
                 >
                   <option value="all">All Time</option>
                   <option value="today">Today</option>
@@ -540,7 +540,7 @@ export default function RevenuePage() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                 
                 >
                   <option value="all">All Status</option>
                   <option value="pending">Pending</option>
@@ -552,38 +552,33 @@ export default function RevenuePage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div>
+              <table>
                 <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-2 px-4">Quote ID</th>
-                    <th className="text-left py-2 px-4">Customer</th>
-                    <th className="text-left py-2 px-4">Project Type</th>
-                    <th className="text-left py-2 px-4">Amount</th>
-                    <th className="text-left py-2 px-4">Status</th>
-                    <th className="text-left py-2 px-4">Date</th>
+                  <tr>
+                    <th>Quote ID</th>
+                    <th>Customer</th>
+                    <th>Project Type</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredQuotes.slice(0, 20).map((quote) => (
-                    <tr key={quote.id} className="border-b hover:bg-gray-50">
-                      <td className="py-2 px-4">{quote.quote_id}</td>
-                      <td className="py-2 px-4">{quote.customer_name}</td>
-                      <td className="py-2 px-4">{quote.project_type || 'General'}</td>
-                      <td className="py-2 px-4 font-semibold text-green-600">
+                    <tr key={quote.id}>
+                      <td>{quote.quote_id}</td>
+                      <td>{quote.customer_name}</td>
+                      <td>{quote.project_type || 'General'}</td>
+                      <td>
                         {formatCurrency(quote.quote_amount)}
                       </td>
-                      <td className="py-2 px-4">
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                          quote.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                          quote.status === 'completed' ? 'bg-blue-100 text-blue-800' :
-                          quote.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                          'bg-yellow-100 text-yellow-800'
-                        }`}>
+                      <td>
+                        <span`}>
                           {quote.status || 'pending'}
                         </span>
                       </td>
-                      <td className="py-2 px-4">{formatDate(new Date(quote.created_at))}</td>
+                      <td>{formatDate(new Date(quote.created_at))}</td>
                     </tr>
                   ))}
                 </tbody>

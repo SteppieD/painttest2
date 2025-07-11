@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
-
 interface MobileOptimizedLayoutProps {
   children: React.ReactNode;
   showBottomPadding?: boolean;
@@ -95,11 +93,7 @@ export function MobileOptimizedLayout({
   return (
     <div 
       ref={containerRef}
-      className={cn(
-        "mobile-optimized relative overflow-auto touch-pan-y",
-        showBottomPadding && "pb-20 safe-area-inset-bottom",
-        className
-      )}
+     
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -111,15 +105,15 @@ export function MobileOptimizedLayout({
       {/* Pull to refresh indicator */}
       {enablePullToRefresh && (pullDistance > 0 || isRefreshing) && (
         <div 
-          className="absolute top-0 left-0 right-0 flex items-center justify-center py-4 bg-blue-50 text-blue-600 text-sm font-medium z-50"
+         
           style={{ 
             transform: `translateY(-${Math.max(60 - pullDistance, 0)}px)`,
             opacity: Math.min(pullDistance / 60, 1)
           }}
         >
           {isRefreshing ? (
-            <div className="design-inline">
-              <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div>
+              <div></div>
               <span>Refreshing...</span>
             </div>
           ) : (
@@ -196,7 +190,7 @@ export function SwipeDetector({
 
   return (
     <div
-      className={cn("touch-manipulation", className)}
+     
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -258,17 +252,7 @@ export function TouchFriendlyButton({
 
   return (
     <button
-      className={cn(
-        "touch-target rounded-lg font-medium transition-all duration-150 ease-out",
-        "flex items-center justify-center gap-2",
-        "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
-        "disabled:opacity-50 disabled:cursor-not-allowed",
-        "transform active:scale-95",
-        getVariantClasses(),
-        getSizeClasses(),
-        isPressed && "scale-95",
-        className
-      )}
+     
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onMouseDown={() => setIsPressed(true)}
@@ -348,11 +332,7 @@ export function TouchFriendlyInput({
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={cn(
-        "design-input design-input-large prevent-zoom",
-        "min-h-[48px] text-base", // Prevent zoom on iOS
-        className
-      )}
+     
       {...props}
     />
   );
@@ -367,7 +347,7 @@ export function SafeAreaWrapper({
   className?: string;
 }) {
   return (
-    <div className={cn("safe-area-inset-top safe-area-inset-bottom", className)}>
+    <div>
       {children}
     </div>
   );
@@ -395,13 +375,10 @@ export function MobileLoadingSpinner({
   };
 
   return (
-    <div className={cn("flex flex-col items-center justify-center p-8", className)}>
-      <div className={cn(
-        "border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin",
-        getSizeClasses()
-      )} />
+    <div>
+      <div />
       {message && (
-        <p className="mt-4 text-sm text-gray-600 text-center">{message}</p>
+        <p>{message}</p>
       )}
     </div>
   );
@@ -449,20 +426,16 @@ export function BottomSheet({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div>
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"
+       
         onClick={onClose}
       />
       
       {/* Sheet */}
       <div 
-        className={cn(
-          "absolute bottom-0 left-0 right-0 bg-white rounded-t-xl",
-          "max-h-[90vh] overflow-hidden",
-          className
-        )}
+       
         style={{
           transform: `translateY(${currentY}px)`,
           transition: isDragging ? 'none' : 'transform 0.3s ease-out'
@@ -472,17 +445,17 @@ export function BottomSheet({
         onTouchEnd={handleTouchEnd}
       >
         {/* Handle */}
-        <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mt-3 mb-4" />
+        <div />
         
         {/* Title */}
         {title && (
-          <div className="px-6 pb-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+          <div>
+            <h3>{title}</h3>
           </div>
         )}
         
         {/* Content */}
-        <div className="overflow-auto max-h-[calc(90vh-100px)]">
+        <div>
           {children}
         </div>
       </div>

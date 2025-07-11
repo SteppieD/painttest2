@@ -195,17 +195,17 @@ export default function PremiumQuoteCreationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div>
       {/* Header */}
-      <div className="bg-white border-b shadow-sm">
-        <div className="max-w-4xl mx-auto p-4">
-          <div className="flex items-center justify-between">
+      <div>
+        <div>
+          <div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Premium AI Quote Assistant</h1>
-              <p className="text-sm text-gray-600">Multi-agent system with business optimization</p>
+              <h1>Premium AI Quote Assistant</h1>
+              <p>Multi-agent system with business optimization</p>
             </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="default" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+            <div>
+              <Badge variant="default">
                 Premium
               </Badge>
               <Badge variant="outline">$100/1000 quotes</Badge>
@@ -216,14 +216,14 @@ export default function PremiumQuoteCreationPage() {
 
       {/* Agent Activity Indicator */}
       {agentActivity.length > 0 && (
-        <div className="max-w-4xl mx-auto p-4">
-          <Card className="bg-blue-50 border-blue-200">
-            <CardContent className="p-3">
-              <div className="flex items-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
-                <div className="flex flex-wrap gap-2">
+        <div>
+          <Card>
+            <CardContent>
+              <div>
+                <Loader2 />
+                <div>
                   {agentActivity.map((activity, idx) => (
-                    <Badge key={idx} variant="secondary" className="text-xs">
+                    <Badge key={idx} variant="secondary">
                       {activity}
                     </Badge>
                   ))}
@@ -236,28 +236,28 @@ export default function PremiumQuoteCreationPage() {
 
       {/* Quote Progress */}
       {quoteData.customer_name && (
-        <div className="max-w-4xl mx-auto p-4">
+        <div>
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg">Quote Progress</CardTitle>
+            <CardHeader>
+              <CardTitle>Quote Progress</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div>
                 <div>
-                  <p className="text-gray-600">Customer</p>
-                  <p className="font-medium">{quoteData.customer_name}</p>
+                  <p>Customer</p>
+                  <p>{quoteData.customer_name}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600">Project</p>
-                  <p className="font-medium">{quoteData.project_type || 'Determining...'}</p>
+                  <p>Project</p>
+                  <p>{quoteData.project_type || 'Determining...'}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600">Surfaces</p>
-                  <p className="font-medium">{quoteData.surfaces?.join(', ') || 'Not selected'}</p>
+                  <p>Surfaces</p>
+                  <p>{quoteData.surfaces?.join(', ') || 'Not selected'}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600">Estimate</p>
-                  <p className="font-medium">{quoteData.quote_amount ? `$${quoteData.quote_amount.toLocaleString()}` : 'Calculating...'}</p>
+                  <p>Estimate</p>
+                  <p>{quoteData.quote_amount ? `$${quoteData.quote_amount.toLocaleString()}` : 'Calculating...'}</p>
                 </div>
               </div>
             </CardContent>
@@ -266,84 +266,72 @@ export default function PremiumQuoteCreationPage() {
       )}
 
       {/* Chat Messages */}
-      <div className="max-w-4xl mx-auto p-4 space-y-4 pb-32">
+      <div>
         {messages.map((message) => (
-          <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`flex gap-3 max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse' : ''}`}>
+          <div key={message.id}`}>
+            <div`}>
               {/* Avatar */}
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                message.type === 'user' 
-                  ? 'bg-blue-600' 
-                  : message.type === 'system'
-                  ? 'bg-purple-600'
-                  : 'bg-gradient-to-r from-green-500 to-blue-500'
-              }`}>
+              <div`}>
                 {message.type === 'user' ? (
-                  <User className="w-4 h-4 text-white" />
+                  <User />
                 ) : message.type === 'system' ? (
-                  <Target className="w-4 h-4 text-white" />
+                  <Target />
                 ) : (
-                  <Bot className="w-4 h-4 text-white" />
+                  <Bot />
                 )}
               </div>
 
               {/* Message Content */}
-              <div className={`space-y-2 ${message.type === 'user' ? 'text-right' : ''}`}>
-                <div className={`inline-block px-4 py-2 rounded-lg max-w-full ${
-                  message.type === 'user'
-                    ? 'bg-blue-600 text-white'
-                    : message.type === 'system'
-                    ? 'bg-purple-100 text-purple-800 border border-purple-200'
-                    : 'bg-white border shadow-sm'
-                }`}>
-                  <div className="whitespace-pre-wrap">{message.content}</div>
+              <div`}>
+                <div`}>
+                  <div>{message.content}</div>
                 </div>
 
                 {/* Agent Insights */}
                 {message.agentInsights && (
-                  <div className="space-y-2">
-                    <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="text-xs">
-                        <CheckCircle className="w-3 h-3 mr-1" />
+                  <div>
+                    <div>
+                      <Badge variant="outline">
+                        <CheckCircle />
                         Confidence: {Math.round(message.agentInsights.confidence * 100)}%
                       </Badge>
                     </div>
                     
-                    <div className="grid gap-2">
+                    <div>
                       {message.agentInsights.validation && (
-                        <details className="bg-yellow-50 border border-yellow-200 rounded p-2">
-                          <summary className="cursor-pointer text-xs font-medium text-yellow-800 flex items-center gap-1">
-                            <AlertTriangle className="w-3 h-3" />
+                        <details>
+                          <summary>
+                            <AlertTriangle />
                             Validation Check
                           </summary>
-                          <p className="text-xs text-yellow-700 mt-1">{message.agentInsights.validation}</p>
+                          <p>{message.agentInsights.validation}</p>
                         </details>
                       )}
 
                       {message.agentInsights.strategy && (
-                        <details className="bg-green-50 border border-green-200 rounded p-2">
-                          <summary className="cursor-pointer text-xs font-medium text-green-800 flex items-center gap-1">
-                            <Lightbulb className="w-3 h-3" />
+                        <details>
+                          <summary>
+                            <Lightbulb />
                             Business Strategy
                           </summary>
-                          <p className="text-xs text-green-700 mt-1">{message.agentInsights.strategy}</p>
+                          <p>{message.agentInsights.strategy}</p>
                         </details>
                       )}
 
                       {message.agentInsights.pricing && (
-                        <details className="bg-blue-50 border border-blue-200 rounded p-2">
-                          <summary className="cursor-pointer text-xs font-medium text-blue-800 flex items-center gap-1">
-                            <DollarSign className="w-3 h-3" />
+                        <details>
+                          <summary>
+                            <DollarSign />
                             Pricing Intelligence
                           </summary>
-                          <p className="text-xs text-blue-700 mt-1">{message.agentInsights.pricing}</p>
+                          <p>{message.agentInsights.pricing}</p>
                         </details>
                       )}
                     </div>
                   </div>
                 )}
 
-                <div className="text-xs text-gray-500">
+                <div>
                   {formatTime(message.timestamp)}
                 </div>
               </div>
@@ -354,38 +342,38 @@ export default function PremiumQuoteCreationPage() {
       </div>
 
       {/* Input Area */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg">
-        <div className="max-w-4xl mx-auto p-4">
-          <div className="flex gap-2">
+      <div>
+        <div>
+          <div>
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Describe your painting project or ask for business advice..."
               disabled={loading}
-              className="flex-1"
+             
             />
             <Button 
               onClick={sendMessage} 
               disabled={loading || !input.trim()}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+             
             >
               {loading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 />
               ) : (
-                <Send className="w-4 h-4" />
+                <Send />
               )}
             </Button>
           </div>
           
-          <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1">
-                <Clock className="w-3 h-3" />
+          <div>
+            <div>
+              <span>
+                <Clock />
                 Multi-agent processing
               </span>
-              <span className="flex items-center gap-1">
-                <TrendingUp className="w-3 h-3" />
+              <span>
+                <TrendingUp />
                 Business optimization
               </span>
             </div>

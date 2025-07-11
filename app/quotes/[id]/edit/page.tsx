@@ -324,17 +324,17 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+      <div>
+        <div></div>
       </div>
     );
   }
 
   if (!quote) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">Quote not found</p>
+      <div>
+        <div>
+          <p>Quote not found</p>
           <Button onClick={() => router.push("/dashboard")}>
             Return to Dashboard
           </Button>
@@ -344,29 +344,29 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <header className="bg-white border-b shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+      <header>
+        <div>
+          <div>
+            <div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => router.push(`/quotes/${params.id}`)}
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft />
               </Button>
               <div>
-                <h1 className="text-xl font-bold">Edit Quote</h1>
-                <p className="text-sm text-gray-500">#{quote.quote_id}</p>
+                <h1>Edit Quote</h1>
+                <p>#{quote.quote_id}</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div>
               {hasChanges && (
-                <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-                  <Save className="w-3 h-3 mr-1" />
+                <Badge variant="secondary">
+                  <Save />
                   Changes Saved
                 </Badge>
               )}
@@ -381,13 +381,13 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto p-6 space-y-6">
+      <div>
         {/* Customer Information */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-blue-600" />
+            <div>
+              <div>
+                <User />
                 <CardTitle>Customer Information</CardTitle>
               </div>
               <Button
@@ -400,31 +400,31 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                   address: quote.address,
                 })}
               >
-                <Edit3 className="w-4 h-4 mr-1" />
+                <Edit3 />
                 Edit
               </Button>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
               <div>
-                <p className="text-sm text-gray-600">Customer Name</p>
-                <p className="font-medium">{quote.customer_name}</p>
+                <p>Customer Name</p>
+                <p>{quote.customer_name}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Address</p>
-                <p className="font-medium">{quote.address}</p>
+                <p>Address</p>
+                <p>{quote.address}</p>
               </div>
               {quote.customer_email && (
                 <div>
-                  <p className="text-sm text-gray-600">Email</p>
-                  <p className="font-medium">{quote.customer_email}</p>
+                  <p>Email</p>
+                  <p>{quote.customer_email}</p>
                 </div>
               )}
               {quote.customer_phone && (
                 <div>
-                  <p className="text-sm text-gray-600">Phone</p>
-                  <p className="font-medium">{quote.customer_phone}</p>
+                  <p>Phone</p>
+                  <p>{quote.customer_phone}</p>
                 </div>
               )}
             </div>
@@ -434,9 +434,9 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
         {/* Project Details */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Home className="w-5 h-5 text-green-600" />
+            <div>
+              <div>
+                <Home />
                 <CardTitle>Project Details</CardTitle>
               </div>
               <Button
@@ -448,40 +448,40 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                   prep_work: quote.prep_work,
                 })}
               >
-                <Edit3 className="w-4 h-4 mr-1" />
+                <Edit3 />
                 Edit
               </Button>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
               <div>
-                <p className="text-sm text-gray-600">Project Type</p>
-                <p className="font-medium capitalize">{quote.project_type} Painting</p>
+                <p>Project Type</p>
+                <p>{quote.project_type} Painting</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Timeline</p>
-                <p className="font-medium">{quote.timeline || 'Not specified'}</p>
+                <p>Timeline</p>
+                <p>{quote.timeline || 'Not specified'}</p>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => openEditModal("timeline", { timeline: quote.timeline })}
-                  className="mt-1 p-0 h-auto text-blue-600"
+                 
                 >
-                  <Edit3 className="w-3 h-3 mr-1" />
+                  <Edit3 />
                   Edit Timeline
                 </Button>
               </div>
               {quote.prep_work && (
-                <div className="md:col-span-2">
-                  <p className="text-sm text-gray-600">Prep Work</p>
-                  <p className="font-medium">{quote.prep_work}</p>
+                <div>
+                  <p>Prep Work</p>
+                  <p>{quote.prep_work}</p>
                 </div>
               )}
               {quote.special_requests && (
-                <div className="md:col-span-2">
-                  <p className="text-sm text-gray-600">Special Requests</p>
-                  <p className="font-medium">{quote.special_requests}</p>
+                <div>
+                  <p>Special Requests</p>
+                  <p>{quote.special_requests}</p>
                 </div>
               )}
             </div>
@@ -491,9 +491,9 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
         {/* Paint Quality */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Palette className="w-5 h-5 text-purple-600" />
+            <div>
+              <div>
+                <Palette />
                 <CardTitle>Paint Quality & Specifications</CardTitle>
               </div>
               <Button
@@ -503,15 +503,15 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                   paint_quality: quote.paint_quality,
                 })}
               >
-                <Edit3 className="w-4 h-4 mr-1" />
+                <Edit3 />
                 Edit
               </Button>
             </div>
           </CardHeader>
           <CardContent>
             <div>
-              <p className="text-sm text-gray-600">Paint Quality Level</p>
-              <Badge variant="secondary" className="capitalize mt-1">
+              <p>Paint Quality Level</p>
+              <Badge variant="secondary">
                 {quote.paint_quality || 'Premium'} Grade
               </Badge>
             </div>
@@ -521,9 +521,9 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
         {/* Paint Products & Costs */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Package className="w-5 h-5 text-green-600" />
+            <div>
+              <div>
+                <Package />
                 <CardTitle>Paint Products & Costs</CardTitle>
               </div>
               <Button
@@ -540,36 +540,36 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                   trim_paint_name: quote.trim_paint_name,
                 })}
               >
-                <Edit3 className="w-4 h-4 mr-1" />
+                <Edit3 />
                 Edit Products
               </Button>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
               <div>
-                <p className="text-sm text-gray-600">Primer</p>
-                <p className="font-medium">{quote.primer_name || 'Standard Primer'}</p>
-                <p className="text-sm text-green-600">${quote.primer_cost || 25}/gallon</p>
+                <p>Primer</p>
+                <p>{quote.primer_name || 'Standard Primer'}</p>
+                <p>${quote.primer_cost || 25}/gallon</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Wall Paint</p>
-                <p className="font-medium">{quote.wall_paint_name || 'Standard Wall Paint'}</p>
-                <p className="text-sm text-green-600">${quote.wall_paint_cost || 45}/gallon</p>
+                <p>Wall Paint</p>
+                <p>{quote.wall_paint_name || 'Standard Wall Paint'}</p>
+                <p>${quote.wall_paint_cost || 45}/gallon</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Ceiling Paint</p>
-                <p className="font-medium">{quote.ceiling_paint_name || 'Standard Ceiling Paint'}</p>
-                <p className="text-sm text-green-600">${quote.ceiling_paint_cost || 35}/gallon</p>
+                <p>Ceiling Paint</p>
+                <p>{quote.ceiling_paint_name || 'Standard Ceiling Paint'}</p>
+                <p>${quote.ceiling_paint_cost || 35}/gallon</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Trim Paint</p>
-                <p className="font-medium">{quote.trim_paint_name || 'Standard Trim Paint'}</p>
-                <p className="text-sm text-green-600">${quote.trim_paint_cost || 55}/gallon</p>
+                <p>Trim Paint</p>
+                <p>{quote.trim_paint_name || 'Standard Trim Paint'}</p>
+                <p>${quote.trim_paint_cost || 55}/gallon</p>
               </div>
             </div>
-            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-700">
+            <div>
+              <p>
                 💡 <strong>Tip:</strong> These costs are specific to this quote and won't affect your global product settings.
               </p>
             </div>
@@ -579,9 +579,9 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
         {/* Measurements */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Ruler className="w-5 h-5 text-orange-600" />
+            <div>
+              <div>
+                <Ruler />
                 <CardTitle>Measurements & Areas</CardTitle>
               </div>
               <Button
@@ -597,50 +597,50 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                   number_of_windows: quote.number_of_windows,
                 })}
               >
-                <Edit3 className="w-4 h-4 mr-1" />
+                <Edit3 />
                 Edit
               </Button>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
               {quote.walls_sqft && (
-                <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <p className="text-2xl font-bold text-blue-600">{quote.walls_sqft.toLocaleString()}</p>
-                  <p className="text-sm text-gray-600">Walls (sq ft)</p>
+                <div>
+                  <p>{quote.walls_sqft.toLocaleString()}</p>
+                  <p>Walls (sq ft)</p>
                 </div>
               )}
               {quote.ceilings_sqft && (
-                <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <p className="text-2xl font-bold text-green-600">{quote.ceilings_sqft.toLocaleString()}</p>
-                  <p className="text-sm text-gray-600">Ceilings (sq ft)</p>
+                <div>
+                  <p>{quote.ceilings_sqft.toLocaleString()}</p>
+                  <p>Ceilings (sq ft)</p>
                 </div>
               )}
               {quote.trim_sqft && (
-                <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <p className="text-2xl font-bold text-purple-600">{quote.trim_sqft.toLocaleString()}</p>
-                  <p className="text-sm text-gray-600">Trim (sq ft)</p>
+                <div>
+                  <p>{quote.trim_sqft.toLocaleString()}</p>
+                  <p>Trim (sq ft)</p>
                 </div>
               )}
               {(quote.number_of_doors || quote.number_of_windows) && (
-                <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <p className="text-lg font-bold text-orange-600">
+                <div>
+                  <p>
                     {(quote.number_of_doors || 0) + (quote.number_of_windows || 0)}
                   </p>
-                  <p className="text-sm text-gray-600">Doors & Windows</p>
+                  <p>Doors & Windows</p>
                 </div>
               )}
             </div>
             {quote.wall_linear_feet && (
-              <div className="mt-4 grid grid-cols-2 gap-4">
+              <div>
                 <div>
-                  <p className="text-sm text-gray-600">Linear Feet</p>
-                  <p className="font-medium">{quote.wall_linear_feet} ft</p>
+                  <p>Linear Feet</p>
+                  <p>{quote.wall_linear_feet} ft</p>
                 </div>
                 {quote.ceiling_height && (
                   <div>
-                    <p className="text-sm text-gray-600">Ceiling Height</p>
-                    <p className="font-medium">{quote.ceiling_height} ft</p>
+                    <p>Ceiling Height</p>
+                    <p>{quote.ceiling_height} ft</p>
                   </div>
                 )}
               </div>
@@ -652,40 +652,40 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
         {rooms.length > 0 && (
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Home className="w-5 h-5 text-indigo-600" />
+              <div>
+                <div>
+                  <Home />
                   <CardTitle>Room Breakdown ({rooms.length} rooms)</CardTitle>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
                 {rooms.map((room, index) => (
-                  <div key={room.id || index} className="p-4 bg-gray-50 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium text-gray-900">{room.name}</h4>
+                  <div key={room.id || index}>
+                    <div>
+                      <h4>{room.name}</h4>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => openEditModal("room", room)}
                       >
-                        <Edit3 className="w-3 h-3" />
+                        <Edit3 />
                       </Button>
                     </div>
-                    <div className="space-y-1 text-sm text-gray-600">
-                      <div className="flex justify-between">
+                    <div>
+                      <div>
                         <span>Dimensions:</span>
                         <span>{room.length}' × {room.width}' × {room.height}'</span>
                       </div>
                       {room.ceiling_area > 0 && (
-                        <div className="flex justify-between">
+                        <div>
                           <span>Ceiling:</span>
                           <span>{room.ceiling_area} sq ft</span>
                         </div>
                       )}
                       {room.wall_area > 0 && (
-                        <div className="flex justify-between">
+                        <div>
                           <span>Walls:</span>
                           <span>{room.wall_area} sq ft</span>
                         </div>
@@ -701,9 +701,9 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
         {/* Pricing */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-5 h-5 text-green-600" />
+            <div>
+              <div>
+                <DollarSign />
                 <CardTitle>Pricing</CardTitle>
               </div>
               <Button
@@ -715,32 +715,32 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                   markup_amount: quote.markup_amount,
                 })}
               >
-                <Edit3 className="w-4 h-4 mr-1" />
+                <Edit3 />
                 Edit Pricing
               </Button>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <p className="text-3xl font-bold text-green-600">
+            <div>
+              <div>
+                <p>
                   {formatCurrency(quote.final_price || quote.total_cost)}
                 </p>
-                <p className="text-sm text-gray-600">Total Price</p>
+                <p>Total Price</p>
               </div>
               {quote.markup_amount && (
-                <div className="text-center p-4 bg-blue-50 rounded-lg">
-                  <p className="text-2xl font-bold text-blue-600">
+                <div>
+                  <p>
                     {formatCurrency(quote.markup_amount)}
                   </p>
-                  <p className="text-sm text-gray-600">Markup</p>
+                  <p>Markup</p>
                 </div>
               )}
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <p className="text-lg font-medium text-gray-600">
+              <div>
+                <p>
                   Created {new Date(quote.created_at).toLocaleDateString()}
                 </p>
-                <p className="text-sm text-gray-500">Quote Date</p>
+                <p>Quote Date</p>
               </div>
             </div>
           </CardContent>
@@ -749,7 +749,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
 
       {/* Edit Modals */}
       <Dialog open={editModal !== null} onOpenChange={() => closeEditModal()}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>
               {editModal === "customer_info" && "Edit Customer Information"}
@@ -766,17 +766,17 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4">
+          <div>
             {editModal === "customer_info" && (
               <>
-                <div className="space-y-2">
+                <div>
                   <Label>Customer Name</Label>
                   <Input
                     value={editForm.customer_name || ""}
                     onChange={(e) => setEditForm({...editForm, customer_name: e.target.value})}
                   />
                 </div>
-                <div className="space-y-2">
+                <div>
                   <Label>Email</Label>
                   <Input
                     type="email"
@@ -784,14 +784,14 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                     onChange={(e) => setEditForm({...editForm, customer_email: e.target.value})}
                   />
                 </div>
-                <div className="space-y-2">
+                <div>
                   <Label>Phone</Label>
                   <Input
                     value={editForm.customer_phone || ""}
                     onChange={(e) => setEditForm({...editForm, customer_phone: e.target.value})}
                   />
                 </div>
-                <div className="space-y-2">
+                <div>
                   <Label>Address</Label>
                   <Textarea
                     value={editForm.address || ""}
@@ -803,7 +803,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
 
             {editModal === "project_details" && (
               <>
-                <div className="space-y-2">
+                <div>
                   <Label>Project Type</Label>
                   <Select
                     value={editForm.project_type || ""}
@@ -819,7 +819,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
+                <div>
                   <Label>Prep Work</Label>
                   <Textarea
                     value={editForm.prep_work || ""}
@@ -827,7 +827,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                     placeholder="Describe any special preparation work needed..."
                   />
                 </div>
-                <div className="space-y-2">
+                <div>
                   <Label>Special Requests</Label>
                   <Textarea
                     value={editForm.special_requests || ""}
@@ -839,7 +839,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
             )}
 
             {editModal === "paint_quality" && (
-              <div className="space-y-2">
+              <div>
                 <Label>Paint Quality Level</Label>
                 <Select
                   value={editForm.paint_quality || ""}
@@ -859,9 +859,9 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
             )}
 
             {editModal === "paint_products" && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+              <div>
+                <div>
+                  <div>
                     <Label>Primer Name</Label>
                     <Input
                       value={editForm.primer_name || ""}
@@ -869,24 +869,24 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       placeholder="e.g., Zinsser Bulls Eye 1-2-3"
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Primer Cost per Gallon</Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                    <div>
+                      <span>$</span>
                       <Input
                         type="number"
                         step="0.01"
                         value={editForm.primer_cost || ""}
                         onChange={(e) => setEditForm({...editForm, primer_cost: e.target.value})}
                         placeholder="25.00"
-                        className="pl-8"
+                       
                       />
                     </div>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div>
+                  <div>
                     <Label>Wall Paint Name</Label>
                     <Input
                       value={editForm.wall_paint_name || ""}
@@ -894,24 +894,24 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       placeholder="e.g., Benjamin Moore Regal Select"
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Wall Paint Cost per Gallon</Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                    <div>
+                      <span>$</span>
                       <Input
                         type="number"
                         step="0.01"
                         value={editForm.wall_paint_cost || ""}
                         onChange={(e) => setEditForm({...editForm, wall_paint_cost: e.target.value})}
                         placeholder="45.00"
-                        className="pl-8"
+                       
                       />
                     </div>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div>
+                  <div>
                     <Label>Ceiling Paint Name</Label>
                     <Input
                       value={editForm.ceiling_paint_name || ""}
@@ -919,24 +919,24 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       placeholder="e.g., Sherwin-Williams ProMar 200"
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Ceiling Paint Cost per Gallon</Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                    <div>
+                      <span>$</span>
                       <Input
                         type="number"
                         step="0.01"
                         value={editForm.ceiling_paint_cost || ""}
                         onChange={(e) => setEditForm({...editForm, ceiling_paint_cost: e.target.value})}
                         placeholder="35.00"
-                        className="pl-8"
+                       
                       />
                     </div>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div>
+                  <div>
                     <Label>Trim Paint Name</Label>
                     <Input
                       value={editForm.trim_paint_name || ""}
@@ -944,24 +944,24 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       placeholder="e.g., Benjamin Moore Advance"
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Trim Paint Cost per Gallon</Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                    <div>
+                      <span>$</span>
                       <Input
                         type="number"
                         step="0.01"
                         value={editForm.trim_paint_cost || ""}
                         onChange={(e) => setEditForm({...editForm, trim_paint_cost: e.target.value})}
                         placeholder="55.00"
-                        className="pl-8"
+                       
                       />
                     </div>
                   </div>
                 </div>
                 
-                <div className="p-3 bg-amber-50 rounded-lg">
-                  <p className="text-sm text-amber-700">
+                <div>
+                  <p>
                     <strong>Note:</strong> These changes only apply to this specific quote and won't modify your global product settings.
                   </p>
                 </div>
@@ -970,8 +970,8 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
 
             {editModal === "measurements" && (
               <>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div>
+                  <div>
                     <Label>Walls (sq ft)</Label>
                     <Input
                       type="number"
@@ -979,7 +979,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       onChange={(e) => setEditForm({...editForm, walls_sqft: e.target.value})}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Ceilings (sq ft)</Label>
                     <Input
                       type="number"
@@ -987,7 +987,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       onChange={(e) => setEditForm({...editForm, ceilings_sqft: e.target.value})}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Trim (sq ft)</Label>
                     <Input
                       type="number"
@@ -995,7 +995,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       onChange={(e) => setEditForm({...editForm, trim_sqft: e.target.value})}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Linear Feet</Label>
                     <Input
                       type="number"
@@ -1003,7 +1003,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       onChange={(e) => setEditForm({...editForm, wall_linear_feet: e.target.value})}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Ceiling Height (ft)</Label>
                     <Input
                       type="number"
@@ -1012,7 +1012,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       onChange={(e) => setEditForm({...editForm, ceiling_height: e.target.value})}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Number of Doors</Label>
                     <Input
                       type="number"
@@ -1020,7 +1020,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       onChange={(e) => setEditForm({...editForm, number_of_doors: e.target.value})}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Number of Windows</Label>
                     <Input
                       type="number"
@@ -1033,7 +1033,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
             )}
 
             {editModal === "timeline" && (
-              <div className="space-y-2">
+              <div>
                 <Label>Project Timeline</Label>
                 <Input
                   value={editForm.timeline || ""}
@@ -1045,15 +1045,15 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
 
             {editModal === "room" && editingRoom && (
               <>
-                <div className="space-y-2">
+                <div>
                   <Label>Room Name</Label>
                   <Input
                     value={editForm.name || editingRoom.name}
                     onChange={(e) => setEditForm({...editForm, name: e.target.value})}
                   />
                 </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-2">
+                <div>
+                  <div>
                     <Label>Length (ft)</Label>
                     <Input
                       type="number"
@@ -1062,7 +1062,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       onChange={(e) => setEditForm({...editForm, length: parseFloat(e.target.value)})}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Width (ft)</Label>
                     <Input
                       type="number"
@@ -1071,7 +1071,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       onChange={(e) => setEditForm({...editForm, width: parseFloat(e.target.value)})}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Height (ft)</Label>
                     <Input
                       type="number"
@@ -1081,8 +1081,8 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div>
+                  <div>
                     <Label>Number of Doors</Label>
                     <Input
                       type="number"
@@ -1090,7 +1090,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
                       onChange={(e) => setEditForm({...editForm, number_of_doors: parseInt(e.target.value)})}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Number of Windows</Label>
                     <Input
                       type="number"
@@ -1104,16 +1104,16 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
 
             {editModal === "other" && (
               <>
-                <div className="space-y-2">
+                <div>
                   <Label>Final Price</Label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <div>
+                    <span>$</span>
                     <Input
                       type="number"
                       step="0.01"
                       value={editForm.final_price || ""}
                       onChange={(e) => setEditForm({...editForm, final_price: parseFloat(e.target.value)})}
-                      className="pl-8"
+                     
                     />
                   </div>
                 </div>
@@ -1121,7 +1121,7 @@ export default function QuoteEditPage({ params }: { params: { id: string } }) {
             )}
           </div>
 
-          <div className="flex justify-end gap-2 pt-4">
+          <div>
             <Button variant="outline" onClick={closeEditModal}>
               Cancel
             </Button>

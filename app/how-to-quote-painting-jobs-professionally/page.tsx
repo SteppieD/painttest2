@@ -26,22 +26,22 @@ export const metadata = generatePageMetadata({
 
 export default function HowToQuotePaintingJobsProfessionallyPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div>
       <KofiHeader />
 
       {/* Hero Section */}
-      <section className="py-16 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              How to Quote <span className="text-blue-600">Painting Jobs</span> Like a Pro
+      <section>
+        <div>
+          <div>
+            <h1>
+              How to Quote <span>Painting Jobs</span> Like a Pro
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p>
               Master the art of professional painting estimates. Learn proven strategies to price jobs accurately, win more bids, and maximize your profits with every quote.
             </p>
-            <Button size="lg" asChild className="text-lg px-8 py-6">
+            <Button size="lg" asChild>
               <Link href="/trial-signup">
-                <Calculator className="w-5 h-5 mr-2" />
+                <Calculator />
                 Get Professional Quote Tool
               </Link>
             </Button>
@@ -50,22 +50,22 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
       </section>
 
       {/* Table of Contents */}
-      <section className="py-12 px-4 border-b">
-        <div className="container mx-auto max-w-4xl">
-          <div className="bg-gray-50 rounded-lg p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Complete Guide Contents</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <ul className="space-y-2">
-                <li><a href="#basics" className="text-blue-600 hover:text-blue-700">1. Painting Quote Basics</a></li>
-                <li><a href="#measurement" className="text-blue-600 hover:text-blue-700">2. Accurate Measurements</a></li>
-                <li><a href="#materials" className="text-blue-600 hover:text-blue-700">3. Material Calculations</a></li>
-                <li><a href="#labor" className="text-blue-600 hover:text-blue-700">4. Labor Cost Estimation</a></li>
+      <section>
+        <div>
+          <div>
+            <h2>Complete Guide Contents</h2>
+            <div>
+              <ul>
+                <li><a href="#basics">1. Painting Quote Basics</a></li>
+                <li><a href="#measurement">2. Accurate Measurements</a></li>
+                <li><a href="#materials">3. Material Calculations</a></li>
+                <li><a href="#labor">4. Labor Cost Estimation</a></li>
               </ul>
-              <ul className="space-y-2">
-                <li><a href="#pricing" className="text-blue-600 hover:text-blue-700">5. Pricing Strategies</a></li>
-                <li><a href="#templates" className="text-blue-600 hover:text-blue-700">6. Professional Templates</a></li>
-                <li><a href="#mistakes" className="text-blue-600 hover:text-blue-700">7. Common Mistakes</a></li>
-                <li><a href="#tools" className="text-blue-600 hover:text-blue-700">8. Quote Software Tools</a></li>
+              <ul>
+                <li><a href="#pricing">5. Pricing Strategies</a></li>
+                <li><a href="#templates">6. Professional Templates</a></li>
+                <li><a href="#mistakes">7. Common Mistakes</a></li>
+                <li><a href="#tools">8. Quote Software Tools</a></li>
               </ul>
             </div>
           </div>
@@ -73,46 +73,46 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
       </section>
 
       {/* Section 1: Basics */}
-      <section id="basics" className="py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">1. Painting Quote Basics: What Every Professional Needs to Know</h2>
+      <section id="basics">
+        <div>
+          <h2>1. Painting Quote Basics: What Every Professional Needs to Know</h2>
           
-          <div className="prose prose-lg max-w-none mb-12">
-            <p className="text-gray-600 text-lg mb-6">
+          <div>
+            <p>
               Creating accurate painting quotes is the foundation of a profitable painting business. A professional quote should include all costs, 
               establish clear expectations, and position you competitively in the market.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gray-900 mb-4">What Should a Painting Quote Include?</h3>
+            <h3>What Should a Painting Quote Include?</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-blue-600" />
+                  <CardTitle>
+                    <FileText />
                     Essential Quote Elements
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                  <ul>
+                    <li>
+                      <CheckCircle />
                       <span>Detailed scope of work</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    <li>
+                      <CheckCircle />
                       <span>Material specifications</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    <li>
+                      <CheckCircle />
                       <span>Labor costs breakdown</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    <li>
+                      <CheckCircle />
                       <span>Timeline expectations</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    <li>
+                      <CheckCircle />
                       <span>Terms and conditions</span>
                     </li>
                   </ul>
@@ -121,31 +121,31 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <DollarSign className="w-5 h-5 text-green-600" />
+                  <CardTitle>
+                    <DollarSign />
                     Pricing Components
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                  <ul>
+                    <li>
+                      <CheckCircle />
                       <span>Paint and primer costs</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    <li>
+                      <CheckCircle />
                       <span>Supplies and equipment</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    <li>
+                      <CheckCircle />
                       <span>Prep work requirements</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    <li>
+                      <CheckCircle />
                       <span>Labor hours and rates</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    <li>
+                      <CheckCircle />
                       <span>Profit margin and overhead</span>
                     </li>
                   </ul>
@@ -157,26 +157,26 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
       </section>
 
       {/* Section 2: Measurement */}
-      <section id="measurement" className="py-16 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">2. Accurate Measurements: The Foundation of Every Quote</h2>
+      <section id="measurement">
+        <div>
+          <h2>2. Accurate Measurements: The Foundation of Every Quote</h2>
           
-          <div className="prose prose-lg max-w-none">
-            <p className="text-gray-600 text-lg mb-6">
+          <div>
+            <p>
               Accurate measurements are crucial for profitable painting quotes. Here's how professional contractors measure different surfaces:
             </p>
 
-            <div className="bg-white rounded-lg p-6 mb-8">
-              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Wall Surface Calculation</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3>Wall Surface Calculation</h3>
+              <div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Standard Formula:</h4>
-                  <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-4">
-                    <code className="text-blue-800">
+                  <h4>Standard Formula:</h4>
+                  <div>
+                    <code>
                       (Length × Height) - Doors - Windows = Paintable Area
                     </code>
                   </div>
-                  <ul className="space-y-2">
+                  <ul>
                     <li>• Measure wall length and height</li>
                     <li>• Subtract door area (21 sq ft each)</li>
                     <li>• Subtract window area (15 sq ft average)</li>
@@ -184,8 +184,8 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Pro Tips:</h4>
-                  <ul className="space-y-2">
+                  <h4>Pro Tips:</h4>
+                  <ul>
                     <li>• Use a laser measure for accuracy</li>
                     <li>• Round up to nearest half foot</li>
                     <li>• Account for texture differences</li>
@@ -195,14 +195,14 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div>
               <Card>
                 <CardHeader>
                   <CardTitle>Interior Walls</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-600 mb-2">Standard ceiling height: 8-9 feet</p>
-                  <p className="text-sm text-gray-600">Coverage: 350-400 sq ft per gallon</p>
+                  <p>Standard ceiling height: 8-9 feet</p>
+                  <p>Coverage: 350-400 sq ft per gallon</p>
                 </CardContent>
               </Card>
 
@@ -211,8 +211,8 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
                   <CardTitle>Ceilings</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-600 mb-2">Length × Width = Area</p>
-                  <p className="text-sm text-gray-600">Coverage: 350-400 sq ft per gallon</p>
+                  <p>Length × Width = Area</p>
+                  <p>Coverage: 350-400 sq ft per gallon</p>
                 </CardContent>
               </Card>
 
@@ -221,8 +221,8 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
                   <CardTitle>Trim & Doors</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-600 mb-2">Measure linear feet of trim</p>
-                  <p className="text-sm text-gray-600">Doors: 20 sq ft average each</p>
+                  <p>Measure linear feet of trim</p>
+                  <p>Doors: 20 sq ft average each</p>
                 </CardContent>
               </Card>
             </div>
@@ -231,68 +231,68 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
       </section>
 
       {/* Section 3: Materials */}
-      <section id="materials" className="py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">3. Material Cost Calculations</h2>
+      <section id="materials">
+        <div>
+          <h2>3. Material Cost Calculations</h2>
           
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-6 h-6 text-yellow-600 mt-0.5" />
+          <div>
+            <div>
+              <AlertCircle />
               <div>
-                <h3 className="font-semibold text-yellow-800 mb-2">Pro Tip: Material Cost Strategy</h3>
-                <p className="text-yellow-700">
+                <h3>Pro Tip: Material Cost Strategy</h3>
+                <p>
                   Always add 15-20% to material costs for waste, touch-ups, and price fluctuations. This protects your profit margins and accounts for unexpected needs.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div>
             <div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Paint Cost Calculation</h3>
-              <div className="space-y-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-semibold mb-2">Premium Paint</h4>
-                  <p className="text-sm text-gray-600">$45-65 per gallon</p>
-                  <p className="text-sm text-gray-600">Coverage: 350-400 sq ft</p>
+              <h3>Paint Cost Calculation</h3>
+              <div>
+                <div>
+                  <h4>Premium Paint</h4>
+                  <p>$45-65 per gallon</p>
+                  <p>Coverage: 350-400 sq ft</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-semibold mb-2">Standard Paint</h4>
-                  <p className="text-sm text-gray-600">$25-45 per gallon</p>
-                  <p className="text-sm text-gray-600">Coverage: 300-350 sq ft</p>
+                <div>
+                  <h4>Standard Paint</h4>
+                  <p>$25-45 per gallon</p>
+                  <p>Coverage: 300-350 sq ft</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-semibold mb-2">Primer</h4>
-                  <p className="text-sm text-gray-600">$20-35 per gallon</p>
-                  <p className="text-sm text-gray-600">Coverage: 300-400 sq ft</p>
+                <div>
+                  <h4>Primer</h4>
+                  <p>$20-35 per gallon</p>
+                  <p>Coverage: 300-400 sq ft</p>
                 </div>
               </div>
             </div>
 
             <div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Supply Costs</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 border-b">
+              <h3>Supply Costs</h3>
+              <div>
+                <div>
                   <span>Brushes & Rollers</span>
-                  <span className="font-medium">$25-50</span>
+                  <span>$25-50</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b">
+                <div>
                   <span>Drop Cloths</span>
-                  <span className="font-medium">$15-30</span>
+                  <span>$15-30</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b">
+                <div>
                   <span>Painter's Tape</span>
-                  <span className="font-medium">$10-25</span>
+                  <span>$10-25</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b">
+                <div>
                   <span>Sandpaper & Prep</span>
-                  <span className="font-medium">$20-40</span>
+                  <span>$20-40</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b">
+                <div>
                   <span>Plastic & Protection</span>
-                  <span className="font-medium">$15-35</span>
+                  <span>$15-35</span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-t-2 font-semibold">
+                <div>
                   <span>Total Supplies</span>
                   <span>$85-180</span>
                 </div>
@@ -303,33 +303,33 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
       </section>
 
       {/* Section 4: Labor */}
-      <section id="labor" className="py-16 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">4. Labor Cost Estimation</h2>
+      <section id="labor">
+        <div>
+          <h2>4. Labor Cost Estimation</h2>
           
-          <div className="prose prose-lg max-w-none mb-8">
-            <p className="text-gray-600 text-lg mb-6">
+          <div>
+            <p>
               Labor typically represents 70-80% of your total quote. Accurate labor estimation is crucial for profitability.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
               <Card>
                 <CardHeader>
                   <CardTitle>Labor Rate Calculation</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div>
                     <div>
-                      <h4 className="font-semibold mb-2">Hourly Rate Components:</h4>
-                      <ul className="space-y-2 text-sm">
+                      <h4>Hourly Rate Components:</h4>
+                      <ul>
                         <li>• Base wage: $20-35/hour</li>
                         <li>• Taxes & benefits: +25%</li>
                         <li>• Equipment & overhead: +15%</li>
                         <li>• Profit margin: +20-30%</li>
                       </ul>
                     </div>
-                    <div className="bg-blue-50 p-4 rounded">
-                      <p className="font-medium text-blue-800">
+                    <div>
+                      <p>
                         Total Rate: $35-65/hour
                       </p>
                     </div>
@@ -342,26 +342,26 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
                   <CardTitle>Time Estimates</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
+                  <div>
+                    <div>
                       <span>Prep work</span>
-                      <span className="font-medium">150-200 sq ft/hour</span>
+                      <span>150-200 sq ft/hour</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div>
                       <span>Priming</span>
-                      <span className="font-medium">300-400 sq ft/hour</span>
+                      <span>300-400 sq ft/hour</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div>
                       <span>Wall painting</span>
-                      <span className="font-medium">350-450 sq ft/hour</span>
+                      <span>350-450 sq ft/hour</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div>
                       <span>Trim painting</span>
-                      <span className="font-medium">25-40 linear ft/hour</span>
+                      <span>25-40 linear ft/hour</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div>
                       <span>Cleanup</span>
-                      <span className="font-medium">10% of total time</span>
+                      <span>10% of total time</span>
                     </div>
                   </div>
                 </CardContent>
@@ -372,29 +372,29 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
       </section>
 
       {/* Professional Tools CTA */}
-      <section className="py-20 px-4 bg-blue-600">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+      <section>
+        <div>
+          <h2>
             Automate Your Painting Quotes with Professional Software
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p>
             Stop calculating quotes manually. Get accurate estimates in minutes with our professional painting quote software.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6">
+          <div>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/trial-signup">
-                <Calculator className="w-5 h-5 mr-2" />
+                <Calculator />
                 Try Free Calculator
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 text-white border-white hover:bg-white hover:text-blue-600">
+            <Button size="lg" variant="outline">
               <Link href="/painting-quote-templates">
-                <FileText className="w-5 h-5 mr-2" />
+                <FileText />
                 Get Quote Templates
               </Link>
             </Button>
           </div>
-          <p className="text-blue-200 mt-4 text-sm">
+          <p>
             Free trial • Professional templates included • Mobile-friendly
           </p>
         </div>

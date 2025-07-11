@@ -20,8 +20,6 @@ import {
   X,
   Ruler
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-
 interface RoomTemplate {
   id: string;
   name: string;
@@ -248,37 +246,32 @@ export function RoomTemplateSelector({
   };
 
   return (
-    <div className={cn("design-container max-w-6xl mx-auto", className)}>
+    <div>
       {/* Header */}
-      <div className="mb-8 text-center">
-        <h2 className="design-heading-2">Choose Room Templates</h2>
-        <p className="design-body">Select from our most popular room configurations to speed up your quote</p>
+      <div>
+        <h2>Choose Room Templates</h2>
+        <p>Select from our most popular room configurations to speed up your quote</p>
       </div>
 
       {/* Search and Filters */}
-      <div className="mb-6 space-y-4">
+      <div>
         <Input
           placeholder="Search room types..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="design-input max-w-md mx-auto"
+         
         />
 
-        <div className="flex flex-wrap justify-center gap-2">
+        <div>
           {categories.map((category) => (
             <Button
               key={category.id}
               variant={selectedCategory === category.id ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedCategory(category.id)}
-              className={cn(
-                "design-button design-button-small",
-                selectedCategory === category.id 
-                  ? "design-button-primary" 
-                  : "design-button-secondary"
-              )}
+             
             >
-              <category.icon className="w-4 h-4 mr-2" />
+              <category.icon />
               {category.label}
             </Button>
           ))}
@@ -286,7 +279,7 @@ export function RoomTemplateSelector({
       </div>
 
       {/* Room Templates Grid */}
-      <div className="design-grid design-grid-3 mb-8">
+      <div>
         {filteredTemplates.map((template) => {
           const popularityBadge = getPopularityBadge(template.popularity);
           const selected = isSelected(template);
@@ -294,64 +287,59 @@ export function RoomTemplateSelector({
           return (
             <Card 
               key={template.id}
-              className={cn(
-                "design-card design-card-interactive cursor-pointer transition-all duration-200",
-                selected 
-                  ? "ring-2 ring-blue-600 bg-blue-50 border-blue-300" 
-                  : "hover:border-blue-300 hover:shadow-lg"
-              )}
+             
               onClick={() => onTemplateSelect(template)}
             >
-              <CardContent className="p-6">
-                <div className="design-stack">
+              <CardContent>
+                <div>
                   {/* Header */}
-                  <div className="design-inline">
-                    <div className="p-3 bg-white rounded-lg shadow-sm">
-                      <template.icon className="w-6 h-6 text-blue-600" />
+                  <div>
+                    <div>
+                      <template.icon />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">{template.name}</h3>
-                      <p className="text-sm text-gray-500">{template.description}</p>
+                    <div>
+                      <h3>{template.name}</h3>
+                      <p>{template.description}</p>
                     </div>
                     {selected && (
-                      <div className="p-1 bg-blue-600 rounded-full">
-                        <Check className="w-4 h-4 text-white" />
+                      <div>
+                        <Check />
                       </div>
                     )}
                   </div>
 
                   {/* Badges */}
-                  <div className="design-inline">
+                  <div>
                     {popularityBadge && (
-                      <Badge className={cn("text-xs", popularityBadge.color)}>
+                      <Badge>
                         {popularityBadge.label}
                       </Badge>
                     )}
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline">
                       {template.surfaces.length} surfaces
                     </Badge>
                   </div>
 
                   {/* Dimensions */}
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <div className="design-inline mb-2">
-                      <Ruler className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm font-medium text-gray-700">Dimensions</span>
+                  <div>
+                    <div>
+                      <Ruler />
+                      <span>Dimensions</span>
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div>
                       {template.dimensions.length}' × {template.dimensions.width}' × {template.dimensions.height}'
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div>
                       {template.estimatedArea} sq ft • ${getCostPerSqFt(template)}/sq ft
                     </div>
                   </div>
 
                   {/* Surfaces */}
                   <div>
-                    <p className="text-sm text-gray-600 mb-2">Includes:</p>
-                    <div className="flex flex-wrap gap-1">
+                    <p>Includes:</p>
+                    <div>
                       {template.surfaces.map((surface) => (
-                        <Badge key={surface} variant="secondary" className="text-xs">
+                        <Badge key={surface} variant="secondary">
                           {surface}
                         </Badge>
                       ))}
@@ -359,9 +347,9 @@ export function RoomTemplateSelector({
                   </div>
 
                   {/* Cost */}
-                  <div className="design-inline pt-3 border-t border-gray-200">
-                    <span className="text-sm text-gray-500">Estimated Cost</span>
-                    <span className="text-lg font-semibold text-green-600">
+                  <div>
+                    <span>Estimated Cost</span>
+                    <span>
                       ${template.estimatedCost.toLocaleString()}
                     </span>
                   </div>
@@ -373,54 +361,54 @@ export function RoomTemplateSelector({
       </div>
 
       {/* Custom Room Option */}
-      <Card className="design-card border-dashed border-2 border-gray-300 hover:border-blue-400 transition-colors">
-        <CardContent className="p-8 text-center">
-          <div className="design-stack items-center">
-            <div className="p-4 bg-gray-100 rounded-full">
-              <Plus className="w-8 h-8 text-gray-400" />
+      <Card>
+        <CardContent>
+          <div>
+            <div>
+              <Plus />
             </div>
             <div>
-              <h3 className="design-heading-3">Custom Room</h3>
-              <p className="design-body">Need different dimensions or surfaces? Create a custom room.</p>
+              <h3>Custom Room</h3>
+              <p>Need different dimensions or surfaces? Create a custom room.</p>
             </div>
             
             {/* Quick Custom Form */}
-            <div className="w-full max-w-md space-y-4">
-              <div className="design-grid grid-cols-3 gap-3">
+            <div>
+              <div>
                 <div>
-                  <label className="text-xs text-gray-500 block mb-1">Length (ft)</label>
+                  <label>Length (ft)</label>
                   <Input
                     type="number"
                     value={customDimensions.length}
                     onChange={(e) => setCustomDimensions(prev => ({ ...prev, length: Number(e.target.value) }))}
-                    className="design-input design-input-small text-center"
+                   
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 block mb-1">Width (ft)</label>
+                  <label>Width (ft)</label>
                   <Input
                     type="number"
                     value={customDimensions.width}
                     onChange={(e) => setCustomDimensions(prev => ({ ...prev, width: Number(e.target.value) }))}
-                    className="design-input design-input-small text-center"
+                   
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 block mb-1">Height (ft)</label>
+                  <label>Height (ft)</label>
                   <Input
                     type="number"
                     value={customDimensions.height}
                     onChange={(e) => setCustomDimensions(prev => ({ ...prev, height: Number(e.target.value) }))}
-                    className="design-input design-input-small text-center"
+                   
                   />
                 </div>
               </div>
               
               <Button 
                 onClick={onCustomRoom}
-                className="design-button design-button-secondary w-full"
+               
               >
-                <Edit className="w-4 h-4 mr-2" />
+                <Edit />
                 Create Custom Room
               </Button>
             </div>
@@ -430,26 +418,26 @@ export function RoomTemplateSelector({
 
       {/* Selection Summary */}
       {selectedTemplates.length > 0 && (
-        <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-xl">
-          <h4 className="font-semibold text-blue-900 mb-3">
+        <div>
+          <h4>
             Selected Rooms ({selectedTemplates.length})
           </h4>
-          <div className="space-y-2">
+          <div>
             {selectedTemplates.map((template) => (
-              <div key={template.id} className="design-inline text-sm">
-                <template.icon className="w-4 h-4 text-blue-600" />
-                <span className="text-blue-900">{template.name}</span>
-                <Badge variant="outline" className="text-blue-700 border-blue-300">
+              <div key={template.id}>
+                <template.icon />
+                <span>{template.name}</span>
+                <Badge variant="outline">
                   ${template.estimatedCost.toLocaleString()}
                 </Badge>
               </div>
             ))}
           </div>
           
-          <div className="mt-4 pt-4 border-t border-blue-200">
-            <div className="design-inline">
-              <span className="font-semibold text-blue-900">Total Estimated Cost:</span>
-              <span className="text-xl font-bold text-green-600">
+          <div>
+            <div>
+              <span>Total Estimated Cost:</span>
+              <span>
                 ${selectedTemplates.reduce((sum, t) => sum + t.estimatedCost, 0).toLocaleString()}
               </span>
             </div>

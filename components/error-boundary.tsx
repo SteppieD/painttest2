@@ -223,8 +223,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Retry button (always available for first 3 attempts)
     if (retryCount < 3) {
       buttons.push(
-        <Button key="retry" onClick={this.handleRetry} className="gap-2">
-          <RefreshCw className="w-4 h-4" />
+        <Button key="retry" onClick={this.handleRetry}>
+          <RefreshCw />
           Try Again {retryCount > 0 && `(${retryCount}/3)`}
         </Button>
       );
@@ -233,8 +233,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Reload page button for high-level errors
     if (level === 'page' || errorLevel === 'critical' || errorLevel === 'high') {
       buttons.push(
-        <Button key="reload" variant="outline" onClick={this.handleReloadPage} className="gap-2">
-          <RefreshCw className="w-4 h-4" />
+        <Button key="reload" variant="outline" onClick={this.handleReloadPage}>
+          <RefreshCw />
           Reload Page
         </Button>
       );
@@ -243,8 +243,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Go home button for critical errors
     if (level === 'app' || errorLevel === 'critical') {
       buttons.push(
-        <Button key="home" variant="outline" onClick={this.handleGoHome} className="gap-2">
-          <Home className="w-4 h-4" />
+        <Button key="home" variant="outline" onClick={this.handleGoHome}>
+          <Home />
           Go Home
         </Button>
       );
@@ -267,25 +267,17 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       const actionButtons = this.getActionButtons();
 
       return (
-        <div className="min-h-[400px] flex items-center justify-center p-4">
-          <Card className="max-w-2xl w-full p-6 space-y-6">
+        <div>
+          <Card>
             {/* Error Header */}
-            <div className="flex items-start gap-4">
-              <div className={`p-3 rounded-full ${
-                errorLevel === 'critical' ? 'bg-red-100' :
-                errorLevel === 'high' ? 'bg-orange-100' :
-                errorLevel === 'medium' ? 'bg-yellow-100' : 'bg-blue-100'
-              }`}>
-                <AlertTriangle className={`w-6 h-6 ${
-                  errorLevel === 'critical' ? 'text-red-600' :
-                  errorLevel === 'high' ? 'text-orange-600' :
-                  errorLevel === 'medium' ? 'text-yellow-600' : 'text-blue-600'
-                }`} />
+            <div>
+              <div`}>
+                <AlertTriangle`} />
               </div>
               
-              <div className="flex-1 space-y-2">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xl font-semibold">Something went wrong</h3>
+              <div>
+                <div>
+                  <h3>Something went wrong</h3>
                   <Badge variant={
                     errorLevel === 'critical' ? 'destructive' :
                     errorLevel === 'high' ? 'destructive' :
@@ -295,12 +287,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                   </Badge>
                 </div>
                 
-                <p className="text-muted-foreground">
+                <p>
                   {errorMessage}
                 </p>
 
                 {error && (
-                  <div className="text-sm font-mono bg-muted p-2 rounded border">
+                  <div>
                     {error.name}: {error.message}
                   </div>
                 )}
@@ -308,45 +300,45 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap gap-2">
+            <div>
               {actionButtons}
             </div>
 
             {/* Error Details (Collapsible) */}
             {(error || errorInfo) && (
-              <div className="space-y-2">
+              <div>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={this.toggleDetails}
-                  className="gap-2 text-muted-foreground"
+                 
                 >
                   {showDetails ? (
                     <>
-                      <ChevronUp className="w-4 h-4" />
+                      <ChevronUp />
                       Hide Details
                     </>
                   ) : (
                     <>
-                      <ChevronDown className="w-4 h-4" />
+                      <ChevronDown />
                       Show Details
                     </>
                   )}
                 </Button>
 
                 {showDetails && (
-                  <div className="space-y-4 p-4 bg-muted rounded-lg">
+                  <div>
                     <div>
-                      <p className="text-sm font-medium mb-2">Error ID:</p>
-                      <code className="text-xs bg-background p-2 rounded border block">
+                      <p>Error ID:</p>
+                      <code>
                         {errorId}
                       </code>
                     </div>
 
                     {error?.stack && (
                       <div>
-                        <p className="text-sm font-medium mb-2">Stack Trace:</p>
-                        <pre className="text-xs bg-background p-3 rounded border overflow-auto max-h-40">
+                        <p>Stack Trace:</p>
+                        <pre>
                           {error.stack}
                         </pre>
                       </div>
@@ -354,14 +346,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
                     {errorInfo?.componentStack && (
                       <div>
-                        <p className="text-sm font-medium mb-2">Component Stack:</p>
-                        <pre className="text-xs bg-background p-3 rounded border overflow-auto max-h-40">
+                        <p>Component Stack:</p>
+                        <pre>
                           {errorInfo.componentStack}
                         </pre>
                       </div>
                     )}
 
-                    <div className="text-xs text-muted-foreground">
+                    <div>
                       <p>Time: {new Date().toLocaleString()}</p>
                       <p>URL: {window.location.href}</p>
                       <p>User Agent: {navigator.userAgent}</p>
@@ -372,7 +364,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             )}
 
             {/* Help Text */}
-            <div className="text-sm text-muted-foreground border-t pt-4">
+            <div>
               <p>
                 If this error persists, please contact support with the error ID above.
                 {errorLevel === 'medium' && ' This might be a temporary issue that will resolve itself.'}

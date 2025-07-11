@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { 
   Square, 
   Layers, 
@@ -32,7 +31,7 @@ export const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: 'walls',
     name: 'Walls',
-    icon: <Square className="w-5 h-5" />,
+    icon: <Square />,
     description: 'Interior or exterior wall surfaces',
     measurementType: 'area',
     category: 'walls',
@@ -42,7 +41,7 @@ export const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: 'accent_walls',
     name: 'Accent Walls',
-    icon: <Square className="w-5 h-5" />,
+    icon: <Square />,
     description: 'Feature walls with special paint or treatment',
     measurementType: 'area',
     category: 'walls',
@@ -54,7 +53,7 @@ export const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: 'ceilings',
     name: 'Ceilings',
-    icon: <Layers className="w-5 h-5" />,
+    icon: <Layers />,
     description: 'Ceiling surfaces - requires room count',
     measurementType: 'rooms',
     category: 'ceilings',
@@ -66,7 +65,7 @@ export const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: 'baseboards',
     name: 'Baseboards',
-    icon: <Frame className="w-5 h-5" />,
+    icon: <Frame />,
     description: 'Base trim along floors',
     measurementType: 'linear',
     category: 'trim',
@@ -76,7 +75,7 @@ export const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: 'crown_molding',
     name: 'Crown Molding',
-    icon: <Frame className="w-5 h-5" />,
+    icon: <Frame />,
     description: 'Decorative trim at ceiling',
     measurementType: 'linear',
     category: 'trim',
@@ -86,7 +85,7 @@ export const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: 'window_trim',
     name: 'Window Trim',
-    icon: <Frame className="w-5 h-5" />,
+    icon: <Frame />,
     description: 'Trim around windows',
     measurementType: 'linear',
     category: 'trim',
@@ -96,7 +95,7 @@ export const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: 'door_trim',
     name: 'Door Trim',
-    icon: <Frame className="w-5 h-5" />,
+    icon: <Frame />,
     description: 'Trim around doors',
     measurementType: 'linear',
     category: 'trim',
@@ -108,7 +107,7 @@ export const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: 'doors',
     name: 'Doors',
-    icon: <DoorOpen className="w-5 h-5" />,
+    icon: <DoorOpen />,
     description: 'Door faces and panels',
     measurementType: 'count',
     category: 'items',
@@ -118,7 +117,7 @@ export const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: 'windows',
     name: 'Window Frames',
-    icon: <Square className="w-5 h-5" />,
+    icon: <Square />,
     description: 'Window frames and sashes',
     measurementType: 'count',
     category: 'items',
@@ -128,7 +127,7 @@ export const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: 'cabinets',
     name: 'Cabinets',
-    icon: <Square className="w-5 h-5" />,
+    icon: <Square />,
     description: 'Kitchen or bathroom cabinets',
     measurementType: 'count',
     category: 'items',
@@ -161,41 +160,32 @@ export function SurfaceSelectionButton({
 
   return (
     <Card 
-      className={cn(
-        "transition-all duration-200 cursor-pointer hover:shadow-md",
-        isSelected ? "bg-blue-50 border-blue-300 ring-2 ring-blue-200" : "hover:bg-gray-50 border-gray-200",
-        isRecommended && !isSelected && "border-green-300 bg-green-50/50",
-        disabled && "opacity-50 cursor-not-allowed"
-      )}
+     
       onClick={() => !disabled && onToggle(surface.id)}
     >
-      <CardContent className="p-4">
-        <div className="flex items-start gap-3">
-          <div className={cn(
-            "p-2 rounded-lg",
-            isSelected ? "bg-blue-100 text-blue-600" : 
-            isRecommended ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-600"
-          )}>
-            {isSelected ? <CheckCircle className="w-5 h-5" /> : surface.icon}
+      <CardContent>
+        <div>
+          <div>
+            {isSelected ? <CheckCircle /> : surface.icon}
           </div>
           
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-medium text-gray-900">{surface.name}</h3>
+          <div>
+            <div>
+              <h3>{surface.name}</h3>
               {isRecommended && !isSelected && (
-                <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                <Badge variant="secondary">
                   Recommended
                 </Badge>
               )}
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline">
                 {measurementTypeLabels[surface.measurementType]}
               </Badge>
             </div>
             
-            <p className="text-sm text-gray-600 mb-2">{surface.description}</p>
+            <p>{surface.description}</p>
             
             {surface.examples && surface.examples.length > 0 && (
-              <div className="text-xs text-gray-500">
+              <div>
                 Examples: {surface.examples.slice(0, 2).join(', ')}
                 {surface.examples.length > 2 && '...'}
               </div>
@@ -259,10 +249,10 @@ export function SmartSurfaceSelector({
   };
 
   const categoryIcons = {
-    walls: <Square className="w-5 h-5" />,
-    ceilings: <Layers className="w-5 h-5" />,
-    trim: <Frame className="w-5 h-5" />,
-    items: <DoorOpen className="w-5 h-5" />
+    walls: <Square />,
+    ceilings: <Layers />,
+    trim: <Frame />,
+    items: <DoorOpen />
   };
 
   // Detect measurement requirements
@@ -270,26 +260,26 @@ export function SmartSurfaceSelector({
   const measurementTypes = Array.from(new Set(selectedSurfaceObjects.map(s => s.measurementType)));
   
   return (
-    <div className={cn("space-y-6", className)}>
+    <div>
       {/* Header */}
-      <div className="text-center space-y-2">
-        <h2 className="text-xl font-bold text-gray-900">What surfaces are you painting?</h2>
-        <p className="text-gray-600">
+      <div>
+        <h2>What surfaces are you painting?</h2>
+        <p>
           Select all surfaces that need painting. We'll determine the best measurement approach.
         </p>
       </div>
 
       {/* Selected Surfaces Summary */}
       {selectedSurfaces.length > 0 && (
-        <Card className="bg-blue-50 border-blue-200">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <CheckCircle className="w-5 h-5 text-blue-600" />
-              <span className="font-medium text-blue-900">
+        <Card>
+          <CardContent>
+            <div>
+              <CheckCircle />
+              <span>
                 {selectedSurfaces.length} surface{selectedSurfaces.length !== 1 ? 's' : ''} selected
               </span>
             </div>
-            <div className="text-sm text-blue-700">
+            <div>
               Measurement types needed: {measurementTypes.join(', ')}
             </div>
           </CardContent>
@@ -299,14 +289,14 @@ export function SmartSurfaceSelector({
       {/* Surface Categories */}
       {Object.entries(surfacesByCategory).map(([category, surfaces]) => (
         <Card key={category}>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center gap-2">
+          <CardHeader>
+            <CardTitle>
               {categoryIcons[category as keyof typeof categoryIcons]}
               {categoryLabels[category as keyof typeof categoryLabels]}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div>
               {surfaces.map((surface) => (
                 <SurfaceSelectionButton
                   key={surface.id}
@@ -323,13 +313,13 @@ export function SmartSurfaceSelector({
 
       {/* Recommendations */}
       {showRecommendations && recommendations.length > 0 && (
-        <Card className="border-green-200 bg-green-50">
-          <CardContent className="p-4">
-            <div className="flex items-start gap-2">
-              <Info className="w-5 h-5 text-green-600 mt-0.5" />
+        <Card>
+          <CardContent>
+            <div>
+              <Info />
               <div>
-                <div className="font-medium text-green-900 mb-1">Recommended additions</div>
-                <div className="text-sm text-green-700">
+                <div>Recommended additions</div>
+                <div>
                   Based on your selections, contractors often also paint: {' '}
                   {recommendations.map(id => {
                     const surface = SURFACE_OPTIONS.find(s => s.id === id);
@@ -344,14 +334,14 @@ export function SmartSurfaceSelector({
 
       {/* Continue Button */}
       {selectedSurfaces.length > 0 && (
-        <div className="flex justify-center">
+        <div>
           <Button 
             onClick={onContinue}
             size="lg"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+           
           >
             Continue with {selectedSurfaces.length} surface{selectedSurfaces.length !== 1 ? 's' : ''}
-            <ArrowRight className="w-5 h-5 ml-2" />
+            <ArrowRight />
           </Button>
         </div>
       )}

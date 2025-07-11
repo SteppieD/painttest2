@@ -152,23 +152,23 @@ export default function SetupChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-blue-600" />
+      <div>
+        <div>
+          <div>
+            <div>
+              <div>
+                <Sparkles />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Business Setup Assistant</h1>
-                <p className="text-sm text-gray-600">Let's get your painting business configured</p>
+                <h1>Business Setup Assistant</h1>
+                <p>Let's get your painting business configured</p>
               </div>
             </div>
           </div>
           {/* Compact Progress Bar in Header */}
-          <div className="max-w-md">
+          <div>
             <OnboardingProgressBar
               steps={[
                 {
@@ -199,34 +199,30 @@ export default function SetupChatPage() {
       </div>
 
       {/* Chat Container */}
-      <div className="max-w-4xl mx-auto p-4">
-        <div className="bg-white rounded-lg shadow-sm border min-h-[600px] flex flex-col">
+      <div>
+        <div>
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          <div>
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+               `}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg p-4 ${
-                    message.role === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-900'
-                  }`}
+                 `}
                 >
-                  <p className="whitespace-pre-wrap">{message.content}</p>
+                  <p>{message.content}</p>
                   
                   {/* Suggestions */}
                   {message.suggestions && message.suggestions.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-gray-200">
-                      <p className="text-sm text-gray-600 mb-2">Quick options:</p>
-                      <div className="flex flex-wrap gap-2">
+                    <div>
+                      <p>Quick options:</p>
+                      <div>
                         {message.suggestions.map((suggestion, idx) => (
                           <button
                             key={idx}
                             onClick={() => handleSuggestionClick(suggestion)}
-                            className="px-3 py-1 bg-white text-gray-700 rounded-md text-sm hover:bg-gray-50 border transition-colors"
+                           
                           >
                             {suggestion}
                           </button>
@@ -239,11 +235,11 @@ export default function SetupChatPage() {
             ))}
             
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 rounded-lg p-4">
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="text-gray-600">Thinking...</span>
+              <div>
+                <div>
+                  <div>
+                    <Loader2 />
+                    <span>Thinking...</span>
                   </div>
                 </div>
               </div>
@@ -254,41 +250,41 @@ export default function SetupChatPage() {
 
           {/* Input Form */}
           {!isComplete ? (
-            <form onSubmit={handleSubmit} className="border-t p-4">
-              <div className="flex gap-2">
+            <form onSubmit={handleSubmit}>
+              <div>
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Type your answer..."
-                  className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                 
                   disabled={isLoading}
                 />
                 <button
                   type="submit"
                   disabled={isLoading || !inputValue.trim()}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                 
                 >
-                  <Send className="w-5 h-5" />
+                  <Send />
                 </button>
               </div>
             </form>
           ) : (
-            <div className="border-t p-6 bg-green-50">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
+            <div>
+              <div>
+                <div>
+                  <CheckCircle />
                   <div>
-                    <p className="font-semibold text-green-900">Setup Complete!</p>
-                    <p className="text-sm text-green-700">Redirecting to your dashboard...</p>
+                    <p>Setup Complete!</p>
+                    <p>Redirecting to your dashboard...</p>
                   </div>
                 </div>
                 <button
                   onClick={() => router.push('/dashboard')}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                 
                 >
                   Go to Dashboard
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight />
                 </button>
               </div>
             </div>
@@ -296,7 +292,7 @@ export default function SetupChatPage() {
         </div>
 
         {/* Progress Indicator */}
-        <div className="mt-4 bg-white rounded-lg shadow-sm border p-4">
+        <div>
           <OnboardingProgressBar
             steps={[
               {

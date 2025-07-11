@@ -2,7 +2,7 @@
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div>
       <h1>Test</h1>
     </div>
   );

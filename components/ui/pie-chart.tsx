@@ -44,12 +44,12 @@ export default function CustomPieChart({
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-medium text-gray-900">{data.name}</p>
-          <p className="text-sm text-gray-600">
+        <div>
+          <p>{data.name}</p>
+          <p>
             Value: {formatValue ? formatValue(data.value) : data.value}
           </p>
-          <p className="text-sm text-gray-600">
+          <p>
             Percentage: {((data.value / data.total) * 100).toFixed(1)}%
           </p>
         </div>
@@ -73,7 +73,7 @@ export default function CustomPieChart({
         fill="white" 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        className="text-xs font-medium"
+       
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>

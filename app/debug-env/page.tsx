@@ -31,28 +31,28 @@ export default function DebugEnvironmentPage() {
   };
 
   const StatusIcon = ({ success }: { success: boolean }) => {
-    if (success) return <CheckCircle className="w-5 h-5 text-green-500" />;
-    return <XCircle className="w-5 h-5 text-red-500" />;
+    if (success) return <CheckCircle />;
+    return <XCircle />;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+    <div>
+      <div>
+        <div>
+          <h1>
             Environment Diagnostics
           </h1>
-          <p className="text-gray-600">
+          <p>
             Debug tool to check Supabase configuration on Vercel
           </p>
         </div>
 
-        <div className="grid gap-6">
+        <div>
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <AlertCircle className="w-5 h-5" />
+              <div>
+                <CardTitle>
+                  <AlertCircle />
                   Environment Configuration
                 </CardTitle>
                 <Button 
@@ -62,9 +62,9 @@ export default function DebugEnvironmentPage() {
                   variant="outline"
                 >
                   {testing ? (
-                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <RefreshCw />
                   ) : (
-                    <RefreshCw className="w-4 h-4" />
+                    <RefreshCw />
                   )}
                   Recheck
                 </Button>
@@ -72,12 +72,12 @@ export default function DebugEnvironmentPage() {
             </CardHeader>
             <CardContent>
               {envStatus ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <span className="font-medium">Overall Status</span>
-                    <div className="flex items-center gap-2">
+                <div>
+                  <div>
+                    <span>Overall Status</span>
+                    <div>
                       <StatusIcon success={envStatus.success} />
-                      <span className={envStatus.success ? "text-green-600" : "text-red-600"}>
+                      <span>
                         {envStatus.success ? "Connected" : "Failed"}
                       </span>
                     </div>
@@ -85,31 +85,31 @@ export default function DebugEnvironmentPage() {
 
                   {envStatus.config && (
                     <>
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
                         <span>Supabase URL</span>
-                        <div className="flex items-center gap-2">
+                        <div>
                           <StatusIcon success={envStatus.config.hasUrl} />
-                          <span className={envStatus.config.hasUrl ? "text-green-600" : "text-red-600"}>
+                          <span>
                             {envStatus.config.hasUrl ? "Set" : "Missing"}
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
                         <span>Service Role Key</span>
-                        <div className="flex items-center gap-2">
+                        <div>
                           <StatusIcon success={envStatus.config.hasServiceKey} />
-                          <span className={envStatus.config.hasServiceKey ? "text-green-600" : "text-red-600"}>
+                          <span>
                             {envStatus.config.hasServiceKey ? "Set" : "Missing"}
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
                         <span>Anon Key</span>
-                        <div className="flex items-center gap-2">
+                        <div>
                           <StatusIcon success={envStatus.config.hasAnonKey} />
-                          <span className={envStatus.config.hasAnonKey ? "text-green-600" : "text-red-600"}>
+                          <span>
                             {envStatus.config.hasAnonKey ? "Set" : "Missing"}
                           </span>
                         </div>
@@ -118,15 +118,15 @@ export default function DebugEnvironmentPage() {
                   )}
 
                   {envStatus.error && (
-                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                      <h4 className="font-medium text-red-800 mb-2">Error:</h4>
-                      <p className="text-red-700 text-sm">{envStatus.error}</p>
+                    <div>
+                      <h4>Error:</h4>
+                      <p>{envStatus.error}</p>
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-500">Loading...</p>
+                <div>
+                  <p>Loading...</p>
                 </div>
               )}
             </CardContent>

@@ -91,18 +91,18 @@ export function LoginPopup({ open, onOpenChange }: LoginPopupProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <KeyRound className="w-5 h-5 text-primary-pink" />
+          <DialogTitle>
+            <KeyRound />
             Enter Access Code
           </DialogTitle>
           <DialogDescription>
             Enter your company access code to access your dashboard
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div className="space-y-2">
+        <form onSubmit={handleSubmit}>
+          <div>
             <Label htmlFor="access-code">Access Code</Label>
             <Input
               id="access-code"
@@ -111,26 +111,26 @@ export function LoginPopup({ open, onOpenChange }: LoginPopupProps) {
               value={accessCode}
               onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
               disabled={isLoading}
-              className="uppercase"
+             
               autoFocus
             />
           </div>
           
           {error && (
-            <div className="bg-red-50 text-red-800 text-sm p-3 rounded-lg">
+            <div>
               {error}
             </div>
           )}
 
-          <div className="flex flex-col gap-3">
+          <div>
             <Button
               type="submit"
               disabled={isLoading || !accessCode.trim()}
-              className="w-full"
+             
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 />
                   Verifying...
                 </>
               ) : (
@@ -138,11 +138,11 @@ export function LoginPopup({ open, onOpenChange }: LoginPopupProps) {
               )}
             </Button>
             
-            <div className="text-center text-sm text-gray-600">
+            <div>
               Don't have an access code?{" "}
               <a 
                 href="/trial-signup" 
-                className="text-primary-pink hover:underline font-medium"
+               
                 onClick={() => onOpenChange(false)}
               >
                 Start free trial

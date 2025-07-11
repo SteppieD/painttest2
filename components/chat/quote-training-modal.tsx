@@ -39,71 +39,71 @@ export function QuoteTrainingModal({ isOpen, onClose, onUseExample }: QuoteTrain
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
+    <div>
+      <Card>
+        <CardHeader>
+          <div>
             <div>
-              <CardTitle className="text-xl flex items-center gap-2">
-                <Lightbulb className="h-5 w-5 text-yellow-500" />
+              <CardTitle>
+                <Lightbulb />
                 Get Instant Quotes in One Message
               </CardTitle>
-              <p className="text-gray-600 text-sm mt-1">
+              <p>
                 Pro tip: Include all details in your first message for the fastest quote
               </p>
             </div>
             <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="h-4 w-4" />
+              <X />
             </Button>
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-6">
+        <CardContent>
           {/* Benefits */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-3 bg-green-50 rounded-lg">
-              <Clock className="h-6 w-6 text-green-600 mx-auto mb-1" />
-              <div className="text-sm font-medium">Instant Results</div>
-              <div className="text-xs text-gray-600">Get quotes in seconds</div>
+          <div>
+            <div>
+              <Clock />
+              <div>Instant Results</div>
+              <div>Get quotes in seconds</div>
             </div>
-            <div className="text-center p-3 bg-blue-50 rounded-lg">
-              <MessageSquare className="h-6 w-6 text-blue-600 mx-auto mb-1" />
-              <div className="text-sm font-medium">One Message</div>
-              <div className="text-xs text-gray-600">No back-and-forth needed</div>
+            <div>
+              <MessageSquare />
+              <div>One Message</div>
+              <div>No back-and-forth needed</div>
             </div>
-            <div className="text-center p-3 bg-purple-50 rounded-lg">
-              <DollarSign className="h-6 w-6 text-purple-600 mx-auto mb-1" />
-              <div className="text-sm font-medium">Cost Efficient</div>
-              <div className="text-xs text-gray-600">Optimized pricing</div>
+            <div>
+              <DollarSign />
+              <div>Cost Efficient</div>
+              <div>Optimized pricing</div>
             </div>
           </div>
 
           {/* What to Include */}
           <div>
-            <h3 className="font-semibold mb-3">Essential Information to Include:</h3>
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <h3>Essential Information to Include:</h3>
+            <div>
+              <div>
+                <div></div>
                 Customer name
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <div>
+                <div></div>
                 Project type (interior/exterior)
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <div>
+                <div></div>
                 Square footage or room size
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <div>
+                <div></div>
                 Paint preferences (optional)
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+              <div>
+                <div></div>
                 Address (optional)
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+              <div>
+                <div></div>
                 Timeline (optional)
               </div>
             </div>
@@ -111,23 +111,19 @@ export function QuoteTrainingModal({ isOpen, onClose, onUseExample }: QuoteTrain
 
           {/* Examples */}
           <div>
-            <h3 className="font-semibold mb-3">Examples You Can Try:</h3>
+            <h3>Examples You Can Try:</h3>
             
-            <div className="space-y-3">
+            <div>
               {EXAMPLE_QUOTES.map((quote, index) => (
                 <div 
                   key={index}
-                  className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
-                    currentExample === index 
-                      ? 'border-blue-500 bg-blue-50' 
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                 `}
                   onClick={() => setCurrentExample(index)}
                 >
-                  <div className="flex items-start justify-between mb-2">
+                  <div>
                     <div>
-                      <h4 className="font-medium text-sm">{quote.title}</h4>
-                      <p className="text-xs text-gray-600">{quote.description}</p>
+                      <h4>{quote.title}</h4>
+                      <p>{quote.description}</p>
                     </div>
                     <Button 
                       size="sm" 
@@ -137,19 +133,19 @@ export function QuoteTrainingModal({ isOpen, onClose, onUseExample }: QuoteTrain
                         onUseExample(quote.example)
                         onClose()
                       }}
-                      className="text-xs"
+                     
                     >
                       Use This
                     </Button>
                   </div>
                   
-                  <div className="bg-gray-50 p-3 rounded text-sm italic mb-3">
+                  <div>
                     "{quote.example}"
                   </div>
                   
-                  <div className="flex flex-wrap gap-1">
+                  <div>
                     {quote.highlights.map((highlight, i) => (
-                      <Badge key={i} variant="secondary" className="text-xs">
+                      <Badge key={i} variant="secondary">
                         {highlight}
                       </Badge>
                     ))}
@@ -160,13 +156,13 @@ export function QuoteTrainingModal({ isOpen, onClose, onUseExample }: QuoteTrain
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 pt-4 border-t">
+          <div>
             <Button 
               onClick={() => {
                 onUseExample(EXAMPLE_QUOTES[currentExample].example)
                 onClose()
               }}
-              className="flex-1"
+             
             >
               Try Selected Example
             </Button>
@@ -175,7 +171,7 @@ export function QuoteTrainingModal({ isOpen, onClose, onUseExample }: QuoteTrain
             </Button>
           </div>
 
-          <div className="text-xs text-gray-500 text-center">
+          <div>
             💡 Don't worry if you forget something - you can always add details in follow-up messages
           </div>
         </CardContent>

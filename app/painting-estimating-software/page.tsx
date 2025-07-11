@@ -74,27 +74,27 @@ export default function PaintingEstimatingSoftwarePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       <KofiHeader />
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+      <section>
+        <div>
+          <div>
+            <h1>
               The Best Painting Estimating Software
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-indigo-100">
+            <p>
               Create professional estimates faster and win more painting jobs
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div>
               <Link href="/access-code">
-                <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 text-lg px-8 py-3">
+                <Button size="lg">
                   Try Free Demo
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight />
                 </Button>
               </Link>
               <Link href="/painting-quote-templates">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-indigo-600 text-lg px-8 py-3">
+                <Button size="lg" variant="outline">
                   View Templates
                 </Button>
               </Link>
@@ -104,26 +104,26 @@ export default function PaintingEstimatingSoftwarePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Why Choose ProPaint Estimating Software?
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p>
               Designed specifically for painting contractors who want to streamline their estimating process
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
             {features.map((feature, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+              <Card key={index}>
                 <CardHeader>
-                  <feature.icon className="w-12 h-12 text-indigo-600 mx-auto mb-4" />
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  <feature.icon />
+                  <CardTitle>{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <p>{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -132,32 +132,32 @@ export default function PaintingEstimatingSoftwarePage() {
       </section>
 
       {/* Comparison Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Traditional Methods vs. Estimating Software
             </h2>
-            <p className="text-lg text-gray-600">
+            <p>
               See how modern estimating software transforms your quoting process
             </p>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300">
+          <div>
+            <table>
               <thead>
-                <tr className="bg-gray-50">
-                  <th className="border border-gray-300 p-4 text-left font-semibold">Feature</th>
-                  <th className="border border-gray-300 p-4 text-left font-semibold">Traditional Methods</th>
-                  <th className="border border-gray-300 p-4 text-left font-semibold bg-indigo-50">ProPaint Software</th>
+                <tr>
+                  <th>Feature</th>
+                  <th>Traditional Methods</th>
+                  <th>ProPaint Software</th>
                 </tr>
               </thead>
               <tbody>
                 {comparison.map((row, index) => (
-                  <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                    <td className="border border-gray-300 p-4 font-medium">{row.feature}</td>
-                    <td className="border border-gray-300 p-4 text-gray-600">{row.traditional}</td>
-                    <td className="border border-gray-300 p-4 text-indigo-700 bg-indigo-50">{row.software}</td>
+                  <tr key={index}>
+                    <td>{row.feature}</td>
+                    <td>{row.traditional}</td>
+                    <td>{row.software}</td>
                   </tr>
                 ))}
               </tbody>
@@ -167,54 +167,54 @@ export default function PaintingEstimatingSoftwarePage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section>
+        <div>
+          <div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              <h2>
                 Everything You Need in One Platform
               </h2>
-              <p className="text-lg text-gray-600 mb-8">
+              <p>
                 Stop juggling multiple tools and spreadsheets. Our comprehensive platform handles 
                 everything from initial estimates to project completion.
               </p>
-              <ul className="space-y-3">
+              <ul>
                 {benefits.map((benefit, index) => (
-                  <li key={index} className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-indigo-500 mr-3" />
-                    <span className="text-gray-700">{benefit}</span>
+                  <li key={index}>
+                    <CheckCircle />
+                    <span>{benefit}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="bg-white p-8 rounded-lg shadow-lg">
-              <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-4">
-                  <Star className="w-8 h-8 text-indigo-600" />
+            <div>
+              <div>
+                <div>
+                  <Star />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">Trusted by Professionals</h3>
-                <p className="text-gray-600">Join thousands of painting contractors</p>
+                <h3>Trusted by Professionals</h3>
+                <p>Join thousands of painting contractors</p>
               </div>
               
-              <div className="space-y-4 mb-6">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Estimates Created</span>
-                  <span className="font-bold text-indigo-600">500,000+</span>
+              <div>
+                <div>
+                  <span>Estimates Created</span>
+                  <span>500,000+</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Active Contractors</span>
-                  <span className="font-bold text-indigo-600">15,000+</span>
+                <div>
+                  <span>Active Contractors</span>
+                  <span>15,000+</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Average Time Saved</span>
-                  <span className="font-bold text-indigo-600">75%</span>
+                <div>
+                  <span>Average Time Saved</span>
+                  <span>75%</span>
                 </div>
               </div>
               
               <Link href="/access-code">
-                <Button size="lg" className="w-full bg-indigo-600 hover:bg-indigo-700">
+                <Button size="lg">
                   Start Free Trial
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight />
                 </Button>
               </Link>
             </div>
@@ -223,38 +223,38 @@ export default function PaintingEstimatingSoftwarePage() {
       </section>
 
       {/* Features Detail */}
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="prose prose-lg max-w-none">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+      <section>
+        <div>
+          <div>
+            <h2>
               Complete Painting Business Solution
             </h2>
             
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Advanced Estimation Engine</h3>
-            <p className="text-gray-600 mb-6">
+            <h3>Advanced Estimation Engine</h3>
+            <p>
               Our software uses industry-standard formulas and real-world data to calculate accurate 
               material quantities, labor hours, and project costs. Built-in databases for paint 
               coverage rates, labor productivity, and local pricing ensure your estimates are both 
               competitive and profitable.
             </p>
 
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Professional Quote Generation</h3>
-            <p className="text-gray-600 mb-6">
+            <h3>Professional Quote Generation</h3>
+            <p>
               Create impressive, detailed quotes that showcase your professionalism. Include your 
               company branding, detailed scope of work, material specifications, timeline, and 
               terms. Clients receive polished PDF documents they can easily share and approve.
             </p>
 
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Mobile Accessibility</h3>
-            <p className="text-gray-600 mb-6">
+            <h3>Mobile Accessibility</h3>
+            <p>
               Work from anywhere with full mobile functionality. Measure and estimate on-site, 
               send quotes while still at the client's location, and manage your business from 
               your smartphone or tablet. No more rushing back to the office to create estimates.
             </p>
 
-            <div className="bg-indigo-50 p-6 rounded-lg">
-              <h4 className="text-xl font-semibold mb-3 text-indigo-900">Getting Started is Easy</h4>
-              <ol className="list-decimal list-inside space-y-2 text-indigo-800">
+            <div>
+              <h4>Getting Started is Easy</h4>
+              <ol>
                 <li>Sign up for free access</li>
                 <li>Enter your project details</li>
                 <li>Review automated calculations</li>
@@ -267,21 +267,21 @@ export default function PaintingEstimatingSoftwarePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-indigo-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Estimating Process?</h2>
-          <p className="text-xl text-indigo-100 mb-8">
+      <section>
+        <div>
+          <h2>Ready to Transform Your Estimating Process?</h2>
+          <p>
             Join thousands of painting contractors who've streamlined their business with our software
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div>
             <Link href="/access-code">
-              <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 text-lg px-8 py-3">
+              <Button size="lg">
                 Start Free Trial Today
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight />
               </Button>
             </Link>
             <Link href="/how-to-quote-painting-jobs">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-indigo-600 text-lg px-8 py-3">
+              <Button size="lg" variant="outline">
                 Learn Best Practices
               </Button>
             </Link>

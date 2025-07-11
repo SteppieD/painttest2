@@ -23,13 +23,13 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
         ));
       } else {
         // Bold text
-        return <strong key={index} className="font-semibold">{part}</strong>;
+        return <strong key={index}>{part}</strong>;
       }
     });
   };
 
   return (
-    <div className={className}>
+    <div>
       {renderMarkdown(content)}
     </div>
   );

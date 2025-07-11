@@ -82,26 +82,26 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center">
-            <Shield className="w-8 h-8 text-white" />
+    <div>
+      <Card>
+        <CardHeader>
+          <div>
+            <Shield />
           </div>
           <div>
-            <CardTitle className="text-2xl font-bold text-gray-900">
+            <CardTitle>
               Admin Portal
             </CardTitle>
-            <p className="text-gray-600 mt-2">
+            <p>
               Sign in to access the admin dashboard
             </p>
           </div>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit}>
             {/* Email Field */}
-            <div className="space-y-2">
+            <div>
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
@@ -109,48 +109,48 @@ export default function AdminLogin() {
                 placeholder="admin@paintingapp.com"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className={errors.email ? 'border-red-500 focus:border-red-500' : ''}
+               
                 disabled={isLoading}
               />
               {errors.email && (
-                <p className="text-sm text-red-600 flex items-center gap-1">
-                  <AlertCircle className="w-4 h-4" />
+                <p>
+                  <AlertCircle />
                   {errors.email}
                 </p>
               )}
             </div>
 
             {/* Password Field */}
-            <div className="space-y-2">
+            <div>
               <Label htmlFor="password">Password</Label>
-              <div className="relative">
+              <div>
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className={errors.password ? 'border-red-500 focus:border-red-500 pr-10' : 'pr-10'}
+                 
                   disabled={isLoading}
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                 
                   onClick={() => setShowPassword(!showPassword)}
                   disabled={isLoading}
                 >
                   {showPassword ? (
-                    <EyeOff className="w-4 h-4 text-gray-400" />
+                    <EyeOff />
                   ) : (
-                    <Eye className="w-4 h-4 text-gray-400" />
+                    <Eye />
                   )}
                 </Button>
               </div>
               {errors.password && (
-                <p className="text-sm text-red-600 flex items-center gap-1">
-                  <AlertCircle className="w-4 h-4" />
+                <p>
+                  <AlertCircle />
                   {errors.password}
                 </p>
               )}
@@ -158,9 +158,9 @@ export default function AdminLogin() {
 
             {/* Submit Error */}
             {errors.submit && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-                <p className="text-sm text-red-600 flex items-center gap-1">
-                  <AlertCircle className="w-4 h-4" />
+              <div>
+                <p>
+                  <AlertCircle />
                   {errors.submit}
                 </p>
               </div>
@@ -169,12 +169,12 @@ export default function AdminLogin() {
             {/* Submit Button */}
             <Button 
               type="submit" 
-              className="w-full" 
+              
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  <div />
                   Signing In...
                 </>
               ) : (
@@ -184,15 +184,15 @@ export default function AdminLogin() {
           </form>
 
           {/* Demo Credentials */}
-          <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <p className="text-sm text-blue-800 font-medium mb-2">Demo Credentials:</p>
-            <p className="text-sm text-blue-700">Email: admin@paintingapp.com</p>
-            <p className="text-sm text-blue-700">Password: admin123</p>
+          <div>
+            <p>Demo Credentials:</p>
+            <p>Email: admin@paintingapp.com</p>
+            <p>Password: admin123</p>
           </div>
 
           {/* Security Notice */}
-          <div className="mt-4 text-center">
-            <p className="text-xs text-gray-500">
+          <div>
+            <p>
               This is a secure admin portal. All activity is logged and monitored.
             </p>
           </div>

@@ -73,7 +73,7 @@ export function FeedbackBox({ type, position = 'fixed', page }: FeedbackBoxProps
 
   if (position === 'inline') {
     return (
-      <div className="w-full max-w-md mx-auto">
+      <div>
         <FeedbackForm
           rating={rating}
           setRating={setRating}
@@ -99,7 +99,7 @@ export function FeedbackBox({ type, position = 'fixed', page }: FeedbackBoxProps
       {/* Floating Feedback Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 right-6 bg-orange-600 text-white p-4 rounded-full shadow-lg hover:bg-orange-700 transition-all hover:scale-110 z-30"
+       
         aria-label="Give Feedback"
       >
         <MessageSquare size={24} />
@@ -107,8 +107,8 @@ export function FeedbackBox({ type, position = 'fixed', page }: FeedbackBoxProps
 
       {/* Feedback Modal */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div>
+          <div>
             <FeedbackForm
               rating={rating}
               setRating={setRating}
@@ -149,56 +149,52 @@ function FeedbackForm({
   showCloseButton = true,
 }: any) {
   return (
-    <form onSubmit={onSubmit} className="p-6">
+    <form onSubmit={onSubmit}>
       {showCloseButton && (
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-all"
+         
           aria-label="Close"
         >
           <X size={24} />
         </button>
       )}
 
-      <h3 className="text-2xl font-bold text-gray-900 mb-2">
+      <h3>
         {isSuccess ? 'Thank You!' : 'Share Your Feedback'}
       </h3>
       
       {isSuccess ? (
-        <div className="text-center py-8">
-          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-          <p className="text-gray-600">
+        <div>
+          <CheckCircle />
+          <p>
             Your feedback has been received. We appreciate your input!
           </p>
         </div>
       ) : (
         <>
-          <p className="text-gray-600 mb-6">
+          <p>
             Help us improve Paint Quote Pro with your valuable feedback.
           </p>
 
           {/* Star Rating */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div>
+            <label>
               How would you rate your experience?
             </label>
-            <div className="flex gap-2">
+            <div>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   type="button"
                   onClick={() => setRating(star)}
-                  className="transition-all hover:scale-110"
+                 
                   aria-label={`Rate ${star} stars`}
                 >
                   <Star
                     size={32}
-                    className={
-                      star <= rating
-                        ? 'fill-yellow-400 text-yellow-400'
-                        : 'text-gray-300 hover:text-yellow-400'
-                    }
+                   
                   />
                 </button>
               ))}
@@ -206,24 +202,24 @@ function FeedbackForm({
           </div>
 
           {/* Feedback Message */}
-          <div className="mb-4">
-            <label htmlFor="feedback-message" className="block text-sm font-medium text-gray-700 mb-2">
-              Your Feedback <span className="text-red-500">*</span>
+          <div>
+            <label htmlFor="feedback-message">
+              Your Feedback <span>*</span>
             </label>
             <textarea
               id="feedback-message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
+             
               placeholder="Tell us what you think..."
               required
             />
           </div>
 
           {/* Name (Optional) */}
-          <div className="mb-4">
-            <label htmlFor="feedback-name" className="block text-sm font-medium text-gray-700 mb-2">
+          <div>
+            <label htmlFor="feedback-name">
               Name (Optional)
             </label>
             <input
@@ -231,14 +227,14 @@ function FeedbackForm({
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+             
               placeholder="John Doe"
             />
           </div>
 
           {/* Email (Optional) */}
-          <div className="mb-6">
-            <label htmlFor="feedback-email" className="block text-sm font-medium text-gray-700 mb-2">
+          <div>
+            <label htmlFor="feedback-email">
               Email (Optional)
             </label>
             <input
@@ -246,17 +242,17 @@ function FeedbackForm({
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+             
               placeholder="john@example.com"
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p>
               If you'd like us to follow up with you
             </p>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div>
               {error}
             </div>
           )}
@@ -265,11 +261,11 @@ function FeedbackForm({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-orange-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+           
           >
             {isSubmitting ? (
               <>
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                <div />
                 Sending...
               </>
             ) : (

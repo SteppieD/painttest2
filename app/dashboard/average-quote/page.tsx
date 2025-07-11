@@ -392,10 +392,10 @@ export default function AverageQuotePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading average quote analytics...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading average quote analytics...</p>
         </div>
       </div>
     );
@@ -404,52 +404,52 @@ export default function AverageQuotePage() {
   const maxAverage = Math.max(...monthlyAverages.map(d => d.average));
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white border-b shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-4 h-16">
+      <div>
+        <div>
+          <div>
             <Button
               variant="ghost"
               onClick={() => router.push("/dashboard")}
-              className="gap-2"
+             
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft />
               Back to Dashboard
             </Button>
-            <div className="flex-1">
-              <h1 className="text-xl font-bold text-gray-900">Average Quote Analysis</h1>
+            <div>
+              <h1>Average Quote Analysis</h1>
             </div>
             <Button
               variant="outline"
               onClick={exportData}
-              className="gap-2"
+             
             >
-              <Download className="w-4 h-4" />
+              <Download />
               Export Data
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div>
         {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div>
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Average Quote Value
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-blue-600">{formatCurrency(stats.overallAverage)}</div>
-              <div className="flex items-center gap-2 mt-2">
+              <div>{formatCurrency(stats.overallAverage)}</div>
+              <div>
                 {stats.monthlyTrend > 0 ? (
-                  <TrendingUp className="w-4 h-4 text-green-600" />
+                  <TrendingUp />
                 ) : (
-                  <TrendingDown className="w-4 h-4 text-red-600" />
+                  <TrendingDown />
                 )}
-                <span className={`text-sm ${stats.monthlyTrend > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <span`}>
                   {Math.abs(stats.monthlyTrend).toFixed(1)}% monthly
                 </span>
               </div>
@@ -457,42 +457,42 @@ export default function AverageQuotePage() {
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Median Quote
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{formatCurrency(stats.medianQuote)}</div>
-              <div className="text-sm text-gray-500 mt-2">
+              <div>{formatCurrency(stats.medianQuote)}</div>
+              <div>
                 50th percentile
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Standard Deviation
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{formatCurrency(stats.standardDeviation)}</div>
-              <div className="text-sm text-gray-500 mt-2">
+              <div>{formatCurrency(stats.standardDeviation)}</div>
+              <div>
                 quote variance
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Top 10% Threshold
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-green-600">{formatCurrency(stats.topPercentileThreshold)}</div>
-              <div className="text-sm text-gray-500 mt-2">
+              <div>{formatCurrency(stats.topPercentileThreshold)}</div>
+              <div>
                 90th percentile
               </div>
             </CardContent>
@@ -500,39 +500,39 @@ export default function AverageQuotePage() {
         </div>
 
         {/* Average by Status */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>Average Quote by Status</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-6 bg-yellow-50 rounded-lg">
-                <Activity className="w-10 h-10 text-yellow-600 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-yellow-600">
+            <div>
+              <div>
+                <Activity />
+                <div>
                   {formatCurrency(stats.pendingAverage)}
                 </div>
-                <div className="text-sm text-gray-600">Pending Average</div>
-                <div className="text-xs text-gray-500 mt-1">
+                <div>Pending Average</div>
+                <div>
                   {((stats.pendingAverage / stats.overallAverage - 1) * 100).toFixed(1)}% vs overall
                 </div>
               </div>
-              <div className="text-center p-6 bg-green-50 rounded-lg">
-                <Target className="w-10 h-10 text-green-600 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-green-600">
+              <div>
+                <Target />
+                <div>
                   {formatCurrency(stats.acceptedAverage)}
                 </div>
-                <div className="text-sm text-gray-600">Accepted Average</div>
-                <div className="text-xs text-gray-500 mt-1">
+                <div>Accepted Average</div>
+                <div>
                   {((stats.acceptedAverage / stats.overallAverage - 1) * 100).toFixed(1)}% vs overall
                 </div>
               </div>
-              <div className="text-center p-6 bg-blue-50 rounded-lg">
-                <Zap className="w-10 h-10 text-blue-600 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-blue-600">
+              <div>
+                <Zap />
+                <div>
                   {formatCurrency(stats.completedAverage)}
                 </div>
-                <div className="text-sm text-gray-600">Completed Average</div>
-                <div className="text-xs text-gray-500 mt-1">
+                <div>Completed Average</div>
+                <div>
                   {((stats.completedAverage / stats.overallAverage - 1) * 100).toFixed(1)}% vs overall
                 </div>
               </div>
@@ -541,28 +541,28 @@ export default function AverageQuotePage() {
         </Card>
 
         {/* Monthly Average Trend */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>Monthly Average Quote Trend</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-end gap-2">
+            <div>
               {monthlyAverages.map((data, index) => (
-                <div key={index} className="flex-1 flex flex-col items-center">
-                  <div className="text-xs font-semibold mb-2">
+                <div key={index}>
+                  <div>
                     {formatCurrency(data.average)}
                   </div>
                   <div 
-                    className="w-full bg-blue-600 rounded-t transition-all duration-300"
+                   
                     style={{ 
                       height: `${maxAverage > 0 ? (data.average / maxAverage) * 180 : 0}px`,
                       minHeight: data.average > 0 ? '20px' : '0'
                     }}
                   />
-                  <div className="text-xs text-gray-600 mt-2 rotate-45 origin-left whitespace-nowrap">
+                  <div>
                     {data.month}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div>
                     ({data.count})
                   </div>
                 </div>
@@ -572,28 +572,28 @@ export default function AverageQuotePage() {
         </Card>
 
         {/* Quote Value Distribution */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>Quote Value Distribution</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div>
               {rangeDistribution.map((range, index) => (
                 <div key={index}>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-medium">{range.range}</span>
-                    <div className="text-right">
-                      <span className="font-semibold">{range.count} quotes</span>
-                      <span className="text-sm text-gray-500 ml-2">(avg: {formatCurrency(range.avgAmount)})</span>
+                  <div>
+                    <span>{range.range}</span>
+                    <div>
+                      <span>{range.count} quotes</span>
+                      <span>(avg: {formatCurrency(range.avgAmount)})</span>
                     </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-6">
+                  <div>
                     <div 
-                      className="bg-blue-600 h-6 rounded-full transition-all duration-300 flex items-center justify-end pr-2"
+                     
                       style={{ width: `${range.percentage}%` }}
                     >
                       {range.percentage > 5 && (
-                        <span className="text-xs text-white font-semibold">
+                        <span>
                           {range.percentage.toFixed(1)}%
                         </span>
                       )}
@@ -608,44 +608,42 @@ export default function AverageQuotePage() {
         {/* Average by Project Type */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle>
               <span>Average Quote by Project Type</span>
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <div>
+                <div>
+                  <Search />
                   <Input
                     placeholder="Search types..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-64"
+                   
                   />
                 </div>
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div>
+              <table>
                 <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-2 px-4">Project Type</th>
-                    <th className="text-left py-2 px-4">Average Quote</th>
-                    <th className="text-left py-2 px-4">Number of Quotes</th>
-                    <th className="text-left py-2 px-4">Variance from Overall</th>
+                  <tr>
+                    <th>Project Type</th>
+                    <th>Average Quote</th>
+                    <th>Number of Quotes</th>
+                    <th>Variance from Overall</th>
                   </tr>
                 </thead>
                 <tbody>
                   {projectTypeAverages.map((type, index) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
-                      <td className="py-2 px-4 font-medium">{type.type}</td>
-                      <td className="py-2 px-4 font-semibold text-blue-600">
+                    <tr key={index}>
+                      <td>{type.type}</td>
+                      <td>
                         {formatCurrency(type.average)}
                       </td>
-                      <td className="py-2 px-4">{type.count}</td>
-                      <td className="py-2 px-4">
-                        <span className={`font-medium ${
-                          type.average > stats.overallAverage ? 'text-green-600' : 'text-red-600'
-                        }`}>
+                      <td>{type.count}</td>
+                      <td>
+                        <span`}>
                           {type.average > stats.overallAverage ? '+' : ''}
                           {((type.average / stats.overallAverage - 1) * 100).toFixed(1)}%
                         </span>

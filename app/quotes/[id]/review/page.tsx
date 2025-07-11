@@ -128,9 +128,9 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
 
   const getMarginHealthIcon = () => {
     const grossProfit = calculateGrossProfit();
-    if (grossProfit >= 45) return <CheckCircle className="w-4 h-4" />;
-    if (grossProfit >= 25) return <AlertTriangle className="w-4 h-4" />;
-    return <AlertTriangle className="w-4 h-4" />;
+    if (grossProfit >= 45) return <CheckCircle />;
+    if (grossProfit >= 25) return <AlertTriangle />;
+    return <AlertTriangle />;
   };
 
   const getMarginHealthLabel = () => {
@@ -211,17 +211,17 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+      <div>
+        <div></div>
       </div>
     );
   }
 
   if (!quote) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">Quote not found</p>
+      <div>
+        <div>
+          <p>Quote not found</p>
           <Button onClick={() => router.push("/dashboard")}>
             Return to Dashboard
           </Button>
@@ -235,26 +235,26 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
   const grossProfit = calculateGrossProfit();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <header className="bg-white border-b shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+      <header>
+        <div>
+          <div>
+            <div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => router.back()}
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft />
               </Button>
               <div>
-                <h1 className="text-xl font-bold">Internal Quote Review</h1>
-                <p className="text-sm text-gray-500">Quote #{quote.quote_id}</p>
+                <h1>Internal Quote Review</h1>
+                <p>Quote #{quote.quote_id}</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div>
               <Button
                 variant="outline"
                 onClick={() => {
@@ -266,15 +266,15 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
                   });
                 }}
               >
-                <Copy className="w-4 h-4 mr-2" />
+                <Copy />
                 Copy Customer Link
               </Button>
               
               <Button
                 onClick={() => router.push(`/quotes/${quote.id}/customer`)}
-                className="bg-blue-600 hover:bg-blue-700"
+               
               >
-                <Eye className="w-4 h-4 mr-2" />
+                <Eye />
                 View Customer Quote
               </Button>
             </div>
@@ -282,53 +282,53 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto p-6 space-y-6">
+      <div>
         {/* Project Overview */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2">
+        <div>
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <FileText />
                 Project Overview
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CardContent>
+              <div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Client Details</Label>
-                  <p className="font-medium">{quote.customer_name}</p>
-                  <p className="text-sm text-gray-600">{quote.address}</p>
-                  {quote.customer_phone && <p className="text-sm text-gray-600">📞 {quote.customer_phone}</p>}
-                  {quote.customer_email && <p className="text-sm text-gray-600">✉️ {quote.customer_email}</p>}
-                  <p className="text-sm text-gray-500 mt-1">
+                  <Label>Client Details</Label>
+                  <p>{quote.customer_name}</p>
+                  <p>{quote.address}</p>
+                  {quote.customer_phone && <p>📞 {quote.customer_phone}</p>}
+                  {quote.customer_email && <p>✉️ {quote.customer_email}</p>}
+                  <p>
                     Quote Date: {new Date(quote.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Scope Summary</Label>
-                  <p className="font-medium capitalize">{quote.project_type} Painting</p>
-                  <p className="text-sm text-gray-600">{quote.sqft?.toLocaleString()} sq ft total</p>
-                  {quote.walls_sqft && <p className="text-sm text-gray-600">• Walls: {quote.walls_sqft.toLocaleString()} sqft</p>}
-                  {quote.ceilings_sqft && <p className="text-sm text-gray-600">• Ceilings: {quote.ceilings_sqft.toLocaleString()} sqft</p>}
-                  {quote.trim_sqft && <p className="text-sm text-gray-600">• Trim: {quote.trim_sqft.toLocaleString()} sqft</p>}
-                  <p className="text-sm text-gray-600">{quote.paint_quality} paint quality</p>
-                  <p className="text-sm text-gray-600">Timeline: {quote.timeline || 'Standard'}</p>
-                  {quote.prep_work && <p className="text-sm text-gray-600">Prep: {quote.prep_work}</p>}
+                  <Label>Scope Summary</Label>
+                  <p>{quote.project_type} Painting</p>
+                  <p>{quote.sqft?.toLocaleString()} sq ft total</p>
+                  {quote.walls_sqft && <p>• Walls: {quote.walls_sqft.toLocaleString()} sqft</p>}
+                  {quote.ceilings_sqft && <p>• Ceilings: {quote.ceilings_sqft.toLocaleString()} sqft</p>}
+                  {quote.trim_sqft && <p>• Trim: {quote.trim_sqft.toLocaleString()} sqft</p>}
+                  <p>{quote.paint_quality} paint quality</p>
+                  <p>Timeline: {quote.timeline || 'Standard'}</p>
+                  {quote.prep_work && <p>Prep: {quote.prep_work}</p>}
                 </div>
               </div>
               {quote.special_requests && (
-                <div className="mt-4 pt-4 border-t">
-                  <Label className="text-sm font-medium text-gray-600">Special Requests</Label>
-                  <p className="text-sm text-gray-700 mt-1">{quote.special_requests}</p>
+                <div>
+                  <Label>Special Requests</Label>
+                  <p>{quote.special_requests}</p>
                 </div>
               )}
               
-              <div className="flex items-center gap-4 pt-4 border-t">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-sm">Quote Stage: Active</span>
+              <div>
+                <div>
+                  <div></div>
+                  <span>Quote Stage: Active</span>
                 </div>
-                <div className="text-sm text-gray-600">
+                <div>
                   Valid until: {formatValidityDate(quote.created_at)}
                 </div>
               </div>
@@ -338,34 +338,34 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
           {/* Margin Health Indicator */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <TrendingUp />
                 Margin Health
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className={`p-4 rounded-lg border ${getMarginHealthColor()}`}>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
+              <div`}>
+                <div>
+                  <div>
                     {getMarginHealthIcon()}
-                    <span className="font-semibold">{getMarginHealthLabel()}</span>
+                    <span>{getMarginHealthLabel()}</span>
                   </div>
-                  <span className="text-2xl font-bold">{grossProfit.toFixed(1)}%</span>
+                  <span>{grossProfit.toFixed(1)}%</span>
                 </div>
-                <Progress value={Math.min(grossProfit, 100)} className="mb-2" />
-                <p className="text-sm">
+                <Progress value={Math.min(grossProfit, 100)} />
+                <p>
                   Target: 45%+ gross profit
                 </p>
               </div>
               
-              <div className="mt-4 space-y-2 text-sm">
-                <div className="flex justify-between">
+              <div>
+                <div>
                   <span>Industry Benchmark:</span>
-                  <span className="font-medium">45%+ excellent</span>
+                  <span>45%+ excellent</span>
                 </div>
-                <div className="flex justify-between">
+                <div>
                   <span>Net Profit Target:</span>
-                  <span className="font-medium">12-15%</span>
+                  <span>12-15%</span>
                 </div>
               </div>
             </CardContent>
@@ -373,53 +373,53 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
         </div>
 
         {/* Cost Breakdown Analysis */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calculator className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <Calculator />
                 Cost Breakdown Analysis
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-600">Labour Costs</span>
-                    <Badge variant={laborPercentage > 40 ? "destructive" : "secondary"} className="text-xs">
+            <CardContent>
+              <div>
+                <div>
+                  <div>
+                    <span>Labour Costs</span>
+                    <Badge variant={laborPercentage > 40 ? "destructive" : "secondary"}>
                       {laborPercentage.toFixed(1)}% {laborPercentage > 40 ? "(Over Target)" : "(Good)"}
                     </Badge>
                   </div>
-                  <span className="font-medium">${(quote.breakdown?.labor || 0).toLocaleString()}</span>
+                  <span>${(quote.breakdown?.labor || 0).toLocaleString()}</span>
                 </div>
                 
-                <div className="flex justify-between items-center py-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-600">Paint Costs</span>
+                <div>
+                  <div>
+                    <span>Paint Costs</span>
                   </div>
-                  <span className="font-medium">${(quote.paint_cost || quote.breakdown?.paint || 0).toLocaleString()}</span>
+                  <span>${(quote.paint_cost || quote.breakdown?.paint || 0).toLocaleString()}</span>
                 </div>
                 
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Sundries & Materials</span>
-                  <span className="font-medium">${((quote.sundries_cost || 0) + (quote.breakdown?.materials || 0)).toLocaleString()}</span>
+                <div>
+                  <span>Sundries & Materials</span>
+                  <span>${((quote.sundries_cost || 0) + (quote.breakdown?.materials || 0)).toLocaleString()}</span>
                 </div>
                 
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Prep Work</span>
-                  <span className="font-medium">${(quote.breakdown?.prepWork || 0).toLocaleString()}</span>
+                <div>
+                  <span>Prep Work</span>
+                  <span>${(quote.breakdown?.prepWork || 0).toLocaleString()}</span>
                 </div>
                 
-                <div className="border-t pt-3">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">Subtotal (Direct Costs)</span>
-                    <span className="font-medium">${calculateSubtotal().toLocaleString()}</span>
+                <div>
+                  <div>
+                    <span>Subtotal (Direct Costs)</span>
+                    <span>${calculateSubtotal().toLocaleString()}</span>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-gray-50 p-3 rounded-lg text-sm">
-                <p className="font-medium mb-1">Industry Targets:</p>
+              <div>
+                <p>Industry Targets:</p>
                 <p>• Labour: Maximum 40% of total</p>
                 <p>• Materials: Maximum 15% of total</p>
                 <p>• Target gross profit: 45%+</p>
@@ -430,17 +430,17 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
           {/* Smart Margin Management */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <DollarSign className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <DollarSign />
                 Smart Margin Management
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
               <div>
-                <Label htmlFor="markup" className="text-sm font-medium">
+                <Label htmlFor="markup">
                   Markup Percentage
                 </Label>
-                <div className="flex items-center gap-2 mt-1">
+                <div>
                   <Input
                     id="markup"
                     type="number"
@@ -448,34 +448,34 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
                     max="100"
                     value={markupPercentage}
                     onChange={(e) => updateMarkup(Number(e.target.value))}
-                    className="flex-1"
+                   
                   />
-                  <span className="text-sm text-gray-600">%</span>
+                  <span>%</span>
                 </div>
               </div>
               
-              <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Markup Amount:</span>
-                  <span className="font-medium">${calculateMarkupAmount().toLocaleString()}</span>
+              <div>
+                <div>
+                  <span>Markup Amount:</span>
+                  <span>${calculateMarkupAmount().toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Gross Profit:</span>
-                  <span className="font-medium">${calculateMarkupAmount().toLocaleString()}</span>
+                <div>
+                  <span>Gross Profit:</span>
+                  <span>${calculateMarkupAmount().toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between text-lg font-bold border-t pt-2">
+                <div>
                   <span>Total Quote:</span>
-                  <span className="text-blue-600">${calculateTotal().toLocaleString()}</span>
+                  <span>${calculateTotal().toLocaleString()}</span>
                 </div>
               </div>
               
-              <div className="space-y-3">
+              <div>
                 <Button
                   onClick={saveQuote}
                   disabled={isSaving}
-                  className="w-full bg-green-600 hover:bg-green-700"
+                 
                 >
-                  <Save className="w-4 h-4 mr-2" />
+                  <Save />
                   {isSaving ? 'Saving...' : 'Save & Update Quote'}
                 </Button>
                 
@@ -488,9 +488,9 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
                     router.push(chatUrl);
                   }}
                   variant="outline"
-                  className="w-full"
+                 
                 >
-                  <MessageSquare className="w-4 h-4 mr-2" />
+                  <MessageSquare />
                   Back to Chat
                 </Button>
               </div>
@@ -499,150 +499,150 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
         </div>
 
         {/* Detailed Line Items */}
-        <Card className="mt-6">
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Package className="w-5 h-5 text-blue-600" />
+            <CardTitle>
+              <Package />
               Detailed Line Items
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
+            <div>
+              <table>
                 <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Description</th>
-                    <th className="text-center py-3 px-4 font-medium text-gray-700">Qty</th>
-                    <th className="text-center py-3 px-4 font-medium text-gray-700">Unit</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-700">Cost</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-700">Price</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-700">Total</th>
+                  <tr>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Unit</th>
+                    <th>Cost</th>
+                    <th>Price</th>
+                    <th>Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   {/* Paint Line Items */}
                   {quote.walls_sqft && quote.walls_sqft > 0 && (
-                    <tr className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4">Wall Painting - {quote.paint_quality} Quality</td>
-                      <td className="text-center py-3 px-4">{quote.walls_sqft?.toLocaleString()}</td>
-                      <td className="text-center py-3 px-4">sqft</td>
-                      <td className="text-right py-3 px-4 text-gray-600">
+                    <tr>
+                      <td>Wall Painting - {quote.paint_quality} Quality</td>
+                      <td>{quote.walls_sqft?.toLocaleString()}</td>
+                      <td>sqft</td>
+                      <td>
                         ${((quote.paint_cost || 0) * 0.6 / (quote.walls_sqft || 1)).toFixed(2)}
                       </td>
-                      <td className="text-right py-3 px-4 font-medium">
+                      <td>
                         ${((quote.paint_cost || 0) * 0.6 / (quote.walls_sqft || 1) * (1 + markupPercentage / 100)).toFixed(2)}
                       </td>
-                      <td className="text-right py-3 px-4 font-medium">
+                      <td>
                         ${((quote.paint_cost || 0) * 0.6 * (1 + markupPercentage / 100)).toFixed(0)}
                       </td>
                     </tr>
                   )}
                   
                   {quote.ceilings_sqft && quote.ceilings_sqft > 0 && (
-                    <tr className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4">Ceiling Painting - {quote.paint_quality} Quality</td>
-                      <td className="text-center py-3 px-4">{quote.ceilings_sqft?.toLocaleString()}</td>
-                      <td className="text-center py-3 px-4">sqft</td>
-                      <td className="text-right py-3 px-4 text-gray-600">
+                    <tr>
+                      <td>Ceiling Painting - {quote.paint_quality} Quality</td>
+                      <td>{quote.ceilings_sqft?.toLocaleString()}</td>
+                      <td>sqft</td>
+                      <td>
                         ${((quote.paint_cost || 0) * 0.3 / (quote.ceilings_sqft || 1)).toFixed(2)}
                       </td>
-                      <td className="text-right py-3 px-4 font-medium">
+                      <td>
                         ${((quote.paint_cost || 0) * 0.3 / (quote.ceilings_sqft || 1) * (1 + markupPercentage / 100)).toFixed(2)}
                       </td>
-                      <td className="text-right py-3 px-4 font-medium">
+                      <td>
                         ${((quote.paint_cost || 0) * 0.3 * (1 + markupPercentage / 100)).toFixed(0)}
                       </td>
                     </tr>
                   )}
                   
                   {quote.trim_sqft && quote.trim_sqft > 0 && (
-                    <tr className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4">Trim & Detail Work</td>
-                      <td className="text-center py-3 px-4">{quote.trim_sqft?.toLocaleString()}</td>
-                      <td className="text-center py-3 px-4">linear ft</td>
-                      <td className="text-right py-3 px-4 text-gray-600">
+                    <tr>
+                      <td>Trim & Detail Work</td>
+                      <td>{quote.trim_sqft?.toLocaleString()}</td>
+                      <td>linear ft</td>
+                      <td>
                         ${((quote.paint_cost || 0) * 0.1 / (quote.trim_sqft || 1)).toFixed(2)}
                       </td>
-                      <td className="text-right py-3 px-4 font-medium">
+                      <td>
                         ${((quote.paint_cost || 0) * 0.1 / (quote.trim_sqft || 1) * (1 + markupPercentage / 100)).toFixed(2)}
                       </td>
-                      <td className="text-right py-3 px-4 font-medium">
+                      <td>
                         ${((quote.paint_cost || 0) * 0.1 * (1 + markupPercentage / 100)).toFixed(0)}
                       </td>
                     </tr>
                   )}
                   
                   {/* Labor Line Item */}
-                  <tr className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4">Professional Labor</td>
-                    <td className="text-center py-3 px-4">{Math.ceil((quote.sqft || 0) / 400)}</td>
-                    <td className="text-center py-3 px-4">days</td>
-                    <td className="text-right py-3 px-4 text-gray-600">
+                  <tr>
+                    <td>Professional Labor</td>
+                    <td>{Math.ceil((quote.sqft || 0) / 400)}</td>
+                    <td>days</td>
+                    <td>
                       ${((quote.breakdown?.labor || 0) / Math.ceil((quote.sqft || 1) / 400)).toFixed(0)}
                     </td>
-                    <td className="text-right py-3 px-4 font-medium">
+                    <td>
                       ${((quote.breakdown?.labor || 0) / Math.ceil((quote.sqft || 1) / 400) * (1 + markupPercentage / 100)).toFixed(0)}
                     </td>
-                    <td className="text-right py-3 px-4 font-medium">
+                    <td>
                       ${((quote.breakdown?.labor || 0) * (1 + markupPercentage / 100)).toFixed(0)}
                     </td>
                   </tr>
                   
                   {/* Materials & Sundries */}
-                  <tr className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4">Materials & Sundries</td>
-                    <td className="text-center py-3 px-4">1</td>
-                    <td className="text-center py-3 px-4">lot</td>
-                    <td className="text-right py-3 px-4 text-gray-600">
+                  <tr>
+                    <td>Materials & Sundries</td>
+                    <td>1</td>
+                    <td>lot</td>
+                    <td>
                       ${((quote.sundries_cost || 0) + (quote.breakdown?.materials || 0)).toFixed(0)}
                     </td>
-                    <td className="text-right py-3 px-4 font-medium">
+                    <td>
                       ${(((quote.sundries_cost || 0) + (quote.breakdown?.materials || 0)) * (1 + markupPercentage / 100)).toFixed(0)}
                     </td>
-                    <td className="text-right py-3 px-4 font-medium">
+                    <td>
                       ${(((quote.sundries_cost || 0) + (quote.breakdown?.materials || 0)) * (1 + markupPercentage / 100)).toFixed(0)}
                     </td>
                   </tr>
                   
                   {/* Prep Work if exists */}
                   {quote.breakdown?.prepWork > 0 && (
-                    <tr className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4">Surface Preparation</td>
-                      <td className="text-center py-3 px-4">1</td>
-                      <td className="text-center py-3 px-4">job</td>
-                      <td className="text-right py-3 px-4 text-gray-600">
+                    <tr>
+                      <td>Surface Preparation</td>
+                      <td>1</td>
+                      <td>job</td>
+                      <td>
                         ${(quote.breakdown.prepWork).toFixed(0)}
                       </td>
-                      <td className="text-right py-3 px-4 font-medium">
+                      <td>
                         ${(quote.breakdown.prepWork * (1 + markupPercentage / 100)).toFixed(0)}
                       </td>
-                      <td className="text-right py-3 px-4 font-medium">
+                      <td>
                         ${(quote.breakdown.prepWork * (1 + markupPercentage / 100)).toFixed(0)}
                       </td>
                     </tr>
                   )}
                 </tbody>
                 <tfoot>
-                  <tr className="border-t-2">
-                    <td colSpan={3} className="py-3 px-4 font-medium">Subtotal</td>
-                    <td className="text-right py-3 px-4 text-gray-600 font-medium">
+                  <tr>
+                    <td colSpan={3}>Subtotal</td>
+                    <td>
                       ${calculateSubtotal().toFixed(0)}
                     </td>
-                    <td className="text-right py-3 px-4 font-medium" colSpan={2}>
+                    <td colSpan={2}>
                       ${(calculateSubtotal() * (1 + markupPercentage / 100)).toFixed(0)}
                     </td>
                   </tr>
                   <tr>
-                    <td colSpan={3} className="py-3 px-4 font-medium">Markup ({markupPercentage}%)</td>
-                    <td className="text-right py-3 px-4 text-gray-600">-</td>
-                    <td className="text-right py-3 px-4 font-medium text-green-600" colSpan={2}>
+                    <td colSpan={3}>Markup ({markupPercentage}%)</td>
+                    <td>-</td>
+                    <td colSpan={2}>
                       ${calculateMarkupAmount().toFixed(0)}
                     </td>
                   </tr>
-                  <tr className="bg-gray-50">
-                    <td colSpan={3} className="py-3 px-4 text-lg font-bold">Total Quote</td>
-                    <td className="text-right py-3 px-4"></td>
-                    <td className="text-right py-3 px-4 text-lg font-bold text-blue-600" colSpan={2}>
+                  <tr>
+                    <td colSpan={3}>Total Quote</td>
+                    <td></td>
+                    <td colSpan={2}>
                       ${calculateTotal().toLocaleString()}
                     </td>
                   </tr>
@@ -650,8 +650,8 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
               </table>
             </div>
             
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-900">
+            <div>
+              <p>
                 <strong>Note:</strong> This breakdown shows your internal costs vs. customer prices. 
                 The markup of {markupPercentage}% covers overhead, profit, and business growth.
               </p>

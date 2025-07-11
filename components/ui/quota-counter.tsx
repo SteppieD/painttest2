@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { FileText, Crown, AlertTriangle } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { useToast } from '@/components/ui/use-toast'
 
 interface QuotaCounterProps {
@@ -85,9 +84,9 @@ export function QuotaCounter({
 
   if (isLoading || !quotaData) {
     return (
-      <div className={cn("flex items-center gap-2", className)}>
-        <div className="w-4 h-4 bg-gray-200 animate-pulse rounded" />
-        <div className="w-16 h-4 bg-gray-200 animate-pulse rounded" />
+      <div>
+        <div />
+        <div />
       </div>
     )
   }
@@ -99,17 +98,17 @@ export function QuotaCounter({
   // Header variant - compact for headers
   if (variant === 'header') {
     return (
-      <div className={cn("flex items-center gap-2", className)}>
-        <div className="flex items-center gap-1">
-          <FileText className="w-4 h-4 text-gray-600" />
-          <span className="text-sm font-medium text-gray-700">
+      <div>
+        <div>
+          <FileText />
+          <span>
             {quotaData.quotes_used}/{quotaData.quote_limit}
           </span>
         </div>
         {quotaData.is_trial && (
           <Badge 
             variant={isOverLimit ? "destructive" : isNearLimit ? "secondary" : "outline"}
-            className="text-xs"
+           
           >
             {isOverLimit ? "Limit Reached" : `${quotaData.quotes_remaining} left`}
           </Badge>
@@ -118,10 +117,7 @@ export function QuotaCounter({
           <Button 
             size="sm" 
             variant={isOverLimit ? "default" : "outline"}
-            className={cn(
-              "h-6 px-2 text-xs",
-              isOverLimit && "bg-blue-600 hover:bg-blue-700"
-            )}
+           
             onClick={() => {
               // Use router.push for better navigation experience
               window.location.href = '/pricing';
@@ -139,47 +135,35 @@ export function QuotaCounter({
     return (
       <Badge 
         variant={isOverLimit ? "destructive" : isNearLimit ? "secondary" : "outline"}
-        className={cn("flex items-center gap-1", className)}
+       
       >
-        <FileText className="w-3 h-3" />
+        <FileText />
         {quotaData.quotes_used}/{quotaData.quote_limit}
-        {isOverLimit && <AlertTriangle className="w-3 h-3" />}
+        {isOverLimit && <AlertTriangle />}
       </Badge>
     )
   }
 
   // Full variant - detailed display
   return (
-    <div className={cn("flex items-center justify-between p-3 rounded-lg border", {
-      "border-red-200 bg-red-50": isOverLimit,
-      "border-yellow-200 bg-yellow-50": isNearLimit && !isOverLimit,
-      "border-blue-200 bg-blue-50": !isNearLimit
-    }, className)}>
-      <div className="flex items-center gap-3">
-        <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center", {
-          "bg-red-100": isOverLimit,
-          "bg-yellow-100": isNearLimit && !isOverLimit,
-          "bg-blue-100": !isNearLimit
-        })}>
-          <FileText className={cn("w-5 h-5", {
-            "text-red-600": isOverLimit,
-            "text-yellow-600": isNearLimit && !isOverLimit,
-            "text-blue-600": !isNearLimit
-          })} />
+    <div, className)}>
+      <div>
+        <div)}>
+          <FileText)} />
         </div>
         <div>
-          <div className="flex items-center gap-2">
-            <span className="font-medium text-gray-900">
+          <div>
+            <span>
               {quotaData.quotes_used} of {quotaData.quote_limit} quotes used
             </span>
             {quotaData.is_trial && (
-              <Badge variant="outline" className="text-xs">
-                <Crown className="w-3 h-3 mr-1" />
+              <Badge variant="outline">
+                <Crown />
                 Trial
               </Badge>
             )}
           </div>
-          <p className="text-sm text-gray-600">
+          <p>
             {isOverLimit 
               ? "Quote limit reached. Upgrade to create more quotes."
               : isNearLimit 
@@ -192,7 +176,7 @@ export function QuotaCounter({
       {showUpgrade && (isOverLimit || isNearLimit) && (
         <Button 
           variant={isOverLimit ? "default" : "outline"}
-          className={isOverLimit ? "bg-blue-600 hover:bg-blue-700" : ""}
+         
           onClick={() => {
             // Navigate to pricing page for upgrade
             window.location.href = '/pricing';

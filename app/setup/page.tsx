@@ -230,14 +230,14 @@ function SetupPageContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div>
+        <div></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div>
       <SimplifiedConversationalWizard
         accessCode={accessCode}
         onComplete={handleSetupComplete}
@@ -251,8 +251,8 @@ function SetupPageContent() {
 export default function SetupPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div>
+        <div></div>
       </div>
     }>
       <SetupPageContent />
