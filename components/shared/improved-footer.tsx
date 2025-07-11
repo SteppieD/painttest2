@@ -23,7 +23,7 @@ export function ImprovedFooter() {
                 <Palette className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-gray-900">Paint Quote Pro</h3>
+                <h3 className="text-2xl font-bold text-gray-900">ProPaint Quote</h3>
                 <p className="text-sm text-gray-600">Professional Painting Software</p>
               </div>
             </div>
@@ -133,7 +133,7 @@ export function ImprovedFooter() {
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-gray-600">
-              © 2025 Paint Quote Pro. All rights reserved.
+              © 2025 ProPaint Quote. All rights reserved.
             </div>
             <div className="flex gap-6">
               <Link href="/privacy" className="text-gray-600 hover:text-blue-600 transition-colors">Privacy Policy</Link>

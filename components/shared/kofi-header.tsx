@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { QuotaCounter } from '@/components/ui/quota-counter';
 import { 
   Palette, 
   Menu, 
@@ -27,7 +28,30 @@ import { Button } from '@/components/ui/button';
 export function KofiHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [companyId, setCompanyId] = useState<string | null>(null);
   const pathname = usePathname();
+
+  // Get company ID from localStorage/sessionStorage
+  useEffect(() => {
+    // Check sessionStorage first
+    const storedCompanyId = sessionStorage.getItem('companyId');
+    if (storedCompanyId) {
+      setCompanyId(storedCompanyId);
+    } else {
+      // Check localStorage for company data
+      const companyData = localStorage.getItem('paintquote_company');
+      if (companyData) {
+        try {
+          const company = JSON.parse(companyData);
+          if (company.id) {
+            setCompanyId(company.id.toString());
+          }
+        } catch (e) {
+          console.error('Error parsing company data:', e);
+        }
+      }
+    }
+  }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -53,7 +77,7 @@ export function KofiHeader() {
           <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
             <Palette className="w-5 h-5 text-white" />
           </div>
-          <span className="hidden sm:block">Paint Quote Pro</span>
+          <span className="hidden sm:block">ProPaint Quote</span>
           <span className="block sm:hidden">PQP</span>
         </Link>
 
@@ -276,18 +300,39 @@ export function KofiHeader() {
 
         {/* Desktop CTA Buttons */}
         <div className="hidden lg:flex items-center gap-3">
-          <Link 
-            href="/access-code" 
-            className="kofi-btn kofi-btn-ghost"
-          >
-            Sign In
-          </Link>
-          <Link 
-            href="/trial-signup" 
-            className="kofi-btn kofi-btn-primary"
-          >
-            Start Free Trial
-          </Link>
+          {/* Show quota counter if user is logged in */}
+          {companyId && (
+            <QuotaCounter 
+              companyId={companyId} 
+              variant="header" 
+              showUpgrade={true}
+              className="mr-3"
+            />
+          )}
+          
+          {companyId ? (
+            <Link 
+              href="/dashboard" 
+              className="kofi-btn kofi-btn-ghost"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link 
+                href="/access-code" 
+                className="kofi-btn kofi-btn-ghost"
+              >
+                Sign In
+              </Link>
+              <Link 
+                href="/trial-signup" 
+                className="kofi-btn kofi-btn-primary"
+              >
+                Start Free Trial
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}

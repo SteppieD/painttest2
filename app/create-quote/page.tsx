@@ -171,6 +171,8 @@ export default function CreateQuotePage() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [savedQuoteId, setSavedQuoteId] = useState<string | null>(null);
+  const [draftSaved, setDraftSaved] = useState(false);
+  const [lastSaveTime, setLastSaveTime] = useState<Date | null>(null);
 
   // Auto-scroll to bottom
   const scrollToBottom = () => {
@@ -198,11 +200,101 @@ export default function CreateQuotePage() {
       }
       setCompanyData(parsedCompany);
       loadCompanyDefaults(parsedCompany.id);
+      
+      // Check if first time user
+      const hasSeenTutorial = localStorage.getItem("paintquote_tutorial_seen");
+      if (!hasSeenTutorial) {
+        // Add welcome tutorial message
+        const tutorialMessage: Message = {
+          id: 'tutorial-' + Date.now().toString(),
+          role: 'assistant',
+          content: `🎉 **Welcome to ProPaint Quote!**
+
+I'm here to help you create professional painting quotes in minutes. Here's how it works:
+
+**Step 1️⃣**: Tell me the customer's name and address
+**Step 2️⃣**: Describe what needs painting (interior/exterior)
+**Step 3️⃣**: Give me room sizes or square footage
+**Step 4️⃣**: Choose paint from your favorites
+**Step 5️⃣**: Review and save your quote
+
+💡 **Pro Tips:**
+• Your quotes auto-save every 30 seconds
+• Click the **Help** button anytime for guidance
+• Hover over the ℹ️ icon in the input field for step-by-step tips
+• Type naturally - I understand phrases like "2 bedrooms, 12x10 each"
+
+Ready? Let's create your first quote! Start by telling me the customer's name and address.`,
+          timestamp: new Date().toISOString()
+        };
+        
+        setMessages([messages[0], tutorialMessage]);
+        localStorage.setItem("paintquote_tutorial_seen", "true");
+      }
+      
+      // Check for saved draft
+      const savedDraft = localStorage.getItem("paintquote_draft");
+      if (savedDraft) {
+        try {
+          const draft = JSON.parse(savedDraft);
+          if (draft.companyId === parsedCompany.id && draft.savedAt) {
+            // Only restore if draft is less than 24 hours old
+            const draftAge = Date.now() - new Date(draft.savedAt).getTime();
+            if (draftAge < 24 * 60 * 60 * 1000) {
+              // Restore draft data
+              if (draft.quoteData) setQuoteData(draft.quoteData);
+              if (draft.messages && draft.messages.length > 1) setMessages(draft.messages);
+              if (draft.stage) setConversationStage(draft.stage);
+              setDraftSaved(true);
+              setLastSaveTime(new Date(draft.savedAt));
+              
+              // Add notification about restored draft
+              const restoredMessage: Message = {
+                id: Date.now().toString(),
+                role: 'assistant',
+                content: '📝 I\'ve restored your previous draft. You can continue where you left off.',
+                timestamp: new Date().toISOString()
+              };
+              setMessages(prev => [...prev, restoredMessage]);
+            }
+          }
+        } catch (e) {
+          console.error('Failed to restore draft:', e);
+        }
+      }
     } catch (e) {
       localStorage.removeItem("paintquote_company");
       router.push("/access-code");
     }
   }, [router]);
+
+  // Auto-save draft every 30 seconds
+  useEffect(() => {
+    const saveInterval = setInterval(() => {
+      if (quoteData.customer_name || quoteData.address || messages.length > 1) {
+        const draft = {
+          companyId: companyData?.id,
+          quoteData,
+          messages,
+          stage: conversationStage,
+          savedAt: new Date().toISOString()
+        };
+        localStorage.setItem("paintquote_draft", JSON.stringify(draft));
+        setDraftSaved(true);
+        setLastSaveTime(new Date());
+      }
+    }, 30000); // Save every 30 seconds
+
+    return () => clearInterval(saveInterval);
+  }, [quoteData, messages, conversationStage, companyData]);
+
+  // Clear draft when quote is successfully saved
+  useEffect(() => {
+    if (savedQuoteId) {
+      localStorage.removeItem("paintquote_draft");
+      setDraftSaved(false);
+    }
+  }, [savedQuoteId]);
 
   const loadCompanyDefaults = async (companyId: string) => {
     try {
@@ -1871,6 +1963,53 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
                 <Calculator className="w-6 h-6 text-blue-600" />
                 <h1 className="text-lg font-semibold">Spreadsheet Calculator</h1>
               </div>
+              
+              {/* Draft Save Indicator */}
+              {draftSaved && (
+                <div className="flex items-center gap-2 text-sm text-gray-500 ml-4">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <span>Draft saved {lastSaveTime ? `at ${lastSaveTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}</span>
+                </div>
+              )}
+            </div>
+            
+            {/* Help Button */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const helpMessage: Message = {
+                    id: Date.now().toString(),
+                    role: 'assistant',
+                    content: `💡 **Quick Help Guide**
+
+**Getting Started:**
+• Tell me the customer's name and address
+• Describe the project (interior/exterior painting)
+• I'll guide you through each step
+
+**Tips for Faster Quotes:**
+• Type naturally - I understand phrases like "2 bedrooms, 12x10 each"
+• Include all surfaces: walls, ceilings, trim, doors, windows
+• Mention if priming is needed
+
+**Common Examples:**
+• "John Smith at 123 Main St"
+• "Interior painting, 3 bedrooms and living room"
+• "Walls only, ceilings are fine"
+• "2000 sq ft of walls, 8 ft ceilings"
+
+**Need to edit?** Just tell me what to change!`,
+                    timestamp: new Date().toISOString()
+                  };
+                  setMessages(prev => [...prev, helpMessage]);
+                }}
+                className="flex items-center gap-2"
+              >
+                <HelpCircle className="w-4 h-4" />
+                <span className="hidden sm:inline">Help</span>
+              </Button>
             </div>
             
             {quoteData.calculation && (
@@ -2041,17 +2180,54 @@ Ready to save this quote? Say "save" to finalize, or "breakdown" to see detailed
               </div>
             )}
             
-            {/* Input field */}
+            {/* Input field with contextual help */}
             <div className={chatStyles.inputContainer}>
               <div className="flex items-end gap-2">
-                <Input
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder={getInputPlaceholder(conversationStage)}
-                  disabled={isLoading}
-                  className="flex-1 border-0 focus:ring-0 p-0 text-sm"
-                />
+                <div className="relative flex-1">
+                  <Input
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder={getInputPlaceholder(conversationStage)}
+                    disabled={isLoading}
+                    className="border-0 focus:ring-0 p-0 pr-8 text-sm"
+                  />
+                  
+                  {/* Contextual help tooltip */}
+                  {conversationStage !== 'complete' && (
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 group">
+                      <HelpCircle className="w-4 h-4 text-gray-400 cursor-help" />
+                      <div className="absolute right-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto z-50">
+                        <div className="font-semibold mb-1">💡 Tip for this step:</div>
+                        {conversationStage === 'greeting' && (
+                          <div>Start by telling me the customer name and address. Example: "John Smith at 123 Main Street"</div>
+                        )}
+                        {conversationStage === 'customer_info' && (
+                          <div>Include both name and full address. I'll parse it automatically!</div>
+                        )}
+                        {conversationStage === 'project_type' && (
+                          <div>Just say "interior", "exterior", or "both". I'll ask for details next.</div>
+                        )}
+                        {conversationStage === 'areas' && (
+                          <div>List what needs painting: "walls and ceilings" or "walls only, 2000 sq ft"</div>
+                        )}
+                        {conversationStage === 'dimensions' && (
+                          <div>Give me room sizes or total square footage. Example: "3 rooms, 12x10 each"</div>
+                        )}
+                        {conversationStage === 'paint_selection' && (
+                          <div>Choose from your favorites or tell me a specific brand and product.</div>
+                        )}
+                        {conversationStage === 'clarification' && (
+                          <div>I need a bit more info. Answer my questions above to continue.</div>
+                        )}
+                        {conversationStage === 'quote_review' && (
+                          <div>Review the quote and tell me if you need any changes!</div>
+                        )}
+                        <div className="absolute bottom-[-6px] right-4 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-gray-900"></div>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 
                 <Button
                   onClick={handleSend}
