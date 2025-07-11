@@ -342,7 +342,7 @@ export function CityPageTemplate({
             <h2 className="text-3xl font-bold text-center mb-12">
               What {city} Painting Contractors Say
             </h2>
-            <TestimonialCarousel testimonials={localTestimonials} />
+            <TestimonialCarousel />
           </div>
         </section>
       )}
