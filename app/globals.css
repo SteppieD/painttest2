@@ -3,37 +3,15 @@
 @tailwind utilities;
 
 /* ================================================
-   CLEANED UP IMPORTS - REMOVED CONFLICTING FILES
+   UNIFIED DESIGN SYSTEM
+   Single source of truth for all styles
    ================================================ */
-
-/* Core Design Systems - Keep these */
-@import '../styles/design-system.css';
-@import '../styles/liquid-glass.css';
-@import '../styles/adcreative-design-system.css';
-
-/* Professional Theme */
-@import '../styles/professional-contractor-theme.css';
-
-/* Navigation */
-@import '../styles/navigation-balance.css';
-@import '../styles/navigation-saas-best-practices.css';
-@import '../styles/tablet-menu-fix.css';
-
-/* Ko-fi Inspired Design System */
-@import '../styles/kofi-inspired-design.css';
+@import '../styles/unified-design-system.css';
 
 /* ================================================
-   BRAND COLOR SYSTEM
-   New brand colors from logo
-   ================================================ */
-@import '../styles/brand-color-system.css';
-
-/* ================================================
-   COMPREHENSIVE CONTRAST FIX
-   This replaces ALL previous contrast fixes
+   TEMPORARY: Keep essential styles during transition
    ================================================ */
 @import '../styles/comprehensive-contrast-fix.css';
-@import '../styles/contrast-fixes-july.css';
 
 /* ================================================
    OVERRIDE ORANGE BUTTON COLORS

@@ -18,7 +18,6 @@ import {
   Check,
   Palette
 } from 'lucide-react';
-import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { generatePageMetadata } from '@/lib/metadata-utils';
 
@@ -32,31 +31,29 @@ export const metadata = generatePageMetadata({
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
-      <KofiHeader />
-      
-      {/* Ko-fi Hero Section */}
-      <section className="kofi-hero">
-        <div className="kofi-container">
-          <div className="kofi-hero-content">
-            <h1 className="kofi-h1">
+      {/* Hero Section */}
+      <section className="unified-section py-24 bg-gradient-to-br from-orange-50 to-white">
+        <div className="unified-container">
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="unified-h1">
               Win More Painting Jobs with <span className="text-orange-500">Professional Quotes</span>
             </h1>
-            <p className="kofi-body-large kofi-mb-xl">
+            <p className="unified-body-large mb-8">
               Create stunning, professional painting quotes in 30 seconds. Trusted by 5,000+ contractors nationwide. 
               Increase your win rate by 40% with our AI-powered quoting platform.
             </p>
-            <div className="kofi-hero-actions">
-              <Link href="/trial-signup" className="kofi-btn kofi-btn-primary kofi-btn-xl">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/trial-signup" className="unified-btn unified-btn-primary unified-btn-xl">
                 Start Free Trial
                 <ArrowRight className="w-5 h-5" />
               </Link>
-              <Link href="/demo" className="kofi-btn kofi-btn-outline kofi-btn-xl">
+              <Link href="/demo" className="unified-btn unified-btn-outline unified-btn-xl">
                 Watch Demo
               </Link>
             </div>
             
-            <div className="kofi-mt-xl">
-              <div className="flex items-center justify-center gap-6 kofi-body-small text-gray-600">
+            <div className="mt-12">
+              <div className="flex items-center justify-center gap-6 unified-body-small text-gray-600">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500" />
                   <span>Free 14-day trial</span>
@@ -76,45 +73,45 @@ export default function HomePage() {
       </section>
 
       {/* Social Proof */}
-      <section className="kofi-section-sm bg-gray-50">
-        <div className="kofi-container">
-          <div className="text-center kofi-mb-lg">
-            <div className="flex items-center justify-center gap-1 kofi-mb-sm">
+      <section className="unified-section py-12 bg-gray-50">
+        <div className="unified-container">
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-1 mb-4">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
               ))}
             </div>
-            <p className="kofi-body">
+            <p className="unified-body">
               Trusted by <span className="font-semibold text-orange-500">5,000+</span> painting contractors
             </p>
           </div>
           
-          <div className="kofi-grid kofi-grid-4">
-            <div className="kofi-card kofi-text-center">
-              <div className="kofi-card-body">
-                <div className="kofi-h3 text-orange-500 kofi-mb-sm">5,000+</div>
-                <div className="kofi-body-small">Active Contractors</div>
+          <div className="unified-grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+            <div className="unified-card text-center">
+              <div className="p-6">
+                <div className="unified-h3 text-orange-500 mb-2">5,000+</div>
+                <div className="unified-body-small">Active Contractors</div>
               </div>
             </div>
             
-            <div className="kofi-card kofi-text-center">
-              <div className="kofi-card-body">
-                <div className="kofi-h3 text-teal-500 kofi-mb-sm">$73M+</div>
-                <div className="kofi-body-small">Quotes Generated</div>
+            <div className="unified-card text-center">
+              <div className="p-6">
+                <div className="unified-h3 text-teal-500 mb-2">$73M+</div>
+                <div className="unified-body-small">Quotes Generated</div>
               </div>
             </div>
             
-            <div className="kofi-card kofi-text-center">
-              <div className="kofi-card-body">
-                <div className="kofi-h3 text-green-500 kofi-mb-sm">99%</div>
-                <div className="kofi-body-small">Accuracy Rate</div>
+            <div className="unified-card text-center">
+              <div className="p-6">
+                <div className="unified-h3 text-green-500 mb-2">99%</div>
+                <div className="unified-body-small">Accuracy Rate</div>
               </div>
             </div>
             
-            <div className="kofi-card kofi-text-center">
-              <div className="kofi-card-body">
-                <div className="kofi-h3 text-purple-500 kofi-mb-sm">4.9/5</div>
-                <div className="kofi-body-small">Customer Rating</div>
+            <div className="unified-card text-center">
+              <div className="p-6">
+                <div className="unified-h3 text-purple-500 mb-2">4.9/5</div>
+                <div className="unified-body-small">Customer Rating</div>
               </div>
             </div>
           </div>
@@ -122,59 +119,59 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="kofi-section">
-        <div className="kofi-container">
-          <div className="kofi-text-center kofi-mb-xl">
-            <h2 className="kofi-h2">Everything You Need to Win More Jobs</h2>
-            <p className="kofi-body-large">
+      <section className="unified-section">
+        <div className="unified-container">
+          <div className="text-center mb-12">
+            <h2 className="unified-h2">Everything You Need to Win More Jobs</h2>
+            <p className="unified-body-large">
               Professional tools designed specifically for painting contractors
             </p>
           </div>
           
-          <div className="kofi-grid kofi-grid-3">
-            <div className="kofi-card">
-              <div className="kofi-card-body">
-                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center kofi-mb-md">
+          <div className="unified-grid grid-cols-1 md:grid-cols-3">
+            <div className="unified-card">
+              <div className="p-6">
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
                   <Calculator className="w-6 h-6 text-orange-500" />
                 </div>
-                <h3 className="kofi-h4 kofi-mb-sm">Instant Quotes</h3>
-                <p className="kofi-body kofi-mb-md">
+                <h3 className="unified-h4 mb-2">Instant Quotes</h3>
+                <p className="unified-body mb-4">
                   Create professional painting quotes in 30 seconds with our AI-powered calculator. 
                   No more hours of manual calculations.
                 </p>
-                <Link href="/painting-estimate-calculator-free" className="kofi-btn kofi-btn-outline kofi-btn-sm">
+                <Link href="/painting-estimate-calculator-free" className="unified-btn unified-btn-outline unified-btn-sm">
                   Try Calculator
                 </Link>
               </div>
             </div>
             
-            <div className="kofi-card">
-              <div className="kofi-card-body">
-                <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center kofi-mb-md">
+            <div className="unified-card">
+              <div className="p-6">
+                <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
                   <Palette className="w-6 h-6 text-teal-500" />
                 </div>
-                <h3 className="kofi-h4 kofi-mb-sm">Professional Templates</h3>
-                <p className="kofi-body kofi-mb-md">
+                <h3 className="unified-h4 mb-2">Professional Templates</h3>
+                <p className="unified-body mb-4">
                   Beautiful, branded quote templates that impress customers and increase your win rate. 
                   Fully customizable to match your brand.
                 </p>
-                <Link href="/paint-estimate-templates" className="kofi-btn kofi-btn-outline kofi-btn-sm">
+                <Link href="/paint-estimate-templates" className="unified-btn unified-btn-outline unified-btn-sm">
                   View Templates
                 </Link>
               </div>
             </div>
             
-            <div className="kofi-card">
-              <div className="kofi-card-body">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center kofi-mb-md">
+            <div className="unified-card">
+              <div className="p-6">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                   <Zap className="w-6 h-6 text-green-500" />
                 </div>
-                <h3 className="kofi-h4 kofi-mb-sm">Smart Automation</h3>
-                <p className="kofi-body kofi-mb-md">
+                <h3 className="unified-h4 mb-2">Smart Automation</h3>
+                <p className="unified-body mb-4">
                   Automated follow-ups, digital signatures, and payment processing. 
                   Focus on painting while we handle the paperwork.
                 </p>
-                <Link href="/features" className="kofi-btn kofi-btn-outline kofi-btn-sm">
+                <Link href="/features" className="unified-btn unified-btn-outline unified-btn-sm">
                   Learn More
                 </Link>
               </div>
@@ -184,42 +181,42 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="kofi-section bg-gray-50">
-        <div className="kofi-container">
-          <div className="kofi-text-center kofi-mb-xl">
-            <h2 className="kofi-h2">How It Works</h2>
-            <p className="kofi-body-large">
+      <section className="unified-section bg-gray-50">
+        <div className="unified-container">
+          <div className="text-center mb-12">
+            <h2 className="unified-h2">How It Works</h2>
+            <p className="unified-body-large">
               Three simple steps to professional quotes
             </p>
           </div>
           
-          <div className="kofi-grid kofi-grid-3">
-            <div className="kofi-text-center">
-              <div className="w-16 h-16 bg-orange-500 text-white rounded-full flex items-center justify-center mx-auto kofi-mb-md font-bold text-xl">
+          <div className="unified-grid grid-cols-1 md:grid-cols-3">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">
                 1
               </div>
-              <h3 className="kofi-h4 kofi-mb-sm">Enter Project Details</h3>
-              <p className="kofi-body">
+              <h3 className="unified-h4 mb-2">Enter Project Details</h3>
+              <p className="unified-body">
                 Simply describe the painting project or use our room templates for instant setup.
               </p>
             </div>
             
-            <div className="kofi-text-center">
-              <div className="w-16 h-16 bg-teal-500 text-white rounded-full flex items-center justify-center mx-auto kofi-mb-md font-bold text-xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-teal-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">
                 2
               </div>
-              <h3 className="kofi-h4 kofi-mb-sm">AI Calculates Everything</h3>
-              <p className="kofi-body">
+              <h3 className="unified-h4 mb-2">AI Calculates Everything</h3>
+              <p className="unified-body">
                 Our AI instantly calculates materials, labor, and provides accurate pricing based on your location.
               </p>
             </div>
             
-            <div className="kofi-text-center">
-              <div className="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto kofi-mb-md font-bold text-xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">
                 3
               </div>
-              <h3 className="kofi-h4 kofi-mb-sm">Send Professional Quote</h3>
-              <p className="kofi-body">
+              <h3 className="unified-h4 mb-2">Send Professional Quote</h3>
+              <p className="unified-body">
                 Generate a beautiful, branded quote and send it directly to your customer's email.
               </p>
             </div>
@@ -228,19 +225,19 @@ export default function HomePage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="kofi-section">
-        <div className="kofi-container">
-          <div className="kofi-grid kofi-grid-2" style={{ alignItems: 'center' }}>
+      <section className="unified-section">
+        <div className="unified-container">
+          <div className="unified-grid grid-cols-1 md:grid-cols-2" style={{ alignItems: 'center' }}>
             <div>
-              <h2 className="kofi-h2 kofi-mb-md">Why 5,000+ Contractors Choose Paint Quote Pro</h2>
+              <h2 className="unified-h2 mb-6">Why 5,000+ Contractors Choose Paint Quote Pro</h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-1">
                     <CheckCircle className="w-4 h-4 text-green-500" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 kofi-mb-xs">Increase Win Rate by 40%</h4>
-                    <p className="kofi-body-small">Professional quotes impress customers and build trust</p>
+                    <h4 className="font-semibold text-gray-900 mb-1">Increase Win Rate by 40%</h4>
+                    <p className="unified-body-small">Professional quotes impress customers and build trust</p>
                   </div>
                 </div>
                 
@@ -249,8 +246,8 @@ export default function HomePage() {
                     <Clock className="w-4 h-4 text-orange-500" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 kofi-mb-xs">Save 5+ Hours Per Week</h4>
-                    <p className="kofi-body-small">Automated calculations and instant quote generation</p>
+                    <h4 className="font-semibold text-gray-900 mb-1">Save 5+ Hours Per Week</h4>
+                    <p className="unified-body-small">Automated calculations and instant quote generation</p>
                   </div>
                 </div>
                 
@@ -259,8 +256,8 @@ export default function HomePage() {
                     <DollarSign className="w-4 h-4 text-teal-500" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 kofi-mb-xs">Increase Revenue by 278%</h4>
-                    <p className="kofi-body-small">Accurate pricing and faster turnaround times</p>
+                    <h4 className="font-semibold text-gray-900 mb-1">Increase Revenue by 278%</h4>
+                    <p className="unified-body-small">Accurate pricing and faster turnaround times</p>
                   </div>
                 </div>
                 
@@ -269,20 +266,20 @@ export default function HomePage() {
                     <Smartphone className="w-4 h-4 text-purple-500" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 kofi-mb-xs">Work From Anywhere</h4>
-                    <p className="kofi-body-small">Mobile-optimized for on-site estimates and quotes</p>
+                    <h4 className="font-semibold text-gray-900 mb-1">Work From Anywhere</h4>
+                    <p className="unified-body-small">Mobile-optimized for on-site estimates and quotes</p>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="kofi-card bg-gradient-to-br from-orange-50 to-teal-50">
-              <div className="kofi-card-body kofi-text-center">
-                <div className="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto kofi-mb-md">
+            <div className="unified-card bg-gradient-to-br from-orange-50 to-teal-50">
+              <div className="p-8 text-center">
+                <div className="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <TrendingUp className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="kofi-h3 kofi-mb-sm">278% ROI</h3>
-                <p className="kofi-body">Average return on investment in just 90 days</p>
+                <h3 className="unified-h3 mb-2">278% ROI</h3>
+                <p className="unified-body">Average return on investment in just 90 days</p>
               </div>
             </div>
           </div>
@@ -290,16 +287,16 @@ export default function HomePage() {
       </section>
 
       {/* Testimonial */}
-      <section className="kofi-section bg-gray-50">
-        <div className="kofi-container-narrow">
-          <div className="kofi-card bg-gradient-to-br from-orange-50 to-teal-50">
-            <div className="kofi-card-body kofi-text-center">
-              <div className="flex items-center justify-center gap-1 kofi-mb-md">
+      <section className="unified-section bg-gray-50">
+        <div className="unified-container max-w-3xl">
+          <div className="unified-card bg-gradient-to-br from-orange-50 to-teal-50">
+            <div className="p-8 text-center">
+              <div className="flex items-center justify-center gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                 ))}
               </div>
-              <blockquote className="kofi-h3 kofi-mb-md text-gray-800">
+              <blockquote className="unified-h3 mb-6 text-gray-800">
                 "Paint Quote Pro increased our revenue by $47,000 per month. The professional quotes 
                 helped us win 60% more jobs than before."
               </blockquote>
@@ -307,9 +304,9 @@ export default function HomePage() {
                 <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">
                   MR
                 </div>
-                <div className="kofi-text-left">
+                <div className="text-left">
                   <div className="font-semibold text-gray-900">Miguel Rodriguez</div>
-                  <div className="kofi-body-small">Rodriguez Painting, Texas</div>
+                  <div className="unified-body-small">Rodriguez Painting, Texas</div>
                 </div>
               </div>
             </div>
@@ -318,27 +315,27 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="kofi-section bg-gradient-to-br from-orange-500 to-red-500 text-white">
-        <div className="kofi-container kofi-text-center">
-          <h2 className="kofi-h2 text-white kofi-mb-md">
+      <section className="unified-section bg-gradient-to-br from-orange-500 to-red-500 text-white">
+        <div className="unified-container text-center">
+          <h2 className="unified-h2 text-white mb-6">
             Ready to Win More Painting Jobs?
           </h2>
-          <p className="kofi-body-large kofi-mb-xl opacity-90">
+          <p className="unified-body-large mb-8 opacity-90">
             Join 5,000+ contractors who've increased their win rates with Paint Quote Pro. 
             Start your free trial today - no credit card required.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/trial-signup" className="kofi-btn bg-white text-orange-500 hover:bg-gray-100 kofi-btn-lg">
+            <Link href="/trial-signup" className="unified-btn bg-white text-orange-500 hover:bg-gray-100 unified-btn-lg">
               Start Free Trial
               <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link href="/demo" className="kofi-btn border-2 border-white text-white hover:bg-white hover:text-orange-500 kofi-btn-lg">
+            <Link href="/demo" className="unified-btn border-2 border-white text-white hover:bg-white hover:text-orange-500 unified-btn-lg">
               Watch Demo
             </Link>
           </div>
           
-          <div className="kofi-mt-xl">
-            <div className="flex items-center justify-center gap-6 kofi-body-small opacity-80">
+          <div className="mt-12">
+            <div className="flex items-center justify-center gap-6 unified-body-small opacity-80">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4" />
                 <span>Free 14-day trial</span>

@@ -1,0 +1,380 @@
+/* ================================================
+   UNIFIED DESIGN SYSTEM FOR PROPAINT QUOTE
+   This consolidates all design systems into one
+   ================================================ */
+
+/* ================================================
+   1. CSS RESET & BASE
+   ================================================ */
+:root {
+  /* Primary Brand Colors */
+  --color-primary: #FF6B35;        /* Ko-fi Orange */
+  --color-primary-dark: #E85A2C;   
+  --color-primary-light: #FF8F66;
+  
+  /* Secondary Colors */
+  --color-secondary: #00B5D8;      /* Professional Blue */
+  --color-secondary-dark: #0096B3;
+  --color-secondary-light: #33C3E0;
+  
+  /* Neutral Colors */
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+  
+  /* Success/Error/Warning */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+  
+  /* Typography Scale */
+  --font-xs: 0.75rem;
+  --font-sm: 0.875rem;
+  --font-base: 1rem;
+  --font-lg: 1.125rem;
+  --font-xl: 1.25rem;
+  --font-2xl: 1.5rem;
+  --font-3xl: 1.875rem;
+  --font-4xl: 2.25rem;
+  --font-5xl: 3rem;
+  
+  /* Spacing Scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  
+  /* Z-index Scale */
+  --z-dropdown: 10;
+  --z-header: 20;
+  --z-modal: 30;
+  --z-toast: 40;
+  --z-tooltip: 50;
+}
+
+/* ================================================
+   2. TYPOGRAPHY
+   ================================================ */
+.unified-h1 {
+  font-size: var(--font-4xl);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-gray-900);
+  margin-bottom: var(--space-lg);
+}
+
+.unified-h2 {
+  font-size: var(--font-3xl);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-gray-900);
+  margin-bottom: var(--space-md);
+}
+
+.unified-h3 {
+  font-size: var(--font-2xl);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-gray-900);
+  margin-bottom: var(--space-md);
+}
+
+.unified-body {
+  font-size: var(--font-base);
+  line-height: 1.6;
+  color: var(--color-gray-700);
+}
+
+.unified-body-large {
+  font-size: var(--font-lg);
+  line-height: 1.7;
+  color: var(--color-gray-700);
+}
+
+/* ================================================
+   3. NAVIGATION (Single Unified Navigation)
+   ================================================ */
+.unified-header {
+  background: white;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+}
+
+.unified-nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.unified-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-weight: 700;
+  font-size: var(--font-xl);
+  color: var(--color-gray-900);
+  text-decoration: none;
+}
+
+.unified-nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.unified-nav-link {
+  color: var(--color-gray-700);
+  text-decoration: none;
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  transition: all 0.2s;
+}
+
+.unified-nav-link:hover {
+  color: var(--color-primary);
+  background: var(--color-gray-50);
+}
+
+.unified-nav-link.active {
+  color: var(--color-primary);
+  background: var(--color-primary-light) / 0.1;
+}
+
+/* Dropdown Styles */
+.unified-dropdown {
+  position: relative;
+}
+
+.unified-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: var(--space-sm);
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-sm);
+  min-width: 280px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s;
+}
+
+.unified-dropdown:hover .unified-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ================================================
+   4. BUTTONS (Single Button System)
+   ================================================ */
+.unified-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-lg);
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  border: 2px solid transparent;
+}
+
+.unified-btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.unified-btn-primary:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.unified-btn-secondary {
+  background: white;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.unified-btn-secondary:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+.unified-btn-ghost {
+  background: transparent;
+  color: var(--color-gray-700);
+}
+
+.unified-btn-ghost:hover {
+  background: var(--color-gray-100);
+}
+
+/* ================================================
+   5. CARDS & CONTAINERS
+   ================================================ */
+.unified-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.unified-section {
+  padding: var(--space-3xl) 0;
+}
+
+.unified-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-xl);
+  transition: all 0.2s;
+}
+
+.unified-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* ================================================
+   6. MOBILE MENU (Single Implementation)
+   ================================================ */
+.unified-mobile-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  padding: var(--space-sm);
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .unified-mobile-toggle {
+    display: block;
+  }
+  
+  .unified-nav-links {
+    display: none;
+  }
+  
+  .unified-nav-buttons {
+    display: none;
+  }
+  
+  .unified-mobile-menu {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    padding: var(--space-lg);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  
+  .unified-mobile-menu.open {
+    transform: translateX(0);
+  }
+}
+
+/* ================================================
+   7. UTILITIES
+   ================================================ */
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-success { color: var(--color-success); }
+.text-error { color: var(--color-error); }
+.text-warning { color: var(--color-warning); }
+
+.bg-primary { background-color: var(--color-primary); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-gray-50 { background-color: var(--color-gray-50); }
+.bg-gray-100 { background-color: var(--color-gray-100); }
+
+/* Spacing utilities */
+.mt-sm { margin-top: var(--space-sm); }
+.mt-md { margin-top: var(--space-md); }
+.mt-lg { margin-top: var(--space-lg); }
+.mt-xl { margin-top: var(--space-xl); }
+
+.mb-sm { margin-bottom: var(--space-sm); }
+.mb-md { margin-bottom: var(--space-md); }
+.mb-lg { margin-bottom: var(--space-lg); }
+.mb-xl { margin-bottom: var(--space-xl); }
+
+/* Grid system */
+.unified-grid {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.unified-grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.unified-grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.unified-grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* ================================================
+   8. REMOVE ALL CONFLICTS
+   ================================================ */
+/* Override any conflicting styles from other CSS files */
+.ac-nav,
+.kofi-header,
+.professional-header {
+  display: none !important;
+}
+
+/* Ensure only one navigation shows */
+header:not(.unified-header) {
+  display: none !important;
+}
+
+/* Remove duplicate mobile menus */
+.ac-mobile-menu,
+.kofi-mobile-menu,
+.mobile-menu:not(.unified-mobile-menu) {
+  display: none !important;
+}
