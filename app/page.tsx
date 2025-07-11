@@ -4,7 +4,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CheckCircle, Clock, Shield, Star, Calculator, Palette, Home, Building } from 'lucide-react'
+import { CheckCircle, Clock, Shield, Star, Calculator, Palette, Home, Building, Bot } from 'lucide-react'
 import { COMPANY_INFO, PAINTING_SERVICES } from '@/lib/constants'
 
 export default function HomePage() {
@@ -35,13 +35,13 @@ export default function HomePage() {
                 {COMPANY_INFO.tagline}
               </h1>
               <p className="text-xl lg:text-2xl text-gray-200 mb-10 leading-relaxed font-medium">
-                Get instant, AI-powered painting quotes for your home or business. 
-                Professional service, transparent pricing, exceptional results.
+                Chat with our AI assistant to get instant, accurate painting quotes. 
+                Just describe your project and get professional estimates in seconds.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-6 mb-12">
                 <Button size="lg" asChild className="text-lg font-semibold h-14 px-10" variant="kofi">
-                  <Link href="/get-quote">Get Instant Quote</Link>
+                  <Link href="/get-quote">🤖 Chat for Quote</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="text-lg font-semibold h-14 px-10 bg-white/10 backdrop-blur-sm text-white border-2 border-white/50 hover:bg-white hover:text-gray-900 hover:border-white">
                   <Link href="/calculator">Try Quote Calculator</Link>
@@ -118,6 +118,70 @@ export default function HomePage() {
                   </Card>
                 )
               })}
+            </div>
+          </div>
+        </section>
+
+        {/* AI Chat Features Section */}
+        <section className="py-20 lg:py-32 bg-gradient-to-br from-secondary-50 via-primary-50 to-accent-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="font-display text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+                <span className="bg-gradient-to-r from-secondary-600 via-primary-600 to-accent-600 bg-clip-text text-transparent">
+                  AI-Powered Quote Assistant
+                </span>
+              </h2>
+              <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+                Experience the future of painting quotes with our intelligent AI assistant. 
+                Get professional estimates instantly through natural conversation.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+              <Card className="group hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1">
+                <CardHeader>
+                  <div className="p-3 bg-gradient-to-r from-primary-500 to-accent-500 rounded-2xl w-fit mb-4">
+                    <Bot className="w-8 h-8 text-white" />
+                  </div>
+                  <CardTitle className="text-xl font-bold text-gray-900">Smart Conversations</CardTitle>
+                  <CardDescription className="text-gray-600">
+                    Chat naturally about your project. Our AI understands context and asks the right questions.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="group hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1">
+                <CardHeader>
+                  <div className="p-3 bg-gradient-to-r from-secondary-500 to-purple-500 rounded-2xl w-fit mb-4">
+                    <Clock className="w-8 h-8 text-white" />
+                  </div>
+                  <CardTitle className="text-xl font-bold text-gray-900">Instant Results</CardTitle>
+                  <CardDescription className="text-gray-600">
+                    Get accurate quotes in seconds, not days. No waiting for callbacks or site visits.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="group hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1">
+                <CardHeader>
+                  <div className="p-3 bg-gradient-to-r from-accent-500 to-pink-500 rounded-2xl w-fit mb-4">
+                    <Calculator className="w-8 h-8 text-white" />
+                  </div>
+                  <CardTitle className="text-xl font-bold text-gray-900">Professional Accuracy</CardTitle>
+                  <CardDescription className="text-gray-600">
+                    Based on real contractor data and industry standards for reliable estimates.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+
+            <div className="text-center">
+              <Button size="lg" asChild className="text-lg font-semibold h-14 px-10" variant="kofi">
+                <Link href="/get-quote">🤖 Try AI Quote Assistant</Link>
+              </Button>
+              <p className="text-sm text-gray-600 mt-4">
+                Free to use • No account required • Instant results
+              </p>
             </div>
           </div>
         </section>
