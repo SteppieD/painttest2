@@ -23,6 +23,11 @@ export function UnifiedHeader() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [companyId, setCompanyId] = useState<string | null>(null);
   const pathname = usePathname();
+  
+  // Debug logging
+  useEffect(() => {
+    console.log('UnifiedHeader mounted');
+  }, []);
 
   // Get company ID from storage
   useEffect(() => {

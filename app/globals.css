@@ -14,6 +14,64 @@
 @import '../styles/comprehensive-contrast-fix.css';
 
 /* ================================================
+   FIX: Hide any duplicate mobile menus
+   ================================================ */
+/* Hide all vertical navigation menus */
+.kofi-mobile-menu,
+.ac-mobile-menu,
+.mobile-menu {
+  display: none !important;
+}
+
+/* Hide any nav that has vertical layout of menu items */
+nav:has(> a[href="/features"]):has(> a[href="/solutions"]):has(> a[href="/resources"]) {
+  display: none !important;
+}
+
+/* Specifically hide any vertical nav on the left side */
+nav {
+  &:has(a[href="/features"]):first-child {
+    display: none !important;
+  }
+}
+
+/* Hide any element that looks like a vertical menu */
+*:has(> a[href="/features"]):has(> a[href="/solutions"]):has(> a[href="/pricing"]):has(> a[href="/about"]) {
+  &:not(.unified-nav-links):not(.unified-mobile-menu) {
+    display: none !important;
+  }
+}
+
+/* But keep the unified navigation */
+.unified-nav-links {
+  display: flex !important;
+}
+
+/* Hide mobile menu on desktop */
+@media (min-width: 1024px) {
+  .unified-mobile-menu {
+    display: none !important;
+  }
+  
+  /* Ensure no vertical menus show */
+  nav:not(.unified-nav-links) {
+    flex-direction: row !important;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 1023px) {
+  .unified-nav-links {
+    display: none !important;
+  }
+  
+  /* Only show unified mobile menu when open */
+  .unified-mobile-menu:not(.open) {
+    display: none !important;
+  }
+}
+
+/* ================================================
    OVERRIDE ORANGE BUTTON COLORS
    Force brand green on Try For Free button
    ================================================ */
