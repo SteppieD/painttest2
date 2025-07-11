@@ -166,7 +166,7 @@ export function OnboardingTour({
             <div>
               <div 
                
-                style={{ width: `${progress}%` }}
+               %` }}
               />
             </div>
             

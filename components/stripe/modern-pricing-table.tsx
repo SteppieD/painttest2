@@ -162,9 +162,9 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
       <AnimatePresence mode="wait">
         {isYearly && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+           
+           
+           
            
           >
             <div>
@@ -184,9 +184,9 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
           return (
             <motion.div
               key={plan.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+             
+             
+             
              `}
             >
               <Card
@@ -203,25 +203,25 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                 )}
 
                 {/* Card Header */}
-                <div rounded-t-lg`} style={plan.popular ? { backgroundColor: '#2563eb', color: '#ffffff' } : {}}>
-                  <h3 style={plan.popular ? { color: '#ffffff' } : { color: '#111827' }}>{plan.name}</h3>
-                  <p style={plan.popular ? { color: '#ffffff' } : { color: '#6b7280' }}>{plan.description}</p>
+                <div rounded-t-lg`} : {}}>
+                  <h3 : { color: '#111827' }}>{plan.name}</h3>
+                  <p : { color: '#6b7280' }}>{plan.description}</p>
 
                   {/* Pricing */}
                   <div>
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={isYearly ? 'yearly' : 'monthly'}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
+                       
+                       
+                       
                        
                       >
-                        <span style={plan.popular ? { color: '#ffffff' } : { color: '#111827' }}>
+                        <span : { color: '#111827' }}>
                           ${isYearly && plan.yearlyMonthlyPrice ? Math.floor(plan.yearlyMonthlyPrice) : price}
                         </span>
                         {price > 0 && (
-                          <span style={plan.popular ? { color: '#ffffff' } : { color: '#6b7280' }}>
+                          <span : { color: '#6b7280' }}>
                             /{isYearly ? 'month' : 'month'}
                           </span>
                         )}
@@ -232,13 +232,13 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                   {/* Yearly pricing details */}
                   {isYearly && plan.savings && (
                     <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
+                     
+                     
                      
                     >
-                      <p style={plan.popular ? { color: '#ffffff' } : { color: '#6b7280' }}>
+                      <p : { color: '#6b7280' }}>
                         <span>${plan.monthlyPrice * 12}</span>
-                        <span style={plan.popular ? { color: '#ffffff' } : { color: '#111827' }}>${plan.yearlyPrice}/year</span>
+                        <span : { color: '#111827' }}>${plan.yearlyPrice}/year</span>
                       </p>
                       <Badge variant="outline"`}>
                         You save ${plan.savings}
@@ -325,9 +325,9 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
 
       {/* Social Proof */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
+       
+       
+       
        
       >
         <div>

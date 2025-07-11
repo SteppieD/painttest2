@@ -54,8 +54,8 @@ export function ImageHeroSection({
               src={imageSrc}
               alt={imageAlt}
               title={imageTitle}
-              width={1200}
-              height={600}
+             
+             
              
               priority
             />

@@ -51,8 +51,8 @@ export function DashboardHeader() {
               src="/paint-logo-transparent.png" 
               alt="Paint Quote App Dashboard - Professional painting estimate software" 
              
-              width="32"
-              height="32"
+             
+             
             />
             <span>Paint Quote App</span>
           </Link>

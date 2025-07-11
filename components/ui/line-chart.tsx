@@ -45,7 +45,7 @@ export default function CustomLineChart({
   };
 
   return (
-    <ResponsiveContainer width="100%" height={height}>
+    <ResponsiveContainer>
       <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
         {showGrid && <CartesianGrid strokeDasharray="3 3" />}
         <XAxis 

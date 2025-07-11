@@ -107,8 +107,8 @@ export default function PaintingContractorSoftwareCaseStudy() {
           <Image
             src={professionalImages.caseStudies.satisfaction}
             alt="Rodriguez Painting team celebrating success with contractor software"
-            width={1200}
-            height={600}
+           
+           
            
           />
           <div>

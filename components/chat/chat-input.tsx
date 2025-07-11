@@ -58,7 +58,7 @@ export function ChatInput({
             placeholder="Describe your painting project..."
             disabled={isLoading}
            
-            style={isMobile ? { fontSize: '16px' } : {}}
+            : {}}
           />
           
           {/* Voice input button (inside input on mobile) */}

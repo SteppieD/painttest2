@@ -97,8 +97,7 @@ export function MobileOptimizedLayout({
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      style={{
-        transform: `translateY(${pullDistance}px)`,
+     px)`,
         transition: isRefreshing || pullDistance === 0 ? 'transform 0.3s ease-out' : 'none'
       }}
     >
@@ -106,8 +105,7 @@ export function MobileOptimizedLayout({
       {enablePullToRefresh && (pullDistance > 0 || isRefreshing) && (
         <div 
          
-          style={{ 
-            transform: `translateY(-${Math.max(60 - pullDistance, 0)}px)`,
+         px)`,
             opacity: Math.min(pullDistance / 60, 1)
           }}
         >
@@ -436,8 +434,7 @@ export function BottomSheet({
       {/* Sheet */}
       <div 
        
-        style={{
-          transform: `translateY(${currentY}px)`,
+       px)`,
           transition: isDragging ? 'none' : 'transform 0.3s ease-out'
         }}
         onTouchStart={handleTouchStart}

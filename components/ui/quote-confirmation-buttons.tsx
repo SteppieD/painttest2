@@ -129,11 +129,7 @@ export function ActionButton({
   variant = "primary",
   disabled = false 
 }: ActionButtonProps) {
-  const variants = {
-    primary: "bg-blue-600 hover:bg-blue-700 text-white",
-    secondary: "border-gray-200 text-gray-600 hover:bg-gray-50",
-    success: "bg-green-600 hover:bg-green-700 text-white"
-  };
+  const;
 
   return (
     <Button

@@ -495,7 +495,7 @@ export default function RevenueAnalytics() {
                     { name: 'Maintenance', value: metrics.breakdown.maintenance, color: CHART_COLORS.warning[0] },
                     { name: 'New Construction', value: metrics.breakdown.newConstruction, color: CHART_COLORS.purple[0] }
                   ]}
-                  height={320}
+                 
                   showLegend={true}
                   showLabels={true}
                   formatValue={formatChartCurrency}
@@ -521,7 +521,7 @@ export default function RevenueAnalytics() {
                   bars={[
                     { key: 'revenue', color: CHART_COLORS.purple[0], label: 'Revenue' }
                   ]}
-                  height={320}
+                 
                   showLegend={false}
                   formatValue={formatChartCurrency}
                 />
@@ -565,7 +565,7 @@ export default function RevenueAnalytics() {
                 { key: 'revenue', color: CHART_COLORS.success[0], label: 'Revenue' },
                 { key: 'quotes', color: CHART_COLORS.primary[0], label: 'Quotes (x100)' }
               ]}
-              height={350}
+             
               showLegend={true}
               formatValue={(value) => {
                 return formatChartCurrency(value);
@@ -652,13 +652,13 @@ export default function RevenueAnalytics() {
                       <div>
                         <div 
                          
-                          style={{ width: `${Math.min((month.current / month.average) * 50, 100)}%` }}
+                         %` }}
                         ></div>
                       </div>
                       <div>
                         <div 
                          
-                          style={{ width: `${Math.min((month.previous / month.average) * 50, 100)}%` }}
+                         %` }}
                         ></div>
                       </div>
                     </div>
@@ -709,7 +709,7 @@ export default function RevenueAnalytics() {
                     <div>
                       <div 
                        
-                        style={{ width: `${opportunity.probability}%` }}
+                       %` }}
                       ></div>
                     </div>
                   </div>

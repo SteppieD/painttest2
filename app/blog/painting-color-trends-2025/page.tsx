@@ -88,8 +88,8 @@ export default function PaintingColorTrends2025Page() {
             <Image
               src={professionalImages.blog.colorSelection}
               alt="Professional painter helping client choose paint colors for 2025"
-              width={1200}
-              height={600}
+             
+             
              
               priority
             />
@@ -113,8 +113,8 @@ export default function PaintingColorTrends2025Page() {
                 <Image
                   src={professionalImages.services.residential}
                   alt="Warm earth tone paint colors in modern living room"
-                  width={600}
-                  height={400}
+                 
+                 
                  
                 />
               </div>
@@ -155,8 +155,8 @@ export default function PaintingColorTrends2025Page() {
               <Image
                 src={professionalImages.services.interior}
                 alt="Quiet luxury neutral paint colors in elegant interior"
-                width={1200}
-                height={600}
+               
+               
                
               />
             </div>

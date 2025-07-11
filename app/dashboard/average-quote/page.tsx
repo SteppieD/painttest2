@@ -554,8 +554,7 @@ export default function AverageQuotePage() {
                   </div>
                   <div 
                    
-                    style={{ 
-                      height: `${maxAverage > 0 ? (data.average / maxAverage) * 180 : 0}px`,
+                   px`,
                       minHeight: data.average > 0 ? '20px' : '0'
                     }}
                   />
@@ -590,7 +589,7 @@ export default function AverageQuotePage() {
                   <div>
                     <div 
                      
-                      style={{ width: `${range.percentage}%` }}
+                     %` }}
                     >
                       {range.percentage > 5 && (
                         <span>

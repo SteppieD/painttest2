@@ -493,8 +493,7 @@ export default function ThisMonthPage() {
                   )}
                   <div 
                    
-                    style={{ 
-                      height: `${maxDailyRevenue > 0 ? (data.revenue / maxDailyRevenue) * 180 : 0}px`,
+                   px`,
                       minHeight: data.revenue > 0 ? '20px' : '0'
                     }}
                   />

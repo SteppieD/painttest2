@@ -527,7 +527,7 @@ export function ConversationalSetupWizard({ accessCode, onComplete, onSkip, isUp
         <div>
           <div 
             
-            style={{ width: `${progress}%` }}
+           %` }}
           />
         </div>
         <p>

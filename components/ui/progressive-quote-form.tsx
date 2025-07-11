@@ -144,7 +144,7 @@ export function ProgressiveQuoteForm({
         <div>
           <div 
            
-            style={{ width: `${quoteData.completion_percentage || 0}%` }}
+           %` }}
           />
         </div>
       </CardHeader>

@@ -132,7 +132,7 @@ export function MarkupPopup({
             <div>
               <div
                
-                style={{ width: `${(profit / total) * 100}%` }}
+               %` }}
               />
             </div>
           </div>

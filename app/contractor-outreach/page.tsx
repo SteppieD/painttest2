@@ -160,7 +160,7 @@ Anyone interested? Drop a comment or DM me!`
             <div>
               <div 
                
-                style={{ width: `${completionRate}%` }}
+               %` }}
               />
             </div>
           </div>

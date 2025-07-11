@@ -84,9 +84,9 @@ export function OptimizedSaaSLayout() {
                   href="/demo" 
                  
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                    <path d="M10 8L16 12L10 16V8Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+                  <svg>
+                    <circle cx="12" cy="12" r="10" strokeWidth="2"/>
+                    <path d="M10 8L16 12L10 16V8Z" strokeWidth="2" strokeLinejoin="round"/>
                   </svg>
                   Watch Demo
                 </Link>
@@ -113,8 +113,8 @@ export function OptimizedSaaSLayout() {
             <div>
               {/* Attention Arrow - Desktop only */}
               <div>
-                <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
-                  <path d="M5 20H45M45 20L30 5M45 20L30 35" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg>
+                  <path d="M5 20H45M45 20L30 5M45 20L30 35" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 <span>Try it!</span>
               </div>

@@ -93,9 +93,9 @@ export function OptimizedSaaSLayoutWithImages() {
                   href="/demo" 
                  
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                    <path d="M10 8L16 12L10 16V8Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+                  <svg>
+                    <circle cx="12" cy="12" r="10" strokeWidth="2"/>
+                    <path d="M10 8L16 12L10 16V8Z" strokeWidth="2" strokeLinejoin="round"/>
                   </svg>
                   Watch Demo
                 </Link>

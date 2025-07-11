@@ -72,10 +72,10 @@ export function PerformanceMonitor({ className }: { className?: string }) {
   }, [isVisible]);
 
   const getPerformanceStatus = (avgTime: number) => {
-    if (avgTime < 50) return { status: 'excellent', color: 'bg-green-500', text: 'Excellent' };
-    if (avgTime < 100) return { status: 'good', color: 'bg-blue-500', text: 'Good' };
-    if (avgTime < 200) return { status: 'fair', color: 'bg-yellow-500', text: 'Fair' };
-    return { status: 'poor', color: 'bg-red-500', text: 'Needs Optimization' };
+    if (avgTime < 50) return {};
+    if (avgTime < 100) return {};
+    if (avgTime < 200) return {};
+    return {};
   };
 
   const getCacheEfficiency = (cacheSize: number, queryCount: number) => {

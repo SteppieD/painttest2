@@ -401,8 +401,7 @@ export default function TotalQuotesPage() {
                   <div>{data.count}</div>
                   <div 
                    
-                    style={{ 
-                      height: `${maxCount > 0 ? (data.count / maxCount) * 200 : 0}px`,
+                   px`,
                       minHeight: data.count > 0 ? '20px' : '0'
                     }}
                   />

@@ -47,7 +47,7 @@ export default function CustomBarChart({
   };
 
   return (
-    <ResponsiveContainer width="100%" height={height}>
+    <ResponsiveContainer>
       <BarChart 
         data={data} 
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

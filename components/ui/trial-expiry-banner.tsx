@@ -172,8 +172,7 @@ export function TrialExpiryBanner({
         <div>
           <div 
            
-            style={{ 
-              width: `${Math.max(0, Math.min(100, ((trialDurationDays - timeLeft.days) / trialDurationDays) * 100))}%` 
+           %` 
             }}
           />
         </div>

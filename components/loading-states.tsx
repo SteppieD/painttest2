@@ -109,8 +109,7 @@ export function LoadingState({
               <div
                 key={i}
                 bg-primary rounded-full animate-pulse`}
-                style={{
-                  animationDelay: `${i * 0.2}s`,
+               s`,
                   animationDuration: '1s'
                 }}
               />
@@ -193,8 +192,7 @@ export function SkeletonLoader({
         <div
           key={i}
          
-          style={{
-            width: `${Math.random() * 40 + 60}%`,
+         %`,
             animationDelay: `${i * 0.1}s`
           }}
         />
@@ -247,8 +245,7 @@ export function ChatLoadingSkeleton() {
                 <div
                   key={i}
                  
-                  style={{
-                    animationDelay: `${i * 0.2}s`,
+                 s`,
                     animationDuration: '1s'
                   }}
                 />
@@ -266,7 +263,7 @@ export function TableLoadingSkeleton({ rows = 5, columns = 4 }: { rows?: number;
   return (
     <div>
       {/* Header */}
-      <div style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
+      <div, 1fr)` }}>
         {Array.from({ length: columns }).map((_, i) => (
           <div key={i} />
         ))}
@@ -274,12 +271,12 @@ export function TableLoadingSkeleton({ rows = 5, columns = 4 }: { rows?: number;
       
       {/* Rows */}
       {Array.from({ length: rows }).map((_, rowIndex) => (
-        <div key={rowIndex} style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
+        <div key={rowIndex}, 1fr)` }}>
           {Array.from({ length: columns }).map((_, colIndex) => (
             <div 
               key={colIndex} 
              
-              style={{ animationDelay: `${(rowIndex * columns + colIndex) * 0.05}s` }}
+             s` }}
             />
           ))}
         </div>

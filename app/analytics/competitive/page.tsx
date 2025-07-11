@@ -902,7 +902,7 @@ export default function CompetitiveIntelligencePlatform() {
                         <div>
                           <div 
                            
-                            style={{ width: `${comp.valuePerception}%` }}
+                           %` }}
                           ></div>
                         </div>
                         <span>{comp.valuePerception}%</span>

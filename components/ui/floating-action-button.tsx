@@ -163,8 +163,7 @@ export function FloatingActionButton({
              ` 
                   : "translate-y-4 opacity-0"
               )}
-              style={{ 
-                transitionDelay: isOpen ? `${index * 50}ms` : '0ms' 
+             ms` : '0ms' 
               }}
             >
               <Button
@@ -278,8 +277,7 @@ export function SpeedDialFAB({
            ` 
                 : "translate-y-8 opacity-0 scale-50"
             )}
-            style={{ 
-              transitionDelay: isOpen ? `${index * 50}ms` : '0ms' 
+           ms` : '0ms' 
             }}
           >
             <MiniFAB

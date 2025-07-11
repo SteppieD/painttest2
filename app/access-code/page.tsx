@@ -108,8 +108,8 @@ export default function AccessCodePage() {
                 src="/paint-logo-transparent.png" 
                 alt="Paint Quote App - Access Code Login" 
                
-                width="32"
-                height="32"
+               
+               
               />
               <span>Paint Quote App</span>
             </div>

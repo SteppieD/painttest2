@@ -278,11 +278,7 @@ export default function TestUsersPage() {
   };
 
   const getStatusBadge = (status: string) => {
-    const variants = {
-      active: "bg-green-100 text-green-800",
-      expired: "bg-red-100 text-red-800",
-      disabled: "bg-gray-100 text-gray-800"
-    };
+    const;
     return variants[status as keyof typeof variants] || variants.active;
   };
 

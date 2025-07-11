@@ -41,7 +41,7 @@ export function OnboardingProgressBar({
         <div>
           <div
            
-            style={{ width: `${progressPercentage}%` }}
+           %` }}
           />
         </div>
       </div>
@@ -68,7 +68,7 @@ export function OnboardingProgressBar({
             <div>
               <div
                
-                style={{ width: `${progressPercentage}%` }}
+               %` }}
               />
             </div>
           </div>
@@ -130,7 +130,7 @@ export function OnboardingProgressBar({
         <div>
           <div
            
-            style={{ width: `${progressPercentage}%` }}
+           %` }}
           />
         </div>
 
@@ -140,7 +140,7 @@ export function OnboardingProgressBar({
             <div
               key={step.id}
              
-              style={{ width: `${100 / steps.length}%` }}
+             %` }}
             >
               <div
                

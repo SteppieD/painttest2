@@ -158,9 +158,9 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
           <AnimatePresence mode="wait">
             {isYearly && (
               <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+               
+               
+               
                
               >
                 <div>
@@ -181,9 +181,9 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
             return (
               <motion.div
                 key={plan.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+               
+               
+               
                `}
               >
                 <Card
@@ -216,9 +216,9 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
                       <AnimatePresence mode="wait">
                         <motion.div
                           key={isYearly ? 'yearly' : 'monthly'}
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.9 }}
+                         
+                         
+                         
                          
                         >
                           <span>
@@ -234,8 +234,8 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
                     {/* Yearly Savings */}
                     {isYearly && plan.savings && (
                       <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
+                       
+                       
                        
                       >
                         <p>
@@ -305,9 +305,9 @@ export function ImprovedPricingSection({ companyId }: ImprovedPricingSectionProp
 
         {/* Bottom Social Proof - Matches Footer Style */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
+         
+         
+         
          
         >
           <div>

@@ -708,7 +708,7 @@ export default function CostManagementLaboratory() {
                     <div>
                       <div 
                        `}
-                        style={{ width: `${item.percentage}%` }}
+                       %` }}
                       ></div>
                     </div>
                   </div>
@@ -790,7 +790,7 @@ export default function CostManagementLaboratory() {
                     <div>
                       <div 
                        
-                        style={{ width: `${category.percentage}%` }}
+                       %` }}
                       ></div>
                     </div>
                     <div>
@@ -832,7 +832,7 @@ export default function CostManagementLaboratory() {
                     <div>
                       <div 
                        
-                        style={{ width: `${(vendor.spend / metrics.materialCosts.totalSpend) * 100}%` }}
+                       %` }}
                       ></div>
                     </div>
                   </div>
@@ -873,7 +873,7 @@ export default function CostManagementLaboratory() {
                     <div>
                       <div 
                        
-                        style={{ width: `${(role.totalCost / metrics.laborCosts.totalSpend) * 100}%` }}
+                       %` }}
                       ></div>
                     </div>
                   </div>
@@ -907,7 +907,7 @@ export default function CostManagementLaboratory() {
                       <div>
                         <div 
                          
-                          style={{ width: `${(metric.current / metric.target) * 100}%` }}
+                         %` }}
                         ></div>
                       </div>
                       <span>Target: {metric.target}</span>

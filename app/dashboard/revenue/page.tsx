@@ -465,8 +465,7 @@ export default function RevenuePage() {
                   </div>
                   <div 
                    
-                    style={{ 
-                      height: `${maxRevenue > 0 ? (data.revenue / maxRevenue) * 180 : 0}px`,
+                   px`,
                       minHeight: data.revenue > 0 ? '20px' : '0'
                     }}
                   />
@@ -498,7 +497,7 @@ export default function RevenuePage() {
                   <div>
                     <div 
                      
-                      style={{ width: `${(type.revenue / totalProjectRevenue) * 100}%` }}
+                     %` }}
                     >
                       <span>
                         {((type.revenue / totalProjectRevenue) * 100).toFixed(1)}%

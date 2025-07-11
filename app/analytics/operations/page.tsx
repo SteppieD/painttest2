@@ -541,7 +541,7 @@ export default function OperationalExcellenceDashboard() {
                     <div>
                       <div 
                        
-                        style={{ width: `${range.percentage}%` }}
+                       %` }}
                       ></div>
                     </div>
                   </div>
@@ -572,7 +572,7 @@ export default function OperationalExcellenceDashboard() {
                     <div>
                       <div 
                        `}
-                        style={{ width: `${stage.rate}%` }}
+                       %` }}
                       ></div>
                     </div>
                   </div>
@@ -729,8 +729,7 @@ export default function OperationalExcellenceDashboard() {
                     <div>
                       <div 
                        `}
-                        style={{ 
-                          width: `${(stage.avgDuration / Math.max(...metrics.workflow.stages.map(s => s.avgDuration))) * 100}%` 
+                       %` 
                         }}
                       ></div>
                     </div>
@@ -769,7 +768,7 @@ export default function OperationalExcellenceDashboard() {
                   <div>
                     <div 
                      
-                      style={{ width: `${metrics.workflow.scheduleOptimization}%` }}
+                     %` }}
                     ></div>
                   </div>
 
@@ -780,7 +779,7 @@ export default function OperationalExcellenceDashboard() {
                   <div>
                     <div 
                      
-                      style={{ width: `${metrics.workflow.processEfficiency}%` }}
+                     %` }}
                     ></div>
                   </div>
                 </div>

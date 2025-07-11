@@ -30,7 +30,7 @@ export function QuoteProgressIndicator({
           <div>
             <div 
              
-              style={{ width: `${progressPercentage}%` }}
+             %` }}
             />
           </div>
         </div>

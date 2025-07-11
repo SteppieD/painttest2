@@ -55,8 +55,8 @@ export function Header() {
               src="/paint-logo-transparent.png" 
               alt="Paint Quote App - Professional painting estimate software for contractors" 
              
-              width="32"
-              height="32"
+             
+             
             />
             <span>Paint Quote App</span>
           </Link>

@@ -23,8 +23,8 @@ export function Footer() {
               src="/paint-logo-transparent.png" 
               alt="Paint Quote App - Professional painting estimate software footer logo" 
              
-              width="32"
-              height="32"
+             
+             
             />
             <span>Paint Quote App</span>
           </div>

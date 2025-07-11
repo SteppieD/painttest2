@@ -428,7 +428,7 @@ export function SimplifiedConversationalWizard({ accessCode, onComplete, onSkip,
         <div>
           <div 
             
-            style={{ width: `${progress}%` }}
+           %` }}
           />
         </div>
         <p>

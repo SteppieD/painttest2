@@ -782,7 +782,7 @@ export default function ForecastingPlanningDashboard() {
                   <div>
                     <div 
                      
-                      style={{ width: `${metrics.revenueForecasting.yearEnd.probability}%` }}
+                     %` }}
                     ></div>
                   </div>
                   <div>
@@ -815,7 +815,7 @@ export default function ForecastingPlanningDashboard() {
                     <div>
                       <div 
                        
-                        style={{ width: `${month.probability}%` }}
+                       %` }}
                       ></div>
                     </div>
                   </div>
@@ -904,7 +904,7 @@ export default function ForecastingPlanningDashboard() {
                     <div>
                       <div 
                        
-                        style={{ width: `${(bottleneck.currentLevel / bottleneck.projectedNeed) * 100}%` }}
+                       %` }}
                       ></div>
                     </div>
                   </div>
@@ -976,7 +976,7 @@ export default function ForecastingPlanningDashboard() {
                     <div>
                       <div 
                        `}
-                        style={{ width: `${goal.progress}%` }}
+                       %` }}
                       ></div>
                     </div>
                     <div>
