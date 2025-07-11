@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   TrendingUp, 
@@ -17,21 +16,14 @@ import {
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { Button } from '@/components/ui/button';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: 'Small Painting Business Growth Software: 0 to $500K in 18 Months | Success Stories',
   description: 'See how small painting businesses grew from startup to $500K+ using business growth software. Real success stories from 1-person startups to thriving teams.',
   keywords: 'small painting business growth software, painting business startup software, painting contractor business growth, small painting company software, painting business scaling software',
-  openGraph: {
-    title: 'Small Painting Business Growth Software: 0 to $500K in 18 Months',
-    description: 'See how small painting businesses grew from startup to $500K+ using business growth software.',
-    type: 'article',
-    url: 'https://propaintquote.com/small-painting-business-growth-software',
-  },
-  alternates: {
-    canonical: 'https://propaintquote.com/small-painting-business-growth-software',
-  },
-};
+  path: '/small-painting-business-growth-software',
+});
 
 export default function SmallPaintingBusinessGrowthSoftware() {
   return (

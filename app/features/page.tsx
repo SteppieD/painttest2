@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Calculator, 
@@ -25,22 +24,14 @@ import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { QuickPaintCalculator } from '@/components/calculators/quick-paint-calculator';
 import { RoomCalculatorWidget } from '@/components/calculators/room-calculator-widget';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Painting Quote Software Features - Trusted by 5,000+ Professional Contractors | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Painting Quote Software Features - Trusted by 5,000+ Professional Contractors',
   description: 'Discover why 5,000+ painting contractors choose ProPaint Quote. Smart calculators, mobile quoting, customer management, and profit analytics. See 40% higher win rates.',
   keywords: 'painting software features, quote calculator, mobile estimating, contractor tools, painting business management, professional painting quotes, painting estimate software',
-  alternates: {
-    canonical: '/features',
-  },
-  openGraph: {
-    title: 'Painting Quote Software Features - Trusted by 5,000+ Contractors',
-    description: 'Join 5,000+ professional painters using ProPaint Quote. Smart features that increase win rates by 40% and reduce quote time by 80%.',
-    url: '/features',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-};
+  path: '/features',
+});
 
 export default function FeaturesPage() {
   // CIALDINI PRINCIPLE: Social Proof & Authority

@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Palette, 
@@ -28,27 +27,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: 'About ProPaint Quote - Leading Painting Contractor Software | Built by Painters',
   description: 'Discover the story behind ProPaint Quote - the painting contractor software trusted by 5,000+ professionals. Built by painters, for painters. Learn our mission to help contractors win 40% more jobs.',
   keywords: 'about painting software, painting contractor company, quote software founders, painting business tools, contractor software story, painting industry leaders',
-  alternates: {
-    canonical: '/about',
-  },
-  openGraph: {
-    title: 'About ProPaint Quote - The Story Behind the Leading Painting Software',
-    description: 'Built by professional painters who understand the industry. See how ProPaint Quote helps 5,000+ contractors create quotes in 5 minutes and win 40% more jobs.',
-    url: '/about',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'About ProPaint Quote - Built by Painters, for Painters',
-    description: 'The story behind the painting software trusted by 5,000+ contractors nationwide.',
-  },
-};
+  path: '/about',
+});
 
 export default function AboutPage() {
   // Company stats and achievements

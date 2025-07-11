@@ -1,12 +1,12 @@
-import { Metadata } from 'next'
 import { KofiHeader } from '@/components/shared/kofi-header'
 import { ImprovedFooter } from '@/components/shared/improved-footer'
+import { generatePageMetadata } from '@/lib/metadata-utils'
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Privacy Policy',
   description: 'Privacy Policy for ProPaint Quote painting contractor software. Learn how we protect your data and maintain your privacy.',
-  robots: 'index, follow',
-}
+  path: '/privacy',
+})
 
 export default function PrivacyPage() {
   return (

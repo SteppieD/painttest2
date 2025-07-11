@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   FileText,
@@ -19,22 +18,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Painting Invoice Template - Free Professional Invoice for Contractors | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Painting Invoice Template - Free Professional Invoice for Contractors',
   description: 'Painting invoice template free download for contractors. Professional invoice templates for painting jobs with payment terms, itemized costs, and legal protection. Excel, PDF, and Word formats.',
   keywords: 'painting invoice template, painting invoice template free, painting contractor invoice, painting invoice example, painting invoice format, paint job invoice template, painting invoice sample, contractor invoice template',
-  alternates: {
-    canonical: '/painting-invoice-template',
-  },
-  openGraph: {
-    title: 'Free Painting Invoice Template - Professional Contractor Invoices',
-    description: 'Painting invoice template for professional contractors. Free download in Excel, PDF, and Word formats. Get paid faster with proper invoicing.',
-    url: '/painting-invoice-template',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-};
+  path: '/painting-invoice-template',
+});
 
 export default function PaintingInvoiceTemplatePage() {
   // Invoice components

@@ -1,12 +1,12 @@
-import { Metadata } from 'next'
 import { KofiHeader } from '@/components/shared/kofi-header'
 import { ImprovedFooter } from '@/components/shared/improved-footer'
+import { generatePageMetadata } from '@/lib/metadata-utils'
 
-export const metadata: Metadata = {
-  title: 'Terms of Service | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Terms of Service',
   description: 'Terms of Service for ProPaint Quote painting contractor software. Read our terms and conditions for using our platform.',
-  robots: 'index, follow',
-}
+  path: '/terms',
+})
 
 export default function TermsPage() {
   return (

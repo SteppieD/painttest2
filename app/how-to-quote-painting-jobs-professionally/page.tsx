@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Calculator, 
@@ -16,22 +15,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: 'How to Quote Painting Jobs Like a Professional Contractor (2024 Guide)',
   description: 'Learn how to quote painting jobs accurately and profitably. Professional guide for contractors on pricing interior, exterior, and commercial painting projects.',
   keywords: 'how to quote painting jobs, how to quote for painting, how to write a painting quote, what should a painting quote include, painting quotation template, how to quote for painting jobs',
-  openGraph: {
-    title: 'How to Quote Painting Jobs Like a Professional Contractor',
-    description: 'Complete guide to accurate painting job quotes. Learn professional pricing strategies for maximum profits.',
-    type: 'article',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'How to Quote Painting Jobs - Professional Guide',
-    description: 'Master the art of painting job quotes. Professional pricing strategies revealed.',
-  }
-};
+  path: '/how-to-quote-painting-jobs-professionally',
+});
 
 export default function HowToQuotePaintingJobsProfessionallyPage() {
   return (

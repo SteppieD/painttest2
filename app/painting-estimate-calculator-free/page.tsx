@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -17,22 +16,14 @@ import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { ImageHeroSection } from '@/components/seo/ImageHeroSection';
 import { professionalImages } from '@/lib/image-config';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Free Painting Estimate Calculator App - Download for iPhone & Android | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Free Painting Estimate Calculator App - Download for iPhone & Android',
   description: 'Free painting estimate calculator app for contractors. Download for iPhone & Android. Calculate accurate painting quotes instantly with our professional estimating software.',
   keywords: 'painting estimate calculator app, free painting estimate app, painting estimate app iphone, painting estimate calculator app free download, paint estimating app, free painting estimate app for android',
-  openGraph: {
-    title: 'Free Painting Estimate Calculator App - iPhone & Android',
-    description: 'Professional painting estimate calculator app. Free download for contractors. Calculate accurate quotes instantly on mobile.',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Free Painting Estimate Calculator App',
-    description: 'Download free painting calculator app for iPhone & Android. Professional estimates in minutes.',
-  }
-};
+  path: '/painting-estimate-calculator-free',
+});
 
 export default function PaintingEstimateCalculatorFreePage() {
   return (

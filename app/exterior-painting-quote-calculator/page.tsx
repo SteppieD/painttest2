@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Calculator, 
@@ -23,22 +22,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Exterior Painting Quote Calculator - Instant House Painting Estimates | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Exterior Painting Quote Calculator - Instant House Painting Estimates',
   description: 'Exterior painting quote calculator provides instant, accurate estimates for house painting projects. Get professional exterior painting quotes with material costs, labor, and weather considerations in 60 seconds.',
   keywords: 'exterior painting quote calculator, exterior painting estimate calculator, house painting calculator, exterior paint cost calculator, siding painting calculator, exterior house painting calculator, exterior painting pricing calculator',
-  alternates: {
-    canonical: '/exterior-painting-quote-calculator',
-  },
-  openGraph: {
-    title: 'Exterior Painting Quote Calculator - Professional House Painting Estimates',
-    description: 'Exterior painting quote calculator generates accurate house painting estimates instantly. Used by 5,000+ professional contractors for residential and commercial projects.',
-    url: '/exterior-painting-quote-calculator',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-};
+  path: '/exterior-painting-quote-calculator',
+});
 
 export default function ExteriorPaintingCalculatorPage() {
   // House sizes and pricing data

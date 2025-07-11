@@ -1,15 +1,16 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { Building2, Shield, Users, Zap, Phone, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Enterprise Painting Quote Software | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Enterprise Painting Quote Software',
   description: 'Enterprise-grade painting quote software for large contractors and franchises. Custom pricing, dedicated support, and advanced features for scaling businesses.',
-};
+  path: '/enterprise',
+});
 
 export default function EnterprisePage() {
   return (

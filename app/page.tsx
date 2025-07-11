@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Calculator, 
@@ -21,12 +20,14 @@ import {
 } from 'lucide-react';
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: 'Paint Quote Pro - Professional Painting Quote Software for Contractors',
   description: 'Win 40-60% more painting jobs with professional quotes in 30 seconds. Trusted by 5,000+ painting contractors. Start free trial today.',
   keywords: 'painting quote software, painting estimate software, contractor quoting app, painting business tools',
-};
+  path: '/',
+});
 
 export default function HomePage() {
   return (

@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -18,21 +17,14 @@ import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { Button } from '@/components/ui/button';
 import { professionalImages } from '@/lib/image-config';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Painting Contractor Software Case Study: 278% ROI in 90 Days | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Painting Contractor Software Case Study: 278% ROI in 90 Days',
   description: 'See how Rodriguez Painting increased revenue by $47,000 monthly using painting contractor software. Real results, proven ROI, and step-by-step transformation.',
   keywords: 'painting contractor software case study, painting business software ROI, painting contractor software results, painting business growth software, painting estimate software success story',
-  openGraph: {
-    title: 'Painting Contractor Software Case Study: 278% ROI in 90 Days',
-    description: 'See how Rodriguez Painting increased revenue by $47,000 monthly using painting contractor software.',
-    type: 'article',
-    url: 'https://propaintquote.com/painting-contractor-software-case-study',
-  },
-  alternates: {
-    canonical: 'https://propaintquote.com/painting-contractor-software-case-study',
-  },
-};
+  path: '/painting-contractor-software-case-study',
+});
 
 export default function PaintingContractorSoftwareCaseStudy() {
   return (

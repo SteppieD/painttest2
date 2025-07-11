@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Calculator, 
@@ -19,22 +18,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Footer } from '@/components/shared/footer';
 import { Header } from '@/components/shared/header';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Paint Coverage Calculator - Square Footage Paint Calculator | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Paint Coverage Calculator - Square Footage Paint Calculator',
   description: 'Paint coverage calculator determines exactly how much paint you need. Calculate gallons by square footage, room dimensions, and surface type. Free tool used by 5,000+ contractors.',
   keywords: 'paint coverage calculator, paint calculator square feet, wall paint calculator, paint needed calculator, paint coverage per gallon, how much paint calculator, paint square footage calculator, paint consumption calculator',
-  alternates: {
-    canonical: '/paint-coverage-calculator',
-  },
-  openGraph: {
-    title: 'Paint Coverage Calculator - Calculate Gallons Needed by Square Feet',
-    description: 'Paint coverage calculator shows exactly how many gallons you need. Input square footage or room dimensions for accurate paint calculations. Free professional tool.',
-    url: '/paint-coverage-calculator',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-};
+  path: '/paint-coverage-calculator',
+});
 
 export default function PaintCoverageCalculatorPage() {
   // Paint coverage data by type

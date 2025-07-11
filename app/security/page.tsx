@@ -1,13 +1,13 @@
-import { Metadata } from 'next'
 import { KofiHeader } from '@/components/shared/kofi-header'
 import { ImprovedFooter } from '@/components/shared/improved-footer'
 import { Shield, Lock, Eye, Server, Users, AlertTriangle, CheckCircle, FileText } from 'lucide-react'
+import { generatePageMetadata } from '@/lib/metadata-utils'
 
-export const metadata: Metadata = {
-  title: 'Security & Data Protection | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Security & Data Protection',
   description: 'Learn about ProPaint Quote\'s security measures, data protection, and compliance standards for painting contractor software.',
-  robots: 'index, follow',
-}
+  path: '/security',
+})
 
 export default function SecurityPage() {
   const securityFeatures = [

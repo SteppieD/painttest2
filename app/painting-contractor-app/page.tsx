@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Smartphone,
@@ -23,22 +22,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Painting Contractor App - Mobile Quote & Business Management | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Painting Contractor App - Mobile Quote & Business Management',
   description: 'Painting contractor app for iOS and Android. Create professional quotes on-site, manage customers, track jobs, and grow your painting business. 5,000+ contractors save 10 hours weekly.',
   keywords: 'painting contractor app, painting business app, painting estimate app, contractor mobile app, painting quote app, painting job management app, contractor business app, painting contractor software mobile',
-  alternates: {
-    canonical: '/painting-contractor-app',
-  },
-  openGraph: {
-    title: 'Painting Contractor App - Professional Mobile Business Management',
-    description: 'Painting contractor app lets you create quotes on-site, manage customers, and track jobs from your phone. Join 5,000+ contractors growing their business.',
-    url: '/painting-contractor-app',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-};
+  path: '/painting-contractor-app',
+});
 
 export default function PaintingContractorAppPage() {
   // App features

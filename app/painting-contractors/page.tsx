@@ -1,4 +1,3 @@
-import { Metadata } from 'next'
 import Link from 'next/link'
 import { 
   Calculator, 
@@ -24,22 +23,14 @@ import { Footer } from '@/components/shared/footer'
 import { ROICalculator } from '@/components/marketing/roi-calculator'
 import { IndustryStats } from '@/components/marketing/industry-stats'
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel'
+import { generatePageMetadata } from '@/lib/metadata-utils'
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: 'Painting Contractors: Professional Quote Software | Win 40-60% More Jobs',
   description: 'Professional painting quote software built for contractors. Generate quotes in 6 minutes vs 6 hours. Join 5,000+ contractors winning 40-60% more jobs with same-day quotes.',
   keywords: 'painting contractor software, painting estimate software, quote software for painters, painting business tools, contractor quoting app, painting job estimator, professional painting quotes',
-  alternates: {
-    canonical: '/painting-contractors',
-  },
-  openGraph: {
-    title: 'Painting Contractor Software - Win More Jobs with Professional Quotes',
-    description: 'Stop losing jobs to timing. Generate professional painting quotes in 6 minutes, not 6 hours. 40-60% higher win rates guaranteed.',
-    url: '/painting-contractors',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-}
+  path: '/painting-contractors',
+})
 
 export default function PaintingContractorsPage() {
   const contractorChallenges = [

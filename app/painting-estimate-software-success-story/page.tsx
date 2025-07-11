@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Clock, 
@@ -17,21 +16,14 @@ import {
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { Button } from '@/components/ui/button';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: 'Painting Estimate Software Success Story: From 4 Hours to 18 Minutes | Real Results',
   description: 'See how painting contractors save 85% time with estimate software. Real success stories from contractors who cut quote time from hours to minutes.',
   keywords: 'painting estimate software success story, painting estimating software results, painting quote software time savings, painting contractor efficiency software, painting estimate software testimonials',
-  openGraph: {
-    title: 'Painting Estimate Software Success Story: From 4 Hours to 18 Minutes',
-    description: 'See how painting contractors save 85% time with estimate software. Real success stories and time-saving results.',
-    type: 'article',
-    url: 'https://propaintquote.com/painting-estimate-software-success-story',
-  },
-  alternates: {
-    canonical: 'https://propaintquote.com/painting-estimate-software-success-story',
-  },
-};
+  path: '/painting-estimate-software-success-story',
+});
 
 export default function PaintingEstimateSoftwareSuccessStory() {
   return (

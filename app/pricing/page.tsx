@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { 
   Check, 
@@ -24,6 +22,14 @@ import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
 import { ModernPricingTable } from '@/components/stripe/modern-pricing-table';
+import { generatePageMetadata } from '@/lib/metadata-utils';
+
+export const metadata = generatePageMetadata({
+  title: 'Pricing',
+  description: 'Transparent pricing for ProPaint Quote. Start free, upgrade as you grow. No contracts, no hidden fees.',
+  keywords: 'painting software pricing, painting quote software cost, contractor software pricing',
+  path: '/pricing',
+});
 
 export default function PricingPage() {
   // CIALDINI PRINCIPLE: Social Proof with real customer data

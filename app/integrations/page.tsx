@@ -1,6 +1,14 @@
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { Shield, Zap, Building2, FileText, Calculator, Users } from 'lucide-react';
+import { generatePageMetadata } from '@/lib/metadata-utils';
+
+export const metadata = generatePageMetadata({
+  title: 'Integrations - Connect Your Painting Business Tools',
+  description: 'Connect Paint Quote App with QuickBooks, Google Workspace, CRM systems and more. Streamline your painting business workflow with powerful integrations.',
+  keywords: 'painting software integrations, quickbooks integration, google workspace integration, crm integration, painting business tools',
+  path: '/integrations',
+});
 
 export default function IntegrationsPage() {
   return (

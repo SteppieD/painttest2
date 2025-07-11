@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   TrendingUp, 
@@ -16,21 +15,14 @@ import {
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { Button } from '@/components/ui/button';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: 'How Painting Contractors Increased Revenue 340% with Software | Real Results',
   description: 'Discover how painting contractors increased revenue from $12K to $53K monthly using painting business software. Step-by-step revenue growth strategy revealed.',
   keywords: 'painting contractor increased revenue software, painting business software revenue growth, painting contractor software ROI, painting business revenue increase, painting software results',
-  openGraph: {
-    title: 'How Painting Contractors Increased Revenue 340% with Software',
-    description: 'Discover how painting contractors increased revenue from $12K to $53K monthly using painting business software.',
-    type: 'article',
-    url: 'https://propaintquote.com/painting-contractor-increased-revenue-software',
-  },
-  alternates: {
-    canonical: 'https://propaintquote.com/painting-contractor-increased-revenue-software',
-  },
-};
+  path: '/painting-contractor-increased-revenue-software',
+});
 
 export default function PaintingContractorIncreasedRevenueSoftware() {
   return (

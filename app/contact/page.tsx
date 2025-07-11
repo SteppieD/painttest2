@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Palette, 
@@ -30,27 +29,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: 'Contact ProPaint Quote - Expert Support for Painting Contractors | Get Help Today',
   description: 'Contact ProPaint Quote for expert support, personalized demos, and sales assistance. Trusted by 5,000+ painting contractors. Call 1-800-PROPAINT or chat with our team.',
   keywords: 'contact painting software, painting contractor support, quote software help, painting software demo, contractor customer service, painting business support',
-  alternates: {
-    canonical: '/contact',
-  },
-  openGraph: {
-    title: 'Contact ProPaint Quote - Expert Support & Customer Success',
-    description: 'Get personalized help from painting industry experts. Schedule a demo, get technical support, or speak with our sales team. 5,000+ contractors trust our support.',
-    url: '/contact',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Contact ProPaint Quote - Expert Support for Contractors',
-    description: 'Get help from painting industry experts. Free demos, technical support, and sales assistance available.',
-  },
-};
+  path: '/contact',
+});
 
 export default function ContactPage() {
   // Support statistics

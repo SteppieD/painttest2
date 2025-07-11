@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   TrendingUp,
@@ -21,22 +20,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Painting Contractor Case Studies - Success Stories & Results | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Painting Contractor Case Studies - Success Stories & Results',
   description: 'Painting contractor case studies showing real results. See how contractors increased revenue 156%, saved 10+ hours weekly, and transformed their painting businesses with our software.',
   keywords: 'painting contractor case studies, painting business success stories, contractor software results, painting business case study, painting contractor testimonials, painting software success, contractor growth stories',
-  alternates: {
-    canonical: '/case-studies',
-  },
-  openGraph: {
-    title: 'Painting Contractor Success Stories - Real Results from Real Contractors',
-    description: 'Painting contractor case studies demonstrate 156% revenue growth, 10+ hours saved weekly, and business transformations. Read success stories from 5,000+ contractors.',
-    url: '/case-studies',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-};
+  path: '/case-studies',
+});
 
 export default function CaseStudiesPage() {
   // Featured case studies

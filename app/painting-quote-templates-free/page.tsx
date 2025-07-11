@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Download, 
@@ -15,22 +14,14 @@ import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: 'Free Painting Quote Templates - Professional PDF Templates Download',
   description: 'Download free professional painting quote templates. PDF templates for interior, exterior, commercial painting quotes. Customizable templates for contractors.',
   keywords: 'painting quote templates, painting quotation template, painting quotation sample, example of a painting quote, painting quote template free download, quotes for a painting',
-  openGraph: {
-    title: 'Free Professional Painting Quote Templates - PDF Download',
-    description: 'Professional painting quote templates for contractors. Free PDF download with customizable formats.',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Free Painting Quote Templates',
-    description: 'Download professional painting quote templates. PDF format, fully customizable.',
-  }
-};
+  path: '/painting-quote-templates-free',
+});
 
 export default function PaintingQuoteTemplatesFreePage() {
   const templates = [

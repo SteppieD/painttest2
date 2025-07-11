@@ -1,4 +1,3 @@
-import { Metadata } from 'next'
 import Link from 'next/link'
 import { 
   Calculator, 
@@ -25,22 +24,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { KofiHeader } from '@/components/shared/kofi-header'
 import { ImprovedFooter } from '@/components/shared/improved-footer'
 import { ROICalculator } from '@/components/marketing/roi-calculator'
+import { generatePageMetadata } from '@/lib/metadata-utils'
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: 'House Painting Cost Calculator | How Much Does It Cost to Paint a House?',
   description: 'Free house painting cost calculator. Get accurate estimates for interior and exterior house painting. Compare local contractor prices and find painters near you.',
   keywords: 'house painting cost calculator, how much does it cost to paint a house, house painters near me, house painting prices, interior house painting cost, exterior house painting cost, paint cost estimator, house paint calculator',
-  alternates: {
-    canonical: '/house-painting-cost-calculator',
-  },
-  openGraph: {
-    title: 'House Painting Cost Calculator - Get Accurate Price Estimates',
-    description: 'Calculate house painting costs instantly. Compare interior vs exterior pricing and find qualified painters in your area.',
-    url: '/house-painting-cost-calculator',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-}
+  path: '/house-painting-cost-calculator',
+})
 
 export default function HousePaintingCostCalculatorPage() {
   const costFactors = [

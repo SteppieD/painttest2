@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Play, 
@@ -23,22 +22,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KofiHeader } from '@/components/shared/kofi-header';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: 'Live Demo - See ProPaint Quote in Action | Professional Painting Software',
   description: 'Watch a live demo of ProPaint Quote - the painting contractor software trusted by 5,000+ professionals. See how to create quotes in 5 minutes and increase win rates by 40%.',
   keywords: 'painting software demo, quote software demonstration, contractor tool preview, painting estimator demo, live software walkthrough',
-  alternates: {
-    canonical: '/demo',
-  },
-  openGraph: {
-    title: 'Live Demo - ProPaint Quote Painting Contractor Software',
-    description: 'See how 5,000+ contractors create professional quotes in minutes. Watch our live demo and discover why painters increase win rates by 40%.',
-    url: '/demo',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-};
+  path: '/demo',
+});
 
 export default function DemoPage() {
   // Social proof statistics
