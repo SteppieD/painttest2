@@ -235,7 +235,7 @@ export function FixedChatInterface({
       setMessages(prev => [...prev, aiResponse])
       
       // Track AI response
-      trackChatMessage('assistant', aiResponse.content.length)
+      trackChatMessage('ai', aiResponse.content.length)
       
       // Check if quote is ready
       if (aiResponse.extractedData?.showQuoteActions) {
