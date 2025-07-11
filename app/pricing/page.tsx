@@ -11,42 +11,36 @@ import { PRICE_IDS } from '@/lib/stripe'
 
 const plans = [
   {
-    name: "Free Trial",
+    name: "Perfect Start",
+    subtitle: "For solo contractors",
     price: "$0",
-    period: "7 days",
-    description: "Perfect for trying our AI quote system",
+    period: "month",
+    description: "10 quotes per month",
     features: [
-      "3 AI-powered quotes",
-      "Basic project templates",
-      "Email support",
-      "Standard response time"
+      "All core features",
+      "Mobile app access", 
+      "Email support"
     ],
-    limitations: [
-      "Watermarked quotes",
-      "No client portal access",
-      "Limited customization"
-    ],
-    cta: "Start Free Trial",
+    limitations: [],
+    cta: "Start Free",
     ctaVariant: "outline" as const,
     popular: false,
     icon: Zap
   },
   {
     name: "Professional",
-    price: "$29",
-    period: "per month",
-    description: "For painting contractors who want more quotes",
+    subtitle: "For growing businesses", 
+    price: "$79",
+    period: "month",
+    description: "Unlimited quotes",
     features: [
-      "Unlimited AI quotes",
-      "Professional templates",
-      "Remove watermarks",
-      "Client portal access",
-      "Priority email support",
-      "Quote analytics",
-      "Custom branding"
+      "Everything in Free",
+      "Custom branding",
+      "Priority support",
+      "Analytics dashboard"
     ],
     limitations: [],
-    cta: "Start Professional",
+    cta: "Start 14-Day Trial",
     ctaVariant: "kofi" as const,
     popular: true,
     icon: Crown,
@@ -54,21 +48,18 @@ const plans = [
   },
   {
     name: "Business",
-    price: "$79",
-    period: "per month",
-    description: "For growing painting businesses",
+    subtitle: "For teams & enterprises",
+    price: "$149",
+    period: "month", 
+    description: "Everything included",
     features: [
-      "Everything in Professional",
-      "Team collaboration (5 users)",
-      "Advanced analytics",
+      "Everything in Pro",
+      "Multi-user access",
       "API access",
-      "Phone support",
-      "Custom integrations",
-      "Priority AI processing",
-      "Dedicated account manager"
+      "Dedicated manager"
     ],
     limitations: [],
-    cta: "Start Business",
+    cta: "Contact Sales",
     ctaVariant: "outline" as const,
     popular: false,
     icon: Rocket,
@@ -134,11 +125,14 @@ export default function PricingPage() {
                       <Icon className="w-8 h-8 text-white" />
                     </div>
                     <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
+                    <CardDescription className="text-sm text-gray-500 mt-1 mb-4">
+                      {plan.subtitle}
+                    </CardDescription>
                     <div className="mt-4">
                       <span className="text-4xl font-bold">{plan.price}</span>
                       <span className="text-gray-600 ml-2">/{plan.period}</span>
                     </div>
-                    <CardDescription className="text-base mt-3">
+                    <CardDescription className="text-base mt-3 font-medium">
                       {plan.description}
                     </CardDescription>
                   </CardHeader>
