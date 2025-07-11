@@ -28,7 +28,8 @@ import { Input } from '@/components/ui/input';
 import { TouchFriendlyInput } from '@/components/ui/touch-friendly-input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export const metadata: Metadata = {
   title: 'Contact ProPaint Quote - Expert Support for Painting Contractors | Get Help Today',
@@ -134,6 +135,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <KofiHeader />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -574,7 +576,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
 
       {/* Structured Data for Organization Contact */}
       <script

@@ -20,7 +20,8 @@ import {
   Award,
   Percent
 } from 'lucide-react';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
 import { ModernPricingTable } from '@/components/stripe/modern-pricing-table';
 
@@ -47,48 +48,57 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <section className="ac-hero py-20">
-        <div className="container mx-auto text-center max-w-4xl px-4">
-          <div className="ac-hero-badge mb-6">
-            <Star className="w-4 h-4 fill-current" />
-            <span>Trusted by 5,000+ Professional Contractors</span>
+      <KofiHeader />
+      
+      <section className="kofi-hero">
+        <div className="kofi-container">
+          <div className="kofi-hero-content">
+            <div className="kofi-badge kofi-badge-primary kofi-mb-md">
+              <Star className="w-4 h-4 fill-current" />
+              <span>Trusted by 5,000+ Professional Contractors</span>
+            </div>
+            
+            <h1 className="kofi-h1">
+              Simple Pricing That <span className="text-orange-500">Scales With You</span>
+            </h1>
+            <p className="kofi-body-large kofi-mb-xl">
+              Start free, upgrade when ready. No contracts, no hidden fees. 
+              Join thousands of contractors winning 40% more jobs.
+            </p>
+          
+            <div className="kofi-grid kofi-grid-4 kofi-mb-xl">
+              {socialProofStats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <div key={index} className="kofi-card kofi-text-center">
+                    <div className="kofi-card-body">
+                      <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto kofi-mb-md">
+                        <Icon className="w-6 h-6 text-orange-500" />
+                      </div>
+                      <div className="kofi-h3 text-orange-500 kofi-mb-sm">{stat.number}</div>
+                      <div className="kofi-body-small">{stat.label}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            
+            <p className="kofi-body">⚡ Most contractors see ROI within their first quote</p>
           </div>
-          
-          <h1 className="ac-hero-title">
-            Simple Pricing That <span style={{ color: 'var(--primary-pink)' }}>Scales With You</span>
-          </h1>
-          <p className="ac-hero-subtitle mb-8">
-            Start free, upgrade when ready. No contracts, no hidden fees. 
-            Join thousands of contractors winning 40% more jobs.
-          </p>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-            {socialProofStats.map((stat, index) => (
-              <div key={index} className="ac-fade-in text-center" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/20 mb-3">
-                  <stat.icon className="w-6 h-6 text-white" />
-                </div>
-                <div className="text-2xl md:text-3xl font-bold text-white">{stat.number}</div>
-                <div className="text-sm text-gray-300">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-          
-          <p className="text-gray-300">⚡ Most contractors see ROI within their first quote</p>
         </div>
       </section>
 
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-12">
-            <div className="ac-hero-badge inline-flex mb-4" style={{ background: 'rgba(239, 43, 112, 0.1)', borderColor: 'rgba(239, 43, 112, 0.2)', color: 'var(--primary-pink)' }}>
-              <Percent size={16} />
+      <section className="kofi-section bg-gray-50">
+        <div className="kofi-container">
+          <div className="kofi-text-center kofi-mb-xl">
+            <div className="kofi-badge kofi-badge-success kofi-mb-md">
+              <Percent className="w-4 h-4" />
               <span>Save 20% with Annual Billing</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Choose Your <span style={{ color: 'var(--primary-pink)' }}>Growth Plan</span>
+            <h2 className="kofi-h2">
+              Choose Your <span className="text-orange-500">Growth Plan</span>
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="kofi-body-large">
               Every plan includes all core features. Upgrade anytime as your business grows.
             </p>
           </div>
@@ -97,18 +107,18 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Compare All <span style={{ color: 'var(--primary-pink)' }}>Features</span>
+      <section className="kofi-section">
+        <div className="kofi-container">
+          <div className="kofi-text-center kofi-mb-xl">
+            <h2 className="kofi-h2">
+              Compare All <span className="text-orange-500">Features</span>
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="kofi-body-large">
               See exactly what's included in each plan. No hidden features or surprise limitations.
             </p>
           </div>
           
-          <div className="ac-card">
+          <div className="kofi-card">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -160,18 +170,19 @@ export default function PricingPage() {
 
       <TestimonialCarousel className="bg-white" />
 
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Calculate Your <span style={{ color: 'var(--primary-pink)' }}>ROI</span>
+      <section className="kofi-section bg-gray-50">
+        <div className="kofi-container-narrow">
+          <div className="kofi-text-center kofi-mb-xl">
+            <h2 className="kofi-h2">
+              Calculate Your <span className="text-orange-500">ROI</span>
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="kofi-body-large">
               See how much revenue ProPaint Quote can generate for your business
             </p>
           </div>
           
-          <div className="ac-card p-8">
+          <div className="kofi-card">
+            <div className="kofi-card-body p-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               <div>
                 <Calculator className="w-12 h-12 text-blue-600 mx-auto mb-4" />
@@ -204,26 +215,27 @@ export default function PricingPage() {
               </div>
             </div>
             
-            <div className="text-center mt-8">
-              <div className="text-2xl font-bold text-gray-900 mb-4">
-                ProPaint Quote pays for itself with just 1 additional job per month
+              <div className="text-center mt-8">
+                <div className="text-2xl font-bold text-gray-900 mb-4">
+                  ProPaint Quote pays for itself with just 1 additional job per month
+                </div>
+                <Link href="/trial-signup" className="kofi-btn kofi-btn-primary kofi-btn-lg">
+                  Start Earning More Today
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
               </div>
-              <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-lg">
-                Start Earning More Today
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Frequently Asked <span style={{ color: 'var(--primary-pink)' }}>Questions</span>
+      <section className="kofi-section">
+        <div className="kofi-container-narrow">
+          <div className="kofi-text-center kofi-mb-xl">
+            <h2 className="kofi-h2">
+              Frequently Asked <span className="text-orange-500">Questions</span>
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="kofi-body-large">
               Get answers to common questions about our pricing and features
             </p>
           </div>
@@ -255,8 +267,8 @@ export default function PricingPage() {
                 a: "All plans include email support. Starter+ plans get chat support. Professional+ plans get phone support. Business plans get a dedicated success manager. Average response time is under 2 hours."
               }
             ].map((faq, index) => (
-              <div key={index} className="ac-card ac-fade-in" style={{ animationDelay: `${index * 0.05}s` }}>
-                <div className="ac-card-body">
+              <div key={index} className="kofi-card">
+                <div className="kofi-card-body">
                   <h3 className="text-lg font-bold text-gray-900 mb-2">{faq.q}</h3>
                   <p className="text-gray-600">{faq.a}</p>
                 </div>
@@ -266,27 +278,27 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="py-20 px-4 bg-gradient-to-r from-primary-pink to-primary-pink-dark">
-        <div className="container mx-auto max-w-4xl text-center">
-          <div className="ac-hero-badge inline-flex mb-6" style={{ background: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.3)' }}>
+      <section className="kofi-section bg-gradient-to-br from-orange-500 to-red-500 text-white">
+        <div className="kofi-container kofi-text-center">
+          <div className="kofi-badge bg-white/20 border-white/30 text-white kofi-mb-md">
             <Sparkles className="w-4 h-4" />
-            <span className="text-white">Limited Time: 10 Free Quotes for Early Adopters</span>
+            <span>Limited Time: 10 Free Quotes for Early Adopters</span>
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="kofi-h2 text-white kofi-mb-md">
             Ready to <span className="text-yellow-300">14x Your Quote Speed?</span>
           </h2>
-          <p className="text-xl text-white/90 mb-8">
+          <p className="kofi-body-large opacity-90 kofi-mb-xl">
             Join 5,000+ contractors who've transformed their businesses. 
             Start free, see results immediately, scale as you grow.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Link href="/trial-signup" className="ac-btn ac-btn-secondary ac-btn-lg">
+            <Link href="/trial-signup" className="kofi-btn bg-white text-orange-500 hover:bg-gray-100 kofi-btn-lg">
               Start Free Trial - 10 Quotes Included
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
-            <Link href="/demo" className="ac-btn ac-btn-ghost ac-btn-lg text-white border-white hover:bg-white hover:text-primary-pink">
+            <Link href="/demo" className="kofi-btn border-2 border-white text-white hover:bg-white hover:text-orange-500 kofi-btn-lg">
               Watch Live Demo
             </Link>
           </div>
@@ -310,7 +322,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

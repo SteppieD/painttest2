@@ -17,6 +17,10 @@
 /* Navigation */
 @import '../styles/navigation-balance.css';
 @import '../styles/navigation-saas-best-practices.css';
+@import '../styles/tablet-menu-fix.css';
+
+/* Ko-fi Inspired Design System */
+@import '../styles/kofi-inspired-design.css';
 
 /* ================================================
    BRAND COLOR SYSTEM

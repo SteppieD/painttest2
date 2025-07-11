@@ -21,7 +21,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { QuickPaintCalculator } from '@/components/calculators/quick-paint-calculator';
 import { RoomCalculatorWidget } from '@/components/calculators/room-calculator-widget';
 
@@ -174,84 +175,95 @@ export default function FeaturesPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section - CIALDINI: Social Proof & Authority */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto text-center max-w-5xl">
-          {/* Authority Badge */}
-          <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <Star className="w-4 h-4 fill-current" />
-            <span>Trusted by 5,000+ Professional Contractors Nationwide</span>
-          </div>
+      <KofiHeader />
+      
+      {/* Hero Section - Ko-fi Design */}
+      <section className="kofi-hero">
+        <div className="kofi-container">
+          <div className="kofi-hero-content">
+            <div className="kofi-badge kofi-badge-success kofi-mb-md">
+              <Star className="w-4 h-4 fill-current" />
+              <span>Trusted by 5,000+ Professional Contractors Nationwide</span>
+            </div>
+            
+            <h1 className="kofi-h1">
+              The Only Painting Quote Software That <span className="text-orange-500">Guarantees Results</span>
+            </h1>
+            <p className="kofi-body-large kofi-mb-xl">
+              Join the thousands of professional painters who've increased their win rates by 40% and reduced quote time by 80%. 
+              Every feature is battle-tested by real contractors in the field.
+            </p>
           
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            The Only Painting Quote Software That <span className="text-blue-600">Guarantees Results</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Join the thousands of professional painters who've increased their win rates by 40% and reduced quote time by 80%. 
-            Every feature is battle-tested by real contractors in the field.
-          </p>
-          
-          {/* Social Proof Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-            {socialProofStats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <div key={index} className="text-center">
-                  <Icon className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                  <div className="text-2xl md:text-3xl font-bold text-gray-900">{stat.number}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
-                </div>
-              );
-            })}
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" asChild className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700">
-              <Link href="/trial-signup">
+            <div className="kofi-grid kofi-grid-4 kofi-mb-xl">
+              {socialProofStats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <div key={index} className="kofi-card kofi-text-center">
+                    <div className="kofi-card-body">
+                      <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto kofi-mb-md">
+                        <Icon className="w-6 h-6 text-orange-500" />
+                      </div>
+                      <div className="kofi-h3 text-orange-500 kofi-mb-sm">{stat.number}</div>
+                      <div className="kofi-body-small">{stat.label}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            
+            <div className="kofi-hero-actions">
+              <Link href="/trial-signup" className="kofi-btn kofi-btn-primary kofi-btn-xl">
                 Start Free Trial - All Features Included
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight className="w-5 h-5" />
               </Link>
-            </Button>
-            <p className="text-sm text-gray-500">✓ No credit card required ✓ 1 free quote included ✓ Setup in 5 minutes</p>
+            </div>
+            
+            <div className="kofi-mt-lg">
+              <p className="kofi-body-small text-gray-600">✓ No credit card required ✓ 1 free quote included ✓ Setup in 5 minutes</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Trust Indicators - CIALDINI: Authority */}
-      <section className="py-12 px-4 bg-white border-b">
-        <div className="container mx-auto max-w-4xl">
-          <p className="text-center text-gray-600 mb-8">
-            "The most comprehensive painting quote software I've ever used. Pays for itself with the first job."
-          </p>
-          <div className="flex flex-col md:flex-row justify-center items-center gap-8">
-            <div className="text-center">
-              <div className="flex justify-center mb-2">
+      {/* Trust Indicators */}
+      <section className="kofi-section-sm bg-white border-b border-gray-200">
+        <div className="kofi-container-narrow">
+          <div className="kofi-text-center kofi-mb-lg">
+            <p className="kofi-body-large text-gray-600">
+              "The most comprehensive painting quote software I've ever used. Pays for itself with the first job."
+            </p>
+          </div>
+          
+          <div className="kofi-grid kofi-grid-3">
+            <div className="kofi-text-center">
+              <div className="flex justify-center kofi-mb-sm">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                 ))}
               </div>
-              <p className="text-sm text-gray-600">4.9/5 stars on G2</p>
+              <div className="kofi-h3 text-green-500 kofi-mb-xs">4.9/5</div>
+              <p className="kofi-body-small">stars on G2</p>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600 mb-1">99.9%</div>
-              <p className="text-sm text-gray-600">Uptime SLA</p>
+            <div className="kofi-text-center">
+              <div className="kofi-h3 text-green-500 kofi-mb-xs">99.9%</div>
+              <p className="kofi-body-small">Uptime SLA</p>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600 mb-1">24/7</div>
-              <p className="text-sm text-gray-600">Customer Support</p>
+            <div className="kofi-text-center">
+              <div className="kofi-h3 text-teal-500 kofi-mb-xs">24/7</div>
+              <p className="kofi-body-small">Customer Support</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Core Features - CIALDINI: Social Proof with Testimonials */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Features That Actually <span className="text-blue-600">Increase Your Revenue</span>
+      {/* Core Features */}
+      <section className="kofi-section">
+        <div className="kofi-container">
+          <div className="kofi-text-center kofi-mb-xl">
+            <h2 className="kofi-h2">
+              Features That Actually <span className="text-orange-500">Increase Your Revenue</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="kofi-body-large">
               Every feature is designed based on feedback from thousands of professional contractors. 
               Here's what our customers are saying:
             </p>
@@ -267,18 +279,18 @@ export default function FeaturesPage() {
                   isEven ? '' : 'lg:grid-flow-col-dense'
                 }`}>
                   <div className={isEven ? '' : 'lg:col-start-2'}>
-                    <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-4">
+                    <div className="kofi-badge kofi-badge-secondary kofi-mb-md">
                       <Icon className="w-4 h-4" />
                       <span>{feature.badge}</span>
                     </div>
                     
-                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                    <h3 className="kofi-h3 kofi-mb-sm">
                       {feature.title}
                     </h3>
-                    <p className="text-lg text-blue-600 font-medium mb-4">
+                    <p className="kofi-body-large text-teal-500 font-medium kofi-mb-md">
                       {feature.subtitle}
                     </p>
-                    <p className="text-gray-600 mb-6 text-lg">
+                    <p className="kofi-body kofi-mb-lg">
                       {feature.description}
                     </p>
                     
@@ -291,23 +303,23 @@ export default function FeaturesPage() {
                       ))}
                     </ul>
                     
-                    {/* Customer Testimonial - CIALDINI: Social Proof */}
-                    <div className="bg-gray-50 p-4 rounded-lg border-l-4 border-blue-500">
-                      <p className="text-gray-700 italic mb-2">{feature.proof}</p>
+                    {/* Customer Testimonial */}
+                    <div className="kofi-card bg-gray-50 border-l-4 border-orange-500">
+                      <div className="kofi-card-body">
+                        <p className="kofi-body text-gray-700 italic">{feature.proof}</p>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className={`${isEven ? '' : 'lg:col-start-1'} bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8 flex items-center justify-center`}>
-                    <div className="text-center">
-                      <Icon className="w-24 h-24 text-blue-600 mx-auto mb-4" />
-                      <div className="text-lg font-semibold text-gray-900 mb-2">
+                  <div className={`${isEven ? '' : 'lg:col-start-1'} kofi-card bg-gradient-to-br from-orange-50 to-teal-50`}>
+                    <div className="kofi-card-body kofi-text-center">
+                      <Icon className="w-24 h-24 text-orange-500 mx-auto kofi-mb-md" />
+                      <div className="kofi-h4 kofi-mb-sm">
                         Live Demo Available
                       </div>
-                      <Button variant="outline" asChild>
-                        <Link href="/demo">
-                          See {feature.title} in Action
-                        </Link>
-                      </Button>
+                      <Link href="/demo" className="kofi-btn kofi-btn-outline kofi-btn-sm">
+                        See {feature.title} in Action
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -318,18 +330,18 @@ export default function FeaturesPage() {
       </section>
 
       {/* Try Our Calculator */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Experience Our <span className="text-blue-600">Smart Calculator</span> Technology
+      <section className="kofi-section bg-gray-50">
+        <div className="kofi-container">
+          <div className="kofi-text-center kofi-mb-xl">
+            <h2 className="kofi-h2">
+              Experience Our <span className="text-orange-500">Smart Calculator</span> Technology
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="kofi-body-large">
               Try the same calculators that 5,000+ contractors use daily. See the difference professional tools make.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          <div className="kofi-grid kofi-grid-2 kofi-mb-xl">
             <QuickPaintCalculator 
               title="Professional Paint Calculator"
               subtitle="Used by 5,000+ contractors daily"
@@ -339,98 +351,94 @@ export default function FeaturesPage() {
             />
           </div>
           
-          <div className="text-center">
-            <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700 mb-4">
-              <Link href="/trial-signup">
-                Get Full Professional Calculator Suite
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
-            <p className="text-gray-600">
+          <div className="kofi-text-center">
+            <Link href="/trial-signup" className="kofi-btn kofi-btn-primary kofi-btn-lg kofi-mb-md">
+              Get Full Professional Calculator Suite
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <p className="kofi-body text-gray-600">
               Professional version includes regional pricing, material costs, profit optimization, and mobile access
             </p>
           </div>
         </div>
       </section>
 
-      {/* Advanced Features - CIALDINI: Scarcity */}
-      <section className="py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Advanced Features for <span className="text-blue-600">Growing Businesses</span>
+      {/* Advanced Features */}
+      <section className="kofi-section bg-white">
+        <div className="kofi-container">
+          <div className="kofi-text-center kofi-mb-xl">
+            <h2 className="kofi-h2">
+              Advanced Features for <span className="text-orange-500">Growing Businesses</span>
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="kofi-body-large">
               Unlock powerful features as your business grows. Available in Professional and Business plans.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="kofi-grid kofi-grid-2">
             {advancedFeatures.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-4">
-                      <Icon className="w-10 h-10 text-blue-600" />
-                      <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                <div key={index} className="kofi-card hover:kofi-shadow-lg transition-shadow">
+                  <div className="kofi-card-body">
+                    <div className="flex items-center justify-between kofi-mb-md">
+                      <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-orange-500" />
+                      </div>
+                      <div className="kofi-badge kofi-badge-secondary">
                         {feature.available}
-                      </span>
+                      </div>
                     </div>
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">{feature.description}</p>
-                    <Button variant="outline" size="sm" asChild className="w-full">
-                      <Link href="/pricing">
-                        Upgrade to Access
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
+                    <h3 className="kofi-h4 kofi-mb-sm">{feature.title}</h3>
+                    <p className="kofi-body kofi-mb-md">{feature.description}</p>
+                    <Link href="/pricing" className="kofi-btn kofi-btn-outline kofi-btn-sm w-full">
+                      Upgrade to Access
+                    </Link>
+                  </div>
+                </div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* Final CTA - CIALDINI: Commitment & Scarcity */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+      {/* Final CTA */}
+      <section className="kofi-section bg-gradient-to-br from-orange-500 to-red-500 text-white">
+        <div className="kofi-container-narrow kofi-text-center">
+          <h2 className="kofi-h2 text-white kofi-mb-md">
             Join 5,000+ Contractors Who <span className="text-yellow-300">Increased Their Revenue</span>
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p className="kofi-body-large opacity-90 kofi-mb-xl">
             Don't let another lead slip away to faster competitors. Start your free trial today and experience 
             the difference professional quote software makes.
           </p>
           
-          {/* Urgency Element - CIALDINI: Scarcity */}
-          <div className="bg-white/10 backdrop-blur rounded-lg p-6 mb-8 max-w-md mx-auto">
-            <div className="text-yellow-300 font-bold mb-2">⚡ Limited Time Offer</div>
-            <div className="text-white text-lg mb-2">First 100 signups this month get:</div>
-            <ul className="text-blue-100 text-left space-y-1">
-              <li>✓ 3 free quotes (normally 1)</li>
-              <li>✓ Free setup consultation</li>
-              <li>✓ Priority customer support</li>
-            </ul>
+          {/* Urgency Element */}
+          <div className="kofi-card bg-white/10 backdrop-blur kofi-mb-xl">
+            <div className="kofi-card-body">
+              <div className="text-yellow-300 font-bold kofi-mb-sm">⚡ Limited Time Offer</div>
+              <div className="text-white kofi-body-large kofi-mb-sm">First 100 signups this month get:</div>
+              <ul className="text-left space-y-1 kofi-body-small text-gray-200">
+                <li>✓ 3 free quotes (normally 1)</li>
+                <li>✓ Free setup consultation</li>
+                <li>✓ Priority customer support</li>
+              </ul>
+            </div>
           </div>
           
           <div className="space-y-4">
-            <Button size="lg" variant="outline_white" asChild className="text-lg px-8 py-6">
-              <Link href="/trial-signup">
-                Claim Your Free Trial + Bonuses
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
+            <Link href="/trial-signup" className="kofi-btn bg-white text-orange-500 hover:bg-gray-100 kofi-btn-lg">
+              Claim Your Free Trial + Bonuses
+              <ArrowRight className="w-5 h-5" />
+            </Link>
             
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-blue-200 text-sm">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-gray-200 kofi-body-small">
               <span>✓ No credit card required</span>
               <span>✓ Full feature access</span>
               <span>✓ Cancel anytime</span>
             </div>
             
-            <p className="text-blue-200 text-sm max-w-md mx-auto">
+            <p className="kofi-body-small text-gray-200 max-w-md mx-auto">
               Join contractors like Mike Johnson (Elite Painting) who says: "ProPaint Quote paid for itself with the first job. 
               My win rate went from 30% to 70%."
             </p>
@@ -438,7 +446,7 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

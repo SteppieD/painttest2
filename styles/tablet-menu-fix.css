@@ -1,0 +1,141 @@
+/* Tablet Menu Overlap Fix */
+
+/* Fix tablet menu overlap issues between lg and mobile breakpoints */
+@media (max-width: 1024px) and (min-width: 640px) {
+  /* Ensure mobile menu is properly stacked */
+  .lg\:hidden nav {
+    position: relative;
+    z-index: 100;
+  }
+  
+  /* Fix dropdown positioning on tablet */
+  .nav-dropdown {
+    position: static !important;
+    transform: none !important;
+    margin-top: 0.5rem !important;
+    width: 100% !important;
+    max-width: none !important;
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 0.5rem !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background: #f9fafb !important;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  
+  /* Fix dropdown items spacing */
+  .nav-dropdown-item {
+    padding: 0.75rem 1rem !important;
+    margin-bottom: 0.25rem;
+    border-radius: 6px;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* Ensure proper stacking */
+  .nav-dropdown-item .nav-dropdown-content {
+    display: block;
+    line-height: 1.4;
+  }
+  
+  /* Fix text wrapping */
+  .nav-dropdown-title,
+  .nav-dropdown-description {
+    white-space: normal !important;
+    word-wrap: break-word;
+  }
+  
+  /* Section headers */
+  .nav-dropdown-section {
+    padding: 0.5rem 1rem 0.25rem !important;
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  /* Ensure mobile menu doesn't overlap */
+  .lg\:hidden .mt-4 {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  /* Fix collapsible sections spacing */
+  .lg\:hidden .space-y-4 > div {
+    margin-bottom: 1rem;
+  }
+  
+  /* Ensure chevron icons work properly */
+  .lg\:hidden .nav-chevron {
+    flex-shrink: 0;
+  }
+  
+  /* Fix button spacing */
+  .lg\:hidden button {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+  }
+  
+  /* Indented submenu items */
+  .lg\:hidden .pl-4 {
+    padding-left: 1.5rem !important;
+    margin-top: 0.5rem;
+  }
+  
+  /* Border for visual separation */
+  .lg\:hidden .border-l-2 {
+    border-left: 2px solid #e5e7eb;
+    padding-left: 1rem;
+  }
+}
+
+/* Additional mobile fixes for smaller tablets */
+@media (max-width: 768px) {
+  /* Ensure header doesn't get too crowded */
+  header .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Logo text responsive */
+  header .text-xl {
+    font-size: 1.125rem;
+  }
+  
+  /* Menu button spacing */
+  .lg\:hidden button[aria-label="Toggle menu"] {
+    padding: 0.5rem;
+    margin-left: 1rem;
+  }
+}
+
+/* Fix for very wide tablets in landscape */
+@media (max-width: 1024px) and (min-width: 900px) {
+  /* Allow more breathing room */
+  .lg\:hidden .mt-4 {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Two column layout for dropdown items */
+  .nav-dropdown {
+    column-count: 2;
+    column-gap: 1rem;
+  }
+  
+  .nav-dropdown-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
