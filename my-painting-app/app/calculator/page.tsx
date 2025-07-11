@@ -119,7 +119,7 @@ export default function CalculatorPage() {
           height: room.height
         },
         surfaces,
-        paintProduct: product ? {
+        paintProduct: product && brand ? {
           brandId: room.paintBrand,
           productId: room.paintProduct,
           name: `${brand.name} ${product.name}`,
