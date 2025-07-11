@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
-import { Footer } from '@/components/shared/footer'
+import { KofiHeader } from '@/components/shared/kofi-header'
+import { ImprovedFooter } from '@/components/shared/improved-footer'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | ProPaint Quote',
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <KofiHeader />
       
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
@@ -160,7 +162,7 @@ export default function PrivacyPage() {
         </div>
       </section>
       
-      <Footer />
+      <ImprovedFooter />
     </div>
   )
 }

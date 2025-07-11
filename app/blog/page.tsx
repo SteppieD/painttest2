@@ -16,7 +16,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export const metadata: Metadata = {
   title: 'Painting Business Blog - Expert Tips & Strategies | ProPaint Quote',
@@ -147,6 +148,7 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <KofiHeader />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -415,7 +417,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
 
       {/* Structured Data for Blog */}
       <script

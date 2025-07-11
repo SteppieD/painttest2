@@ -17,7 +17,8 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Footer } from '@/components/shared/footer'
+import { KofiHeader } from '@/components/shared/kofi-header'
+import { ImprovedFooter } from '@/components/shared/improved-footer'
 import { ROICalculator } from '@/components/marketing/roi-calculator'
 import { RoomCalculatorWidget } from '@/components/calculators/room-calculator-widget'
 
@@ -133,6 +134,7 @@ export default function InteriorPaintingQuoteCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <KofiHeader />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -563,7 +565,7 @@ export default function InteriorPaintingQuoteCalculatorPage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
 
       {/* Structured Data */}
       <script

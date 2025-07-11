@@ -21,7 +21,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export const metadata: Metadata = {
   title: 'Live Demo - See ProPaint Quote in Action | Professional Painting Software',
@@ -107,6 +108,7 @@ export default function DemoPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <KofiHeader />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -372,7 +374,7 @@ export default function DemoPage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
 
       {/* Structured Data for Demo Page */}
       <script

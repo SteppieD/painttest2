@@ -14,7 +14,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export const metadata: Metadata = {
   title: 'How to Quote Painting Jobs Like a Professional Contractor (2024 Guide)',
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
 export default function HowToQuotePaintingJobsProfessionallyPage() {
   return (
     <div className="min-h-screen bg-white">
+      <KofiHeader />
 
       {/* Hero Section */}
       <section className="py-16 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -409,7 +411,7 @@ export default function HowToQuotePaintingJobsProfessionallyPage() {
 
       {/* Continue reading sections would go here... */}
       
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

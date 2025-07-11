@@ -19,7 +19,8 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Footer } from '@/components/shared/footer'
+import { KofiHeader } from '@/components/shared/kofi-header'
+import { ImprovedFooter } from '@/components/shared/improved-footer'
 
 export const metadata: Metadata = {
   title: 'Painting Business Profit Optimization: Complete Guide to 40%+ Margins',
@@ -165,6 +166,7 @@ const marginBenchmarks = [
 export default function PaintingBusinessProfitGuidePage() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <KofiHeader />
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-green-600 via-green-700 to-green-800 text-white py-20">
@@ -584,7 +586,7 @@ export default function PaintingBusinessProfitGuidePage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   )
 }

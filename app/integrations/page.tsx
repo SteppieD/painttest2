@@ -1,11 +1,11 @@
-import { Header } from '@/components/shared/header';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { Shield, Zap, Building2, FileText, Calculator, Users } from 'lucide-react';
 
 export default function IntegrationsPage() {
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      <KofiHeader />
       
       <div className="container mx-auto max-w-6xl px-4 py-20">
         <div className="text-center mb-16">
@@ -99,7 +99,7 @@ export default function IntegrationsPage() {
         </div>
       </div>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

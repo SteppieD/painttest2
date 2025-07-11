@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { Smartphone, Monitor, Cloud, CheckCircle, Star, Users, ArrowRight, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export const metadata: Metadata = {
   title: 'Best Painting Estimating Software for Contractors | ProPaint',
@@ -74,6 +75,7 @@ export default function PaintingEstimatingSoftwarePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <KofiHeader />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -286,7 +288,7 @@ export default function PaintingEstimatingSoftwarePage() {
           </div>
         </div>
       </section>
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

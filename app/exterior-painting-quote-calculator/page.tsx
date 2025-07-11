@@ -21,8 +21,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Footer } from '@/components/shared/footer';
-import { Header } from '@/components/shared/header';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export const metadata: Metadata = {
   title: 'Exterior Painting Quote Calculator - Instant House Painting Estimates | ProPaint Quote',
@@ -165,7 +165,7 @@ export default function ExteriorPaintingCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      <KofiHeader />
       
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -648,7 +648,7 @@ export default function ExteriorPaintingCalculatorPage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

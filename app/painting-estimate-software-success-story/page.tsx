@@ -14,7 +14,8 @@ import {
   Timer,
   Award
 } from 'lucide-react';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
 export default function PaintingEstimateSoftwareSuccessStory() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
+      <KofiHeader />
       
       <main className="container mx-auto px-4 py-16 max-w-4xl">
         {/* Hero Section */}
@@ -420,7 +422,7 @@ export default function PaintingEstimateSoftwareSuccessStory() {
         </div>
       </main>
       
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

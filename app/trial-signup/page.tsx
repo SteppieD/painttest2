@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertCircle, Check, Sparkles, ArrowRight, Shield, Star, TrendingUp, Users } from "lucide-react";
-import { Footer } from "@/components/shared/footer";
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export default function TrialSignupPage() {
   const router = useRouter();
@@ -81,6 +82,7 @@ export default function TrialSignupPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <KofiHeader />
       {/* Split Hero Section with Form */}
       <section className="min-h-[80vh] flex items-center py-12 px-4 bg-gradient-to-br from-gray-50 to-white">
         <div className="container mx-auto max-w-7xl">
@@ -289,7 +291,7 @@ export default function TrialSignupPage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { Building2, Shield, Users, Zap, Phone, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export const metadata: Metadata = {
   title: 'Enterprise Painting Quote Software | ProPaint Quote',
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 export default function EnterprisePage() {
   return (
     <div className="min-h-screen bg-white">
+      <KofiHeader />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-gray-100">
@@ -224,7 +226,7 @@ export default function EnterprisePage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

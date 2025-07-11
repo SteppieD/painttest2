@@ -22,7 +22,8 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Footer } from '@/components/shared/footer'
+import { KofiHeader } from '@/components/shared/kofi-header'
+import { ImprovedFooter } from '@/components/shared/improved-footer'
 import { ROICalculator } from '@/components/marketing/roi-calculator'
 
 export const metadata: Metadata = {
@@ -175,6 +176,7 @@ export default function HousePaintingCostCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <KofiHeader />
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-green-50 to-blue-100">
@@ -585,7 +587,7 @@ export default function HousePaintingCostCalculatorPage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
 
       {/* Structured Data */}
       <script

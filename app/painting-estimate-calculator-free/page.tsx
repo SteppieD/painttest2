@@ -13,7 +13,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 import { ImageHeroSection } from '@/components/seo/ImageHeroSection';
 import { professionalImages } from '@/lib/image-config';
 
@@ -36,6 +37,7 @@ export const metadata: Metadata = {
 export default function PaintingEstimateCalculatorFreePage() {
   return (
     <div className="min-h-screen bg-white">
+      <KofiHeader />
 
       {/* Hero Section with Professional Image */}
       <ImageHeroSection
@@ -296,7 +298,7 @@ export default function PaintingEstimateCalculatorFreePage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

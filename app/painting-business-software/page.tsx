@@ -16,7 +16,8 @@ import {
   TrendingUp,
   Shield
 } from 'lucide-react';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export const metadata: Metadata = {
   title: 'Complete Painting Business Software | Customer Management & Quotes | ProPaint Quote',
@@ -32,7 +33,8 @@ export const metadata: Metadata = {
 export default function PaintingBusinessSoftwarePage() {
   return (
     <div className="min-h-screen bg-white">
-
+      <KofiHeader />
+      
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="container mx-auto text-center max-w-4xl">
@@ -375,7 +377,7 @@ export default function PaintingBusinessSoftwarePage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

@@ -20,7 +20,8 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Footer } from '@/components/shared/footer'
+import { KofiHeader } from '@/components/shared/kofi-header'
+import { ImprovedFooter } from '@/components/shared/improved-footer'
 
 export const metadata: Metadata = {
   title: 'How to Scale Your Painting Business: The Complete 2025 Growth Guide',
@@ -125,6 +126,7 @@ const scalingMetrics = [
 export default function HowToScalePaintingBusinessPage() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <KofiHeader />
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-20">
@@ -530,7 +532,7 @@ export default function HowToScalePaintingBusinessPage() {
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   )
 }
