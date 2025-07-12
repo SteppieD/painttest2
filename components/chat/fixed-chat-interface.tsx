@@ -239,6 +239,19 @@ export function FixedChatInterface({
       // Check if quote is ready
       if (aiResponse.extractedData?.showQuoteActions) {
         trackChatQuoteReady(messages.length + 2) // +2 for user and assistant messages
+        
+        // If quote was saved successfully, redirect to review page
+        if (aiResponse.extractedData.action === 'quote_saved' && aiResponse.extractedData.quoteId) {
+          toast({
+            title: "Quote Saved!",
+            description: "Redirecting to review page..."
+          })
+          
+          // Small delay for user to see the message
+          setTimeout(() => {
+            router.push(`/quotes/${aiResponse.extractedData.quoteId}/review`)
+          }, 1500)
+        }
       }
 
     } catch (error) {

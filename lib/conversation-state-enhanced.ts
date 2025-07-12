@@ -98,7 +98,8 @@ export class EnhancedConversationStateManager {
     
     const weakYesResponses = [
       'that works', 'sounds good', 'looks right', 'all good', 'correct',
-      'accurate', 'yes please', 'please save', 'save it', 'send it'
+      'accurate', 'yes please', 'please save', 'save it', 'send it',
+      "let's send it", 'send this', 'send quote', 'email it', 'send to customer'
     ];
 
     // Check for strong confirmations (always valid)
