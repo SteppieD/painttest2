@@ -4,7 +4,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CheckCircle, Clock, Shield, Star, Calculator, Palette, Home, Building, Bot } from 'lucide-react'
+import { CheckCircle, Clock, Shield, Star, Calculator, Palette, Home, Building, Bot, FileText } from 'lucide-react'
 import { COMPANY_INFO, PAINTING_SERVICES } from '@/lib/constants'
 
 export default function HomePage() {
@@ -37,10 +37,10 @@ export default function HomePage() {
                 </div>
               </div>
               <h1 className="font-display text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-                Stop Losing Jobs to<br />Faster Competitors
+                The Quote Tool Built<br />For Painting Contractors
               </h1>
               <p className="text-xl lg:text-2xl text-gray-200 mb-10 leading-relaxed font-medium">
-                Create professional painting quotes in <strong>30 seconds instead of 3 days</strong>. Win more jobs with instant, accurate estimates that impress customers.
+                Create professional painting quotes in <strong>30 seconds instead of 3 hours</strong>. Close deals on the spot while your competitors are still driving back to the office.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-6 mb-12">
@@ -48,7 +48,7 @@ export default function HomePage() {
                   <Link href="/trial-signup">Start Free Trial</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="text-lg font-semibold h-14 px-10 bg-white/10 backdrop-blur-sm text-white border-2 border-white/50 hover:bg-white hover:text-gray-900 hover:border-white">
-                  <Link href="/get-quote">Watch Demo</Link>
+                  <Link href="/get-quote">See How It Works</Link>
                 </Button>
               </div>
               
@@ -190,6 +190,95 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Contractor Pain Points Section */}
+        <section className="py-20 lg:py-32 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="font-display text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+                Built By Contractors, For Contractors
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                We know the challenges you face every day. That's why we built the solution.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              <div className="text-center">
+                <div className="mb-6">
+                  <div className="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full">
+                    <Clock className="w-10 h-10 text-red-600" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-gray-900">Losing Jobs to Faster Competitors?</h3>
+                <p className="text-gray-600 mb-4">
+                  While you're driving back to the office to create a quote, your competitor already sent theirs.
+                </p>
+                <p className="text-sm font-semibold text-green-600">
+                  ✓ Create quotes on-site in 30 seconds
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <div className="mb-6">
+                  <div className="inline-flex items-center justify-center w-20 h-20 bg-orange-100 rounded-full">
+                    <Calculator className="w-10 h-10 text-orange-600" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-gray-900">Calculation Errors Eating Profits?</h3>
+                <p className="text-gray-600 mb-4">
+                  One math mistake can turn a profitable job into a loss. Manual calculations are risky.
+                </p>
+                <p className="text-sm font-semibold text-green-600">
+                  ✓ AI-powered accuracy every time
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <div className="mb-6">
+                  <div className="inline-flex items-center justify-center w-20 h-20 bg-purple-100 rounded-full">
+                    <FileText className="w-10 h-10 text-purple-600" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-gray-900">Unprofessional Handwritten Quotes?</h3>
+                <p className="text-gray-600 mb-4">
+                  First impressions matter. Scribbled estimates on notepads don't inspire confidence.
+                </p>
+                <p className="text-sm font-semibold text-green-600">
+                  ✓ Beautiful PDFs that win trust
+                </p>
+              </div>
+            </div>
+            
+            <div className="mt-16 max-w-4xl mx-auto">
+              <div className="bg-gradient-to-r from-primary-500 to-accent-500 rounded-3xl p-8 lg:p-12 text-white text-center">
+                <h3 className="text-3xl font-bold mb-4">
+                  The Math is Simple
+                </h3>
+                <p className="text-xl mb-8 opacity-90">
+                  Win just ONE extra job per month and ProPaint Quote pays for itself 10x over
+                </p>
+                <div className="grid md:grid-cols-3 gap-8 mb-8">
+                  <div>
+                    <div className="text-4xl font-bold mb-2">$2,800</div>
+                    <div className="text-sm opacity-80">Average job value</div>
+                  </div>
+                  <div>
+                    <div className="text-4xl font-bold mb-2">$79</div>
+                    <div className="text-sm opacity-80">Monthly cost</div>
+                  </div>
+                  <div>
+                    <div className="text-4xl font-bold mb-2">35x</div>
+                    <div className="text-sm opacity-80">Return on investment</div>
+                  </div>
+                </div>
+                <Button size="lg" variant="secondary" asChild className="bg-white text-primary-600 hover:bg-gray-100">
+                  <Link href="/roi-calculator">Calculate Your ROI →</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Services Section */}
         <section className="py-20 lg:py-32 gradient-bg-kofi">
           <div className="container mx-auto px-4">
@@ -300,10 +389,10 @@ export default function HomePage() {
 
             <div className="text-center">
               <Button size="lg" asChild className="text-lg font-semibold h-14 px-10" variant="kofi">
-                <Link href="/get-quote">🤖 Try AI Quote Assistant</Link>
+                <Link href="/get-quote">🔨 Try Quote Builder Demo</Link>
               </Button>
               <p className="text-sm text-gray-600 mt-4">
-                Free to use • No account required • Instant results
+                Built for contractors • No credit card • See it in action
               </p>
             </div>
           </div>

@@ -274,10 +274,10 @@ export default function GetQuotePage() {
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="font-display text-4xl lg:text-5xl font-bold bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-600 bg-clip-text text-transparent mb-4">
-                Paint Quote Assistant
+                Quote Builder for Contractors
               </h1>
               <p className="text-lg text-gray-600">
-                Powered by AI • Instant Quotes • Professional Accuracy
+                Create professional painting quotes • Powered by AI • Impress your customers
               </p>
             </div>
 
@@ -376,7 +376,7 @@ export default function GetQuotePage() {
                       onClick={() => setInput("It's for Sarah at 123 Oak Street. 400 linear feet of interior walls, 10ft ceilings, $65/gal premium paint with 400 sqft coverage. Labor included at $1.75/sqft. No ceilings, doors, or trim.")}
                       className="text-primary-600 hover:underline text-xs"
                     >
-                      Try example →
+                      Try contractor example →
                     </button>
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />

@@ -343,7 +343,7 @@ export default function InteriorPaintingCalculatorPage() {
 
               <div className="text-center">
                 <Button asChild size="lg" className="bg-gradient-to-r from-primary-500 to-accent-500 text-white">
-                  <Link href="/get-quote">Get Professional Quote</Link>
+                  <Link href="/get-quote">Create Professional Quote</Link>
                 </Button>
               </div>
             </div>

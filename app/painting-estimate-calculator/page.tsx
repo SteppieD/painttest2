@@ -369,7 +369,7 @@ export default function PaintingEstimateCalculatorPage() {
 
               <div className="space-y-4">
                 <Button asChild size="lg" className="w-full bg-gradient-to-r from-primary-500 to-accent-500 text-white">
-                  <Link href="/get-quote">Get AI-Powered Quote in 30 Seconds</Link>
+                  <Link href="/get-quote">Create AI-Powered Quote in 30 Seconds</Link>
                 </Button>
                 
                 <div className="grid grid-cols-2 gap-3">

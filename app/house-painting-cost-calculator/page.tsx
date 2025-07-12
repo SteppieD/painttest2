@@ -436,7 +436,7 @@ export default function HousePaintingCostCalculatorPage() {
 
               <div className="space-y-4">
                 <Button asChild size="lg" className="w-full bg-gradient-to-r from-primary-500 to-accent-500 text-white">
-                  <Link href="/get-quote">Get Detailed Professional Quote</Link>
+                  <Link href="/get-quote">Create Detailed Professional Quote</Link>
                 </Button>
                 <div className="text-center">
                   <Link href="/roi-calculator" className="text-primary-600 hover:underline text-sm">

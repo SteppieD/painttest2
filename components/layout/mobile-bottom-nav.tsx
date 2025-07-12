@@ -11,7 +11,7 @@ export function MobileBottomNav() {
 
   const navItems = [
     { href: '/', icon: Home, label: 'Home' },
-    { href: '/get-quote', icon: Calculator, label: 'Quote' },
+    { href: '/get-quote', icon: Calculator, label: 'Create' },
     { href: '/calculator', icon: FileText, label: 'Tools' },
     { href: '/dashboard', icon: User, label: 'Account' },
     { href: '/more', icon: MoreHorizontal, label: 'More' }

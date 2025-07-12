@@ -143,7 +143,7 @@ export function Header() {
               </div>
             )}
             <Button asChild variant="kofi" size="default">
-              <Link href="/get-quote">Get Free Quote</Link>
+              <Link href="/get-quote">Try Quote Builder</Link>
             </Button>
           </div>
 
@@ -200,7 +200,7 @@ export function Header() {
             <div className="pt-4 border-t space-y-4">
               <Button asChild className="w-full">
                 <Link href="/get-quote" onClick={() => setIsMenuOpen(false)}>
-                  Get Free Quote
+                  Try Quote Builder
                 </Link>
               </Button>
             </div>

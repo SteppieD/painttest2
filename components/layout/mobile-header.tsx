@@ -12,7 +12,7 @@ export function MobileHeader() {
 
   const menuItems = [
     { href: '/', icon: Home, label: 'Home' },
-    { href: '/get-quote', icon: Calculator, label: 'Get Quote' },
+    { href: '/get-quote', icon: Calculator, label: 'Create Quote' },
     { href: '/calculator', icon: FileText, label: 'Calculator' },
     { href: '/pricing', icon: FileText, label: 'Pricing' },
     { href: '/about', icon: Info, label: 'About' }
