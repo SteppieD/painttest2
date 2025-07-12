@@ -569,6 +569,17 @@ export default function DashboardPage() {
             </Button>
             <Button
               variant="outline"
+              onClick={() => router.push("/business-insights")}
+              className={`${quotaInfo.isTrial ? 'opacity-50' : ''}`}
+            >
+              <Crown className="h-4 w-4" />
+              <span>Business Insights</span>
+              {quotaInfo.isTrial && (
+                <Sparkles className="h-3 w-3 ml-1" />
+              )}
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => router.push("/settings")}
              
             >
