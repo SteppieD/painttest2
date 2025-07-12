@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { 
   Calculator, 
@@ -17,300 +15,345 @@ import {
   DollarSign,
   BarChart3,
   Award,
-  Check
+  Check,
+  Palette
 } from 'lucide-react';
-import { ContractorHeroSection } from '@/components/hero/ContractorHeroSection';
-import { OptimizedSaaSLayoutWithImages } from '@/components/homepage/OptimizedSaaSLayoutWithImages';
-import { Footer } from '@/components/shared/footer';
-import { ROICalculator } from '@/components/marketing/roi-calculator';
-import { TestimonialCarousel } from '@/components/marketing/testimonial-carousel';
-import { FeedbackBox } from '@/components/ui/feedback-box';
-import { QuickLinksSection } from '@/components/homepage/QuickLinksSection';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
+
+export const metadata = generatePageMetadata({
+  title: 'Paint Quote Pro - Professional Painting Quote Software for Contractors',
+  description: 'Win 40-60% more painting jobs with professional quotes in 30 seconds. Trusted by 5,000+ painting contractors. Start free trial today.',
+  keywords: 'painting quote software, painting estimate software, contractor quoting app, painting business tools',
+  path: '/',
+});
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Optimized SaaS Homepage Layout with Professional Images */}
-      <OptimizedSaaSLayoutWithImages />
-
-      {/* Trust Indicators */}
-      <section className="py-12 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="ac-fade-in">
-              <div className="text-3xl font-bold text-gray-900">5,000+</div>
-              <div className="text-sm text-gray-600">Active Contractors</div>
-            </div>
-            <div className="ac-fade-in" style={{ animationDelay: '0.1s' }}>
-              <div className="text-3xl font-bold text-gray-900">$73M+</div>
-              <div className="text-sm text-gray-600">Quotes Generated</div>
-            </div>
-            <div className="ac-fade-in" style={{ animationDelay: '0.2s' }}>
-              <div className="text-3xl font-bold text-gray-900">99%</div>
-              <div className="text-sm text-gray-600">Accuracy Rate</div>
-            </div>
-            <div className="ac-fade-in" style={{ animationDelay: '0.3s' }}>
-              <div className="text-3xl font-bold text-gray-900">4.9/5</div>
-              <div className="text-sm text-gray-600">Customer Rating</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section with AC Design */}
-      <section id="features" className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <div className="ac-hero-badge inline-flex mb-4">
-              <Zap size={16} />
-              <span>Professional Features</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Everything You Need to <span className="text-primary-pink">Win More Jobs</span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Built specifically for painting contractors who want to dominate their market
+    <div>
+      {/* Hero Section */}
+      <section>
+        <div>
+          <div>
+            <h1>
+              Win More Painting Jobs with <span>Professional Quotes</span>
+            </h1>
+            <p>
+              Create stunning, professional painting quotes in 30 seconds. Trusted by 5,000+ contractors nationwide. 
+              Increase your win rate by 40% with our AI-powered quoting platform.
             </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Calculator,
-                title: "AI-Powered Calculator",
-                description: "99% accurate estimates with smart material and labor calculations. Never lose money on underquotes.",
-                color: "from-blue-500 to-blue-600"
-              },
-              {
-                icon: Clock,
-                title: "30-Second Quotes",
-                description: "Create professional quotes in seconds, not hours. Close deals on-site before competitors respond.",
-                color: "from-green-500 to-green-600"
-              },
-              {
-                icon: Smartphone,
-                title: "Mobile-First Design",
-                description: "Quote from anywhere - job sites, client meetings, or your truck. Works perfectly on any device.",
-                color: "from-purple-500 to-purple-600"
-              },
-              {
-                icon: FileText,
-                title: "Professional Templates",
-                description: "Stunning quote templates that make you look like a million-dollar company. Customizable branding.",
-                color: "from-brand-primary to-brand-primary/90"
-              },
-              {
-                icon: TrendingUp,
-                title: "Win Rate Analytics",
-                description: "Track which quotes win and why. Optimize your pricing for maximum profit and conversion.",
-                color: "from-brand-secondary to-brand-secondary/90"
-              },
-              {
-                icon: Shield,
-                title: "Digital Signatures",
-                description: "Get quotes approved instantly with legally-binding e-signatures. No more chasing paperwork.",
-                color: "from-indigo-500 to-indigo-600"
-              }
-            ].map((feature, index) => (
-              <div key={index} className="ac-card group ac-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div className="ac-card-body">
-                  <div className={`p-3 rounded-xl bg-gradient-to-br ${feature.color} w-fit mb-4 group-hover:scale-110 transition-transform`}>
-                    <feature.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-pink transition-colors">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600">
-                    {feature.description}
-                  </p>
+            <div>
+              <Link href="/trial-signup">
+                Start Free Trial
+                <ArrowRight />
+              </Link>
+              <Link href="/demo">
+                Watch Demo
+              </Link>
+            </div>
+            
+            <div>
+              <div>
+                <div>
+                  <CheckCircle />
+                  <span>Free 14-day trial</span>
+                </div>
+                <div>
+                  <CheckCircle />
+                  <span>No credit card required</span>
+                </div>
+                <div>
+                  <CheckCircle />
+                  <span>Setup in 2 minutes</span>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Preview with professional design */}
-      <section className="py-20 px-4 bg-gray-900 text-white">
-        <div className="container mx-auto max-w-6xl text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Simple, Transparent Pricing
-          </h2>
-          <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
-            Start free, upgrade when ready. No contracts, no hidden fees.
-          </p>
-          
-          <div className="ac-pricing-grid">
-            {/* Free Plan */}
-            <div className="ac-pricing-card">
-              <h3 className="text-2xl font-bold mb-2">Perfect Start</h3>
-              <p className="text-gray-600 mb-6">For solo contractors</p>
-              <div className="ac-pricing-price">
-                $0<span className="ac-pricing-period">/month</span>
-              </div>
-              <p className="text-sm text-gray-600 mb-6">10 quotes per month</p>
-              <ul className="space-y-3 mb-8 text-left">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>All core features</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Mobile app access</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Email support</span>
-                </li>
-              </ul>
-              <Link href="/trial-signup" className="ac-btn ac-btn-secondary ac-btn-lg">
-                Start Free
-              </Link>
+      {/* Social Proof */}
+      <section>
+        <div>
+          <div>
+            <div>
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} />
+              ))}
             </div>
-
-            {/* Professional Plan */}
-            <div className="ac-pricing-card featured">
-              <div className="ac-pricing-badge">Most Popular</div>
-              <h3 className="text-2xl font-bold mb-2">Professional</h3>
-              <p className="text-gray-600 mb-6">For growing businesses</p>
-              <div className="ac-pricing-price">
-                $79<span className="ac-pricing-period">/month</span>
-              </div>
-              <p className="text-sm text-gray-600 mb-6">Unlimited quotes</p>
-              <ul className="space-y-3 mb-8 text-left">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Everything in Free</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Custom branding</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Priority support</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Analytics dashboard</span>
-                </li>
-              </ul>
-              <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-lg">
-                Start 14-Day Trial
-              </Link>
-            </div>
-
-            {/* Business Plan */}
-            <div className="ac-pricing-card">
-              <h3 className="text-2xl font-bold mb-2">Business</h3>
-              <p className="text-gray-600 mb-6">For teams & enterprises</p>
-              <div className="ac-pricing-price">
-                $149<span className="ac-pricing-period">/month</span>
-              </div>
-              <p className="text-sm text-gray-600 mb-6">Everything included</p>
-              <ul className="space-y-3 mb-8 text-left">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Everything in Pro</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Multi-user access</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>API access</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Dedicated manager</span>
-                </li>
-              </ul>
-              <Link href="/contact" className="ac-btn ac-btn-secondary ac-btn-lg">
-                Contact Sales
-              </Link>
-            </div>
-          </div>
-          
-          <div className="mt-12 text-center">
-            <Link href="/pricing" className="text-white hover:text-primary-pink transition-colors">
-              View detailed pricing & features →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ROI Calculator Section */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Calculate Your <span className="text-primary-pink">ROI</span>
-            </h2>
-            <p className="text-xl text-gray-600">
-              See how much revenue ProPaint Quote can generate for your business
+            <p>
+              Trusted by <span>5,000+</span> painting contractors
             </p>
           </div>
-          <ROICalculator />
+          
+          <div>
+            <div>
+              <div>
+                <div>5,000+</div>
+                <div>Active Contractors</div>
+              </div>
+            </div>
+            
+            <div>
+              <div>
+                <div>$73M+</div>
+                <div>Quotes Generated</div>
+              </div>
+            </div>
+            
+            <div>
+              <div>
+                <div>99%</div>
+                <div>Accuracy Rate</div>
+              </div>
+            </div>
+            
+            <div>
+              <div>
+                <div>4.9/5</div>
+                <div>Customer Rating</div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <TestimonialCarousel className="bg-white" />
-
-      {/* Final CTA with AC Design */}
-      <section className="py-20 px-4 gradient-pink-contrast text-white-important">
-        <div className="container mx-auto max-w-4xl text-center">
-          <div className="ac-hero-badge inline-flex mb-6 text-white" style={{ background: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.3)' }}>
-            <Award size={16} className="text-white" />
-            <span className="text-white">Limited Time Offer</span>
+      {/* Features Section */}
+      <section>
+        <div>
+          <div>
+            <h2>Everything You Need to Win More Jobs</h2>
+            <p>
+              Professional tools designed specifically for painting contractors
+            </p>
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Ready to 14x Your Quote Speed?
-          </h2>
-          <p className="text-xl text-white opacity-90 mb-8">
-            Join 5,000+ contractors winning more jobs with professional quotes
-          </p>
+          <div>
+            <div>
+              <div>
+                <div>
+                  <Calculator />
+                </div>
+                <h3>Instant Quotes</h3>
+                <p>
+                  Create professional painting quotes in 30 seconds with our AI-powered calculator. 
+                  No more hours of manual calculations.
+                </p>
+                <Link href="/painting-estimate-calculator-free">
+                  Try Calculator
+                </Link>
+              </div>
+            </div>
+            
+            <div>
+              <div>
+                <div>
+                  <Palette />
+                </div>
+                <h3>Professional Templates</h3>
+                <p>
+                  Beautiful, branded quote templates that impress customers and increase your win rate. 
+                  Fully customizable to match your brand.
+                </p>
+                <Link href="/paint-estimate-templates">
+                  View Templates
+                </Link>
+              </div>
+            </div>
+            
+            <div>
+              <div>
+                <div>
+                  <Zap />
+                </div>
+                <h3>Smart Automation</h3>
+                <p>
+                  Automated follow-ups, digital signatures, and payment processing. 
+                  Focus on painting while we handle the paperwork.
+                </p>
+                <Link href="/features">
+                  Learn More
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section>
+        <div>
+          <div>
+            <h2>How It Works</h2>
+            <p>
+              Three simple steps to professional quotes
+            </p>
+          </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Link href="/trial-signup" className="ac-btn ac-btn-secondary ac-btn-lg">
-              Start Free Trial - 10 Quotes Included
-              <ArrowRight size={20} />
+          <div>
+            <div>
+              <div>
+                1
+              </div>
+              <h3>Enter Project Details</h3>
+              <p>
+                Simply describe the painting project or use our room templates for instant setup.
+              </p>
+            </div>
+            
+            <div>
+              <div>
+                2
+              </div>
+              <h3>AI Calculates Everything</h3>
+              <p>
+                Our AI instantly calculates materials, labor, and provides accurate pricing based on your location.
+              </p>
+            </div>
+            
+            <div>
+              <div>
+                3
+              </div>
+              <h3>Send Professional Quote</h3>
+              <p>
+                Generate a beautiful, branded quote and send it directly to your customer's email.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section>
+        <div>
+          <div>
+            <div>
+              <h2>Why 5,000+ Contractors Choose Paint Quote Pro</h2>
+              <div>
+                <div>
+                  <div>
+                    <CheckCircle />
+                  </div>
+                  <div>
+                    <h4>Increase Win Rate by 40%</h4>
+                    <p>Professional quotes impress customers and build trust</p>
+                  </div>
+                </div>
+                
+                <div>
+                  <div>
+                    <Clock />
+                  </div>
+                  <div>
+                    <h4>Save 5+ Hours Per Week</h4>
+                    <p>Automated calculations and instant quote generation</p>
+                  </div>
+                </div>
+                
+                <div>
+                  <div>
+                    <DollarSign />
+                  </div>
+                  <div>
+                    <h4>Increase Revenue by 278%</h4>
+                    <p>Accurate pricing and faster turnaround times</p>
+                  </div>
+                </div>
+                
+                <div>
+                  <div>
+                    <Smartphone />
+                  </div>
+                  <div>
+                    <h4>Work From Anywhere</h4>
+                    <p>Mobile-optimized for on-site estimates and quotes</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <div>
+                <div>
+                  <TrendingUp />
+                </div>
+                <h3>278% ROI</h3>
+                <p>Average return on investment in just 90 days</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonial */}
+      <section>
+        <div>
+          <div>
+            <div>
+              <div>
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} />
+                ))}
+              </div>
+              <blockquote>
+                "Paint Quote Pro increased our revenue by $47,000 per month. The professional quotes 
+                helped us win 60% more jobs than before."
+              </blockquote>
+              <div>
+                <div>
+                  MR
+                </div>
+                <div>
+                  <div>Miguel Rodriguez</div>
+                  <div>Rodriguez Painting, Texas</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section>
+        <div>
+          <h2>
+            Ready to Win More Painting Jobs?
+          </h2>
+          <p>
+            Join 5,000+ contractors who've increased their win rates with Paint Quote Pro. 
+            Start your free trial today - no credit card required.
+          </p>
+          <div>
+            <Link href="/trial-signup">
+              Start Free Trial
+              <ArrowRight />
             </Link>
-            <Link href="/demo" className="ac-btn ac-btn-ghost ac-btn-lg text-white border-white hover:bg-white hover:text-primary-pink">
+            <Link href="/demo">
               Watch Demo
             </Link>
           </div>
           
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-white text-sm">
-            <span>✓ No credit card required</span>
-            <span>✓ Full feature access</span>
-            <span>✓ Cancel anytime</span>
+          <div>
+            <div>
+              <div>
+                <CheckCircle />
+                <span>Free 14-day trial</span>
+              </div>
+              <div>
+                <CheckCircle />
+                <span>No credit card required</span>
+              </div>
+              <div>
+                <CheckCircle />
+                <span>Setup in 2 minutes</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Feedback Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto max-w-4xl px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Help Us Improve
-            </h2>
-            <p className="text-lg text-gray-600">
-              Your feedback helps us build better features for painting contractors
-            </p>
-          </div>
-          <FeedbackBox type="website" position="inline" />
-        </div>
-      </section>
-
-      {/* Quick Links Section for SEO */}
-      <QuickLinksSection />
-
-      <Footer />
-
+      <ImprovedFooter />
     </div>
   );
 }

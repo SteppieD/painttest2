@@ -16,8 +16,6 @@ import {
   Star,
   Target
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-
 interface SmartSuggestion {
   type: 'dimension' | 'surface' | 'paint' | 'pricing' | 'time';
   title: string;
@@ -110,16 +108,16 @@ export function SmartSuggestionWidget({
   }
 
   return (
-    <Card className={cn("design-card border-blue-200", className)}>
-      <CardHeader className="pb-3">
-        <div className="design-inline">
-          <div className="design-inline">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Lightbulb className="w-5 h-5 text-blue-600" />
+    <Card>
+      <CardHeader>
+        <div>
+          <div>
+            <div>
+              <Lightbulb />
             </div>
             <div>
-              <CardTitle className="text-lg">Smart Suggestions</CardTitle>
-              <p className="text-sm text-gray-600">Based on your quote history</p>
+              <CardTitle>Smart Suggestions</CardTitle>
+              <p>Based on your quote history</p>
             </div>
           </div>
           
@@ -137,12 +135,12 @@ export function SmartSuggestionWidget({
 
       <CardContent>
         {isLoading ? (
-          <div className="design-inline p-4">
-            <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-            <span className="text-sm text-gray-600">Analyzing your patterns...</span>
+          <div>
+            <div />
+            <span>Analyzing your patterns...</span>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div>
             {/* High confidence suggestions (always shown) */}
             {highConfidenceSuggestions.map((suggestion, index) => {
               const IconComponent = getTypeIcon(suggestion.type);
@@ -151,45 +149,40 @@ export function SmartSuggestionWidget({
               return (
                 <div
                   key={index}
-                  className={cn(
-                    "p-4 rounded-lg border transition-all duration-200",
-                    isApplied 
-                      ? "bg-green-50 border-green-200" 
-                      : "bg-gray-50 border-gray-200 hover:border-blue-300"
-                  )}
+                 
                 >
-                  <div className="design-inline mb-2">
-                    <div className="design-inline">
-                      <IconComponent className="w-4 h-4 text-blue-600" />
-                      <span className="font-medium text-gray-900">{suggestion.title}</span>
+                  <div>
+                    <div>
+                      <IconComponent />
+                      <span>{suggestion.title}</span>
                     </div>
                     
-                    <div className="design-inline">
-                      <Badge className={cn("text-xs", getConfidenceColor(suggestion.confidence))}>
-                        <Star className="w-3 h-3 mr-1" />
+                    <div>
+                      <Badge>
+                        <Star />
                         {suggestion.confidence} confidence
                       </Badge>
                       
                       {isApplied ? (
-                        <Badge className="bg-green-100 text-green-700">
-                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                        <Badge>
+                          <CheckCircle2 />
                           Applied
                         </Badge>
                       ) : suggestion.applyable && (
                         <Button
                           size="sm"
                           onClick={() => handleApplySuggestion(suggestion)}
-                          className="design-button design-button-small h-6 px-3"
+                         
                         >
-                          <Zap className="w-3 h-3 mr-1" />
+                          <Zap />
                           Apply
                         </Button>
                       )}
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-2">{suggestion.description}</p>
-                  <p className="text-xs text-gray-500">{suggestion.reasoning}</p>
+                  <p>{suggestion.description}</p>
+                  <p>{suggestion.reasoning}</p>
                 </div>
               );
             })}
@@ -202,27 +195,22 @@ export function SmartSuggestionWidget({
               return (
                 <div
                   key={`other-${index}`}
-                  className={cn(
-                    "p-3 rounded-lg border transition-all duration-200",
-                    isApplied 
-                      ? "bg-green-50 border-green-200" 
-                      : "bg-gray-50 border-gray-200 hover:border-blue-300"
-                  )}
+                 
                 >
-                  <div className="design-inline mb-2">
-                    <div className="design-inline">
-                      <IconComponent className="w-4 h-4 text-gray-600" />
-                      <span className="font-medium text-gray-900">{suggestion.title}</span>
+                  <div>
+                    <div>
+                      <IconComponent />
+                      <span>{suggestion.title}</span>
                     </div>
                     
-                    <div className="design-inline">
-                      <Badge className={cn("text-xs", getConfidenceColor(suggestion.confidence))}>
+                    <div>
+                      <Badge>
                         {suggestion.confidence}
                       </Badge>
                       
                       {isApplied ? (
-                        <Badge className="bg-green-100 text-green-700">
-                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                        <Badge>
+                          <CheckCircle2 />
                           Applied
                         </Badge>
                       ) : suggestion.applyable && (
@@ -230,7 +218,7 @@ export function SmartSuggestionWidget({
                           size="sm"
                           variant="outline"
                           onClick={() => handleApplySuggestion(suggestion)}
-                          className="h-6 px-2 text-xs"
+                         
                         >
                           Apply
                         </Button>
@@ -238,23 +226,23 @@ export function SmartSuggestionWidget({
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-1">{suggestion.description}</p>
-                  <p className="text-xs text-gray-500">{suggestion.reasoning}</p>
+                  <p>{suggestion.description}</p>
+                  <p>{suggestion.reasoning}</p>
                 </div>
               );
             })}
 
             {/* Summary stats */}
             {suggestions.length > 0 && (
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <div className="design-inline text-sm">
-                  <div className="design-inline">
-                    <TrendingUp className="w-4 h-4 text-blue-600" />
-                    <span className="text-blue-800 font-medium">
+              <div>
+                <div>
+                  <div>
+                    <TrendingUp />
+                    <span>
                       {highConfidenceSuggestions.length} high-confidence suggestions
                     </span>
                   </div>
-                  <span className="text-blue-600">
+                  <span>
                     Based on {Math.floor(Math.random() * 15) + 5} similar quotes
                   </span>
                 </div>
@@ -278,16 +266,16 @@ export function QuickSuggestionBadges({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-wrap gap-2", className)}>
+    <div>
       {suggestions.slice(0, 3).map((suggestion, index) => (
         <Button
           key={index}
           variant="outline"
           size="sm"
           onClick={() => onApply(suggestion)}
-          className="design-button design-button-small border-blue-200 text-blue-700 hover:bg-blue-50"
+         
         >
-          <Zap className="w-3 h-3 mr-1" />
+          <Zap />
           {suggestion.title}
         </Button>
       ))}

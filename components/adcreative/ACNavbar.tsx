@@ -72,41 +72,41 @@ export function ACNavbar() {
 
   return (
     <>
-      <nav className={`ac-navbar ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="ac-navbar-container">
+      <nav`}>
+        <div>
           {/* Logo */}
-          <Link href="/" className="ac-navbar-logo">
+          <Link href="/">
             <Image 
               src="/paint-quote-logo.png" 
               alt="Paint Quote Pro" 
-              width={32}
-              height={32}
-              className="h-8 w-8"
+             
+             
+             
             />
             <span>Paint Quote Pro</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <ul className="ac-navbar-menu">
+          <ul>
             {navItems.map((item) => (
-              <li key={item.label} className="ac-navbar-item">
+              <li key={item.label}>
                 {item.dropdown ? (
                   <div
-                    className="ac-navbar-dropdown"
+                   
                     onMouseEnter={() => setOpenDropdown(item.label)}
                     onMouseLeave={() => setOpenDropdown(null)}
                   >
-                    <button className="ac-navbar-link ac-navbar-dropdown-trigger">
+                    <button>
                       {item.label}
                       <ChevronDown size={16} />
                     </button>
                     {openDropdown === item.label && (
-                      <div className="ac-navbar-dropdown-menu">
+                      <div>
                         {item.dropdown.map((subItem) => (
                           <Link
                             key={subItem.href}
                             href={subItem.href}
-                            className="ac-navbar-dropdown-link"
+                           
                           >
                             {subItem.label}
                           </Link>
@@ -117,7 +117,7 @@ export function ACNavbar() {
                 ) : (
                   <Link
                     href={item.href}
-                    className={`ac-navbar-link ${pathname === item.href ? 'active' : ''}`}
+                   `}
                   >
                     {item.label}
                   </Link>
@@ -127,20 +127,20 @@ export function ACNavbar() {
           </ul>
 
           {/* CTA Buttons */}
-          <div className="ac-navbar-cta">
+          <div>
             {isLoggedIn ? (
-              <Link href="/dashboard" className="ac-btn ac-btn-ghost ac-btn-sm">
+              <Link href="/dashboard">
                 Dashboard
               </Link>
             ) : (
               <>
                 <button 
                   onClick={() => setShowLoginPopup(true)} 
-                  className="ac-btn ac-btn-ghost ac-btn-sm"
+                 
                 >
                   Login
                 </button>
-                <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-sm" style={{ backgroundColor: '#2f97e0', borderColor: '#2f97e0' }}>
+                <Link href="/trial-signup">
                   Try For Free
                 </Link>
               </>
@@ -148,7 +148,7 @@ export function ACNavbar() {
             
             {/* Mobile Menu Toggle */}
             <button
-              className="ac-mobile-menu-toggle"
+             
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle mobile menu"
             >
@@ -160,22 +160,22 @@ export function ACNavbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="ac-mobile-menu">
-          <div className="ac-mobile-menu-backdrop" onClick={() => setIsMobileMenuOpen(false)} />
-          <div className="ac-mobile-menu-content">
-            <div className="ac-mobile-menu-header">
-              <Link href="/" className="ac-navbar-logo" onClick={() => setIsMobileMenuOpen(false)}>
+        <div>
+          <div onClick={() => setIsMobileMenuOpen(false)} />
+          <div>
+            <div>
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
                 <Image 
                   src="/paint-quote-logo.png" 
                   alt="Paint Quote Pro" 
-                  width={32}
-                  height={32}
-                  className="h-8 w-8"
+                 
+                 
+                 
                 />
                 <span>Paint Quote Pro</span>
               </Link>
               <button
-                className="ac-mobile-menu-close"
+               
                 onClick={() => setIsMobileMenuOpen(false)}
                 aria-label="Close mobile menu"
               >
@@ -183,25 +183,25 @@ export function ACNavbar() {
               </button>
             </div>
             
-            <ul className="ac-mobile-menu-list">
+            <ul>
               {navItems.map((item) => (
-                <li key={item.label} className="ac-mobile-menu-item">
+                <li key={item.label}>
                   {item.dropdown ? (
-                    <div className="ac-mobile-menu-dropdown">
+                    <div>
                       <button
-                        className="ac-mobile-menu-link ac-mobile-menu-dropdown-trigger"
+                       
                         onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
                       >
                         {item.label}
-                        <ChevronDown size={16} className={openDropdown === item.label ? 'rotate-180' : ''} />
+                        <ChevronDown size={16} />
                       </button>
                       {openDropdown === item.label && (
-                        <div className="ac-mobile-menu-dropdown-content">
+                        <div>
                           {item.dropdown.map((subItem) => (
                             <Link
                               key={subItem.href}
                               href={subItem.href}
-                              className="ac-mobile-menu-dropdown-link"
+                             
                               onClick={() => setIsMobileMenuOpen(false)}
                             >
                               {subItem.label}
@@ -213,7 +213,7 @@ export function ACNavbar() {
                   ) : (
                     <Link
                       href={item.href}
-                      className={`ac-mobile-menu-link ${pathname === item.href ? 'active' : ''}`}
+                     `}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.label}
@@ -223,9 +223,9 @@ export function ACNavbar() {
               ))}
             </ul>
             
-            <div className="ac-mobile-menu-footer">
+            <div>
               {isLoggedIn ? (
-                <Link href="/dashboard" className="ac-btn ac-btn-ghost ac-btn-lg" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
                   Dashboard
                 </Link>
               ) : (
@@ -235,11 +235,11 @@ export function ACNavbar() {
                       setIsMobileMenuOpen(false);
                       setShowLoginPopup(true);
                     }} 
-                    className="ac-btn ac-btn-ghost ac-btn-lg w-full"
+                   
                   >
                     Login
                   </button>
-                  <Link href="/trial-signup" className="ac-btn ac-btn-primary ac-btn-lg" style={{ backgroundColor: '#2f97e0', borderColor: '#2f97e0' }} onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href="/trial-signup" onClick={() => setIsMobileMenuOpen(false)}>
                     Try For Free
                   </Link>
                 </>
@@ -249,194 +249,7 @@ export function ACNavbar() {
         </div>
       )}
 
-      <style jsx>{`
-        /* Dropdown Styles */
-        .ac-navbar-dropdown {
-          position: relative;
-        }
-
-        .ac-navbar-dropdown-trigger {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          background: none;
-          border: none;
-          font: inherit;
-          cursor: pointer;
-        }
-
-        .ac-navbar-dropdown-menu {
-          position: absolute;
-          top: calc(100% + 4px);
-          left: 50%;
-          transform: translateX(-50%);
-          margin-top: 0;
-          background: white;
-          border-radius: 16px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
-          min-width: 240px;
-          padding: 12px;
-          z-index: 50;
-          border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .ac-navbar-dropdown::before {
-          content: '';
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          height: 8px;
-        }
-
-        .ac-navbar-dropdown-link {
-          display: block;
-          padding: 10px 14px;
-          margin: 2px 0;
-          color: #374151;
-          text-decoration: none;
-          border-radius: 10px;
-          transition: all 150ms ease;
-          font-size: 14px;
-          font-weight: 500;
-          white-space: nowrap;
-        }
-
-        .ac-navbar-dropdown-link:hover {
-          background: #f3f4f6;
-          color: #2f97e0;
-        }
-
-        /* Mobile Menu Styles */
-        .ac-mobile-menu {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 60;
-        }
-
-        .ac-mobile-menu-backdrop {
-          position: absolute;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.5);
-          backdrop-filter: blur(4px);
-        }
-
-        .ac-mobile-menu-content {
-          position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          width: 100%;
-          max-width: 320px;
-          background: white;
-          overflow-y: auto;
-          animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-          }
-          to {
-            transform: translateX(0);
-          }
-        }
-
-        .ac-mobile-menu-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 16px 24px;
-          border-bottom: 1px solid #e5e7eb;
-        }
-
-        .ac-mobile-menu-close {
-          background: none;
-          border: none;
-          padding: 8px;
-          cursor: pointer;
-          color: #6b7280;
-        }
-
-        .ac-mobile-menu-list {
-          list-style: none;
-          padding: 24px;
-        }
-
-        .ac-mobile-menu-item {
-          margin-bottom: 8px;
-        }
-
-        .ac-mobile-menu-link {
-          display: block;
-          padding: 12px 16px;
-          color: #374151;
-          text-decoration: none;
-          font-weight: 500;
-          border-radius: 8px;
-          transition: all 150ms ease;
-        }
-
-        .ac-mobile-menu-link:hover,
-        .ac-mobile-menu-link.active {
-          background: #fef3c7;
-          color: #2f97e0;
-        }
-
-        .ac-mobile-menu-dropdown-trigger {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 12px 16px;
-          background: none;
-          border: none;
-          font: inherit;
-          color: #374151;
-          font-weight: 500;
-          cursor: pointer;
-          text-align: left;
-        }
-
-        .ac-mobile-menu-dropdown-trigger svg {
-          transition: transform 200ms ease;
-        }
-
-        .rotate-180 {
-          transform: rotate(180deg);
-        }
-
-        .ac-mobile-menu-dropdown-content {
-          padding-left: 16px;
-          margin-top: 4px;
-        }
-
-        .ac-mobile-menu-dropdown-link {
-          display: block;
-          padding: 10px 16px;
-          color: #6b7280;
-          text-decoration: none;
-          font-size: 14px;
-          border-radius: 6px;
-          transition: all 150ms ease;
-        }
-
-        .ac-mobile-menu-dropdown-link:hover {
-          background: #f3f4f6;
-          color: #2f97e0;
-        }
-
-        .ac-mobile-menu-footer {
-          padding: 24px;
-          border-top: 1px solid #e5e7eb;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-      `}</style>
+      
 
       {/* Login Popup */}
       <LoginPopup 

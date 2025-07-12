@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { cn } from '@/lib/utils'
 import { Copy, Check, Bot, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { formatDistanceToNow } from 'date-fns'
@@ -36,7 +35,7 @@ export function EnhancedMessageBubble({
         // Handle bullet points
         if (line.trim().startsWith('•')) {
           return (
-            <li key={i} className="ml-4 list-disc">
+            <li key={i}>
               {line.replace('•', '').trim()}
             </li>
           )
@@ -52,7 +51,7 @@ export function EnhancedMessageBubble({
         }
         
         return (
-          <p key={i} className={cn(i > 0 && "mt-2")}>
+          <p key={i}>
             {formattedLine}
           </p>
         )
@@ -61,47 +60,30 @@ export function EnhancedMessageBubble({
 
   return (
     <div
-      className={cn(
-        "flex mb-1 px-4 fade-in",
-        isUser ? "justify-end" : "justify-start"
-      )}
+     
     >
       {/* iMessage-style bubble */}
       <div
-        className={cn(
-          "relative max-w-[85%] group",
-          isUser ? "ml-12" : "mr-12"
-        )}
+       
       >
         <div
-          className={cn(
-            "px-4 py-2 rounded-[18px] text-[16px] leading-[1.4]",
-            isUser
-              ? "bg-[#007AFF] text-white" // iMessage blue
-              : "bg-[#E5E5EA] text-black" // iMessage gray
-          )}
+         
         >
           {formatContent(message.content)}
 
           {/* Quote data preview - styled more casually */}
           {message.quoteData && message.quoteData.totalCost && (
-            <div className={cn(
-              "mt-2 pt-2 border-t border-opacity-20",
-              isUser ? "border-white" : "border-gray-400"
-            )}>
-              <div className="font-medium">💰 ${message.quoteData.totalCost.toLocaleString()}</div>
+            <div>
+              <div>💰 ${message.quoteData.totalCost.toLocaleString()}</div>
               {message.quoteData.timeEstimate && (
-                <div className="text-sm opacity-90">⏱️ {message.quoteData.timeEstimate}</div>
+                <div>⏱️ {message.quoteData.timeEstimate}</div>
               )}
             </div>
           )}
         </div>
 
         {/* Timestamp - only show on hover/tap like iMessage */}
-        <div className={cn(
-          "text-[11px] text-gray-500 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200",
-          isUser ? "text-right" : "text-left"
-        )}>
+        <div>
           {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
         </div>
       </div>

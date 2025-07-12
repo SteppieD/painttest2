@@ -132,48 +132,48 @@ export function ProgressiveQuoteForm({
   if (!isVisible) return null;
 
   return (
-    <Card className="w-full max-w-md bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Calculator className="w-5 h-5 text-blue-600" />
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          <Calculator />
           Quote Progress
-          <Badge variant="secondary" className="ml-auto">
+          <Badge variant="secondary">
             {quoteData.completion_percentage || 0}%
           </Badge>
         </CardTitle>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div>
           <div 
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${quoteData.completion_percentage || 0}%` }}
+           
+           %` }}
           />
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-3">
+      <CardContent>
         {/* Customer Information Section */}
-        <div className="border-b border-gray-200 pb-3">
+        <div>
           <button
             onClick={() => toggleSection('customer')}
-            className="flex items-center gap-2 w-full text-left text-sm font-medium text-gray-700 hover:text-blue-600"
+           
           >
             {getFieldStatus(quoteData.customer_name) === 'complete' ? (
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle />
             ) : (
-              <Circle className="w-4 h-4 text-gray-400" />
+              <Circle />
             )}
             Customer Information
           </button>
           {expandedSections.includes('customer') && (
-            <div className="mt-2 ml-6 space-y-1 text-xs">
-              <div className="flex justify-between">
+            <div>
+              <div>
                 <span>Name:</span>
-                <span className={quoteData.customer_name ? 'text-green-600 font-medium' : 'text-gray-400'}>
+                <span>
                   {quoteData.customer_name || 'Pending'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div>
                 <span>Address:</span>
-                <span className={quoteData.address ? 'text-green-600 font-medium' : 'text-gray-400'}>
+                <span>
                   {quoteData.address ? quoteData.address.substring(0, 20) + '...' : 'Pending'}
                 </span>
               </div>
@@ -182,41 +182,41 @@ export function ProgressiveQuoteForm({
         </div>
 
         {/* Project Details Section */}
-        <div className="border-b border-gray-200 pb-3">
+        <div>
           <button
             onClick={() => toggleSection('project')}
-            className="flex items-center gap-2 w-full text-left text-sm font-medium text-gray-700 hover:text-blue-600"
+           
           >
             {getFieldStatus(quoteData.total_sqft) === 'complete' ? (
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle />
             ) : (
-              <Circle className="w-4 h-4 text-gray-400" />
+              <Circle />
             )}
             Project Details
           </button>
           {expandedSections.includes('project') && (
-            <div className="mt-2 ml-6 space-y-1 text-xs">
-              <div className="flex justify-between">
+            <div>
+              <div>
                 <span>Type:</span>
-                <span className={quoteData.project_type ? 'text-green-600 font-medium' : 'text-gray-400'}>
+                <span>
                   {quoteData.project_type || 'Pending'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div>
                 <span>Linear Feet:</span>
-                <span className={quoteData.linear_feet ? 'text-green-600 font-medium' : 'text-gray-400'}>
+                <span>
                   {quoteData.linear_feet || 'Pending'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div>
                 <span>Height:</span>
-                <span className={quoteData.ceiling_height ? 'text-green-600 font-medium' : 'text-gray-400'}>
+                <span>
                   {quoteData.ceiling_height ? `${quoteData.ceiling_height} ft` : 'Pending'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div>
                 <span>Total Area:</span>
-                <span className={quoteData.total_sqft ? 'text-blue-600 font-bold' : 'text-gray-400'}>
+                <span>
                   {quoteData.total_sqft ? `${quoteData.total_sqft.toLocaleString()} sq ft` : 'Calculating...'}
                 </span>
               </div>
@@ -225,41 +225,41 @@ export function ProgressiveQuoteForm({
         </div>
 
         {/* Paint Specifications Section */}
-        <div className="border-b border-gray-200 pb-3">
+        <div>
           <button
             onClick={() => toggleSection('paint')}
-            className="flex items-center gap-2 w-full text-left text-sm font-medium text-gray-700 hover:text-blue-600"
+           
           >
             {getFieldStatus(quoteData.gallons_needed) === 'complete' ? (
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle />
             ) : (
-              <Circle className="w-4 h-4 text-gray-400" />
+              <Circle />
             )}
             Paint & Materials
           </button>
           {expandedSections.includes('paint') && (
-            <div className="mt-2 ml-6 space-y-1 text-xs">
-              <div className="flex justify-between">
+            <div>
+              <div>
                 <span>Brand:</span>
-                <span className={quoteData.paint_brand ? 'text-green-600 font-medium' : 'text-gray-400'}>
+                <span>
                   {quoteData.paint_brand || 'Pending'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div>
                 <span>Cost/Gallon:</span>
-                <span className={quoteData.cost_per_gallon ? 'text-green-600 font-medium' : 'text-gray-400'}>
+                <span>
                   {quoteData.cost_per_gallon ? `$${quoteData.cost_per_gallon}` : 'Pending'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div>
                 <span>Gallons Needed:</span>
-                <span className={quoteData.gallons_needed ? 'text-blue-600 font-bold' : 'text-gray-400'}>
+                <span>
                   {quoteData.gallons_needed || 'Calculating...'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div>
                 <span>Material Cost:</span>
-                <span className={quoteData.total_material_cost ? 'text-blue-600 font-bold' : 'text-gray-400'}>
+                <span>
                   {quoteData.total_material_cost ? `$${quoteData.total_material_cost.toLocaleString()}` : 'Calculating...'}
                 </span>
               </div>
@@ -268,41 +268,41 @@ export function ProgressiveQuoteForm({
         </div>
 
         {/* Labor & Pricing Section */}
-        <div className="pb-3">
+        <div>
           <button
             onClick={() => toggleSection('pricing')}
-            className="flex items-center gap-2 w-full text-left text-sm font-medium text-gray-700 hover:text-blue-600"
+           
           >
             {getFieldStatus(quoteData.final_quote_amount) === 'complete' ? (
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle />
             ) : (
-              <Circle className="w-4 h-4 text-gray-400" />
+              <Circle />
             )}
             Labor & Pricing
           </button>
           {expandedSections.includes('pricing') && (
-            <div className="mt-2 ml-6 space-y-1 text-xs">
-              <div className="flex justify-between">
+            <div>
+              <div>
                 <span>Labor Rate:</span>
-                <span className={quoteData.labor_cost_per_sqft ? 'text-green-600 font-medium' : 'text-gray-400'}>
+                <span>
                   {quoteData.labor_cost_per_sqft ? `$${quoteData.labor_cost_per_sqft}/sq ft` : 'Pending'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div>
                 <span>Labor Cost:</span>
-                <span className={quoteData.total_labor_cost ? 'text-blue-600 font-bold' : 'text-gray-400'}>
+                <span>
                   {quoteData.total_labor_cost ? `$${quoteData.total_labor_cost.toLocaleString()}` : 'Calculating...'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div>
                 <span>Markup:</span>
-                <span className={quoteData.markup_percentage ? 'text-green-600 font-medium' : 'text-gray-400'}>
+                <span>
                   {quoteData.markup_percentage ? `${quoteData.markup_percentage}%` : 'Pending'}
                 </span>
               </div>
-              <div className="flex justify-between font-bold">
+              <div>
                 <span>Final Quote:</span>
-                <span className={quoteData.final_quote_amount ? 'text-green-600 text-lg' : 'text-gray-400'}>
+                <span>
                   {quoteData.final_quote_amount ? `$${quoteData.final_quote_amount.toLocaleString()}` : 'Calculating...'}
                 </span>
               </div>

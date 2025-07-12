@@ -319,10 +319,10 @@ export default function ProjectPerformanceAnalyzer() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading project analytics...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading project analytics...</p>
         </div>
       </div>
     );
@@ -330,24 +330,24 @@ export default function ProjectPerformanceAnalyzer() {
 
   if (!analytics) {
     return (
-      <div className="text-center py-12">
-        <p className="text-gray-600">Unable to load project data</p>
+      <div>
+        <p>Unable to load project data</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div>
       {/* Header with Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Project Performance Analyzer</h1>
-          <p className="text-gray-600">Individual project profitability and efficiency insights</p>
+          <h1>Project Performance Analyzer</h1>
+          <p>Individual project profitability and efficiency insights</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div>
           {/* View Mode Selector */}
-          <div className="flex bg-white rounded-lg border">
+          <div>
             {[
               { id: 'table', label: 'Table', icon: BarChart3 },
               { id: 'matrix', label: 'Matrix', icon: PieChart },
@@ -357,122 +357,118 @@ export default function ProjectPerformanceAnalyzer() {
               <button
                 key={mode.id}
                 onClick={() => setViewMode(mode.id as any)}
-                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors ${
-                  viewMode === mode.id
-                    ? 'bg-blue-100 text-blue-700 border-blue-200'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
+               `}
               >
-                <mode.icon className="w-4 h-4" />
+                <mode.icon />
                 {mode.label}
               </button>
             ))}
           </div>
 
           {/* Export Button */}
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            <Download className="w-4 h-4" />
+          <button>
+            <Download />
             Export
           </button>
         </div>
       </div>
 
       {/* Summary KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-green-700 flex items-center gap-2">
-              <DollarSign className="w-4 h-4" />
+      <div>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <DollarSign />
               Average Profit Margin
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-green-800">
+            <div>
+              <div>
                 {analytics.summary.averageMargin.toFixed(1)}%
               </div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-green-600">
+              <div>
+                <TrendingUp />
+                <span>
                   +{analytics.trends.marginTrend.toFixed(1)}% vs last period
                 </span>
               </div>
-              <div className="text-xs text-green-600">
+              <div>
                 Range: {analytics.summary.worstMargin.toFixed(1)}% - {analytics.summary.bestMargin.toFixed(1)}%
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-blue-700 flex items-center gap-2">
-              <Calculator className="w-4 h-4" />
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Calculator />
               Average Project Value
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-blue-800">
+            <div>
+              <div>
                 {formatCurrency(analytics.summary.totalRevenue / analytics.summary.totalProjects)}
               </div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-600">
+              <div>
+                <TrendingUp />
+                <span>
                   +{analytics.trends.revenueTrend.toFixed(1)}% growth
                 </span>
               </div>
-              <div className="text-xs text-blue-600">
+              <div>
                 {analytics.summary.totalProjects} total projects
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-purple-700 flex items-center gap-2">
-              <Clock className="w-4 h-4" />
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Clock />
               Avg Completion Time
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-purple-800">
+            <div>
+              <div>
                 {analytics.summary.averageDuration.toFixed(0)} days
               </div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-purple-600" />
-                <span className="text-sm font-medium text-purple-600">
+              <div>
+                <TrendingUp />
+                <span>
                   {analytics.efficiencyMetrics.onTimeCompletion}% on-time
                 </span>
               </div>
-              <div className="text-xs text-purple-600">
+              <div>
                 {analytics.efficiencyMetrics.budgetVariance}% budget variance
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-orange-700 flex items-center gap-2">
-              <Star className="w-4 h-4" />
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Star />
               Customer Satisfaction
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-orange-800">
+            <div>
+              <div>
                 {analytics.efficiencyMetrics.customerSatisfaction.toFixed(1)}/5
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-orange-600" />
-                <span className="text-sm font-medium text-orange-600">
+              <div>
+                <CheckCircle />
+                <span>
                   {analytics.efficiencyMetrics.qualityScore}% quality score
                 </span>
               </div>
-              <div className="text-xs text-orange-600">
+              <div>
                 Based on completed projects
               </div>
             </div>
@@ -484,21 +480,21 @@ export default function ProjectPerformanceAnalyzer() {
       {viewMode === 'table' && (
         <Card>
           <CardHeader>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-blue-600" />
+            <div>
+              <CardTitle>
+                <BarChart3 />
                 Project Performance Table
               </CardTitle>
               
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div>
                 {/* Search */}
-                <div className="relative">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <div>
+                  <Search />
                   <input
                     placeholder="Search projects..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                   
                   />
                 </div>
 
@@ -506,7 +502,7 @@ export default function ProjectPerformanceAnalyzer() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                 
                 >
                   <option value="all">All Status</option>
                   <option value="pending">Pending</option>
@@ -519,7 +515,7 @@ export default function ProjectPerformanceAnalyzer() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                 
                 >
                   <option value="margin">Sort by Margin</option>
                   <option value="revenue">Sort by Revenue</option>
@@ -530,68 +526,59 @@ export default function ProjectPerformanceAnalyzer() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div>
+              <table>
                 <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Customer</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Type</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-700">Revenue</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-700">Profit</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-700">Margin</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-700">$/Sq Ft</th>
-                    <th className="text-center py-3 px-4 font-medium text-gray-700">Status</th>
-                    <th className="text-center py-3 px-4 font-medium text-gray-700">Actions</th>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Type</th>
+                    <th>Revenue</th>
+                    <th>Profit</th>
+                    <th>Margin</th>
+                    <th>$/Sq Ft</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredProjects.map((project) => (
-                    <tr key={project.id} className="border-b border-gray-100 hover:bg-gray-50">
-                      <td className="py-3 px-4">
+                    <tr key={project.id}>
+                      <td>
                         <div>
-                          <div className="font-medium text-gray-900">{project.customerName}</div>
-                          <div className="text-sm text-gray-500">{formatDate(new Date(project.createdAt))}</div>
+                          <div>{project.customerName}</div>
+                          <div>{formatDate(new Date(project.createdAt))}</div>
                         </div>
                       </td>
-                      <td className="py-3 px-4">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 capitalize">
+                      <td>
+                        <span>
                           {project.projectType}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-right font-medium">{formatCurrency(project.revenue)}</td>
-                      <td className="py-3 px-4 text-right">
-                        <span className={`font-medium ${project.profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      <td>{formatCurrency(project.revenue)}</td>
+                      <td>
+                        <span`}>
                           {formatCurrency(project.profit)}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-right">
-                        <span className={`font-medium ${
-                          project.margin >= 30 ? 'text-green-600' :
-                          project.margin >= 15 ? 'text-yellow-600' :
-                          'text-red-600'
-                        }`}>
+                      <td>
+                        <span`}>
                           {project.margin.toFixed(1)}%
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-right text-sm text-gray-600">
+                      <td>
                         ${project.revenuePerSqft.toFixed(2)}
                       </td>
-                      <td className="py-3 px-4 text-center">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          project.status === 'completed' ? 'bg-green-100 text-green-800' :
-                          project.status === 'active' ? 'bg-blue-100 text-blue-800' :
-                          project.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
+                      <td>
+                        <span`}>
                           {project.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-center">
+                      <td>
                         <button
                           onClick={() => router.push(`/quotes/${project.id}`)}
-                          className="text-blue-600 hover:text-blue-800 transition-colors"
+                         
                         >
-                          <Eye className="w-4 h-4" />
+                          <Eye />
                         </button>
                       </td>
                     </tr>
@@ -600,7 +587,7 @@ export default function ProjectPerformanceAnalyzer() {
               </table>
               
               {filteredProjects.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
+                <div>
                   No projects match your filters
                 </div>
               )}
@@ -613,22 +600,22 @@ export default function ProjectPerformanceAnalyzer() {
       {viewMode === 'matrix' && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <PieChart className="w-5 h-5 text-purple-600" />
+            <CardTitle>
+              <PieChart />
               Profitability Matrix
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
               {analytics.profitabilityMatrix.map((matrix, index) => (
-                <div key={index} className="text-center p-6 bg-gray-50 rounded-lg">
-                  <div className="text-2xl font-bold text-gray-900 mb-2">{matrix.count}</div>
-                  <div className="text-sm font-medium text-gray-700 mb-3">{matrix.range}</div>
-                  <div className="space-y-2">
-                    <div className="text-lg font-semibold text-green-600">
+                <div key={index}>
+                  <div>{matrix.count}</div>
+                  <div>{matrix.range}</div>
+                  <div>
+                    <div>
                       {formatCurrency(matrix.revenue)}
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div>
                       Avg margin: {matrix.avgMargin.toFixed(1)}%
                     </div>
                   </div>
@@ -641,30 +628,30 @@ export default function ProjectPerformanceAnalyzer() {
 
       {/* Insights View */}
       {viewMode === 'insights' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
           {/* High Performers */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-700">
-                <Star className="w-5 h-5" />
+              <CardTitle>
+                <Star />
                 Top Performing Projects
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {analytics.outliers.highPerformers.map((project) => (
-                  <div key={project.id} className="p-4 bg-green-50 rounded-lg">
-                    <div className="flex justify-between items-start mb-2">
+                  <div key={project.id}>
+                    <div>
                       <div>
-                        <h3 className="font-medium text-gray-900">{project.customerName}</h3>
-                        <p className="text-sm text-gray-600 capitalize">{project.projectType}</p>
+                        <h3>{project.customerName}</h3>
+                        <p>{project.projectType}</p>
                       </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-green-600">{project.margin.toFixed(1)}%</div>
-                        <div className="text-sm text-gray-600">{formatCurrency(project.revenue)}</div>
+                      <div>
+                        <div>{project.margin.toFixed(1)}%</div>
+                        <div>{formatCurrency(project.revenue)}</div>
                       </div>
                     </div>
-                    <div className="text-xs text-green-700">
+                    <div>
                       Profit: {formatCurrency(project.profit)} • {project.duration} days • {project.efficiency}% efficiency
                     </div>
                   </div>
@@ -676,26 +663,26 @@ export default function ProjectPerformanceAnalyzer() {
           {/* Improvement Opportunities */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-orange-700">
-                <AlertCircle className="w-5 h-5" />
+              <CardTitle>
+                <AlertCircle />
                 Improvement Opportunities
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {analytics.outliers.opportunities.map((project) => (
-                  <div key={project.id} className="p-4 bg-orange-50 rounded-lg">
-                    <div className="flex justify-between items-start mb-2">
+                  <div key={project.id}>
+                    <div>
                       <div>
-                        <h3 className="font-medium text-gray-900">{project.customerName}</h3>
-                        <p className="text-sm text-gray-600 capitalize">{project.projectType}</p>
+                        <h3>{project.customerName}</h3>
+                        <p>{project.projectType}</p>
                       </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-orange-600">{project.margin.toFixed(1)}%</div>
-                        <div className="text-sm text-gray-600">{formatCurrency(project.revenue)}</div>
+                      <div>
+                        <div>{project.margin.toFixed(1)}%</div>
+                        <div>{formatCurrency(project.revenue)}</div>
                       </div>
                     </div>
-                    <div className="text-xs text-orange-700">
+                    <div>
                       High revenue but low margin - review pricing and costs
                     </div>
                   </div>

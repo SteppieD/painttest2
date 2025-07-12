@@ -108,11 +108,11 @@ export default function PublicQuotePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 text-green-600 animate-spin mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Loading Your Quote</h2>
-          <p className="text-gray-600">Please wait while we retrieve your painting quote...</p>
+      <div>
+        <div>
+          <Loader2 />
+          <h2>Loading Your Quote</h2>
+          <p>Please wait while we retrieve your painting quote...</p>
         </div>
       </div>
     );
@@ -120,14 +120,14 @@ export default function PublicQuotePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-6">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">❌</span>
+      <div>
+        <div>
+          <div>
+            <span>❌</span>
           </div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Quote Not Available</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <p className="text-sm text-gray-500">
+          <h2>Quote Not Available</h2>
+          <p>{error}</p>
+          <p>
             If you believe this is an error, please contact your painting contractor directly.
           </p>
         </div>
@@ -140,7 +140,7 @@ export default function PublicQuotePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div>
       <CustomerQuoteDisplay
         quote={quote}
         onAccept={handleAcceptQuote}

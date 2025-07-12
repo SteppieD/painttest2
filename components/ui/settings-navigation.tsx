@@ -60,14 +60,14 @@ export default function SettingsNavigation({ currentPage = 'general' }: Settings
   ];
 
   return (
-    <Card className="mb-6">
-      <CardContent className="p-6">
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Settings</h3>
-          <p className="text-sm text-gray-600">Configure your painting business preferences</p>
+    <Card>
+      <CardContent>
+        <div>
+          <h3>Settings</h3>
+          <p>Configure your painting business preferences</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPage === item.id;
@@ -77,25 +77,21 @@ export default function SettingsNavigation({ currentPage = 'general' }: Settings
                 key={item.id}
                 variant="ghost"
                 onClick={() => router.push(item.href)}
-                className={`h-auto p-4 justify-start text-left ${
-                  isActive 
-                    ? 'bg-blue-50 border-blue-200 border-2' 
-                    : 'hover:bg-gray-50'
-                }`}
+               `}
               >
-                <div className="flex items-start gap-3 w-full">
-                  <div className={`w-10 h-10 rounded-lg ${item.bgColor} flex items-center justify-center`}>
-                    <Icon className={`w-5 h-5 ${item.color}`} />
+                <div>
+                  <div flex items-center justify-center`}>
+                    <Icon`} />
                   </div>
                   
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <h4 className={`font-medium ${isActive ? 'text-blue-900' : 'text-gray-900'}`}>
+                  <div>
+                    <div>
+                      <h4`}>
                         {item.title}
                       </h4>
-                      <ArrowRight className={`w-4 h-4 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                      <ArrowRight`} />
                     </div>
-                    <p className={`text-sm mt-1 ${isActive ? 'text-blue-700' : 'text-gray-600'}`}>
+                    <p`}>
                       {item.description}
                     </p>
                   </div>
@@ -106,15 +102,15 @@ export default function SettingsNavigation({ currentPage = 'general' }: Settings
         </div>
         
         {/* Quick Actions */}
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Need help setting up?</span>
+        <div>
+          <div>
+            <span>Need help setting up?</span>
             <Button 
               variant="outline" 
               size="sm"
               onClick={() => router.push('/setup')}
             >
-              <Building className="w-4 h-4 mr-2" />
+              <Building />
               Setup Wizard
             </Button>
           </div>

@@ -4,7 +4,7 @@ import { FixedChatInterface } from '@/components/chat/fixed-chat-interface'
 
 export default function TestFixedParsingPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       <FixedChatInterface
         companyId="demo-company-123"
         onQuoteGenerated={(quote) => {

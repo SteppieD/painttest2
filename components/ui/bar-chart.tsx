@@ -33,10 +33,10 @@ export default function CustomBarChart({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-medium text-gray-900 mb-2">{label}</p>
+        <div>
+          <p>{label}</p>
           {payload.map((entry: any, index: number) => (
-            <p key={index} className="text-sm" style={{ color: entry.color }}>
+            <p key={index}>
               {entry.name}: {formatValue ? formatValue(entry.value) : entry.value}
             </p>
           ))}
@@ -47,23 +47,23 @@ export default function CustomBarChart({
   };
 
   return (
-    <ResponsiveContainer width="100%" height={height}>
+    <ResponsiveContainer>
       <BarChart 
         data={data} 
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         layout={orientation === 'horizontal' ? 'horizontal' : 'vertical'}
       >
-        {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200" />}
+        {showGrid && <CartesianGrid strokeDasharray="3 3" />}
         <XAxis 
           dataKey="name" 
-          className="text-xs fill-gray-600"
+         
           tickLine={false}
           axisLine={false}
           type={orientation === 'horizontal' ? 'number' : 'category'}
           tickFormatter={orientation === 'horizontal' ? formatValue : undefined}
         />
         <YAxis 
-          className="text-xs fill-gray-600"
+         
           tickLine={false}
           axisLine={false}
           type={orientation === 'horizontal' ? 'category' : 'number'}

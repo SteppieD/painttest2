@@ -124,10 +124,10 @@ export default function AdminLayout({
   // Show loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading admin panel...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading admin panel...</p>
         </div>
       </div>
     );
@@ -139,53 +139,47 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Mobile Header */}
-      <div className="lg:hidden bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Shield className="w-8 h-8 text-blue-600" />
-          <h1 className="text-xl font-bold text-gray-900">Admin Portal</h1>
+      <div>
+        <div>
+          <Shield />
+          <h1>Admin Portal</h1>
         </div>
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          {isMenuOpen ? <X /> : <Menu />}
         </Button>
       </div>
 
-      <div className="flex h-screen">
+      <div>
         {/* Sidebar */}
-        <div className={`${
-          isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 transition-transform duration-200 ease-in-out fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg lg:shadow-none border-r`}>
+        <div lg:translate-x-0 transition-transform duration-200 ease-in-out fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg lg:shadow-none border-r`}>
           
           {/* Desktop Header */}
-          <div className="hidden lg:flex items-center gap-3 p-6 border-b">
-            <Shield className="w-8 h-8 text-blue-600" />
-            <h1 className="text-xl font-bold text-gray-900">Admin Portal</h1>
+          <div>
+            <Shield />
+            <h1>Admin Portal</h1>
           </div>
 
           {/* Navigation */}
-          <nav className="p-4 space-y-2 mt-4 lg:mt-0">
+          <nav>
             {navigationItems.map((item) => {
               const Icon = item.icon;
               return (
                 <Button
                   key={item.href}
                   variant={item.active ? "default" : "ghost"}
-                  className={`w-full justify-start gap-3 ${
-                    item.active 
-                      ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                 `}
                   onClick={() => {
                     router.push(item.href);
                     setIsMenuOpen(false);
                   }}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon />
                   {item.label}
                 </Button>
               );
@@ -193,20 +187,20 @@ export default function AdminLayout({
           </nav>
 
           {/* User Info & Logout */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
-            <Card className="p-3">
-              <div className="text-sm">
-                <div className="font-medium text-gray-900">{adminUser.full_name}</div>
-                <div className="text-gray-500">{adminUser.email}</div>
-                <div className="text-xs text-blue-600 capitalize mt-1">{adminUser.role.replace('_', ' ')}</div>
+          <div>
+            <Card>
+              <div>
+                <div>{adminUser.full_name}</div>
+                <div>{adminUser.email}</div>
+                <div>{adminUser.role.replace('_', ' ')}</div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-full mt-3 text-red-600 hover:text-red-700 hover:bg-red-50"
+               
                 onClick={handleLogout}
               >
-                <LogOut className="w-4 h-4 mr-2" />
+                <LogOut />
                 Logout
               </Button>
             </Card>
@@ -216,15 +210,15 @@ export default function AdminLayout({
         {/* Mobile Overlay */}
         {isMenuOpen && (
           <div 
-            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+           
             onClick={() => setIsMenuOpen(false)}
           />
         )}
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div>
           {/* Page Content */}
-          <main className="flex-1 overflow-y-auto p-6">
+          <main>
             {children}
           </main>
         </div>

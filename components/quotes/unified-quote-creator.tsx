@@ -276,35 +276,35 @@ export function UnifiedQuoteCreator({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div>
       <Card>
         <CardHeader>
           <CardTitle>Create New Quote</CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs value={activeMode} onValueChange={(value) => setActiveMode(value as any)}>
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="manual" className="flex items-center gap-2">
-                <Calculator className="w-4 h-4" />
+            <TabsList>
+              <TabsTrigger value="manual">
+                <Calculator />
                 Manual
               </TabsTrigger>
-              <TabsTrigger value="ai" className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4" />
+              <TabsTrigger value="ai">
+                <MessageSquare />
                 AI Assistant
               </TabsTrigger>
-              <TabsTrigger value="quick" className="flex items-center gap-2">
-                <Zap className="w-4 h-4" />
+              <TabsTrigger value="quick">
+                <Zap />
                 Quick Quote
               </TabsTrigger>
-              <TabsTrigger value="import" className="flex items-center gap-2">
-                <Upload className="w-4 h-4" />
+              <TabsTrigger value="import">
+                <Upload />
                 Import
               </TabsTrigger>
             </TabsList>
 
             {/* Manual Form Mode */}
-            <TabsContent value="manual" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <TabsContent value="manual">
+              <div>
                 <div>
                   <Label htmlFor="customerName">Customer Name *</Label>
                   <Input
@@ -358,7 +358,7 @@ export function UnifiedQuoteCreator({
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
                 <div>
                   <Label htmlFor="wallsSquareFootage">Walls (sq ft) *</Label>
                   <Input
@@ -426,9 +426,9 @@ export function UnifiedQuoteCreator({
                 />
               </div>
 
-              <div className="flex gap-2">
+              <div>
                 <Button onClick={createManualQuote} disabled={isCreating}>
-                  {isCreating && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {isCreating && <Loader2 />}
                   Create Quote
                 </Button>
                 {onCancel && (
@@ -440,34 +440,30 @@ export function UnifiedQuoteCreator({
             </TabsContent>
 
             {/* AI Assistant Mode */}
-            <TabsContent value="ai" className="space-y-4">
-              <div className="border rounded-lg p-4 h-96 overflow-y-auto bg-gray-50">
+            <TabsContent value="ai">
+              <div>
                 {aiSession.messages.length === 0 ? (
-                  <p className="text-gray-500 text-center">
+                  <p>
                     Hi! I'm here to help you create a quote. What project details can you tell me about?
                   </p>
                 ) : (
-                  <div className="space-y-3">
+                  <div>
                     {aiSession.messages.map((msg, index) => (
                       <div
                         key={index}
-                        className={`p-3 rounded-lg ${
-                          msg.role === 'user' 
-                            ? 'bg-blue-100 ml-8' 
-                            : 'bg-white mr-8'
-                        }`}
+                       `}
                       >
-                        <p className="text-sm">{msg.content}</p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p>{msg.content}</p>
+                        <p>
                           {new Date(msg.timestamp).toLocaleTimeString()}
                         </p>
                       </div>
                     ))}
                     {aiSession.isProcessing && (
-                      <div className="bg-white mr-8 p-3 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span className="text-sm text-gray-500">AI is thinking...</span>
+                      <div>
+                        <div>
+                          <Loader2 />
+                          <span>AI is thinking...</span>
                         </div>
                       </div>
                     )}
@@ -475,7 +471,7 @@ export function UnifiedQuoteCreator({
                 )}
               </div>
 
-              <div className="flex gap-2">
+              <div>
                 <Input
                   value={aiSession.currentMessage}
                   onChange={(e) => setAiSession(prev => ({ ...prev, currentMessage: e.target.value }))}
@@ -491,10 +487,10 @@ export function UnifiedQuoteCreator({
                 </Button>
               </div>
 
-              <div className="flex gap-2">
+              <div>
                 <Label htmlFor="aiProvider">AI Provider:</Label>
                 <Select value={aiSession.provider} onValueChange={(value) => setAiSession(prev => ({ ...prev, provider: value as any }))}>
-                  <SelectTrigger className="w-32">
+                  <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -507,12 +503,12 @@ export function UnifiedQuoteCreator({
             </TabsContent>
 
             {/* Quick Quote Mode */}
-            <TabsContent value="quick" className="space-y-4">
-              <p className="text-sm text-gray-600">
+            <TabsContent value="quick">
+              <p>
                 Create a quick estimate using total square footage. Perfect for ballpark quotes.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
                 <div>
                   <Label htmlFor="quickCustomerName">Customer Name *</Label>
                   <Input
@@ -561,15 +557,15 @@ export function UnifiedQuoteCreator({
                 </div>
               </div>
 
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="text-sm text-blue-800">
+              <div>
+                <p>
                   <strong>Estimation:</strong> We'll automatically calculate walls, ceilings, and trim based on your total square footage using industry standards.
                 </p>
               </div>
 
-              <div className="flex gap-2">
+              <div>
                 <Button onClick={createQuickQuote} disabled={isCreating}>
-                  {isCreating && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {isCreating && <Loader2 />}
                   Create Quick Quote
                 </Button>
                 {onCancel && (
@@ -581,9 +577,9 @@ export function UnifiedQuoteCreator({
             </TabsContent>
 
             {/* Import Mode */}
-            <TabsContent value="import" className="space-y-4">
-              <p className="text-gray-600">Import functionality coming soon. You can:</p>
-              <ul className="list-disc pl-6 text-gray-600">
+            <TabsContent value="import">
+              <p>Import functionality coming soon. You can:</p>
+              <ul>
                 <li>Import from CSV files</li>
                 <li>Import from existing estimates</li>
                 <li>Bulk import multiple quotes</li>

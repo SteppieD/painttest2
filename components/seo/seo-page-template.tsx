@@ -95,61 +95,61 @@ export default function SEOPageTemplate({
       )}
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-blue-50 to-white py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section>
+        <div>
+          <div>
             <div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+              <h1>
                 {hero.headline}
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
+              <p>
                 {hero.subheadline}
               </p>
               
               {hero.features && (
-                <div className="space-y-3 mb-8">
+                <div>
                   {hero.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
+                    <div key={index}>
+                      <CheckCircle />
+                      <span>{feature}</span>
                     </div>
                   ))}
                 </div>
               )}
               
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div>
                 <Link href={hero.ctaLink}>
-                  <Button size="lg" className="w-full sm:w-auto">
+                  <Button size="lg">
                     {hero.ctaText}
                   </Button>
                 </Link>
                 <Link href="/demo">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                  <Button size="lg" variant="outline">
                     Watch Demo
                   </Button>
                 </Link>
               </div>
               
               {/* Trust Indicators */}
-              <div className="flex items-center gap-6 mt-8">
-                <div className="flex items-center gap-2">
-                  <div className="flex">
+              <div>
+                <div>
+                  <div>
                     {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                      <Star key={star} />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">4.9/5 (500+ reviews)</span>
+                  <span>4.9/5 (500+ reviews)</span>
                 </div>
               </div>
             </div>
             
             {hero.image && (
-              <div className="relative h-[400px] lg:h-[500px]">
+              <div>
                 <Image
                   src={hero.image}
                   alt={hero.headline}
                   fill
-                  className="object-cover rounded-lg shadow-xl"
+                 
                   priority
                 />
               </div>
@@ -160,26 +160,26 @@ export default function SEOPageTemplate({
 
       {/* Content Sections */}
       {content.sections.map((section, index) => (
-        <section key={index} className={`py-16 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">{section.title}</h2>
+        <section key={index}`}>
+          <div>
+            <div>
+              <h2>{section.title}</h2>
               
               {section.image && (
-                <div className="relative h-[300px] mb-8">
+                <div>
                   <Image
                     src={section.image}
                     alt={section.imageAlt || section.title}
                     fill
-                    className="object-cover rounded-lg"
+                   
                   />
                 </div>
               )}
               
               {typeof section.content === 'string' ? (
-                <div className="prose prose-lg max-w-none text-gray-600">
+                <div>
                   {section.content.split('\n\n').map((paragraph, pIndex) => (
-                    <p key={pIndex} className="mb-4">{paragraph}</p>
+                    <p key={pIndex}>{paragraph}</p>
                   ))}
                 </div>
               ) : (
@@ -187,15 +187,15 @@ export default function SEOPageTemplate({
               )}
               
               {section.features && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                <div>
                   {section.features.map((feature, fIndex) => (
                     <Card key={fIndex}>
                       <CardHeader>
-                        {feature.icon && <div className="mb-2">{feature.icon}</div>}
-                        <CardTitle className="text-lg">{feature.title}</CardTitle>
+                        {feature.icon && <div>{feature.icon}</div>}
+                        <CardTitle>{feature.title}</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-gray-600">{feature.description}</p>
+                        <p>{feature.description}</p>
                       </CardContent>
                     </Card>
                   ))}
@@ -208,30 +208,30 @@ export default function SEOPageTemplate({
 
       {/* Testimonials Section */}
       {testimonials && testimonials.length > 0 && (
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        <section>
+          <div>
+            <div>
+              <h2>
                 What Contractors Say About Us
               </h2>
-              <p className="text-xl text-gray-600">
+              <p>
                 Join thousands of successful painting contractors
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div>
               {testimonials.map((testimonial, index) => (
                 <Card key={index}>
-                  <CardContent className="pt-6">
-                    <div className="flex mb-4">
+                  <CardContent>
+                    <div>
                       {testimonial.rating && [...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} />
                       ))}
                     </div>
-                    <p className="text-gray-600 mb-4">"{testimonial.content}"</p>
-                    <div className="border-t pt-4">
-                      <p className="font-semibold">{testimonial.name}</p>
-                      <p className="text-sm text-gray-500">
+                    <p>"{testimonial.content}"</p>
+                    <div>
+                      <p>{testimonial.name}</p>
+                      <p>
                         {testimonial.role} at {testimonial.company}
                       </p>
                     </div>
@@ -245,16 +245,16 @@ export default function SEOPageTemplate({
 
       {/* CTA Section */}
       {cta && (
-        <section className="py-20 bg-blue-600">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <section>
+          <div>
+            <h2>
               {cta.title}
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            <p>
               {cta.description}
             </p>
             <Link href={cta.buttonLink}>
-              <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">
+              <Button size="lg" variant="secondary">
                 {cta.buttonText}
               </Button>
             </Link>

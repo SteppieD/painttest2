@@ -106,53 +106,53 @@ export default function UsageAnalyticsPage() {
 
   const getDeviceIcon = (device: string) => {
     switch (device) {
-      case 'mobile': return <Smartphone className="w-4 h-4" />;
-      case 'tablet': return <Monitor className="w-4 h-4" />;
-      default: return <Monitor className="w-4 h-4" />;
+      case 'mobile': return <Smartphone />;
+      case 'tablet': return <Monitor />;
+      default: return <Monitor />;
     }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div>
+        <div></div>
       </div>
     );
   }
 
   if (!metrics) {
     return (
-      <div className="min-h-screen p-6">
+      <div>
         <Button onClick={() => router.back()} variant="ghost" size="sm">
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft />
           Back
         </Button>
-        <div className="text-center mt-20">
-          <p className="text-gray-600">No usage data available yet.</p>
+        <div>
+          <p>No usage data available yet.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+      <div>
+        <div>
+          <div>
+            <div>
               <Button onClick={() => router.back()} variant="ghost" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-2" />
+                <ArrowLeft />
                 Back
               </Button>
               <div>
-                <h1 className="text-2xl font-bold">Usage Analytics</h1>
-                <p className="text-gray-600">Monitor user behavior and platform engagement</p>
+                <h1>Usage Analytics</h1>
+                <p>Monitor user behavior and platform engagement</p>
               </div>
             </div>
             
             {/* Timeframe selector */}
-            <div className="flex gap-2">
+            <div>
               <Button
                 variant={timeframe === '7d' ? 'default' : 'outline'}
                 size="sm"
@@ -179,56 +179,56 @@ export default function UsageAnalyticsPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6">
+      <div>
         {/* Key Usage Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div>
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Active Users</CardTitle>
+              <Users />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{metrics.activeUsers}</div>
-              <p className="text-xs text-muted-foreground">
+              <div>{metrics.activeUsers}</div>
+              <p>
                 {metrics.newUsers} new users this period
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Sessions</CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Total Sessions</CardTitle>
+              <Activity />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{metrics.totalSessions}</div>
-              <p className="text-xs text-muted-foreground">
+              <div>{metrics.totalSessions}</div>
+              <p>
                 Avg: {formatDuration(metrics.avgSessionDuration)} per session
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Quotes Created</CardTitle>
-              <MousePointer className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Quotes Created</CardTitle>
+              <MousePointer />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{metrics.quotesCreated}</div>
-              <p className="text-xs text-muted-foreground">
+              <div>{metrics.quotesCreated}</div>
+              <p>
                 {metrics.avgQuotesPerUser.toFixed(1)} per user average
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Avg Session Time</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Avg Session Time</CardTitle>
+              <Clock />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatDuration(metrics.avgSessionDuration)}</div>
-              <p className="text-xs text-muted-foreground">
+              <div>{formatDuration(metrics.avgSessionDuration)}</div>
+              <p>
                 User engagement metric
               </p>
             </CardContent>
@@ -236,101 +236,101 @@ export default function UsageAnalyticsPage() {
         </div>
 
         {/* Feature Usage */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>Feature Usage</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div>
               <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm">Quote Creation</span>
-                  <span className="text-sm font-medium">{metrics.featureUsage.quoteCreation} uses</span>
+                <div>
+                  <span>Quote Creation</span>
+                  <span>{metrics.featureUsage.quoteCreation} uses</span>
                 </div>
-                <Progress value={85} className="h-2" />
+                <Progress value={85} />
               </div>
               <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm">Dashboard</span>
-                  <span className="text-sm font-medium">{metrics.featureUsage.dashboard} views</span>
+                <div>
+                  <span>Dashboard</span>
+                  <span>{metrics.featureUsage.dashboard} views</span>
                 </div>
-                <Progress value={95} className="h-2" />
+                <Progress value={95} />
               </div>
               <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm">Insights</span>
-                  <span className="text-sm font-medium">{metrics.featureUsage.insights} views</span>
+                <div>
+                  <span>Insights</span>
+                  <span>{metrics.featureUsage.insights} views</span>
                 </div>
-                <Progress value={45} className="h-2" />
+                <Progress value={45} />
               </div>
               <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm">Settings</span>
-                  <span className="text-sm font-medium">{metrics.featureUsage.settings} views</span>
+                <div>
+                  <span>Settings</span>
+                  <span>{metrics.featureUsage.settings} views</span>
                 </div>
-                <Progress value={30} className="h-2" />
+                <Progress value={30} />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div>
           {/* Device Breakdown */}
           <Card>
             <CardHeader>
               <CardTitle>Device Usage</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Monitor className="w-4 h-4 text-gray-600" />
-                    <span className="text-sm">Desktop</span>
+              <div>
+                <div>
+                  <div>
+                    <Monitor />
+                    <span>Desktop</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{metrics.deviceBreakdown.desktop}</span>
-                    <span className="text-xs text-gray-500">
+                  <div>
+                    <span>{metrics.deviceBreakdown.desktop}</span>
+                    <span>
                       ({formatPercentage(metrics.deviceBreakdown.desktop, metrics.totalUsers)}%)
                     </span>
                   </div>
                 </div>
                 <Progress 
                   value={parseFloat(formatPercentage(metrics.deviceBreakdown.desktop, metrics.totalUsers))} 
-                  className="h-2"
+                 
                 />
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Smartphone className="w-4 h-4 text-gray-600" />
-                    <span className="text-sm">Mobile</span>
+                <div>
+                  <div>
+                    <Smartphone />
+                    <span>Mobile</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{metrics.deviceBreakdown.mobile}</span>
-                    <span className="text-xs text-gray-500">
+                  <div>
+                    <span>{metrics.deviceBreakdown.mobile}</span>
+                    <span>
                       ({formatPercentage(metrics.deviceBreakdown.mobile, metrics.totalUsers)}%)
                     </span>
                   </div>
                 </div>
                 <Progress 
                   value={parseFloat(formatPercentage(metrics.deviceBreakdown.mobile, metrics.totalUsers))} 
-                  className="h-2"
+                 
                 />
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Monitor className="w-4 h-4 text-gray-600" />
-                    <span className="text-sm">Tablet</span>
+                <div>
+                  <div>
+                    <Monitor />
+                    <span>Tablet</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{metrics.deviceBreakdown.tablet}</span>
-                    <span className="text-xs text-gray-500">
+                  <div>
+                    <span>{metrics.deviceBreakdown.tablet}</span>
+                    <span>
                       ({formatPercentage(metrics.deviceBreakdown.tablet, metrics.totalUsers)}%)
                     </span>
                   </div>
                 </div>
                 <Progress 
                   value={parseFloat(formatPercentage(metrics.deviceBreakdown.tablet, metrics.totalUsers))} 
-                  className="h-2"
+                 
                 />
               </div>
             </CardContent>
@@ -342,16 +342,16 @@ export default function UsageAnalyticsPage() {
               <CardTitle>Browser Usage</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div>
                 {Object.entries(metrics.browserBreakdown).map(([browser, count]) => (
-                  <div key={browser} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-gray-600" />
-                      <span className="text-sm capitalize">{browser}</span>
+                  <div key={browser}>
+                    <div>
+                      <Globe />
+                      <span>{browser}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">{count}</span>
-                      <span className="text-xs text-gray-500">
+                    <div>
+                      <span>{count}</span>
+                      <span>
                         ({formatPercentage(count, metrics.totalUsers)}%)
                       </span>
                     </div>
@@ -363,47 +363,47 @@ export default function UsageAnalyticsPage() {
         </div>
 
         {/* User Engagement */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>User Engagement Levels</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600 mb-1">
+            <div>
+              <div>
+                <div>
                   {metrics.userEngagement.highlyActive}
                 </div>
-                <Badge className="bg-green-100 text-green-800 text-xs">
+                <Badge>
                   Highly Active
                 </Badge>
-                <p className="text-xs text-gray-500 mt-1">5+ quotes/month</p>
+                <p>5+ quotes/month</p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600 mb-1">
+              <div>
+                <div>
                   {metrics.userEngagement.moderatelyActive}
                 </div>
-                <Badge className="bg-blue-100 text-blue-800 text-xs">
+                <Badge>
                   Moderately Active
                 </Badge>
-                <p className="text-xs text-gray-500 mt-1">2-4 quotes/month</p>
+                <p>2-4 quotes/month</p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-600 mb-1">
+              <div>
+                <div>
                   {metrics.userEngagement.lowActivity}
                 </div>
-                <Badge className="bg-yellow-100 text-yellow-800 text-xs">
+                <Badge>
                   Low Activity
                 </Badge>
-                <p className="text-xs text-gray-500 mt-1">1 quote/month</p>
+                <p>1 quote/month</p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-600 mb-1">
+              <div>
+                <div>
                   {metrics.userEngagement.inactive}
                 </div>
-                <Badge className="bg-gray-100 text-gray-800 text-xs">
+                <Badge>
                   Inactive
                 </Badge>
-                <p className="text-xs text-gray-500 mt-1">No activity</p>
+                <p>No activity</p>
               </div>
             </div>
           </CardContent>
@@ -415,33 +415,33 @@ export default function UsageAnalyticsPage() {
             <CardTitle>Daily Activity Trend</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div>
               {metrics.userActivity.slice(-7).map((day, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={index}>
                   <div>
-                    <p className="font-medium">{day.date}</p>
-                    <p className="text-sm text-gray-600">{day.sessions} sessions</p>
+                    <p>{day.date}</p>
+                    <p>{day.sessions} sessions</p>
                   </div>
-                  <div className="text-right">
-                    <div className="flex items-center gap-4">
-                      <div className="text-center">
-                        <p className="text-sm font-medium text-blue-600">{day.activeUsers}</p>
-                        <p className="text-xs text-gray-500">Active</p>
+                  <div>
+                    <div>
+                      <div>
+                        <p>{day.activeUsers}</p>
+                        <p>Active</p>
                       </div>
-                      <div className="text-center">
-                        <p className="text-sm font-medium text-green-600">{day.newUsers}</p>
-                        <p className="text-xs text-gray-500">New</p>
+                      <div>
+                        <p>{day.newUsers}</p>
+                        <p>New</p>
                       </div>
-                      <div className="text-center">
-                        <p className="text-sm font-medium text-purple-600">{day.quotesCreated}</p>
-                        <p className="text-xs text-gray-500">Quotes</p>
+                      <div>
+                        <p>{day.quotesCreated}</p>
+                        <p>Quotes</p>
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
               {metrics.userActivity.length === 0 && (
-                <p className="text-gray-500 text-center py-4">No activity data available</p>
+                <p>No activity data available</p>
               )}
             </div>
           </CardContent>

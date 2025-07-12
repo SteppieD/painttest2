@@ -318,10 +318,10 @@ export default function OperationalExcellenceDashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading operational analytics...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading operational analytics...</p>
         </div>
       </div>
     );
@@ -329,24 +329,24 @@ export default function OperationalExcellenceDashboard() {
 
   if (!metrics) {
     return (
-      <div className="text-center py-12">
-        <p className="text-gray-600">Unable to load operational data</p>
+      <div>
+        <p>Unable to load operational data</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div>
       {/* Header with Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Operational Excellence Dashboard</h1>
-          <p className="text-gray-600">Workflow efficiency and resource optimization insights</p>
+          <h1>Operational Excellence Dashboard</h1>
+          <p>Workflow efficiency and resource optimization insights</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div>
           {/* View Mode Selector */}
-          <div className="flex bg-white rounded-lg border">
+          <div>
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'efficiency', label: 'Efficiency', icon: Zap },
@@ -356,20 +356,16 @@ export default function OperationalExcellenceDashboard() {
               <button
                 key={mode.id}
                 onClick={() => setViewMode(mode.id as any)}
-                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors ${
-                  viewMode === mode.id
-                    ? 'bg-blue-100 text-blue-700 border-blue-200'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
+               `}
               >
-                <mode.icon className="w-4 h-4" />
+                <mode.icon />
                 {mode.label}
               </button>
             ))}
           </div>
 
           {/* Time Range Selector */}
-          <div className="flex bg-white rounded-lg border">
+          <div>
             {[
               { id: 'week', label: 'Week' },
               { id: 'month', label: 'Month' },
@@ -378,11 +374,7 @@ export default function OperationalExcellenceDashboard() {
               <button
                 key={range.id}
                 onClick={() => setTimeRange(range.id as any)}
-                className={`px-3 py-2 text-sm font-medium transition-colors ${
-                  timeRange === range.id
-                    ? 'bg-green-100 text-green-700 border-green-200'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
+               `}
               >
                 {range.label}
               </button>
@@ -390,8 +382,8 @@ export default function OperationalExcellenceDashboard() {
           </div>
 
           {/* Export Button */}
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            <Download className="w-4 h-4" />
+          <button>
+            <Download />
             Export
           </button>
         </div>
@@ -399,26 +391,22 @@ export default function OperationalExcellenceDashboard() {
 
       {/* Operational Alerts */}
       {alerts.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div>
           {alerts.slice(0, 4).map((alert) => (
-            <Card key={alert.id} className={`border-l-4 ${
-              alert.type === 'error' ? 'border-l-red-500 bg-red-50' :
-              alert.type === 'warning' ? 'border-l-yellow-500 bg-yellow-50' :
-              'border-l-blue-500 bg-blue-50'
-            }`}>
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
+            <Card key={alert.id}`}>
+              <CardContent>
+                <div>
                   {alert.type === 'error' ? (
-                    <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5" />
+                    <AlertTriangle />
                   ) : alert.type === 'warning' ? (
-                    <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5" />
+                    <AlertTriangle />
                   ) : (
-                    <CheckCircle className="w-5 h-5 text-blue-600 mt-0.5" />
+                    <CheckCircle />
                   )}
-                  <div className="flex-1">
-                    <h3 className="font-medium text-gray-900 mb-1">{alert.title}</h3>
-                    <p className="text-sm text-gray-600 mb-2">{alert.description}</p>
-                    <p className="text-xs text-gray-500 italic">{alert.action}</p>
+                  <div>
+                    <h3>{alert.title}</h3>
+                    <p>{alert.description}</p>
+                    <p>{alert.action}</p>
                   </div>
                 </div>
               </CardContent>
@@ -428,101 +416,99 @@ export default function OperationalExcellenceDashboard() {
       )}
 
       {/* Key Operational Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-blue-700 flex items-center gap-2">
-              <Clock className="w-4 h-4" />
+      <div>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Clock />
               Avg Response Time
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-blue-800">
+            <div>
+              <div>
                 {metrics.responseTime.average.toFixed(1)}h
               </div>
-              <div className="flex items-center gap-2">
+              <div>
                 {metrics.responseTime.trend < 0 ? (
-                  <ArrowDownRight className="w-4 h-4 text-green-600" />
+                  <ArrowDownRight />
                 ) : (
-                  <ArrowUpRight className="w-4 h-4 text-red-600" />
+                  <ArrowUpRight />
                 )}
-                <span className={`text-sm font-medium ${
-                  metrics.responseTime.trend < 0 ? 'text-green-600' : 'text-red-600'
-                }`}>
+                <span`}>
                   {Math.abs(metrics.responseTime.trend).toFixed(1)}h vs last period
                 </span>
               </div>
-              <div className="text-xs text-blue-600">
+              <div>
                 Target: {metrics.responseTime.target}h
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-green-700 flex items-center gap-2">
-              <Target className="w-4 h-4" />
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Target />
               Conversion Rate
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-green-800">
+            <div>
+              <div>
                 {metrics.conversionRate.current.toFixed(1)}%
               </div>
-              <div className="flex items-center gap-2">
-                <ArrowUpRight className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-green-600">
+              <div>
+                <ArrowUpRight />
+                <span>
                   +{metrics.conversionRate.trend.toFixed(1)}% improvement
                 </span>
               </div>
-              <div className="text-xs text-green-600">
+              <div>
                 Target: {metrics.conversionRate.target}%
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-purple-700 flex items-center gap-2">
-              <Users className="w-4 h-4" />
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Users />
               Resource Efficiency
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-purple-800">
+            <div>
+              <div>
                 {metrics.resourceUtilization.efficiency}%
               </div>
-              <div className="text-sm text-purple-600">
+              <div>
                 Labor: {metrics.resourceUtilization.labor}% • Equipment: {metrics.resourceUtilization.equipment}%
               </div>
-              <div className="text-xs text-purple-600">
+              <div>
                 Overall capacity utilization
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-orange-700 flex items-center gap-2">
-              <Award className="w-4 h-4" />
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Award />
               Quality Score
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-orange-800">
+            <div>
+              <div>
                 {metrics.qualityMetrics.satisfaction.toFixed(1)}/5
               </div>
-              <div className="text-sm text-orange-600">
+              <div>
                 {metrics.qualityMetrics.completionRate}% on-time completion
               </div>
-              <div className="text-xs text-orange-600">
+              <div>
                 {metrics.qualityMetrics.defectRate}% defect rate
               </div>
             </div>
@@ -532,30 +518,30 @@ export default function OperationalExcellenceDashboard() {
 
       {/* Overview Mode */}
       {viewMode === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
           {/* Response Time Distribution */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <Clock />
                 Response Time Distribution
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.responseTime.distribution.map((range, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-gray-700">{range.range}</span>
-                      <div className="text-right">
-                        <span className="text-sm font-semibold">{range.count} quotes</span>
-                        <span className="text-xs text-gray-500 ml-2">({range.percentage}%)</span>
+                  <div key={index}>
+                    <div>
+                      <span>{range.range}</span>
+                      <div>
+                        <span>{range.count} quotes</span>
+                        <span>({range.percentage}%)</span>
                       </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div>
                       <div 
-                        className="bg-blue-600 h-2 rounded-full transition-all"
-                        style={{ width: `${range.percentage}%` }}
+                       
+                       %` }}
                       ></div>
                     </div>
                   </div>
@@ -567,30 +553,26 @@ export default function OperationalExcellenceDashboard() {
           {/* Conversion Funnel */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="w-5 h-5 text-green-600" />
+              <CardTitle>
+                <Target />
                 Conversion Funnel
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.conversionRate.byStage.map((stage, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-gray-700">{stage.stage}</span>
-                      <div className="text-right">
-                        <span className="text-sm font-semibold">{stage.rate}%</span>
-                        <span className="text-xs text-gray-500 ml-2">({stage.volume} leads)</span>
+                  <div key={index}>
+                    <div>
+                      <span>{stage.stage}</span>
+                      <div>
+                        <span>{stage.rate}%</span>
+                        <span>({stage.volume} leads)</span>
                       </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div>
                       <div 
-                        className={`h-3 rounded-full transition-all ${
-                          stage.rate >= 80 ? 'bg-green-500' :
-                          stage.rate >= 60 ? 'bg-yellow-500' :
-                          'bg-red-500'
-                        }`}
-                        style={{ width: `${stage.rate}%` }}
+                       `}
+                       %` }}
                       ></div>
                     </div>
                   </div>
@@ -603,43 +585,39 @@ export default function OperationalExcellenceDashboard() {
 
       {/* Efficiency Mode */}
       {viewMode === 'efficiency' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
           {/* Resource Utilization */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-purple-600" />
+              <CardTitle>
+                <Users />
                 Resource Utilization
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-4 text-center">
+              <div>
+                <div>
                   <div>
-                    <div className="text-2xl font-bold text-purple-800">{metrics.resourceUtilization.labor}%</div>
-                    <div className="text-sm text-gray-600">Labor</div>
+                    <div>{metrics.resourceUtilization.labor}%</div>
+                    <div>Labor</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-blue-800">{metrics.resourceUtilization.equipment}%</div>
-                    <div className="text-sm text-gray-600">Equipment</div>
+                    <div>{metrics.resourceUtilization.equipment}%</div>
+                    <div>Equipment</div>
                   </div>
                 </div>
                 
-                <div className="space-y-3">
-                  <h4 className="font-medium text-gray-900">Resource Bottlenecks:</h4>
+                <div>
+                  <h4>Resource Bottlenecks:</h4>
                   {metrics.resourceUtilization.bottlenecks.map((bottleneck, index) => (
-                    <div key={index} className="p-3 bg-gray-50 rounded-lg">
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="font-medium text-gray-900">{bottleneck.resource}</span>
-                        <span className={`font-bold ${
-                          bottleneck.utilization >= 90 ? 'text-red-600' :
-                          bottleneck.utilization >= 80 ? 'text-yellow-600' :
-                          'text-green-600'
-                        }`}>
+                    <div key={index}>
+                      <div>
+                        <span>{bottleneck.resource}</span>
+                        <span`}>
                           {bottleneck.utilization}%
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600">{bottleneck.impact}</p>
+                      <p>{bottleneck.impact}</p>
                     </div>
                   ))}
                 </div>
@@ -650,34 +628,32 @@ export default function OperationalExcellenceDashboard() {
           {/* Productivity Trends */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-green-600" />
+              <CardTitle>
+                <TrendingUp />
                 Productivity Trends
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.productivity.trends.map((trend, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={index}>
                     <div>
-                      <div className="font-medium text-gray-900">{trend.metric}</div>
-                      <div className="text-lg font-bold text-gray-800">
+                      <div>{trend.metric}</div>
+                      <div>
                         {trend.metric.includes('Revenue') ? formatCurrency(trend.current) : trend.current.toFixed(1)}
                         {trend.metric.includes('%') || trend.metric.includes('Capacity') ? '%' : ''}
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className={`flex items-center gap-1 text-sm font-medium ${
-                        trend.change >= 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
+                    <div>
+                      <div`}>
                         {trend.change >= 0 ? (
-                          <ArrowUpRight className="w-4 h-4" />
+                          <ArrowUpRight />
                         ) : (
-                          <ArrowDownRight className="w-4 h-4" />
+                          <ArrowDownRight />
                         )}
                         {Math.abs(trend.change).toFixed(1)}%
                       </div>
-                      <div className="text-xs text-gray-500">vs last period</div>
+                      <div>vs last period</div>
                     </div>
                   </div>
                 ))}
@@ -691,30 +667,30 @@ export default function OperationalExcellenceDashboard() {
       {viewMode === 'quality' && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Award className="w-5 h-5 text-orange-600" />
+            <CardTitle>
+              <Award />
               Quality Metrics Timeline
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div>
               {metrics.qualityMetrics.timeline.map((period, index) => (
-                <div key={index} className="grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-gray-900">{period.period}</div>
-                    <div className="text-sm text-gray-600">Period</div>
+                <div key={index}>
+                  <div>
+                    <div>{period.period}</div>
+                    <div>Period</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-orange-600">{period.satisfaction.toFixed(1)}/5</div>
-                    <div className="text-sm text-gray-600">Satisfaction</div>
+                  <div>
+                    <div>{period.satisfaction.toFixed(1)}/5</div>
+                    <div>Satisfaction</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-red-600">{period.defects.toFixed(1)}%</div>
-                    <div className="text-sm text-gray-600">Defect Rate</div>
+                  <div>
+                    <div>{period.defects.toFixed(1)}%</div>
+                    <div>Defect Rate</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-green-600">{period.onTime}%</div>
-                    <div className="text-sm text-gray-600">On-Time</div>
+                  <div>
+                    <div>{period.onTime}%</div>
+                    <div>On-Time</div>
                   </div>
                 </div>
               ))}
@@ -725,40 +701,35 @@ export default function OperationalExcellenceDashboard() {
 
       {/* Workflow Mode */}
       {viewMode === 'workflow' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
           {/* Project Workflow Stages */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <Activity />
                 Project Workflow Analysis
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.workflow.stages.map((stage, index) => (
-                  <div key={index} className={`p-4 rounded-lg border-l-4 ${
-                    stage.bottleneck ? 'border-l-red-500 bg-red-50' : 'border-l-blue-500 bg-blue-50'
-                  }`}>
-                    <div className="flex justify-between items-start mb-2">
+                  <div key={index}`}>
+                    <div>
                       <div>
-                        <h3 className="font-medium text-gray-900">{stage.stage}</h3>
+                        <h3>{stage.stage}</h3>
                         {stage.bottleneck && (
-                          <span className="text-xs text-red-600 font-medium">BOTTLENECK DETECTED</span>
+                          <span>BOTTLENECK DETECTED</span>
                         )}
                       </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-gray-800">{stage.avgDuration.toFixed(1)} days</div>
-                        <div className="text-sm text-gray-600">±{stage.variability.toFixed(1)} days</div>
+                      <div>
+                        <div>{stage.avgDuration.toFixed(1)} days</div>
+                        <div>±{stage.variability.toFixed(1)} days</div>
                       </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div>
                       <div 
-                        className={`h-2 rounded-full ${
-                          stage.bottleneck ? 'bg-red-500' : 'bg-blue-500'
-                        }`}
-                        style={{ 
-                          width: `${(stage.avgDuration / Math.max(...metrics.workflow.stages.map(s => s.avgDuration))) * 100}%` 
+                       `}
+                       %` 
                         }}
                       ></div>
                     </div>
@@ -771,51 +742,51 @@ export default function OperationalExcellenceDashboard() {
           {/* Workflow Efficiency Summary */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Settings className="w-5 h-5 text-green-600" />
+              <CardTitle>
+                <Settings />
                 Workflow Efficiency
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-4 text-center">
+              <div>
+                <div>
                   <div>
-                    <div className="text-2xl font-bold text-green-800">{metrics.workflow.avgProjectDuration.toFixed(1)}</div>
-                    <div className="text-sm text-gray-600">Avg Duration (days)</div>
+                    <div>{metrics.workflow.avgProjectDuration.toFixed(1)}</div>
+                    <div>Avg Duration (days)</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-blue-800">{metrics.workflow.onTimeCompletion}%</div>
-                    <div className="text-sm text-gray-600">On-Time Completion</div>
+                    <div>{metrics.workflow.onTimeCompletion}%</div>
+                    <div>On-Time Completion</div>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Schedule Optimization:</span>
-                    <span className="font-semibold">{metrics.workflow.scheduleOptimization}%</span>
+                <div>
+                  <div>
+                    <span>Schedule Optimization:</span>
+                    <span>{metrics.workflow.scheduleOptimization}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div>
                     <div 
-                      className="bg-green-500 h-2 rounded-full"
-                      style={{ width: `${metrics.workflow.scheduleOptimization}%` }}
+                     
+                     %` }}
                     ></div>
                   </div>
 
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Process Efficiency:</span>
-                    <span className="font-semibold">{metrics.workflow.processEfficiency}%</span>
+                  <div>
+                    <span>Process Efficiency:</span>
+                    <span>{metrics.workflow.processEfficiency}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div>
                     <div 
-                      className="bg-blue-500 h-2 rounded-full"
-                      style={{ width: `${metrics.workflow.processEfficiency}%` }}
+                     
+                     %` }}
                     ></div>
                   </div>
                 </div>
 
-                <div className="p-3 bg-green-50 rounded-lg">
-                  <h4 className="font-medium text-green-800 mb-2">Optimization Recommendations:</h4>
-                  <ul className="text-sm text-green-700 space-y-1">
+                <div>
+                  <h4>Optimization Recommendations:</h4>
+                  <ul>
                     <li>• Automate material ordering for prep work</li>
                     <li>• Implement advanced scheduling for painting stage</li>
                     <li>• Standardize touch-up processes</li>

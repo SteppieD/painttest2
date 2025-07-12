@@ -176,10 +176,10 @@ Status: ${quote.status || 'pending'}
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading quote details...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading quote details...</p>
         </div>
       </div>
     );
@@ -187,11 +187,11 @@ Status: ${quote.status || 'pending'}
 
   if (!quote) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="p-8 text-center">
-            <h2 className="text-xl font-semibold mb-2">Quote Not Found</h2>
-            <p className="text-gray-600 mb-4">The quote you're looking for doesn't exist or has been removed.</p>
+      <div>
+        <Card>
+          <CardContent>
+            <h2>Quote Not Found</h2>
+            <p>The quote you're looking for doesn't exist or has been removed.</p>
             <Button onClick={() => router.back()}>Go Back</Button>
           </CardContent>
         </Card>
@@ -206,34 +206,34 @@ Status: ${quote.status || 'pending'}
   const markupPercentage = quote.markup_percentage || 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+      <div>
+        <div>
+          <div>
+            <div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => router.back()}
-                className="shrink-0"
+               
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft />
               </Button>
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
-                <Calculator className="w-6 h-6 text-white" />
+              <div>
+                <Calculator />
               </div>
-              <div className="min-w-0">
-                <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+              <div>
+                <h1>
                   Internal Quote Breakdown
                 </h1>
-                <p className="text-sm text-gray-500">Quote #{quote.quote_id}</p>
+                <p>Quote #{quote.quote_id}</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div>
               <Button variant="outline" size="sm" onClick={copyQuoteData}>
-                <Copy className="w-4 h-4 mr-2" />
+                <Copy />
                 Copy Data
               </Button>
               <Button 
@@ -241,11 +241,11 @@ Status: ${quote.status || 'pending'}
                 size="sm" 
                 onClick={() => window.open(`/quotes/${quote.id}/customer`, '_blank')}
               >
-                <Eye className="w-4 h-4 mr-2" />
+                <Eye />
                 Customer View
               </Button>
               <Button variant="outline" size="sm" onClick={() => window.print()}>
-                <Printer className="w-4 h-4 mr-2" />
+                <Printer />
                 Print
               </Button>
             </div>
@@ -253,33 +253,33 @@ Status: ${quote.status || 'pending'}
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto p-4 py-8">
+      <div>
         {/* Quote Overview */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div>
           {/* Customer Info */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <Users />
                 Customer Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent>
               <div>
-                <div className="font-medium text-lg">{quote.customer_name}</div>
-                <div className="text-sm text-gray-600">{quote.address}</div>
+                <div>{quote.customer_name}</div>
+                <div>{quote.address}</div>
               </div>
               {quote.customer_email && (
-                <div className="text-sm text-gray-600">
+                <div>
                   <strong>Email:</strong> {quote.customer_email}
                 </div>
               )}
               {quote.customer_phone && (
-                <div className="text-sm text-gray-600">
+                <div>
                   <strong>Phone:</strong> {quote.customer_phone}
                 </div>
               )}
-              <div className="pt-2">
+              <div>
                 <Badge variant={quote.status === 'accepted' ? 'default' : 'secondary'}>
                   {quote.status || 'Pending'}
                 </Badge>
@@ -290,43 +290,43 @@ Status: ${quote.status || 'pending'}
           {/* Project Details */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Home className="w-5 h-5 text-green-600" />
+              <CardTitle>
+                <Home />
                 Project Scope
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent>
               <div>
-                <div className="font-medium capitalize">{quote.project_type} Painting</div>
-                <div className="text-sm text-gray-600">Created: {formatDate(quote.created_at)}</div>
+                <div>{quote.project_type} Painting</div>
+                <div>Created: {formatDate(quote.created_at)}</div>
               </div>
-              <div className="space-y-2">
+              <div>
                 {quote.walls_sqft && quote.walls_sqft > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div>
                     <span>Walls:</span>
                     <span>{quote.walls_sqft.toLocaleString()} sq ft</span>
                   </div>
                 )}
                 {quote.ceilings_sqft && quote.ceilings_sqft > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div>
                     <span>Ceilings:</span>
                     <span>{quote.ceilings_sqft.toLocaleString()} sq ft</span>
                   </div>
                 )}
                 {quote.trim_sqft && quote.trim_sqft > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div>
                     <span>Trim:</span>
                     <span>{quote.trim_sqft.toLocaleString()} sq ft</span>
                   </div>
                 )}
                 {quote.number_of_doors && quote.number_of_doors > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div>
                     <span>Doors:</span>
                     <span>{quote.number_of_doors}</span>
                   </div>
                 )}
                 {quote.number_of_windows && quote.number_of_windows > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div>
                     <span>Windows:</span>
                     <span>{quote.number_of_windows}</span>
                   </div>
@@ -338,33 +338,33 @@ Status: ${quote.status || 'pending'}
           {/* Financial Overview */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <DollarSign className="w-5 h-5 text-green-600" />
+              <CardTitle>
+                <DollarSign />
                 Financial Summary
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
+            <CardContent>
+              <div>
+                <div>
                   <span>Materials:</span>
                   <span>{formatCurrency(materials)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
+                <div>
                   <span>Labor:</span>
                   <span>{formatCurrency(labor)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
+                <div>
                   <span>Subtotal:</span>
                   <span>{formatCurrency(materials + labor)}</span>
                 </div>
-                <div className="flex justify-between text-sm text-green-600">
+                <div>
                   <span>Markup ({markupPercentage}%):</span>
                   <span>{formatCurrency(markupAmount)}</span>
                 </div>
                 <Separator />
-                <div className="flex justify-between text-lg font-bold">
+                <div>
                   <span>Total Quote:</span>
-                  <span className="text-green-600">{formatCurrency(finalPrice)}</span>
+                  <span>{formatCurrency(finalPrice)}</span>
                 </div>
               </div>
             </CardContent>
@@ -372,62 +372,62 @@ Status: ${quote.status || 'pending'}
         </div>
 
         {/* Detailed Cost Breakdown */}
-        <Card className="mb-6">
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calculator className="w-5 h-5 text-blue-600" />
+            <CardTitle>
+              <Calculator />
               Detailed Cost Analysis
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="space-y-3">
-                <h4 className="font-semibold text-gray-900">Materials Cost</h4>
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-blue-600">{formatCurrency(materials)}</div>
-                  <div className="text-sm text-gray-600">
+            <div>
+              <div>
+                <h4>Materials Cost</h4>
+                <div>
+                  <div>{formatCurrency(materials)}</div>
+                  <div>
                     Paint, primer, supplies
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div>
                     {materials > 0 ? `${((materials / finalPrice) * 100).toFixed(1)}% of total` : 'N/A'}
                   </div>
                 </div>
               </div>
               
-              <div className="space-y-3">
-                <h4 className="font-semibold text-gray-900">Labor Cost</h4>
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-orange-600">{formatCurrency(labor)}</div>
-                  <div className="text-sm text-gray-600">
+              <div>
+                <h4>Labor Cost</h4>
+                <div>
+                  <div>{formatCurrency(labor)}</div>
+                  <div>
                     Prep work, painting, cleanup
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div>
                     {labor > 0 ? `${((labor / finalPrice) * 100).toFixed(1)}% of total` : 'N/A'}
                   </div>
                 </div>
               </div>
               
-              <div className="space-y-3">
-                <h4 className="font-semibold text-gray-900">Your Profit</h4>
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-green-600">{formatCurrency(markupAmount)}</div>
-                  <div className="text-sm text-gray-600">
+              <div>
+                <h4>Your Profit</h4>
+                <div>
+                  <div>{formatCurrency(markupAmount)}</div>
+                  <div>
                     {markupPercentage}% markup
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div>
                     {markupAmount > 0 ? `${((markupAmount / finalPrice) * 100).toFixed(1)}% of total` : 'N/A'}
                   </div>
                 </div>
               </div>
               
-              <div className="space-y-3">
-                <h4 className="font-semibold text-gray-900">Customer Pays</h4>
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-purple-600">{formatCurrency(finalPrice)}</div>
-                  <div className="text-sm text-gray-600">
+              <div>
+                <h4>Customer Pays</h4>
+                <div>
+                  <div>{formatCurrency(finalPrice)}</div>
+                  <div>
                     Total invoice amount
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div>
                     Final quoted price
                   </div>
                 </div>
@@ -438,43 +438,43 @@ Status: ${quote.status || 'pending'}
 
         {/* Room Breakdown - Only show if rooms exist */}
         {rooms.length > 0 && (
-          <Card className="mb-6">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Home className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <Home />
                 Room-by-Room Breakdown ({rooms.length} rooms)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
                 {rooms.map((room, index) => (
-                  <div key={room.id || index} className="p-4 bg-gray-50 rounded-lg border">
-                    <h4 className="font-medium text-gray-900 mb-3">{room.name}</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Dimensions:</span>
-                        <span className="font-medium">{room.length}' × {room.width}' × {room.height}'</span>
+                  <div key={room.id || index}>
+                    <h4>{room.name}</h4>
+                    <div>
+                      <div>
+                        <span>Dimensions:</span>
+                        <span>{room.length}' × {room.width}' × {room.height}'</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Floor Area:</span>
-                        <span className="font-medium">{(room.length * room.width).toFixed(1)} sq ft</span>
+                      <div>
+                        <span>Floor Area:</span>
+                        <span>{(room.length * room.width).toFixed(1)} sq ft</span>
                       </div>
                       {room.ceiling_area > 0 && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Ceiling Area:</span>
-                          <span className="font-medium">{room.ceiling_area} sq ft</span>
+                        <div>
+                          <span>Ceiling Area:</span>
+                          <span>{room.ceiling_area} sq ft</span>
                         </div>
                       )}
                       {room.wall_area > 0 && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Wall Area:</span>
-                          <span className="font-medium">{room.wall_area} sq ft</span>
+                        <div>
+                          <span>Wall Area:</span>
+                          <span>{room.wall_area} sq ft</span>
                         </div>
                       )}
                       {(room.number_of_doors > 0 || room.number_of_windows > 0) && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Features:</span>
-                          <span className="font-medium">
+                        <div>
+                          <span>Features:</span>
+                          <span>
                             {room.number_of_doors > 0 ? `${room.number_of_doors} doors` : ''}
                             {room.number_of_doors > 0 && room.number_of_windows > 0 ? ', ' : ''}
                             {room.number_of_windows > 0 ? `${room.number_of_windows} windows` : ''}
@@ -491,24 +491,24 @@ Status: ${quote.status || 'pending'}
 
         {/* Additional Notes */}
         {(quote.prep_work || quote.special_requests) && (
-          <Card className="mb-6">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <FileText />
                 Additional Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
               {quote.prep_work && (
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Prep Work Required</h4>
-                  <p className="text-gray-600">{quote.prep_work}</p>
+                  <h4>Prep Work Required</h4>
+                  <p>{quote.prep_work}</p>
                 </div>
               )}
               {quote.special_requests && (
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Special Requests</h4>
-                  <p className="text-gray-600">{quote.special_requests}</p>
+                  <h4>Special Requests</h4>
+                  <p>{quote.special_requests}</p>
                 </div>
               )}
             </CardContent>
@@ -516,21 +516,21 @@ Status: ${quote.status || 'pending'}
         )}
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
           <Button
             onClick={() => router.push(`/quotes/${quote.id}/edit`)}
-            className="flex items-center justify-center gap-2"
+           
           >
-            <Edit3 className="w-4 h-4" />
+            <Edit3 />
             Edit Quote
           </Button>
           
           <Button
             variant="outline"
             onClick={() => window.open(`/quotes/${quote.id}/customer`, '_blank')}
-            className="flex items-center justify-center gap-2"
+           
           >
-            <Eye className="w-4 h-4" />
+            <Eye />
             Customer View
           </Button>
           
@@ -544,9 +544,9 @@ Status: ${quote.status || 'pending'}
                 description: "Customer quote link copied to clipboard",
               });
             }}
-            className="flex items-center justify-center gap-2"
+           
           >
-            <Share className="w-4 h-4" />
+            <Share />
             Share Customer Link
           </Button>
         </div>

@@ -108,8 +108,8 @@ export default function CustomersPage() {
     const Icon = badge.icon;
 
     return (
-      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${badge.color}`}>
-        <Icon className="w-3 h-3" />
+      <span`}>
+        <Icon />
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </span>
     );
@@ -123,15 +123,15 @@ export default function CustomersPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Customers</h1>
-          <p className="text-gray-600 mt-2">Manage your customer accounts</p>
+          <h1>Customers</h1>
+          <p>Manage your customer accounts</p>
         </div>
         <Card>
-          <CardContent className="p-12 text-center">
-            <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto"></div>
-            <p className="text-gray-500 mt-4">Loading customers...</p>
+          <CardContent>
+            <div></div>
+            <p>Loading customers...</p>
           </CardContent>
         </Card>
       </div>
@@ -139,27 +139,27 @@ export default function CustomersPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Customers</h1>
-        <p className="text-gray-600 mt-2">Manage your customer accounts</p>
+        <h1>Customers</h1>
+        <p>Manage your customer accounts</p>
       </div>
 
       {/* Filters */}
       <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row gap-4">
+        <CardContent>
+          <div>
             {/* Search */}
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <div>
+              <div>
+                <Search />
                 <input
                   type="text"
                   placeholder="Search by name, email, or access code..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                 
                 />
               </div>
             </div>
@@ -168,7 +168,7 @@ export default function CustomersPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+             
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -178,9 +178,9 @@ export default function CustomersPage() {
             </select>
 
             {/* Summary Stats */}
-            <div className="flex items-center gap-4 text-sm text-gray-600">
+            <div>
               <span>{filteredCustomers.length} customers</span>
-              <span className="text-gray-400">•</span>
+              <span>•</span>
               <span>{filteredCustomers.filter(c => c.status === 'active').length} active</span>
             </div>
           </div>
@@ -189,54 +189,54 @@ export default function CustomersPage() {
 
       {/* Customer List */}
       <Card>
-        <CardContent className="p-0">
+        <CardContent>
           {filteredCustomers.length > 0 ? (
             <ResponsiveTable
               headers={['Company', 'Access Code', 'Status', 'Quotes', 'Revenue', 'Joined', '']}
               rows={filteredCustomers.map((customer, customerIndex) => [
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gray-100 rounded-lg">
-                    <Building className="w-5 h-5 text-gray-600" />
+                <div>
+                  <div>
+                    <Building />
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900">{customer.name}</div>
-                    <div className="text-sm text-gray-500">{customer.email}</div>
+                    <div>{customer.name}</div>
+                    <div>{customer.email}</div>
                   </div>
                 </div>,
-                <code className="text-sm bg-gray-100 px-2 py-1 rounded">
+                <code>
                   {customer.access_code}
                 </code>,
                 getStatusBadge(customer.status),
-                <div className="flex items-center gap-1">
-                  <FileText className="w-4 h-4 text-gray-400" />
+                <div>
+                  <FileText />
                   <span>{customer.quote_count}</span>
                 </div>,
-                <span className="font-medium">
+                <span>
                   {formatCurrency(customer.total_revenue)}
                 </span>,
-                <span className="text-sm text-gray-500">
+                <span>
                   {formatDate(customer.created_at)}
                 </span>,
-                <div className="flex items-center gap-2">
+                <div>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       router.push(`/admin/customers/${customer.id}`);
                     }}
-                    className="p-1 hover:bg-gray-100 rounded"
+                   
                     title="View Details"
                   >
-                    <Eye className="w-4 h-4 text-gray-600" />
+                    <Eye />
                   </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       // TODO: Implement actions menu
                     }}
-                    className="p-1 hover:bg-gray-100 rounded"
+                   
                     title="More Actions"
                   >
-                    <MoreVertical className="w-4 h-4 text-gray-600" />
+                    <MoreVertical />
                   </button>
                 </div>
               ])}
@@ -248,59 +248,59 @@ export default function CustomersPage() {
                 return (
                   <div 
                     key={customer.id}
-                    className="bg-white p-6 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
+                   
                     onClick={() => router.push(`/admin/customers/${customer.id}`)}
                   >
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-gray-100 rounded-lg">
-                          <Building className="w-5 h-5 text-gray-600" />
+                    <div>
+                      <div>
+                        <div>
+                          <Building />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900">{customer.name}</div>
-                          <div className="text-sm text-gray-500">{customer.email}</div>
+                          <div>{customer.name}</div>
+                          <div>{customer.email}</div>
                         </div>
                       </div>
                       {getStatusBadge(customer.status)}
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
                       <div>
-                        <p className="text-sm text-gray-500">Access Code</p>
-                        <code className="text-sm bg-gray-100 px-2 py-1 rounded">
+                        <p>Access Code</p>
+                        <code>
                           {customer.access_code}
                         </code>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Quotes</p>
-                        <div className="flex items-center gap-1">
-                          <FileText className="w-4 h-4 text-gray-400" />
+                        <p>Quotes</p>
+                        <div>
+                          <FileText />
                           <span>{customer.quote_count}</span>
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Revenue</p>
-                        <span className="font-medium">
+                        <p>Revenue</p>
+                        <span>
                           {formatCurrency(customer.total_revenue)}
                         </span>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Joined</p>
-                        <span className="text-sm">
+                        <p>Joined</p>
+                        <span>
                           {formatDate(customer.created_at)}
                         </span>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
+                    <div>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           router.push(`/admin/customers/${customer.id}`);
                         }}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100"
+                       
                       >
-                        <Eye className="w-4 h-4" />
+                        <Eye />
                         View Details
                       </button>
                       <button
@@ -308,10 +308,10 @@ export default function CustomersPage() {
                           e.stopPropagation();
                           // TODO: Implement actions menu
                         }}
-                        className="p-2 hover:bg-gray-100 rounded"
+                       
                         title="More Actions"
                       >
-                        <MoreVertical className="w-4 h-4 text-gray-600" />
+                        <MoreVertical />
                       </button>
                     </div>
                   </div>
@@ -319,10 +319,10 @@ export default function CustomersPage() {
               }}
             />
           ) : (
-            <div className="text-center py-12">
-              <Building className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">No customers found</p>
-              <p className="text-sm text-gray-400 mt-1">
+            <div>
+              <Building />
+              <p>No customers found</p>
+              <p>
                 {searchTerm || statusFilter !== "all" 
                   ? "Try adjusting your filters" 
                   : "Your first customer will appear here"}

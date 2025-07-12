@@ -278,11 +278,7 @@ export default function TestUsersPage() {
   };
 
   const getStatusBadge = (status: string) => {
-    const variants = {
-      active: "bg-green-100 text-green-800",
-      expired: "bg-red-100 text-red-800",
-      disabled: "bg-gray-100 text-gray-800"
-    };
+    const;
     return variants[status as keyof typeof variants] || variants.active;
   };
 
@@ -303,64 +299,60 @@ export default function TestUsersPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div>
+        <div></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+      <div>
+        <div>
+          <div>
+            <div>
               <Button variant="ghost" size="sm" onClick={() => router.back()}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
+                <ArrowLeft />
                 Back
               </Button>
               <div>
-                <h1 className="text-2xl font-bold">Test User Management</h1>
-                <p className="text-gray-600">Create and manage test users for demos, QA, and development</p>
+                <h1>Test User Management</h1>
+                <p>Create and manage test users for demos, QA, and development</p>
               </div>
             </div>
             
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
                 <Button>
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus />
                   Create Test User
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Create New Test User</DialogTitle>
                   <DialogDescription>
                     Create a test user for demonstrations, QA testing, or development purposes.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="space-y-6">
+                <div>
                   {/* Test User Type Selection */}
                   <div>
-                    <Label className="text-base font-medium">Test User Type</Label>
-                    <div className="grid grid-cols-2 gap-3 mt-2">
+                    <Label>Test User Type</Label>
+                    <div>
                       {TEST_USER_TYPES.map((type) => (
                         <div
                           key={type.id}
-                          className={`p-3 border-2 rounded-lg cursor-pointer transition-all ${
-                            newTestUser.test_type === type.id
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
+                         `}
                           onClick={() => handleTestTypeChange(type.id)}
                         >
-                          <div className="flex items-center gap-2 mb-1">
-                            <TestTube className="w-4 h-4" />
-                            <span className="font-medium">{type.name}</span>
+                          <div>
+                            <TestTube />
+                            <span>{type.name}</span>
                           </div>
-                          <p className="text-xs text-gray-600">{type.description}</p>
-                          <p className="text-xs text-blue-600 mt-1">
+                          <p>{type.description}</p>
+                          <p>
                             {type.defaultQuotes} quotes • {type.defaultPlan} plan
                           </p>
                         </div>
@@ -371,7 +363,7 @@ export default function TestUsersPage() {
                   <Separator />
 
                   {/* Basic Information */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div>
                     <div>
                       <Label htmlFor="companyName">Company Name *</Label>
                       <Input
@@ -392,7 +384,7 @@ export default function TestUsersPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div>
                     <div>
                       <Label htmlFor="quotesAllowed">Quotes Allowed</Label>
                       <Input
@@ -439,79 +431,79 @@ export default function TestUsersPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6">
+      <div>
         {/* Stats Overview */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
+          <div>
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Test Users</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
+              <CardHeader>
+                <CardTitle>Total Test Users</CardTitle>
+                <Users />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats.total_test_users}</div>
+                <div>{stats.total_test_users}</div>
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Demo Users</CardTitle>
-                <TestTube className="h-4 w-4 text-blue-600" />
+              <CardHeader>
+                <CardTitle>Demo Users</CardTitle>
+                <TestTube />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-blue-600">{stats.demo_users}</div>
+                <div>{stats.demo_users}</div>
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">QA Testing</CardTitle>
-                <TestTube className="h-4 w-4 text-green-600" />
+              <CardHeader>
+                <CardTitle>QA Testing</CardTitle>
+                <TestTube />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-green-600">{stats.qa_users}</div>
+                <div>{stats.qa_users}</div>
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Support Users</CardTitle>
-                <TestTube className="h-4 w-4 text-purple-600" />
+              <CardHeader>
+                <CardTitle>Support Users</CardTitle>
+                <TestTube />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-purple-600">{stats.support_users}</div>
+                <div>{stats.support_users}</div>
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Developer Users</CardTitle>
-                <TestTube className="h-4 w-4 text-orange-600" />
+              <CardHeader>
+                <CardTitle>Developer Users</CardTitle>
+                <TestTube />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-orange-600">{stats.developer_users}</div>
+                <div>{stats.developer_users}</div>
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Test Quotes</CardTitle>
-                <TestTube className="h-4 w-4 text-gray-600" />
+              <CardHeader>
+                <CardTitle>Test Quotes</CardTitle>
+                <TestTube />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-600">{stats.total_test_quotes}</div>
+                <div>{stats.total_test_quotes}</div>
               </CardContent>
             </Card>
           </div>
         )}
 
         {/* Filters */}
-        <Card className="mb-6">
-          <CardContent className="p-6">
-            <div className="flex gap-4 items-center">
-              <div className="flex-1">
+        <Card>
+          <CardContent>
+            <div>
+              <div>
                 <Input
                   placeholder="Search by company name or access code..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <div className="flex gap-2">
+              <div>
                 <Button
                   variant={filterType === 'all' ? 'default' : 'outline'}
                   size="sm"
@@ -540,64 +532,64 @@ export default function TestUsersPage() {
             <CardTitle>Test Users ({filteredTestUsers.length})</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div>
               {filteredTestUsers.map((user) => {
                 const typeInfo = getTypeInfo(user.test_type);
                 return (
-                  <div key={user.id} className="border rounded-lg p-4 hover:bg-gray-50">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <code className="font-mono text-lg font-bold bg-gray-100 px-2 py-1 rounded">
+                  <div key={user.id}>
+                    <div>
+                      <div>
+                        <div>
+                          <code>
                             {user.access_code}
                           </code>
-                          <Badge className={typeInfo.color}>
+                          <Badge>
                             {typeInfo.name}
                           </Badge>
-                          <Badge className={getStatusBadge(user.status)}>
+                          <Badge>
                             {user.status}
                           </Badge>
-                          <span className="font-medium">{user.company_name}</span>
+                          <span>{user.company_name}</span>
                         </div>
                         
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
+                        <div>
                           <div>
-                            <span className="font-medium">Created:</span> {formatDate(user.created_at)}
+                            <span>Created:</span> {formatDate(user.created_at)}
                           </div>
                           <div>
-                            <span className="font-medium">Quotes:</span> {user.quotes_used} / {user.quotes_allowed}
+                            <span>Quotes:</span> {user.quotes_used} / {user.quotes_allowed}
                           </div>
                           <div>
-                            <span className="font-medium">Plan:</span> {user.subscription_plan}
+                            <span>Plan:</span> {user.subscription_plan}
                           </div>
                           {user.expires_at && (
                             <div>
-                              <span className="font-medium">Expires:</span> {formatDate(user.expires_at)}
+                              <span>Expires:</span> {formatDate(user.expires_at)}
                             </div>
                           )}
                         </div>
                         
                         {user.description && (
-                          <p className="text-sm text-gray-600 mt-2">{user.description}</p>
+                          <p>{user.description}</p>
                         )}
                       </div>
                       
-                      <div className="flex items-center gap-2">
+                      <div>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => resetTestUser(user.id, user.company_name)}
                         >
-                          <Settings className="w-4 h-4 mr-1" />
+                          <Settings />
                           Reset
                         </Button>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleDeleteTestUser(user.id, user.company_name)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                         
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 />
                         </Button>
                       </div>
                     </div>
@@ -606,10 +598,10 @@ export default function TestUsersPage() {
               })}
               
               {filteredTestUsers.length === 0 && (
-                <div className="text-center py-12">
-                  <TestTube className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No test users found</h3>
-                  <p className="text-gray-600 mb-4">
+                <div>
+                  <TestTube />
+                  <h3>No test users found</h3>
+                  <p>
                     {searchTerm || filterType !== 'all' 
                       ? 'Try adjusting your search or filter criteria.'
                       : 'Create your first test user to get started.'
@@ -617,7 +609,7 @@ export default function TestUsersPage() {
                   </p>
                   {!searchTerm && filterType === 'all' && (
                     <Button onClick={() => setIsCreateDialogOpen(true)}>
-                      <Plus className="w-4 h-4 mr-2" />
+                      <Plus />
                       Create Test User
                     </Button>
                   )}

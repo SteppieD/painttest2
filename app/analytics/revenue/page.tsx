@@ -306,10 +306,10 @@ export default function RevenueAnalytics() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading revenue analytics...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading revenue analytics...</p>
         </div>
       </div>
     );
@@ -317,24 +317,24 @@ export default function RevenueAnalytics() {
 
   if (!metrics) {
     return (
-      <div className="text-center py-12">
-        <p className="text-gray-600">Unable to load revenue data</p>
+      <div>
+        <p>Unable to load revenue data</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div>
       {/* Header with Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Revenue Analytics Laboratory</h1>
-          <p className="text-gray-600">Deep revenue insights and forecasting</p>
+          <h1>Revenue Analytics Laboratory</h1>
+          <p>Deep revenue insights and forecasting</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div>
           {/* View Mode Selector */}
-          <div className="flex bg-white rounded-lg border">
+          <div>
             {[
               { id: 'overview', label: 'Overview' },
               { id: 'trends', label: 'Trends' },
@@ -344,11 +344,7 @@ export default function RevenueAnalytics() {
               <button
                 key={mode.id}
                 onClick={() => setViewMode(mode.id as any)}
-                className={`px-3 py-2 text-sm font-medium transition-colors ${
-                  viewMode === mode.id
-                    ? 'bg-blue-100 text-blue-700 border-blue-200'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
+               `}
               >
                 {mode.label}
               </button>
@@ -356,7 +352,7 @@ export default function RevenueAnalytics() {
           </div>
 
           {/* Time Range Selector */}
-          <div className="flex bg-white rounded-lg border">
+          <div>
             {[
               { id: 'month', label: 'Month' },
               { id: 'quarter', label: 'Quarter' },
@@ -365,11 +361,7 @@ export default function RevenueAnalytics() {
               <button
                 key={range.id}
                 onClick={() => setTimeRange(range.id as any)}
-                className={`px-3 py-2 text-sm font-medium transition-colors ${
-                  timeRange === range.id
-                    ? 'bg-green-100 text-green-700 border-green-200'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
+               `}
               >
                 {range.label}
               </button>
@@ -377,8 +369,8 @@ export default function RevenueAnalytics() {
           </div>
 
           {/* Export Button */}
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            <Download className="w-4 h-4" />
+          <button>
+            <Download />
             Export
           </button>
         </div>
@@ -388,98 +380,96 @@ export default function RevenueAnalytics() {
       {viewMode === 'overview' && (
         <>
           {/* Key Revenue Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-green-700 flex items-center gap-2">
-                  <DollarSign className="w-4 h-4" />
+          <div>
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  <DollarSign />
                   Current {timeRange} Revenue
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-green-800">
+                <div>
+                  <div>
                     {formatCurrency(metrics.currentPeriod.total)}
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div>
                     {metrics.currentPeriod.growth >= 0 ? (
-                      <ArrowUpRight className="w-4 h-4 text-green-600" />
+                      <ArrowUpRight />
                     ) : (
-                      <ArrowDownRight className="w-4 h-4 text-red-600" />
+                      <ArrowDownRight />
                     )}
-                    <span className={`text-sm font-medium ${
-                      metrics.currentPeriod.growth >= 0 ? 'text-green-600' : 'text-red-600'
-                    }`}>
+                    <span`}>
                       {Math.abs(metrics.currentPeriod.growth).toFixed(1)}% vs last {timeRange}
                     </span>
                   </div>
-                  <div className="text-xs text-green-600">
+                  <div>
                     Target: {formatCurrency(metrics.currentPeriod.target)}
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-blue-700 flex items-center gap-2">
-                  <Target className="w-4 h-4" />
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  <Target />
                   Projected Revenue
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-blue-800">
+                <div>
+                  <div>
                     {formatCurrency(metrics.currentPeriod.projected)}
                   </div>
-                  <div className="text-sm text-blue-600">
+                  <div>
                     End of {timeRange}
                   </div>
-                  <div className="text-xs text-blue-600">
+                  <div>
                     {((metrics.currentPeriod.projected / metrics.currentPeriod.target) * 100).toFixed(0)}% of target
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-purple-700 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4" />
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  <TrendingUp />
                   Next Month Forecast
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-purple-800">
+                <div>
+                  <div>
                     {formatCurrency(metrics.forecasting.nextMonth)}
                   </div>
-                  <div className="text-sm text-purple-600">
+                  <div>
                     {metrics.forecasting.confidence}% confidence
                   </div>
-                  <div className="text-xs text-purple-600">
+                  <div>
                     Based on trends & pipeline
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-orange-700 flex items-center gap-2">
-                  <Zap className="w-4 h-4" />
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  <Zap />
                   Growth Opportunity
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-orange-800">
+                <div>
+                  <div>
                     {formatCurrency(metrics.opportunities.reduce((sum, opp) => sum + (opp.potential * opp.probability / 100), 0))}
                   </div>
-                  <div className="text-sm text-orange-600">
+                  <div>
                     Weighted potential
                   </div>
-                  <div className="text-xs text-orange-600">
+                  <div>
                     {metrics.opportunities.length} opportunities
                   </div>
                 </div>
@@ -488,12 +478,12 @@ export default function RevenueAnalytics() {
           </div>
 
           {/* Revenue Breakdown */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
             {/* Project Type Breakdown */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <PieChart className="w-5 h-5 text-blue-600" />
+                <CardTitle>
+                  <PieChart />
                   Revenue by Project Type
                 </CardTitle>
               </CardHeader>
@@ -505,7 +495,7 @@ export default function RevenueAnalytics() {
                     { name: 'Maintenance', value: metrics.breakdown.maintenance, color: CHART_COLORS.warning[0] },
                     { name: 'New Construction', value: metrics.breakdown.newConstruction, color: CHART_COLORS.purple[0] }
                   ]}
-                  height={320}
+                 
                   showLegend={true}
                   showLabels={true}
                   formatValue={formatChartCurrency}
@@ -516,8 +506,8 @@ export default function RevenueAnalytics() {
             {/* Customer Segments */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-purple-600" />
+                <CardTitle>
+                  <BarChart3 />
                   Customer Segments
                 </CardTitle>
               </CardHeader>
@@ -531,19 +521,19 @@ export default function RevenueAnalytics() {
                   bars={[
                     { key: 'revenue', color: CHART_COLORS.purple[0], label: 'Revenue' }
                   ]}
-                  height={320}
+                 
                   showLegend={false}
                   formatValue={formatChartCurrency}
                 />
                 
                 {/* Customer Segment Details */}
-                <div className="mt-4 space-y-2">
+                <div>
                   {customerSegments.map((segment, index) => (
-                    <div key={index} className="flex items-center justify-between text-sm">
-                      <span className="font-medium text-gray-700">{segment.name}</span>
-                      <div className="text-right">
-                        <span className="text-green-600">+{segment.growth}%</span>
-                        <span className="text-gray-500 ml-2">({segment.count} customers)</span>
+                    <div key={index}>
+                      <span>{segment.name}</span>
+                      <div>
+                        <span>+{segment.growth}%</span>
+                        <span>({segment.count} customers)</span>
                       </div>
                     </div>
                   ))}
@@ -558,8 +548,8 @@ export default function RevenueAnalytics() {
       {(viewMode === 'overview' || viewMode === 'trends') && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-green-600" />
+            <CardTitle>
+              <Calendar />
               Revenue Timeline (Last 6 Months)
             </CardTitle>
           </CardHeader>
@@ -575,7 +565,7 @@ export default function RevenueAnalytics() {
                 { key: 'revenue', color: CHART_COLORS.success[0], label: 'Revenue' },
                 { key: 'quotes', color: CHART_COLORS.primary[0], label: 'Quotes (x100)' }
               ]}
-              height={350}
+             
               showLegend={true}
               formatValue={(value) => {
                 return formatChartCurrency(value);
@@ -583,24 +573,24 @@ export default function RevenueAnalytics() {
             />
             
             {/* Timeline Summary */}
-            <div className="mt-4 grid grid-cols-3 gap-4 text-center">
-              <div className="p-3 bg-green-50 rounded-lg">
-                <div className="text-lg font-bold text-green-800">
+            <div>
+              <div>
+                <div>
                   {formatCurrency(metrics.timeline.reduce((sum, p) => sum + p.revenue, 0))}
                 </div>
-                <div className="text-sm text-green-600">Total Revenue</div>
+                <div>Total Revenue</div>
               </div>
-              <div className="p-3 bg-blue-50 rounded-lg">
-                <div className="text-lg font-bold text-blue-800">
+              <div>
+                <div>
                   {metrics.timeline.reduce((sum, p) => sum + p.quotes, 0)}
                 </div>
-                <div className="text-sm text-blue-600">Total Quotes</div>
+                <div>Total Quotes</div>
               </div>
-              <div className="p-3 bg-purple-50 rounded-lg">
-                <div className="text-lg font-bold text-purple-800">
+              <div>
+                <div>
                   {(metrics.timeline.reduce((sum, p) => sum + p.conversion, 0) / metrics.timeline.length).toFixed(1)}%
                 </div>
-                <div className="text-sm text-purple-600">Avg Conversion</div>
+                <div>Avg Conversion</div>
               </div>
             </div>
           </CardContent>
@@ -609,30 +599,30 @@ export default function RevenueAnalytics() {
 
       {/* Forecasting View */}
       {viewMode === 'forecasting' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <TrendingUp />
                 Revenue Forecast
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                <div className="text-center p-6 bg-blue-50 rounded-lg">
-                  <div className="text-3xl font-bold text-blue-800 mb-2">
+              <div>
+                <div>
+                  <div>
                     {formatCurrency(metrics.forecasting.nextMonth)}
                   </div>
-                  <div className="text-blue-600 font-medium mb-1">Next Month Projection</div>
-                  <div className="text-sm text-blue-600">{metrics.forecasting.confidence}% confidence level</div>
+                  <div>Next Month Projection</div>
+                  <div>{metrics.forecasting.confidence}% confidence level</div>
                 </div>
                 
-                <div className="space-y-3">
-                  <h4 className="font-medium text-gray-900">Key Factors:</h4>
+                <div>
+                  <h4>Key Factors:</h4>
                   {metrics.forecasting.factors.map((factor, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                      <span className="text-sm text-gray-700">{factor}</span>
+                    <div key={index}>
+                      <CheckCircle />
+                      <span>{factor}</span>
                     </div>
                   ))}
                 </div>
@@ -642,37 +632,37 @@ export default function RevenueAnalytics() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-purple-600" />
+              <CardTitle>
+                <Calendar />
                 Seasonal Patterns
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.seasonal.map((month, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">{month.month}</span>
-                      <div className="text-right">
-                        <div className="text-sm font-semibold">{formatCurrency(month.current)}</div>
-                        <div className="text-xs text-gray-500">vs {formatCurrency(month.average)} avg</div>
+                  <div key={index}>
+                    <div>
+                      <span>{month.month}</span>
+                      <div>
+                        <div>{formatCurrency(month.current)}</div>
+                        <div>vs {formatCurrency(month.average)} avg</div>
                       </div>
                     </div>
-                    <div className="flex gap-1">
-                      <div className="flex-1 bg-gray-200 rounded h-2">
+                    <div>
+                      <div>
                         <div 
-                          className="bg-blue-500 h-2 rounded"
-                          style={{ width: `${Math.min((month.current / month.average) * 50, 100)}%` }}
+                         
+                         %` }}
                         ></div>
                       </div>
-                      <div className="flex-1 bg-gray-200 rounded h-2">
+                      <div>
                         <div 
-                          className="bg-green-500 h-2 rounded"
-                          style={{ width: `${Math.min((month.previous / month.average) * 50, 100)}%` }}
+                         
+                         %` }}
                         ></div>
                       </div>
                     </div>
-                    <div className="flex justify-between text-xs text-gray-500">
+                    <div>
                       <span>Current</span>
                       <span>Previous Year</span>
                     </div>
@@ -688,38 +678,38 @@ export default function RevenueAnalytics() {
       {viewMode === 'opportunities' && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-yellow-600" />
+            <CardTitle>
+              <Zap />
               Revenue Growth Opportunities
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div>
               {metrics.opportunities.map((opportunity) => (
-                <div key={opportunity.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <h3 className="font-medium text-gray-900 mb-2">{opportunity.title}</h3>
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                <div key={opportunity.id}>
+                  <div>
+                    <div>
+                      <h3>{opportunity.title}</h3>
+                      <div>
                         <span>Timeline: {opportunity.timeline}</span>
                         <span>•</span>
                         <span>Probability: {opportunity.probability}%</span>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold text-green-600">
+                    <div>
+                      <div>
                         {formatCurrency(opportunity.potential)}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div>
                         {formatCurrency(opportunity.potential * opportunity.probability / 100)} weighted
                       </div>
                     </div>
                   </div>
-                  <div className="mt-3">
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div>
+                    <div>
                       <div 
-                        className="bg-green-500 h-2 rounded-full transition-all"
-                        style={{ width: `${opportunity.probability}%` }}
+                       
+                       %` }}
                       ></div>
                     </div>
                   </div>

@@ -47,23 +47,23 @@ export default function TestEnhancedAIPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div>
+      <div>
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle>
               Enhanced AI Assistant Demo 
               <Badge variant="secondary">$10/1000 quotes</Badge>
             </CardTitle>
-            <p className="text-sm text-gray-600">
+            <p>
               Test advanced AI features: validation, recommendations, predictions, and smart corrections
             </p>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent>
             {/* Test Controls */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
               <div>
-                <label className="text-sm font-medium">AI Feature</label>
+                <label>AI Feature</label>
                 <Select value={scenario} onValueChange={(value) => {
                   setScenario(value);
                   // Update input with scenario example
@@ -84,7 +84,7 @@ export default function TestEnhancedAIPage() {
               </div>
 
               <div>
-                <label className="text-sm font-medium">Contractor Input</label>
+                <label>Contractor Input</label>
                 <Input 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -92,15 +92,15 @@ export default function TestEnhancedAIPage() {
                 />
               </div>
 
-              <div className="flex items-end">
+              <div>
                 <Button 
                   onClick={runTest}
                   disabled={loading}
-                  className="w-full"
+                 
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 />
                       Testing...
                     </>
                   ) : (
@@ -111,9 +111,9 @@ export default function TestEnhancedAIPage() {
             </div>
 
             {/* Quick Examples */}
-            <div className="border-t pt-4">
-              <p className="text-sm font-medium mb-2">Quick Test Examples:</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+            <div>
+              <p>Quick Test Examples:</p>
+              <div>
                 {testExamples.map((example, idx) => (
                   <Button
                     key={idx}
@@ -123,11 +123,11 @@ export default function TestEnhancedAIPage() {
                       setInput(example.input);
                       setScenario(example.scenario);
                     }}
-                    className="text-left justify-start h-auto p-2"
+                   
                   >
                     <div>
-                      <div className="font-medium text-xs">{example.input}</div>
-                      <div className="text-xs text-gray-500">{example.issue || example.feature}</div>
+                      <div>{example.input}</div>
+                      <div>{example.issue || example.feature}</div>
                     </div>
                   </Button>
                 ))}
@@ -138,38 +138,38 @@ export default function TestEnhancedAIPage() {
 
         {/* Results */}
         {results && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
             {/* Enhanced Response */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
+                <CardTitle>
                   Enhanced AI Response
-                  <Badge variant="outline" className="text-blue-600">GPT-4o mini</Badge>
+                  <Badge variant="outline">GPT-4o mini</Badge>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent>
                 <div>
-                  <h4 className="font-medium text-sm text-gray-700 flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
+                  <h4>
+                    <CheckCircle />
                     AI Response:
                   </h4>
-                  <div className="mt-1 p-3 bg-blue-50 rounded">
-                    <p className="text-sm">{results.result?.response}</p>
+                  <div>
+                    <p>{results.result?.response}</p>
                   </div>
                 </div>
 
                 {/* Validation Results */}
                 {results.result?.validation && (
                   <div>
-                    <h4 className="font-medium text-sm text-gray-700 flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-yellow-500" />
+                    <h4>
+                      <AlertTriangle />
                       Smart Validation:
                     </h4>
-                    <div className="mt-1 space-y-2">
+                    <div>
                       {results.result.validation.concerns.length > 0 && (
-                        <div className="p-2 bg-yellow-50 rounded">
-                          <p className="text-xs font-medium text-yellow-800">Concerns:</p>
-                          <ul className="text-xs text-yellow-700 list-disc list-inside">
+                        <div>
+                          <p>Concerns:</p>
+                          <ul>
                             {results.result.validation.concerns.map((concern: string, idx: number) => (
                               <li key={idx}>{concern}</li>
                             ))}
@@ -177,9 +177,9 @@ export default function TestEnhancedAIPage() {
                         </div>
                       )}
                       {results.result.validation.suggestions.length > 0 && (
-                        <div className="p-2 bg-blue-50 rounded">
-                          <p className="text-xs font-medium text-blue-800">Suggestions:</p>
-                          <ul className="text-xs text-blue-700 list-disc list-inside">
+                        <div>
+                          <p>Suggestions:</p>
+                          <ul>
                             {results.result.validation.suggestions.map((suggestion: string, idx: number) => (
                               <li key={idx}>{suggestion}</li>
                             ))}
@@ -193,12 +193,12 @@ export default function TestEnhancedAIPage() {
                 {/* Recommendations */}
                 {results.result?.recommendations && (
                   <div>
-                    <h4 className="font-medium text-sm text-gray-700 flex items-center gap-2">
-                      <Lightbulb className="w-4 h-4 text-orange-500" />
+                    <h4>
+                      <Lightbulb />
                       Smart Recommendations:
                     </h4>
-                    <div className="mt-1 p-3 bg-orange-50 rounded">
-                      <ul className="text-xs text-orange-700 list-disc list-inside space-y-1">
+                    <div>
+                      <ul>
                         {results.result.recommendations.map((rec: string, idx: number) => (
                           <li key={idx}>{rec}</li>
                         ))}
@@ -212,14 +212,14 @@ export default function TestEnhancedAIPage() {
             {/* Feature Comparison */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Feature Comparison</CardTitle>
+                <CardTitle>Feature Comparison</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div>
                     <div>
-                      <h4 className="font-medium text-sm mb-2">Basic AI ($2.70/1000)</h4>
-                      <ul className="text-xs text-gray-600 space-y-1">
+                      <h4>Basic AI ($2.70/1000)</h4>
+                      <ul>
                         <li>✅ Natural language understanding</li>
                         <li>✅ Basic parsing</li>
                         <li>✅ Conversational responses</li>
@@ -229,8 +229,8 @@ export default function TestEnhancedAIPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-medium text-sm mb-2">Enhanced AI ($10/1000)</h4>
-                      <ul className="text-xs text-gray-600 space-y-1">
+                      <h4>Enhanced AI ($10/1000)</h4>
+                      <ul>
                         <li>✅ Natural language understanding</li>
                         <li>✅ Advanced parsing</li>
                         <li>✅ Conversational responses</li>
@@ -243,9 +243,9 @@ export default function TestEnhancedAIPage() {
                     </div>
                   </div>
 
-                  <div className="border-t pt-4">
-                    <h4 className="font-medium text-sm mb-2">Features Demonstrated:</h4>
-                    <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <h4>Features Demonstrated:</h4>
+                    <div>
                       <Badge variant={results.features?.validation ? "default" : "secondary"}>
                         Validation {results.features?.validation ? "✓" : "○"}
                       </Badge>
@@ -266,26 +266,26 @@ export default function TestEnhancedAIPage() {
         {/* Cost Analysis */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Cost vs Value Analysis</CardTitle>
+            <CardTitle>Cost vs Value Analysis</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 border rounded">
-                <h4 className="font-medium">Basic AI</h4>
-                <p className="text-2xl font-bold text-green-600">$2.70</p>
-                <p className="text-sm text-gray-600">per 1000 quotes</p>
-                <ul className="text-xs mt-2 space-y-1">
+            <div>
+              <div>
+                <h4>Basic AI</h4>
+                <p>$2.70</p>
+                <p>per 1000 quotes</p>
+                <ul>
                   <li>• Natural conversation</li>
                   <li>• Basic understanding</li>
                   <li>• Single AI call per message</li>
                 </ul>
               </div>
 
-              <div className="p-4 border rounded border-blue-500 bg-blue-50">
-                <h4 className="font-medium text-blue-700">Enhanced AI</h4>
-                <p className="text-2xl font-bold text-blue-600">$6-10</p>
-                <p className="text-sm text-gray-600">per 1000 quotes</p>
-                <ul className="text-xs mt-2 space-y-1">
+              <div>
+                <h4>Enhanced AI</h4>
+                <p>$6-10</p>
+                <p>per 1000 quotes</p>
+                <ul>
                   <li>• Everything in Basic</li>
                   <li>• Smart validation</li>
                   <li>• Project recommendations</li>
@@ -294,16 +294,16 @@ export default function TestEnhancedAIPage() {
                 </ul>
               </div>
 
-              <div className="p-4 border rounded">
-                <h4 className="font-medium">ROI Calculation</h4>
-                <p className="text-sm text-gray-600 mb-2">Benefits of Enhanced AI:</p>
-                <ul className="text-xs space-y-1">
+              <div>
+                <h4>ROI Calculation</h4>
+                <p>Benefits of Enhanced AI:</p>
+                <ul>
                   <li>• 20% fewer quote errors</li>
                   <li>• 15% higher quote accuracy</li>
                   <li>• 10% more add-on suggestions</li>
                   <li>• Better customer satisfaction</li>
                 </ul>
-                <p className="text-xs mt-2 font-medium text-green-600">
+                <p>
                   ROI: $7 extra cost could save 1+ hour per problem quote
                 </p>
               </div>

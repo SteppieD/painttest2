@@ -103,7 +103,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-4">
+          <div>
             <div>
               <Label htmlFor="customerName">Customer Name *</Label>
               <Input
@@ -146,19 +146,15 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
 
       case 2:
         return (
-          <div className="space-y-6">
+          <div>
             <div>
-              <Label className="text-base font-medium mb-4 block">Project Type *</Label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <Label>Project Type *</Label>
+              <div>
                 {['interior', 'exterior', 'both'].map((type) => (
                   <button
                     key={type}
                     onClick={() => updateQuoteData('projectType', type)}
-                    className={`p-4 border rounded-lg text-center capitalize transition-colors ${
-                      quoteData.projectType === type
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                   `}
                   >
                     {type}
                   </button>
@@ -167,8 +163,8 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
             </div>
             
             <div>
-              <Label className="text-base font-medium mb-4 block">Surfaces to Paint *</Label>
-              <div className="grid grid-cols-2 gap-3">
+              <Label>Surfaces to Paint *</Label>
+              <div>
                 {['walls', 'ceilings', 'trim', 'doors', 'cabinets', 'exterior siding'].map((surface) => {
                   const isSelected = quoteData.surfaces.includes(surface);
                   return (
@@ -180,11 +176,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
                           : [...quoteData.surfaces, surface];
                         updateQuoteData('surfaces', newSurfaces);
                       }}
-                      className={`p-3 border rounded-lg text-sm capitalize transition-colors ${
-                        isSelected
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                     `}
                     >
                       {surface}
                     </button>
@@ -197,7 +189,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
 
       case 3:
         return (
-          <div className="space-y-4">
+          <div>
             <div>
               <Label htmlFor="totalSquareFeet">Total Square Feet to Paint *</Label>
               <Input
@@ -207,7 +199,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
                 onChange={(e) => updateQuoteData('totalSquareFeet', parseInt(e.target.value) || 0)}
                 placeholder="1500"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p>
                 Include all surfaces you selected in the previous step
               </p>
             </div>
@@ -247,19 +239,15 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
 
       case 4:
         return (
-          <div className="space-y-6">
+          <div>
             <div>
-              <Label className="text-base font-medium mb-4 block">Paint Brand *</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <Label>Paint Brand *</Label>
+              <div>
                 {['Sherwin-Williams', 'Benjamin Moore', 'Behr', 'PPG'].map((brand) => (
                   <button
                     key={brand}
                     onClick={() => updateQuoteData('paintBrand', brand)}
-                    className={`p-4 border rounded-lg text-center transition-colors ${
-                      quoteData.paintBrand === brand
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                   `}
                   >
                     {brand}
                   </button>
@@ -268,8 +256,8 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
             </div>
             
             <div>
-              <Label className="text-base font-medium mb-4 block">Paint Quality *</Label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <Label>Paint Quality *</Label>
+              <div>
                 {[
                   { value: 'economy', label: 'Economy', desc: 'Good value' },
                   { value: 'standard', label: 'Standard', desc: 'Most popular' },
@@ -278,14 +266,10 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
                   <button
                     key={quality.value}
                     onClick={() => updateQuoteData('paintQuality', quality.value)}
-                    className={`p-4 border rounded-lg text-center transition-colors ${
-                      quoteData.paintQuality === quality.value
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                   `}
                   >
-                    <div className="font-medium">{quality.label}</div>
-                    <div className="text-sm text-gray-500">{quality.desc}</div>
+                    <div>{quality.label}</div>
+                    <div>{quality.desc}</div>
                   </button>
                 ))}
               </div>
@@ -296,36 +280,36 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
       case 5:
         const estimatedCost = quoteData.totalSquareFeet * 3.50 * (1 + quoteData.markup / 100);
         return (
-          <div className="space-y-6">
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-green-900 mb-4">Quote Summary</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
+          <div>
+            <div>
+              <h3>Quote Summary</h3>
+              <div>
+                <div>
                   <span>Customer:</span>
-                  <span className="font-medium">{quoteData.customerName}</span>
+                  <span>{quoteData.customerName}</span>
                 </div>
-                <div className="flex justify-between">
+                <div>
                   <span>Property:</span>
-                  <span className="font-medium">{quoteData.address}</span>
+                  <span>{quoteData.address}</span>
                 </div>
-                <div className="flex justify-between">
+                <div>
                   <span>Project Type:</span>
-                  <span className="font-medium capitalize">{quoteData.projectType}</span>
+                  <span>{quoteData.projectType}</span>
                 </div>
-                <div className="flex justify-between">
+                <div>
                   <span>Square Feet:</span>
-                  <span className="font-medium">{quoteData.totalSquareFeet} sq ft</span>
+                  <span>{quoteData.totalSquareFeet} sq ft</span>
                 </div>
-                <div className="flex justify-between">
+                <div>
                   <span>Paint Brand:</span>
-                  <span className="font-medium">{quoteData.paintBrand}</span>
+                  <span>{quoteData.paintBrand}</span>
                 </div>
-                <div className="flex justify-between">
+                <div>
                   <span>Paint Quality:</span>
-                  <span className="font-medium capitalize">{quoteData.paintQuality}</span>
+                  <span>{quoteData.paintQuality}</span>
                 </div>
-                <hr className="my-3" />
-                <div className="flex justify-between text-lg font-bold text-green-900">
+                <hr />
+                <div>
                   <span>Estimated Total:</span>
                   <span>${estimatedCost.toFixed(2)}</span>
                 </div>
@@ -342,7 +326,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
                 min="0"
                 max="100"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p>
                 Adjust your profit margin (default: 20%)
               </p>
             </div>
@@ -355,51 +339,43 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div>
       {/* Progress Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">Create New Quote</h1>
+      <div>
+        <div>
+          <h1>Create New Quote</h1>
           <button
             onClick={onCancel}
-            className="text-gray-500 hover:text-gray-700 text-sm"
+           
           >
             Cancel
           </button>
         </div>
         
-        <div className="mb-4">
-          <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+        <div>
+          <div>
             <span>Step {currentStep} of {steps.length}</span>
             <span>{Math.round(progress)}% Complete</span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress value={progress} />
         </div>
         
-        <div className="flex items-center justify-between">
+        <div>
           {steps.map((step) => {
             const StepIcon = step.icon;
             const isActive = currentStep === step.number;
             const isCompleted = currentStep > step.number;
             
             return (
-              <div key={step.number} className="flex flex-col items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors ${
-                  isCompleted
-                    ? 'bg-green-500 border-green-500 text-white'
-                    : isActive
-                    ? 'bg-blue-500 border-blue-500 text-white'
-                    : 'bg-gray-100 border-gray-300 text-gray-400'
-                }`}>
+              <div key={step.number}>
+                <div`}>
                   {isCompleted ? (
-                    <CheckCircle className="w-5 h-5" />
+                    <CheckCircle />
                   ) : (
-                    <StepIcon className="w-5 h-5" />
+                    <StepIcon />
                   )}
                 </div>
-                <span className={`text-xs mt-1 text-center ${
-                  isActive ? 'text-blue-600 font-medium' : 'text-gray-500'
-                }`}>
+                <span`}>
                   {step.title}
                 </span>
               </div>
@@ -419,13 +395,13 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
       </Card>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between mt-6">
+      <div>
         <Button
           variant="outline"
           onClick={prevStep}
           disabled={currentStep === 1}
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft />
           Previous
         </Button>
         
@@ -433,10 +409,10 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
           <Button
             onClick={() => onComplete(quoteData)}
             disabled={!canProceed()}
-            className="bg-green-600 hover:bg-green-700"
+           
           >
             Generate Quote
-            <FileText className="w-4 h-4 ml-2" />
+            <FileText />
           </Button>
         ) : (
           <Button
@@ -444,7 +420,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
             disabled={!canProceed()}
           >
             Next
-            <ArrowRight className="w-4 h-4 ml-2" />
+            <ArrowRight />
           </Button>
         )}
       </div>

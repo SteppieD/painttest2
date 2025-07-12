@@ -130,15 +130,13 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
   ];
 
   return (
-    <div className="w-full py-8">
+    <div>
       {/* Billing Toggle */}
-      <div className="flex justify-center mb-12">
-        <div className="bg-gray-100 p-1.5 rounded-xl inline-flex items-center gap-2">
+      <div>
+        <div>
           <Label
             htmlFor="billing-toggle"
-            className={`px-6 py-3 rounded-lg font-medium transition-all cursor-pointer ${
-              !isYearly ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'
-            }`}
+           `}
           >
             Monthly
           </Label>
@@ -146,16 +144,14 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
             id="billing-toggle"
             checked={isYearly}
             onCheckedChange={setIsYearly}
-            className="data-[state=checked]:bg-blue-600"
+           
           />
           <Label
             htmlFor="billing-toggle"
-            className={`px-6 py-3 rounded-lg font-medium transition-all cursor-pointer flex items-center gap-2 ${
-              isYearly ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'
-            }`}
+           `}
           >
             Yearly
-            <Badge className="bg-green-100 text-green-700 border-green-200">
+            <Badge>
               Save 20%
             </Badge>
           </Label>
@@ -166,21 +162,21 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
       <AnimatePresence mode="wait">
         {isYearly && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="text-center mb-8"
+           
+           
+           
+           
           >
-            <div className="inline-flex items-center gap-2 bg-green-50 text-green-800 px-4 py-2 rounded-full">
-              <Zap className="w-4 h-4" />
-              <span className="font-medium">Get 2 months free with yearly billing!</span>
+            <div>
+              <Zap />
+              <span>Get 2 months free with yearly billing!</span>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Pricing Cards */}
-      <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+      <div>
         {plans.map((plan, index) => {
           const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
           const isMiddle = index === 1;
@@ -188,48 +184,44 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
           return (
             <motion.div
               key={plan.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className={`relative ${isMiddle ? 'lg:-mt-4' : ''}`}
+             
+             
+             
+             `}
             >
               <Card
-                className={`relative h-full border-2 transition-all duration-300 ${
-                  plan.popular
-                    ? 'border-blue-500 shadow-2xl scale-[1.02]'
-                    : 'border-gray-200 hover:border-gray-300 hover:shadow-lg'
-                }`}
+               `}
               >
                 {/* Popular Badge */}
                 {plan.badge && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                    <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-1.5 text-sm font-semibold shadow-lg">
-                      <Star className="w-4 h-4 mr-1.5 fill-current" />
+                  <div>
+                    <Badge>
+                      <Star />
                       {plan.badge}
                     </Badge>
                   </div>
                 )}
 
                 {/* Card Header */}
-                <div className={`p-8 pb-6 text-center ${plan.gradient} rounded-t-lg`} style={plan.popular ? { backgroundColor: '#2563eb', color: '#ffffff' } : {}}>
-                  <h3 className={`text-2xl font-bold mb-2`} style={plan.popular ? { color: '#ffffff' } : { color: '#111827' }}>{plan.name}</h3>
-                  <p className={`mb-6`} style={plan.popular ? { color: '#ffffff' } : { color: '#6b7280' }}>{plan.description}</p>
+                <div rounded-t-lg`} : {}}>
+                  <h3 : { color: '#111827' }}>{plan.name}</h3>
+                  <p : { color: '#6b7280' }}>{plan.description}</p>
 
                   {/* Pricing */}
-                  <div className="mb-2">
+                  <div>
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={isYearly ? 'yearly' : 'monthly'}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        className="flex items-baseline justify-center gap-1"
+                       
+                       
+                       
+                       
                       >
-                        <span className={`text-5xl font-bold`} style={plan.popular ? { color: '#ffffff' } : { color: '#111827' }}>
+                        <span : { color: '#111827' }}>
                           ${isYearly && plan.yearlyMonthlyPrice ? Math.floor(plan.yearlyMonthlyPrice) : price}
                         </span>
                         {price > 0 && (
-                          <span className={`text-lg`} style={plan.popular ? { color: '#ffffff' } : { color: '#6b7280' }}>
+                          <span : { color: '#6b7280' }}>
                             /{isYearly ? 'month' : 'month'}
                           </span>
                         )}
@@ -240,15 +232,15 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                   {/* Yearly pricing details */}
                   {isYearly && plan.savings && (
                     <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="space-y-1"
+                     
+                     
+                     
                     >
-                      <p className={`text-sm`} style={plan.popular ? { color: '#ffffff' } : { color: '#6b7280' }}>
-                        <span className="line-through">${plan.monthlyPrice * 12}</span>
-                        <span className={`ml-2 font-semibold`} style={plan.popular ? { color: '#ffffff' } : { color: '#111827' }}>${plan.yearlyPrice}/year</span>
+                      <p : { color: '#6b7280' }}>
+                        <span>${plan.monthlyPrice * 12}</span>
+                        <span : { color: '#111827' }}>${plan.yearlyPrice}/year</span>
                       </p>
-                      <Badge variant="outline" className={`${plan.popular ? 'bg-white/20 text-white border-white/40' : 'bg-green-50 text-green-700 border-green-200'}`}>
+                      <Badge variant="outline"`}>
                         You save ${plan.savings}
                       </Badge>
                     </motion.div>
@@ -256,36 +248,30 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
 
                   {/* Free plan specifics */}
                   {plan.id === 'free' && (
-                    <p className="text-sm font-semibold mt-2 text-gray-700">
+                    <p>
                       10 Quotes/Month Limit
                     </p>
                   )}
                 </div>
 
                 {/* Features */}
-                <div className="p-8 pt-6 space-y-4">
+                <div>
                   <TooltipProvider>
-                    <ul className="space-y-3">
+                    <ul>
                       {plan.features.map((feature, featureIndex) => (
                         <li
                           key={featureIndex}
-                          className={`flex items-start gap-3 ${
-                            feature.highlighted ? 'font-medium' : ''
-                          }`}
+                         `}
                         >
                           <Check
-                            className={`w-5 h-5 mt-0.5 flex-shrink-0 ${
-                              feature.highlighted
-                                ? 'text-blue-600'
-                                : 'text-green-500'
-                            }`}
+                           `}
                           />
-                          <span className="text-gray-700 text-sm">
+                          <span>
                             {feature.text}
                             {feature.text.includes('API') && (
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <HelpCircle className="inline-block w-4 h-4 ml-1 text-gray-400 cursor-help" />
+                                  <HelpCircle />
                                 </TooltipTrigger>
                                 <TooltipContent>
                                   <p>Connect your existing tools and automate workflows</p>
@@ -299,12 +285,12 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                   </TooltipProvider>
 
                   {/* CTA Button */}
-                  <div className="pt-6">
+                  <div>
                     {plan.id === 'free' ? (
                       <Button
                         size="lg"
                         variant={plan.ctaVariant}
-                        className="w-full text-base font-semibold py-6"
+                       
                         onClick={() => (window.location.href = '/trial-signup')}
                       >
                         {plan.cta}
@@ -323,11 +309,7 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                       <Button
                         size="lg"
                         variant={plan.ctaVariant}
-                        className={`w-full text-base font-semibold py-6 ${
-                          plan.popular
-                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                            : ''
-                        }`}
+                       `}
                         onClick={() => (window.location.href = '/access-code')}
                       >
                         Sign in to {plan.cta}
@@ -343,21 +325,21 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
 
       {/* Social Proof */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="text-center mt-12 space-y-4"
+       
+       
+       
+       
       >
-        <div className="flex justify-center items-center gap-1">
+        <div>
           {[...Array(5)].map((_, i) => (
-            <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+            <Star key={i} />
           ))}
         </div>
-        <p className="text-gray-600">
-          Trusted by <span className="font-semibold text-gray-900">5,000+</span> painting contractors
+        <p>
+          Trusted by <span>5,000+</span> painting contractors
         </p>
-        <p className="text-sm text-gray-500">
-          Average ROI: <span className="font-semibold">278%</span> in the first 90 days
+        <p>
+          Average ROI: <span>278%</span> in the first 90 days
         </p>
       </motion.div>
     </div>

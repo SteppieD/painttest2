@@ -142,11 +142,11 @@ export function SubscriptionStatus({ companyId }: { companyId: string }) {
   if (isLoading) {
     return (
       <Card>
-        <CardContent className="p-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-            <div className="h-8 bg-gray-200 rounded w-1/2"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+        <CardContent>
+          <div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
         </CardContent>
       </Card>
@@ -156,8 +156,8 @@ export function SubscriptionStatus({ companyId }: { companyId: string }) {
   if (!subscriptionInfo) {
     return (
       <Card>
-        <CardContent className="p-6">
-          <p className="text-gray-500">Unable to load subscription information</p>
+        <CardContent>
+          <p>Unable to load subscription information</p>
         </CardContent>
       </Card>
     );
@@ -181,29 +181,29 @@ export function SubscriptionStatus({ companyId }: { companyId: string }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Current Subscription Overview */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Crown className="w-5 h-5" />
+          <CardTitle>
+            <Crown />
             Current Plan: {subscription.plan_name}
-            <Badge className={getStatusColor(subscription.status)}>
+            <Badge>
               {subscription.status}
             </Badge>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent>
           {/* Trial Warning */}
           {subscription.is_trial && analytics.trial_days_left !== undefined && (
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-yellow-600" />
+            <div>
+              <div>
+                <AlertTriangle />
                 <div>
-                  <p className="font-medium text-yellow-800">
+                  <p>
                     Trial ends in {analytics.trial_days_left} day{analytics.trial_days_left !== 1 ? 's' : ''}
                   </p>
-                  <p className="text-sm text-yellow-700">
+                  <p>
                     Upgrade now to continue creating quotes after your trial expires.
                   </p>
                 </div>
@@ -212,37 +212,37 @@ export function SubscriptionStatus({ companyId }: { companyId: string }) {
           )}
 
           {/* Quote Usage */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-blue-600" />
+          <div>
+            <div>
+              <div>
+                <Users />
                 <div>
-                  <p className="text-sm text-blue-700">This Period</p>
-                  <p className="text-2xl font-bold text-blue-900">
+                  <p>This Period</p>
+                  <p>
                     {subscription.quotes_used_this_period}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="p-4 bg-green-50 rounded-lg">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-green-600" />
+            <div>
+              <div>
+                <CheckCircle2 />
                 <div>
-                  <p className="text-sm text-green-700">Remaining</p>
-                  <p className="text-2xl font-bold text-green-900">
+                  <p>Remaining</p>
+                  <p>
                     {subscription.quotes_remaining === null ? '∞' : subscription.quotes_remaining}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="p-4 bg-purple-50 rounded-lg">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-purple-600" />
+            <div>
+              <div>
+                <TrendingUp />
                 <div>
-                  <p className="text-sm text-purple-700">Total Created</p>
-                  <p className="text-2xl font-bold text-purple-900">
+                  <p>Total Created</p>
+                  <p>
                     {analytics.total_quotes}
                   </p>
                 </div>
@@ -252,23 +252,23 @@ export function SubscriptionStatus({ companyId }: { companyId: string }) {
 
           {/* Usage Progress Bar */}
           {subscription.quotes_remaining !== null && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
+            <div>
+              <div>
                 <span>Quote Usage</span>
                 <span>{subscription.quotes_used_this_period} / {subscription.quotes_used_this_period + subscription.quotes_remaining}</span>
               </div>
-              <Progress value={usagePercentage} className="h-2" />
+              <Progress value={usagePercentage} />
             </div>
           )}
 
           {/* Quota Warning */}
           {!quota.can_create_quote && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-red-600" />
+            <div>
+              <div>
+                <AlertTriangle />
                 <div>
-                  <p className="font-medium text-red-800">Quote Limit Reached</p>
-                  <p className="text-sm text-red-700">{quota.quota_message}</p>
+                  <p>Quote Limit Reached</p>
+                  <p>{quota.quota_message}</p>
                 </div>
               </div>
             </div>
@@ -278,10 +278,10 @@ export function SubscriptionStatus({ companyId }: { companyId: string }) {
           {(subscription.is_trial || !quota.can_create_quote) && (
             <Button 
               onClick={() => setShowUpgradeModal(true)} 
-              className="w-full"
+             
               size="lg"
             >
-              <Zap className="w-4 h-4 mr-2" />
+              <Zap />
               Upgrade Plan
             </Button>
           )}
@@ -290,41 +290,41 @@ export function SubscriptionStatus({ companyId }: { companyId: string }) {
 
       {/* Upgrade Modal */}
       {showUpgradeModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b">
-              <h2 className="text-2xl font-bold">Choose Your Plan</h2>
-              <p className="text-gray-600">Upgrade to unlock more quotes and features</p>
+        <div>
+          <div>
+            <div>
+              <h2>Choose Your Plan</h2>
+              <p>Upgrade to unlock more quotes and features</p>
             </div>
             
-            <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
               {availablePlans.filter(plan => plan.id !== 'plan_free').map((plan) => (
-                <Card key={plan.id} className={`relative ${plan.popular ? 'ring-2 ring-blue-500' : ''}`}>
+                <Card key={plan.id}`}>
                   {plan.popular && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <Badge className="bg-blue-500 text-white">
-                        <Star className="w-3 h-3 mr-1" />
+                    <div>
+                      <Badge>
+                        <Star />
                         Popular
                       </Badge>
                     </div>
                   )}
                   
                   <CardHeader>
-                    <CardTitle className="text-center">{plan.name}</CardTitle>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold">${plan.pricing.monthly}</div>
-                      <div className="text-sm text-gray-600">/month</div>
+                    <CardTitle>{plan.name}</CardTitle>
+                    <div>
+                      <div>${plan.pricing.monthly}</div>
+                      <div>/month</div>
                       {plan.pricing.yearly_savings > 0 && (
-                        <div className="text-sm text-green-600">
+                        <div>
                           Save {plan.pricing.yearly_savings}% yearly
                         </div>
                       )}
                     </div>
                   </CardHeader>
                   
-                  <CardContent className="space-y-4">
-                    <div className="text-center">
-                      <div className="font-medium">
+                  <CardContent>
+                    <div>
+                      <div>
                         {plan.limits.unlimited_quotes 
                           ? 'Unlimited Quotes' 
                           : `${plan.limits.quotes_per_month} quotes/month`
@@ -332,22 +332,22 @@ export function SubscriptionStatus({ companyId }: { companyId: string }) {
                       </div>
                     </div>
                     
-                    <div className="space-y-2">
+                    <div>
                       {Object.entries(plan.features).map(([feature, enabled]) => (
                         enabled && (
-                          <div key={feature} className="flex items-center gap-2 text-sm">
-                            <CheckCircle2 className="w-4 h-4 text-green-500" />
-                            <span className="capitalize">{feature.replace(/_/g, ' ')}</span>
+                          <div key={feature}>
+                            <CheckCircle2 />
+                            <span>{feature.replace(/_/g, ' ')}</span>
                           </div>
                         )
                       ))}
                     </div>
                     
-                    <div className="space-y-2">
+                    <div>
                       <Button
                         onClick={() => handleUpgrade(plan.id, 'monthly')}
                         disabled={isUpgrading}
-                        className="w-full"
+                       
                         variant={plan.popular ? "default" : "outline"}
                       >
                         {isUpgrading ? 'Upgrading...' : 'Choose Monthly'}
@@ -357,7 +357,7 @@ export function SubscriptionStatus({ companyId }: { companyId: string }) {
                         <Button
                           onClick={() => handleUpgrade(plan.id, 'yearly')}
                           disabled={isUpgrading}
-                          className="w-full"
+                         
                           variant="outline"
                         >
                           Choose Yearly (Save {plan.pricing.yearly_savings}%)
@@ -369,11 +369,11 @@ export function SubscriptionStatus({ companyId }: { companyId: string }) {
               ))}
             </div>
             
-            <div className="p-6 border-t">
+            <div>
               <Button 
                 onClick={() => setShowUpgradeModal(false)} 
                 variant="outline" 
-                className="w-full"
+               
               >
                 Cancel
               </Button>

@@ -177,32 +177,32 @@ export default function AwardsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-yellow-50 to-orange-100">
-        <div className="container mx-auto max-w-6xl text-center">
-          <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <Award className="w-4 h-4" />
+      <section>
+        <div>
+          <div>
+            <Award />
             <span>Award-Winning Painting Software</span>
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Industry Recognition & <span className="text-yellow-600">Awards</span>
+          <h1>
+            Industry Recognition & <span>Awards</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p>
             Discover why ProPaint Quote has earned industry recognition, customer choice awards, and professional certifications from leading organizations.
           </p>
           
           {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-6 mb-8">
+          <div>
             {performanceMetrics.map((item, index) => {
               const Icon = item.icon;
               return (
-                <div key={index} className="text-center">
-                  <Icon className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-gray-900">{item.metric}</div>
-                  <div className="text-xs text-gray-600">{item.label}</div>
+                <div key={index}>
+                  <Icon />
+                  <div>{item.metric}</div>
+                  <div>{item.label}</div>
                 </div>
               );
             })}
@@ -211,33 +211,33 @@ export default function AwardsPage() {
       </section>
 
       {/* Major Awards */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Major Awards & Recognition
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p>
               Honored by industry leaders for innovation, customer satisfaction, and business impact
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
             {majorAwards.map((award, index) => {
               const Icon = award.icon;
               return (
-                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                  <CardHeader className="text-center pb-6">
-                    <div className={`inline-flex items-center gap-2 ${award.bgColor} px-3 py-1 rounded-full text-sm font-bold mb-4`}>
-                      <Icon className={`w-4 h-4 ${award.color}`} />
-                      <span className={award.color}>{award.badge}</span>
+                <Card key={index}>
+                  <CardHeader>
+                    <div px-3 py-1 rounded-full text-sm font-bold mb-4`}>
+                      <Icon`} />
+                      <span>{award.badge}</span>
                     </div>
-                    <div className="text-sm text-gray-500 mb-2">{award.year}</div>
-                    <CardTitle className="text-2xl font-bold text-gray-900 mb-2">{award.title}</CardTitle>
-                    <p className="text-lg text-blue-600 font-medium">{award.organization}</p>
+                    <div>{award.year}</div>
+                    <CardTitle>{award.title}</CardTitle>
+                    <p>{award.organization}</p>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-700 text-center">{award.description}</p>
+                    <p>{award.description}</p>
                   </CardContent>
                 </Card>
               );
@@ -247,36 +247,36 @@ export default function AwardsPage() {
       </section>
 
       {/* Certifications */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Professional Certifications
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Certified by leading organizations for security, quality, and innovation
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
             {certifications.map((cert, index) => {
               const Icon = cert.icon;
               return (
-                <Card key={index} className="border-0 shadow-sm bg-white">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-blue-100 p-3 rounded-lg">
-                        <Icon className="w-6 h-6 text-blue-600" />
+                <Card key={index}>
+                  <CardContent>
+                    <div>
+                      <div>
+                        <Icon />
                       </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-lg font-bold text-gray-900">{cert.title}</h3>
+                      <div>
+                        <div>
+                          <h3>{cert.title}</h3>
                           {cert.verified && (
-                            <CheckCircle className="w-5 h-5 text-green-500" />
+                            <CheckCircle />
                           )}
                         </div>
-                        <p className="text-sm text-blue-600 font-medium mb-2">{cert.organization}</p>
-                        <p className="text-gray-600 text-sm">{cert.description}</p>
+                        <p>{cert.organization}</p>
+                        <p>{cert.description}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -288,28 +288,28 @@ export default function AwardsPage() {
       </section>
 
       {/* Customer Testimonials */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               What Award Judges Are Saying
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Real feedback from customers that influenced award decisions
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
             {awardTestimonials.map((testimonial, index) => (
-              <Card key={index} className="border-0 shadow-lg">
-                <CardContent className="p-6">
-                  <Quote className="w-8 h-8 text-blue-200 mb-4" />
-                  <p className="text-gray-700 mb-6 italic">"{testimonial.quote}"</p>
-                  <div className="border-t pt-4">
-                    <div className="font-semibold text-gray-900">{testimonial.author}</div>
-                    <div className="text-sm text-blue-600">{testimonial.company}</div>
-                    <div className="text-sm text-gray-500">{testimonial.location}</div>
-                    <div className="text-sm text-green-600 font-medium mt-1">{testimonial.metric}</div>
+              <Card key={index}>
+                <CardContent>
+                  <Quote />
+                  <p>"{testimonial.quote}"</p>
+                  <div>
+                    <div>{testimonial.author}</div>
+                    <div>{testimonial.company}</div>
+                    <div>{testimonial.location}</div>
+                    <div>{testimonial.metric}</div>
                   </div>
                 </CardContent>
               </Card>
@@ -319,36 +319,36 @@ export default function AwardsPage() {
       </section>
 
       {/* Media Coverage */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Media Coverage & Press
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Industry publications recognize ProPaint Quote innovation
             </p>
           </div>
           
-          <div className="space-y-6">
+          <div>
             {mediaCoverage.map((article, index) => (
-              <Card key={index} className="border-0 shadow-sm bg-white">
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row md:items-center gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <BookOpen className="w-5 h-5 text-blue-600" />
-                        <span className="text-sm font-medium text-blue-600">{article.type}</span>
-                        <span className="text-sm text-gray-500">•</span>
-                        <span className="text-sm text-gray-500">{article.date}</span>
+              <Card key={index}>
+                <CardContent>
+                  <div>
+                    <div>
+                      <div>
+                        <BookOpen />
+                        <span>{article.type}</span>
+                        <span>•</span>
+                        <span>{article.date}</span>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{article.headline}</h3>
-                      <p className="text-gray-600 mb-2">{article.excerpt}</p>
-                      <p className="text-sm font-medium text-gray-700">{article.publication}</p>
+                      <h3>{article.headline}</h3>
+                      <p>{article.excerpt}</p>
+                      <p>{article.publication}</p>
                     </div>
                     <Button variant="outline" size="sm">
                       Read Article
-                      <ArrowRight className="w-4 h-4 ml-2" />
+                      <ArrowRight />
                     </Button>
                   </div>
                 </CardContent>
@@ -359,31 +359,31 @@ export default function AwardsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-yellow-600 to-orange-600 text-white">
-        <div className="container mx-auto max-w-4xl text-center">
-          <Medal className="w-16 h-16 text-white mx-auto mb-6" />
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      <section>
+        <div>
+          <Medal />
+          <h2>
             Join the Award-Winning Platform
           </h2>
-          <p className="text-xl text-yellow-100 mb-8">
+          <p>
             Experience the software that's earned industry recognition and transformed thousands of painting businesses
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" asChild className="bg-white text-yellow-600 hover:bg-gray-100">
+          <div>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/trial-signup">
                 Start Free Trial
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="border-white text-white hover:bg-white hover:text-yellow-600">
+            <Button size="lg" variant="outline" asChild>
               <Link href="/demo">
                 See Award-Winning Features
               </Link>
             </Button>
           </div>
           
-          <p className="text-sm text-yellow-200 mt-6">
+          <p>
             Join 5,000+ contractors using award-winning quote software • No credit card required
           </p>
         </div>

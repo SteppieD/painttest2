@@ -29,7 +29,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export const metadata: Metadata = {
   title: 'Mobile Painting Estimate App | ProPaint Quote Field Software',
@@ -182,81 +183,82 @@ export default function MobileAppPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
+      <KofiHeader />
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section>
+        <div>
+          <div>
             <div>
-              <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                <Smartphone className="w-4 h-4" />
+              <div>
+                <Smartphone />
                 <span>Mobile-First Painting Software</span>
               </div>
               
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Quote Jobs <span className="text-blue-600">On-Site</span><br />
+              <h1>
+                Quote Jobs <span>On-Site</span><br />
                 Win More Business
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
+              <p>
                 Professional painting quotes in your pocket. Create estimates on-site, work offline, 
                 get signatures instantly. Join 5,000+ contractors who increased their win rates with mobile quoting.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700">
+              <div>
+                <Button size="lg" asChild>
                   <Link href="/trial-signup">
-                    <Download className="w-5 h-5 mr-2" />
+                    <Download />
                     Start Free Trial
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
                   <Link href="/demo">
-                    <Play className="w-5 h-5 mr-2" />
+                    <Play />
                     Watch Demo
                   </Link>
                 </Button>
               </div>
               
-              <div className="flex items-center gap-6 text-sm text-gray-600">
-                <div className="flex items-center gap-1">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+              <div>
+                <div>
+                  <CheckCircle />
                   <span>Works offline</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                <div>
+                  <CheckCircle />
                   <span>No credit card</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                <div>
+                  <CheckCircle />
                   <span>30-second quotes</span>
                 </div>
               </div>
             </div>
             
-            <div className="relative">
+            <div>
               {/* Mobile App Mockup */}
-              <div className="relative mx-auto w-80 h-[600px] bg-gradient-to-br from-gray-800 to-gray-900 rounded-[3rem] p-2 shadow-2xl">
-                <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden">
+              <div>
+                <div>
                   {/* Mock app interface */}
-                  <div className="bg-blue-600 text-white p-4 text-center">
-                    <h3 className="font-bold">ProPaint Quote</h3>
-                    <p className="text-sm text-blue-100">New Quote - Kitchen</p>
+                  <div>
+                    <h3>ProPaint Quote</h3>
+                    <p>New Quote - Kitchen</p>
                   </div>
-                  <div className="p-4 space-y-4">
-                    <div className="bg-gray-50 rounded-lg p-3">
-                      <div className="text-sm text-gray-600 mb-1">Customer</div>
-                      <div className="font-medium">Johnson Residence</div>
+                  <div>
+                    <div>
+                      <div>Customer</div>
+                      <div>Johnson Residence</div>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-3">
-                      <div className="text-sm text-gray-600 mb-1">Room Type</div>
-                      <div className="font-medium">Kitchen (12x14 ft)</div>
+                    <div>
+                      <div>Room Type</div>
+                      <div>Kitchen (12x14 ft)</div>
                     </div>
-                    <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-                      <div className="text-sm text-green-600 mb-1">Estimated Total</div>
-                      <div className="text-2xl font-bold text-green-600">$2,847</div>
+                    <div>
+                      <div>Estimated Total</div>
+                      <div>$2,847</div>
                     </div>
-                    <Button className="w-full bg-blue-600">
+                    <Button>
                       Generate Quote PDF
                     </Button>
                   </div>
@@ -264,17 +266,17 @@ export default function MobileAppPage() {
               </div>
               
               {/* Floating features */}
-              <div className="absolute -left-4 top-20 bg-white rounded-lg shadow-lg p-3 max-w-32">
-                <WifiOff className="w-6 h-6 text-gray-600 mb-2" />
-                <div className="text-xs font-medium">Works Offline</div>
+              <div>
+                <WifiOff />
+                <div>Works Offline</div>
               </div>
-              <div className="absolute -right-4 top-32 bg-white rounded-lg shadow-lg p-3 max-w-32">
-                <Clock className="w-6 h-6 text-blue-600 mb-2" />
-                <div className="text-xs font-medium">30-Second Quotes</div>
+              <div>
+                <Clock />
+                <div>30-Second Quotes</div>
               </div>
-              <div className="absolute -left-4 bottom-32 bg-white rounded-lg shadow-lg p-3 max-w-32">
-                <PenTool className="w-6 h-6 text-green-600 mb-2" />
-                <div className="text-xs font-medium">Digital Signatures</div>
+              <div>
+                <PenTool />
+                <div>Digital Signatures</div>
               </div>
             </div>
           </div>
@@ -282,16 +284,16 @@ export default function MobileAppPage() {
       </section>
 
       {/* Mobile Stats */}
-      <section className="py-16 px-4 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <section>
+        <div>
+          <div>
             {mobileStats.map((stat, index) => {
               const Icon = stat.icon;
               return (
                 <div key={index}>
-                  <Icon className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-                  <div className="text-3xl font-bold text-gray-900 mb-1">{stat.metric}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
+                  <Icon />
+                  <div>{stat.metric}</div>
+                  <div>{stat.label}</div>
                 </div>
               );
             })}
@@ -300,35 +302,35 @@ export default function MobileAppPage() {
       </section>
 
       {/* Field Workflow */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Your New On-Site Workflow
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               From arrival to signed contract in minutes, not hours
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
             {fieldWorkflow.map((step, index) => {
               const Icon = step.icon;
               return (
-                <div key={index} className="text-center">
-                  <div className="relative mb-6">
-                    <div className={`w-16 h-16 rounded-full bg-white shadow-lg flex items-center justify-center mx-auto mb-4`}>
-                      <Icon className={`w-8 h-8 ${step.color}`} />
+                <div key={index}>
+                  <div>
+                    <div>
+                      <Icon`} />
                     </div>
-                    <div className={`absolute -top-2 -right-2 w-8 h-8 rounded-full bg-blue-600 text-white text-sm font-bold flex items-center justify-center`}>
+                    <div>
                       {step.step}
                     </div>
                     {index < fieldWorkflow.length - 1 && (
-                      <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gray-300 -translate-y-1/2"></div>
+                      <div></div>
                     )}
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
-                  <p className="text-gray-600">{step.description}</p>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
                 </div>
               );
             })}
@@ -337,31 +339,31 @@ export default function MobileAppPage() {
       </section>
 
       {/* Mobile Features */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Built for the Field
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Every feature designed for real-world painting contractor needs
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div>
             {mobileFeatures.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+                <Card key={index}>
                   <CardHeader>
-                    <div className="bg-blue-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                      <Icon className="w-6 h-6 text-blue-600" />
+                    <div>
+                      <Icon />
                     </div>
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
+                    <CardTitle>{feature.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-4">{feature.description}</p>
-                    <div className="bg-green-50 text-green-700 px-3 py-2 rounded-lg text-sm font-medium">
+                    <p>{feature.description}</p>
+                    <div>
                       ✓ {feature.benefit}
                     </div>
                   </CardContent>
@@ -373,32 +375,32 @@ export default function MobileAppPage() {
       </section>
 
       {/* Device Compatibility */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Works on Every Device
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Native experience across iPhone, Android, tablets, and web browsers
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div>
             {compatibility.map((device, index) => {
               const Icon = device.icon;
               return (
-                <Card key={index} className="border-0 shadow-sm bg-white text-center">
+                <Card key={index}>
                   <CardHeader>
-                    <Icon className="w-12 h-12 text-gray-700 mx-auto mb-4" />
-                    <CardTitle className="text-lg">{device.device}</CardTitle>
-                    <p className="text-sm text-gray-600">{device.description}</p>
+                    <Icon />
+                    <CardTitle>{device.device}</CardTitle>
+                    <p>{device.description}</p>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2 text-sm text-gray-600">
+                    <ul>
                       {device.features.map((feature, i) => (
-                        <li key={i} className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                        <li key={i}>
+                          <CheckCircle />
                           {feature}
                         </li>
                       ))}
@@ -412,35 +414,35 @@ export default function MobileAppPage() {
       </section>
 
       {/* Mobile Testimonials */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Contractors Love Mobile Quoting
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Real stories from contractors using mobile quotes daily
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
             {mobileTestimonials.map((testimonial, index) => (
-              <Card key={index} className="border-0 shadow-lg">
-                <CardContent className="p-6">
-                  <div className="flex gap-1 mb-4">
+              <Card key={index}>
+                <CardContent>
+                  <div>
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                      <Star key={i} />
                     ))}
                   </div>
-                  <p className="text-gray-700 mb-6 italic">"{testimonial.quote}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                  <p>"{testimonial.quote}"</p>
+                  <div>
+                    <div>
                       {testimonial.avatar}
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">{testimonial.author}</div>
-                      <div className="text-sm text-blue-600">{testimonial.company}</div>
-                      <div className="text-sm text-gray-500">{testimonial.location}</div>
+                      <div>{testimonial.author}</div>
+                      <div>{testimonial.company}</div>
+                      <div>{testimonial.location}</div>
                     </div>
                   </div>
                 </CardContent>
@@ -451,50 +453,50 @@ export default function MobileAppPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="container mx-auto max-w-4xl text-center">
-          <Smartphone className="w-16 h-16 text-white mx-auto mb-6" />
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      <section>
+        <div>
+          <Smartphone />
+          <h2>
             Start Quoting On-Site Today
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p>
             Join 5,000+ contractors who create professional quotes anywhere, anytime. 
             No more losing jobs to faster competitors.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button size="lg" variant="secondary" asChild className="bg-white text-blue-600 hover:bg-gray-100">
+          <div>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/trial-signup">
-                <Download className="w-5 h-5 mr-2" />
+                <Download />
                 Get Mobile App Free
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="border-white text-white hover:bg-white hover:text-blue-600">
+            <Button size="lg" variant="outline" asChild>
               <Link href="/demo">
-                <Play className="w-5 h-5 mr-2" />
+                <Play />
                 Watch Mobile Demo
               </Link>
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-blue-200 text-sm">
-            <div className="flex items-center justify-center gap-2">
-              <CheckCircle className="w-4 h-4" />
+          <div>
+            <div>
+              <CheckCircle />
               <span>Works completely offline</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <CheckCircle className="w-4 h-4" />
+            <div>
+              <CheckCircle />
               <span>No credit card required</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <CheckCircle className="w-4 h-4" />
+            <div>
+              <CheckCircle />
               <span>Start quoting in 2 minutes</span>
             </div>
           </div>
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
 
       {/* Structured Data */}
       <script

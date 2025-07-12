@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 export default function PaintEstimateTemplatesPage() {
   const templateTypes = [
     {
-      icon: <Home className="w-8 h-8 text-blue-600" />,
+      icon: <Home />,
       name: "Interior Paint Estimate Template",
       description: "Comprehensive template for indoor painting projects including bedrooms, bathrooms, and living areas",
       features: ["Room-by-room breakdown", "Wall area calculations", "Paint and labor costs", "Material specifications"],
@@ -48,7 +48,7 @@ export default function PaintEstimateTemplatesPage() {
       downloadUrl: "/templates/interior-paint-estimate.pdf"
     },
     {
-      icon: <Building className="w-8 h-8 text-green-600" />,
+      icon: <Building />,
       name: "Exterior Paint Quote Template", 
       description: "Professional template for outdoor painting including siding, trim, and special surface preparations",
       features: ["Surface area calculations", "Prep work details", "Weather considerations", "Multi-coat specifications"],
@@ -56,7 +56,7 @@ export default function PaintEstimateTemplatesPage() {
       downloadUrl: "/templates/exterior-paint-estimate.pdf"
     },
     {
-      icon: <Building className="w-8 h-8 text-purple-600" />,
+      icon: <Building />,
       name: "Commercial Paint Estimate",
       description: "Business-focused template for office buildings, retail spaces, and commercial properties",
       features: ["Large area calculations", "Minimal disruption scheduling", "Safety requirements", "Volume pricing"],
@@ -64,7 +64,7 @@ export default function PaintEstimateTemplatesPage() {
       downloadUrl: "/templates/commercial-paint-estimate.pdf"
     },
     {
-      icon: <Palette className="w-8 h-8 text-orange-600" />,
+      icon: <Palette />,
       name: "Apartment Painting Quote",
       description: "Specialized template for rental properties, apartment complexes, and multi-unit buildings",
       features: ["Unit-by-unit pricing", "Turnover schedules", "Landlord specifications", "Bulk pricing options"],
@@ -75,32 +75,32 @@ export default function PaintEstimateTemplatesPage() {
 
   const templateFeatures = [
     {
-      icon: <Calculator className="w-6 h-6 text-blue-600" />,
+      icon: <Calculator />,
       feature: "Automatic Calculations",
       description: "Built-in formulas calculate paint coverage, material costs, and labor hours automatically"
     },
     {
-      icon: <Palette className="w-6 h-6 text-green-600" />,
+      icon: <Palette />,
       feature: "Professional Branding",
       description: "Customizable headers and footers to include your company logo, colors, and contact information"
     },
     {
-      icon: <FileText className="w-6 h-6 text-purple-600" />,
+      icon: <FileText />,
       feature: "Detailed Breakdowns",
       description: "Room-by-room or area-by-area cost breakdowns that customers can easily understand"
     },
     {
-      icon: <Shield className="w-6 h-6 text-indigo-600" />,
+      icon: <Shield />,
       feature: "Terms & Conditions",
       description: "Pre-written contract terms, warranty information, and payment schedules"
     },
     {
-      icon: <Mail className="w-6 h-6 text-red-600" />,
+      icon: <Mail />,
       feature: "Email Ready",
       description: "Formatted for easy email delivery or professional printing and presentation"
     },
     {
-      icon: <Smartphone className="w-6 h-6 text-teal-600" />,
+      icon: <Smartphone />,
       feature: "Mobile Compatible",
       description: "Templates work on all devices - edit and send quotes from your phone or tablet"
     }
@@ -124,48 +124,48 @@ export default function PaintEstimateTemplatesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto text-center max-w-5xl">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Free <span className="text-blue-600">Paint Estimate Templates</span>
+      <section>
+        <div>
+          <h1>
+            Free <span>Paint Estimate Templates</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p>
             Download professional <strong>painting quote templates</strong> used by <strong>5,000+ contractors</strong>. 
             Complete with sample interior paint estimates, cost breakdowns, and contract terms.
           </p>
           
-          <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-12">
-            <Button size="lg" asChild className="text-lg px-12 py-6 bg-blue-600 hover:bg-blue-700">
+          <div>
+            <Button size="lg" asChild>
               <Link href="#templates">
                 Download Free Templates
-                <Download className="w-5 h-5 ml-2" />
+                <Download />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6">
+            <Button size="lg" variant="outline" asChild>
               <Link href="/trial-signup">
                 Try Professional Software
               </Link>
             </Button>
           </div>
           
-          <div className="grid md:grid-cols-4 gap-6 text-sm text-gray-600">
-            <div className="flex items-center justify-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-500" />
+          <div>
+            <div>
+              <CheckCircle />
               <span>Instantly downloadable</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <FileText className="w-5 h-5 text-green-500" />
+            <div>
+              <FileText />
               <span>Professional formatting</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <Palette className="w-5 h-5 text-green-500" />
+            <div>
+              <Palette />
               <span>Customizable branding</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <Calculator className="w-5 h-5 text-green-500" />
+            <div>
+              <Calculator />
               <span>Built-in calculations</span>
             </div>
           </div>
@@ -173,63 +173,63 @@ export default function PaintEstimateTemplatesPage() {
       </section>
 
       {/* Sample Paint Estimate Preview */}
-      <section className="py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Sample Interior Paint Estimate
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               See what a professional painting quote looks like with our templates
             </p>
           </div>
 
-          <Card className="border-2 border-blue-100 shadow-xl">
-            <CardHeader className="bg-blue-50">
-              <div className="flex justify-between items-start">
+          <Card>
+            <CardHeader>
+              <div>
                 <div>
-                  <CardTitle className="text-2xl text-blue-900">ProPaint Quote</CardTitle>
-                  <p className="text-blue-700">Professional Painting Services</p>
+                  <CardTitle>ProPaint Quote</CardTitle>
+                  <p>Professional Painting Services</p>
                 </div>
-                <div className="text-right text-sm text-blue-700">
+                <div>
                   <p>Date: {sampleEstimate.date}</p>
                   <p>Quote #: PQ-2025-001</p>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-8">
-              <div className="grid md:grid-cols-2 gap-8 mb-8">
+            <CardContent>
+              <div>
                 <div>
-                  <h3 className="font-bold text-gray-900 mb-2">Project Details</h3>
-                  <p className="font-semibold text-lg">{sampleEstimate.projectType}</p>
-                  <p className="text-gray-600 mt-2">
+                  <h3>Project Details</h3>
+                  <p>{sampleEstimate.projectType}</p>
+                  <p>
                     Complete interior painting including all prep work, primer, and two coats of premium paint
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900 mb-2">Client Information</h3>
-                  <p className="font-medium">{sampleEstimate.clientName}</p>
-                  <p className="text-gray-600">{sampleEstimate.address}</p>
+                  <h3>Client Information</h3>
+                  <p>{sampleEstimate.clientName}</p>
+                  <p>{sampleEstimate.address}</p>
                 </div>
               </div>
 
-              <div className="mb-8">
-                <h3 className="font-bold text-gray-900 mb-4">Room-by-Room Breakdown</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full border border-gray-200">
-                    <thead className="bg-gray-50">
+              <div>
+                <h3>Room-by-Room Breakdown</h3>
+                <div>
+                  <table>
+                    <thead>
                       <tr>
-                        <th className="text-left p-3 border-b font-semibold">Room</th>
-                        <th className="text-center p-3 border-b font-semibold">Sq Ft</th>
-                        <th className="text-right p-3 border-b font-semibold">Cost</th>
+                        <th>Room</th>
+                        <th>Sq Ft</th>
+                        <th>Cost</th>
                       </tr>
                     </thead>
                     <tbody>
                       {sampleEstimate.rooms.map((room, index) => (
-                        <tr key={index} className="border-b">
-                          <td className="p-3">{room.name}</td>
-                          <td className="p-3 text-center">{room.sqft}</td>
-                          <td className="p-3 text-right">${room.cost}</td>
+                        <tr key={index}>
+                          <td>{room.name}</td>
+                          <td>{room.sqft}</td>
+                          <td>${room.cost}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -237,54 +237,54 @@ export default function PaintEstimateTemplatesPage() {
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-8">
+              <div>
                 <div>
-                  <h3 className="font-bold text-gray-900 mb-4">What's Included</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <h3>What's Included</h3>
+                  <ul>
+                    <li>
+                      <CheckCircle />
                       Complete surface preparation
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <li>
+                      <CheckCircle />
                       High-quality primer application
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <li>
+                      <CheckCircle />
                       Two coats premium interior paint
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <li>
+                      <CheckCircle />
                       Complete cleanup and protection
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <li>
+                      <CheckCircle />
                       2-year workmanship warranty
                     </li>
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-gray-900 mb-4">Cost Summary</h3>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
+                  <h3>Cost Summary</h3>
+                  <div>
+                    <div>
                       <span>Materials:</span>
                       <span>${sampleEstimate.materials}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div>
                       <span>Labor:</span>
                       <span>${sampleEstimate.labor}</span>
                     </div>
-                    <div className="border-t pt-2 mt-4">
-                      <div className="flex justify-between text-lg font-bold">
+                    <div>
+                      <div>
                         <span>Total Project Cost:</span>
-                        <span className="text-green-600">${sampleEstimate.total}</span>
+                        <span>${sampleEstimate.total}</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="mt-6 bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                    <p className="text-sm text-blue-800">
+                  <div>
+                    <p>
                       <strong>Payment Terms:</strong> 25% deposit, 50% at midpoint, 25% on completion
                     </p>
                   </div>
@@ -293,11 +293,11 @@ export default function PaintEstimateTemplatesPage() {
             </CardContent>
           </Card>
 
-          <div className="text-center mt-8">
-            <Button size="lg" asChild className="bg-green-600 hover:bg-green-700">
+          <div>
+            <Button size="lg" asChild>
               <Link href="/trial-signup">
                 Create Professional Quotes Like This
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight />
               </Link>
             </Button>
           </div>
@@ -305,55 +305,55 @@ export default function PaintEstimateTemplatesPage() {
       </section>
 
       {/* Template Downloads */}
-      <section id="templates" className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section id="templates">
+        <div>
+          <div>
+            <h2>
               Download Professional Paint Estimate Templates
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p>
               Choose from our collection of proven quote templates used by successful painting contractors
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div>
             {templateTypes.map((template, index) => (
-              <Card key={index} className="border-2 hover:border-blue-200 transition-colors">
+              <Card key={index}>
                 <CardHeader>
-                  <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div>
+                    <div>
                       {template.icon}
                     </div>
                     <div>
-                      <CardTitle className="text-xl mb-2">{template.name}</CardTitle>
-                      <p className="text-gray-600">{template.description}</p>
+                      <CardTitle>{template.name}</CardTitle>
+                      <p>{template.description}</p>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Template Features:</h4>
-                      <ul className="space-y-1">
+                      <h4>Template Features:</h4>
+                      <ul>
                         {template.features.map((feature, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                            <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                          <li key={i}>
+                            <CheckCircle />
                             {feature}
                           </li>
                         ))}
                       </ul>
                     </div>
                     
-                    <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                      <p className="text-sm text-blue-800">
+                    <div>
+                      <p>
                         <strong>Example Project:</strong> {template.sampleProject}
                       </p>
                     </div>
 
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700" asChild>
+                    <Button asChild>
                       <Link href={template.downloadUrl}>
                         Download Template
-                        <Download className="w-4 h-4 ml-2" />
+                        <Download />
                       </Link>
                     </Button>
                   </div>
@@ -365,28 +365,28 @@ export default function PaintEstimateTemplatesPage() {
       </section>
 
       {/* Template Features */}
-      <section className="py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Why Contractors Love Our Paint Estimate Templates
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Professional features that help you win more painting jobs and increase revenue
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div>
             {templateFeatures.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-lg">
+              <Card key={index}>
                 <CardHeader>
-                  <div className="flex items-center gap-3">
+                  <div>
                     {feature.icon}
-                    <CardTitle className="text-lg">{feature.feature}</CardTitle>
+                    <CardTitle>{feature.feature}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <p>{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -395,62 +395,62 @@ export default function PaintEstimateTemplatesPage() {
       </section>
 
       {/* Upgrade to Professional */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <h2>
             Ready for Automated Quote Generation?
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <p>
             While templates are great, our professional software creates quotes automatically in 6 minutes vs 6 hours
           </p>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <Card className="border-2 border-gray-200">
+          <div>
+            <Card>
               <CardHeader>
-                <CardTitle className="text-center">Free Templates</CardTitle>
+                <CardTitle>Free Templates</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-3 text-left">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                <ul>
+                  <li>
+                    <CheckCircle />
                     Manual calculations required
                   </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <li>
+                    <CheckCircle />
                     Basic formatting
                   </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <li>
+                    <CheckCircle />
                     Download and customize
                   </li>
-                  <li className="flex items-start gap-2">
-                    <Clock className="w-5 h-5 text-orange-500 mt-0.5" />
+                  <li>
+                    <Clock />
                     2-3 hours per quote
                   </li>
                 </ul>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-blue-500 bg-blue-50">
+            <Card>
               <CardHeader>
-                <CardTitle className="text-center text-blue-900">Professional Software</CardTitle>
+                <CardTitle>Professional Software</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-3 text-left">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                <ul>
+                  <li>
+                    <CheckCircle />
                     Automatic calculations
                   </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <li>
+                    <CheckCircle />
                     Professional branding
                   </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <li>
+                    <CheckCircle />
                     Mobile app access
                   </li>
-                  <li className="flex items-start gap-2">
-                    <Clock className="w-5 h-5 text-green-500 mt-0.5" />
+                  <li>
+                    <Clock />
                     6 minutes per quote
                   </li>
                 </ul>
@@ -458,66 +458,66 @@ export default function PaintEstimateTemplatesPage() {
             </Card>
           </div>
 
-          <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700 text-lg px-12 py-6">
+          <Button size="lg" asChild>
             <Link href="/trial-signup">
               Try Professional Software Free
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <ArrowRight />
             </Link>
           </Button>
           
-          <p className="text-gray-600 mt-4">
+          <p>
             10 professional quotes included • No credit card required
           </p>
         </div>
       </section>
 
       {/* Template Tips */}
-      <section className="py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               How to Use Paint Estimate Templates Effectively
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Professional tips for creating winning paint quotes with templates
             </p>
           </div>
 
-          <div className="space-y-8">
-            <Card className="border-l-4 border-blue-500">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">1. Customize Your Branding</h3>
-                <p className="text-gray-600">
+          <div>
+            <Card>
+              <CardContent>
+                <h3>1. Customize Your Branding</h3>
+                <p>
                   Add your company logo, colors, and contact information to every template. Professional presentation 
                   increases win rates by 40-60% compared to basic estimates.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-l-4 border-green-500">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">2. Double-Check Calculations</h3>
-                <p className="text-gray-600">
+            <Card>
+              <CardContent>
+                <h3>2. Double-Check Calculations</h3>
+                <p>
                   Always verify wall area calculations and paint coverage estimates. Use the formula: 
                   (Length × Width × Height) - (Doors + Windows) = Paintable Area.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-l-4 border-purple-500">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">3. Include Detailed Scope</h3>
-                <p className="text-gray-600">
+            <Card>
+              <CardContent>
+                <h3>3. Include Detailed Scope</h3>
+                <p>
                   Clearly specify what's included: prep work, primer, number of coats, cleanup, and warranty terms. 
                   Detailed scope prevents misunderstandings and change orders.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-l-4 border-orange-500">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">4. Present Quotes Quickly</h3>
-                <p className="text-gray-600">
+            <Card>
+              <CardContent>
+                <h3>4. Present Quotes Quickly</h3>
+                <p>
                   Deliver quotes within 24-48 hours while customer interest is high. Late quotes lose to competitors 
                   who respond faster, regardless of pricing.
                 </p>

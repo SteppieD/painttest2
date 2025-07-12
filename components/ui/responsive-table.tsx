@@ -1,8 +1,6 @@
 "use client";
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-
 interface ResponsiveTableProps {
   headers: string[];
   rows: (string | React.ReactNode)[][];
@@ -24,11 +22,11 @@ export function ResponsiveTable({
 }: ResponsiveTableProps) {
   // Default mobile card renderer
   const defaultMobileCard = (row: (string | React.ReactNode)[], index: number) => (
-    <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 space-y-3">
+    <div key={index}>
       {row.map((cell, cellIndex) => (
-        <div key={cellIndex} className="flex justify-between items-center">
-          <span className="text-sm font-medium text-gray-600">{headers[cellIndex]}:</span>
-          <div className="text-sm text-gray-900">{cell}</div>
+        <div key={cellIndex}>
+          <span>{headers[cellIndex]}:</span>
+          <div>{cell}</div>
         </div>
       ))}
     </div>
@@ -37,24 +35,24 @@ export function ResponsiveTable({
   const renderMobileCard = mobileCardRenderer || defaultMobileCard;
 
   return (
-    <div className={cn("w-full", className)}>
+    <div>
       {/* Desktop Table View */}
-      <div className="hidden md:block overflow-x-auto">
-        <table className={cn("w-full", tableClassName)}>
+      <div>
+        <table>
           <thead>
-            <tr className={headerClassName}>
+            <tr>
               {headers.map((header, index) => (
-                <th key={index} className={cn("px-6 py-4 text-left text-sm font-medium", cellClassName)}>
+                <th key={index}>
                   {header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody>
             {rows.map((row, rowIndex) => (
-              <tr key={rowIndex} className="hover:bg-gray-50">
+              <tr key={rowIndex}>
                 {row.map((cell, cellIndex) => (
-                  <td key={cellIndex} className={cn("px-6 py-4 text-sm", cellClassName)}>
+                  <td key={cellIndex}>
                     {cell}
                   </td>
                 ))}
@@ -65,7 +63,7 @@ export function ResponsiveTable({
       </div>
 
       {/* Mobile Card View */}
-      <div className="md:hidden space-y-4">
+      <div>
         {rows.map((row, index) => renderMobileCard(row, index))}
       </div>
     </div>

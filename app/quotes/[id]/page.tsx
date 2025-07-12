@@ -83,8 +83,8 @@ export default function QuotePage({ params }: { params: { id: string } }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+      <div>
+        <div></div>
       </div>
     );
   }
@@ -93,9 +93,9 @@ export default function QuotePage({ params }: { params: { id: string } }) {
   
   if (!quote) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">Quote not found</p>
+      <div>
+        <div>
+          <p>Quote not found</p>
           <Button onClick={() => router.push("/dashboard")}>
             Return to Dashboard
           </Button>
@@ -105,39 +105,39 @@ export default function QuotePage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <header className="bg-white border-b shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+      <header>
+        <div>
+          <div>
+            <div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => router.push("/dashboard")}
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft />
               </Button>
               <div>
-                <h1 className="text-xl font-bold">Quote Overview</h1>
-                <p className="text-sm text-gray-500">#{quote.quote_id}</p>
+                <h1>Quote Overview</h1>
+                <p>#{quote.quote_id}</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div>
               <Button
                 variant="outline"
                 onClick={copyCustomerLink}
-                className="hidden sm:flex"
+               
               >
                 {copied ? (
                   <>
-                    <CheckCircle className="w-4 h-4 mr-2" />
+                    <CheckCircle />
                     Copied!
                   </>
                 ) : (
                   <>
-                    <Link className="w-4 h-4 mr-2" />
+                    <Link />
                     Copy Customer Link
                   </>
                 )}
@@ -146,9 +146,9 @@ export default function QuotePage({ params }: { params: { id: string } }) {
               <Button
                 variant="outline"
                 onClick={handleEmailQuote}
-                className="hidden sm:flex"
+               
               >
-                <Send className="w-4 h-4 mr-2" />
+                <Send />
                 Email Quote
               </Button>
             </div>
@@ -156,44 +156,39 @@ export default function QuotePage({ params }: { params: { id: string } }) {
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <div>
         {/* Quote Summary Card */}
         <Card>
           <CardHeader>
             <CardTitle>Quote Summary</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
               <div>
-                <h3 className="font-semibold mb-2">Customer Information</h3>
-                <p className="text-lg font-medium">{quote.customer_name}</p>
-                <p className="text-gray-600">{quote.address}</p>
+                <h3>Customer Information</h3>
+                <p>{quote.customer_name}</p>
+                <p>{quote.address}</p>
                 {quote.customer_email && (
-                  <p className="text-gray-600">{quote.customer_email}</p>
+                  <p>{quote.customer_email}</p>
                 )}
                 {quote.customer_phone && (
-                  <p className="text-gray-600">{quote.customer_phone}</p>
+                  <p>{quote.customer_phone}</p>
                 )}
               </div>
               
               <div>
-                <h3 className="font-semibold mb-2">Project Details</h3>
-                <p className="text-gray-600">
+                <h3>Project Details</h3>
+                <p>
                   {quote.project_type?.charAt(0).toUpperCase() + quote.project_type?.slice(1)} Painting
                 </p>
-                <p className="text-2xl font-bold text-green-600 mt-2">
+                <p>
                   ${quote.total_cost?.toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p>
                   Created: {new Date(quote.created_at).toLocaleDateString()}
                 </p>
-                <div className="mt-2">
-                  <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
-                    quote.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                    quote.status === 'completed' ? 'bg-blue-100 text-blue-800' :
-                    quote.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                    'bg-yellow-100 text-yellow-800'
-                  }`}>
+                <div>
+                  <span`}>
                     {quote.status || 'pending'}
                   </span>
                 </div>
@@ -203,35 +198,35 @@ export default function QuotePage({ params }: { params: { id: string } }) {
         </Card>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" 
+        <div>
+          <Card 
                 onClick={() => router.push(`/quotes/${quote.id}/review`)}>
-            <CardContent className="p-6 text-center">
-              <Edit3 className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Review & Edit</h3>
-              <p className="text-sm text-gray-600">
+            <CardContent>
+              <Edit3 />
+              <h3>Review & Edit</h3>
+              <p>
                 View internal details, adjust markup, and analyze costs
               </p>
             </CardContent>
           </Card>
           
-          <Card className="cursor-pointer hover:shadow-md transition-shadow"
+          <Card
                 onClick={() => router.push(`/quotes/${quote.id}/customer`)}>
-            <CardContent className="p-6 text-center">
-              <Eye className="w-8 h-8 text-green-600 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Customer View</h3>
-              <p className="text-sm text-gray-600">
+            <CardContent>
+              <Eye />
+              <h3>Customer View</h3>
+              <p>
                 See the professional quote as your customer sees it
               </p>
             </CardContent>
           </Card>
           
-          <Card className="cursor-pointer hover:shadow-md transition-shadow"
+          <Card
                 onClick={copyCustomerLink}>
-            <CardContent className="p-6 text-center">
-              <Send className="w-8 h-8 text-purple-600 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Share Quote</h3>
-              <p className="text-sm text-gray-600">
+            <CardContent>
+              <Send />
+              <h3>Share Quote</h3>
+              <p>
                 Copy link to send to your customer
               </p>
             </CardContent>
@@ -239,20 +234,20 @@ export default function QuotePage({ params }: { params: { id: string } }) {
         </div>
 
         {/* Mobile Actions */}
-        <div className="sm:hidden space-y-3">
+        <div>
           <Button
             onClick={copyCustomerLink}
-            className="w-full"
+           
             variant="outline"
           >
             {copied ? (
               <>
-                <CheckCircle className="w-4 h-4 mr-2" />
+                <CheckCircle />
                 Customer Link Copied!
               </>
             ) : (
               <>
-                <Link className="w-4 h-4 mr-2" />
+                <Link />
                 Copy Customer Link
               </>
             )}
@@ -260,10 +255,10 @@ export default function QuotePage({ params }: { params: { id: string } }) {
           
           <Button
             onClick={handleEmailQuote}
-            className="w-full"
+           
             variant="outline"
           >
-            <Send className="w-4 h-4 mr-2" />
+            <Send />
             Email Quote to Customer
           </Button>
         </div>

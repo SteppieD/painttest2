@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { X, Clock, Zap, ArrowRight } from "lucide-react";
 import { Button } from "./button";
-import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
 interface TrialExpiryBannerProps {
@@ -94,37 +93,33 @@ export function TrialExpiryBanner({
 
   if (variant === "minimal") {
     return (
-      <div className={cn(
-        "fixed top-0 left-0 right-0 z-50 px-4 py-2",
-        bgColor,
-        className
-      )}>
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2 text-white text-sm">
-            <Clock className="w-4 h-4" />
-            <span className="font-medium">
+      <div>
+        <div>
+          <div>
+            <Clock />
+            <span>
               {timeLeft.expired 
                 ? "Trial expired" 
                 : `${timeLeft.days}d ${timeLeft.hours}h left`}
             </span>
-            <span className="opacity-80">•</span>
+            <span>•</span>
             <span>{quotesRemaining} quotes remaining</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div>
             <Button
               size="sm"
               variant="ghost"
-              className="text-white hover:bg-white/20 h-7 px-2"
+             
               onClick={handleUpgrade}
             >
               Upgrade
-              <ArrowRight className="w-3 h-3 ml-1" />
+              <ArrowRight />
             </Button>
             <button
               onClick={handleDismiss}
-              className="text-white/80 hover:text-white p-1"
+             
             >
-              <X className="w-4 h-4" />
+              <X />
             </button>
           </div>
         </div>
@@ -134,24 +129,20 @@ export function TrialExpiryBanner({
 
   // Full variant
   return (
-    <div className={cn(
-      "fixed top-0 left-0 right-0 z-50",
-      bgColor,
-      className
-    )}>
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <Clock className="w-5 h-5" />
+    <div>
+      <div>
+        <div>
+          <div>
+            <div>
+              <Clock />
             </div>
             <div>
-              <h3 className="font-semibold text-lg">
+              <h3>
                 {timeLeft.expired 
                   ? "Your free trial has expired" 
                   : `Free trial ends in ${timeLeft.days} days`}
               </h3>
-              <p className="text-sm opacity-90">
+              <p>
                 {timeLeft.expired 
                   ? "Upgrade now to continue creating quotes" 
                   : `${quotesRemaining} of ${quotesAllowed} quotes remaining • ${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m left`}
@@ -159,38 +150,37 @@ export function TrialExpiryBanner({
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div>
             <Button
               onClick={handleUpgrade}
-              className="bg-white text-gray-900 hover:bg-gray-100"
+             
             >
-              <Zap className="w-4 h-4 mr-2" />
+              <Zap />
               Upgrade Now
             </Button>
             <button
               onClick={handleDismiss}
-              className="text-white/80 hover:text-white p-2"
+             
               aria-label="Dismiss banner"
             >
-              <X className="w-5 h-5" />
+              <X />
             </button>
           </div>
         </div>
 
         {/* Progress bar */}
-        <div className="mt-3 h-1 bg-white/20 rounded-full overflow-hidden">
+        <div>
           <div 
-            className="h-full bg-white transition-all duration-300"
-            style={{ 
-              width: `${Math.max(0, Math.min(100, ((trialDurationDays - timeLeft.days) / trialDurationDays) * 100))}%` 
+           
+           %` 
             }}
           />
         </div>
 
         {/* Special offer for last 3 days */}
         {isUrgent && !timeLeft.expired && (
-          <div className="mt-3 text-center">
-            <p className="text-sm text-white/90">
+          <div>
+            <p>
               🎉 <strong>Limited Time Offer:</strong> Get 20% off your first month when you upgrade today!
             </p>
           </div>

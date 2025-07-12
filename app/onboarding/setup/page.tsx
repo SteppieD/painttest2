@@ -220,48 +220,42 @@ export default function OnboardingSetupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div>
       {/* Header */}
-      <div className="bg-white border-b px-4 py-3">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Building2 className="h-5 w-5 text-blue-600" />
-            <h1 className="text-lg font-semibold">Company Setup</h1>
+      <div>
+        <div>
+          <div>
+            <Building2 />
+            <h1>Company Setup</h1>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <PaintBucket className="h-4 w-4" />
+          <div>
+            <PaintBucket />
             <span>Setting up your paint products</span>
           </div>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="max-w-4xl mx-auto space-y-4">
+      <div>
+        <div>
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex ${
-                message.role === "user" ? "justify-end" : "justify-start"
-              }`}
+             `}
             >
               <Card
-                className={`max-w-[80%] p-4 ${
-                  message.role === "user"
-                    ? "bg-blue-50 border-blue-200"
-                    : "bg-white"
-                }`}
+               `}
               >
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                <p>{message.content}</p>
               </Card>
             </div>
           ))}
           {isLoading && (
-            <div className="flex justify-start">
-              <Card className="p-4 bg-white">
-                <div className="flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span className="text-sm text-gray-600">Thinking...</span>
+            <div>
+              <Card>
+                <div>
+                  <Loader2 />
+                  <span>Thinking...</span>
                 </div>
               </Card>
             </div>
@@ -271,22 +265,22 @@ export default function OnboardingSetupPage() {
       </div>
 
       {/* Input */}
-      <div className="bg-white border-t p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex gap-2">
+      <div>
+        <div>
+          <div>
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Type your response..."
               disabled={isLoading}
-              className="flex-1"
+             
             />
             <Button onClick={handleSend} disabled={isLoading || !input.trim()}>
-              <Send className="h-4 w-4" />
+              <Send />
             </Button>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
+          <p>
             Press Enter to send, Shift+Enter for new line
           </p>
         </div>

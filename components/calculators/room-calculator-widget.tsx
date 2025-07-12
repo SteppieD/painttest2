@@ -12,7 +12,7 @@ interface RoomCalculatorWidgetProps {
 
 export function RoomCalculatorWidget({ 
   title = "Room Paint Calculator",
-  className = ""
+ 
 }: RoomCalculatorWidgetProps) {
   const [length, setLength] = useState('')
   const [width, setWidth] = useState('')
@@ -73,64 +73,64 @@ export function RoomCalculatorWidget({
   }
 
   return (
-    <Card className={`border-2 border-green-100 ${className}`}>
-      <CardHeader className="text-center">
-        <div className="mx-auto mb-3 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-          <Home className="w-6 h-6 text-green-600" />
+    <Card`}>
+      <CardHeader>
+        <div>
+          <Home />
         </div>
-        <CardTitle className="text-lg">{title}</CardTitle>
-        <p className="text-sm text-gray-600">Calculate paint for individual rooms</p>
+        <CardTitle>{title}</CardTitle>
+        <p>Calculate paint for individual rooms</p>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-2">
+        <div>
+          <div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label>
                 Length (ft)
               </label>
               <input
                 type="number"
                 value={length}
                 onChange={(e) => setLength(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md text-sm"
+               
                 placeholder="12"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label>
                 Width (ft)
               </label>
               <input
                 type="number"
                 value={width}
                 onChange={(e) => setWidth(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md text-sm"
+               
                 placeholder="10"
               />
             </div>
           </div>
           
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label>
               Height (ft)
             </label>
             <input
               type="number"
               value={height}
               onChange={(e) => setHeight(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+             
               placeholder="9"
             />
           </div>
           
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label>
               Room Type
             </label>
             <select
               value={roomType}
               onChange={(e) => setRoomType(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+             
             >
               <option value="bedroom">Bedroom</option>
               <option value="bathroom">Bathroom</option>
@@ -142,33 +142,33 @@ export function RoomCalculatorWidget({
           
           <Button 
             onClick={calculateRoom}
-            className="w-full bg-green-600 hover:bg-green-700"
+           
             size="sm"
           >
             Calculate Room
-            <Ruler className="w-4 h-4 ml-2" />
+            <Ruler />
           </Button>
           
           {result && (
-            <div className="mt-4 space-y-2 bg-blue-50 border border-blue-200 p-3 rounded-md">
-              <div className="text-center">
-                <div className="text-lg font-bold text-blue-800">
+            <div>
+              <div>
+                <div>
                   ${result.estimatedCost.toLocaleString()}
                 </div>
-                <div className="text-sm text-blue-600">Room Total</div>
+                <div>Room Total</div>
               </div>
-              <div className="grid grid-cols-2 gap-2 text-xs">
+              <div>
                 <div>
-                  <div className="font-semibold">{result.wallArea} sq ft</div>
-                  <div className="text-gray-600">Wall area</div>
+                  <div>{result.wallArea} sq ft</div>
+                  <div>Wall area</div>
                 </div>
                 <div>
-                  <div className="font-semibold">{result.ceilingArea} sq ft</div>
-                  <div className="text-gray-600">Ceiling area</div>
+                  <div>{result.ceilingArea} sq ft</div>
+                  <div>Ceiling area</div>
                 </div>
               </div>
-              <div className="text-center text-xs">
-                <div className="font-semibold">{result.paintNeeded} gallons needed</div>
+              <div>
+                <div>{result.paintNeeded} gallons needed</div>
               </div>
             </div>
           )}

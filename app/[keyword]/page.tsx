@@ -82,7 +82,7 @@ export default function KeywordPage({ params }: { params: { keyword: string } })
       title: "Key Features",
       content: "",
       features: page.content.features.map(feature => ({
-        icon: <CheckCircle className="h-8 w-8 text-blue-600" />,
+        icon: <CheckCircle />,
         title: feature,
         description: ""
       }))
@@ -94,13 +94,13 @@ export default function KeywordPage({ params }: { params: { keyword: string } })
     sections.push({
       title: "How It Works",
       content: (
-        <ol className="space-y-4">
+        <ol>
           {page.content.howItWorks.map((step, index) => (
-            <li key={index} className="flex gap-4">
-              <span className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold">
+            <li key={index}>
+              <span>
                 {index + 1}
               </span>
-              <span className="text-gray-600">{step}</span>
+              <span>{step}</span>
             </li>
           ))}
         </ol>
@@ -114,7 +114,7 @@ export default function KeywordPage({ params }: { params: { keyword: string } })
       title: "Benefits for Your Business",
       content: "",
       features: page.content.benefits.map(benefit => ({
-        icon: <TrendingUp className="h-8 w-8 text-green-600" />,
+        icon: <TrendingUp />,
         title: benefit,
         description: ""
       }))
@@ -126,11 +126,11 @@ export default function KeywordPage({ params }: { params: { keyword: string } })
     sections.push({
       title: "Frequently Asked Questions",
       content: (
-        <div className="space-y-6">
+        <div>
           {page.content.faqs.map((faq, index) => (
-            <div key={index} className="border-b pb-4">
-              <h3 className="font-semibold text-lg mb-2">{faq.q}</h3>
-              <p className="text-gray-600">{faq.a}</p>
+            <div key={index}>
+              <h3>{faq.q}</h3>
+              <p>{faq.a}</p>
             </div>
           ))}
         </div>
@@ -144,17 +144,17 @@ export default function KeywordPage({ params }: { params: { keyword: string } })
     content: "",
     features: [
       {
-        icon: <Clock className="h-8 w-8 text-blue-600" />,
+        icon: <Clock />,
         title: "80% Time Savings",
         description: "Create quotes in 5 minutes instead of 30-60 minutes"
       },
       {
-        icon: <TrendingUp className="h-8 w-8 text-green-600" />,
+        icon: <TrendingUp />,
         title: "30% More Jobs Won",
         description: "Professional quotes that convert better"
       },
       {
-        icon: <DollarSign className="h-8 w-8 text-purple-600" />,
+        icon: <DollarSign />,
         title: "25% Revenue Growth",
         description: "Average increase in first 6 months"
       }

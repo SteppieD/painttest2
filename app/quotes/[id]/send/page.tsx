@@ -208,11 +208,11 @@ ${data.company_name}`);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded mb-4"></div>
-            <div className="h-64 bg-gray-200 rounded"></div>
+      <div>
+        <div>
+          <div>
+            <div></div>
+            <div></div>
           </div>
         </div>
       </div>
@@ -221,14 +221,14 @@ ${data.company_name}`);
 
   if (!quote) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
-        <div className="max-w-4xl mx-auto">
+      <div>
+        <div>
           <Card>
-            <CardContent className="p-8 text-center">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Quote Not Found</h2>
-              <p className="text-gray-600 mb-4">The quote you're looking for doesn't exist.</p>
+            <CardContent>
+              <h2>Quote Not Found</h2>
+              <p>The quote you're looking for doesn't exist.</p>
               <Button onClick={() => router.push('/dashboard')}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
+                <ArrowLeft />
                 Back to Dashboard
               </Button>
             </CardContent>
@@ -239,38 +239,38 @@ ${data.company_name}`);
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-4xl mx-auto">
+    <div>
+      <div>
         {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
+        <div>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => router.push(`/quotes/${params.id}/preview`)}
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Send Quote</h1>
-            <p className="text-gray-600">
+            <h1>Send Quote</h1>
+            <p>
               {quote.customer_name} • Quote #{quote.quote_id} • ${quote.quote_amount.toLocaleString()}
             </p>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div>
           {/* Email Section */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <Mail className="h-5 w-5 mr-2 text-blue-600" />
+              <CardTitle>
+                <Mail />
                 Send via Email
-                {emailSent && <Check className="h-5 w-5 ml-auto text-green-600" />}
+                {emailSent && <Check />}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                <label>
                   Customer Email
                 </label>
                 <Input
@@ -283,7 +283,7 @@ ${data.company_name}`);
               </div>
               
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                <label>
                   Subject Line
                 </label>
                 <Input
@@ -294,7 +294,7 @@ ${data.company_name}`);
               </div>
               
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                <label>
                   Message
                 </label>
                 <Textarea
@@ -308,16 +308,16 @@ ${data.company_name}`);
               <Button
                 onClick={handleSendEmail}
                 disabled={sending || emailSent || !customerEmail.trim()}
-                className="w-full"
+               
               >
                 {emailSent ? (
                   <>
-                    <Check className="h-4 w-4 mr-2" />
+                    <Check />
                     Email Sent Successfully
                   </>
                 ) : (
                   <>
-                    <Send className="h-4 w-4 mr-2" />
+                    <Send />
                     {sending ? 'Sending...' : 'Send Email'}
                   </>
                 )}
@@ -328,15 +328,15 @@ ${data.company_name}`);
           {/* SMS Section */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <MessageSquare className="h-5 w-5 mr-2 text-green-600" />
+              <CardTitle>
+                <MessageSquare />
                 Send via SMS
-                {smsSent && <Check className="h-5 w-5 ml-auto text-green-600" />}
+                {smsSent && <Check />}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                <label>
                   Customer Phone
                 </label>
                 <Input
@@ -349,7 +349,7 @@ ${data.company_name}`);
               </div>
               
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                <label>
                   SMS Message ({smsMessage.length}/160)
                 </label>
                 <Textarea
@@ -359,7 +359,7 @@ ${data.company_name}`);
                   maxLength={160}
                   disabled={smsSent}
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p>
                   Keep it under 160 characters for best delivery
                 </p>
               </div>
@@ -367,17 +367,17 @@ ${data.company_name}`);
               <Button
                 onClick={handleSendSMS}
                 disabled={sending || smsSent || !customerPhone.trim()}
-                className="w-full"
+               
                 variant="outline"
               >
                 {smsSent ? (
                   <>
-                    <Check className="h-4 w-4 mr-2" />
+                    <Check />
                     SMS Sent Successfully
                   </>
                 ) : (
                   <>
-                    <Phone className="h-4 w-4 mr-2" />
+                    <Phone />
                     {sending ? 'Sending...' : 'Send SMS'}
                   </>
                 )}
@@ -387,25 +387,25 @@ ${data.company_name}`);
         </div>
 
         {/* Additional Options */}
-        <Card className="mt-6">
+        <Card>
           <CardHeader>
             <CardTitle>Additional Options</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid sm:grid-cols-3 gap-4">
+            <div>
               <Button
                 onClick={handleCopyLink}
                 variant="outline"
-                className="w-full"
+               
               >
                 {linkCopied ? (
                   <>
-                    <Check className="h-4 w-4 mr-2" />
+                    <Check />
                     Link Copied!
                   </>
                 ) : (
                   <>
-                    <Copy className="h-4 w-4 mr-2" />
+                    <Copy />
                     Copy Public Link
                   </>
                 )}
@@ -414,18 +414,18 @@ ${data.company_name}`);
               <Button
                 onClick={handleDownloadPDF}
                 variant="outline"
-                className="w-full"
+               
               >
-                <Download className="h-4 w-4 mr-2" />
+                <Download />
                 Download PDF
               </Button>
               
               <Button
                 onClick={() => window.open(`/quotes/${params.id}/view`, '_blank')}
                 variant="outline"
-                className="w-full"
+               
               >
-                <ExternalLink className="h-4 w-4 mr-2" />
+                <ExternalLink />
                 Preview Quote
               </Button>
             </div>
@@ -434,13 +434,13 @@ ${data.company_name}`);
 
         {/* Success Summary */}
         {(emailSent || smsSent) && (
-          <Card className="mt-6 bg-green-50 border-green-200">
-            <CardContent className="p-6">
-              <div className="flex items-center mb-4">
-                <Check className="h-6 w-6 text-green-600 mr-2" />
-                <h3 className="text-lg font-semibold text-green-900">Quote Delivered!</h3>
+          <Card>
+            <CardContent>
+              <div>
+                <Check />
+                <h3>Quote Delivered!</h3>
               </div>
-              <div className="space-y-2 text-sm text-green-800">
+              <div>
                 {emailSent && (
                   <p>✓ Email sent to {customerEmail}</p>
                 )}
@@ -451,7 +451,7 @@ ${data.company_name}`);
                 <p>✓ Quote is valid for 30 days from issue date</p>
               </div>
               
-              <div className="mt-4 flex gap-2">
+              <div>
                 <Button
                   onClick={() => router.push('/dashboard')}
                   size="sm"

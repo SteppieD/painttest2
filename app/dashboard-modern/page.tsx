@@ -150,72 +150,72 @@ export default function ModernDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 design-body">Loading modern dashboard...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading modern dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Modern Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="design-container max-w-7xl mx-auto">
-          <div className="flex items-center justify-between h-16 px-4">
+      <header>
+        <div>
+          <div>
             {/* Left Side */}
-            <div className="design-inline">
+            <div>
               {currentView !== 'dashboard' && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleBackToDashboard}
-                  className="mr-3"
+                 
                 >
-                  <ArrowLeft className="w-4 h-4" />
+                  <ArrowLeft />
                 </Button>
               )}
               
-              <div className="design-inline">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Palette className="w-6 h-6 text-blue-600" />
+              <div>
+                <div>
+                  <Palette />
                 </div>
-                <div className="ml-3">
-                  <h1 className="text-lg font-semibold text-gray-900">
+                <div>
+                  <h1>
                     {currentView === 'dashboard' && 'Dashboard'}
                     {currentView === 'express-quote' && 'Express Quote'}
                     {currentView === 'full-quote' && 'Custom Quote'}
                     {currentView === 'quote-preview' && 'Quote Preview'}
                   </h1>
-                  <p className="text-sm text-gray-500">{companyInfo?.company_name}</p>
+                  <p>{companyInfo?.company_name}</p>
                 </div>
               </div>
             </div>
 
             {/* Right Side */}
-            <div className="design-inline">
+            <div>
               {companyInfo?.access_code && (
-                <div className="hidden sm:flex items-center mr-4">
-                  <span className="text-sm text-gray-500 mr-2">Code:</span>
+                <div>
+                  <span>Code:</span>
                   <Badge 
                     variant="outline" 
-                    className="cursor-pointer hover:bg-gray-50"
+                   
                     onClick={() => {
                       navigator.clipboard.writeText(companyInfo.access_code);
                       // Show toast notification
                     }}
                   >
-                    <span className="mr-1">{companyInfo.access_code}</span>
-                    <Copy className="w-3 h-3" />
+                    <span>{companyInfo.access_code}</span>
+                    <Copy />
                   </Badge>
                 </div>
               )}
 
-              <div className="design-inline">
-                <Button variant="ghost" size="sm" className="hidden sm:flex">
-                  <Bell className="w-4 h-4" />
+              <div>
+                <Button variant="ghost" size="sm">
+                  <Bell />
                 </Button>
                 
                 <Button 
@@ -223,16 +223,16 @@ export default function ModernDashboardPage() {
                   size="sm"
                   onClick={() => router.push('/settings')}
                 >
-                  <Settings className="w-4 h-4" />
+                  <Settings />
                 </Button>
 
                 <Button 
                   variant="ghost" 
                   size="sm"
                   onClick={handleLogout}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                 
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut />
                 </Button>
               </div>
             </div>
@@ -241,12 +241,12 @@ export default function ModernDashboardPage() {
       </header>
 
       {/* Main Content */}
-      <main className="pb-20">
+      <main>
         {currentView === 'dashboard' && (
-          <div className="space-y-6">
+          <div>
             {/* Onboarding Checklist (if applicable) */}
             {showOnboardingChecklist && companyInfo && (
-              <div className="design-container max-w-4xl mx-auto p-4">
+              <div>
                 <OnboardingChecklist
                   companyId={parseInt(companyInfo.id)}
                   onAllComplete={handleChecklistComplete}
@@ -272,26 +272,26 @@ export default function ModernDashboardPage() {
         )}
 
         {currentView === 'full-quote' && (
-          <div className="design-container max-w-4xl mx-auto p-4">
-            <Card className="design-card">
+          <div>
+            <Card>
               <CardHeader>
-                <CardTitle className="design-heading-3">Custom Quote Builder</CardTitle>
+                <CardTitle>Custom Quote Builder</CardTitle>
               </CardHeader>
-              <CardContent className="text-center py-12">
-                <p className="design-body mb-6">
+              <CardContent>
+                <p>
                   The custom quote builder with visual room layout is coming soon!
                 </p>
-                <div className="design-inline">
+                <div>
                   <Button 
                     onClick={handleFallbackToChat}
-                    className="design-button design-button-primary"
+                   
                   >
                     Use Chat Interface for Now
                   </Button>
                   <Button 
                     onClick={handleBackToDashboard}
                     variant="outline"
-                    className="design-button design-button-secondary"
+                   
                   >
                     Back to Dashboard
                   </Button>
@@ -302,13 +302,13 @@ export default function ModernDashboardPage() {
         )}
 
         {currentView === 'quote-preview' && generatedQuote && (
-          <div className="py-8">
-            <div className="design-container max-w-4xl mx-auto mb-6">
-              <div className="design-inline">
-                <CheckCircle2 className="w-6 h-6 text-green-600" />
+          <div>
+            <div>
+              <div>
+                <CheckCircle2 />
                 <div>
-                  <h2 className="design-heading-2">Quote Generated Successfully!</h2>
-                  <p className="design-body">
+                  <h2>Quote Generated Successfully!</h2>
+                  <p>
                     Professional quote ready for {generatedQuote.customer_name}
                   </p>
                 </div>
@@ -335,14 +335,14 @@ export default function ModernDashboardPage() {
       )}
 
       {/* Demo Banner */}
-      <div className="fixed bottom-0 left-0 right-0 bg-blue-600 text-white p-3 text-center text-sm z-30">
-        <div className="design-inline">
+      <div>
+        <div>
           <span>🚀 Modern UX Demo - Apple/Google inspired design for contractors</span>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => router.push('/dashboard')}
-            className="text-white hover:bg-blue-700 ml-4"
+           
           >
             View Original Dashboard
           </Button>

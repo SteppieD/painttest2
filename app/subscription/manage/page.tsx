@@ -44,10 +44,10 @@ export default function ManageSubscriptionPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">
-          <div className="h-12 w-48 bg-gray-200 rounded mb-4"></div>
-          <div className="h-32 w-96 bg-gray-200 rounded"></div>
+      <div>
+        <div>
+          <div></div>
+          <div></div>
         </div>
       </div>
     );
@@ -55,14 +55,14 @@ export default function ManageSubscriptionPage() {
 
   if (!subscription) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="container mx-auto px-4 py-16 max-w-4xl">
+      <div>
+        <div>
           <Card>
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold mb-2">No Active Subscription</h2>
-                <p className="text-gray-600 mb-4">You don't have an active subscription yet.</p>
+            <CardContent>
+              <div>
+                <AlertCircle />
+                <h2>No Active Subscription</h2>
+                <p>You don't have an active subscription yet.</p>
                 <Link href="/pricing">
                   <Button>View Plans</Button>
                 </Link>
@@ -75,11 +75,11 @@ export default function ManageSubscriptionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-16 max-w-4xl">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Manage Subscription</h1>
+    <div>
+      <div>
+        <h1>Manage Subscription</h1>
 
-        <div className="grid gap-6">
+        <div>
           {/* Current Plan */}
           <Card>
             <CardHeader>
@@ -87,22 +87,22 @@ export default function ManageSubscriptionPage() {
               <CardDescription>Your subscription details</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
+              <div>
+                <div>
                   <div>
-                    <h3 className="text-lg font-semibold">{subscription.plan} Plan</h3>
-                    <p className="text-sm text-gray-600">
+                    <h3>{subscription.plan} Plan</h3>
+                    <p>
                       ${subscription.amount}/month
                     </p>
                   </div>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                  <span>
                     {subscription.status === 'active' ? 'Active' : subscription.status}
                   </span>
                 </div>
 
-                <div className="pt-4 border-t">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Calendar className="w-4 h-4 mr-2" />
+                <div>
+                  <div>
+                    <Calendar />
                     Next billing date: {new Date(subscription.nextBillingDate).toLocaleDateString()}
                   </div>
                 </div>
@@ -118,13 +118,13 @@ export default function ManageSubscriptionPage() {
             </CardHeader>
             <CardContent>
               {subscription.lastPayment && (
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <div>
                     <div>
-                      <p className="font-medium">
+                      <p>
                         {new Date(subscription.lastPayment.date).toLocaleDateString()}
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p>
                         ${subscription.lastPayment.amount} - {subscription.plan} Plan
                       </p>
                     </div>
@@ -133,7 +133,7 @@ export default function ManageSubscriptionPage() {
                       size="sm"
                       onClick={() => window.open(subscription.lastPayment?.receiptUrl, '_blank')}
                     >
-                      <Download className="w-4 h-4 mr-2" />
+                      <Download />
                       Receipt
                     </Button>
                   </div>
@@ -149,16 +149,16 @@ export default function ManageSubscriptionPage() {
               <CardDescription>Manage your subscription settings</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <Button variant="outline" className="w-full justify-start">
-                  <CreditCard className="w-4 h-4 mr-2" />
+              <div>
+                <Button variant="outline">
+                  <CreditCard />
                   Update Payment Method
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Settings className="w-4 h-4 mr-2" />
+                <Button variant="outline">
+                  <Settings />
                   Change Plan
                 </Button>
-                <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700">
+                <Button variant="outline">
                   Cancel Subscription
                 </Button>
               </div>
@@ -166,7 +166,7 @@ export default function ManageSubscriptionPage() {
           </Card>
         </div>
 
-        <div className="mt-8 text-center">
+        <div>
           <Link href="/dashboard">
             <Button variant="outline">Back to Dashboard</Button>
           </Link>

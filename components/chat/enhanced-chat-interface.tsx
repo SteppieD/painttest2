@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Send, Mic, MicOff, Image, Loader2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { EnhancedMessageBubble } from './enhanced-message-bubble'
 import { TypingIndicator } from './typing-indicator'
 import { ChatInput } from './chat-input'
@@ -168,15 +167,12 @@ export function ChatInterface({
   ]
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div>
       {/* Messages Area */}
       <div 
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto py-4 enhanced-scroll"
-        style={{ 
-          scrollBehavior: 'smooth',
-          WebkitOverflowScrolling: 'touch' // Better iOS scrolling
-        }}
+       
+       
       >
 
         {/* Messages */}
@@ -197,12 +193,12 @@ export function ChatInterface({
         
         {/* Quick Suggestions - styled like iOS quick replies */}
         {showSuggestions && messages.length === 1 && (
-          <div className="flex flex-wrap gap-2 px-4 py-2">
+          <div>
             {suggestions.map((suggestion, index) => (
               <button
                 key={index}
                 onClick={() => sendMessage(suggestion)}
-                className="px-3 py-2 bg-[#E5E5EA] text-black rounded-full text-sm hover:bg-[#D1D1D6] transition-colors"
+               
               >
                 {suggestion}
               </button>
@@ -214,9 +210,9 @@ export function ChatInterface({
       </div>
 
       {/* iMessage-style Input Area */}
-      <div className="bg-[#F8F8F8] border-t border-[#C6C6C8] p-2">
-        <div className="flex items-end gap-2 max-w-none">
-          <div className="flex-1 bg-white rounded-full border border-[#C6C6C8] px-4 py-2 min-h-[36px] flex items-center">
+      <div>
+        <div>
+          <div>
             <input
               ref={inputRef}
               type="text"
@@ -224,7 +220,7 @@ export function ChatInterface({
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="iMessage"
-              className="flex-1 outline-none text-[16px] bg-transparent placeholder-gray-500"
+             
               disabled={isLoading}
             />
           </div>
@@ -232,7 +228,7 @@ export function ChatInterface({
             <button
               onClick={() => sendMessage()}
               disabled={isLoading}
-              className="w-8 h-8 bg-[#007AFF] rounded-full flex items-center justify-center text-white font-semibold text-sm disabled:opacity-50"
+             
             >
               ↑
             </button>

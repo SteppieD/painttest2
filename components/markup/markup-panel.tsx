@@ -7,7 +7,6 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Calculator, Save, Eye, DollarSign } from 'lucide-react'
 import { QuoteResult } from '@/lib/quote-calculator'
-import { cn } from '@/lib/utils'
 import { PriceDisplay } from './price-display'
 import { QuickMarkupButtons } from './quick-markup-buttons'
 
@@ -31,15 +30,15 @@ export function MarkupPanel({
   const finalPrice = baseCost + markupAmount
 
   return (
-    <div className="h-full flex flex-col">
-      <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Calculator className="w-5 h-5 text-blue-600" />
+    <div>
+      <CardHeader>
+        <CardTitle>
+          <Calculator />
           Quote Pricing
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="flex-1 space-y-6 overflow-y-auto">
+      <CardContent>
         {/* Live Price Display */}
         <PriceDisplay
           baseCost={baseCost}
@@ -51,8 +50,8 @@ export function MarkupPanel({
         <Separator />
 
         {/* Quick Markup Buttons */}
-        <div className="space-y-3">
-          <Label className="text-sm font-medium">Quick Markup Options</Label>
+        <div>
+          <Label>Quick Markup Options</Label>
           <QuickMarkupButtons
             currentMarkup={markupPercentage}
             onMarkupChange={onMarkupChange}
@@ -60,11 +59,11 @@ export function MarkupPanel({
         </div>
 
         {/* Custom Markup Input */}
-        <div className="space-y-2">
-          <Label htmlFor="custom-markup" className="text-sm font-medium">
+        <div>
+          <Label htmlFor="custom-markup">
             Custom Markup
           </Label>
-          <div className="flex gap-2">
+          <div>
             <Input
               id="custom-markup"
               type="number"
@@ -72,34 +71,34 @@ export function MarkupPanel({
               max="100"
               value={markupPercentage}
               onChange={(e) => onMarkupChange(Number(e.target.value))}
-              className="flex-1"
+             
             />
-            <span className="flex items-center px-3 text-sm text-gray-600">%</span>
+            <span>%</span>
           </div>
         </div>
 
         <Separator />
 
         {/* Quote Breakdown */}
-        <div className="space-y-3">
-          <h3 className="text-sm font-medium">Cost Breakdown</h3>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Labor:</span>
-              <span className="font-medium">${(quote.breakdown?.labor?.total || 0).toLocaleString()}</span>
+        <div>
+          <h3>Cost Breakdown</h3>
+          <div>
+            <div>
+              <span>Labor:</span>
+              <span>${(quote.breakdown?.labor?.total || 0).toLocaleString()}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Materials:</span>
-              <span className="font-medium">${(quote.breakdown?.materials?.total || 0).toLocaleString()}</span>
+            <div>
+              <span>Materials:</span>
+              <span>${(quote.breakdown?.materials?.total || 0).toLocaleString()}</span>
             </div>
-            <div className="pt-2 border-t">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Base Cost:</span>
-                <span className="font-medium">${baseCost.toLocaleString()}</span>
+            <div>
+              <div>
+                <span>Base Cost:</span>
+                <span>${baseCost.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-blue-600">
+              <div>
                 <span>Markup ({markupPercentage}%):</span>
-                <span className="font-medium">+${markupAmount.toLocaleString()}</span>
+                <span>+${markupAmount.toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -109,9 +108,9 @@ export function MarkupPanel({
 
         {/* Project Details */}
         {quote.details && (
-          <div className="space-y-2">
-            <h3 className="text-sm font-medium">Project Details</h3>
-            <div className="text-sm text-gray-600 space-y-1">
+          <div>
+            <h3>Project Details</h3>
+            <div>
               <p>Rooms: {quote.details.roomCount || 0}</p>
               <p>Total Sq Ft: {quote.details.sqft || 0}</p>
               <p>Timeline: {quote.timeEstimate || 'TBD'}</p>
@@ -121,26 +120,26 @@ export function MarkupPanel({
       </CardContent>
 
       {/* Action Buttons */}
-      <div className="p-4 border-t space-y-3">
+      <div>
         <Button
           onClick={onSave}
           disabled={isSaving}
-          className="w-full"
+         
           size="lg"
         >
-          <Save className="w-4 h-4 mr-2" />
+          <Save />
           {isSaving ? 'Saving...' : 'Save Quote'}
         </Button>
         
         <Button
           variant="outline"
-          className="w-full"
+         
           onClick={() => {
             // Preview functionality would go here
             console.log('Preview quote')
           }}
         >
-          <Eye className="w-4 h-4 mr-2" />
+          <Eye />
           Preview Customer View
         </Button>
       </div>

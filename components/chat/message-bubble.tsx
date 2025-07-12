@@ -1,8 +1,6 @@
 'use client'
 
 import { User, Bot } from 'lucide-react'
-import { cn } from '@/lib/utils'
-
 // Simple markdown component for basic formatting
 function MarkdownContent({ content }: { content: string }) {
   // Process basic markdown: **bold** and *italic*
@@ -40,13 +38,13 @@ export function MessageBubble({ message, isLoading }: MessageBubbleProps) {
 
   if (isLoading) {
     return (
-      <div className="flex items-start gap-3">
-        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-          <Bot className="w-4 h-4 text-blue-600" />
+      <div>
+        <div>
+          <Bot />
         </div>
-        <div className="flex-1 space-y-2">
-          <div className="bg-gray-100 rounded-lg p-3 max-w-[80%]">
-            <div className="typing-dots">
+        <div>
+          <div>
+            <div>
               <span></span>
               <span></span>
               <span></span>
@@ -58,42 +56,23 @@ export function MessageBubble({ message, isLoading }: MessageBubbleProps) {
   }
 
   return (
-    <div className={cn(
-      "flex items-start gap-3",
-      isUser ? "flex-row-reverse" : "flex-row"
-    )}>
-      <div className={cn(
-        "w-8 h-8 rounded-full flex items-center justify-center shrink-0",
-        isUser 
-          ? "bg-blue-600 text-white" 
-          : "bg-blue-100 text-blue-600"
-      )}>
+    <div>
+      <div>
         {isUser ? (
-          <User className="w-4 h-4" />
+          <User />
         ) : (
-          <Bot className="w-4 h-4" />
+          <Bot />
         )}
       </div>
       
-      <div className={cn(
-        "flex-1 space-y-2",
-        isUser ? "flex flex-col items-end" : ""
-      )}>
-        <div className={cn(
-          "rounded-lg p-3 max-w-[80%] break-words",
-          isUser 
-            ? "bg-blue-600 text-white ml-12" 
-            : "bg-gray-100 text-gray-900 mr-12"
-        )}>
-          <div className="whitespace-pre-wrap text-sm leading-relaxed">
+      <div>
+        <div>
+          <div>
             <MarkdownContent content={message.content} />
           </div>
         </div>
         
-        <div className={cn(
-          "text-xs text-gray-500",
-          isUser ? "text-right mr-12" : "ml-0"
-        )}>
+        <div>
           {message.timestamp.toLocaleTimeString([], { 
             hour: '2-digit', 
             minute: '2-digit' 

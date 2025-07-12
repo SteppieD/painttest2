@@ -20,7 +20,8 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Footer } from '@/components/shared/footer'
+import { KofiHeader } from '@/components/shared/kofi-header'
+import { ImprovedFooter } from '@/components/shared/improved-footer'
 
 export const metadata: Metadata = {
   title: 'How to Scale Your Painting Business: The Complete 2025 Growth Guide',
@@ -124,49 +125,50 @@ const scalingMetrics = [
 
 export default function HowToScalePaintingBusinessPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
+      <KofiHeader />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl lg:text-6xl font-bold mb-6">
+      <section>
+        <div>
+          <div>
+            <h1>
               How to Scale Your Painting Business: The Complete 2025 Growth Guide
             </h1>
-            <p className="text-xl mb-8 text-blue-100">
+            <p>
               From $100K to $1M+: The proven systems, technology, and strategies successful painting contractors use to scale professionally. Based on analysis of 500+ painting businesses.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-blue-700/50 p-6 rounded-lg">
-                <div className="text-3xl font-bold">340%</div>
-                <div className="text-blue-200">Average Revenue Growth</div>
+            <div>
+              <div>
+                <div>340%</div>
+                <div>Average Revenue Growth</div>
               </div>
-              <div className="bg-blue-700/50 p-6 rounded-lg">
-                <div className="text-3xl font-bold">18 Months</div>
-                <div className="text-blue-200">Average Scale Timeline</div>
+              <div>
+                <div>18 Months</div>
+                <div>Average Scale Timeline</div>
               </div>
-              <div className="bg-blue-700/50 p-6 rounded-lg">
-                <div className="text-3xl font-bold">500+</div>
-                <div className="text-blue-200">Contractors Analyzed</div>
+              <div>
+                <div>500+</div>
+                <div>Contractors Analyzed</div>
               </div>
             </div>
-            <p className="text-sm text-blue-200 mb-6">15-minute read • Updated January 2025</p>
+            <p>15-minute read • Updated January 2025</p>
           </div>
         </div>
       </section>
 
       {/* Table of Contents */}
-      <section className="py-12 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold mb-6">Table of Contents</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <section>
+        <div>
+          <h2>Table of Contents</h2>
+          <div>
             {tableOfContents.map((item, index) => (
               <a 
                 key={index}
                 href={`#${item.anchor}`}
-                className="flex items-center p-3 rounded-lg border hover:bg-blue-50 transition-colors"
+               
               >
-                <span className="text-blue-600 font-semibold mr-3">{index + 1}.</span>
+                <span>{index + 1}.</span>
                 <span>{item.title}</span>
               </a>
             ))}
@@ -175,37 +177,37 @@ export default function HowToScalePaintingBusinessPage() {
       </section>
 
       {/* The Scaling Reality Check */}
-      <section id="scaling-reality" className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-8">The Scaling Reality Check</h2>
+      <section id="scaling-reality">
+        <div>
+          <h2>The Scaling Reality Check</h2>
           
-          <div className="mb-12 p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <div className="flex items-start">
-              <AlertTriangle className="h-6 w-6 text-yellow-600 mr-3 mt-1 flex-shrink-0" />
+          <div>
+            <div>
+              <AlertTriangle />
               <div>
-                <h3 className="font-semibold text-yellow-800 mb-2">The Brutal Truth About Painting Business Growth</h3>
-                <p className="text-yellow-700">
+                <h3>The Brutal Truth About Painting Business Growth</h3>
+                <p>
                   78% of painting contractors never scale beyond $200K annual revenue. They work 60+ hour weeks, struggle with cash flow, and burn out within 5 years. But 22% crack the code and build million-dollar businesses with systems that work without them.
                 </p>
               </div>
             </div>
           </div>
 
-          <p className="text-lg text-gray-700 mb-8">
+          <p>
             Your painting business hit $100K this year. You're booked solid, customers love your work, and referrals keep coming. But you're working 70-hour weeks, doing everything yourself, and one bad week could sink the whole operation.
           </p>
 
-          <p className="text-lg text-gray-700 mb-8">
+          <p>
             Sound familiar? You're not alone. After analyzing 500+ painting businesses, we found a clear pattern: successful scaling requires systems, not just skills.
           </p>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
+          <div>
             <Card>
               <CardHeader>
-                <CardTitle className="text-red-600">❌ Businesses That Stay Small</CardTitle>
+                <CardTitle>❌ Businesses That Stay Small</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-3">
+                <ul>
                   <li>• Owner estimates every job manually</li>
                   <li>• No standardized processes</li>
                   <li>• Basic tools (pen, paper, calculator)</li>
@@ -218,10 +220,10 @@ export default function HowToScalePaintingBusinessPage() {
             
             <Card>
               <CardHeader>
-                <CardTitle className="text-green-600">✅ Businesses That Scale</CardTitle>
+                <CardTitle>✅ Businesses That Scale</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-3">
+                <ul>
                   <li>• Professional quote systems</li>
                   <li>• Documented processes and checklists</li>
                   <li>• Technology for efficiency</li>
@@ -236,30 +238,30 @@ export default function HowToScalePaintingBusinessPage() {
       </section>
 
       {/* Why Most Painting Businesses Stay Small */}
-      <section id="why-businesses-stay-small" className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-8">Why Most Painting Businesses Stay Small</h2>
+      <section id="why-businesses-stay-small">
+        <div>
+          <h2>Why Most Painting Businesses Stay Small</h2>
           
-          <p className="text-lg text-gray-700 mb-8">
+          <p>
             The painting industry has a scaling problem. While contractors excel at the craft, they struggle with the business side. Our research identified four critical barriers:
           </p>
 
-          <div className="grid gap-8 mb-12">
+          <div>
             {scalingChallenges.map((item, index) => (
-              <Card key={index} className="border-l-4 border-blue-500">
-                <CardContent className="p-6">
-                  <div className="grid md:grid-cols-4 gap-4 items-center">
+              <Card key={index}>
+                <CardContent>
+                  <div>
                     <div>
-                      <h3 className="font-bold text-lg">{item.challenge}</h3>
+                      <h3>{item.challenge}</h3>
                     </div>
                     <div>
-                      <p className="text-red-600 font-medium">Problem: {item.problem}</p>
+                      <p>Problem: {item.problem}</p>
                     </div>
                     <div>
-                      <p className="text-green-600 font-medium">Solution: {item.solution}</p>
+                      <p>Solution: {item.solution}</p>
                     </div>
                     <div>
-                      <p className="text-blue-600 font-bold">{item.impact}</p>
+                      <p>{item.impact}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -267,12 +269,12 @@ export default function HowToScalePaintingBusinessPage() {
             ))}
           </div>
 
-          <div className="bg-blue-50 p-8 rounded-lg">
-            <h3 className="text-xl font-bold mb-4">The $200K Revenue Ceiling</h3>
-            <p className="text-gray-700 mb-4">
+          <div>
+            <h3>The $200K Revenue Ceiling</h3>
+            <p>
               Most painting businesses hit a revenue ceiling around $200K because the owner becomes the bottleneck. They can't estimate fast enough, manage quality, or find reliable team members.
             </p>
-            <p className="text-gray-700">
+            <p>
               Breaking through requires shifting from "I do everything" to "I build systems that do everything."
             </p>
           </div>
@@ -280,44 +282,44 @@ export default function HowToScalePaintingBusinessPage() {
       </section>
 
       {/* Case Studies */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Real Success Stories: From Struggling to Scaling</h2>
+      <section>
+        <div>
+          <h2>Real Success Stories: From Struggling to Scaling</h2>
           
-          <div className="grid gap-8">
+          <div>
             {caseStudies.map((study, index) => (
-              <Card key={index} className="overflow-hidden">
-                <CardContent className="p-8">
-                  <div className="grid lg:grid-cols-3 gap-8 items-center">
+              <Card key={index}>
+                <CardContent>
+                  <div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">{study.name}</h3>
-                      <p className="text-gray-600 mb-4">{study.company}</p>
-                      <div className="space-y-2">
-                        <div className="text-sm">
-                          <span className="text-red-600 font-medium">Before: </span>
+                      <h3>{study.name}</h3>
+                      <p>{study.company}</p>
+                      <div>
+                        <div>
+                          <span>Before: </span>
                           {study.before}
                         </div>
-                        <div className="text-sm">
-                          <span className="text-green-600 font-medium">After: </span>
+                        <div>
+                          <span>After: </span>
                           {study.after}
                         </div>
-                        <div className="text-sm">
-                          <span className="text-blue-600 font-medium">Timeline: </span>
+                        <div>
+                          <span>Timeline: </span>
                           {study.timeline}
                         </div>
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2">Key Strategy:</h4>
-                      <p className="text-gray-700 mb-4">{study.keyStrategy}</p>
-                      <div className="flex items-center">
+                      <h4>Key Strategy:</h4>
+                      <p>{study.keyStrategy}</p>
+                      <div>
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                          <Star key={i} />
                         ))}
                       </div>
                     </div>
                     <div>
-                      <blockquote className="text-gray-700 italic">
+                      <blockquote>
                         "{study.quote}"
                       </blockquote>
                     </div>
@@ -330,24 +332,24 @@ export default function HowToScalePaintingBusinessPage() {
       </section>
 
       {/* The Million-Dollar Framework */}
-      <section id="million-dollar-framework" className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">The Million-Dollar Framework</h2>
+      <section id="million-dollar-framework">
+        <div>
+          <h2>The Million-Dollar Framework</h2>
           
-          <p className="text-lg text-gray-700 text-center mb-12 max-w-3xl mx-auto">
+          <p>
             After studying 100+ painting businesses that scaled past $1M, we identified the four pillars every successful operation relies on:
           </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="text-center h-full">
+          <div>
+            <Card>
               <CardHeader>
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calculator className="h-8 w-8 text-blue-600" />
+                <div>
+                  <Calculator />
                 </div>
                 <CardTitle>Professional Systems</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm space-y-2 text-left">
+                <ul>
                   <li>• Instant, accurate quotes</li>
                   <li>• Standardized processes</li>
                   <li>• Quality checklists</li>
@@ -356,15 +358,15 @@ export default function HowToScalePaintingBusinessPage() {
               </CardContent>
             </Card>
 
-            <Card className="text-center h-full">
+            <Card>
               <CardHeader>
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-8 w-8 text-green-600" />
+                <div>
+                  <Users />
                 </div>
                 <CardTitle>Scalable Team</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm space-y-2 text-left">
+                <ul>
                   <li>• Clear role definitions</li>
                   <li>• Training programs</li>
                   <li>• Performance metrics</li>
@@ -373,15 +375,15 @@ export default function HowToScalePaintingBusinessPage() {
               </CardContent>
             </Card>
 
-            <Card className="text-center h-full">
+            <Card>
               <CardHeader>
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <BarChart3 className="h-8 w-8 text-purple-600" />
+                <div>
+                  <BarChart3 />
                 </div>
                 <CardTitle>Smart Technology</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm space-y-2 text-left">
+                <ul>
                   <li>• Quote automation</li>
                   <li>• Customer management</li>
                   <li>• Business analytics</li>
@@ -390,15 +392,15 @@ export default function HowToScalePaintingBusinessPage() {
               </CardContent>
             </Card>
 
-            <Card className="text-center h-full">
+            <Card>
               <CardHeader>
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Target className="h-8 w-8 text-orange-600" />
+                <div>
+                  <Target />
                 </div>
                 <CardTitle>Marketing Engine</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm space-y-2 text-left">
+                <ul>
                   <li>• Multiple lead sources</li>
                   <li>• Professional branding</li>
                   <li>• Customer retention</li>
@@ -411,32 +413,32 @@ export default function HowToScalePaintingBusinessPage() {
       </section>
 
       {/* 90-Day Action Plan */}
-      <section id="90-day-action-plan" className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-8">Your 90-Day Scaling Action Plan</h2>
+      <section id="90-day-action-plan">
+        <div>
+          <h2>Your 90-Day Scaling Action Plan</h2>
           
-          <p className="text-lg text-gray-700 mb-12">
+          <p>
             Don't try to change everything at once. This proven 90-day plan prioritizes the highest-impact changes first:
           </p>
 
-          <div className="space-y-8">
-            <Card className="border-blue-200">
-              <CardHeader className="bg-blue-50">
-                <CardTitle className="text-blue-800">Days 1-30: Foundation Building</CardTitle>
+          <div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Days 1-30: Foundation Building</CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid md:grid-cols-2 gap-6">
+              <CardContent>
+                <div>
                   <div>
-                    <h4 className="font-semibold mb-3">Week 1-2: Assessment</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Week 1-2: Assessment</h4>
+                    <ul>
                       <li>• Audit current processes and bottlenecks</li>
                       <li>• Calculate true hourly rates and profit margins</li>
                       <li>• Document what you do vs. what you should delegate</li>
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-3">Week 3-4: Quick Wins</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Week 3-4: Quick Wins</h4>
+                    <ul>
                       <li>• Implement professional quote system</li>
                       <li>• Create standard price sheet</li>
                       <li>• Set up basic customer database</li>
@@ -446,23 +448,23 @@ export default function HowToScalePaintingBusinessPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-green-200">
-              <CardHeader className="bg-green-50">
-                <CardTitle className="text-green-800">Days 31-60: System Implementation</CardTitle>
+            <Card>
+              <CardHeader>
+                <CardTitle>Days 31-60: System Implementation</CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid md:grid-cols-2 gap-6">
+              <CardContent>
+                <div>
                   <div>
-                    <h4 className="font-semibold mb-3">Operations</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Operations</h4>
+                    <ul>
                       <li>• Standardize job processes and quality checks</li>
                       <li>• Create customer communication templates</li>
                       <li>• Implement project tracking system</li>
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-3">Team Building</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Team Building</h4>
+                    <ul>
                       <li>• Define roles and responsibilities</li>
                       <li>• Create training materials</li>
                       <li>• Establish performance metrics</li>
@@ -472,23 +474,23 @@ export default function HowToScalePaintingBusinessPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-purple-200">
-              <CardHeader className="bg-purple-50">
-                <CardTitle className="text-purple-800">Days 61-90: Growth Acceleration</CardTitle>
+            <Card>
+              <CardHeader>
+                <CardTitle>Days 61-90: Growth Acceleration</CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid md:grid-cols-2 gap-6">
+              <CardContent>
+                <div>
                   <div>
-                    <h4 className="font-semibold mb-3">Marketing</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Marketing</h4>
+                    <ul>
                       <li>• Launch referral program</li>
                       <li>• Optimize online presence</li>
                       <li>• Track lead sources and conversion rates</li>
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-3">Optimization</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Optimization</h4>
+                    <ul>
                       <li>• Analyze profitability by job type</li>
                       <li>• Refine pricing strategy</li>
                       <li>• Plan next quarter's growth initiatives</li>
@@ -502,35 +504,35 @@ export default function HowToScalePaintingBusinessPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-blue-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+      <section>
+        <div>
+          <h2>
             Ready to Scale Your Painting Business?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p>
             Get your free Business Scaling Assessment and discover exactly where to focus your efforts for maximum growth.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          <div>
             <Button asChild size="lg" variant="outline_white">
               <Link href="/trial-signup">
-                <Calculator className="h-5 w-5 mr-2" />
+                <Calculator />
                 Get Free Assessment
               </Link>
             </Button>
             <Button asChild variant="outline_white" size="lg">
               <Link href="/contact">
-                <Phone className="h-5 w-5 mr-2" />
+                <Phone />
                 Schedule Strategy Call
               </Link>
             </Button>
           </div>
-          <p className="text-sm text-blue-200">
+          <p>
             Join 10,000+ painting contractors already scaling with professional systems
           </p>
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   )
 }

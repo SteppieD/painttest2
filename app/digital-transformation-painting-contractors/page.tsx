@@ -212,49 +212,49 @@ const roiCalculation = {
 
 export default function DigitalTransformationPaintingContractorsPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl lg:text-6xl font-bold mb-6">
+      <section>
+        <div>
+          <div>
+            <h1>
               Digital Transformation for Painting Contractors: Stop Working Harder, Start Working Smarter
             </h1>
-            <p className="text-xl mb-8 text-purple-100">
+            <p>
               Traditional painting contractors are being left behind. Modern technology can increase your efficiency by 60%+, profits by 40%+, and give you your life back. Here's your complete modernization roadmap.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-purple-700/50 p-6 rounded-lg">
-                <div className="text-3xl font-bold">83%</div>
-                <div className="text-purple-200">Still Use Manual Processes</div>
+            <div>
+              <div>
+                <div>83%</div>
+                <div>Still Use Manual Processes</div>
               </div>
-              <div className="bg-purple-700/50 p-6 rounded-lg">
-                <div className="text-3xl font-bold">60%</div>
-                <div className="text-purple-200">Efficiency Improvement Possible</div>
+              <div>
+                <div>60%</div>
+                <div>Efficiency Improvement Possible</div>
               </div>
-              <div className="bg-purple-700/50 p-6 rounded-lg">
-                <div className="text-3xl font-bold">$75K</div>
-                <div className="text-purple-200">Average Annual Time Savings Value</div>
+              <div>
+                <div>$75K</div>
+                <div>Average Annual Time Savings Value</div>
               </div>
             </div>
-            <p className="text-sm text-purple-200 mb-6">25-minute read • Updated January 2025</p>
+            <p>25-minute read • Updated January 2025</p>
           </div>
         </div>
       </section>
 
       {/* Table of Contents */}
-      <section className="py-12 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold mb-6">Table of Contents</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <section>
+        <div>
+          <h2>Table of Contents</h2>
+          <div>
             {tableOfContents.map((item, index) => (
               <a 
                 key={index}
                 href={`#${item.anchor}`}
-                className="flex items-center p-3 rounded-lg border hover:bg-purple-50 transition-colors"
+               
               >
-                <span className="text-purple-600 font-semibold mr-3">{index + 1}.</span>
+                <span>{index + 1}.</span>
                 <span>{item.title}</span>
               </a>
             ))}
@@ -263,49 +263,49 @@ export default function DigitalTransformationPaintingContractorsPage() {
       </section>
 
       {/* The Digital Divide */}
-      <section id="digital-divide" className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-8">The Digital Divide in Painting</h2>
+      <section id="digital-divide">
+        <div>
+          <h2>The Digital Divide in Painting</h2>
           
-          <div className="mb-12 p-6 bg-orange-50 border border-orange-200 rounded-lg">
-            <div className="flex items-start">
-              <AlertTriangle className="h-6 w-6 text-orange-600 mr-3 mt-1 flex-shrink-0" />
+          <div>
+            <div>
+              <AlertTriangle />
               <div>
-                <h3 className="font-semibold text-orange-800 mb-2">The Reality Check</h3>
-                <p className="text-orange-700">
+                <h3>The Reality Check</h3>
+                <p>
                   While other industries embraced digital transformation, 83% of painting contractors still use manual processes from the 1990s. They're losing to competitors who quote faster, communicate better, and operate more efficiently.
                 </p>
               </div>
             </div>
           </div>
 
-          <p className="text-lg text-gray-700 mb-8">
+          <p>
             Your competition isn't just other painters anymore. It's contractors who can quote in 6 minutes while you take 3 hours. Who track every job's profitability while you guess. Who delight customers with professional systems while you scramble with spreadsheets.
           </p>
 
-          <p className="text-lg text-gray-700 mb-8">
+          <p>
             The gap is widening every day. But the good news? Catching up is easier than you think, and the payoff is massive.
           </p>
 
-          <div className="grid gap-6 mb-12">
+          <div>
             {digitalGaps.map((gap, index) => (
-              <Card key={index} className="border-l-4 border-purple-500">
-                <CardContent className="p-6">
-                  <div className="grid lg:grid-cols-4 gap-4 items-center">
+              <Card key={index}>
+                <CardContent>
+                  <div>
                     <div>
-                      <h3 className="font-bold text-lg">{gap.area}</h3>
+                      <h3>{gap.area}</h3>
                     </div>
-                    <div className="text-center">
-                      <p className="text-sm text-gray-600 mb-1">Traditional</p>
-                      <p className="font-medium text-red-600">{gap.traditional}</p>
+                    <div>
+                      <p>Traditional</p>
+                      <p>{gap.traditional}</p>
                     </div>
-                    <div className="text-center">
-                      <p className="text-sm text-gray-600 mb-1">Digital</p>
-                      <p className="font-medium text-green-600">{gap.digital}</p>
+                    <div>
+                      <p>Digital</p>
+                      <p>{gap.digital}</p>
                     </div>
-                    <div className="text-center">
-                      <p className="text-xl font-bold text-purple-600">{gap.improvement}</p>
-                      <p className="text-sm text-gray-600">{gap.impact}</p>
+                    <div>
+                      <p>{gap.improvement}</p>
+                      <p>{gap.impact}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -316,60 +316,60 @@ export default function DigitalTransformationPaintingContractorsPage() {
       </section>
 
       {/* Technology ROI */}
-      <section id="technology-roi" className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">The Numbers Don't Lie: Technology ROI</h2>
+      <section id="technology-roi">
+        <div>
+          <h2>The Numbers Don't Lie: Technology ROI</h2>
           
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-12">
+          <div>
             <div>
-              <h3 className="text-2xl font-bold mb-6">Annual Investment</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center p-4 bg-red-50 rounded-lg">
+              <h3>Annual Investment</h3>
+              <div>
+                <div>
                   <span>Professional Software Suite</span>
-                  <span className="font-bold">{roiCalculation.investment.software}</span>
+                  <span>{roiCalculation.investment.software}</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-red-50 rounded-lg">
+                <div>
                   <span>Training & Onboarding</span>
-                  <span className="font-bold">{roiCalculation.investment.training}</span>
+                  <span>{roiCalculation.investment.training}</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-red-50 rounded-lg">
+                <div>
                   <span>Setup & Configuration</span>
-                  <span className="font-bold">{roiCalculation.investment.setup}</span>
+                  <span>{roiCalculation.investment.setup}</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-red-100 rounded-lg border-2 border-red-300">
-                  <span className="font-bold">Total Investment</span>
-                  <span className="font-bold text-xl">{roiCalculation.investment.total}</span>
+                <div>
+                  <span>Total Investment</span>
+                  <span>{roiCalculation.investment.total}</span>
                 </div>
               </div>
             </div>
             
             <div>
-              <h3 className="text-2xl font-bold mb-6">Annual Returns</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
+              <h3>Annual Returns</h3>
+              <div>
+                <div>
                   <span>Time Savings Value</span>
-                  <span className="font-bold">{roiCalculation.returns.timesSaved}</span>
+                  <span>{roiCalculation.returns.timesSaved}</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
+                <div>
                   <span>Additional Revenue</span>
-                  <span className="font-bold">{roiCalculation.returns.moreQuotes}</span>
+                  <span>{roiCalculation.returns.moreQuotes}</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
+                <div>
                   <span>Better Pricing Profits</span>
-                  <span className="font-bold">{roiCalculation.returns.betterPricing}</span>
+                  <span>{roiCalculation.returns.betterPricing}</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-green-100 rounded-lg border-2 border-green-300">
-                  <span className="font-bold">Total Returns</span>
-                  <span className="font-bold text-xl">{roiCalculation.returns.total}</span>
+                <div>
+                  <span>Total Returns</span>
+                  <span>{roiCalculation.returns.total}</span>
                 </div>
               </div>
             </div>
           </div>
           
-          <div className="text-center p-8 bg-purple-50 rounded-lg">
-            <h3 className="text-2xl font-bold mb-4">Return on Investment</h3>
-            <p className="text-5xl font-bold text-purple-600 mb-4">{roiCalculation.roi}</p>
-            <p className="text-gray-700">
+          <div>
+            <h3>Return on Investment</h3>
+            <p>{roiCalculation.roi}</p>
+            <p>
               For every $1 invested in technology, successful contractors see $93.50 in returns the first year.
             </p>
           </div>
@@ -377,42 +377,38 @@ export default function DigitalTransformationPaintingContractorsPage() {
       </section>
 
       {/* The Modern Technology Stack */}
-      <section id="business-stack" className="py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">The Modern Painting Business Technology Stack</h2>
+      <section id="business-stack">
+        <div>
+          <h2>The Modern Painting Business Technology Stack</h2>
           
-          <p className="text-lg text-gray-700 text-center mb-12 max-w-3xl mx-auto">
+          <p>
             You don't need every tool on day one. Start with high-impact areas and build your stack systematically:
           </p>
 
-          <div className="grid gap-6">
+          <div>
             {technologyStack.map((stack, index) => (
-              <Card key={index} className="border-l-4 border-purple-500">
-                <CardContent className="p-6">
-                  <div className="grid lg:grid-cols-5 gap-4 items-center">
+              <Card key={index}>
+                <CardContent>
+                  <div>
                     <div>
-                      <h3 className="font-bold text-lg mb-2">{stack.category}</h3>
-                      <span className={`px-2 py-1 rounded text-sm font-medium ${
-                        stack.priority === 'Critical' ? 'bg-red-100 text-red-800' :
-                        stack.priority === 'High' ? 'bg-orange-100 text-orange-800' :
-                        'bg-yellow-100 text-yellow-800'
-                      }`}>
+                      <h3>{stack.category}</h3>
+                      <span`}>
                         {stack.priority} Priority
                       </span>
                     </div>
-                    <div className="lg:col-span-2">
-                      <ul className="text-sm space-y-1">
+                    <div>
+                      <ul>
                         {stack.tools.map((tool, idx) => (
                           <li key={idx}>• {tool}</li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <p className="font-medium text-green-600">{stack.benefit}</p>
+                      <p>{stack.benefit}</p>
                     </div>
-                    <div className="text-center">
-                      <p className="font-bold text-purple-600">{stack.cost}</p>
-                      <p className="text-sm text-gray-600">Investment</p>
+                    <div>
+                      <p>{stack.cost}</p>
+                      <p>Investment</p>
                     </div>
                   </div>
                 </CardContent>
@@ -420,20 +416,20 @@ export default function DigitalTransformationPaintingContractorsPage() {
             ))}
           </div>
 
-          <div className="mt-12 p-8 bg-blue-50 rounded-lg">
-            <h3 className="text-xl font-bold mb-4">Implementation Priority</h3>
-            <div className="grid md:grid-cols-3 gap-6">
+          <div>
+            <h3>Implementation Priority</h3>
+            <div>
               <div>
-                <h4 className="font-semibold text-red-600 mb-2">Month 1-2: Critical</h4>
-                <p className="text-sm">Quote & estimation tools. Biggest immediate impact on efficiency and profitability.</p>
+                <h4>Month 1-2: Critical</h4>
+                <p>Quote & estimation tools. Biggest immediate impact on efficiency and profitability.</p>
               </div>
               <div>
-                <h4 className="font-semibold text-orange-600 mb-2">Month 3-4: High Priority</h4>
-                <p className="text-sm">Customer management and project coordination. Improves service quality and team efficiency.</p>
+                <h4>Month 3-4: High Priority</h4>
+                <p>Customer management and project coordination. Improves service quality and team efficiency.</p>
               </div>
               <div>
-                <h4 className="font-semibold text-yellow-600 mb-2">Month 5-6: Medium Priority</h4>
-                <p className="text-sm">Financial management and marketing tools. Optimizes operations and drives growth.</p>
+                <h4>Month 5-6: Medium Priority</h4>
+                <p>Financial management and marketing tools. Optimizes operations and drives growth.</p>
               </div>
             </div>
           </div>
@@ -441,84 +437,84 @@ export default function DigitalTransformationPaintingContractorsPage() {
       </section>
 
       {/* Success Stories */}
-      <section id="success-stories" className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Real Digital Transformation Success Stories</h2>
+      <section id="success-stories">
+        <div>
+          <h2>Real Digital Transformation Success Stories</h2>
           
-          <div className="grid lg:grid-cols-2 gap-12">
+          <div>
             {transformationCaseStudies.map((study, index) => (
-              <Card key={index} className="h-full">
-                <CardContent className="p-8">
-                  <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold mb-2">{study.name}</h3>
-                    <p className="text-gray-600">{study.company}</p>
-                    <p className="text-sm text-purple-600 font-medium">Transformation Timeline: {study.timeline}</p>
+              <Card key={index}>
+                <CardContent>
+                  <div>
+                    <h3>{study.name}</h3>
+                    <p>{study.company}</p>
+                    <p>Transformation Timeline: {study.timeline}</p>
                   </div>
                   
-                  <div className="grid md:grid-cols-2 gap-6 mb-6">
-                    <div className="bg-red-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-red-800 mb-3">Before Digital</h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
+                  <div>
+                    <div>
+                      <h4>Before Digital</h4>
+                      <div>
+                        <div>
                           <span>Revenue:</span>
-                          <span className="font-medium">{study.before.revenue}</span>
+                          <span>{study.before.revenue}</span>
                         </div>
-                        <div className="flex justify-between">
+                        <div>
                           <span>Margin:</span>
-                          <span className="font-medium">{study.before.margin}</span>
+                          <span>{study.before.margin}</span>
                         </div>
-                        <div className="flex justify-between">
+                        <div>
                           <span>Work Hours:</span>
-                          <span className="font-medium">{study.before.hours}</span>
+                          <span>{study.before.hours}</span>
                         </div>
-                        <div className="flex justify-between">
+                        <div>
                           <span>Quotes/Week:</span>
-                          <span className="font-medium">{study.before.quotes}</span>
+                          <span>{study.before.quotes}</span>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-green-800 mb-3">After Digital</h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
+                    <div>
+                      <h4>After Digital</h4>
+                      <div>
+                        <div>
                           <span>Revenue:</span>
-                          <span className="font-medium">{study.after.revenue}</span>
+                          <span>{study.after.revenue}</span>
                         </div>
-                        <div className="flex justify-between">
+                        <div>
                           <span>Margin:</span>
-                          <span className="font-medium">{study.after.margin}</span>
+                          <span>{study.after.margin}</span>
                         </div>
-                        <div className="flex justify-between">
+                        <div>
                           <span>Work Hours:</span>
-                          <span className="font-medium">{study.after.hours}</span>
+                          <span>{study.after.hours}</span>
                         </div>
-                        <div className="flex justify-between">
+                        <div>
                           <span>Quotes/Week:</span>
-                          <span className="font-medium">{study.after.quotes}</span>
+                          <span>{study.after.quotes}</span>
                         </div>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="mb-6">
-                    <h4 className="font-semibold mb-3">Key Technologies:</h4>
-                    <p className="text-gray-700 text-sm">{study.keyTechnology}</p>
+                  <div>
+                    <h4>Key Technologies:</h4>
+                    <p>{study.keyTechnology}</p>
                   </div>
                   
-                  <div className="mb-6">
-                    <h4 className="font-semibold mb-3">Specific Improvements:</h4>
-                    <ul className="text-sm space-y-1">
+                  <div>
+                    <h4>Specific Improvements:</h4>
+                    <ul>
                       {study.specificGains.map((gain, idx) => (
-                        <li key={idx} className="flex items-center">
-                          <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                        <li key={idx}>
+                          <CheckCircle />
                           {gain}
                         </li>
                       ))}
                     </ul>
                   </div>
                   
-                  <blockquote className="text-center italic text-gray-700 border-t pt-6">
+                  <blockquote>
                     "{study.quote}"
                   </blockquote>
                 </CardContent>
@@ -529,30 +525,30 @@ export default function DigitalTransformationPaintingContractorsPage() {
       </section>
 
       {/* Overcoming Resistance */}
-      <section id="overcoming-resistance" className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-8">Overcoming Technology Resistance</h2>
+      <section id="overcoming-resistance">
+        <div>
+          <h2>Overcoming Technology Resistance</h2>
           
-          <p className="text-lg text-gray-700 mb-12">
+          <p>
             The biggest barrier to digital transformation isn't technical - it's mental. Here are the most common objections and the reality:
           </p>
 
-          <div className="space-y-6">
+          <div>
             {adoptionBarriers.map((barrier, index) => (
               <Card key={index}>
-                <CardContent className="p-6">
-                  <div className="grid lg:grid-cols-3 gap-4">
+                <CardContent>
+                  <div>
                     <div>
-                      <h3 className="font-bold text-red-600 mb-2">Common Objection</h3>
-                      <p className="text-gray-700">{barrier.barrier}</p>
+                      <h3>Common Objection</h3>
+                      <p>{barrier.barrier}</p>
                     </div>
                     <div>
-                      <h3 className="font-bold text-blue-600 mb-2">Reality</h3>
-                      <p className="text-gray-700">{barrier.reality}</p>
+                      <h3>Reality</h3>
+                      <p>{barrier.reality}</p>
                     </div>
                     <div>
-                      <h3 className="font-bold text-green-600 mb-2">Solution</h3>
-                      <p className="text-gray-700">{barrier.solution}</p>
+                      <h3>Solution</h3>
+                      <p>{barrier.solution}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -560,12 +556,12 @@ export default function DigitalTransformationPaintingContractorsPage() {
             ))}
           </div>
 
-          <div className="mt-12 p-8 bg-purple-50 rounded-lg">
-            <h3 className="text-xl font-bold mb-4">The Truth About Technology Adoption</h3>
-            <p className="text-gray-700 mb-4">
+          <div>
+            <h3>The Truth About Technology Adoption</h3>
+            <p>
               Every successful contractor who embraced technology says the same thing: "I wish I had started sooner." The learning curve is measured in days, but the benefits last for years.
             </p>
-            <p className="text-gray-700">
+            <p>
               Your customers expect professionalism. Your competition is getting faster and more efficient. The question isn't whether to modernize - it's how quickly you can get started.
             </p>
           </div>
@@ -573,25 +569,25 @@ export default function DigitalTransformationPaintingContractorsPage() {
       </section>
 
       {/* 6-Month Digital Plan */}
-      <section id="digital-plan" className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-8">Your 6-Month Digital Transformation Plan</h2>
+      <section id="digital-plan">
+        <div>
+          <h2>Your 6-Month Digital Transformation Plan</h2>
           
-          <p className="text-lg text-gray-700 mb-12">
+          <p>
             Don't try to digitize everything at once. This proven timeline maximizes ROI while minimizing disruption:
           </p>
 
-          <div className="space-y-8">
-            <Card className="border-purple-200">
-              <CardHeader className="bg-purple-50">
-                <CardTitle className="text-purple-800">Months 1-2: Core Systems (Quote & Customer Management)</CardTitle>
-                <p className="text-purple-600">Focus: Immediate efficiency gains and professional image</p>
+          <div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Months 1-2: Core Systems (Quote & Customer Management)</CardTitle>
+                <p>Focus: Immediate efficiency gains and professional image</p>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid md:grid-cols-2 gap-6">
+              <CardContent>
+                <div>
                   <div>
-                    <h4 className="font-semibold mb-3">Implementation</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Implementation</h4>
+                    <ul>
                       <li>• Choose and set up professional quote software</li>
                       <li>• Import customer database and historical data</li>
                       <li>• Train on new quote creation process</li>
@@ -599,8 +595,8 @@ export default function DigitalTransformationPaintingContractorsPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-3">Expected Results</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Expected Results</h4>
+                    <ul>
                       <li>• 90%+ reduction in quote creation time</li>
                       <li>• Professional quotes that win more jobs</li>
                       <li>• Better customer communication</li>
@@ -611,16 +607,16 @@ export default function DigitalTransformationPaintingContractorsPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-blue-200">
-              <CardHeader className="bg-blue-50">
-                <CardTitle className="text-blue-800">Months 3-4: Operations & Team (Project Management & Coordination)</CardTitle>
-                <p className="text-blue-600">Focus: Team efficiency and project coordination</p>
+            <Card>
+              <CardHeader>
+                <CardTitle>Months 3-4: Operations & Team (Project Management & Coordination)</CardTitle>
+                <p>Focus: Team efficiency and project coordination</p>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid md:grid-cols-2 gap-6">
+              <CardContent>
+                <div>
                   <div>
-                    <h4 className="font-semibold mb-3">Implementation</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Implementation</h4>
+                    <ul>
                       <li>• Set up job scheduling and tracking system</li>
                       <li>• Train team on mobile apps and processes</li>
                       <li>• Implement quality control checklists</li>
@@ -628,8 +624,8 @@ export default function DigitalTransformationPaintingContractorsPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-3">Expected Results</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Expected Results</h4>
+                    <ul>
                       <li>• 50%+ improvement in team coordination</li>
                       <li>• Better quality control and consistency</li>
                       <li>• Real-time project visibility</li>
@@ -640,16 +636,16 @@ export default function DigitalTransformationPaintingContractorsPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-green-200">
-              <CardHeader className="bg-green-50">
-                <CardTitle className="text-green-800">Months 5-6: Growth & Optimization (Analytics & Marketing)</CardTitle>
-                <p className="text-green-600">Focus: Business intelligence and growth acceleration</p>
+            <Card>
+              <CardHeader>
+                <CardTitle>Months 5-6: Growth & Optimization (Analytics & Marketing)</CardTitle>
+                <p>Focus: Business intelligence and growth acceleration</p>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid md:grid-cols-2 gap-6">
+              <CardContent>
+                <div>
                   <div>
-                    <h4 className="font-semibold mb-3">Implementation</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Implementation</h4>
+                    <ul>
                       <li>• Set up business analytics and reporting</li>
                       <li>• Implement marketing automation tools</li>
                       <li>• Create online presence and review management</li>
@@ -657,8 +653,8 @@ export default function DigitalTransformationPaintingContractorsPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-3">Expected Results</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4>Expected Results</h4>
+                    <ul>
                       <li>• Data-driven business decisions</li>
                       <li>• 200%+ increase in lead generation</li>
                       <li>• Better online reputation management</li>
@@ -670,20 +666,20 @@ export default function DigitalTransformationPaintingContractorsPage() {
             </Card>
           </div>
 
-          <div className="mt-12 p-8 bg-green-50 rounded-lg text-center">
-            <h3 className="text-2xl font-bold text-green-800 mb-4">6-Month Transformation Results</h3>
-            <div className="grid md:grid-cols-3 gap-6">
+          <div>
+            <h3>6-Month Transformation Results</h3>
+            <div>
               <div>
-                <p className="text-3xl font-bold text-green-600">60%+</p>
-                <p className="text-green-700">Efficiency Improvement</p>
+                <p>60%+</p>
+                <p>Efficiency Improvement</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-green-600">40%+</p>
-                <p className="text-green-700">Profit Increase</p>
+                <p>40%+</p>
+                <p>Profit Increase</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-green-600">25+</p>
-                <p className="text-green-700">Hours/Week Saved</p>
+                <p>25+</p>
+                <p>Hours/Week Saved</p>
               </div>
             </div>
           </div>
@@ -691,29 +687,29 @@ export default function DigitalTransformationPaintingContractorsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-purple-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+      <section>
+        <div>
+          <h2>
             Ready to Transform Your Painting Business?
           </h2>
-          <p className="text-xl text-purple-100 mb-8">
+          <p>
             Get your free Digital Readiness Assessment and discover exactly which technologies will have the biggest impact on your business.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button asChild size="lg" className="bg-white text-purple-600 hover:bg-purple-50">
+          <div>
+            <Button asChild size="lg">
               <Link href="/trial-signup">
-                <Zap className="h-5 w-5 mr-2" />
+                <Zap />
                 Get Free Digital Assessment
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-purple-600">
+            <Button asChild variant="outline" size="lg">
               <Link href="/contact">
-                <Smartphone className="h-5 w-5 mr-2" />
+                <Smartphone />
                 Schedule Technology Demo
               </Link>
             </Button>
           </div>
-          <p className="text-sm text-purple-200">
+          <p>
             Join 2,000+ painting contractors already transforming their business with modern technology
           </p>
         </div>

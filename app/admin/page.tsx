@@ -85,18 +85,18 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="neomorphism-card-accessible">
-          <h1 className="text-3xl font-bold text-gray-900 neomorphism-text">Admin Dashboard</h1>
-          <p className="text-gray-600 mt-2">Loading business intelligence...</p>
+      <div>
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Loading business intelligence...</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div>
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="neomorphism-skeleton p-6">
-              <div className="h-4 bg-gray-200 rounded mb-2"></div>
-              <div className="h-8 bg-gray-200 rounded mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div key={i}>
+              <div></div>
+              <div></div>
+              <div></div>
             </div>
           ))}
         </div>
@@ -146,15 +146,15 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Header */}
-      <div className="neomorphism-card-accessible animate-neomorphism-fade-in">
-        <h1 className="text-3xl font-bold text-gray-900 neomorphism-text">Admin Dashboard</h1>
-        <p className="text-gray-600 mt-2">Business intelligence and key performance metrics</p>
+      <div>
+        <h1>Admin Dashboard</h1>
+        <p>Business intelligence and key performance metrics</p>
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div>
         {metricCards.map((metric, index) => {
           const Icon = metric.icon;
           const isPositiveTrend = typeof metric.trend === 'number' && metric.trend > 0;
@@ -162,37 +162,35 @@ export default function AdminDashboard() {
           return (
             <div 
               key={index} 
-              className="neomorphism-metric-card animate-neomorphism-slide-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
+             
+             s` }}
             >
-              <div className="flex items-center justify-between">
+              <div>
                 <div>
-                  <p className="text-sm font-medium text-gray-600">{metric.title}</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1 neomorphism-text">
+                  <p>{metric.title}</p>
+                  <p>
                     {metric.value}
                   </p>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p>
                     {metric.subtitle}
                   </p>
                 </div>
-                <div className={`neomorphism-accessible-subtle p-3 rounded-full ${metric.color}`}>
-                  <Icon className="w-6 h-6" />
+                <div`}>
+                  <Icon />
                 </div>
               </div>
               
               {typeof metric.trend === 'number' && (
-                <div className="flex items-center mt-4">
+                <div>
                   {isPositiveTrend ? (
-                    <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
+                    <TrendingUp />
                   ) : (
-                    <TrendingDown className="w-4 h-4 text-gray-400 mr-1" />
+                    <TrendingDown />
                   )}
-                  <span className={`text-sm font-medium ${
-                    isPositiveTrend ? 'text-green-600' : 'text-gray-500'
-                  }`}>
+                  <span`}>
                     {metric.trend}{metric.trendLabel.includes('rate') ? '%' : ''}
                   </span>
-                  <span className="text-sm text-gray-500 ml-1">{metric.trendLabel}</span>
+                  <span>{metric.trendLabel}</span>
                 </div>
               )}
             </div>
@@ -201,67 +199,67 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="neomorphism-card-accessible animate-neomorphism-slide-up" style={{ animationDelay: '0.4s' }}>
-          <div className="mb-6">
-            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2 neomorphism-text">
-              <div className="neomorphism-accessible-subtle p-2 rounded-xl">
-                <Activity className="w-5 h-5 text-blue-600" />
+      <div>
+        <div>
+          <div>
+            <h3>
+              <div>
+                <Activity />
               </div>
               Quick Actions
             </h3>
           </div>
-          <div className="space-y-3">
-            <button className="neomorphism-button-enhanced w-full text-left p-4">
-              <div className="font-medium">Create New Access Code</div>
-              <div className="text-sm text-gray-500 mt-1">Generate access codes for new customers</div>
+          <div>
+            <button>
+              <div>Create New Access Code</div>
+              <div>Generate access codes for new customers</div>
             </button>
-            <button className="neomorphism-button-enhanced w-full text-left p-4">
-              <div className="font-medium">View Customer Analytics</div>
-              <div className="text-sm text-gray-500 mt-1">Analyze customer behavior and usage</div>
+            <button>
+              <div>View Customer Analytics</div>
+              <div>Analyze customer behavior and usage</div>
             </button>
-            <button className="neomorphism-button-enhanced w-full text-left p-4">
-              <div className="font-medium">Export Reports</div>
-              <div className="text-sm text-gray-500 mt-1">Download business intelligence reports</div>
+            <button>
+              <div>Export Reports</div>
+              <div>Download business intelligence reports</div>
             </button>
           </div>
         </div>
 
-        <div className="neomorphism-card-accessible animate-neomorphism-slide-up" style={{ animationDelay: '0.5s' }}>
-          <div className="mb-6">
-            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2 neomorphism-text">
-              <div className="neomorphism-accessible-subtle p-2 rounded-xl">
-                <Building className="w-5 h-5 text-green-600" />
+        <div>
+          <div>
+            <h3>
+              <div>
+                <Building />
               </div>
               Recent Activity
             </h3>
           </div>
-          <div className="space-y-4">
-            <div className="neomorphism-accessible-subtle p-3 rounded-xl">
-              <div className="flex items-center justify-between">
+          <div>
+            <div>
+              <div>
                 <div>
-                  <div className="font-medium">New customer signup</div>
-                  <div className="text-sm text-gray-500">Elite Contractors joined</div>
+                  <div>New customer signup</div>
+                  <div>Elite Contractors joined</div>
                 </div>
-                <div className="neomorphism-badge-enhanced text-xs">2 hours ago</div>
+                <div>2 hours ago</div>
               </div>
             </div>
-            <div className="neomorphism-accessible-subtle p-3 rounded-xl">
-              <div className="flex items-center justify-between">
+            <div>
+              <div>
                 <div>
-                  <div className="font-medium">Quote accepted</div>
-                  <div className="text-sm text-gray-500">$3,932 project confirmed</div>
+                  <div>Quote accepted</div>
+                  <div>$3,932 project confirmed</div>
                 </div>
-                <div className="neomorphism-badge-enhanced text-xs">4 hours ago</div>
+                <div>4 hours ago</div>
               </div>
             </div>
-            <div className="neomorphism-accessible-subtle p-3 rounded-xl">
-              <div className="flex items-center justify-between">
+            <div>
+              <div>
                 <div>
-                  <div className="font-medium">Access code created</div>
-                  <div className="text-sm text-gray-500">5 new trial codes generated</div>
+                  <div>Access code created</div>
+                  <div>5 new trial codes generated</div>
                 </div>
-                <div className="neomorphism-badge-enhanced text-xs">1 day ago</div>
+                <div>1 day ago</div>
               </div>
             </div>
           </div>
@@ -269,31 +267,31 @@ export default function AdminDashboard() {
       </div>
 
       {/* System Status */}
-      <div className="neomorphism-card-accessible animate-neomorphism-slide-up" style={{ animationDelay: '0.6s' }}>
-        <div className="mb-6">
-          <h3 className="text-xl font-bold text-gray-900 neomorphism-text">System Status</h3>
+      <div>
+        <div>
+          <h3>System Status</h3>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center neomorphism-accessible-subtle p-4 rounded-xl">
-            <div className="neomorphism-accessible-subtle w-4 h-4 bg-green-500 rounded-full mx-auto mb-2 flex items-center justify-center">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+        <div>
+          <div>
+            <div>
+              <div></div>
             </div>
-            <div className="font-medium">Database</div>
-            <div className="text-sm text-gray-500">Operational</div>
+            <div>Database</div>
+            <div>Operational</div>
           </div>
-          <div className="text-center neomorphism-accessible-subtle p-4 rounded-xl">
-            <div className="neomorphism-accessible-subtle w-4 h-4 bg-green-500 rounded-full mx-auto mb-2 flex items-center justify-center">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+          <div>
+            <div>
+              <div></div>
             </div>
-            <div className="font-medium">API Services</div>
-            <div className="text-sm text-gray-500">Operational</div>
+            <div>API Services</div>
+            <div>Operational</div>
           </div>
-          <div className="text-center neomorphism-accessible-subtle p-4 rounded-xl">
-            <div className="neomorphism-accessible-subtle w-4 h-4 bg-green-500 rounded-full mx-auto mb-2 flex items-center justify-center">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+          <div>
+            <div>
+              <div></div>
             </div>
-            <div className="font-medium">Authentication</div>
-            <div className="text-sm text-gray-500">Operational</div>
+            <div>Authentication</div>
+            <div>Operational</div>
           </div>
         </div>
       </div>

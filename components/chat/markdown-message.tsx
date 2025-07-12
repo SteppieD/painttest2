@@ -5,7 +5,7 @@ interface MarkdownMessageProps {
   className?: string;
 }
 
-export function MarkdownMessage({ content, className = "" }: MarkdownMessageProps) {
+export function MarkdownMessage({ content, }: MarkdownMessageProps) {
   // Simple markdown to HTML conversion for chat messages
   const renderMarkdown = (text: string) => {
     // Split by double newlines to preserve paragraphs
@@ -15,7 +15,7 @@ export function MarkdownMessage({ content, className = "" }: MarkdownMessageProp
       // Handle headers
       if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
         const headerText = paragraph.slice(2, -2);
-        return <h3 key={pIndex} className="font-semibold text-base mb-2">{headerText}</h3>;
+        return <h3 key={pIndex}>{headerText}</h3>;
       }
       
       // Handle bullet points
@@ -32,11 +32,11 @@ export function MarkdownMessage({ content, className = "" }: MarkdownMessageProp
               }
               return part;
             });
-            return <li key={lIndex} className="ml-4">{renderedText}</li>;
+            return <li key={lIndex}>{renderedText}</li>;
           });
         
         if (listItems.length > 0) {
-          return <ul key={pIndex} className="list-disc list-inside space-y-1 mb-3">{listItems}</ul>;
+          return <ul key={pIndex}>{listItems}</ul>;
         }
       }
       
@@ -55,12 +55,12 @@ export function MarkdownMessage({ content, className = "" }: MarkdownMessageProp
         ));
       });
       
-      return <p key={pIndex} className="mb-3">{renderedParts}</p>;
+      return <p key={pIndex}>{renderedParts}</p>;
     });
   };
   
   return (
-    <div className={className}>
+    <div>
       {renderMarkdown(content)}
     </div>
   );

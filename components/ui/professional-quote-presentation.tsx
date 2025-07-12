@@ -19,8 +19,6 @@ import {
   FileText,
   Star
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-
 interface QuoteData {
   id: string;
   customerName: string;
@@ -154,35 +152,35 @@ export function ProfessionalQuotePresentation({
   ];
 
   return (
-    <div className={cn("design-container max-w-4xl mx-auto", className)}>
+    <div>
       {/* Header */}
-      <div className="mb-8 p-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl text-white">
-        <div className="design-inline mb-4">
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold mb-2">Professional Painting Quote</h1>
-            <p className="text-blue-100">Quote #{quote.id}</p>
+      <div>
+        <div>
+          <div>
+            <h1>Professional Painting Quote</h1>
+            <p>Quote #{quote.id}</p>
           </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold">${quote.totals.total.toLocaleString()}</div>
-            <div className="text-blue-100">Total Investment</div>
+          <div>
+            <div>${quote.totals.total.toLocaleString()}</div>
+            <div>Total Investment</div>
           </div>
         </div>
 
-        <div className="design-grid design-grid-2 gap-6 mt-6">
+        <div>
           <div>
-            <h3 className="font-semibold mb-2">Customer Information</h3>
-            <div className="space-y-1 text-blue-100">
-              <div className="design-inline">
-                <MapPin className="w-4 h-4" />
+            <h3>Customer Information</h3>
+            <div>
+              <div>
+                <MapPin />
                 <span>{quote.customerName}</span>
               </div>
-              <div className="design-inline">
-                <MapPin className="w-4 h-4" />
+              <div>
+                <MapPin />
                 <span>{quote.customerAddress}</span>
               </div>
               {quote.customerPhone && (
-                <div className="design-inline">
-                  <Phone className="w-4 h-4" />
+                <div>
+                  <Phone />
                   <span>{quote.customerPhone}</span>
                 </div>
               )}
@@ -190,18 +188,18 @@ export function ProfessionalQuotePresentation({
           </div>
 
           <div>
-            <h3 className="font-semibold mb-2">Company Information</h3>
-            <div className="space-y-1 text-blue-100">
-              <div className="design-inline">
-                <Award className="w-4 h-4" />
+            <h3>Company Information</h3>
+            <div>
+              <div>
+                <Award />
                 <span>{quote.companyInfo.name}</span>
               </div>
-              <div className="design-inline">
-                <Phone className="w-4 h-4" />
+              <div>
+                <Phone />
                 <span>{quote.companyInfo.phone}</span>
               </div>
-              <div className="design-inline">
-                <Shield className="w-4 h-4" />
+              <div>
+                <Shield />
                 <span>{quote.companyInfo.license}</span>
               </div>
             </div>
@@ -210,22 +208,16 @@ export function ProfessionalQuotePresentation({
       </div>
 
       {/* Navigation */}
-      <div className="mb-8">
-        <div className="flex space-x-1 p-1 bg-gray-100 rounded-lg">
+      <div>
+        <div>
           {sections.map((section) => (
             <button
               key={section.id}
               onClick={() => setActiveSection(section.id)}
-              className={cn(
-                "flex-1 flex items-center justify-center px-4 py-3 rounded-md transition-all duration-200",
-                "text-sm font-medium",
-                activeSection === section.id
-                  ? "bg-white text-blue-600 shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
-              )}
+             
             >
-              <section.icon className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">{section.label}</span>
+              <section.icon />
+              <span>{section.label}</span>
             </button>
           ))}
         </div>
@@ -233,44 +225,44 @@ export function ProfessionalQuotePresentation({
 
       {/* Content Sections */}
       {activeSection === 'overview' && (
-        <div className="design-stack">
+        <div>
           {/* Project Summary */}
-          <Card className="design-card">
+          <Card>
             <CardHeader>
-              <CardTitle className="design-heading-3">Project Summary</CardTitle>
+              <CardTitle>Project Summary</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="design-grid design-grid-2 gap-6">
+              <div>
                 <div>
-                  <h4 className="font-semibold mb-3">Scope of Work</h4>
-                  <div className="space-y-2">
-                    <div className="design-inline">
-                      <Palette className="w-5 h-5 text-blue-600" />
+                  <h4>Scope of Work</h4>
+                  <div>
+                    <div>
+                      <Palette />
                       <span>{quote.projectType}</span>
                     </div>
-                    <div className="design-inline">
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                    <div>
+                      <CheckCircle2 />
                       <span>{quote.rooms.length} rooms included</span>
                     </div>
-                    <div className="design-inline">
-                      <Clock className="w-5 h-5 text-orange-600" />
+                    <div>
+                      <Clock />
                       <span>{quote.timeline.estimatedDays} days estimated</span>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold mb-3">Investment Breakdown</h4>
-                  <div className="space-y-2">
-                    <div className="design-inline">
+                  <h4>Investment Breakdown</h4>
+                  <div>
+                    <div>
                       <span>Materials</span>
                       <span>${quote.totals.materials.toLocaleString()}</span>
                     </div>
-                    <div className="design-inline">
+                    <div>
                       <span>Labor</span>
                       <span>${quote.totals.labor.toLocaleString()}</span>
                     </div>
-                    <div className="design-inline font-semibold">
+                    <div>
                       <span>Total</span>
                       <span>${quote.totals.total.toLocaleString()}</span>
                     </div>
@@ -281,26 +273,26 @@ export function ProfessionalQuotePresentation({
           </Card>
 
           {/* Why Choose Us */}
-          <Card className="design-card">
+          <Card>
             <CardHeader>
-              <CardTitle className="design-heading-3">Why Choose {quote.companyInfo.name}?</CardTitle>
+              <CardTitle>Why Choose {quote.companyInfo.name}?</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="design-grid design-grid-3 gap-4">
-                <div className="text-center p-4 bg-blue-50 rounded-lg">
-                  <Shield className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                  <h4 className="font-semibold">Fully Licensed & Insured</h4>
-                  <p className="text-sm text-gray-600 mt-1">{quote.companyInfo.insurance}</p>
+              <div>
+                <div>
+                  <Shield />
+                  <h4>Fully Licensed & Insured</h4>
+                  <p>{quote.companyInfo.insurance}</p>
                 </div>
-                <div className="text-center p-4 bg-green-50 rounded-lg">
-                  <Award className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                  <h4 className="font-semibold">2-Year Warranty</h4>
-                  <p className="text-sm text-gray-600 mt-1">Guaranteed workmanship</p>
+                <div>
+                  <Award />
+                  <h4>2-Year Warranty</h4>
+                  <p>Guaranteed workmanship</p>
                 </div>
-                <div className="text-center p-4 bg-orange-50 rounded-lg">
-                  <Star className="w-8 h-8 text-orange-600 mx-auto mb-2" />
-                  <h4 className="font-semibold">Premium Materials</h4>
-                  <p className="text-sm text-gray-600 mt-1">Professional-grade paints</p>
+                <div>
+                  <Star />
+                  <h4>Premium Materials</h4>
+                  <p>Professional-grade paints</p>
                 </div>
               </div>
             </CardContent>
@@ -309,37 +301,37 @@ export function ProfessionalQuotePresentation({
       )}
 
       {activeSection === 'details' && (
-        <div className="design-stack">
-          <Card className="design-card">
+        <div>
+          <Card>
             <CardHeader>
-              <CardTitle className="design-heading-3">Room-by-Room Breakdown</CardTitle>
+              <CardTitle>Room-by-Room Breakdown</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
+              <div>
                 {quote.rooms.map((room, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-6">
-                    <div className="design-inline mb-4">
-                      <h4 className="font-semibold text-lg">{room.name}</h4>
-                      <Badge className="bg-green-100 text-green-700">
+                  <div key={index}>
+                    <div>
+                      <h4>{room.name}</h4>
+                      <Badge>
                         ${room.cost.toLocaleString()}
                       </Badge>
                     </div>
                     
-                    <div className="design-grid design-grid-2 gap-4">
+                    <div>
                       <div>
-                        <p className="text-sm text-gray-600 mb-2">Dimensions & Area</p>
-                        <p className="font-medium">{room.dimensions}</p>
-                        <p className="text-sm text-gray-500">{room.area} sq ft</p>
+                        <p>Dimensions & Area</p>
+                        <p>{room.dimensions}</p>
+                        <p>{room.area} sq ft</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600 mb-2">Paint Product</p>
-                        <p className="font-medium">{room.paintProduct}</p>
+                        <p>Paint Product</p>
+                        <p>{room.paintProduct}</p>
                       </div>
                     </div>
                     
-                    <div className="mt-4">
-                      <p className="text-sm text-gray-600 mb-2">Surfaces Included</p>
-                      <div className="flex flex-wrap gap-2">
+                    <div>
+                      <p>Surfaces Included</p>
+                      <div>
                         {room.surfaces.map((surface) => (
                           <Badge key={surface} variant="outline">
                             {surface}
@@ -356,37 +348,37 @@ export function ProfessionalQuotePresentation({
       )}
 
       {activeSection === 'timeline' && (
-        <div className="design-stack">
-          <Card className="design-card">
+        <div>
+          <Card>
             <CardHeader>
-              <CardTitle className="design-heading-3">Project Timeline</CardTitle>
+              <CardTitle>Project Timeline</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                <div className="design-inline p-4 bg-blue-50 rounded-lg">
-                  <Calendar className="w-6 h-6 text-blue-600" />
+              <div>
+                <div>
+                  <Calendar />
                   <div>
-                    <h4 className="font-semibold">Estimated Duration</h4>
-                    <p className="text-sm text-gray-600">{quote.timeline.estimatedDays} working days</p>
+                    <h4>Estimated Duration</h4>
+                    <p>{quote.timeline.estimatedDays} working days</p>
                   </div>
                 </div>
 
                 {quote.timeline.startDate && (
-                  <div className="design-grid design-grid-2 gap-4">
-                    <div className="p-4 border border-gray-200 rounded-lg">
-                      <h4 className="font-semibold mb-2">Proposed Start Date</h4>
-                      <p className="text-lg">{quote.timeline.startDate}</p>
+                  <div>
+                    <div>
+                      <h4>Proposed Start Date</h4>
+                      <p>{quote.timeline.startDate}</p>
                     </div>
-                    <div className="p-4 border border-gray-200 rounded-lg">
-                      <h4 className="font-semibold mb-2">Estimated Completion</h4>
-                      <p className="text-lg">{quote.timeline.completionDate}</p>
+                    <div>
+                      <h4>Estimated Completion</h4>
+                      <p>{quote.timeline.completionDate}</p>
                     </div>
                   </div>
                 )}
 
-                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <h4 className="font-semibold text-yellow-800 mb-2">Weather Considerations</h4>
-                  <p className="text-sm text-yellow-700">
+                <div>
+                  <h4>Weather Considerations</h4>
+                  <p>
                     Timeline may vary based on weather conditions and material availability.
                     We will communicate any adjustments promptly.
                   </p>
@@ -398,47 +390,47 @@ export function ProfessionalQuotePresentation({
       )}
 
       {activeSection === 'terms' && (
-        <div className="design-stack">
-          <Card className="design-card">
+        <div>
+          <Card>
             <CardHeader>
-              <CardTitle className="design-heading-3">Terms & Conditions</CardTitle>
+              <CardTitle>Terms & Conditions</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                <div className="design-grid design-grid-2 gap-6">
+              <div>
+                <div>
                   <div>
-                    <h4 className="font-semibold mb-3">Payment Terms</h4>
-                    <div className="space-y-2">
-                      <div className="design-inline">
+                    <h4>Payment Terms</h4>
+                    <div>
+                      <div>
                         <span>Deposit Required</span>
-                        <span className="font-semibold">${quote.terms.deposit.toLocaleString()}</span>
+                        <span>${quote.terms.deposit.toLocaleString()}</span>
                       </div>
-                      <p className="text-sm text-gray-600">{quote.terms.paymentTerms}</p>
+                      <p>{quote.terms.paymentTerms}</p>
                     </div>
                   </div>
 
                   <div>
-                    <h4 className="font-semibold mb-3">Quote Validity</h4>
-                    <div className="space-y-2">
-                      <div className="design-inline">
+                    <h4>Quote Validity</h4>
+                    <div>
+                      <div>
                         <span>Valid Until</span>
-                        <span className="font-semibold">{quote.terms.validUntil}</span>
+                        <span>{quote.terms.validUntil}</span>
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p>
                         Prices subject to change after this date
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <h4 className="font-semibold text-green-800 mb-2">Our Guarantee</h4>
-                  <p className="text-sm text-green-700">
+                <div>
+                  <h4>Our Guarantee</h4>
+                  <p>
                     {quote.terms.warranty}. We stand behind our work with complete confidence.
                   </p>
                 </div>
 
-                <div className="text-xs text-gray-500 space-y-1">
+                <div>
                   <p>• Materials and labor costs included as specified</p>
                   <p>• Color matching guaranteed to approved samples</p>
                   <p>• Clean-up and debris removal included</p>
@@ -451,36 +443,36 @@ export function ProfessionalQuotePresentation({
       )}
 
       {/* Action Buttons */}
-      <div className="mt-8 p-6 bg-gray-50 rounded-xl">
-        <div className="design-grid design-grid-2 gap-4">
-          <div className="space-y-3">
+      <div>
+        <div>
+          <div>
             <Button
               onClick={onDownload}
-              className="design-button design-button-secondary w-full"
+             
             >
-              <Download className="w-5 h-5 mr-2" />
+              <Download />
               Download PDF
             </Button>
             <Button
               onClick={onShare}
               variant="outline"
-              className="design-button design-button-secondary w-full"
+             
             >
-              <Share2 className="w-5 h-5 mr-2" />
+              <Share2 />
               Share Quote
             </Button>
           </div>
 
           {isClientView && onAccept && (
-            <div className="space-y-3">
+            <div>
               <Button
                 onClick={onAccept}
-                className="design-button design-button-primary design-button-large w-full"
+               
               >
-                <CheckCircle2 className="w-5 h-5 mr-2" />
+                <CheckCircle2 />
                 Accept This Quote
               </Button>
-              <p className="text-xs text-gray-500 text-center">
+              <p>
                 By accepting, you agree to the terms and conditions outlined above
               </p>
             </div>

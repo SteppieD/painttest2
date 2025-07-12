@@ -14,22 +14,22 @@ interface PricePreviewProps {
 
 export function PricePreview({ quote, onGenerateQuote, isGenerating }: PricePreviewProps) {
   return (
-    <Card className="border-blue-200 bg-blue-50/50">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Calculator className="w-5 h-5 text-blue-600" />
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          <Calculator />
           Estimate Preview
         </CardTitle>
       </CardHeader>
       
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Palette className="w-4 h-4" />
+      <CardContent>
+        <div>
+          <div>
+            <div>
+              <Palette />
               Project Details
             </div>
-            <div className="text-xs space-y-1">
+            <div>
               <div>{quote.details?.sqft || 0} sq ft</div>
               <div>{quote.details?.roomCount || 0} rooms</div>
               {quote.details?.paintGallons && (
@@ -38,36 +38,36 @@ export function PricePreview({ quote, onGenerateQuote, isGenerating }: PricePrev
             </div>
           </div>
           
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Clock className="w-4 h-4" />
+          <div>
+            <div>
+              <Clock />
               Timeline
             </div>
-            <div className="text-xs space-y-1">
+            <div>
               <div>{quote.timeEstimate || 'TBD'}</div>
               <div>{quote.details?.totalLaborHours || 0} labor hours</div>
             </div>
           </div>
         </div>
 
-        <div className="border-t pt-3">
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
+        <div>
+          <div>
+            <div>
               <span>Labor</span>
               <span>{formatCurrency(quote.breakdown?.labor?.total || 0)}</span>
             </div>
-            <div className="flex justify-between text-sm">
+            <div>
               <span>Materials</span>
               <span>{formatCurrency(quote.breakdown?.materials?.total || 0)}</span>
             </div>
-            <div className="flex justify-between text-sm">
+            <div>
               <span>Markup</span>
               <span>{formatCurrency(quote.breakdown?.markup || 0)}</span>
             </div>
-            <div className="border-t pt-2">
-              <div className="flex justify-between font-semibold">
+            <div>
+              <div>
                 <span>Total Estimate</span>
-                <span className="text-blue-600">
+                <span>
                   {formatCurrency(quote.totalCost || 0)}
                 </span>
               </div>
@@ -79,14 +79,14 @@ export function PricePreview({ quote, onGenerateQuote, isGenerating }: PricePrev
           <Button 
             onClick={onGenerateQuote}
             disabled={isGenerating}
-            className="w-full"
+           
             size="sm"
           >
             {isGenerating ? (
               "Generating Quote..."
             ) : (
               <>
-                <FileText className="w-4 h-4 mr-2" />
+                <FileText />
                 Generate Final Quote
               </>
             )}

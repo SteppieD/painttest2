@@ -156,57 +156,57 @@ export function TestimonialCarousel({
   const currentTestimonial = testimonials[currentIndex]
 
   return (
-    <section className={`py-20 px-4 ${className}`}>
-      <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    <section`}>
+      <div>
+        <div>
+          <h2>
             Real Results from Real Contractors
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p>
             See how painting contractors across America have transformed their businesses with professional quoting
           </p>
         </div>
 
-        <div className="relative">
+        <div>
           {/* Main Testimonial Card */}
-          <Card className="border-2 border-blue-100 shadow-xl">
-            <CardContent className="p-8">
-              <div className="grid lg:grid-cols-2 gap-8">
+          <Card>
+            <CardContent>
+              <div>
                 {/* Left Side - Testimonial */}
                 <div>
-                  <div className="flex items-center mb-6">
-                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                      <span className="text-xl font-bold text-blue-600">
+                  <div>
+                    <div>
+                      <span>
                         {currentTestimonial.avatar}
                       </span>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900">
+                      <h3>
                         {currentTestimonial.name}
                       </h3>
-                      <p className="text-gray-600">{currentTestimonial.company}</p>
-                      <p className="text-sm text-gray-500">{currentTestimonial.location}</p>
-                      <p className="text-sm text-blue-600 font-medium">{currentTestimonial.businessType}</p>
+                      <p>{currentTestimonial.company}</p>
+                      <p>{currentTestimonial.location}</p>
+                      <p>{currentTestimonial.businessType}</p>
                     </div>
                   </div>
 
                   {/* Star Rating */}
-                  <div className="flex items-center mb-4">
+                  <div>
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                      <Star key={i} />
                     ))}
                   </div>
 
                   {/* Quote */}
-                  <blockquote className="text-lg text-gray-700 italic mb-4 leading-relaxed">
+                  <blockquote>
                     "{currentTestimonial.quote}"
                   </blockquote>
 
                   {/* Key Benefit */}
-                  <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
-                    <div className="flex items-center">
-                      <TrendingUp className="w-5 h-5 text-green-600 mr-2" />
-                      <span className="font-semibold text-green-800">
+                  <div>
+                    <div>
+                      <TrendingUp />
+                      <span>
                         {currentTestimonial.keyBenefit}
                       </span>
                     </div>
@@ -215,82 +215,82 @@ export function TestimonialCarousel({
 
                 {/* Right Side - Before/After Stats */}
                 <div>
-                  <h4 className="text-lg font-bold text-gray-900 mb-6 text-center">
+                  <h4>
                     Before vs. After Results
                   </h4>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div>
                     {/* Before Column */}
-                    <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
-                      <h5 className="font-semibold text-red-800 mb-3 text-center">Before</h5>
-                      <div className="space-y-3 text-sm">
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-600">Win Rate:</span>
-                          <span className="font-bold text-red-700">{currentTestimonial.beforeStats.winRate}</span>
+                    <div>
+                      <h5>Before</h5>
+                      <div>
+                        <div>
+                          <span>Win Rate:</span>
+                          <span>{currentTestimonial.beforeStats.winRate}</span>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-600">Revenue:</span>
-                          <span className="font-bold text-red-700">{currentTestimonial.beforeStats.monthlyRevenue}</span>
+                        <div>
+                          <span>Revenue:</span>
+                          <span>{currentTestimonial.beforeStats.monthlyRevenue}</span>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-600">Quotes/Month:</span>
-                          <span className="font-bold text-red-700">{currentTestimonial.beforeStats.quotesPerMonth}</span>
+                        <div>
+                          <span>Quotes/Month:</span>
+                          <span>{currentTestimonial.beforeStats.quotesPerMonth}</span>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-600">Time/Quote:</span>
-                          <span className="font-bold text-red-700">{currentTestimonial.beforeStats.timePerQuote}</span>
+                        <div>
+                          <span>Time/Quote:</span>
+                          <span>{currentTestimonial.beforeStats.timePerQuote}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* After Column */}
-                    <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
-                      <h5 className="font-semibold text-green-800 mb-3 text-center">After</h5>
-                      <div className="space-y-3 text-sm">
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-600">Win Rate:</span>
-                          <span className="font-bold text-green-700">{currentTestimonial.afterStats.winRate}</span>
+                    <div>
+                      <h5>After</h5>
+                      <div>
+                        <div>
+                          <span>Win Rate:</span>
+                          <span>{currentTestimonial.afterStats.winRate}</span>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-600">Revenue:</span>
-                          <span className="font-bold text-green-700">{currentTestimonial.afterStats.monthlyRevenue}</span>
+                        <div>
+                          <span>Revenue:</span>
+                          <span>{currentTestimonial.afterStats.monthlyRevenue}</span>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-600">Quotes/Month:</span>
-                          <span className="font-bold text-green-700">{currentTestimonial.afterStats.quotesPerMonth}</span>
+                        <div>
+                          <span>Quotes/Month:</span>
+                          <span>{currentTestimonial.afterStats.quotesPerMonth}</span>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-600">Time/Quote:</span>
-                          <span className="font-bold text-green-700">{currentTestimonial.afterStats.timePerQuote}</span>
+                        <div>
+                          <span>Time/Quote:</span>
+                          <span>{currentTestimonial.afterStats.timePerQuote}</span>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Summary Stats */}
-                  <div className="mt-6 bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
-                    <h5 className="font-semibold text-gray-900 mb-3 text-center">Impact Summary</h5>
-                    <div className="grid grid-cols-3 gap-4 text-center text-sm">
+                  <div>
+                    <h5>Impact Summary</h5>
+                    <div>
                       <div>
-                        <DollarSign className="w-6 h-6 text-blue-600 mx-auto mb-1" />
-                        <div className="font-bold text-gray-900 text-lg">
+                        <DollarSign />
+                        <div>
                           +{Math.round(((parseInt(currentTestimonial.afterStats.monthlyRevenue.replace(/[,$]/g, '')) - parseInt(currentTestimonial.beforeStats.monthlyRevenue.replace(/[,$]/g, ''))) / parseInt(currentTestimonial.beforeStats.monthlyRevenue.replace(/[,$]/g, ''))) * 100)}%
                         </div>
-                        <div className="text-gray-700 font-medium">Revenue</div>
+                        <div>Revenue</div>
                       </div>
                       <div>
-                        <TrendingUp className="w-6 h-6 text-green-600 mx-auto mb-1" />
-                        <div className="font-bold text-gray-900 text-lg">
+                        <TrendingUp />
+                        <div>
                           +{parseInt(currentTestimonial.afterStats.winRate) - parseInt(currentTestimonial.beforeStats.winRate)}%
                         </div>
-                        <div className="text-gray-700 font-medium">Win Rate</div>
+                        <div>Win Rate</div>
                       </div>
                       <div>
-                        <Clock className="w-6 h-6 text-purple-600 mx-auto mb-1" />
-                        <div className="font-bold text-gray-900 text-lg">
+                        <Clock />
+                        <div>
                           {currentTestimonial.afterStats.quotesPerMonth - currentTestimonial.beforeStats.quotesPerMonth}+
                         </div>
-                        <div className="text-gray-700 font-medium">More Quotes</div>
+                        <div>More Quotes</div>
                       </div>
                     </div>
                   </div>
@@ -304,56 +304,54 @@ export function TestimonialCarousel({
             variant="outline"
             size="sm"
             onClick={goToPrevious}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white shadow-lg hover:bg-gray-50"
+           
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft />
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={goToNext}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white shadow-lg hover:bg-gray-50"
+           
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight />
           </Button>
         </div>
 
         {/* Pagination Dots */}
-        <div className="flex justify-center mt-8 space-x-2">
+        <div>
           {testimonials.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                index === currentIndex ? 'bg-blue-600' : 'bg-gray-300'
-              }`}
+             `}
             />
           ))}
         </div>
 
         {/* Overall Industry Stats */}
-        <div className="mt-16 bg-blue-600 p-8 rounded-2xl shadow-lg" style={{ backgroundColor: '#2563eb', color: '#ffffff' }}>
-          <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold mb-2" style={{ color: '#ffffff' }}>Industry-Wide Results</h3>
-            <p style={{ color: '#dbeafe' }}>Based on data from 5,000+ active contractors using our platform</p>
+        <div>
+          <div>
+            <h3>Industry-Wide Results</h3>
+            <p>Based on data from 5,000+ active contractors using our platform</p>
           </div>
           
-          <div className="grid md:grid-cols-4 gap-6 text-center">
+          <div>
             <div>
-              <div className="text-3xl font-bold mb-2" style={{ color: '#ffffff' }}>47%</div>
-              <p className="text-sm" style={{ color: '#dbeafe' }}>Average win rate increase</p>
+              <div>47%</div>
+              <p>Average win rate increase</p>
             </div>
             <div>
-              <div className="text-3xl font-bold mb-2" style={{ color: '#ffffff' }}>$8,400</div>
-              <p className="text-sm" style={{ color: '#dbeafe' }}>Average monthly revenue increase</p>
+              <div>$8,400</div>
+              <p>Average monthly revenue increase</p>
             </div>
             <div>
-              <div className="text-3xl font-bold mb-2" style={{ color: '#ffffff' }}>4.2x</div>
-              <p className="text-sm" style={{ color: '#dbeafe' }}>Faster quote delivery</p>
+              <div>4.2x</div>
+              <p>Faster quote delivery</p>
             </div>
             <div>
-              <div className="text-3xl font-bold mb-2" style={{ color: '#ffffff' }}>94%</div>
-              <p className="text-sm" style={{ color: '#dbeafe' }}>Customer satisfaction rate</p>
+              <div>94%</div>
+              <p>Customer satisfaction rate</p>
             </div>
           </div>
         </div>

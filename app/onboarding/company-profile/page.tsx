@@ -114,27 +114,27 @@ export default function CompanyProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container max-w-4xl mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Welcome to Painting Quote Pro!</h1>
-          <p className="text-gray-600 mt-2">Let's set up your company profile to get started.</p>
+    <div>
+      <div>
+        <div>
+          <h1>Welcome to Painting Quote Pro!</h1>
+          <p>Let's set up your company profile to get started.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit}>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Building2 className="h-5 w-5" />
+              <CardTitle>
+                <Building2 />
                 Company Information
               </CardTitle>
               <CardDescription>
                 This information will appear on your quotes and help customers identify your business.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
+            <CardContent>
+              <div>
+                <div>
                   <Label htmlFor="companyName">Company Name *</Label>
                   <Input
                     id="companyName"
@@ -146,21 +146,21 @@ export default function CompanyProfilePage() {
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div>
                   <Label htmlFor="companyLogo">Company Logo</Label>
-                  <div className="flex items-center gap-2">
+                  <div>
                     <Input
                       id="companyLogo"
                       type="file"
                       accept="image/*"
                       onChange={handleLogoUpload}
-                      className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                     
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="companyAddress">Company Address</Label>
                 <Textarea
                   id="companyAddress"
@@ -172,10 +172,10 @@ export default function CompanyProfilePage() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="companyPhone" className="flex items-center gap-2">
-                    <Phone className="h-4 w-4" />
+              <div>
+                <div>
+                  <Label htmlFor="companyPhone">
+                    <Phone />
                     Phone Number
                   </Label>
                   <Input
@@ -188,9 +188,9 @@ export default function CompanyProfilePage() {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="companyEmail" className="flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
+                <div>
+                  <Label htmlFor="companyEmail">
+                    <Mail />
                     Email Address
                   </Label>
                   <Input
@@ -204,9 +204,9 @@ export default function CompanyProfilePage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="companyWebsite" className="flex items-center gap-2">
-                  <Globe className="h-4 w-4" />
+              <div>
+                <Label htmlFor="companyWebsite">
+                  <Globe />
                   Website (optional)
                 </Label>
                 <Input
@@ -223,17 +223,17 @@ export default function CompanyProfilePage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
+              <CardTitle>
+                <Shield />
                 Licensing & Insurance
               </CardTitle>
               <CardDescription>
                 Professional credentials that build customer trust.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
+            <CardContent>
+              <div>
+                <div>
                   <Label htmlFor="licenseNumber">License Number</Label>
                   <Input
                     id="licenseNumber"
@@ -244,7 +244,7 @@ export default function CompanyProfilePage() {
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div>
                   <Label htmlFor="insuranceInfo">Insurance Information</Label>
                   <Input
                     id="insuranceInfo"
@@ -260,16 +260,16 @@ export default function CompanyProfilePage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
+              <CardTitle>
+                <FileText />
                 Quote Customization
               </CardTitle>
               <CardDescription>
                 Customize how your quotes appear to customers.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
+            <CardContent>
+              <div>
                 <Label htmlFor="quoteHeaderText">Quote Header Text (optional)</Label>
                 <Textarea
                   id="quoteHeaderText"
@@ -281,7 +281,7 @@ export default function CompanyProfilePage() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="quoteFooterText">Quote Footer Text</Label>
                 <Textarea
                   id="quoteFooterText"
@@ -292,7 +292,7 @@ export default function CompanyProfilePage() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="paymentTerms">Payment Terms</Label>
                 <Input
                   id="paymentTerms"
@@ -305,7 +305,7 @@ export default function CompanyProfilePage() {
             </CardContent>
           </Card>
 
-          <div className="flex justify-between">
+          <div>
             <Button
               type="button"
               variant="outline"

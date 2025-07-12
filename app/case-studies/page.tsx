@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   TrendingUp,
@@ -19,24 +18,16 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Footer } from '@/components/shared/footer';
-import { Header } from '@/components/shared/header';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Painting Contractor Case Studies - Success Stories & Results | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Painting Contractor Case Studies - Success Stories & Results',
   description: 'Painting contractor case studies showing real results. See how contractors increased revenue 156%, saved 10+ hours weekly, and transformed their painting businesses with our software.',
   keywords: 'painting contractor case studies, painting business success stories, contractor software results, painting business case study, painting contractor testimonials, painting software success, contractor growth stories',
-  alternates: {
-    canonical: '/case-studies',
-  },
-  openGraph: {
-    title: 'Painting Contractor Success Stories - Real Results from Real Contractors',
-    description: 'Painting contractor case studies demonstrate 156% revenue growth, 10+ hours saved weekly, and business transformations. Read success stories from 5,000+ contractors.',
-    url: '/case-studies',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-};
+  path: '/case-studies',
+});
 
 export default function CaseStudiesPage() {
   // Featured case studies
@@ -192,35 +183,35 @@ export default function CaseStudiesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
+    <div>
+      <KofiHeader />
       
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 px-4 py-1 text-sm font-semibold bg-blue-100 text-blue-800 border-blue-200">
+      <section>
+        <div>
+          <div>
+            <Badge>
               Real Contractors, Real Results
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1>
               Painting Contractor Case Studies & Success Stories
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p>
               Painting contractor case studies showing how 5,000+ professionals transformed 
               their businesses. Real data, real growth, real success stories.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700" asChild>
+            <div>
+              <Button size="lg" asChild>
                 <Link href="/trial-signup">
                   Start Your Success Story
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
+              <Button size="lg" variant="outline" asChild>
                 <Link href="#featured">
                   Read Case Studies
-                  <FileText className="ml-2 w-5 h-5" />
+                  <FileText />
                 </Link>
               </Button>
             </div>
@@ -229,111 +220,111 @@ export default function CaseStudiesPage() {
       </section>
 
       {/* Aggregate Results Banner */}
-      <section className="py-12 px-4 bg-gray-900">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+      <section>
+        <div>
+          <div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2">78%</div>
-              <div className="text-gray-400">Average Revenue Growth</div>
+              <div>78%</div>
+              <div>Average Revenue Growth</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2">10+ hrs</div>
-              <div className="text-gray-400">Saved Per Week</div>
+              <div>10+ hrs</div>
+              <div>Saved Per Week</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2">2.4x</div>
-              <div className="text-gray-400">More Quotes Won</div>
+              <div>2.4x</div>
+              <div>More Quotes Won</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2">45%</div>
-              <div className="text-gray-400">Higher Job Values</div>
+              <div>45%</div>
+              <div>Higher Job Values</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Featured Case Studies */}
-      <section id="featured" className="py-20 px-4">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section id="featured">
+        <div>
+          <div>
+            <h2>
               Featured Painting Contractor Success Stories
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               In-depth case studies from contractors who transformed their businesses
             </p>
           </div>
           
-          <div className="space-y-12">
+          <div>
             {featuredCaseStudies.map((study, index) => (
-              <Card key={index} className="overflow-hidden shadow-xl">
-                <div className="grid lg:grid-cols-3 gap-0">
+              <Card key={index}>
+                <div>
                   {/* Company Info */}
-                  <div className="bg-gradient-to-br from-blue-600 to-purple-600 text-white p-8">
-                    <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold mb-6">
+                  <div>
+                    <div>
                       {study.avatar}
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">{study.contractor}</h3>
-                    <p className="text-blue-100 mb-4">{study.location}</p>
+                    <h3>{study.contractor}</h3>
+                    <p>{study.location}</p>
                     
-                    <div className="space-y-3">
+                    <div>
                       <div>
-                        <p className="text-sm text-blue-200">Established</p>
-                        <p className="font-semibold">{study.established}</p>
+                        <p>Established</p>
+                        <p>{study.established}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-blue-200">Team Size</p>
-                        <p className="font-semibold">{study.teamSize}</p>
+                        <p>Team Size</p>
+                        <p>{study.teamSize}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-blue-200">Growth Timeline</p>
-                        <p className="font-semibold">{study.timeframe}</p>
+                        <p>Growth Timeline</p>
+                        <p>{study.timeframe}</p>
                       </div>
                     </div>
                   </div>
                   
                   {/* Results & Challenge */}
-                  <div className="lg:col-span-2 p-8">
-                    <div className="grid md:grid-cols-2 gap-8 mb-8">
+                  <div>
+                    <div>
                       <div>
-                        <h4 className="font-bold text-gray-900 mb-2">The Challenge</h4>
-                        <p className="text-gray-600 mb-4">{study.challenge}</p>
+                        <h4>The Challenge</h4>
+                        <p>{study.challenge}</p>
                         
-                        <h4 className="font-bold text-gray-900 mb-2">The Solution</h4>
-                        <p className="text-gray-600">{study.solution}</p>
+                        <h4>The Solution</h4>
+                        <p>{study.solution}</p>
                       </div>
                       
                       <div>
-                        <h4 className="font-bold text-gray-900 mb-4">Revenue Growth</h4>
-                        <div className="space-y-2 mb-4">
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Before:</span>
-                            <span className="font-semibold">{study.beforeRevenue}</span>
+                        <h4>Revenue Growth</h4>
+                        <div>
+                          <div>
+                            <span>Before:</span>
+                            <span>{study.beforeRevenue}</span>
                           </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">After:</span>
-                            <span className="font-semibold text-green-600">{study.afterRevenue}</span>
+                          <div>
+                            <span>After:</span>
+                            <span>{study.afterRevenue}</span>
                           </div>
                         </div>
-                        <div className="text-center p-4 bg-green-50 rounded-lg">
-                          <div className="text-3xl font-bold text-green-600">{study.growth}</div>
-                          <div className="text-sm text-gray-600">Revenue Increase</div>
+                        <div>
+                          <div>{study.growth}</div>
+                          <div>Revenue Increase</div>
                         </div>
                       </div>
                     </div>
                     
                     <div>
-                      <h4 className="font-bold text-gray-900 mb-3">Key Results</h4>
-                      <div className="grid md:grid-cols-2 gap-3 mb-6">
+                      <h4>Key Results</h4>
+                      <div>
                         {study.keyResults.map((result, idx) => (
-                          <div key={idx} className="flex items-center gap-2">
-                            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                            <span className="text-gray-700">{result}</span>
+                          <div key={idx}>
+                            <CheckCircle />
+                            <span>{result}</span>
                           </div>
                         ))}
                       </div>
                       
-                      <blockquote className="border-l-4 border-blue-600 pl-4 italic text-gray-700">
+                      <blockquote>
                         "{study.quote}"
                       </blockquote>
                     </div>
@@ -346,27 +337,27 @@ export default function CaseStudiesPage() {
       </section>
 
       {/* Quick Wins */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Quick Wins from Real Contractors
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Immediate results contractors saw after switching to our software
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div>
             {quickWins.map((win, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-lg">{win.company}</CardTitle>
+                  <CardTitle>{win.company}</CardTitle>
                   <Badge variant="outline">{win.metric}</Badge>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold text-blue-600 mb-2">{win.value}</p>
-                  <p className="text-gray-600">{win.result}</p>
+                  <p>{win.value}</p>
+                  <p>{win.result}</p>
                 </CardContent>
               </Card>
             ))}
@@ -375,34 +366,34 @@ export default function CaseStudiesPage() {
       </section>
 
       {/* Challenges Solved */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Common Painting Business Challenges We Solve
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               See how our software addresses industry-wide problems
             </p>
           </div>
           
-          <div className="grid gap-6">
+          <div>
             {challengesSolved.map((item, index) => (
-              <Card key={index} className="overflow-hidden">
-                <div className="grid md:grid-cols-4 gap-6 p-6 items-center">
+              <Card key={index}>
+                <div>
                   <div>
-                    <h3 className="font-bold text-lg text-gray-900">{item.challenge}</h3>
+                    <h3>{item.challenge}</h3>
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">Before</p>
-                    <p className="font-semibold text-red-600">{item.before}</p>
+                  <div>
+                    <p>Before</p>
+                    <p>{item.before}</p>
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">After</p>
-                    <p className="font-semibold text-green-600">{item.after}</p>
+                  <div>
+                    <p>After</p>
+                    <p>{item.after}</p>
                   </div>
-                  <div className="text-center">
-                    <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                  <div>
+                    <Badge>
                       {item.impact}
                     </Badge>
                   </div>
@@ -414,36 +405,36 @@ export default function CaseStudiesPage() {
       </section>
 
       {/* Results by Business Size */}
-      <section className="py-20 px-4 bg-blue-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Success Stories by Business Size
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Our software scales with your painting business
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div>
             {resultsBySize.map((size, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-lg">{size.size}</CardTitle>
+                  <CardTitle>{size.size}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div>
                     <div>
-                      <p className="text-3xl font-bold text-green-600">{size.avgGrowth}</p>
-                      <p className="text-sm text-gray-600">Average Growth</p>
+                      <p>{size.avgGrowth}</p>
+                      <p>Average Growth</p>
                     </div>
                     <div>
-                      <p className="font-semibold text-blue-600">{size.timesSaved}</p>
-                      <p className="text-sm text-gray-600">Time Saved</p>
+                      <p>{size.timesSaved}</p>
+                      <p>Time Saved</p>
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900 mb-1">{size.keyBenefit}</p>
-                      <p className="text-sm text-gray-600 italic">"{size.example}"</p>
+                      <p>{size.keyBenefit}</p>
+                      <p>"{size.example}"</p>
                     </div>
                   </div>
                 </CardContent>
@@ -454,87 +445,87 @@ export default function CaseStudiesPage() {
       </section>
 
       {/* Success Formula */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               The Success Formula Our Case Studies Reveal
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Common patterns from our most successful contractors
             </p>
           </div>
           
-          <Card className="overflow-hidden shadow-xl">
-            <CardContent className="p-0">
-              <div className="grid md:grid-cols-3">
-                <div className="p-8 border-b md:border-b-0 md:border-r">
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Zap className="w-8 h-8 text-blue-600" />
+          <Card>
+            <CardContent>
+              <div>
+                <div>
+                  <div>
+                    <div>
+                      <Zap />
                     </div>
-                    <h3 className="text-xl font-bold mb-2">Week 1-2</h3>
-                    <p className="text-gray-600">Quick Implementation</p>
+                    <h3>Week 1-2</h3>
+                    <p>Quick Implementation</p>
                   </div>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <ul>
+                    <li>
+                      <CheckCircle />
                       <span>Set up in one afternoon</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    <li>
+                      <CheckCircle />
                       <span>First mobile quote same day</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    <li>
+                      <CheckCircle />
                       <span>Team training in 2 hours</span>
                     </li>
                   </ul>
                 </div>
                 
-                <div className="p-8 border-b md:border-b-0 md:border-r">
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Target className="w-8 h-8 text-green-600" />
+                <div>
+                  <div>
+                    <div>
+                      <Target />
                     </div>
-                    <h3 className="text-xl font-bold mb-2">Month 1-3</h3>
-                    <p className="text-gray-600">Momentum Building</p>
+                    <h3>Month 1-3</h3>
+                    <p>Momentum Building</p>
                   </div>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <ul>
+                    <li>
+                      <CheckCircle />
                       <span>Quote volume doubles</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    <li>
+                      <CheckCircle />
                       <span>Close rate up 40%+</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    <li>
+                      <CheckCircle />
                       <span>First record month</span>
                     </li>
                   </ul>
                 </div>
                 
-                <div className="p-8">
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Award className="w-8 h-8 text-purple-600" />
+                <div>
+                  <div>
+                    <div>
+                      <Award />
                     </div>
-                    <h3 className="text-xl font-bold mb-2">Month 6+</h3>
-                    <p className="text-gray-600">Transformation</p>
+                    <h3>Month 6+</h3>
+                    <p>Transformation</p>
                   </div>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <ul>
+                    <li>
+                      <CheckCircle />
                       <span>50-150% revenue growth</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    <li>
+                      <CheckCircle />
                       <span>Expansion opportunities</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    <li>
+                      <CheckCircle />
                       <span>Industry leader status</span>
                     </li>
                   </ul>
@@ -546,49 +537,49 @@ export default function CaseStudiesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      <section>
+        <div>
+          <h2>
             Ready to Write Your Success Story?
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p>
             Join 5,000+ painting contractors who transformed their businesses. 
             Start your free trial and see results in your first week.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-6" asChild>
+          <div>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/trial-signup">
                 Start Your Transformation
-                <TrendingUp className="ml-2 w-5 h-5" />
+                <TrendingUp />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 text-white border-white hover:bg-white hover:text-blue-600" asChild>
+            <Button size="lg" variant="outline" asChild>
               <Link href="/features">
                 See How It Works
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight />
               </Link>
             </Button>
           </div>
           
-          <div className="mt-8 flex items-center justify-center gap-8 text-sm text-blue-100">
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+          <div>
+            <span>
+              <CheckCircle />
               14-day free trial
             </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+            <span>
+              <CheckCircle />
               No credit card required
             </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+            <span>
+              <CheckCircle />
               Full support included
             </span>
           </div>
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

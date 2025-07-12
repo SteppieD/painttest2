@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Calculator, 
@@ -19,22 +18,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Footer } from '@/components/shared/footer';
 import { Header } from '@/components/shared/header';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Paint Coverage Calculator - Square Footage Paint Calculator | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Paint Coverage Calculator - Square Footage Paint Calculator',
   description: 'Paint coverage calculator determines exactly how much paint you need. Calculate gallons by square footage, room dimensions, and surface type. Free tool used by 5,000+ contractors.',
   keywords: 'paint coverage calculator, paint calculator square feet, wall paint calculator, paint needed calculator, paint coverage per gallon, how much paint calculator, paint square footage calculator, paint consumption calculator',
-  alternates: {
-    canonical: '/paint-coverage-calculator',
-  },
-  openGraph: {
-    title: 'Paint Coverage Calculator - Calculate Gallons Needed by Square Feet',
-    description: 'Paint coverage calculator shows exactly how many gallons you need. Input square footage or room dimensions for accurate paint calculations. Free professional tool.',
-    url: '/paint-coverage-calculator',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-};
+  path: '/paint-coverage-calculator',
+});
 
 export default function PaintCoverageCalculatorPage() {
   // Paint coverage data by type
@@ -174,50 +165,50 @@ export default function PaintCoverageCalculatorPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
       <Header />
       
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 px-4 py-1 text-sm font-semibold bg-blue-100 text-blue-800 border-blue-200">
+      <section>
+        <div>
+          <div>
+            <Badge>
               Professional Paint Calculator
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1>
               Paint Coverage Calculator by Square Footage
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p>
               Paint coverage calculator determines exactly how many gallons of paint you need. 
               Calculate by square footage, room dimensions, or full house. Accurate coverage for any surface type.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-              <Button size="lg" className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700" asChild>
+            <div>
+              <Button size="lg" asChild>
                 <Link href="/trial-signup">
                   Use Advanced Calculator
-                  <Calculator className="ml-2 w-5 h-5" />
+                  <Calculator />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
+              <Button size="lg" variant="outline" asChild>
                 <Link href="#calculator">
                   Try Basic Calculator
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight />
                 </Link>
               </Button>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
-              <span className="flex items-center gap-1">
-                <Ruler className="w-4 h-4 text-green-500" />
+            <div>
+              <span>
+                <Ruler />
                 Accurate coverage rates
               </span>
-              <span className="flex items-center gap-1">
-                <Paintbrush className="w-4 h-4 text-green-500" />
+              <span>
+                <Paintbrush />
                 All paint types
               </span>
-              <span className="flex items-center gap-1">
-                <Home className="w-4 h-4 text-green-500" />
+              <span>
+                <Home />
                 Room & house calculators
               </span>
             </div>
@@ -226,51 +217,51 @@ export default function PaintCoverageCalculatorPage() {
       </section>
 
       {/* Paint Coverage Rates Table */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Paint Coverage Rates by Type
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Professional coverage rates for accurate paint calculations
             </p>
           </div>
           
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse bg-white rounded-lg shadow-lg">
+          <div>
+            <table>
               <thead>
-                <tr className="bg-blue-600 text-white">
-                  <th className="px-6 py-4 text-left">Paint Type</th>
-                  <th className="px-6 py-4 text-left">Coverage Rate</th>
-                  <th className="px-6 py-4 text-left">Best For</th>
-                  <th className="px-6 py-4 text-left">Coats Needed</th>
-                  <th className="px-6 py-4 text-left">Absorption</th>
+                <tr>
+                  <th>Paint Type</th>
+                  <th>Coverage Rate</th>
+                  <th>Best For</th>
+                  <th>Coats Needed</th>
+                  <th>Absorption</th>
                 </tr>
               </thead>
               <tbody>
                 {paintCoverageRates.map((paint, index) => (
-                  <tr key={index} className="border-b hover:bg-gray-50">
-                    <td className="px-6 py-4 font-medium">{paint.type}</td>
-                    <td className="px-6 py-4 font-semibold text-blue-600">{paint.coverage}</td>
-                    <td className="px-6 py-4">{paint.bestFor}</td>
-                    <td className="px-6 py-4">{paint.coats}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{paint.absorption}</td>
+                  <tr key={index}>
+                    <td>{paint.type}</td>
+                    <td>{paint.coverage}</td>
+                    <td>{paint.bestFor}</td>
+                    <td>{paint.coats}</td>
+                    <td>{paint.absorption}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           
-          <Card className="mt-8 bg-amber-50 border-amber-200">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-3">
-                <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <Card>
+            <CardContent>
+              <div>
+                <Info />
                 <div>
-                  <p className="font-semibold text-amber-900 mb-1">
+                  <p>
                     Important Coverage Note:
                   </p>
-                  <p className="text-amber-800 text-sm">
+                  <p>
                     These are manufacturer specifications for smooth surfaces. Actual coverage varies based on 
                     surface texture, porosity, application method, and painter technique. Always calculate 
                     conservatively and purchase 10% extra.
@@ -283,30 +274,30 @@ export default function PaintCoverageCalculatorPage() {
       </section>
 
       {/* Surface Type Factors */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Surface Type Coverage Factors
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Adjust paint calculations based on surface texture
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div>
             {surfaceFactors.map((surface, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-lg flex items-center justify-between">
+                  <CardTitle>
                     {surface.surface}
-                    <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                    <Badge>
                       {surface.factor}
                     </Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">{surface.note}</p>
+                  <p>{surface.note}</p>
                 </CardContent>
               </Card>
             ))}
@@ -315,37 +306,37 @@ export default function PaintCoverageCalculatorPage() {
       </section>
 
       {/* Room Examples */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Paint Coverage by Room Size
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Real-world examples for common room sizes
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div>
             {roomExamples.map((room, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="bg-gradient-to-br from-blue-50 to-indigo-50">
-                  <CardTitle className="text-lg">{room.room}</CardTitle>
-                  <p className="text-sm text-gray-600">{room.dimensions}</p>
+              <Card key={index}>
+                <CardHeader>
+                  <CardTitle>{room.room}</CardTitle>
+                  <p>{room.dimensions}</p>
                 </CardHeader>
-                <CardContent className="pt-6">
-                  <div className="space-y-3">
+                <CardContent>
+                  <div>
                     <div>
-                      <p className="text-sm text-gray-600">Wall Area:</p>
-                      <p className="font-semibold">{room.wallArea}</p>
+                      <p>Wall Area:</p>
+                      <p>{room.wallArea}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Paint (1 coat):</p>
-                      <p className="font-semibold text-blue-600">{room.paintNeeded}</p>
+                      <p>Paint (1 coat):</p>
+                      <p>{room.paintNeeded}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Paint (2 coats):</p>
-                      <p className="font-semibold text-green-600">{room.with2Coats}</p>
+                      <p>Paint (2 coats):</p>
+                      <p>{room.with2Coats}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -356,50 +347,50 @@ export default function PaintCoverageCalculatorPage() {
       </section>
 
       {/* Calculator Section */}
-      <section id="calculator" className="py-20 px-4 bg-blue-50">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section id="calculator">
+        <div>
+          <div>
+            <h2>
               Paint Coverage Calculator
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Calculate exactly how much paint you need
             </p>
           </div>
           
-          <Card className="shadow-xl">
-            <CardContent className="p-8">
-              <div className="grid md:grid-cols-2 gap-8">
+          <Card>
+            <CardContent>
+              <div>
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Room Dimensions</h3>
-                  <div className="space-y-4">
+                  <h3>Room Dimensions</h3>
+                  <div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label>
                         Room Length (feet)
                       </label>
                       <input 
                         type="number" 
-                        className="w-full p-3 border border-gray-300 rounded-lg" 
+                        
                         placeholder="12"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label>
                         Room Width (feet)
                       </label>
                       <input 
                         type="number" 
-                        className="w-full p-3 border border-gray-300 rounded-lg" 
+                        
                         placeholder="10"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label>
                         Wall Height (feet)
                       </label>
                       <input 
                         type="number" 
-                        className="w-full p-3 border border-gray-300 rounded-lg" 
+                        
                         placeholder="8"
                       />
                     </div>
@@ -407,33 +398,33 @@ export default function PaintCoverageCalculatorPage() {
                 </div>
                 
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Paint Details</h3>
-                  <div className="space-y-4">
+                  <h3>Paint Details</h3>
+                  <div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label>
                         Number of Doors
                       </label>
                       <input 
                         type="number" 
-                        className="w-full p-3 border border-gray-300 rounded-lg" 
+                        
                         placeholder="1"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label>
                         Number of Windows
                       </label>
                       <input 
                         type="number" 
-                        className="w-full p-3 border border-gray-300 rounded-lg" 
+                        
                         placeholder="2"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label>
                         Number of Coats
                       </label>
-                      <select className="w-full p-3 border border-gray-300 rounded-lg">
+                      <select>
                         <option>1 coat</option>
                         <option selected>2 coats (recommended)</option>
                         <option>3 coats</option>
@@ -443,11 +434,11 @@ export default function PaintCoverageCalculatorPage() {
                 </div>
               </div>
               
-              <div className="mt-8">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div>
+                <label>
                   Surface Type
                 </label>
-                <select className="w-full p-3 border border-gray-300 rounded-lg mb-6">
+                <select>
                   <option>Smooth Drywall (Standard)</option>
                   <option>Textured Walls (+15%)</option>
                   <option>Rough Stucco (+50%)</option>
@@ -456,18 +447,18 @@ export default function PaintCoverageCalculatorPage() {
                 </select>
               </div>
               
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-lg py-6">
+              <Button>
                 Calculate Paint Coverage
-                <Calculator className="ml-2 w-5 h-5" />
+                <Calculator />
               </Button>
               
-              <div className="mt-8 p-6 bg-gray-50 rounded-lg">
-                <h4 className="font-semibold text-gray-900 mb-2">Sample Calculation:</h4>
-                <div className="space-y-2 text-sm">
+              <div>
+                <h4>Sample Calculation:</h4>
+                <div>
                   <p>Wall Area: 320 sq ft (after subtracting doors/windows)</p>
                   <p>Coverage Rate: 400 sq ft per gallon</p>
                   <p>Coats: 2</p>
-                  <p className="font-semibold text-blue-600">Total Paint Needed: 1.6 gallons (recommend buying 2 gallons)</p>
+                  <p>Total Paint Needed: 1.6 gallons (recommend buying 2 gallons)</p>
                 </div>
               </div>
             </CardContent>
@@ -476,31 +467,31 @@ export default function PaintCoverageCalculatorPage() {
       </section>
 
       {/* Calculation Tips */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               How to Calculate Paint Coverage
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Step-by-step guide for accurate calculations
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8">
+          <div>
             {calculationTips.map((tip, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <span className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                  <CardTitle>
+                    <span>
                       {index + 1}
                     </span>
                     {tip.tip}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-3">{tip.description}</p>
-                  <div className="p-3 bg-blue-50 rounded text-sm font-mono text-blue-800">
+                  <p>{tip.description}</p>
+                  <div>
                     {tip.example}
                   </div>
                 </CardContent>
@@ -511,33 +502,33 @@ export default function PaintCoverageCalculatorPage() {
       </section>
 
       {/* Common Mistakes */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Common Paint Coverage Mistakes
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Avoid these errors in your calculations
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-6">
+          <div>
             {commonMistakes.map((mistake, index) => (
-              <Card key={index} className="border-l-4 border-red-500">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5 text-red-500" />
+                  <CardTitle>
+                    <AlertCircle />
                     {mistake.mistake}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-600">
-                      <span className="font-semibold">Impact:</span> {mistake.impact}
+                  <div>
+                    <p>
+                      <span>Impact:</span> {mistake.impact}
                     </p>
-                    <p className="text-sm text-green-600">
-                      <span className="font-semibold">Solution:</span> {mistake.solution}
+                    <p>
+                      <span>Solution:</span> {mistake.solution}
                     </p>
                   </div>
                 </CardContent>
@@ -548,67 +539,67 @@ export default function PaintCoverageCalculatorPage() {
       </section>
 
       {/* Professional Benefits */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <Card className="overflow-hidden shadow-xl">
-            <div className="grid md:grid-cols-2">
-              <div className="bg-gradient-to-br from-blue-600 to-purple-600 text-white p-8 md:p-12">
-                <h2 className="text-3xl font-bold mb-4">
+      <section>
+        <div>
+          <Card>
+            <div>
+              <div>
+                <h2>
                   Why Contractors Trust Our Calculator
                 </h2>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <BarChart3 className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <div>
+                  <div>
+                    <BarChart3 />
                     <div>
-                      <h3 className="font-semibold mb-1">95% Accuracy</h3>
-                      <p className="text-blue-100 text-sm">Based on 250,000+ real projects</p>
+                      <h3>95% Accuracy</h3>
+                      <p>Based on 250,000+ real projects</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Clock className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <Clock />
                     <div>
-                      <h3 className="font-semibold mb-1">Save 30 Minutes</h3>
-                      <p className="text-blue-100 text-sm">Per quote with instant calculations</p>
+                      <h3>Save 30 Minutes</h3>
+                      <p>Per quote with instant calculations</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <DollarSign className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <DollarSign />
                     <div>
-                      <h3 className="font-semibold mb-1">Reduce Waste</h3>
-                      <p className="text-blue-100 text-sm">Order right amount, save money</p>
+                      <h3>Reduce Waste</h3>
+                      <p>Order right amount, save money</p>
                     </div>
                   </div>
                 </div>
               </div>
               
-              <div className="p-8 md:p-12">
-                <h3 className="text-2xl font-bold mb-6">Professional Features</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+              <div>
+                <h3>Professional Features</h3>
+                <ul>
+                  <li>
+                    <CheckCircle />
                     <span>Multiple surface type calculations</span>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  <li>
+                    <CheckCircle />
                     <span>Interior & exterior coverage rates</span>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  <li>
+                    <CheckCircle />
                     <span>Brand-specific coverage data</span>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  <li>
+                    <CheckCircle />
                     <span>Commercial project scaling</span>
                   </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  <li>
+                    <CheckCircle />
                     <span>Export calculations to quotes</span>
                   </li>
                 </ul>
-                <Button className="w-full mt-6" asChild>
+                <Button asChild>
                   <Link href="/trial-signup">
                     Try Professional Calculator
-                    <ArrowRight className="ml-2 w-4 h-4" />
+                    <ArrowRight />
                   </Link>
                 </Button>
               </div>
@@ -618,42 +609,42 @@ export default function PaintCoverageCalculatorPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      <section>
+        <div>
+          <h2>
             Get Professional Paint Coverage Calculations
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p>
             Join 5,000+ contractors using our advanced calculators for accurate paint 
             estimates. Never run out or over-order again.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-6" asChild>
+          <div>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/trial-signup">
                 Start Free Trial
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 text-white border-white hover:bg-white hover:text-blue-600" asChild>
+            <Button size="lg" variant="outline" asChild>
               <Link href="/painting-quote-templates-free">
                 Get Free Templates
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight />
               </Link>
             </Button>
           </div>
           
-          <div className="mt-8 flex items-center justify-center gap-8 text-sm text-blue-100">
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+          <div>
+            <span>
+              <CheckCircle />
               Accurate calculations
             </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+            <span>
+              <CheckCircle />
               All paint types
             </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+            <span>
+              <CheckCircle />
               Save on materials
             </span>
           </div>

@@ -65,25 +65,25 @@ export function ROICalculator({ className }: ROICalculatorProps) {
   }
 
   return (
-    <div className={className}>
-      <Card className="w-full max-w-4xl mx-auto">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center justify-center gap-2">
-            <Calculator className="w-8 h-8 text-blue-600" />
+    <div>
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <Calculator />
             ROI Calculator for Painting Contractors
           </CardTitle>
-          <p className="text-gray-600">
+          <p>
             See how much additional revenue you could generate with faster, more professional quotes
           </p>
         </CardHeader>
 
-        <CardContent className="space-y-8">
-          <div className="grid md:grid-cols-2 gap-8">
+        <CardContent>
+          <div>
             {/* Input Section */}
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-800">Your Current Business</h3>
+            <div>
+              <h3>Your Current Business</h3>
               
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="quotes-per-month">Quotes per month</Label>
                 <Input
                   id="quotes-per-month"
@@ -92,11 +92,11 @@ export function ROICalculator({ className }: ROICalculatorProps) {
                   max={50}
                   value={quotesPerMonth}
                   onChange={(e) => setQuotesPerMonth(parseInt(e.target.value) || 5)}
-                  className="w-full"
+                 
                 />
               </div>
 
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="close-rate">Current close rate (%)</Label>
                 <Input
                   id="close-rate"
@@ -105,89 +105,89 @@ export function ROICalculator({ className }: ROICalculatorProps) {
                   max={50}
                   value={currentCloseRate}
                   onChange={(e) => setCurrentCloseRate(parseInt(e.target.value) || 15)}
-                  className="w-full"
+                 
                 />
               </div>
 
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="job-value">Average job value ($)</Label>
                 <Input
                   id="job-value"
                   type="number"
                   value={averageJobValue}
                   onChange={(e) => setAverageJobValue(Number(e.target.value))}
-                  className="w-full"
+                 
                 />
-                <p className="text-xs text-gray-500">Industry average: $2,800</p>
+                <p>Industry average: $2,800</p>
               </div>
             </div>
 
             {/* Results Section */}
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-800">Your Potential with Professional Quotes</h3>
+            <div>
+              <h3>Your Potential with Professional Quotes</h3>
               
-              <div className="space-y-4">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <DollarSign className="w-5 h-5 text-gray-600" />
-                    <span className="text-sm font-medium text-gray-600">Current Monthly Revenue</span>
+              <div>
+                <div>
+                  <div>
+                    <DollarSign />
+                    <span>Current Monthly Revenue</span>
                   </div>
-                  <p className="text-2xl font-bold text-gray-900">{formatCurrency(results.currentRevenue)}</p>
+                  <p>{formatCurrency(results.currentRevenue)}</p>
                 </div>
 
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <TrendingUp className="w-5 h-5 text-green-600" />
-                    <span className="text-sm font-medium text-green-600">Projected Monthly Revenue</span>
+                <div>
+                  <div>
+                    <TrendingUp />
+                    <span>Projected Monthly Revenue</span>
                   </div>
-                  <p className="text-2xl font-bold text-green-800">{formatCurrency(results.projectedRevenue)}</p>
+                  <p>{formatCurrency(results.projectedRevenue)}</p>
                 </div>
 
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <TrendingUp className="w-5 h-5 text-blue-600" />
-                    <span className="text-sm font-medium text-blue-600">Monthly Increase</span>
+                <div>
+                  <div>
+                    <TrendingUp />
+                    <span>Monthly Increase</span>
                   </div>
-                  <p className="text-3xl font-bold text-blue-800">{formatCurrency(results.monthlyIncrease)}</p>
-                  <p className="text-sm text-blue-600">+{results.additionalJobs} more jobs per month</p>
+                  <p>{formatCurrency(results.monthlyIncrease)}</p>
+                  <p>+{results.additionalJobs} more jobs per month</p>
                 </div>
 
-                <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Clock className="w-5 h-5 text-purple-600" />
-                    <span className="text-sm font-medium text-purple-600">Time Saved</span>
+                <div>
+                  <div>
+                    <Clock />
+                    <span>Time Saved</span>
                   </div>
-                  <p className="text-2xl font-bold text-purple-800">{results.timeSaved} hours/month</p>
-                  <p className="text-sm text-purple-600">Worth {formatCurrency(results.timeSaved * 50)} at $50/hour</p>
+                  <p>{results.timeSaved} hours/month</p>
+                  <p>Worth {formatCurrency(results.timeSaved * 50)} at $50/hour</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Annual Summary */}
-          <div className="bg-blue-600 text-white p-6 rounded-lg text-center" style={{ backgroundColor: '#2563eb', color: '#ffffff' }}>
-            <h4 className="text-xl font-bold mb-2" style={{ color: '#ffffff' }}>Annual Revenue Increase</h4>
-            <p className="text-4xl font-bold mb-2" style={{ color: '#ffffff' }}>{formatCurrency(results.annualIncrease)}</p>
-            <p className="opacity-90" style={{ color: '#ffffff' }}>
+          <div>
+            <h4>Annual Revenue Increase</h4>
+            <p>{formatCurrency(results.annualIncrease)}</p>
+            <p>
               Based on 40-60% win rate improvement with professional quotes and faster response times
             </p>
           </div>
 
           {/* CTA Section */}
-          <div className="text-center space-y-4">
-            <h4 className="text-lg font-semibold text-gray-800">
+          <div>
+            <h4>
               Ready to start winning more jobs?
             </h4>
-            <p className="text-gray-600">
+            <p>
               Join thousands of contractors already using professional quoting to grow their business
             </p>
-            <Button size="lg" asChild className="bg-blue-600 hover:bg-blue-700">
+            <Button size="lg" asChild>
               <Link href="/trial-signup">
                 Start Free Trial - 10 Quotes Free
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight />
               </Link>
             </Button>
-            <p className="text-xs text-gray-500">No credit card required • Setup in 5 minutes</p>
+            <p>No credit card required • Setup in 5 minutes</p>
           </div>
         </CardContent>
       </Card>

@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { Calculator, PaintBucket, Clock, DollarSign, CheckCircle, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export const metadata: Metadata = {
   title: 'Free Painting Estimate Calculator - Get Instant Paint Job Quotes | ProPaint',
@@ -48,26 +49,27 @@ export default function PaintingEstimateCalculatorPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
+      <KofiHeader />
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+      <section>
+        <div>
+          <div>
+            <h1>
               Free Painting Estimate Calculator
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100">
+            <p>
               Get instant, accurate painting quotes for any project size
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div>
               <Link href="/access-code">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3">
+                <Button size="lg">
                   Start Free Calculator
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight />
                 </Button>
               </Link>
               <Link href="/painting-quote-templates">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3">
+                <Button size="lg" variant="outline">
                   View Quote Templates
                 </Button>
               </Link>
@@ -77,26 +79,26 @@ export default function PaintingEstimateCalculatorPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Why Choose Our Painting Estimate Calculator?
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p>
               Trusted by professional painters and contractors nationwide for accurate, detailed painting estimates
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div>
             {features.map((feature, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+              <Card key={index}>
                 <CardHeader>
-                  <feature.icon className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  <feature.icon />
+                  <CardTitle>{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <p>{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -105,35 +107,35 @@ export default function PaintingEstimateCalculatorPage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section>
+        <div>
+          <div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              <h2>
                 Professional Painting Estimates Made Simple
               </h2>
-              <p className="text-lg text-gray-600 mb-8">
+              <p>
                 Our painting estimate calculator uses industry-standard formulas and real-world data to provide 
                 accurate quotes that help you win more jobs and maintain profitable margins.
               </p>
-              <ul className="space-y-3">
+              <ul>
                 {benefits.map((benefit, index) => (
-                  <li key={index} className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span className="text-gray-700">{benefit}</span>
+                  <li key={index}>
+                    <CheckCircle />
+                    <span>{benefit}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="bg-gray-100 p-8 rounded-lg">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Calculate?</h3>
-              <p className="text-gray-600 mb-6">
+            <div>
+              <h3>Ready to Calculate?</h3>
+              <p>
                 Start creating professional painting estimates in under 2 minutes. No registration required for basic calculations.
               </p>
               <Link href="/access-code">
-                <Button size="lg" className="w-full">
+                <Button size="lg">
                   Launch Calculator Now
-                  <Calculator className="ml-2 w-5 h-5" />
+                  <Calculator />
                 </Button>
               </Link>
             </div>
@@ -142,25 +144,25 @@ export default function PaintingEstimateCalculatorPage() {
       </section>
 
       {/* SEO Content Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="prose prose-lg max-w-none">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+      <section>
+        <div>
+          <div>
+            <h2>
               How to Use a Painting Estimate Calculator
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p>
               A painting estimate calculator is an essential tool for both professional painters and homeowners 
               looking to understand the true cost of a painting project. Our calculator takes into account room 
               dimensions, paint quality, surface preparation requirements, and local labor rates to provide 
               accurate estimates.
             </p>
             
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">What Makes a Good Painting Estimate?</h3>
-            <p className="text-gray-600 mb-4">
+            <h3>What Makes a Good Painting Estimate?</h3>
+            <p>
               Professional painting estimates should include detailed breakdowns of materials, labor, and timeline. 
               Our calculator automatically factors in:
             </p>
-            <ul className="list-disc pl-6 text-gray-600 mb-6">
+            <ul>
               <li>Square footage calculations for walls, ceilings, and trim</li>
               <li>Paint coverage rates and number of coats needed</li>
               <li>Surface preparation requirements</li>
@@ -168,11 +170,11 @@ export default function PaintingEstimateCalculatorPage() {
               <li>Material costs including primer, paint, and supplies</li>
             </ul>
 
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Types of Painting Projects</h3>
-            <p className="text-gray-600 mb-4">
+            <h3>Types of Painting Projects</h3>
+            <p>
               Our painting estimate calculator works for all types of projects:
             </p>
-            <ul className="list-disc pl-6 text-gray-600 mb-6">
+            <ul>
               <li><strong>Interior Painting:</strong> Bedrooms, living rooms, kitchens, bathrooms</li>
               <li><strong>Exterior Painting:</strong> Siding, trim, doors, windows, decks</li>
               <li><strong>Commercial Painting:</strong> Offices, retail spaces, warehouses</li>
@@ -183,21 +185,21 @@ export default function PaintingEstimateCalculatorPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-blue-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Start Your Free Painting Estimate</h2>
-          <p className="text-xl text-blue-100 mb-8">
+      <section>
+        <div>
+          <h2>Start Your Free Painting Estimate</h2>
+          <p>
             Join thousands of painters and contractors who trust our calculator for accurate estimates
           </p>
           <Link href="/access-code">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3">
+            <Button size="lg">
               Get Started - It's Free
-              <ArrowRight className="ml-2 w-5 h-5" />
+              <ArrowRight />
             </Button>
           </Link>
         </div>
       </section>
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

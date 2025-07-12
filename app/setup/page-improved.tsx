@@ -79,7 +79,7 @@ const getTierBadge = (tier: string) => {
   };
   
   return (
-    <Badge className={`${colors[tier as keyof typeof colors]} ml-2`}>
+    <Badge ml-2`}>
       {labels[tier as keyof typeof labels]}
     </Badge>
   );
@@ -145,11 +145,11 @@ export default function SetupPageImproved() {
     const selectedKey = `${projectType}_${category}`;
     
     return (
-      <div key={selectedKey} className="mb-6">
-        <h4 className="font-medium text-gray-900 mb-3 capitalize">
+      <div key={selectedKey}>
+        <h4>
           {categoryLabel}
         </h4>
-        <div className="grid grid-cols-1 gap-3">
+        <div>
           {products.map((product, index) => {
             const isSelected = selectedProducts[selectedKey]?.name === product.name;
             return (
@@ -157,9 +157,7 @@ export default function SetupPageImproved() {
                 key={index}
                 type="button"
                 variant={isSelected ? "default" : "outline"}
-                className={`h-auto p-4 justify-start text-left ${
-                  isSelected ? "bg-blue-600 text-white hover:bg-blue-700" : ""
-                } ${product.popular ? "ring-1 ring-blue-300" : ""}`}
+                ${product.popular ? "ring-1 ring-blue-300" : ""}`}
                 onClick={(e) => {
                   e.preventDefault();
                   setSelectedProducts(prev => ({
@@ -168,19 +166,19 @@ export default function SetupPageImproved() {
                   }))
                 }}
               >
-                <div className="flex justify-between items-center w-full">
-                  <div className="flex-1">
-                    <div className="font-medium flex items-center">
+                <div>
+                  <div>
+                    <div>
                       {product.supplier}
                       {product.popular && (
-                        <Star className="w-4 h-4 ml-2 fill-current text-yellow-500" />
+                        <Star />
                       )}
                     </div>
-                    <div className="text-sm opacity-75">{product.name}</div>
+                    <div>{product.name}</div>
                   </div>
-                  <div className="flex items-center">
+                  <div>
                     {getTierBadge(product.tier)}
-                    {isSelected && <CheckCircle className="w-5 h-5 ml-2" />}
+                    {isSelected && <CheckCircle />}
                   </div>
                 </div>
               </Button>
@@ -278,85 +276,85 @@ export default function SetupPageImproved() {
 
   if (!companyData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading setup...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading setup...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
+    <div>
+      <div>
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <div>
+          <h1>
             Welcome to Professional Quote Builder
           </h1>
-          <p className="text-gray-600">
+          <p>
             Let's set up your paint preferences to get you quoting quickly
           </p>
         </div>
 
         {/* Progress */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700">Setup Progress</span>
-            <span className="text-sm text-gray-500">Step {currentStep} of {totalSteps}</span>
+        <div>
+          <div>
+            <span>Setup Progress</span>
+            <span>Step {currentStep} of {totalSteps}</span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress value={progress} />
         </div>
 
         {/* Steps */}
-        <Card className="mb-6">
-          <CardContent className="p-8">
+        <Card>
+          <CardContent>
             {currentStep === 1 && (
-              <div className="text-center">
-                <Palette className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              <div>
+                <Palette />
+                <h2>
                   Hi {companyData.company_name}!
                 </h2>
-                <p className="text-gray-600 mb-6">
+                <p>
                   We'll help you set up your preferred paint products and pricing so you can create accurate quotes in seconds.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <CheckCircle className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                    <p className="text-sm font-medium">Choose Favorites</p>
-                    <p className="text-xs text-gray-600">Pick your go-to products</p>
+                <div>
+                  <div>
+                    <CheckCircle />
+                    <p>Choose Favorites</p>
+                    <p>Pick your go-to products</p>
                   </div>
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <DollarSign className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                    <p className="text-sm font-medium">Set Markup</p>
-                    <p className="text-xs text-gray-600">Your profit percentage</p>
+                  <div>
+                    <DollarSign />
+                    <p>Set Markup</p>
+                    <p>Your profit percentage</p>
                   </div>
-                  <div className="text-center p-4 bg-purple-50 rounded-lg">
-                    <Rocket className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                    <p className="text-sm font-medium">Start Quoting</p>
-                    <p className="text-xs text-gray-600">Create professional quotes</p>
+                  <div>
+                    <Rocket />
+                    <p>Start Quoting</p>
+                    <p>Create professional quotes</p>
                   </div>
                 </div>
-                <Button onClick={() => setCurrentStep(2)} size="lg" className="px-8">
+                <Button onClick={() => setCurrentStep(2)} size="lg">
                   Let's Get Started
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <ArrowRight />
                 </Button>
               </div>
             )}
 
             {currentStep === 2 && (
               <div>
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
+                <h2>
                   What type of projects do you typically do?
                 </h2>
-                <p className="text-gray-600 mb-4">
+                <p>
                   We'll set up paint products for your most common project types.
                 </p>
-                <p className="text-sm text-blue-600 mb-6 font-medium">
+                <p>
                   ✓ Select one or both options below
                 </p>
-                <div className="space-y-3">
+                <div>
                   {[
                     { value: 'interior', label: 'Interior Painting', description: 'Walls, ceilings, trim inside homes/buildings' },
                     { value: 'exterior', label: 'Exterior Painting', description: 'Siding, trim, outdoor surfaces' },
@@ -365,9 +363,7 @@ export default function SetupPageImproved() {
                       key={type.value}
                       type="button"
                       variant={projectTypes.includes(type.value) ? "default" : "outline"}
-                      className={`w-full h-auto p-4 justify-start text-left ${
-                        projectTypes.includes(type.value) ? "bg-blue-600 hover:bg-blue-700" : ""
-                      }`}
+                     `}
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -379,18 +375,18 @@ export default function SetupPageImproved() {
                       }}
                     >
                       <div>
-                        <div className="font-medium">{type.label}</div>
-                        <div className="text-sm opacity-75">{type.description}</div>
+                        <div>{type.label}</div>
+                        <div>{type.description}</div>
                       </div>
                       {projectTypes.includes(type.value) && (
-                        <CheckCircle className="w-5 h-5 ml-auto" />
+                        <CheckCircle />
                       )}
                     </Button>
                   ))}
                 </div>
                 {projectTypes.length > 0 && (
-                  <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <p className="text-sm text-green-700">
+                  <div>
+                    <p>
                       ✓ Selected: {projectTypes.map(t => t === 'interior' ? 'Interior' : 'Exterior').join(', ')}
                     </p>
                   </div>
@@ -400,23 +396,23 @@ export default function SetupPageImproved() {
 
             {currentStep === 3 && (
               <div>
-                <h2 className="text-xl font-bold text-gray-900 mb-2">
+                <h2>
                   Choose Your Go-To Paint Products
                 </h2>
-                <p className="text-gray-600 mb-2">
+                <p>
                   Pick your preferred brand for each category - these will be your quick-select options.
                 </p>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 flex items-start gap-2">
-                  <Info className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div className="text-sm text-blue-800">
-                    <p className="font-medium mb-1">You'll set your actual prices later</p>
+                <div>
+                  <Info />
+                  <div>
+                    <p>You'll set your actual prices later</p>
                     <p>Just pick the brands you prefer to work with. You can update your pricing anytime in Settings.</p>
                   </div>
                 </div>
                 
                 {projectTypes.map((projectType) => (
-                  <div key={projectType} className="mb-8">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4 capitalize flex items-center gap-2">
+                  <div key={projectType}>
+                    <h3>
                       {projectType} Projects
                       <Badge variant="outline">{projectType === 'interior' ? '4 products' : '3 products'}</Badge>
                     </h3>
@@ -428,8 +424,8 @@ export default function SetupPageImproved() {
                   </div>
                 ))}
                 
-                <div className="text-xs text-gray-500 flex items-center gap-1">
-                  <Star className="w-3 h-3 fill-current text-yellow-500" />
+                <div>
+                  <Star />
                   = Most popular choice among contractors
                 </div>
               </div>
@@ -437,42 +433,40 @@ export default function SetupPageImproved() {
 
             {currentStep === 4 && (
               <div>
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
+                <h2>
                   Set Your Default Markup Percentage
                 </h2>
-                <p className="text-gray-600 mb-6">
+                <p>
                   This covers your overhead and profit. You can adjust this for individual quotes.
                 </p>
-                <div className="space-y-3">
+                <div>
                   {MARKUP_OPTIONS.map((option) => (
                     <Button
                       key={option.value}
                       type="button"
                       variant={markupPercentage === option.value ? "default" : "outline"}
-                      className={`w-full h-auto p-4 justify-between text-left relative ${
-                        option.recommended ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
-                      } ${markupPercentage === option.value ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                      ${markupPercentage === option.value ? "bg-blue-600 hover:bg-blue-700" : ""}`}
                       onClick={() => setMarkupPercentage(option.value)}
                     >
-                      <div className="flex-1">
-                        <div className="font-medium flex items-center gap-2">
-                          <span className="text-lg">{option.label}</span>
-                          <Badge variant="secondary" className="font-normal">
+                      <div>
+                        <div>
+                          <span>{option.label}</span>
+                          <Badge variant="secondary">
                             {option.tier}
                           </Badge>
                           {option.recommended && (
-                            <Badge className="bg-blue-600">Recommended</Badge>
+                            <Badge>Recommended</Badge>
                           )}
                         </div>
-                        <div className="text-sm opacity-75">{option.description}</div>
+                        <div>{option.description}</div>
                       </div>
                       {markupPercentage === option.value && (
-                        <CheckCircle className="w-5 h-5" />
+                        <CheckCircle />
                       )}
                     </Button>
                   ))}
                 </div>
-                <div className="mt-4 text-sm text-gray-600">
+                <div>
                   <p>💡 Tip: Most successful contractors use 20-30% markup to balance competitiveness with profitability.</p>
                 </div>
               </div>
@@ -481,7 +475,7 @@ export default function SetupPageImproved() {
         </Card>
 
         {/* Navigation */}
-        <div className="flex justify-between">
+        <div>
           <Button
             variant="outline"
             onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
@@ -498,19 +492,19 @@ export default function SetupPageImproved() {
                 setCurrentStep(currentStep + 1);
               }}
               disabled={!canProceedFromCurrentStep()}
-              className={!canProceedFromCurrentStep() ? "opacity-50 cursor-not-allowed" : ""}
+             
             >
               Next Step
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight />
             </Button>
           ) : (
             <Button
               onClick={saveSetupData}
               disabled={isLoading || !canProceedFromCurrentStep()}
-              className="bg-green-600 hover:bg-green-700"
+             
             >
               {isLoading ? 'Saving...' : 'Complete Setup'}
-              <Rocket className="w-4 h-4 ml-2" />
+              <Rocket />
             </Button>
           )}
         </div>

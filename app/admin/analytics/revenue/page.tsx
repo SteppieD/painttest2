@@ -90,45 +90,45 @@ export default function RevenueAnalyticsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div>
+        <div></div>
       </div>
     );
   }
 
   if (!metrics) {
     return (
-      <div className="min-h-screen p-6">
+      <div>
         <Button onClick={() => router.back()} variant="ghost" size="sm">
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft />
           Back
         </Button>
-        <div className="text-center mt-20">
-          <p className="text-gray-600">No revenue data available yet.</p>
+        <div>
+          <p>No revenue data available yet.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+      <div>
+        <div>
+          <div>
+            <div>
               <Button onClick={() => router.back()} variant="ghost" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-2" />
+                <ArrowLeft />
                 Back
               </Button>
               <div>
-                <h1 className="text-2xl font-bold">Revenue Analytics</h1>
-                <p className="text-gray-600">Track revenue performance and growth trends</p>
+                <h1>Revenue Analytics</h1>
+                <p>Track revenue performance and growth trends</p>
               </div>
             </div>
             
             {/* Timeframe selector */}
-            <div className="flex gap-2">
+            <div>
               <Button
                 variant={timeframe === '7d' ? 'default' : 'outline'}
                 size="sm"
@@ -162,23 +162,23 @@ export default function RevenueAnalyticsPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6">
+      <div>
         {/* Key Revenue Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div>
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Total Revenue</CardTitle>
+              <DollarSign />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(metrics.totalRevenue)}</div>
-              <div className="flex items-center text-xs">
+              <div>{formatCurrency(metrics.totalRevenue)}</div>
+              <div>
                 {(() => {
                   const GrowthIcon = getGrowthIcon(metrics.revenueGrowth.monthly);
                   return (
                     <>
-                      <GrowthIcon className={`h-4 w-4 mr-1 ${getGrowthColor(metrics.revenueGrowth.monthly)}`} />
-                      <span className={getGrowthColor(metrics.revenueGrowth.monthly)}>
+                      <GrowthIcon`} />
+                      <span>
                         {formatPercentage(metrics.revenueGrowth.monthly)} vs last month
                       </span>
                     </>
@@ -189,46 +189,46 @@ export default function RevenueAnalyticsPage() {
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Avg Quote Value</CardTitle>
-              <Target className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Avg Quote Value</CardTitle>
+              <Target />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(metrics.avgQuoteValue)}</div>
-              <p className="text-xs text-muted-foreground">
+              <div>{formatCurrency(metrics.avgQuoteValue)}</div>
+              <p>
                 From {metrics.totalQuotes} total quotes
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Conversion Rate</CardTitle>
+              <TrendingUp />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{metrics.conversionRate.toFixed(1)}%</div>
-              <Progress value={metrics.conversionRate} className="mt-2" />
-              <p className="text-xs text-muted-foreground mt-1">
+              <div>{metrics.conversionRate.toFixed(1)}%</div>
+              <Progress value={metrics.conversionRate} />
+              <p>
                 {metrics.acceptedQuotes} of {metrics.totalQuotes} quotes accepted
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Monthly Revenue</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Monthly Revenue</CardTitle>
+              <Calendar />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(metrics.monthlyRevenue)}</div>
-              <div className="flex items-center text-xs">
+              <div>{formatCurrency(metrics.monthlyRevenue)}</div>
+              <div>
                 {(() => {
                   const GrowthIcon = getGrowthIcon(metrics.revenueGrowth.monthly);
                   return (
                     <>
-                      <GrowthIcon className={`h-4 w-4 mr-1 ${getGrowthColor(metrics.revenueGrowth.monthly)}`} />
-                      <span className={getGrowthColor(metrics.revenueGrowth.monthly)}>
+                      <GrowthIcon`} />
+                      <span>
                         {formatPercentage(metrics.revenueGrowth.monthly)} growth
                       </span>
                     </>
@@ -240,68 +240,68 @@ export default function RevenueAnalyticsPage() {
         </div>
 
         {/* Revenue by Project Type */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>Revenue by Project Type</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div>
               <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm">Interior Projects</span>
-                  <span className="text-sm font-medium">{formatCurrency(metrics.projectTypeRevenue.interior)}</span>
+                <div>
+                  <span>Interior Projects</span>
+                  <span>{formatCurrency(metrics.projectTypeRevenue.interior)}</span>
                 </div>
                 <Progress 
                   value={(metrics.projectTypeRevenue.interior / metrics.totalRevenue) * 100} 
-                  className="h-2"
+                 
                 />
               </div>
               <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm">Exterior Projects</span>
-                  <span className="text-sm font-medium">{formatCurrency(metrics.projectTypeRevenue.exterior)}</span>
+                <div>
+                  <span>Exterior Projects</span>
+                  <span>{formatCurrency(metrics.projectTypeRevenue.exterior)}</span>
                 </div>
                 <Progress 
                   value={(metrics.projectTypeRevenue.exterior / metrics.totalRevenue) * 100} 
-                  className="h-2"
+                 
                 />
               </div>
               <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm">Interior + Exterior</span>
-                  <span className="text-sm font-medium">{formatCurrency(metrics.projectTypeRevenue.both)}</span>
+                <div>
+                  <span>Interior + Exterior</span>
+                  <span>{formatCurrency(metrics.projectTypeRevenue.both)}</span>
                 </div>
                 <Progress 
                   value={(metrics.projectTypeRevenue.both / metrics.totalRevenue) * 100} 
-                  className="h-2"
+                 
                 />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
           {/* Monthly Breakdown */}
           <Card>
             <CardHeader>
               <CardTitle>Monthly Performance</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.monthlyBreakdown.map((month, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={index}>
                     <div>
-                      <p className="font-medium">{month.month}</p>
-                      <p className="text-sm text-gray-600">{month.quotes} quotes</p>
+                      <p>{month.month}</p>
+                      <p>{month.quotes} quotes</p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-bold">{formatCurrency(month.revenue)}</p>
-                      <p className="text-sm text-gray-600">Avg: {formatCurrency(month.avgValue)}</p>
+                    <div>
+                      <p>{formatCurrency(month.revenue)}</p>
+                      <p>Avg: {formatCurrency(month.avgValue)}</p>
                     </div>
                   </div>
                 ))}
                 {metrics.monthlyBreakdown.length === 0 && (
-                  <p className="text-gray-500 text-center py-4">No monthly data available</p>
+                  <p>No monthly data available</p>
                 )}
               </div>
             </CardContent>
@@ -313,25 +313,25 @@ export default function RevenueAnalyticsPage() {
               <CardTitle>Top Revenue Customers</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div>
                 {metrics.topCustomers.map((customer, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span className="text-sm font-bold text-blue-600">#{index + 1}</span>
+                  <div key={index}>
+                    <div>
+                      <div>
+                        <span>#{index + 1}</span>
                       </div>
                       <div>
-                        <p className="font-medium">{customer.company_name}</p>
-                        <p className="text-sm text-gray-600">{customer.quotes} quotes</p>
+                        <p>{customer.company_name}</p>
+                        <p>{customer.quotes} quotes</p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-bold">{formatCurrency(customer.revenue)}</p>
+                    <div>
+                      <p>{formatCurrency(customer.revenue)}</p>
                     </div>
                   </div>
                 ))}
                 {metrics.topCustomers.length === 0 && (
-                  <p className="text-gray-500 text-center py-4">No customer data available</p>
+                  <p>No customer data available</p>
                 )}
               </div>
             </CardContent>
@@ -339,29 +339,29 @@ export default function RevenueAnalyticsPage() {
         </div>
 
         {/* Growth Insights */}
-        <Card className="mt-8">
+        <Card>
           <CardHeader>
             <CardTitle>Growth Insights</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600 mb-2">
+            <div>
+              <div>
+                <div>
                   {formatPercentage(metrics.revenueGrowth.monthly)}
                 </div>
-                <p className="text-sm text-gray-600">Monthly Growth</p>
+                <p>Monthly Growth</p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600 mb-2">
+              <div>
+                <div>
                   {formatCurrency(metrics.dailyRevenue)}
                 </div>
-                <p className="text-sm text-gray-600">Daily Average</p>
+                <p>Daily Average</p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600 mb-2">
+              <div>
+                <div>
                   {metrics.pendingQuotes}
                 </div>
-                <p className="text-sm text-gray-600">Pending Quotes</p>
+                <p>Pending Quotes</p>
               </div>
             </div>
           </CardContent>

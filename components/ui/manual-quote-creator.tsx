@@ -116,35 +116,35 @@ export function ManualQuoteCreator({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <div>
+      <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5" />
+          <div>
+            <CardTitle>
+              <FileText />
               Create Quote
             </CardTitle>
             <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="w-4 h-4" />
+              <X />
             </Button>
           </div>
           {extractedData?.confidence && (
-            <p className="text-sm text-gray-600">
+            <p>
               Auto-filled from conversation ({extractedData.confidence} confidence)
             </p>
           )}
         </CardHeader>
         
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit}>
             {/* Customer Information */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <User className="w-4 h-4" />
+            <div>
+              <div>
+                <User />
                 Customer Information
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
                 <div>
                   <Label htmlFor="customer_name">Customer Name *</Label>
                   <Input
@@ -177,7 +177,7 @@ export function ManualQuoteCreator({
                   />
                 </div>
                 
-                <div className="md:col-span-2">
+                <div>
                   <Label htmlFor="address">Address</Label>
                   <Input
                     id="address"
@@ -190,13 +190,13 @@ export function ManualQuoteCreator({
             </div>
 
             {/* Project Information */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <MapPin className="w-4 h-4" />
+            <div>
+              <div>
+                <MapPin />
                 Project Details
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
                 <div>
                   <Label htmlFor="project_type">Project Type</Label>
                   <Select 
@@ -248,15 +248,15 @@ export function ManualQuoteCreator({
               {/* Surfaces */}
               <div>
                 <Label>Surfaces to Paint</Label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
+                <div>
                   {availableSurfaces.map(surface => (
-                    <div key={surface} className="flex items-center space-x-2">
+                    <div key={surface}>
                       <Checkbox
                         id={surface}
                         checked={(formData.surfaces || []).includes(surface)}
                         onCheckedChange={(checked) => handleSurfaceChange(surface, !!checked)}
                       />
-                      <Label htmlFor={surface} className="text-sm capitalize">
+                      <Label htmlFor={surface}>
                         {surface}
                       </Label>
                     </div>
@@ -266,13 +266,13 @@ export function ManualQuoteCreator({
             </div>
 
             {/* Pricing and Timeline */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <DollarSign className="w-4 h-4" />
+            <div>
+              <div>
+                <DollarSign />
                 Pricing & Timeline
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
                 <div>
                   <Label htmlFor="quote_amount">Quote Amount *</Label>
                   <Input
@@ -313,7 +313,7 @@ export function ManualQuoteCreator({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-3 pt-4">
+            <div>
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>

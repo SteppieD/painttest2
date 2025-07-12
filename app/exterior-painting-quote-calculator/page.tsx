@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Calculator, 
@@ -21,24 +20,16 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Footer } from '@/components/shared/footer';
-import { Header } from '@/components/shared/header';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { generatePageMetadata } from '@/lib/metadata-utils';
 
-export const metadata: Metadata = {
-  title: 'Exterior Painting Quote Calculator - Instant House Painting Estimates | ProPaint Quote',
+export const metadata = generatePageMetadata({
+  title: 'Exterior Painting Quote Calculator - Instant House Painting Estimates',
   description: 'Exterior painting quote calculator provides instant, accurate estimates for house painting projects. Get professional exterior painting quotes with material costs, labor, and weather considerations in 60 seconds.',
   keywords: 'exterior painting quote calculator, exterior painting estimate calculator, house painting calculator, exterior paint cost calculator, siding painting calculator, exterior house painting calculator, exterior painting pricing calculator',
-  alternates: {
-    canonical: '/exterior-painting-quote-calculator',
-  },
-  openGraph: {
-    title: 'Exterior Painting Quote Calculator - Professional House Painting Estimates',
-    description: 'Exterior painting quote calculator generates accurate house painting estimates instantly. Used by 5,000+ professional contractors for residential and commercial projects.',
-    url: '/exterior-painting-quote-calculator',
-    siteName: 'ProPaint Quote',
-    type: 'website',
-  },
-};
+  path: '/exterior-painting-quote-calculator',
+});
 
 export default function ExteriorPaintingCalculatorPage() {
   // House sizes and pricing data
@@ -164,50 +155,50 @@ export default function ExteriorPaintingCalculatorPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
+    <div>
+      <KofiHeader />
       
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 px-4 py-1 text-sm font-semibold bg-blue-100 text-blue-800 border-blue-200">
+      <section>
+        <div>
+          <div>
+            <Badge>
               Professional Exterior Painting Calculator
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1>
               Exterior Painting Quote Calculator for House Painting Estimates
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p>
               Exterior painting quote calculator generates instant, accurate estimates for house painting projects. 
               Get professional quotes with weather factors, surface types, and material costs in 60 seconds.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-              <Button size="lg" className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700" asChild>
+            <div>
+              <Button size="lg" asChild>
                 <Link href="/trial-signup">
                   Calculate Exterior Quote Now
-                  <Calculator className="ml-2 w-5 h-5" />
+                  <Calculator />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
+              <Button size="lg" variant="outline" asChild>
                 <Link href="/free-calculator">
                   Try Free Calculator
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight />
                 </Link>
               </Button>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
-              <span className="flex items-center gap-1">
-                <Home className="w-4 h-4 text-green-500" />
+            <div>
+              <span>
+                <Home />
                 All house sizes
               </span>
-              <span className="flex items-center gap-1">
-                <Sun className="w-4 h-4 text-green-500" />
+              <span>
+                <Sun />
                 Weather factors
               </span>
-              <span className="flex items-center gap-1">
-                <Shield className="w-4 h-4 text-green-500" />
+              <span>
+                <Shield />
                 Surface types
               </span>
             </div>
@@ -216,39 +207,39 @@ export default function ExteriorPaintingCalculatorPage() {
       </section>
 
       {/* House Sizes and Pricing */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Exterior House Painting Prices by Size
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Professional contractor pricing for different house sizes
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div>
             {houseSizes.map((house, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Building className="w-5 h-5 text-blue-600" />
+                  <CardTitle>
+                    <Building />
                     {house.size}
                   </CardTitle>
-                  <div className="space-y-1">
-                    <Badge variant="outline" className="w-fit">{house.sqft} sq ft</Badge>
-                    <p className="text-sm text-gray-600">{house.stories}</p>
+                  <div>
+                    <Badge variant="outline">{house.sqft} sq ft</Badge>
+                    <p>{house.stories}</p>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Price Range:</span>
-                      <span className="font-semibold text-blue-600">{house.basePrice}</span>
+                  <div>
+                    <div>
+                      <span>Price Range:</span>
+                      <span>{house.basePrice}</span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Timeline:</span>
-                      <span className="text-sm">{house.time}</span>
+                    <div>
+                      <span>Timeline:</span>
+                      <span>{house.time}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -256,15 +247,15 @@ export default function ExteriorPaintingCalculatorPage() {
             ))}
           </div>
           
-          <Card className="bg-blue-50 border-blue-200">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          <Card>
+            <CardContent>
+              <div>
+                <AlertCircle />
                 <div>
-                  <p className="font-semibold text-blue-900 mb-1">
+                  <p>
                     Important Pricing Note:
                   </p>
-                  <p className="text-blue-800 text-sm">
+                  <p>
                     These are base prices for vinyl/fiber cement siding in good condition. 
                     Wood siding, stucco, or brick add 20-35%. Extensive prep work, multiple stories, 
                     and architectural details increase costs. Use our calculator for accurate, customized estimates.
@@ -277,36 +268,36 @@ export default function ExteriorPaintingCalculatorPage() {
       </section>
 
       {/* Surface Types */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Exterior Surface Types & Cost Factors
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               How different siding materials affect your painting quote
             </p>
           </div>
           
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse bg-white rounded-lg shadow-lg">
+          <div>
+            <table>
               <thead>
-                <tr className="bg-blue-600 text-white">
-                  <th className="px-6 py-4 text-left">Surface Type</th>
-                  <th className="px-6 py-4 text-left">Prep Work</th>
-                  <th className="px-6 py-4 text-left">Primer Needed</th>
-                  <th className="px-6 py-4 text-left">Coats Required</th>
-                  <th className="px-6 py-4 text-left">Cost Impact</th>
+                <tr>
+                  <th>Surface Type</th>
+                  <th>Prep Work</th>
+                  <th>Primer Needed</th>
+                  <th>Coats Required</th>
+                  <th>Cost Impact</th>
                 </tr>
               </thead>
               <tbody>
                 {surfaceTypes.map((surface, index) => (
-                  <tr key={index} className="border-b hover:bg-gray-50">
-                    <td className="px-6 py-4 font-medium">{surface.type}</td>
-                    <td className="px-6 py-4">{surface.prepWork}</td>
-                    <td className="px-6 py-4">{surface.primerNeeded}</td>
-                    <td className="px-6 py-4">{surface.coats}</td>
-                    <td className="px-6 py-4">
+                  <tr key={index}>
+                    <td>{surface.type}</td>
+                    <td>{surface.prepWork}</td>
+                    <td>{surface.primerNeeded}</td>
+                    <td>{surface.coats}</td>
+                    <td>
                       <Badge variant={surface.costFactor === 'Standard' ? 'default' : 'outline'}>
                         {surface.costFactor}
                       </Badge>
@@ -320,39 +311,39 @@ export default function ExteriorPaintingCalculatorPage() {
       </section>
 
       {/* Weather Considerations */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Weather Factors in Exterior Painting
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Critical weather conditions that affect exterior painting projects
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div>
             {weatherFactors.map((factor, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index}>
                 <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <CloudRain className="w-8 h-8 text-blue-600" />
-                    <CardTitle className="text-lg">{factor.condition}</CardTitle>
+                  <div>
+                    <CloudRain />
+                    <CardTitle>{factor.condition}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div>
                     <div>
-                      <span className="text-sm font-semibold text-green-600">Ideal: </span>
-                      <span className="text-sm text-gray-700">{factor.ideal}</span>
+                      <span>Ideal: </span>
+                      <span>{factor.ideal}</span>
                     </div>
                     <div>
-                      <span className="text-sm font-semibold text-orange-600">Impact: </span>
-                      <span className="text-sm text-gray-700">{factor.impact}</span>
+                      <span>Impact: </span>
+                      <span>{factor.impact}</span>
                     </div>
                     <div>
-                      <span className="text-sm font-semibold text-blue-600">Solution: </span>
-                      <span className="text-sm text-gray-700">{factor.solution}</span>
+                      <span>Solution: </span>
+                      <span>{factor.solution}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -360,12 +351,12 @@ export default function ExteriorPaintingCalculatorPage() {
             ))}
           </div>
           
-          <div className="mt-8 p-6 bg-orange-50 rounded-lg border border-orange-200">
-            <h3 className="font-bold text-orange-900 mb-2 flex items-center gap-2">
-              <Sun className="w-5 h-5" />
+          <div>
+            <h3>
+              <Sun />
               Pro Tip: Seasonal Planning
             </h3>
-            <p className="text-orange-800">
+            <p>
               Best exterior painting months: Late spring through early fall (May-September in most regions). 
               Plan projects during stable weather periods and build in 2-3 buffer days for weather delays.
             </p>
@@ -374,39 +365,39 @@ export default function ExteriorPaintingCalculatorPage() {
       </section>
 
       {/* Cost Breakdown */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Exterior Painting Cost Breakdown
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Understanding what goes into professional exterior painting quotes
             </p>
           </div>
           
-          <div className="grid gap-4">
+          <div>
             {costBreakdown.map((item, index) => (
-              <Card key={index} className="overflow-hidden">
-                <div className="flex items-center">
-                  <div className="bg-blue-600 text-white p-6 flex items-center justify-center min-w-[120px]">
-                    <span className="text-2xl font-bold">{item.percentage}</span>
+              <Card key={index}>
+                <div>
+                  <div>
+                    <span>{item.percentage}</span>
                   </div>
-                  <CardContent className="p-6 flex-1">
-                    <h3 className="font-bold text-lg mb-1">{item.category}</h3>
-                    <p className="text-gray-600">{item.description}</p>
+                  <CardContent>
+                    <h3>{item.category}</h3>
+                    <p>{item.description}</p>
                   </CardContent>
                 </div>
               </Card>
             ))}
           </div>
           
-          <Card className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-            <CardContent className="p-8 text-center">
-              <h3 className="text-2xl font-bold text-blue-900 mb-4">
+          <Card>
+            <CardContent>
+              <h3>
                 Average Total: $3,500-5,500
               </h3>
-              <p className="text-blue-800 text-lg">
+              <p>
                 For a typical 2,000 sq ft two-story house with vinyl siding
               </p>
             </CardContent>
@@ -415,74 +406,74 @@ export default function ExteriorPaintingCalculatorPage() {
       </section>
 
       {/* Calculator Features */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Exterior Painting Calculator Features
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Professional tools for accurate exterior painting quotes
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Home className="w-8 h-8 text-blue-600" />
+          <div>
+            <div>
+              <div>
+                <Home />
               </div>
-              <h3 className="text-xl font-semibold mb-2">House Measurements</h3>
-              <p className="text-gray-600">
+              <h3>House Measurements</h3>
+              <p>
                 Square footage, stories, architectural features, and trim details for precise estimates
               </p>
             </div>
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Paintbrush className="w-8 h-8 text-green-600" />
+            <div>
+              <div>
+                <Paintbrush />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Surface Analysis</h3>
-              <p className="text-gray-600">
+              <h3>Surface Analysis</h3>
+              <p>
                 Different pricing for wood, vinyl, stucco, brick, and specialty siding materials
               </p>
             </div>
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Wrench className="w-8 h-8 text-purple-600" />
+            <div>
+              <div>
+                <Wrench />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Prep Work Calculator</h3>
-              <p className="text-gray-600">
+              <h3>Prep Work Calculator</h3>
+              <p>
                 Power washing, scraping, priming, caulking, and repair costs built in
               </p>
             </div>
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CloudRain className="w-8 h-8 text-orange-600" />
+            <div>
+              <div>
+                <CloudRain />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Weather Planning</h3>
-              <p className="text-gray-600">
+              <h3>Weather Planning</h3>
+              <p>
                 Factor in seasonal timing and potential weather delays for realistic scheduling
               </p>
             </div>
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="w-8 h-8 text-red-600" />
+            <div>
+              <div>
+                <DollarSign />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Regional Pricing</h3>
-              <p className="text-gray-600">
+              <h3>Regional Pricing</h3>
+              <p>
                 Location-based labor rates and material costs for accurate local quotes
               </p>
             </div>
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-8 h-8 text-indigo-600" />
+            <div>
+              <div>
+                <TrendingUp />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Profit Optimization</h3>
-              <p className="text-gray-600">
+              <h3>Profit Optimization</h3>
+              <p>
                 Built-in margins ensure every exterior painting job is profitable
               </p>
             </div>
@@ -491,31 +482,31 @@ export default function ExteriorPaintingCalculatorPage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Trusted by Exterior Painting Professionals
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               See what contractors say about our exterior calculator
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div>
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="hover:shadow-xl transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex mb-4">
+              <Card key={index}>
+                <CardContent>
+                  <div>
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                      <Star key={i} />
                     ))}
                   </div>
-                  <p className="text-gray-700 mb-4 italic">"{testimonial.quote}"</p>
-                  <div className="border-t pt-4">
-                    <p className="font-semibold">{testimonial.author}</p>
-                    <p className="text-sm text-gray-600">{testimonial.company}</p>
-                    <p className="text-sm text-blue-600 mt-1">{testimonial.project}</p>
+                  <p>"{testimonial.quote}"</p>
+                  <div>
+                    <p>{testimonial.author}</p>
+                    <p>{testimonial.company}</p>
+                    <p>{testimonial.project}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -525,24 +516,24 @@ export default function ExteriorPaintingCalculatorPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Exterior Painting Calculator FAQs
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Common questions about exterior painting quotes
             </p>
           </div>
           
-          <div className="space-y-6">
+          <div>
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">How accurate is the exterior painting calculator?</CardTitle>
+                <CardTitle>How accurate is the exterior painting calculator?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p>
                   Our calculator achieves 93% accuracy by analyzing house dimensions, surface materials, 
                   regional labor costs, and weather factors. It uses data from 250,000+ professional 
                   exterior painting projects to provide estimates typically within 5-10% of actual quotes.
@@ -552,10 +543,10 @@ export default function ExteriorPaintingCalculatorPage() {
             
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">What's included in exterior painting quotes?</CardTitle>
+                <CardTitle>What's included in exterior painting quotes?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p>
                   Professional exterior quotes include: pressure washing, surface preparation (scraping, 
                   sanding, caulking), primer application, 2 coats of quality paint, trim and detail work, 
                   cleanup, and typically a 3-5 year warranty. Extensive repairs or wood replacement are additional.
@@ -565,10 +556,10 @@ export default function ExteriorPaintingCalculatorPage() {
             
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">How long does exterior house painting take?</CardTitle>
+                <CardTitle>How long does exterior house painting take?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p>
                   A typical 2,000 sq ft house takes 3-5 days with a professional crew of 3-4 painters. 
                   Larger homes or those requiring extensive prep can take 1-2 weeks. Weather delays 
                   should be factored in, adding 2-3 potential buffer days.
@@ -578,10 +569,10 @@ export default function ExteriorPaintingCalculatorPage() {
             
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">What affects exterior painting costs most?</CardTitle>
+                <CardTitle>What affects exterior painting costs most?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p>
                   The biggest cost factors are: house size and height (2-3 stories add 25-40%), 
                   surface material (wood/stucco cost more than vinyl), condition requiring prep work, 
                   number of colors, architectural complexity, and regional labor rates.
@@ -591,10 +582,10 @@ export default function ExteriorPaintingCalculatorPage() {
             
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">When is the best time for exterior painting?</CardTitle>
+                <CardTitle>When is the best time for exterior painting?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p>
                   Ideal conditions are temperatures between 50-85°F with low humidity and no rain. 
                   In most regions, this is late spring through early fall (May-September). 
                   Avoid painting in direct sunlight, extreme heat, or when rain is forecast within 24 hours.
@@ -606,49 +597,49 @@ export default function ExteriorPaintingCalculatorPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      <section>
+        <div>
+          <h2>
             Start Creating Professional Exterior Painting Quotes
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p>
             Join 5,000+ contractors using our exterior painting calculator to create 
             accurate house painting quotes in 60 seconds. Free trial available.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-6" asChild>
+          <div>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/trial-signup">
                 Start Free Trial
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 text-white border-white hover:bg-white hover:text-blue-600" asChild>
+            <Button size="lg" variant="outline" asChild>
               <Link href="/quoting-guide">
                 Read Quote Guide
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight />
               </Link>
             </Button>
           </div>
           
-          <div className="mt-8 flex items-center justify-center gap-8 text-sm text-blue-100">
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+          <div>
+            <span>
+              <CheckCircle />
               No credit card required
             </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+            <span>
+              <CheckCircle />
               60-second setup
             </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
+            <span>
+              <CheckCircle />
               Weather planning included
             </span>
           </div>
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
     </div>
   );
 }

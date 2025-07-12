@@ -220,10 +220,10 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your quote...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading your quote...</p>
         </div>
       </div>
     );
@@ -231,11 +231,11 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
 
   if (!quote) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="p-8 text-center">
-            <h2 className="text-xl font-semibold mb-2">Quote Not Found</h2>
-            <p className="text-gray-600 mb-4">The quote you're looking for doesn't exist or has been removed.</p>
+      <div>
+        <Card>
+          <CardContent>
+            <h2>Quote Not Found</h2>
+            <p>The quote you're looking for doesn't exist or has been removed.</p>
             <Button onClick={() => router.back()}>Go Back</Button>
           </CardContent>
         </Card>
@@ -246,34 +246,34 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
   const finalPrice = quote.final_price || quote.total_cost || 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+      <div>
+        <div>
+          <div>
+            <div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => router.push(`/quotes/${params.id}`)}
-                className="shrink-0"
+               
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft />
               </Button>
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
-                <Palette className="w-6 h-6 text-white" />
+              <div>
+                <Palette />
               </div>
-              <div className="min-w-0">
-                <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+              <div>
+                <h1>
                   {quote.company_name || "Professional Painting"}
                 </h1>
-                <p className="text-sm text-gray-500">Licensed & Insured</p>
+                <p>Licensed & Insured</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div>
               <Button variant="outline" size="sm" onClick={shareQuote}>
-                <Copy className="w-4 h-4 mr-2" />
+                <Copy />
                 Share
               </Button>
               <Button 
@@ -281,11 +281,11 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
                 size="sm" 
                 onClick={() => window.open(`/api/quotes/${params.id}/pdf`, '_blank')}
               >
-                <Download className="w-4 h-4 mr-2" />
+                <Download />
                 PDF
               </Button>
               <Button variant="outline" size="sm" onClick={() => window.print()}>
-                <Printer className="w-4 h-4 mr-2" />
+                <Printer />
                 Print
               </Button>
             </div>
@@ -293,74 +293,74 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-4 py-8">
+      <div>
         {/* Quote Header */}
-        <Card className="mb-6">
-          <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+        <Card>
+          <CardHeader>
+            <div>
               <div>
-                <CardTitle className="text-2xl font-bold mb-2">
+                <CardTitle>
                   Professional Painting Quote
                 </CardTitle>
-                <div className="flex items-center gap-4 text-blue-100">
+                <div>
                   <span>Quote #{quote.quote_id}</span>
                   <span>•</span>
                   <span>{formatDate(quote.created_at)}</span>
                 </div>
               </div>
-              <div className="mt-4 lg:mt-0 text-right">
-                <div className="text-3xl font-bold">{formatCurrency(finalPrice)}</div>
-                <div className="text-blue-100 text-sm">Total Investment</div>
+              <div>
+                <div>{formatCurrency(finalPrice)}</div>
+                <div>Total Investment</div>
               </div>
             </div>
           </CardHeader>
           
-          <CardContent className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <CardContent>
+            <div>
               {/* Customer Details */}
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <Home className="w-5 h-5 text-blue-600" />
+                <h3>
+                  <Home />
                   Project Details
                 </h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-start gap-2">
-                    <MapPin className="w-4 h-4 text-gray-400 mt-0.5" />
+                <div>
+                  <div>
+                    <MapPin />
                     <div>
-                      <div className="font-medium">{quote.customer_name}</div>
-                      <div className="text-gray-600">{quote.address}</div>
+                      <div>{quote.customer_name}</div>
+                      <div>{quote.address}</div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Palette className="w-4 h-4 text-gray-400" />
-                    <span className="capitalize">{quote.project_type} Painting</span>
+                  <div>
+                    <Palette />
+                    <span>{quote.project_type} Painting</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Home className="w-4 h-4 text-gray-400" />
+                  <div>
+                    <Home />
                     <span>Total: {quote.sqft ? `${quote.sqft.toLocaleString()} sq ft` : 'Custom project'}</span>
                   </div>
                   {(quote.walls_sqft || 0) > 0 && (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4" />
-                      <span className="text-gray-600">Walls: {(quote.walls_sqft || 0).toLocaleString()} sq ft</span>
+                    <div>
+                      <div />
+                      <span>Walls: {(quote.walls_sqft || 0).toLocaleString()} sq ft</span>
                     </div>
                   )}
                   {(quote.ceilings_sqft || 0) > 0 && (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4" />
-                      <span className="text-gray-600">Ceilings: {(quote.ceilings_sqft || 0).toLocaleString()} sq ft</span>
+                    <div>
+                      <div />
+                      <span>Ceilings: {(quote.ceilings_sqft || 0).toLocaleString()} sq ft</span>
                     </div>
                   )}
                   {(quote.trim_sqft || 0) > 0 && (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4" />
-                      <span className="text-gray-600">Trim: {(quote.trim_sqft || 0).toLocaleString()} sq ft</span>
+                    <div>
+                      <div />
+                      <span>Trim: {(quote.trim_sqft || 0).toLocaleString()} sq ft</span>
                     </div>
                   )}
                   {(quote.number_of_doors || quote.number_of_windows) && (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4" />
-                      <span className="text-gray-600">
+                    <div>
+                      <div />
+                      <span>
                         {quote.number_of_doors ? `${quote.number_of_doors} doors` : ''}
                         {quote.number_of_doors && quote.number_of_windows ? ', ' : ''}
                         {quote.number_of_windows ? `${quote.number_of_windows} windows` : ''}
@@ -372,24 +372,24 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
 
               {/* Timeline & Quality */}
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-blue-600" />
+                <h3>
+                  <Clock />
                   Timeline & Quality
                 </h3>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Paint Quality:</span>
-                    <Badge variant="secondary" className="capitalize">
+                <div>
+                  <div>
+                    <span>Paint Quality:</span>
+                    <Badge variant="secondary">
                       {quote.paint_quality || 'Premium'} Grade
                     </Badge>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Timeline:</span>
-                    <span className="text-sm font-medium">{quote.timeline || '3-5 business days'}</span>
+                  <div>
+                    <span>Timeline:</span>
+                    <span>{quote.timeline || '3-5 business days'}</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Valid Until:</span>
-                    <span className="text-sm font-medium">{getValidityDate(quote.created_at)}</span>
+                  <div>
+                    <span>Valid Until:</span>
+                    <span>{getValidityDate(quote.created_at)}</span>
                   </div>
                 </div>
               </div>
@@ -399,37 +399,37 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
 
         {/* Room Breakdown - Only show if rooms exist */}
         {rooms.length > 0 && (
-          <Card className="mb-6">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Home className="w-5 h-5 text-blue-600" />
+              <CardTitle>
+                <Home />
                 Room Breakdown ({rooms.length} rooms)
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CardContent>
+              <div>
                 {rooms.map((room, index) => (
-                  <div key={room.id || index} className="p-4 bg-gray-50 rounded-lg">
-                    <h4 className="font-medium text-gray-900 mb-2">{room.name}</h4>
-                    <div className="space-y-1 text-sm text-gray-600">
-                      <div className="flex justify-between">
+                  <div key={room.id || index}>
+                    <h4>{room.name}</h4>
+                    <div>
+                      <div>
                         <span>Dimensions:</span>
                         <span>{room.length}' × {room.width}' × {room.height}'</span>
                       </div>
                       {room.ceiling_area > 0 && (
-                        <div className="flex justify-between">
+                        <div>
                           <span>Ceiling Area:</span>
                           <span>{room.ceiling_area} sq ft</span>
                         </div>
                       )}
                       {room.wall_area > 0 && (
-                        <div className="flex justify-between">
+                        <div>
                           <span>Wall Area:</span>
                           <span>{room.wall_area} sq ft</span>
                         </div>
                       )}
                       {(room.number_of_doors > 0 || room.number_of_windows > 0) && (
-                        <div className="flex justify-between">
+                        <div>
                           <span>Features:</span>
                           <span>
                             {room.number_of_doors > 0 ? `${room.number_of_doors} doors` : ''}
@@ -447,58 +447,58 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
         )}
 
         {/* Services Included */}
-        <Card className="mb-6">
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-600" />
+            <CardTitle>
+              <CheckCircle />
               What's Included
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
+          <CardContent>
+            <div>
+              <div>
+                <div>
+                  <CheckCircle />
                   <div>
-                    <div className="font-medium">Complete Surface Preparation</div>
-                    <div className="text-sm text-gray-600">Cleaning, sanding, and priming as needed</div>
+                    <div>Complete Surface Preparation</div>
+                    <div>Cleaning, sanding, and priming as needed</div>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
+                <div>
+                  <CheckCircle />
                   <div>
-                    <div className="font-medium">Premium Paint & Materials</div>
-                    <div className="text-sm text-gray-600">High-quality paints with excellent coverage</div>
+                    <div>Premium Paint & Materials</div>
+                    <div>High-quality paints with excellent coverage</div>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
+                <div>
+                  <CheckCircle />
                   <div>
-                    <div className="font-medium">Professional Application</div>
-                    <div className="text-sm text-gray-600">Expert techniques for flawless finish</div>
+                    <div>Professional Application</div>
+                    <div>Expert techniques for flawless finish</div>
                   </div>
                 </div>
               </div>
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
+              <div>
+                <div>
+                  <CheckCircle />
                   <div>
-                    <div className="font-medium">Daily Cleanup & Protection</div>
-                    <div className="text-sm text-gray-600">Your property protected throughout</div>
+                    <div>Daily Cleanup & Protection</div>
+                    <div>Your property protected throughout</div>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
+                <div>
+                  <CheckCircle />
                   <div>
-                    <div className="font-medium">Final Walkthrough</div>
-                    <div className="text-sm text-gray-600">Ensure your complete satisfaction</div>
+                    <div>Final Walkthrough</div>
+                    <div>Ensure your complete satisfaction</div>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
+                <div>
+                  <CheckCircle />
                   <div>
-                    <div className="font-medium">Complete Post-Project Cleanup</div>
-                    <div className="text-sm text-gray-600">Leave your space spotless</div>
+                    <div>Complete Post-Project Cleanup</div>
+                    <div>Leave your space spotless</div>
                   </div>
                 </div>
               </div>
@@ -507,29 +507,29 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
         </Card>
 
         {/* Guarantees */}
-        <Card className="mb-6">
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-blue-600" />
+            <CardTitle>
+              <Shield />
               Our Guarantee
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="text-center">
-                <Award className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-                <div className="font-medium">1-Year Warranty</div>
-                <div className="text-sm text-gray-600">Workmanship guarantee</div>
+          <CardContent>
+            <div>
+              <div>
+                <Award />
+                <div>1-Year Warranty</div>
+                <div>Workmanship guarantee</div>
               </div>
-              <div className="text-center">
-                <Shield className="w-8 h-8 text-green-500 mx-auto mb-2" />
-                <div className="font-medium">Licensed & Insured</div>
-                <div className="text-sm text-gray-600">Full protection coverage</div>
+              <div>
+                <Shield />
+                <div>Licensed & Insured</div>
+                <div>Full protection coverage</div>
               </div>
-              <div className="text-center">
-                <Star className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-                <div className="font-medium">Satisfaction Promise</div>
-                <div className="text-sm text-gray-600">We make it right</div>
+              <div>
+                <Star />
+                <div>Satisfaction Promise</div>
+                <div>We make it right</div>
               </div>
             </div>
           </CardContent>
@@ -537,24 +537,24 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
 
         {/* Payment Terms - Only show if configured for this quote */}
         {quote.payment_terms && (
-          <Card className="mb-6">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <DollarSign className="w-5 h-5 text-green-600" />
+              <CardTitle>
+                <DollarSign />
                 Payment Terms
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <div className="space-y-4">
-                <div className="text-sm text-gray-700">
+            <CardContent>
+              <div>
+                <div>
                   {quote.payment_terms.terms}
                 </div>
                 {quote.payment_terms.schedule && (
-                  <div className="text-sm text-gray-600">
+                  <div>
                     <strong>Payment Schedule:</strong> {quote.payment_terms.schedule}
                   </div>
                 )}
-                <div className="text-center text-sm text-gray-600 pt-2 border-t">
+                <div>
                   We accept cash, check, and all major credit cards
                 </div>
               </div>
@@ -564,7 +564,7 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
 
         {/* Payment Option */}
         {!isAccepted && quote && (
-          <div className="mb-6">
+          <div>
             <QuotePaymentLink 
               quoteId={parseInt(quote.id)}
               amount={quote.total_cost || quote.final_price || 0}
@@ -575,45 +575,45 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
 
         {/* Accept Quote */}
         {!isAccepted ? (
-          <Card className="border-green-200 bg-green-50">
+          <Card>
             <CardHeader>
-              <CardTitle className="text-green-800 flex items-center gap-2">
-                <PenTool className="w-5 h-5" />
+              <CardTitle>
+                <PenTool />
                 Ready to Get Started?
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 space-y-4">
-              <p className="text-green-700">
+            <CardContent>
+              <p>
                 Transform your space with professional painting. Enter your name below to accept this quote and we'll contact you within 24 hours to schedule your project.
               </p>
               
-              <div className="space-y-3">
+              <div>
                 <div>
-                  <label className="block text-sm font-medium text-green-800 mb-1">
+                  <label>
                     Digital Signature (Type your full name)
                   </label>
                   <Input
                     value={clientSignature}
                     onChange={(e) => setClientSignature(e.target.value)}
                     placeholder="Type your full name here"
-                    className="border-green-300 focus:border-green-500 focus:ring-green-500"
+                   
                   />
                 </div>
                 
                 <Button 
                   onClick={handleAcceptQuote}
                   disabled={!clientSignature.trim() || isSubmitting}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg"
+                 
                   size="lg"
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                      <div />
                       Processing...
                     </>
                   ) : (
                     <>
-                      <CheckCircle className="w-5 h-5 mr-2" />
+                      <CheckCircle />
                       Accept Quote & Get Started
                     </>
                   )}
@@ -622,14 +622,14 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
             </CardContent>
           </Card>
         ) : (
-          <Card className="border-green-200 bg-green-50">
-            <CardContent className="p-8 text-center">
-              <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-green-800 mb-2">Quote Accepted!</h3>
-              <p className="text-green-700 mb-4">
+          <Card>
+            <CardContent>
+              <CheckCircle />
+              <h3>Quote Accepted!</h3>
+              <p>
                 Thank you for choosing us for your painting project. We'll contact you within 24 hours to schedule your project start date.
               </p>
-              <div className="text-sm text-green-600">
+              <div>
                 Signed by: {clientSignature}
               </div>
             </CardContent>
@@ -637,23 +637,23 @@ export default function CustomerQuotePage({ params }: { params: { id: string } }
         )}
 
         {/* Contact Footer */}
-        <div className="mt-8 text-center">
-          <h3 className="font-semibold text-gray-900 mb-4">Questions? Ready to Schedule?</h3>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-blue-600" />
-              <a href={`tel:${quote.company_phone || '(555) 123-4567'}`} className="text-blue-600 hover:underline">
+        <div>
+          <h3>Questions? Ready to Schedule?</h3>
+          <div>
+            <div>
+              <Phone />
+              <a href={`tel:${quote.company_phone || '(555) 123-4567'}`}>
                 {quote.company_phone || '(555) 123-4567'}
               </a>
             </div>
-            <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4 text-blue-600" />
-              <a href={`mailto:${quote.company_email || 'contact@paintingcompany.com'}`} className="text-blue-600 hover:underline">
+            <div>
+              <Mail />
+              <a href={`mailto:${quote.company_email || 'contact@paintingcompany.com'}`}>
                 {quote.company_email || 'contact@paintingcompany.com'}
               </a>
             </div>
           </div>
-          <p className="text-gray-600 mt-4 text-sm">
+          <p>
             Thank you for choosing {quote.company_name || "us"} for your painting project!
           </p>
         </div>

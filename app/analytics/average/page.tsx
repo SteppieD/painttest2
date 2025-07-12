@@ -98,140 +98,140 @@ export default function AverageAnalyticsPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b">
-        <div className="container mx-auto max-w-7xl px-4 py-6">
-          <div className="flex items-center gap-4">
+    <div>
+      <div>
+        <div>
+          <div>
             <button
               onClick={() => router.push("/dashboard")}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+             
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft />
             </button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Average Quote Analytics</h1>
-              <p className="text-gray-600">Pricing insights and trends</p>
+              <h1>Average Quote Analytics</h1>
+              <p>Pricing insights and trends</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto max-w-7xl px-4 py-8">
+      <div>
         {/* Average Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm border p-6">
-            <div className="flex items-center justify-between mb-2">
-              <TrendingUp className="w-8 h-8 text-blue-600" />
-              <span className="text-3xl font-bold">{formatCurrency(stats.averageQuote)}</span>
+        <div>
+          <div>
+            <div>
+              <TrendingUp />
+              <span>{formatCurrency(stats.averageQuote)}</span>
             </div>
-            <p className="text-gray-600 font-medium">Overall Average</p>
-            <p className="text-sm text-gray-500">All quotes</p>
+            <p>Overall Average</p>
+            <p>All quotes</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border p-6">
-            <div className="flex items-center justify-between mb-2">
-              <Target className="w-8 h-8 text-green-600" />
-              <span className="text-3xl font-bold">{formatCurrency(stats.averageAccepted)}</span>
+          <div>
+            <div>
+              <Target />
+              <span>{formatCurrency(stats.averageAccepted)}</span>
             </div>
-            <p className="text-gray-600 font-medium">Accepted Average</p>
-            <p className="text-sm text-green-600">Won projects</p>
+            <p>Accepted Average</p>
+            <p>Won projects</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border p-6">
-            <div className="flex items-center justify-between mb-2">
-              <BarChart3 className="w-8 h-8 text-purple-600" />
-              <span className="text-3xl font-bold">{formatCurrency(stats.median)}</span>
+          <div>
+            <div>
+              <BarChart3 />
+              <span>{formatCurrency(stats.median)}</span>
             </div>
-            <p className="text-gray-600 font-medium">Median Quote</p>
-            <p className="text-sm text-gray-500">Middle value</p>
+            <p>Median Quote</p>
+            <p>Middle value</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border p-6">
-            <div className="flex items-center justify-between mb-2">
-              <DollarSign className="w-8 h-8 text-orange-600" />
-              <span className="text-xl font-bold">{formatCurrency(stats.highest)}</span>
+          <div>
+            <div>
+              <DollarSign />
+              <span>{formatCurrency(stats.highest)}</span>
             </div>
-            <p className="text-gray-600 font-medium">Highest Quote</p>
-            <p className="text-sm text-gray-500">Maximum value</p>
+            <p>Highest Quote</p>
+            <p>Maximum value</p>
           </div>
         </div>
 
         {/* Price Range Analysis */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm border p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Price Range Analysis</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between py-3 border-b">
-                <span className="text-gray-600">Highest Quote</span>
-                <span className="text-lg font-bold text-green-600">{formatCurrency(stats.highest)}</span>
+        <div>
+          <div>
+            <h2>Price Range Analysis</h2>
+            <div>
+              <div>
+                <span>Highest Quote</span>
+                <span>{formatCurrency(stats.highest)}</span>
               </div>
-              <div className="flex items-center justify-between py-3 border-b">
-                <span className="text-gray-600">Average Quote</span>
-                <span className="text-lg font-bold">{formatCurrency(stats.averageQuote)}</span>
+              <div>
+                <span>Average Quote</span>
+                <span>{formatCurrency(stats.averageQuote)}</span>
               </div>
-              <div className="flex items-center justify-between py-3 border-b">
-                <span className="text-gray-600">Median Quote</span>
-                <span className="text-lg font-bold">{formatCurrency(stats.median)}</span>
+              <div>
+                <span>Median Quote</span>
+                <span>{formatCurrency(stats.median)}</span>
               </div>
-              <div className="flex items-center justify-between py-3">
-                <span className="text-gray-600">Lowest Quote</span>
-                <span className="text-lg font-bold text-orange-600">{formatCurrency(stats.lowest)}</span>
+              <div>
+                <span>Lowest Quote</span>
+                <span>{formatCurrency(stats.lowest)}</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Project Type Averages</h2>
-            <div className="space-y-4">
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">Interior Projects</span>
-                  <span className="text-xl font-bold text-blue-600">{formatCurrency(stats.interiorAvg)}</span>
+          <div>
+            <h2>Project Type Averages</h2>
+            <div>
+              <div>
+                <div>
+                  <span>Interior Projects</span>
+                  <span>{formatCurrency(stats.interiorAvg)}</span>
                 </div>
-                <p className="text-sm text-gray-600">Average interior painting quote</p>
+                <p>Average interior painting quote</p>
               </div>
-              <div className="p-4 bg-green-50 rounded-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">Exterior Projects</span>
-                  <span className="text-xl font-bold text-green-600">{formatCurrency(stats.exteriorAvg)}</span>
+              <div>
+                <div>
+                  <span>Exterior Projects</span>
+                  <span>{formatCurrency(stats.exteriorAvg)}</span>
                 </div>
-                <p className="text-sm text-gray-600">Average exterior painting quote</p>
+                <p>Average exterior painting quote</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Quote Distribution */}
-        <div className="bg-white rounded-xl shadow-sm border p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Quote Distribution</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600 mb-1">Under $1,000</p>
-              <p className="text-2xl font-bold">
+        <div>
+          <h2>Quote Distribution</h2>
+          <div>
+            <div>
+              <p>Under $1,000</p>
+              <p>
                 {quotes.filter(q => (q.final_price || q.quote_amount || 0) < 1000).length}
               </p>
             </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600 mb-1">$1,000 - $5,000</p>
-              <p className="text-2xl font-bold">
+            <div>
+              <p>$1,000 - $5,000</p>
+              <p>
                 {quotes.filter(q => {
                   const amt = q.final_price || q.quote_amount || 0;
                   return amt >= 1000 && amt < 5000;
                 }).length}
               </p>
             </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600 mb-1">$5,000 - $10,000</p>
-              <p className="text-2xl font-bold">
+            <div>
+              <p>$5,000 - $10,000</p>
+              <p>
                 {quotes.filter(q => {
                   const amt = q.final_price || q.quote_amount || 0;
                   return amt >= 5000 && amt < 10000;
                 }).length}
               </p>
             </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600 mb-1">Over $10,000</p>
-              <p className="text-2xl font-bold">
+            <div>
+              <p>Over $10,000</p>
+              <p>
                 {quotes.filter(q => (q.final_price || q.quote_amount || 0) >= 10000).length}
               </p>
             </div>

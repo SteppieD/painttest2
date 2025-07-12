@@ -77,17 +77,17 @@ export function LocationPageTemplate({ location }: { location: LocationData }) {
 Paint Quote App helps you create stunning, professional quotes that win more jobs. Our AI-powered platform understands the unique aspects of the ${location.city} market, from local paint preferences to typical project sizes, helping you quote accurately and competitively.`,
         features: [
           {
-            icon: <MapPin className="h-8 w-8 text-blue-600" />,
+            icon: <MapPin />,
             title: `Local ${location.city} Market Data`,
             description: "Pricing insights based on local market rates and competition"
           },
           {
-            icon: <Clock className="h-8 w-8 text-blue-600" />,
+            icon: <Clock />,
             title: "5-Minute Quotes",
             description: "Create professional quotes 80% faster than traditional methods"
           },
           {
-            icon: <DollarSign className="h-8 w-8 text-blue-600" />,
+            icon: <DollarSign />,
             title: "Win More Jobs",
             description: `Join contractors winning 30% more jobs in ${location.city}`
           }
@@ -96,11 +96,11 @@ Paint Quote App helps you create stunning, professional quotes that win more job
       {
         title: `Painting Industry Insights for ${location.city}`,
         content: (
-          <div className="space-y-4">
-            <p className="text-gray-600">
+          <div>
+            <p>
               The painting industry in {location.city} is thriving, with unique opportunities and challenges:
             </p>
-            <ul className="space-y-2">
+            <ul>
               {(location.localInsights || [
                 `Average painting project size: ${location.avgProjectSize || "$3,500-5,000"}`,
                 `Peak season: April through October`,
@@ -108,9 +108,9 @@ Paint Quote App helps you create stunning, professional quotes that win more job
                 `Growing demand for eco-friendly paint options`,
                 `Competitive market with ${location.topContractors || 50}+ active contractors`
               ]).map((insight, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <span className="text-blue-600 mt-1">•</span>
-                  <span className="text-gray-600">{insight}</span>
+                <li key={index}>
+                  <span>•</span>
+                  <span>{insight}</span>
                 </li>
               ))}
             </ul>

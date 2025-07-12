@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
 import { 
   Check, 
   Edit3, 
@@ -88,23 +87,17 @@ export function CategorySummaryButton({
         size="sm"
         onClick={() => isClickable && onClick(id)}
         disabled={disabled}
-        className={cn(
-          "h-8 px-3 gap-2 transition-all duration-200",
-          status === 'completed' && "bg-green-600 hover:bg-green-700 text-white",
-          status === 'needs_review' && "border-orange-300 text-orange-700 hover:bg-orange-50",
-          isClickable && "cursor-pointer hover:shadow-sm",
-          className
-        )}
+       
       >
         {status === 'completed' ? (
-          <Check className="w-3 h-3" />
+          <Check />
         ) : status === 'needs_review' ? (
-          <AlertCircle className="w-3 h-3" />
+          <AlertCircle />
         ) : (
           icon
         )}
-        <span className="text-xs font-medium">{name}</span>
-        {isClickable && <Edit3 className="w-3 h-3 opacity-50" />}
+        <span>{name}</span>
+        {isClickable && <Edit3 />}
       </Button>
     );
   }
@@ -112,22 +105,17 @@ export function CategorySummaryButton({
   if (variant === 'compact') {
     return (
       <div 
-        className={cn(
-          "flex items-center gap-3 p-3 rounded-lg border transition-all duration-200",
-          config.color,
-          isClickable && "cursor-pointer hover:shadow-sm",
-          className
-        )}
+       
         onClick={() => isClickable && onClick(id)}
       >
-        <div className="flex items-center gap-2 flex-1">
+        <div>
           {icon}
-          <span className="font-medium text-sm">{name}</span>
+          <span>{name}</span>
         </div>
         
-        <div className="flex items-center gap-2">
-          <span className="text-sm">{summary}</span>
-          {isClickable && <Edit3 className="w-4 h-4 opacity-50" />}
+        <div>
+          <span>{summary}</span>
+          {isClickable && <Edit3 />}
         </div>
       </div>
     );
@@ -135,41 +123,35 @@ export function CategorySummaryButton({
 
   // Default card variant
   return (
-    <Card className={cn(
-      "transition-all duration-200 border",
-      config.color,
-      isClickable && "cursor-pointer hover:shadow-md",
-      disabled && "opacity-50 cursor-not-allowed",
-      className
-    )}>
+    <Card>
       <CardContent 
-        className="p-4"
+       
         onClick={() => isClickable && onClick(id)}
       >
-        <div className="flex items-start justify-between">
+        <div>
           {/* Left side: Icon, name, and summary */}
-          <div className="flex items-start gap-3 flex-1">
-            <div className="p-2 rounded-lg bg-white/50">
+          <div>
+            <div>
               {icon}
             </div>
             
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-medium text-sm">{name}</h3>
-                <Badge variant={config.badgeVariant} className="text-xs">
+            <div>
+              <div>
+                <h3>{name}</h3>
+                <Badge variant={config.badgeVariant}>
                   {config.badgeText}
                 </Badge>
               </div>
               
-              <p className="text-sm opacity-80 mb-2">
+              <p>
                 {summary}
               </p>
               
               {details && details.length > 0 && (
-                <div className="space-y-1">
+                <div>
                   {details.map((detail, index) => (
-                    <div key={index} className="text-xs opacity-70 flex items-center gap-1">
-                      <div className="w-1 h-1 bg-current rounded-full" />
+                    <div key={index}>
+                      <div />
                       {detail}
                     </div>
                   ))}
@@ -177,14 +159,14 @@ export function CategorySummaryButton({
               )}
               
               {showProgress && typeof progress === 'number' && (
-                <div className="mt-2">
-                  <Progress value={progress} className="h-2" />
-                  <span className="text-xs opacity-70 mt-1">{progress}% complete</span>
+                <div>
+                  <Progress value={progress} />
+                  <span>{progress}% complete</span>
                 </div>
               )}
               
               {showLastUpdated && lastUpdated && (
-                <div className="text-xs opacity-60 mt-1">
+                <div>
                   Updated {lastUpdated.toLocaleDateString()}
                 </div>
               )}
@@ -196,9 +178,9 @@ export function CategorySummaryButton({
             <Button
               variant="ghost"
               size="sm"
-              className="opacity-50 hover:opacity-100"
+             
             >
-              <Edit3 className="w-4 h-4" />
+              <Edit3 />
             </Button>
           )}
         </div>
@@ -212,49 +194,49 @@ export const QUOTE_CATEGORIES: Record<string, Omit<CategorySummary, 'status' | '
   customer_info: {
     id: 'customer_info',
     name: 'Customer Info',
-    icon: <User className="w-5 h-5" />,
+    icon: <User />,
     isRequired: true
   },
   project_location: {
     id: 'project_location',
     name: 'Project Location',
-    icon: <MapPin className="w-5 h-5" />,
+    icon: <MapPin />,
     isRequired: true
   },
   project_type: {
     id: 'project_type',
     name: 'Project Type',
-    icon: <Home className="w-5 h-5" />,
+    icon: <Home />,
     isRequired: true
   },
   rooms: {
     id: 'rooms',
     name: 'Rooms',
-    icon: <Layers className="w-5 h-5" />,
+    icon: <Layers />,
     isRequired: true
   },
   surfaces: {
     id: 'surfaces',
     name: 'Surfaces',
-    icon: <Square className="w-5 h-5" />,
+    icon: <Square />,
     isRequired: true
   },
   quantities: {
     id: 'quantities',
     name: 'Doors & Windows',
-    icon: <DoorOpen className="w-5 h-5" />,
+    icon: <DoorOpen />,
     isRequired: false
   },
   paint_selection: {
     id: 'paint_selection',
     name: 'Paint Selection',
-    icon: <Palette className="w-5 h-5" />,
+    icon: <Palette />,
     isRequired: true
   },
   pricing: {
     id: 'pricing',
     name: 'Pricing & Markup',
-    icon: <Calculator className="w-5 h-5" />,
+    icon: <Calculator />,
     isRequired: true
   }
 };
@@ -270,14 +252,14 @@ export function CategoryProgressBar({ categories, className }: CategoryProgressB
   const progressPercentage = totalCategories > 0 ? (completedCategories / totalCategories) * 100 : 0;
   
   return (
-    <div className={cn("space-y-2", className)}>
-      <div className="flex items-center justify-between text-sm">
-        <span className="font-medium text-gray-700">Progress</span>
-        <span className="text-gray-600">
+    <div>
+      <div>
+        <span>Progress</span>
+        <span>
           {completedCategories} of {totalCategories} complete
         </span>
       </div>
-      <Progress value={progressPercentage} className="h-2" />
+      <Progress value={progressPercentage} />
     </div>
   );
 }
@@ -299,7 +281,7 @@ export function CategoryGrid({
 }: CategoryGridProps) {
   if (variant === 'pill') {
     return (
-      <div className={cn("flex flex-wrap gap-2", className)}>
+      <div>
         {categories.map((category) => (
           <CategorySummaryButton
             key={category.id}
@@ -313,10 +295,7 @@ export function CategoryGrid({
   }
   
   return (
-    <div className={cn(
-      variant === 'compact' ? "space-y-2" : "grid gap-3 md:grid-cols-2",
-      className
-    )}>
+    <div>
       {categories.map((category) => (
         <CategorySummaryButton
           key={category.id}

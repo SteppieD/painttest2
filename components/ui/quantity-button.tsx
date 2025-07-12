@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { 
   Plus, 
   Minus, 
@@ -73,27 +72,27 @@ export function QuantityButton({
 
   if (variant === 'compact') {
     return (
-      <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
-        <div className="flex items-center gap-2 flex-1">
-          <div className="text-gray-600">
+      <div>
+        <div>
+          <div>
             {icon}
           </div>
-          <span className="text-sm font-medium">{name}</span>
-          {unit && <span className="text-xs text-gray-500">({unit})</span>}
+          <span>{name}</span>
+          {unit && <span>({unit})</span>}
         </div>
         
-        <div className="flex items-center gap-1">
+        <div>
           <Button
             variant="outline"
             size="sm"
             onClick={decrement}
             disabled={disabled || quantity <= minQuantity}
-            className="h-6 w-6 p-0"
+           
           >
-            <Minus className="w-3 h-3" />
+            <Minus />
           </Button>
           
-          <span className="w-8 text-center text-sm font-medium">
+          <span>
             {quantity}
           </span>
           
@@ -102,9 +101,9 @@ export function QuantityButton({
             size="sm"
             onClick={increment}
             disabled={disabled || quantity >= maxQuantity}
-            className="h-6 w-6 p-0"
+           
           >
-            <Plus className="w-3 h-3" />
+            <Plus />
           </Button>
         </div>
         
@@ -113,9 +112,9 @@ export function QuantityButton({
             variant="ghost"
             size="sm"
             onClick={() => onRemove(id)}
-            className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+           
           >
-            <X className="w-3 h-3" />
+            <X />
           </Button>
         )}
       </div>
@@ -123,34 +122,25 @@ export function QuantityButton({
   }
 
   return (
-    <Card className={cn(
-      "transition-all duration-200 hover:shadow-md",
-      quantity > 0 ? "bg-blue-50 border-blue-200" : "hover:bg-gray-50 border-gray-200",
-      disabled && "opacity-50"
-    )}>
-      <CardContent className={sizeClasses[size]}>
-        <div className="flex items-center justify-between">
+    <Card>
+      <CardContent>
+        <div>
           {/* Left: Icon and Label */}
-          <div className="flex items-center gap-3">
-            <div className={cn(
-              "p-2 rounded-lg",
-              quantity > 0 
-                ? "bg-blue-100 text-blue-600" 
-                : "bg-gray-100 text-gray-600"
-            )}>
+          <div>
+            <div>
               {icon}
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-medium text-gray-900">{name}</h3>
+              <div>
+                <h3>{name}</h3>
                 {unit && (
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary">
                     {unit}
                   </Badge>
                 )}
               </div>
               {description && (
-                <p className="text-sm text-gray-600 mt-1">
+                <p>
                   {description}
                 </p>
               )}
@@ -158,21 +148,21 @@ export function QuantityButton({
           </div>
           
           {/* Right: Quantity Controls */}
-          <div className="flex items-center gap-2">
+          <div>
             {/* Quantity Display */}
-            <div className="flex items-center gap-1">
+            <div>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={decrement}
                 disabled={disabled || quantity <= minQuantity}
-                className={cn(buttonSizeClasses[size], "p-0")}
+               
               >
-                <Minus className="w-4 h-4" />
+                <Minus />
               </Button>
               
-              <div className="w-12 text-center">
-                <span className="text-lg font-semibold">{quantity}</span>
+              <div>
+                <span>{quantity}</span>
               </div>
               
               <Button
@@ -180,9 +170,9 @@ export function QuantityButton({
                 size="sm"
                 onClick={increment}
                 disabled={disabled || quantity >= maxQuantity}
-                className={cn(buttonSizeClasses[size], "p-0")}
+               
               >
-                <Plus className="w-4 h-4" />
+                <Plus />
               </Button>
             </div>
             
@@ -192,9 +182,9 @@ export function QuantityButton({
                 variant="ghost"
                 size="sm"
                 onClick={() => onRemove(id)}
-                className="text-red-500 hover:text-red-700 hover:bg-red-50"
+               
               >
-                <X className="w-4 h-4" />
+                <X />
               </Button>
             )}
           </div>
@@ -209,7 +199,7 @@ export const COMMON_QUANTITY_ITEMS: QuantityItem[] = [
   {
     id: 'doors',
     name: 'Doors',
-    icon: <DoorOpen className="w-5 h-5" />,
+    icon: <DoorOpen />,
     quantity: 0,
     description: 'Interior doors to paint',
     maxQuantity: 15
@@ -217,7 +207,7 @@ export const COMMON_QUANTITY_ITEMS: QuantityItem[] = [
   {
     id: 'windows',
     name: 'Windows',
-    icon: <Square className="w-5 h-5" />,
+    icon: <Square />,
     quantity: 0,
     description: 'Window frames and trim',
     maxQuantity: 20
@@ -225,7 +215,7 @@ export const COMMON_QUANTITY_ITEMS: QuantityItem[] = [
   {
     id: 'closets',
     name: 'Closets',
-    icon: <Home className="w-5 h-5" />,
+    icon: <Home />,
     quantity: 0,
     description: 'Closet interiors',
     maxQuantity: 10
@@ -237,7 +227,7 @@ export const TRIM_QUANTITY_ITEMS: QuantityItem[] = [
   {
     id: 'baseboards',
     name: 'Baseboards',
-    icon: <Frame className="w-5 h-5" />,
+    icon: <Frame />,
     quantity: 0,
     unit: 'lin ft',
     description: 'Baseboard trim',
@@ -246,7 +236,7 @@ export const TRIM_QUANTITY_ITEMS: QuantityItem[] = [
   {
     id: 'crown_molding',
     name: 'Crown Molding',
-    icon: <Frame className="w-5 h-5" />,
+    icon: <Frame />,
     quantity: 0,
     unit: 'lin ft',
     description: 'Crown molding',
@@ -255,7 +245,7 @@ export const TRIM_QUANTITY_ITEMS: QuantityItem[] = [
   {
     id: 'chair_rail',
     name: 'Chair Rail',
-    icon: <Frame className="w-5 h-5" />,
+    icon: <Frame />,
     quantity: 0,
     unit: 'lin ft',
     description: 'Chair rail molding',
@@ -285,21 +275,19 @@ export function QuantityGrid({
   const hasQuantities = items.some(item => item.quantity > 0);
   
   return (
-    <div className={cn("space-y-3", className)}>
+    <div>
       {title && (
-        <div className="flex items-center justify-between">
-          <h4 className="text-sm font-medium text-gray-700">{title}</h4>
+        <div>
+          <h4>{title}</h4>
           {hasQuantities && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="secondary">
               {items.filter(item => item.quantity > 0).length} selected
             </Badge>
           )}
         </div>
       )}
       
-      <div className={cn(
-        variant === 'compact' ? "space-y-2" : "space-y-3"
-      )}>
+      <div>
         {items.map((item) => (
           <QuantityButton
             key={item.id}

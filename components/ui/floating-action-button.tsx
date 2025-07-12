@@ -11,8 +11,6 @@ import {
   X,
   ChevronUp
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-
 interface FABAction {
   id: string;
   label: string;
@@ -154,48 +152,32 @@ export function FloatingActionButton({
 
   return (
     <div 
-      className={cn(
-        "fixed z-50 fab-container transition-all duration-300 ease-out",
-        getPositionClasses(),
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16",
-        className
-      )}
+     
     >
       {/* Action Menu */}
       {isOpen && (
-        <div className={cn(
-          "absolute bottom-16 w-64 space-y-2",
-          getMenuAlignment()
-        )}>
+        <div>
           {fabActions.map((action, index) => (
             <div
               key={action.id}
-              className={cn(
-                "transform transition-all duration-200 ease-out",
-                isOpen 
-                  ? `translate-y-0 opacity-100 delay-${index * 50}` 
+             ` 
                   : "translate-y-4 opacity-0"
               )}
-              style={{ 
-                transitionDelay: isOpen ? `${index * 50}ms` : '0ms' 
+             ms` : '0ms' 
               }}
             >
               <Button
                 onClick={action.action}
-                className={cn(
-                  "w-full justify-start h-12 shadow-lg border-0 transition-all duration-200",
-                  action.bgColor,
-                  "hover:scale-105 hover:shadow-xl"
-                )}
+               
               >
-                <div className="design-inline w-full">
-                  <div className={cn("p-2 rounded-lg bg-white shadow-sm", action.color)}>
-                    <action.icon className="w-5 h-5" />
+                <div>
+                  <div>
+                    <action.icon />
                   </div>
-                  <div className="flex-1 text-left ml-3">
-                    <span className="font-medium text-gray-900">{action.label}</span>
+                  <div>
+                    <span>{action.label}</span>
                     {action.isPopular && (
-                      <span className="ml-2 px-2 py-0.5 bg-blue-600 text-white text-xs rounded-full">
+                      <span>
                         Popular
                       </span>
                     )}
@@ -210,25 +192,20 @@ export function FloatingActionButton({
       {/* Main FAB Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "design-fab w-14 h-14 shadow-xl transition-all duration-300 ease-out",
-          "hover:scale-110 active:scale-95",
-          isOpen ? "rotate-45" : "rotate-0",
-          isOpen ? "bg-gray-600 hover:bg-gray-700" : "bg-blue-600 hover:bg-blue-700"
-        )}
+       
         aria-label={isOpen ? "Close menu" : "Create new quote"}
       >
         {isOpen ? (
-          <X className="w-6 h-6 text-white" />
+          <X />
         ) : (
-          <Plus className="w-6 h-6 text-white" />
+          <Plus />
         )}
       </Button>
 
       {/* Backdrop for mobile */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm -z-10 md:hidden"
+         
           onClick={() => setIsOpen(false)}
         />
       )}
@@ -253,15 +230,10 @@ export function MiniFAB({
   return (
     <Button
       onClick={onClick}
-      className={cn(
-        "w-10 h-10 rounded-full shadow-lg border-0 transition-all duration-200",
-        "hover:scale-110 active:scale-95",
-        color,
-        className
-      )}
+     
       aria-label={label}
     >
-      <Icon className="w-5 h-5 text-white" />
+      <Icon />
     </Button>
   );
 }
@@ -296,20 +268,16 @@ export function SpeedDialFAB({
   };
 
   return (
-    <div className={cn("fixed z-50", getPositionClasses(), className)}>
+    <div>
       {/* Speed dial actions */}
-      <div className="flex flex-col items-center space-y-3 mb-4">
+      <div>
         {actions.map((action, index) => (
           <div
             key={index}
-            className={cn(
-              "transition-all duration-200 ease-out",
-              isOpen 
-                ? `translate-y-0 opacity-100 scale-100 delay-${index * 50}` 
+           ` 
                 : "translate-y-8 opacity-0 scale-50"
             )}
-            style={{ 
-              transitionDelay: isOpen ? `${index * 50}ms` : '0ms' 
+           ms` : '0ms' 
             }}
           >
             <MiniFAB
@@ -328,16 +296,12 @@ export function SpeedDialFAB({
       {/* Main button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "design-fab w-14 h-14 shadow-xl transition-all duration-300",
-          "hover:scale-110 active:scale-95",
-          isOpen ? "rotate-45 bg-gray-600" : "rotate-0 bg-blue-600"
-        )}
+       
       >
         {isOpen ? (
-          <X className="w-6 h-6 text-white" />
+          <X />
         ) : (
-          <Plus className="w-6 h-6 text-white" />
+          <Plus />
         )}
       </Button>
     </div>

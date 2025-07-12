@@ -80,59 +80,59 @@ export const ContractorToolbar: React.FC<ContractorToolbarProps> = ({
   return (
     <>
       {/* Floating Toolbar */}
-      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-        <Card className="shadow-2xl border-gray-200">
-          <div className="p-4">
-            <div className="flex items-center gap-4">
+      <div>
+        <Card>
+          <div>
+            <div>
               {/* View Toggle */}
               <Button
                 variant="outline"
                 size="sm"
                 onClick={onViewToggle}
-                className="gap-2"
+               
               >
-                {isContractorView ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {isContractorView ? <EyeOff /> : <Eye />}
                 {isContractorView ? 'Customer View' : 'Contractor View'}
               </Button>
 
               {/* Markup Adjustment */}
               {isContractorView && (
-                <div className="flex items-center gap-3 px-4 border-x">
-                  <Minus className="w-4 h-4 text-gray-400" />
-                  <div className="w-32">
+                <div>
+                  <Minus />
+                  <div>
                     <Slider
                       value={[currentMarkup]}
                       onValueChange={([value]) => onMarkupChange(value)}
                       min={-5}
                       max={50}
                       step={5}
-                      className="cursor-pointer"
+                     
                     />
                   </div>
-                  <Plus className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm font-medium min-w-[3rem] text-right">
+                  <Plus />
+                  <span>
                     {currentMarkup > 0 ? '+' : ''}{currentMarkup}%
                   </span>
                 </div>
               )}
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-2">
+              <div>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={onEditClick}
-                  className="gap-2"
+                 
                 >
-                  <Edit className="w-4 h-4" />
+                  <Edit />
                   Edit Quote
                 </Button>
                 <Button
                   size="sm"
                   onClick={() => setShowEmailDialog(true)}
-                  className="gap-2 bg-blue-600 hover:bg-blue-700"
+                 
                 >
-                  <Send className="w-4 h-4" />
+                  <Send />
                   Send to Client
                 </Button>
               </div>
@@ -140,8 +140,8 @@ export const ContractorToolbar: React.FC<ContractorToolbarProps> = ({
 
             {/* Markup Info */}
             {isContractorView && currentMarkup !== 0 && (
-              <div className="mt-3 pt-3 border-t text-sm text-gray-600 text-center">
-                <Calculator className="w-4 h-4 inline mr-1" />
+              <div>
+                <Calculator />
                 Quote includes {currentMarkup}% markup on base cost
               </div>
             )}
@@ -159,8 +159,8 @@ export const ContractorToolbar: React.FC<ContractorToolbarProps> = ({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
+          <div>
+            <div>
               <Label htmlFor="email-to">Customer Email</Label>
               <Input
                 id="email-to"
@@ -171,7 +171,7 @@ export const ContractorToolbar: React.FC<ContractorToolbarProps> = ({
               />
             </div>
             
-            <div className="space-y-2">
+            <div>
               <Label htmlFor="email-message">Message</Label>
               <Textarea
                 id="email-message"
@@ -183,7 +183,7 @@ export const ContractorToolbar: React.FC<ContractorToolbarProps> = ({
             </div>
           </div>
 
-          <div className="flex justify-end gap-3">
+          <div>
             <Button
               variant="outline"
               onClick={() => setShowEmailDialog(false)}
@@ -194,16 +194,16 @@ export const ContractorToolbar: React.FC<ContractorToolbarProps> = ({
             <Button
               onClick={handleSendEmail}
               disabled={isSending}
-              className="bg-blue-600 hover:bg-blue-700"
+             
             >
               {isSending ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  <div />
                   Sending...
                 </>
               ) : (
                 <>
-                  <Send className="w-4 h-4 mr-2" />
+                  <Send />
                   Send Quote
                 </>
               )}

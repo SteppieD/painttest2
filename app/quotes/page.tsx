@@ -103,13 +103,13 @@ export default function QuotesPage() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'draft': return <FileText className="w-4 h-4" />;
-      case 'pending': return <Clock className="w-4 h-4" />;
-      case 'sent': return <Send className="w-4 h-4" />;
-      case 'accepted': return <CheckCircle className="w-4 h-4" />;
-      case 'rejected': return <XCircle className="w-4 h-4" />;
-      case 'completed': return <CheckCircle className="w-4 h-4" />;
-      default: return <FileText className="w-4 h-4" />;
+      case 'draft': return <FileText />;
+      case 'pending': return <Clock />;
+      case 'sent': return <Send />;
+      case 'accepted': return <CheckCircle />;
+      case 'rejected': return <XCircle />;
+      case 'completed': return <CheckCircle />;
+      default: return <FileText />;
     }
   };
 
@@ -132,33 +132,33 @@ export default function QuotesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading quotes...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading quotes...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+      <div>
+        <div>
+          <div>
+            <div>
               <button
                 onClick={() => router.push('/dashboard')}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+               
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft />
               </button>
-              <h1 className="text-2xl font-bold text-gray-900">All Quotes</h1>
+              <h1>All Quotes</h1>
             </div>
             <button
               onClick={() => router.push('/create-quote')}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+             
             >
               <span>Create New Quote</span>
             </button>
@@ -167,17 +167,17 @@ export default function QuotesPage() {
       </div>
 
       {/* Filters and Search */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-lg shadow-sm p-4 space-y-4">
-          <div className="flex flex-col sm:flex-row gap-4">
+      <div>
+        <div>
+          <div>
             {/* Search */}
-            <div className="flex-1">
+            <div>
               <input
                 type="text"
                 placeholder="Search by client name, address, or quote ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+               
               />
             </div>
 
@@ -185,7 +185,7 @@ export default function QuotesPage() {
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+             
             >
               <option value="all">All Status</option>
               <option value="draft">Draft</option>
@@ -200,7 +200,7 @@ export default function QuotesPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+             
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
@@ -210,19 +210,19 @@ export default function QuotesPage() {
           </div>
 
           {/* Results count */}
-          <div className="text-sm text-gray-600">
+          <div>
             Showing {filteredQuotes.length} of {quotes.length} quotes
           </div>
         </div>
       </div>
 
       {/* Quotes Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <div>
         {filteredQuotes.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-            <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No quotes found</h3>
-            <p className="text-gray-600 mb-6">
+          <div>
+            <FileText />
+            <h3>No quotes found</h3>
+            <p>
               {searchTerm || filter !== 'all' 
                 ? 'Try adjusting your filters or search term.'
                 : 'Create your first quote to get started.'}
@@ -230,55 +230,55 @@ export default function QuotesPage() {
             {filter === 'all' && !searchTerm && (
               <button
                 onClick={() => router.push('/create-quote')}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+               
               >
                 Create First Quote
               </button>
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div>
             {filteredQuotes.map((quote) => (
               <div
                 key={quote.id}
-                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer border border-gray-200 overflow-hidden group"
+               
                 onClick={() => router.push(`/quotes/${quote.id}/review`)}
               >
                 {/* Quote Header */}
-                <div className="p-6 space-y-4">
+                <div>
                   {/* Status Badge */}
-                  <div className="flex items-center justify-between">
-                    <span className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(quote.status)}`}>
+                  <div>
+                    <span`}>
                       {getStatusIcon(quote.status)}
-                      <span className="capitalize">{quote.status}</span>
+                      <span>{quote.status}</span>
                     </span>
-                    <span className="text-sm text-gray-500">{formatDate(quote.createdAt)}</span>
+                    <span>{formatDate(quote.createdAt)}</span>
                   </div>
 
                   {/* Client Info */}
-                  <div className="space-y-3">
-                    <div className="flex items-start space-x-2">
-                      <User className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <div>
+                    <div>
+                      <User />
                       <div>
-                        <p className="font-semibold text-gray-900">{quote.clientName}</p>
-                        <p className="text-sm text-gray-600 capitalize">{quote.projectType} Project</p>
+                        <p>{quote.clientName}</p>
+                        <p>{quote.projectType} Project</p>
                       </div>
                     </div>
 
-                    <div className="flex items-start space-x-2">
-                      <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
-                      <p className="text-sm text-gray-600">{quote.propertyAddress}</p>
+                    <div>
+                      <MapPin />
+                      <p>{quote.propertyAddress}</p>
                     </div>
                   </div>
 
                   {/* Price */}
-                  <div className="pt-4 border-t border-gray-100">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Total Quote</span>
-                      <span className="text-2xl font-bold text-gray-900">{formatCurrency(quote.finalPrice)}</span>
+                  <div>
+                    <div>
+                      <span>Total Quote</span>
+                      <span>{formatCurrency(quote.finalPrice)}</span>
                     </div>
                     {quote.markupPercentage > 0 && (
-                      <p className="text-xs text-gray-500 text-right mt-1">
+                      <p>
                         Includes {quote.markupPercentage}% markup
                       </p>
                     )}
@@ -286,11 +286,11 @@ export default function QuotesPage() {
                 </div>
 
                 {/* Hover Actions */}
-                <div className="bg-gray-50 px-6 py-3 border-t border-gray-100 flex items-center justify-between group-hover:bg-gray-100 transition-colors">
-                  <span className="text-sm text-gray-600">Quote #{quote.quote_id || quote.id}</span>
-                  <div className="flex items-center space-x-2 text-blue-600">
-                    <span className="text-sm font-medium">View Details</span>
-                    <ArrowLeft className="w-4 h-4 rotate-180" />
+                <div>
+                  <span>Quote #{quote.quote_id || quote.id}</span>
+                  <div>
+                    <span>View Details</span>
+                    <ArrowLeft />
                   </div>
                 </div>
               </div>

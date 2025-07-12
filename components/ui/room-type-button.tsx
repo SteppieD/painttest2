@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { 
   Home, 
   Bed, 
@@ -38,7 +37,7 @@ export const ROOM_TEMPLATES: RoomTemplate[] = [
   {
     id: 'living_room',
     name: 'Living Room',
-    icon: <Sofa className="w-6 h-6" />,
+    icon: <Sofa />,
     typicalDimensions: { length: 16, width: 12, height: 9 },
     description: 'Main living space',
     commonSurfaces: ['walls', 'ceiling', 'trim'],
@@ -49,7 +48,7 @@ export const ROOM_TEMPLATES: RoomTemplate[] = [
   {
     id: 'master_bedroom',
     name: 'Master Bedroom',
-    icon: <Bed className="w-6 h-6" />,
+    icon: <Bed />,
     typicalDimensions: { length: 14, width: 12, height: 9 },
     description: 'Primary bedroom',
     commonSurfaces: ['walls', 'ceiling', 'trim'],
@@ -60,7 +59,7 @@ export const ROOM_TEMPLATES: RoomTemplate[] = [
   {
     id: 'bedroom',
     name: 'Bedroom',
-    icon: <Bed className="w-6 h-6" />,
+    icon: <Bed />,
     typicalDimensions: { length: 12, width: 10, height: 9 },
     description: 'Standard bedroom',
     commonSurfaces: ['walls', 'ceiling', 'trim'],
@@ -71,7 +70,7 @@ export const ROOM_TEMPLATES: RoomTemplate[] = [
   {
     id: 'kitchen',
     name: 'Kitchen',
-    icon: <ChefHat className="w-6 h-6" />,
+    icon: <ChefHat />,
     typicalDimensions: { length: 12, width: 10, height: 9 },
     description: 'Cooking area',
     commonSurfaces: ['walls', 'ceiling', 'trim'],
@@ -82,7 +81,7 @@ export const ROOM_TEMPLATES: RoomTemplate[] = [
   {
     id: 'bathroom',
     name: 'Bathroom',
-    icon: <Bath className="w-6 h-6" />,
+    icon: <Bath />,
     typicalDimensions: { length: 8, width: 6, height: 9 },
     description: 'Full bathroom',
     commonSurfaces: ['walls', 'ceiling', 'trim'],
@@ -93,7 +92,7 @@ export const ROOM_TEMPLATES: RoomTemplate[] = [
   {
     id: 'dining_room',
     name: 'Dining Room',
-    icon: <Users className="w-6 h-6" />,
+    icon: <Users />,
     typicalDimensions: { length: 12, width: 10, height: 9 },
     description: 'Formal dining',
     commonSurfaces: ['walls', 'ceiling', 'trim'],
@@ -104,7 +103,7 @@ export const ROOM_TEMPLATES: RoomTemplate[] = [
   {
     id: 'office',
     name: 'Office/Study',
-    icon: <Coffee className="w-6 h-6" />,
+    icon: <Coffee />,
     typicalDimensions: { length: 10, width: 10, height: 9 },
     description: 'Home office',
     commonSurfaces: ['walls', 'ceiling', 'trim'],
@@ -115,7 +114,7 @@ export const ROOM_TEMPLATES: RoomTemplate[] = [
   {
     id: 'garage',
     name: 'Garage',
-    icon: <Car className="w-6 h-6" />,
+    icon: <Car />,
     typicalDimensions: { length: 20, width: 20, height: 8 },
     description: '2-car garage',
     commonSurfaces: ['walls', 'ceiling'],
@@ -143,49 +142,38 @@ export function RoomTypeButton({
   const { length, width, height } = template.typicalDimensions;
   
   return (
-    <Card className={cn(
-      "transition-all duration-200 hover:shadow-md cursor-pointer",
-      isSelected 
-        ? "bg-blue-50 border-blue-300 ring-2 ring-blue-200" 
-        : "hover:bg-gray-50 border-gray-200",
-      disabled && "opacity-50 cursor-not-allowed"
-    )}>
+    <Card>
       <CardContent 
-        className="p-4"
+       
         onClick={() => !disabled && onClick(template)}
       >
-        <div className="flex items-start gap-3">
+        <div>
           {/* Icon */}
-          <div className={cn(
-            "p-2 rounded-lg",
-            isSelected 
-              ? "bg-blue-100 text-blue-600" 
-              : "bg-gray-100 text-gray-600"
-          )}>
+          <div>
             {template.icon}
           </div>
           
           {/* Content */}
-          <div className="flex-1">
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="font-medium text-gray-900">
+          <div>
+            <div>
+              <h3>
                 {template.name}
               </h3>
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="secondary">
                 {length}' × {width}'
               </Badge>
             </div>
             
-            <p className="text-sm text-gray-600 mb-2">
+            <p>
               {template.description}
             </p>
             
             {showDetails && (
-              <div className="space-y-1">
-                <div className="text-xs text-gray-500">
+              <div>
+                <div>
                   Height: {height}ft • Doors: {template.typicalDoors} • Windows: {template.typicalWindows}
                 </div>
-                <div className="text-xs text-gray-500">
+                <div>
                   Surfaces: {template.commonSurfaces.join(", ")}
                 </div>
               </div>
@@ -219,7 +207,7 @@ export function RoomTypeGrid({
     : templates.filter(t => t.category === category);
 
   return (
-    <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-3", className)}>
+    <div>
       {filteredTemplates.map((template) => (
         <RoomTypeButton
           key={template.id}
@@ -240,21 +228,18 @@ interface CustomRoomButtonProps {
 
 export function CustomRoomButton({ onClick, className }: CustomRoomButtonProps) {
   return (
-    <Card className={cn(
-      "transition-all duration-200 hover:shadow-md cursor-pointer border-dashed border-2 hover:bg-gray-50",
-      className
-    )}>
+    <Card>
       <CardContent 
-        className="p-4"
+       
         onClick={onClick}
       >
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-gray-100 text-gray-600">
-            <Plus className="w-6 h-6" />
+        <div>
+          <div>
+            <Plus />
           </div>
           <div>
-            <h3 className="font-medium text-gray-900">Custom Room</h3>
-            <p className="text-sm text-gray-600">Enter custom dimensions</p>
+            <h3>Custom Room</h3>
+            <p>Enter custom dimensions</p>
           </div>
         </div>
       </CardContent>

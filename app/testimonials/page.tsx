@@ -17,7 +17,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footer } from '@/components/shared/footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
+import { ImprovedFooter } from '@/components/shared/improved-footer';
 
 export const metadata: Metadata = {
   title: 'Customer Success Stories & Testimonials | ProPaint Quote Reviews',
@@ -158,33 +159,34 @@ export default function TestimonialsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
+      <KofiHeader />
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto max-w-6xl text-center">
-          <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <Star className="w-4 h-4 fill-current" />
+      <section>
+        <div>
+          <div>
+            <Star />
             <span>4.9/5 Average Rating from 5,000+ Contractors</span>
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Real Stories from <span className="text-blue-600">Real Contractors</span>
+          <h1>
+            Real Stories from <span>Real Contractors</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p>
             See how painting professionals across the country are transforming their businesses with ProPaint Quote. 
             These aren't just testimonials – they're success stories.
           </p>
           
           {/* Industry Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+          <div>
             {industryStats.map((item, index) => {
               const Icon = item.icon;
               return (
-                <div key={index} className="text-center">
-                  <Icon className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                  <div className="text-2xl md:text-3xl font-bold text-gray-900">{item.stat}</div>
-                  <div className="text-sm text-gray-600">{item.label}</div>
+                <div key={index}>
+                  <Icon />
+                  <div>{item.stat}</div>
+                  <div>{item.label}</div>
                 </div>
               );
             })}
@@ -193,73 +195,73 @@ export default function TestimonialsPage() {
       </section>
 
       {/* Detailed Success Stories */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               Success Stories That Speak for Themselves
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p>
               Real contractors, real results, real impact on their businesses
             </p>
           </div>
           
-          <div className="space-y-12">
+          <div>
             {detailedTestimonials.map((testimonial, index) => (
-              <Card key={testimonial.id} className="border-0 shadow-lg overflow-hidden">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
+              <Card key={testimonial.id}>
+                <div>
                   {/* Customer Info */}
-                  <div className="text-center lg:text-left">
-                    <div className="flex items-center justify-center lg:justify-start gap-4 mb-4">
-                      <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                  <div>
+                    <div>
+                      <div>
                         {testimonial.avatar}
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold text-gray-900">{testimonial.name}</h3>
-                        <p className="text-blue-600 font-medium">{testimonial.company}</p>
-                        <p className="text-sm text-gray-500">{testimonial.location}</p>
+                        <h3>{testimonial.name}</h3>
+                        <p>{testimonial.company}</p>
+                        <p>{testimonial.location}</p>
                       </div>
                     </div>
                     
                     {/* Rating */}
-                    <div className="flex justify-center lg:justify-start gap-1 mb-4">
+                    <div>
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                        <Star key={i} />
                       ))}
                     </div>
                     
                     {/* Business Growth */}
-                    <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                      <div className="text-sm font-medium text-gray-600">Business Growth:</div>
-                      <div className="text-sm text-gray-700">{testimonial.businessSize}</div>
-                      <div className="text-sm text-gray-700">Started: {testimonial.yearStarted}</div>
+                    <div>
+                      <div>Business Growth:</div>
+                      <div>{testimonial.businessSize}</div>
+                      <div>Started: {testimonial.yearStarted}</div>
                     </div>
                   </div>
                   
                   {/* Testimonial Content */}
-                  <div className="lg:col-span-2">
-                    <h4 className="text-2xl font-bold text-gray-900 mb-4">{testimonial.headline}</h4>
+                  <div>
+                    <h4>{testimonial.headline}</h4>
                     
-                    <div className="relative mb-6">
-                      <Quote className="w-8 h-8 text-blue-200 absolute -top-2 -left-2" />
-                      <p className="text-lg text-gray-700 leading-relaxed pl-6 italic">
+                    <div>
+                      <Quote />
+                      <p>
                         {testimonial.quote}
                       </p>
                     </div>
                     
                     {/* Results Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="bg-green-50 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-green-600">{testimonial.results.winRate}</div>
-                        <div className="text-sm text-green-700">Win Rate Increase</div>
+                    <div>
+                      <div>
+                        <div>{testimonial.results.winRate}</div>
+                        <div>Win Rate Increase</div>
                       </div>
-                      <div className="bg-blue-50 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-blue-600">{testimonial.results.timesSaved}</div>
-                        <div className="text-sm text-blue-700">Time Saved</div>
+                      <div>
+                        <div>{testimonial.results.timesSaved}</div>
+                        <div>Time Saved</div>
                       </div>
-                      <div className="bg-purple-50 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-purple-600">{testimonial.results.revenue}</div>
-                        <div className="text-sm text-purple-700">Revenue Impact</div>
+                      <div>
+                        <div>{testimonial.results.revenue}</div>
+                        <div>Revenue Impact</div>
                       </div>
                     </div>
                   </div>
@@ -271,30 +273,30 @@ export default function TestimonialsPage() {
       </section>
 
       {/* Quick Testimonials Grid */}
-      <section className="py-16 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      <section>
+        <div>
+          <div>
+            <h2>
               What Contractors Are Saying
             </h2>
-            <p className="text-xl text-gray-600">
+            <p>
               Join thousands of satisfied painting professionals
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
             {quickTestimonials.map((testimonial, index) => (
-              <Card key={index} className="border-0 shadow-sm">
-                <CardContent className="p-6">
-                  <div className="flex gap-1 mb-4">
+              <Card key={index}>
+                <CardContent>
+                  <div>
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                      <Star key={i} />
                     ))}
                   </div>
-                  <p className="text-gray-700 mb-4">"{testimonial.text}"</p>
+                  <p>"{testimonial.text}"</p>
                   <div>
-                    <div className="font-semibold text-gray-900">{testimonial.author}</div>
-                    <div className="text-sm text-gray-600">{testimonial.company}</div>
+                    <div>{testimonial.author}</div>
+                    <div>{testimonial.company}</div>
                   </div>
                 </CardContent>
               </Card>
@@ -304,63 +306,63 @@ export default function TestimonialsPage() {
       </section>
 
       {/* Trust Indicators */}
-      <section className="py-16 px-4 bg-white">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+      <section>
+        <div>
+          <h2>
             Trusted by Industry Leaders
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="text-center">
-              <Award className="w-12 h-12 text-gold-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Industry Recognition</h3>
-              <p className="text-gray-600">Recommended by Painting Contractors Association</p>
+          <div>
+            <div>
+              <Award />
+              <h3>Industry Recognition</h3>
+              <p>Recommended by Painting Contractors Association</p>
             </div>
-            <div className="text-center">
-              <Shield className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Secure & Reliable</h3>
-              <p className="text-gray-600">Enterprise-grade security with 99.9% uptime</p>
+            <div>
+              <Shield />
+              <h3>Secure & Reliable</h3>
+              <p>Enterprise-grade security with 99.9% uptime</p>
             </div>
-            <div className="text-center">
-              <Users className="w-12 h-12 text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Growing Community</h3>
-              <p className="text-gray-600">5,000+ contractors and growing every month</p>
+            <div>
+              <Users />
+              <h3>Growing Community</h3>
+              <p>5,000+ contractors and growing every month</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      <section>
+        <div>
+          <h2>
             Ready to Write Your Success Story?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p>
             Join thousands of contractors who've transformed their businesses with ProPaint Quote
           </p>
           
-          <div className="flex flex-col md:flex-row gap-4 justify-center">
-            <Button size="lg" asChild className="bg-white text-blue-600 hover:bg-gray-100">
+          <div>
+            <Button size="lg" asChild>
               <Link href="/trial-signup">
                 Start Your Free Trial
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="border-white text-white hover:bg-white hover:text-blue-600">
+            <Button size="lg" variant="outline" asChild>
               <Link href="/demo">
                 Watch Demo First
               </Link>
             </Button>
           </div>
           
-          <p className="text-sm text-blue-200 mt-6">
+          <p>
             Start with 1 free quote • No credit card required • Cancel anytime
           </p>
         </div>
       </section>
 
-      <Footer />
+      <ImprovedFooter />
 
       {/* Structured Data */}
       <script

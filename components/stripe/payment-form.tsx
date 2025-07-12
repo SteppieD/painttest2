@@ -66,17 +66,17 @@ function CheckoutForm({ amount, onSuccess }: { amount: number; onSuccess?: () =>
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit}>
       <PaymentElement 
         options={{
           layout: 'tabs',
         }}
       />
       
-      <div className="border-t pt-6">
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-lg font-semibold">Total Amount:</span>
-          <span className="text-2xl font-bold text-green-600">
+      <div>
+        <div>
+          <span>Total Amount:</span>
+          <span>
             {formatAmountFromCents(amount)}
           </span>
         </div>
@@ -84,12 +84,12 @@ function CheckoutForm({ amount, onSuccess }: { amount: number; onSuccess?: () =>
         <Button
           type="submit"
           disabled={isLoading || !stripe || !elements}
-          className="w-full"
+         
           size="lg"
         >
           {isLoading ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 />
               Processing...
             </>
           ) : (
@@ -145,8 +145,8 @@ export function PaymentForm({
   if (loading) {
     return (
       <Card>
-        <CardContent className="flex justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin" />
+        <CardContent>
+          <Loader2 />
         </CardContent>
       </Card>
     );
@@ -155,8 +155,8 @@ export function PaymentForm({
   if (!clientSecret) {
     return (
       <Card>
-        <CardContent className="text-center py-8">
-          <p className="text-red-600">Failed to initialize payment. Please try again.</p>
+        <CardContent>
+          <p>Failed to initialize payment. Please try again.</p>
         </CardContent>
       </Card>
     );

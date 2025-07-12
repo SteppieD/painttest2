@@ -1,8 +1,6 @@
 "use client";
 
 import { Button } from "./button";
-import { cn } from "@/lib/utils";
-
 interface PaintProduct {
   id: string;
   product_name: string;
@@ -65,7 +63,7 @@ export function PaintProductSelector({
 }: PaintProductSelectorProps) {
   if (products.length === 0) {
     return (
-      <div className="text-sm text-gray-500 italic">
+      <div>
         No {brand} products available for {category}
       </div>
     );
@@ -76,19 +74,19 @@ export function PaintProductSelector({
   const allPrices = products.map(p => p.cost_per_gallon);
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div>
       <div>
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm font-medium text-gray-700">
+        <div>
+          <span>
             Choose your {brand} {category} paint:
           </span>
         </div>
-        <p className="text-xs text-gray-500">
+        <p>
           {products.length} option{products.length !== 1 ? 's' : ''} • Prices include coverage up to 350 sq ft per gallon
         </p>
       </div>
       
-      <div className="space-y-3">
+      <div>
         {sortedProducts.map((product, index) => {
           const isSelected = selectedProduct?.id === product.id;
           const quality = getQualityLevel(product.cost_per_gallon, allPrices);
@@ -97,61 +95,49 @@ export function PaintProductSelector({
           const isRecommended = quality === 'Better';
           
           return (
-            <div key={product.id} className="relative">
+            <div key={product.id}>
               {isRecommended && !isSelected && (
-                <div className="absolute -top-2 -right-2 z-10">
-                  <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                <div>
+                  <span>
                     Recommended
                   </span>
                 </div>
               )}
               <Button
                 variant={isSelected ? "default" : "outline"}
-                className={cn(
-                  "w-full h-auto p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between text-left transition-all border-2",
-                  isSelected 
-                    ? "bg-blue-600 text-white border-blue-600 shadow-lg" 
-                    : isRecommended 
-                      ? "border-blue-300 hover:bg-blue-50 hover:border-blue-400"
-                      : "hover:bg-gray-50"
-                )}
+               
                 onClick={() => onProductSelect(product)}
               >
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="font-semibold text-base leading-tight">
+                <div>
+                  <div>
+                    <span>
                       {product.product_name}
                     </span>
-                    <span className={cn(
-                      "px-2 py-1 rounded-full text-xs font-medium border",
-                      isSelected 
-                        ? "bg-white text-blue-600 border-white" 
-                        : qualityColorClass
-                    )}>
+                    <span>
                       {quality}
                     </span>
                   </div>
-                  <div className="text-sm mb-1">
+                  <div>
                     {product.product_line && (
-                      <span className="font-medium">{product.product_line}</span>
+                      <span>{product.product_line}</span>
                     )}
                     {product.sheen && (
-                      <span className="text-gray-600"> • {product.sheen} finish</span>
+                      <span> • {product.sheen} finish</span>
                     )}
                   </div>
-                  <div className="text-xs opacity-75">
+                  <div>
                     {qualityDesc}
                   </div>
                 </div>
                 
-                <div className="text-right mt-3 sm:mt-0">
-                  <div className="font-bold text-xl text-green-600">
+                <div>
+                  <div>
                     ${product.cost_per_gallon}
                   </div>
-                  <div className="text-xs opacity-75">
+                  <div>
                     per gallon
                   </div>
-                  <div className="text-xs mt-1 opacity-60">
+                  <div>
                     ~350 sq ft coverage
                   </div>
                 </div>

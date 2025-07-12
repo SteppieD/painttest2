@@ -169,17 +169,17 @@ export function ChatInterface({ onQuoteGenerated, initialMessages = [] }: ChatIn
   }
 
   return (
-    <div className="flex flex-col h-full max-h-screen">
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2">
-            <Calculator className="w-5 h-5 text-blue-600" />
+    <div>
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <Calculator />
             AI Quote Assistant
           </CardTitle>
         </CardHeader>
         
-        <CardContent className="flex-1 flex flex-col min-h-0">
-          <div className="flex-1 overflow-y-auto space-y-4 pr-2 mobile-scroll">
+        <CardContent>
+          <div>
             {messages.map((message) => (
               <MessageBubble
                 key={message.id}
@@ -204,7 +204,7 @@ export function ChatInterface({ onQuoteGenerated, initialMessages = [] }: ChatIn
           </div>
 
           {currentQuote && currentQuote.totalCost && (
-            <div className="mt-4 mb-4">
+            <div>
               <PricePreview
                 quote={currentQuote as QuoteResult}
                 onGenerateQuote={generateQuote}
@@ -213,22 +213,22 @@ export function ChatInterface({ onQuoteGenerated, initialMessages = [] }: ChatIn
             </div>
           )}
 
-          <div className="flex gap-2 pt-3 border-t">
+          <div>
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Describe your painting project..."
               disabled={isLoading}
-              className="flex-1"
+             
             />
             <Button 
               onClick={sendMessage} 
               disabled={!input.trim() || isLoading}
               size="icon"
-              className="shrink-0"
+             
             >
-              <Send className="w-4 h-4" />
+              <Send />
             </Button>
           </div>
         </CardContent>

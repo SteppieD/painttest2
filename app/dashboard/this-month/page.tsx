@@ -331,10 +331,10 @@ export default function ThisMonthPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading this month's data...</p>
+      <div>
+        <div>
+          <div></div>
+          <p>Loading this month's data...</p>
         </div>
       </div>
     );
@@ -346,88 +346,88 @@ export default function ThisMonthPage() {
   const monthName = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white border-b shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-4 h-16">
+      <div>
+        <div>
+          <div>
             <Button
               variant="ghost"
               onClick={() => router.push("/dashboard")}
-              className="gap-2"
+             
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft />
               Back to Dashboard
             </Button>
-            <div className="flex-1">
-              <h1 className="text-xl font-bold text-gray-900">{monthName} Performance</h1>
+            <div>
+              <h1>{monthName} Performance</h1>
             </div>
             <Button
               variant="outline"
               onClick={exportData}
-              className="gap-2"
+             
             >
-              <Download className="w-4 h-4" />
+              <Download />
               Export Data
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div>
         {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div>
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Total Quotes
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{stats.totalQuotes}</div>
-              <div className="text-sm text-gray-500 mt-2">
+              <div>{stats.totalQuotes}</div>
+              <div>
                 {(stats.totalQuotes / currentDate.getDate()).toFixed(1)} per day
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Month Revenue
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-green-600">{formatCurrency(stats.totalRevenue)}</div>
-              <div className="text-sm text-gray-500 mt-2">
+              <div>{formatCurrency(stats.totalRevenue)}</div>
+              <div>
                 {formatCurrency(stats.averageQuote)} avg
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Daily Average
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-blue-600">{formatCurrency(stats.dailyAverage)}</div>
-              <div className="text-sm text-gray-500 mt-2">
+              <div>{formatCurrency(stats.dailyAverage)}</div>
+              <div>
                 revenue per day
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+            <CardHeader>
+              <CardTitle>
                 Projected Total
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-purple-600">{formatCurrency(stats.projectedMonthTotal)}</div>
-              <div className="text-sm text-gray-500 mt-2">
+              <div>{formatCurrency(stats.projectedMonthTotal)}</div>
+              <div>
                 end of month
               </div>
             </CardContent>
@@ -435,41 +435,41 @@ export default function ThisMonthPage() {
         </div>
 
         {/* Status Breakdown */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>Quote Status Overview</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                <AlertCircle className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-yellow-600">{stats.pendingQuotes}</div>
-                <div className="text-sm text-gray-600">Pending</div>
-                <div className="text-xs text-gray-500 mt-1">
+            <div>
+              <div>
+                <AlertCircle />
+                <div>{stats.pendingQuotes}</div>
+                <div>Pending</div>
+                <div>
                   {stats.totalQuotes > 0 ? ((stats.pendingQuotes / stats.totalQuotes) * 100).toFixed(1) : 0}%
                 </div>
               </div>
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-green-600">{stats.acceptedQuotes}</div>
-                <div className="text-sm text-gray-600">Accepted</div>
-                <div className="text-xs text-gray-500 mt-1">
+              <div>
+                <CheckCircle />
+                <div>{stats.acceptedQuotes}</div>
+                <div>Accepted</div>
+                <div>
                   {stats.totalQuotes > 0 ? ((stats.acceptedQuotes / stats.totalQuotes) * 100).toFixed(1) : 0}%
                 </div>
               </div>
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <CheckCircle className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-blue-600">{stats.completedQuotes}</div>
-                <div className="text-sm text-gray-600">Completed</div>
-                <div className="text-xs text-gray-500 mt-1">
+              <div>
+                <CheckCircle />
+                <div>{stats.completedQuotes}</div>
+                <div>Completed</div>
+                <div>
                   {stats.totalQuotes > 0 ? ((stats.completedQuotes / stats.totalQuotes) * 100).toFixed(1) : 0}%
                 </div>
               </div>
-              <div className="text-center p-4 bg-red-50 rounded-lg">
-                <XCircle className="w-8 h-8 text-red-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-red-600">{stats.cancelledQuotes}</div>
-                <div className="text-sm text-gray-600">Cancelled</div>
-                <div className="text-xs text-gray-500 mt-1">
+              <div>
+                <XCircle />
+                <div>{stats.cancelledQuotes}</div>
+                <div>Cancelled</div>
+                <div>
                   {stats.totalQuotes > 0 ? ((stats.cancelledQuotes / stats.totalQuotes) * 100).toFixed(1) : 0}%
                 </div>
               </div>
@@ -478,31 +478,30 @@ export default function ThisMonthPage() {
         </Card>
 
         {/* Daily Revenue Chart */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>Daily Revenue Breakdown</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-end gap-1 overflow-x-auto">
+            <div>
               {dailyData.map((data, index) => (
-                <div key={index} className="flex-1 min-w-[30px] flex flex-col items-center">
+                <div key={index}>
                   {data.revenue > 0 && (
-                    <div className="text-xs font-semibold mb-1">
+                    <div>
                       {formatCurrency(data.revenue)}
                     </div>
                   )}
                   <div 
-                    className="w-full bg-purple-600 rounded-t transition-all duration-300"
-                    style={{ 
-                      height: `${maxDailyRevenue > 0 ? (data.revenue / maxDailyRevenue) * 180 : 0}px`,
+                   
+                   px`,
                       minHeight: data.revenue > 0 ? '20px' : '0'
                     }}
                   />
-                  <div className="text-xs text-gray-600 mt-1 whitespace-nowrap">
+                  <div>
                     {data.date.split(' ')[1]}
                   </div>
                   {data.quotes > 0 && (
-                    <div className="text-xs text-gray-500">
+                    <div>
                       ({data.quotes})
                     </div>
                   )}
@@ -513,22 +512,22 @@ export default function ThisMonthPage() {
         </Card>
 
         {/* Week Comparison */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div>
           <Card>
             <CardHeader>
               <CardTitle>Weekly Performance</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div>
                 {stats.weekComparison.map((week) => (
-                  <div key={week.week} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Calendar className="w-5 h-5 text-gray-600" />
-                      <span className="font-medium">Week {week.week}</span>
+                  <div key={week.week}>
+                    <div>
+                      <Calendar />
+                      <span>Week {week.week}</span>
                     </div>
-                    <div className="text-right">
-                      <div className="font-semibold">{formatCurrency(week.revenue)}</div>
-                      <div className="text-sm text-gray-500">{week.quotes} quotes</div>
+                    <div>
+                      <div>{formatCurrency(week.revenue)}</div>
+                      <div>{week.quotes} quotes</div>
                     </div>
                   </div>
                 ))}
@@ -541,13 +540,13 @@ export default function ThisMonthPage() {
               <CardTitle>Project Type Breakdown</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div>
                 {projectTypeBreakdown.slice(0, 5).map((type, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <span className="font-medium">{type.type}</span>
-                    <div className="text-right">
-                      <span className="font-semibold">{formatCurrency(type.revenue)}</span>
-                      <span className="text-sm text-gray-500 ml-2">({type.count})</span>
+                  <div key={index}>
+                    <span>{type.type}</span>
+                    <div>
+                      <span>{formatCurrency(type.revenue)}</span>
+                      <span>({type.count})</span>
                     </div>
                   </div>
                 ))}
@@ -558,20 +557,20 @@ export default function ThisMonthPage() {
 
         {/* Best Day Highlight */}
         {stats.bestDay.revenue > 0 && (
-          <Card className="mb-8 bg-gradient-to-r from-purple-50 to-blue-50">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-purple-600" />
+              <CardTitle>
+                <TrendingUp />
                 Best Day This Month
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
+              <div>
                 <div>
-                  <p className="text-lg font-semibold">{stats.bestDay.date}</p>
-                  <p className="text-sm text-gray-600">{stats.bestDay.count} quotes generated</p>
+                  <p>{stats.bestDay.date}</p>
+                  <p>{stats.bestDay.count} quotes generated</p>
                 </div>
-                <div className="text-3xl font-bold text-purple-600">
+                <div>
                   {formatCurrency(stats.bestDay.revenue)}
                 </div>
               </div>
@@ -582,22 +581,22 @@ export default function ThisMonthPage() {
         {/* Quote List */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle>
               <span>This Month's Quotes ({filteredQuotes.length})</span>
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <div>
+                <div>
+                  <Search />
                   <Input
                     placeholder="Search quotes..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-64"
+                   
                   />
                 </div>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                 
                 >
                   <option value="all">All Status</option>
                   <option value="pending">Pending</option>
@@ -609,36 +608,31 @@ export default function ThisMonthPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div>
+              <table>
                 <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-2 px-4">Date</th>
-                    <th className="text-left py-2 px-4">Quote ID</th>
-                    <th className="text-left py-2 px-4">Customer</th>
-                    <th className="text-left py-2 px-4">Amount</th>
-                    <th className="text-left py-2 px-4">Status</th>
+                  <tr>
+                    <th>Date</th>
+                    <th>Quote ID</th>
+                    <th>Customer</th>
+                    <th>Amount</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredQuotes.map((quote) => (
-                    <tr key={quote.id} className="border-b hover:bg-gray-50">
-                      <td className="py-2 px-4">
+                    <tr key={quote.id}>
+                      <td>
                         {new Date(quote.created_at).toLocaleDateString('en-US', { 
                           month: 'short', 
                           day: 'numeric' 
                         })}
                       </td>
-                      <td className="py-2 px-4">{quote.quote_id}</td>
-                      <td className="py-2 px-4">{quote.customer_name}</td>
-                      <td className="py-2 px-4 font-semibold">{formatCurrency(quote.quote_amount)}</td>
-                      <td className="py-2 px-4">
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                          quote.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                          quote.status === 'completed' ? 'bg-blue-100 text-blue-800' :
-                          quote.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                          'bg-yellow-100 text-yellow-800'
-                        }`}>
+                      <td>{quote.quote_id}</td>
+                      <td>{quote.customer_name}</td>
+                      <td>{formatCurrency(quote.quote_amount)}</td>
+                      <td>
+                        <span`}>
                           {quote.status || 'pending'}
                         </span>
                       </td>

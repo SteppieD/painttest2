@@ -70,32 +70,32 @@ export function QuickLinksSection() {
   ];
 
   return (
-    <section className="py-16 px-4 bg-gray-50">
-      <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+    <section>
+      <div>
+        <div>
+          <h2>
             Explore Paint Quote Pro Resources
           </h2>
-          <p className="text-xl text-gray-600">
+          <p>
             Free tools, guides, and resources for painting contractors
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div>
           {quickLinks.map((section, idx) => (
-            <div key={idx} className="bg-white rounded-lg p-6 shadow-md">
-              <h3 className="font-semibold text-lg mb-4 text-gray-900">
+            <div key={idx}>
+              <h3>
                 {section.category}
               </h3>
-              <ul className="space-y-3">
+              <ul>
                 {section.links.map((link, linkIdx) => (
                   <li key={linkIdx}>
                     <Link 
                       href={link.href}
-                      className="flex items-center gap-2 text-gray-600 hover:text-primary-pink transition-colors"
+                     
                     >
-                      <link.icon className="w-4 h-4" />
-                      <span className="text-sm">{link.text}</span>
+                      <link.icon />
+                      <span>{link.text}</span>
                     </Link>
                   </li>
                 ))}
@@ -104,36 +104,36 @@ export function QuickLinksSection() {
           ))}
         </div>
         
-        <div className="mt-12 text-center">
-          <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Service Locations</h3>
-            <div className="flex flex-wrap justify-center gap-3 text-sm">
-              <Link href="/locations" className="text-gray-600 hover:text-primary-pink">All Locations</Link>
-              <span className="text-gray-400">|</span>
-              <Link href="/locations/new-york-ny" className="text-gray-600 hover:text-primary-pink">New York</Link>
-              <span className="text-gray-400">|</span>
-              <Link href="/locations/los-angeles-ca" className="text-gray-600 hover:text-primary-pink">Los Angeles</Link>
-              <span className="text-gray-400">|</span>
-              <Link href="/locations/chicago-il" className="text-gray-600 hover:text-primary-pink">Chicago</Link>
-              <span className="text-gray-400">|</span>
-              <Link href="/locations/houston-tx" className="text-gray-600 hover:text-primary-pink">Houston</Link>
-              <span className="text-gray-400">|</span>
-              <Link href="/locations/phoenix-az" className="text-gray-600 hover:text-primary-pink">Phoenix</Link>
-              <span className="text-gray-400">|</span>
-              <Link href="/locations/philadelphia-pa" className="text-gray-600 hover:text-primary-pink">Philadelphia</Link>
-              <span className="text-gray-400">|</span>
-              <Link href="/locations/san-antonio-tx" className="text-gray-600 hover:text-primary-pink">San Antonio</Link>
-              <span className="text-gray-400">|</span>
-              <Link href="/locations/san-diego-ca" className="text-gray-600 hover:text-primary-pink">San Diego</Link>
-              <span className="text-gray-400">|</span>
-              <Link href="/locations/dallas-tx" className="text-gray-600 hover:text-primary-pink">Dallas</Link>
+        <div>
+          <div>
+            <h3>Service Locations</h3>
+            <div>
+              <Link href="/locations">All Locations</Link>
+              <span>|</span>
+              <Link href="/locations/new-york-ny">New York</Link>
+              <span>|</span>
+              <Link href="/locations/los-angeles-ca">Los Angeles</Link>
+              <span>|</span>
+              <Link href="/locations/chicago-il">Chicago</Link>
+              <span>|</span>
+              <Link href="/locations/houston-tx">Houston</Link>
+              <span>|</span>
+              <Link href="/locations/phoenix-az">Phoenix</Link>
+              <span>|</span>
+              <Link href="/locations/philadelphia-pa">Philadelphia</Link>
+              <span>|</span>
+              <Link href="/locations/san-antonio-tx">San Antonio</Link>
+              <span>|</span>
+              <Link href="/locations/san-diego-ca">San Diego</Link>
+              <span>|</span>
+              <Link href="/locations/dallas-tx">Dallas</Link>
             </div>
           </div>
           
-          <div className="flex justify-center gap-6 text-sm">
-            <Link href="/privacy" className="text-gray-600 hover:text-primary-pink">Privacy Policy</Link>
-            <Link href="/terms" className="text-gray-600 hover:text-primary-pink">Terms of Service</Link>
-            <Link href="/sitemap.xml" className="text-gray-600 hover:text-primary-pink">Sitemap</Link>
+          <div>
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/terms">Terms of Service</Link>
+            <Link href="/sitemap.xml">Sitemap</Link>
           </div>
         </div>
       </div>

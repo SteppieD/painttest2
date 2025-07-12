@@ -76,21 +76,21 @@ export default function InsightsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div>
+        <div></div>
       </div>
     );
   }
 
   if (!metrics) {
     return (
-      <div className="min-h-screen p-6">
+      <div>
         <Button onClick={() => router.back()} variant="ghost" size="sm">
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft />
           Back
         </Button>
-        <div className="text-center mt-20">
-          <p className="text-gray-600">No data available yet. Start creating quotes!</p>
+        <div>
+          <p>No data available yet. Start creating quotes!</p>
         </div>
       </div>
     );
@@ -100,21 +100,21 @@ export default function InsightsPage() {
   const quotesGrowth = getGrowthPercentage(metrics.quotesThisMonth, metrics.quotesLastMonth);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+      <div>
+        <div>
+          <div>
+            <div>
               <Button onClick={() => router.back()} variant="ghost" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-2" />
+                <ArrowLeft />
                 Back
               </Button>
-              <h1 className="text-2xl font-bold">Business Insights</h1>
+              <h1>Business Insights</h1>
             </div>
             
             {/* Timeframe selector */}
-            <div className="flex gap-2">
+            <div>
               <Button
                 variant={timeframe === '30d' ? 'default' : 'outline'}
                 size="sm"
@@ -141,23 +141,23 @@ export default function InsightsPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6">
+      <div>
         {/* Key Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div>
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Revenue This Month</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Revenue This Month</CardTitle>
+              <DollarSign />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(metrics.revenueThisMonth)}</div>
-              <div className="flex items-center text-xs">
+              <div>{formatCurrency(metrics.revenueThisMonth)}</div>
+              <div>
                 {revenueGrowth >= 0 ? (
-                  <TrendingUp className="h-4 w-4 text-green-600 mr-1" />
+                  <TrendingUp />
                 ) : (
-                  <TrendingDown className="h-4 w-4 text-red-600 mr-1" />
+                  <TrendingDown />
                 )}
-                <span className={revenueGrowth >= 0 ? "text-green-600" : "text-red-600"}>
+                <span>
                   {Math.abs(revenueGrowth)}% vs last month
                 </span>
               </div>
@@ -165,19 +165,19 @@ export default function InsightsPage() {
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Quotes This Month</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Quotes This Month</CardTitle>
+              <Calendar />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{metrics.quotesThisMonth}</div>
-              <div className="flex items-center text-xs">
+              <div>{metrics.quotesThisMonth}</div>
+              <div>
                 {quotesGrowth >= 0 ? (
-                  <TrendingUp className="h-4 w-4 text-green-600 mr-1" />
+                  <TrendingUp />
                 ) : (
-                  <TrendingDown className="h-4 w-4 text-red-600 mr-1" />
+                  <TrendingDown />
                 )}
-                <span className={quotesGrowth >= 0 ? "text-green-600" : "text-red-600"}>
+                <span>
                   {Math.abs(quotesGrowth)}% vs last month
                 </span>
               </div>
@@ -185,27 +185,27 @@ export default function InsightsPage() {
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Win Rate</CardTitle>
-              <Target className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Win Rate</CardTitle>
+              <Target />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{metrics.winRate.toFixed(0)}%</div>
-              <Progress value={metrics.winRate} className="mt-2" />
-              <p className="text-xs text-muted-foreground mt-1">
+              <div>{metrics.winRate.toFixed(0)}%</div>
+              <Progress value={metrics.winRate} />
+              <p>
                 {metrics.winRate >= 50 ? "Above average!" : "Room to improve"}
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Avg Quote Value</CardTitle>
-              <Award className="h-4 w-4 text-muted-foreground" />
+            <CardHeader>
+              <CardTitle>Avg Quote Value</CardTitle>
+              <Award />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(metrics.averageQuoteValue)}</div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <div>{formatCurrency(metrics.averageQuoteValue)}</div>
+              <p>
                 Avg margin: {metrics.averageMargin.toFixed(0)}%
               </p>
             </CardContent>
@@ -213,30 +213,30 @@ export default function InsightsPage() {
         </div>
 
         {/* Project Type Breakdown */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle>Project Type Distribution</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div>
               <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm">Interior</span>
-                  <span className="text-sm font-medium">{metrics.projectTypeBreakdown.interior}%</span>
+                <div>
+                  <span>Interior</span>
+                  <span>{metrics.projectTypeBreakdown.interior}%</span>
                 </div>
                 <Progress value={metrics.projectTypeBreakdown.interior} />
               </div>
               <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm">Exterior</span>
-                  <span className="text-sm font-medium">{metrics.projectTypeBreakdown.exterior}%</span>
+                <div>
+                  <span>Exterior</span>
+                  <span>{metrics.projectTypeBreakdown.exterior}%</span>
                 </div>
                 <Progress value={metrics.projectTypeBreakdown.exterior} />
               </div>
               <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm">Both</span>
-                  <span className="text-sm font-medium">{metrics.projectTypeBreakdown.both}%</span>
+                <div>
+                  <span>Both</span>
+                  <span>{metrics.projectTypeBreakdown.both}%</span>
                 </div>
                 <Progress value={metrics.projectTypeBreakdown.both} />
               </div>
@@ -250,20 +250,20 @@ export default function InsightsPage() {
             <CardTitle>Top Clients</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div>
               {metrics.topClients.map((client, index) => (
-                <div key={index} className="flex items-center justify-between">
+                <div key={index}>
                   <div>
-                    <p className="font-medium">{client.name}</p>
-                    <p className="text-sm text-gray-600">{client.jobCount} project{client.jobCount > 1 ? 's' : ''}</p>
+                    <p>{client.name}</p>
+                    <p>{client.jobCount} project{client.jobCount > 1 ? 's' : ''}</p>
                   </div>
-                  <div className="text-right">
-                    <p className="font-bold">{formatCurrency(client.totalSpent)}</p>
+                  <div>
+                    <p>{formatCurrency(client.totalSpent)}</p>
                   </div>
                 </div>
               ))}
               {metrics.topClients.length === 0 && (
-                <p className="text-gray-500 text-center py-4">No client data yet</p>
+                <p>No client data yet</p>
               )}
             </div>
           </CardContent>

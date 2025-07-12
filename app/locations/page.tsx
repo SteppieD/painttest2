@@ -60,61 +60,61 @@ export default function LocationsPage() {
   return (
     <>
       
-      <main className="min-h-screen bg-gradient-to-br from-white to-blue-50">
+      <main>
         {/* Hero Section */}
-        <section className="py-16 px-4 md:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="flex items-center justify-center gap-2 text-blue-600 mb-4">
-                <MapPin className="w-5 h-5" />
-                <span className="text-sm font-medium">Serving Painting Contractors Nationwide</span>
+        <section>
+          <div>
+            <div>
+              <div>
+                <MapPin />
+                <span>Serving Painting Contractors Nationwide</span>
               </div>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+              <h1>
                 Find Painting Contractors in Your Area
               </h1>
               
-              <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              <p>
                 Professional painting contractors across the United States trust ProPaint Quote 
                 to generate accurate estimates in minutes, not hours.
               </p>
             </div>
             
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+            <div>
               <Card>
-                <CardContent className="p-6 text-center">
-                  <div className="text-3xl font-bold text-blue-600">
+                <CardContent>
+                  <div>
                     {totalContractors.toLocaleString()}+
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">Active Contractors</p>
+                  <p>Active Contractors</p>
                 </CardContent>
               </Card>
               
               <Card>
-                <CardContent className="p-6 text-center">
-                  <div className="text-3xl font-bold text-green-600">
+                <CardContent>
+                  <div>
                     50+
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">Major Cities</p>
+                  <p>Major Cities</p>
                 </CardContent>
               </Card>
               
               <Card>
-                <CardContent className="p-6 text-center">
-                  <div className="text-3xl font-bold text-purple-600">
+                <CardContent>
+                  <div>
                     48
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">States Covered</p>
+                  <p>States Covered</p>
                 </CardContent>
               </Card>
               
               <Card>
-                <CardContent className="p-6 text-center">
-                  <div className="text-3xl font-bold text-orange-600">
+                <CardContent>
+                  <div>
                     4.8/5
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">Average Rating</p>
+                  <p>Average Rating</p>
                 </CardContent>
               </Card>
             </div>
@@ -122,40 +122,40 @@ export default function LocationsPage() {
         </section>
 
         {/* Locations by Region */}
-        <section className="py-16 px-4 md:px-6 lg:px-8 bg-white">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">
+        <section>
+          <div>
+            <h2>
               Select Your Location
             </h2>
             
-            <div className="space-y-12">
+            <div>
               {Object.entries(locations).map(([region, cities]) => (
                 <div key={region}>
-                  <h3 className="text-2xl font-semibold mb-6 text-gray-800">{region}</h3>
+                  <h3>{region}</h3>
                   
-                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div>
                     {cities.map((location) => (
                       <Link 
                         key={location.slug} 
                         href={`/locations/${location.slug}`}
-                        className="block hover:shadow-lg transition-shadow"
+                       
                       >
-                        <Card className="h-full hover:border-blue-500 transition-colors">
-                          <CardContent className="p-6">
-                            <div className="flex items-start justify-between">
+                        <Card>
+                          <CardContent>
+                            <div>
                               <div>
-                                <h4 className="font-semibold text-lg mb-1">
+                                <h4>
                                   {location.city}
                                 </h4>
-                                <p className="text-gray-600 text-sm">
+                                <p>
                                   {location.state}
                                 </p>
                               </div>
-                              <MapPin className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                              <MapPin />
                             </div>
                             
-                            <div className="mt-4 flex items-center text-sm text-gray-500">
-                              <Users className="w-4 h-4 mr-1" />
+                            <div>
+                              <Users />
                               <span>{location.contractors} contractors</span>
                             </div>
                           </CardContent>
@@ -170,22 +170,22 @@ export default function LocationsPage() {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-16 px-4 md:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">
+        <section>
+          <div>
+            <h2>
               Why Contractors Choose ProPaint Quote
             </h2>
             
-            <div className="grid md:grid-cols-3 gap-8">
+            <div>
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-green-600" />
+                  <CardTitle>
+                    <TrendingUp />
                     Local Market Advantage
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p>
                     Pre-configured with regional pricing data, labor rates, and material costs 
                     specific to your local market for accurate estimates every time.
                   </p>
@@ -194,13 +194,13 @@ export default function LocationsPage() {
               
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Star className="w-5 h-5 text-yellow-600" />
+                  <CardTitle>
+                    <Star />
                     Trusted by Professionals
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p>
                     Join thousands of painting contractors nationwide who have modernized 
                     their quoting process and increased their win rates by 40-60%.
                   </p>
@@ -209,13 +209,13 @@ export default function LocationsPage() {
               
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-blue-600" />
+                  <CardTitle>
+                    <MapPin />
                     Works Everywhere
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p>
                     Cloud-based platform works on any device, anywhere. Quote on-site, 
                     at the office, or from home - your data syncs automatically.
                   </p>
@@ -226,23 +226,23 @@ export default function LocationsPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 px-4 md:px-6 lg:px-8 bg-blue-600 text-white">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+        <section>
+          <div>
+            <h2>
               Join {totalContractors.toLocaleString()}+ Contractors Nationwide
             </h2>
             
-            <p className="text-xl mb-8 opacity-90">
+            <p>
               Start generating professional quotes in minutes, not hours.
             </p>
             
             <Link href="/trial-signup">
-              <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors">
+              <button>
                 Start Your Free Trial
               </button>
             </Link>
             
-            <p className="mt-4 text-sm opacity-75">
+            <p>
               14-day free trial • No credit card required • Cancel anytime
             </p>
           </div>

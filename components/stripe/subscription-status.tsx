@@ -72,10 +72,10 @@ export function SubscriptionStatus({ companyId }: SubscriptionStatusProps) {
   if (loading) {
     return (
       <Card>
-        <CardContent className="py-8">
-          <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+        <CardContent>
+          <div>
+            <div></div>
+            <div></div>
           </div>
         </CardContent>
       </Card>
@@ -85,13 +85,13 @@ export function SubscriptionStatus({ companyId }: SubscriptionStatusProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
-        return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+        return <Badge>Active</Badge>;
       case 'trialing':
-        return <Badge className="bg-blue-100 text-blue-800">Trial</Badge>;
+        return <Badge>Trial</Badge>;
       case 'past_due':
-        return <Badge className="bg-red-100 text-red-800">Past Due</Badge>;
+        return <Badge>Past Due</Badge>;
       case 'canceled':
-        return <Badge className="bg-gray-100 text-gray-800">Canceled</Badge>;
+        return <Badge>Canceled</Badge>;
       default:
         return <Badge>{status}</Badge>;
     }
@@ -108,7 +108,7 @@ export function SubscriptionStatus({ companyId }: SubscriptionStatusProps) {
           <CardTitle>No Active Subscription</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600 mb-4">
+          <p>
             Subscribe to unlock all features and start accepting payments.
           </p>
           <Button onClick={() => window.location.href = '/pricing'}>
@@ -124,17 +124,17 @@ export function SubscriptionStatus({ companyId }: SubscriptionStatusProps) {
   return (
     <Card>
       <CardHeader>
-        <div className="flex justify-between items-center">
+        <div>
           <CardTitle>Subscription Status</CardTitle>
           {getStatusBadge(subscription.status)}
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center gap-3">
-          <CreditCard className="h-5 w-5 text-gray-500" />
+      <CardContent>
+        <div>
+          <CreditCard />
           <div>
-            <p className="font-medium">{getPlanName(subscription.plan_type)}</p>
-            <p className="text-sm text-gray-600">
+            <p>{getPlanName(subscription.plan_type)}</p>
+            <p>
               {subscription.cancel_at_period_end 
                 ? `Cancels on ${nextBillingDate}`
                 : `Renews on ${nextBillingDate}`
@@ -144,18 +144,18 @@ export function SubscriptionStatus({ companyId }: SubscriptionStatusProps) {
         </div>
 
         {subscription.status === 'past_due' && (
-          <div className="flex items-center gap-2 p-3 bg-red-50 text-red-800 rounded-lg">
-            <AlertCircle className="h-5 w-5" />
-            <p className="text-sm">
+          <div>
+            <AlertCircle />
+            <p>
               Your payment is past due. Please update your payment method.
             </p>
           </div>
         )}
 
         {subscription.status === 'active' && !subscription.cancel_at_period_end && (
-          <div className="flex items-center gap-2 p-3 bg-green-50 text-green-800 rounded-lg">
-            <CheckCircle className="h-5 w-5" />
-            <p className="text-sm">
+          <div>
+            <CheckCircle />
+            <p>
               Your subscription is active and all features are enabled.
             </p>
           </div>
@@ -165,7 +165,7 @@ export function SubscriptionStatus({ companyId }: SubscriptionStatusProps) {
           onClick={openCustomerPortal}
           disabled={portalLoading}
           variant="outline"
-          className="w-full"
+         
         >
           {portalLoading ? 'Loading...' : 'Manage Subscription'}
         </Button>
