@@ -6,12 +6,13 @@ import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Bot, User, Send, Sparkles, Calculator, Clock, FileText, Mail, Download } from 'lucide-react'
+import { Bot, User, Send, Sparkles, Calculator, Clock, FileText, Mail, Download, Eye } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import { IntelligentQuoteParser } from '@/lib/services/intelligent-quote-parser'
 import { QuotePDFGenerator } from '@/lib/services/quote-pdf-generator'
 import { QuoteEmailTemplates } from '@/lib/services/quote-email-templates'
 import { MobileChatInterface } from '@/components/ui/mobile-chat-interface'
+import { ProfessionalQuoteView } from '@/components/ui/professional-quote-view'
 
 interface Message {
   id: string
@@ -44,6 +45,8 @@ export default function GetQuotePage() {
   const [isMobile, setIsMobile] = useState(false)
   const [quotaInfo, setQuotaInfo] = useState<{ used: number; limit: number } | null>(null)
   const [progressStage, setProgressStage] = useState(1)
+  const [showProfessionalQuote, setShowProfessionalQuote] = useState(false)
+  const [fullQuoteData, setFullQuoteData] = useState<any>(null)
 
   // Detect mobile device
   useEffect(() => {
@@ -114,13 +117,27 @@ export default function GetQuotePage() {
         setQuoteEstimate(aiResponse.quote)
         setShowQuoteActions(true)
         setProgressStage(5)
+        if (aiResponse.fullQuoteData) {
+          setFullQuoteData(aiResponse.fullQuoteData)
+        }
+        
+        // Add a follow-up message with the review button
+        setTimeout(() => {
+          const reviewMessage: Message = {
+            id: (Date.now() + 2).toString(),
+            role: 'assistant',
+            content: `✅ **Your quote is ready!**\n\n📄 Quote ID: ${aiResponse.fullQuoteData?.id || 'QUOTE-' + Date.now()}\n💰 Total: ${formatCurrency(aiResponse.quote.total || 0)}\n\nClick below to review your professional quote with full details, terms, and customer-ready formatting.`,
+            timestamp: new Date()
+          }
+          setMessages(prev => [...prev, reviewMessage])
+        }, 500)
       }
       
       setIsLoading(false)
     }, 1500)
   }
 
-  const processWithIntelligentParser = (userInput: string, previousMessages: Message[]): { message: string; quote?: QuoteEstimate } => {
+  const processWithIntelligentParser = (userInput: string, previousMessages: Message[]): { message: string; quote?: QuoteEstimate; fullQuoteData?: any } => {
     try {
       // Parse the input with intelligent parser
       const parsedData = IntelligentQuoteParser.parse(userInput)
@@ -134,9 +151,41 @@ export default function GetQuotePage() {
       if (hasWallInfo && (hasPaintInfo || hasLaborInfo)) {
         // We have enough info to calculate a quote
         const result = IntelligentQuoteParser.calculateQuote(parsedData)
+        
+        // Store the full quote data for later use
+        const fullQuoteData = {
+          ...parsedData,
+          ...result.breakdown,
+          id: `QUOTE-${Date.now()}`,
+          createdAt: new Date().toISOString(),
+          status: 'draft' as const,
+          projectType: parsedData.projectType || 'interior',
+          area: result.breakdown.area || 0
+        }
+        sessionStorage.setItem('latestQuote', JSON.stringify(fullQuoteData))
+        sessionStorage.setItem('currentQuoteData', JSON.stringify(fullQuoteData))
+        
+        // Save to dashboard if user is logged in
+        const authData = sessionStorage.getItem('paintQuoteAuth')
+        if (authData) {
+          try {
+            const session = JSON.parse(authData)
+            const savedQuotes = JSON.parse(localStorage.getItem(`quotes_${session.companyId}`) || '[]')
+            savedQuotes.push(fullQuoteData)
+            localStorage.setItem(`quotes_${session.companyId}`, JSON.stringify(savedQuotes))
+            
+            // Update quota
+            session.quotesUsed = (session.quotesUsed || 0) + 1
+            sessionStorage.setItem('paintQuoteAuth', JSON.stringify(session))
+          } catch (error) {
+            console.error('Failed to save quote to dashboard:', error)
+          }
+        }
+        
         return {
           message: result.summary,
-          quote: result.breakdown
+          quote: result.breakdown,
+          fullQuoteData
         }
       }
       
@@ -188,6 +237,18 @@ export default function GetQuotePage() {
       return {
         message: `Great! Based on your description of ${roomCount} bedroom${roomCount > 1 ? 's' : ''}, I've calculated an estimate for approximately ${sqft} square feet.\n\n**Quote Summary:**\n• Area: ${sqft} sq ft\n• Paint & Materials: ${formatCurrency(quote.paintCost!)}\n• Labor: ${formatCurrency(quote.laborCost!)}\n• **Total Estimate: ${formatCurrency(quote.total!)}**\n\nWould you like to adjust any details or get a more detailed breakdown?`,
         quote
+      }
+    }
+    
+    // Check if user is asking to see the quote
+    if (input_lower.includes('see it') || input_lower.includes('show me') || input_lower.includes('review')) {
+      // Check if we have a recent quote in session storage
+      const recentQuote = sessionStorage.getItem('currentQuoteData')
+      if (recentQuote) {
+        return {
+          message: "I'll show you the professional quote view. Click the button below to see your complete quote with all details.",
+          quote: JSON.parse(recentQuote)
+        }
       }
     }
     
@@ -321,6 +382,20 @@ export default function GetQuotePage() {
                                 .replace(/\n/g, '<br />')
                             }}
                           />
+                          
+                          {/* Add Review Quote button if this is the quote ready message */}
+                          {message.content.includes('Your quote is ready!') && (
+                            <div className="mt-4">
+                              <Button
+                                size="sm"
+                                className="bg-white text-primary-600 hover:bg-gray-100"
+                                onClick={() => setShowProfessionalQuote(true)}
+                              >
+                                <Eye className="w-4 h-4 mr-2" />
+                                Review Professional Quote
+                              </Button>
+                            </div>
+                          )}
                           <div className={`text-xs mt-2 ${
                             message.role === 'user' ? 'text-white/70' : 'text-gray-500'
                           }`}>
@@ -400,7 +475,16 @@ export default function GetQuotePage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid md:grid-cols-3 gap-4">
+                  <div className="grid md:grid-cols-4 gap-4">
+                    <Button 
+                      variant="kofi" 
+                      className="flex items-center gap-2"
+                      onClick={() => setShowProfessionalQuote(true)}
+                    >
+                      <Eye className="w-4 h-4" />
+                      Review Quote
+                    </Button>
+                    
                     <Button 
                       variant="outline" 
                       className="flex items-center gap-2"
@@ -443,11 +527,19 @@ export default function GetQuotePage() {
                     </Button>
                     
                     <Button 
-                      variant="kofi" 
+                      variant="default" 
                       className="flex items-center gap-2"
                       onClick={() => {
-                        setInput("Let's create another quote")
+                        setMessages([{
+                          id: '1',
+                          role: 'assistant',
+                          content: "Hi! I'm your AI painting assistant. I'll help you get an instant quote for your painting project. Let's start with some basic information:\n\n• What type of project is this? (interior, exterior, or both)\n• How many rooms or which areas need painting?\n• What's the approximate size of the space?\n\nJust describe your project in your own words!",
+                          timestamp: new Date()
+                        }])
+                        setQuoteEstimate(null)
                         setShowQuoteActions(false)
+                        setProgressStage(1)
+                        setFullQuoteData(null)
                       }}
                     >
                       <Calculator className="w-4 h-4" />
@@ -502,6 +594,50 @@ export default function GetQuotePage() {
           </div>
         </div>
       </main>
+      
+      {/* Professional Quote View Modal */}
+      {showProfessionalQuote && fullQuoteData && (
+        <ProfessionalQuoteView
+          quoteData={{
+            id: fullQuoteData.id || `QUOTE-${Date.now()}`,
+            customerName: fullQuoteData.customerName || 'Customer',
+            customerAddress: fullQuoteData.customerAddress || 'Address not provided',
+            projectType: fullQuoteData.projectType || 'interior',
+            wallArea: fullQuoteData.area || fullQuoteData.wallArea || 0,
+            linearFeet: fullQuoteData.surfaces?.walls?.linearFeet || 0,
+            ceilingHeight: fullQuoteData.surfaces?.walls?.height || 0,
+            paintRequired: fullQuoteData.paintGallons || 0,
+            paintBrand: fullQuoteData.paint?.brand || 'Sherwin Williams',
+            paintType: fullQuoteData.paint?.product || 'Premium',
+            paintCostPerGallon: fullQuoteData.paint?.pricePerGallon || 50,
+            laborRate: fullQuoteData.laborRate || 1.50,
+            paintCost: fullQuoteData.paintCost || 0,
+            laborCost: fullQuoteData.laborCost || 0,
+            totalCost: fullQuoteData.total || 0,
+            excludes: fullQuoteData.excludes || ['ceilings', 'doors', 'trim', 'primer'],
+            createdAt: fullQuoteData.createdAt || new Date().toISOString()
+          }}
+          onClose={() => setShowProfessionalQuote(false)}
+          onSend={() => {
+            // TODO: Implement email sending
+            alert('Email functionality coming soon!')
+          }}
+          onDownload={() => {
+            // TODO: Implement PDF download
+            const html = QuotePDFGenerator.generateHTML({
+              id: fullQuoteData.id || `QUOTE-${Date.now()}`,
+              ...fullQuoteData,
+              customerEmail: fullQuoteData.customerEmail || ''
+            })
+            const blob = new Blob([html], { type: 'text/html' })
+            const url = URL.createObjectURL(blob)
+            window.open(url, '_blank')
+          }}
+          onPrint={() => {
+            window.print()
+          }}
+        />
+      )}
       
       <Footer />
     </>

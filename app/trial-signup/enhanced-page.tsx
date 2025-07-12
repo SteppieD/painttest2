@@ -14,7 +14,7 @@ import {
   Shield, Users, TrendingUp, AlertCircle 
 } from 'lucide-react'
 
-export default function TrialSignupPage() {
+export default function EnhancedTrialSignupPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [companyName, setCompanyName] = useState('')

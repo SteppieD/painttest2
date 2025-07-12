@@ -12,6 +12,8 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [quotaInfo, setQuotaInfo] = useState<{ used: number; limit: number } | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [companyName, setCompanyName] = useState('')
   
   useEffect(() => {
     // Check if user is logged in and get quota info
@@ -19,6 +21,8 @@ export function Header() {
     if (authData) {
       try {
         const session = JSON.parse(authData)
+        setIsLoggedIn(true)
+        setCompanyName(session.companyName || '')
         setQuotaInfo({
           used: session.quotesUsed || 0,
           limit: session.quotesLimit || 10
@@ -51,100 +55,154 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-10">
-            {/* Services Dropdown */}
-            <div className="relative">
-              <button
-                className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50"
-                onMouseEnter={() => setActiveDropdown('services')}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <span>Services</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
-              
-              {activeDropdown === 'services' && (
-                <div 
-                  className="absolute top-full left-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border border-gray-100/50 p-3 backdrop-blur-lg"
-                  onMouseEnter={() => setActiveDropdown('services')}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  {PAINTING_SERVICES.map((service) => (
-                    <Link
-                      key={service.id}
-                      href={`/services/${service.id}`}
-                      className="block px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-blue-50 hover:text-primary-700 transition-all duration-200 group"
+            {isLoggedIn ? (
+              // Logged-in user navigation
+              <>
+                <Link href="/dashboard" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
+                  Dashboard
+                </Link>
+                
+                <Link href="/get-quote" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
+                  Create Quote
+                </Link>
+                
+                <Link href="/quotes" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
+                  My Quotes
+                </Link>
+                
+                <Link href="/settings" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
+                  Settings
+                </Link>
+              </>
+            ) : (
+              // Public navigation
+              <>
+                {/* Services Dropdown */}
+                <div className="relative">
+                  <button
+                    className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50"
+                    onMouseEnter={() => setActiveDropdown('services')}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    <span>Services</span>
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                  
+                  {activeDropdown === 'services' && (
+                    <div 
+                      className="absolute top-full left-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border border-gray-100/50 p-3 backdrop-blur-lg"
+                      onMouseEnter={() => setActiveDropdown('services')}
+                      onMouseLeave={() => setActiveDropdown(null)}
                     >
-                      <div className="font-semibold text-gray-900 group-hover:text-primary-700">{service.name}</div>
-                      <div className="text-sm text-gray-500 group-hover:text-primary-600 mt-1">{service.description}</div>
-                    </Link>
-                  ))}
+                      {PAINTING_SERVICES.map((service) => (
+                        <Link
+                          key={service.id}
+                          href={`/services/${service.id}`}
+                          className="block px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-blue-50 hover:text-primary-700 transition-all duration-200 group"
+                        >
+                          <div className="font-semibold text-gray-900 group-hover:text-primary-700">{service.name}</div>
+                          <div className="text-sm text-gray-500 group-hover:text-primary-600 mt-1">{service.description}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* Locations Dropdown */}
-            <div className="relative">
-              <button
-                className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50"
-                onMouseEnter={() => setActiveDropdown('locations')}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <span>Locations</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
-              
-              {activeDropdown === 'locations' && (
-                <div 
-                  className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100/50 p-3 max-h-96 overflow-y-auto backdrop-blur-lg"
-                  onMouseEnter={() => setActiveDropdown('locations')}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  {SERVICE_AREAS.map((area) => (
-                    <Link
-                      key={`${area.city}-${area.state}`}
-                      href={`/locations/${area.city.toLowerCase().replace(' ', '-')}-${area.state.toLowerCase()}`}
-                      className="block px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-blue-50 hover:text-primary-700 transition-all duration-200 font-medium text-gray-700"
+                {/* Locations Dropdown */}
+                <div className="relative">
+                  <button
+                    className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50"
+                    onMouseEnter={() => setActiveDropdown('locations')}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    <span>Locations</span>
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                  
+                  {activeDropdown === 'locations' && (
+                    <div 
+                      className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100/50 p-3 max-h-96 overflow-y-auto backdrop-blur-lg"
+                      onMouseEnter={() => setActiveDropdown('locations')}
+                      onMouseLeave={() => setActiveDropdown(null)}
                     >
-                      {area.city}, {area.state}
-                    </Link>
-                  ))}
+                      {SERVICE_AREAS.map((area) => (
+                        <Link
+                          key={`${area.city}-${area.state}`}
+                          href={`/locations/${area.city.toLowerCase().replace(' ', '-')}-${area.state.toLowerCase()}`}
+                          className="block px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-blue-50 hover:text-primary-700 transition-all duration-200 font-medium text-gray-700"
+                        >
+                          {area.city}, {area.state}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            <Link href="/calculator" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
-              Quote Calculator
-            </Link>
-            
-            <Link href="/pricing" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
-              Pricing
-            </Link>
-            
-            <Link href="/about" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
-              About
-            </Link>
-            
-            <Link href="/blog" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
-              Blog
-            </Link>
+                <Link href="/how-it-works" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
+                  How It Works
+                </Link>
+                
+                <Link href="/calculator" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
+                  Calculator
+                </Link>
+                
+                <Link href="/pricing" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
+                  Pricing
+                </Link>
+                
+                <Link href="/about" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
+                  About
+                </Link>
+                
+                <Link href="/blog" className="text-gray-600 hover:text-primary-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-primary-50">
+                  Blog
+                </Link>
+              </>
+            )}
           </div>
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
-            {quotaInfo && (
-              <div className={cn(
-                "text-sm font-medium px-3 py-1 rounded-full",
-                quotaInfo.limit === -1 ? "bg-green-100 text-green-700" :
-                quotaInfo.used >= quotaInfo.limit * 0.8 ? "bg-red-100 text-red-700" :
-                quotaInfo.used >= quotaInfo.limit * 0.5 ? "bg-yellow-100 text-yellow-700" :
-                "bg-gray-100 text-gray-700"
-              )}>
-                {quotaInfo.limit === -1 ? "Unlimited" : `${quotaInfo.used}/${quotaInfo.limit}`} quotes
-              </div>
+            {isLoggedIn ? (
+              <>
+                {quotaInfo && (
+                  <div className={cn(
+                    "text-sm font-medium px-3 py-1 rounded-full",
+                    quotaInfo.limit === -1 ? "bg-green-100 text-green-700" :
+                    quotaInfo.used >= quotaInfo.limit * 0.8 ? "bg-red-100 text-red-700" :
+                    quotaInfo.used >= quotaInfo.limit * 0.5 ? "bg-yellow-100 text-yellow-700" :
+                    "bg-gray-100 text-gray-700"
+                  )}>
+                    {quotaInfo.limit === -1 ? "Unlimited" : `${quotaInfo.used}/${quotaInfo.limit}`} quotes
+                  </div>
+                )}
+                <div className="text-sm text-gray-600">
+                  {companyName}
+                </div>
+                <Button asChild variant="outline" size="default">
+                  <Link href="/get-quote">New Quote</Link>
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="default"
+                  onClick={() => {
+                    sessionStorage.removeItem('paintQuoteAuth')
+                    window.location.href = '/'
+                  }}
+                >
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button asChild variant="outline" size="default">
+                  <Link href="/trial-signup">Sign In</Link>
+                </Button>
+                <Button asChild variant="kofi" size="default">
+                  <Link href="/get-quote">Try Quote Builder</Link>
+                </Button>
+              </>
             )}
-            <Button asChild variant="kofi" size="default">
-              <Link href="/get-quote">Try Quote Builder</Link>
-            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -176,11 +234,25 @@ export function Header() {
               Locations
             </Link>
             <Link 
+              href="/how-it-works" 
+              className="block py-2 text-gray-700 hover:text-primary-600"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              How It Works
+            </Link>
+            <Link 
               href="/calculator" 
               className="block py-2 text-gray-700 hover:text-primary-600"
               onClick={() => setIsMenuOpen(false)}
             >
-              Quote Calculator
+              Calculator
+            </Link>
+            <Link 
+              href="/pricing" 
+              className="block py-2 text-gray-700 hover:text-primary-600"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Pricing
             </Link>
             <Link 
               href="/about" 

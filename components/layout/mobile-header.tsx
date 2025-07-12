@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, Home, Calculator, Info, FileText, ChevronRight } from 'lucide-react'
+import { Menu, X, Home, Calculator, Info, FileText, ChevronRight, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -12,6 +12,7 @@ export function MobileHeader() {
 
   const menuItems = [
     { href: '/', icon: Home, label: 'Home' },
+    { href: '/how-it-works', icon: Zap, label: 'How It Works' },
     { href: '/get-quote', icon: Calculator, label: 'Create Quote' },
     { href: '/calculator', icon: FileText, label: 'Calculator' },
     { href: '/pricing', icon: FileText, label: 'Pricing' },
