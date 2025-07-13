@@ -360,7 +360,7 @@ export default function RevenuePage() {
                 ) : (
                   <TrendingDown />
                 )}
-                <span`}>
+                <span>
                   {Math.abs(stats.monthlyGrowth).toFixed(1)}% monthly
                 </span>
               </div>
@@ -464,8 +464,8 @@ export default function RevenuePage() {
                     {formatCurrency(data.revenue)}
                   </div>
                   <div 
-                   
-                   px`,
+                    style={{
+                      height: `${(data.revenue / maxRevenue) * 200}px`,
                       minHeight: data.revenue > 0 ? '20px' : '0'
                     }}
                   />
@@ -496,8 +496,7 @@ export default function RevenuePage() {
                   </div>
                   <div>
                     <div 
-                     
-                     %` }}
+                      style={{ width: `${(type.revenue / totalProjectRevenue) * 100}%` }}
                     >
                       <span>
                         {((type.revenue / totalProjectRevenue) * 100).toFixed(1)}%
@@ -573,7 +572,7 @@ export default function RevenuePage() {
                         {formatCurrency(quote.quote_amount)}
                       </td>
                       <td>
-                        <span`}>
+                        <span>
                           {quote.status || 'pending'}
                         </span>
                       </td>

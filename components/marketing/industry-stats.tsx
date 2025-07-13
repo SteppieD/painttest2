@@ -15,7 +15,7 @@ function StatCard({ icon, value, label, description, color }: StatCardProps) {
   return (
     <Card>
       <CardContent>
-        <div rounded-full flex items-center justify-center mx-auto mb-4`}>
+        <div>
           {icon}
         </div>
         <div>{value}</div>
@@ -83,7 +83,7 @@ export function IndustryStats({
   ]
 
   return (
-    <section`}>
+    <section>
       <div>
         <div>
           <h2>

@@ -241,11 +241,8 @@ export default function OnboardingSetupPage() {
           {messages.map((message, index) => (
             <div
               key={index}
-             `}
             >
-              <Card
-               `}
-              >
+              <Card>
                 <p>{message.content}</p>
               </Card>
             </div>

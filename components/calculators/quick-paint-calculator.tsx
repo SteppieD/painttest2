@@ -46,7 +46,7 @@ export function QuickPaintCalculator({
   }
 
   return (
-    <Card`}>
+    <Card className="w-full max-w-2xl">
       <CardHeader>
         <div>
           <Calculator />

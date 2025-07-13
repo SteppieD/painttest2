@@ -136,7 +136,6 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
         <div>
           <Label
             htmlFor="billing-toggle"
-           `}
           >
             Monthly
           </Label>
@@ -148,7 +147,6 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
           />
           <Label
             htmlFor="billing-toggle"
-           `}
           >
             Yearly
             <Badge>
@@ -187,10 +185,10 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
              
              
              
-             `}
+             
             >
               <Card
-               `}
+               
               >
                 {/* Popular Badge */}
                 {plan.badge && (
@@ -203,9 +201,9 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                 )}
 
                 {/* Card Header */}
-                <div rounded-t-lg`} : {}}>
-                  <h3 : { color: '#111827' }}>{plan.name}</h3>
-                  <p : { color: '#6b7280' }}>{plan.description}</p>
+                <div>
+                  <h3>{plan.name}</h3>
+                  <p>{plan.description}</p>
 
                   {/* Pricing */}
                   <div>
@@ -217,11 +215,11 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                        
                        
                       >
-                        <span : { color: '#111827' }}>
+                        <span>
                           ${isYearly && plan.yearlyMonthlyPrice ? Math.floor(plan.yearlyMonthlyPrice) : price}
                         </span>
                         {price > 0 && (
-                          <span : { color: '#6b7280' }}>
+                          <span>
                             /{isYearly ? 'month' : 'month'}
                           </span>
                         )}
@@ -236,11 +234,11 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                      
                      
                     >
-                      <p : { color: '#6b7280' }}>
+                      <p>
                         <span>${plan.monthlyPrice * 12}</span>
-                        <span : { color: '#111827' }}>${plan.yearlyPrice}/year</span>
+                        <span>${plan.yearlyPrice}/year</span>
                       </p>
-                      <Badge variant="outline"`}>
+                      <Badge variant="outline">
                         You save ${plan.savings}
                       </Badge>
                     </motion.div>
@@ -261,10 +259,10 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                       {plan.features.map((feature, featureIndex) => (
                         <li
                           key={featureIndex}
-                         `}
+                         
                         >
                           <Check
-                           `}
+                           
                           />
                           <span>
                             {feature.text}
@@ -309,7 +307,7 @@ export function ModernPricingTable({ companyId: propCompanyId }: ModernPricingTa
                       <Button
                         size="lg"
                         variant={plan.ctaVariant}
-                       `}
+                       
                         onClick={() => (window.location.href = '/access-code')}
                       >
                         Sign in to {plan.cta}

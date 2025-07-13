@@ -103,7 +103,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
     switch (currentStep) {
       case 1:
         return (
-          <div>
+          <div className="space-y-4">
             <div>
               <Label htmlFor="customerName">Customer Name *</Label>
               <Input
@@ -146,7 +146,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
 
       case 2:
         return (
-          <div>
+          <div className="space-y-4">
             <div>
               <Label>Project Type *</Label>
               <div>
@@ -154,7 +154,11 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
                   <button
                     key={type}
                     onClick={() => updateQuoteData('projectType', type)}
-                   `}
+                    className={`px-4 py-2 rounded-lg border-2 transition-colors ${
+                      quoteData.projectType === type
+                        ? 'border-blue-600 bg-blue-50 text-blue-700'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
                   >
                     {type}
                   </button>
@@ -176,7 +180,11 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
                           : [...quoteData.surfaces, surface];
                         updateQuoteData('surfaces', newSurfaces);
                       }}
-                     `}
+                      className={`px-4 py-2 rounded-lg border-2 transition-colors ${
+                        isSelected
+                          ? 'border-blue-600 bg-blue-50 text-blue-700'
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
                     >
                       {surface}
                     </button>
@@ -189,7 +197,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
 
       case 3:
         return (
-          <div>
+          <div className="space-y-4">
             <div>
               <Label htmlFor="totalSquareFeet">Total Square Feet to Paint *</Label>
               <Input
@@ -239,7 +247,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
 
       case 4:
         return (
-          <div>
+          <div className="space-y-4">
             <div>
               <Label>Paint Brand *</Label>
               <div>
@@ -247,7 +255,11 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
                   <button
                     key={brand}
                     onClick={() => updateQuoteData('paintBrand', brand)}
-                   `}
+                    className={`px-4 py-3 rounded-lg border-2 transition-colors ${
+                      quoteData.paintBrand === brand
+                        ? 'border-blue-600 bg-blue-50 text-blue-700'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
                   >
                     {brand}
                   </button>
@@ -266,7 +278,11 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
                   <button
                     key={quality.value}
                     onClick={() => updateQuoteData('paintQuality', quality.value)}
-                   `}
+                    className={`p-4 rounded-lg border-2 transition-colors text-center ${
+                      quoteData.paintQuality === quality.value
+                        ? 'border-blue-600 bg-blue-50 text-blue-700'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
                   >
                     <div>{quality.label}</div>
                     <div>{quality.desc}</div>
@@ -339,43 +355,45 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
   };
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto p-6">
       {/* Progress Header */}
-      <div>
-        <div>
-          <h1>Create New Quote</h1>
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold">Create New Quote</h1>
           <button
             onClick={onCancel}
-           
+            className="text-gray-600 hover:text-gray-900 font-medium"
           >
             Cancel
           </button>
         </div>
         
-        <div>
-          <div>
+        <div className="mb-6">
+          <div className="flex justify-between text-sm text-gray-600 mb-2">
             <span>Step {currentStep} of {steps.length}</span>
             <span>{Math.round(progress)}% Complete</span>
           </div>
           <Progress value={progress} />
         </div>
         
-        <div>
+        <div className="flex justify-between items-center">
           {steps.map((step) => {
             const StepIcon = step.icon;
             const isActive = currentStep === step.number;
             const isCompleted = currentStep > step.number;
             
             return (
-              <div key={step.number}>
-                <div`}>
+              <div key={step.number} className="flex flex-col items-center">
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${
+                  isActive ? 'bg-blue-600 text-white' : isCompleted ? 'bg-green-600 text-white' : 'bg-gray-300 text-gray-600'
+                }`}>
                   {isCompleted ? (
-                    <CheckCircle />
+                    <CheckCircle className="w-6 h-6" />
                   ) : (
-                    <StepIcon />
+                    <StepIcon className="w-6 h-6" />
                   )}
                 </div>
-                <span`}>
+                <span className={`text-sm mt-2 ${isActive ? 'font-medium text-gray-900' : 'text-gray-600'}`}>
                   {step.title}
                 </span>
               </div>
@@ -385,7 +403,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
       </div>
 
       {/* Step Content */}
-      <Card>
+      <Card className="mb-8">
         <CardHeader>
           <CardTitle>{steps[currentStep - 1].title}</CardTitle>
         </CardHeader>
@@ -395,7 +413,7 @@ export function QuoteWizard({ onComplete, onCancel }: QuoteWizardProps) {
       </Card>
 
       {/* Navigation */}
-      <div>
+      <div className="flex justify-between">
         <Button
           variant="outline"
           onClick={prevStep}

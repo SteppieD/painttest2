@@ -101,7 +101,7 @@ export default function PaintingQuoteTemplatesPage() {
 
           <div>
             {templates.map((template, index) => (
-              <Card key={index}`}>
+              <Card key={index}>
                 {template.popular && (
                   <div>
                     <span>

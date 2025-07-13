@@ -273,7 +273,7 @@ export default function FreeCalculatorPage() {
               return (
                 <Card key={index}>
                   <CardHeader>
-                    <div mb-4`}>
+                    <div>
                       <Icon />
                     </div>
                     <CardTitle>{calc.title}</CardTitle>

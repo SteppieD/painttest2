@@ -215,7 +215,6 @@ export default function TrialSignupPage() {
                     <button
                       type="submit"
                       disabled={isLoading || !email}
-                     `}
                     >
                       {isLoading ? '' : (
                         <>

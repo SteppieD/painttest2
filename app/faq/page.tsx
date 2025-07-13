@@ -263,8 +263,8 @@ export default function FAQPage() {
                 <div key={categoryIndex}>
                   {/* Category Header */}
                   <div>
-                    <div rounded-lg`}>
-                      <CategoryIcon`} />
+                    <div>
+                      <CategoryIcon />
                     </div>
                     <h3>{category.title}</h3>
                   </div>

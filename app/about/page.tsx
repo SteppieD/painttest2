@@ -26,6 +26,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ImprovedFooter } from '@/components/shared/improved-footer';
+import { KofiHeader } from '@/components/shared/kofi-header';
 import { generatePageMetadata } from '@/lib/metadata-utils';
 
 export const metadata = generatePageMetadata({

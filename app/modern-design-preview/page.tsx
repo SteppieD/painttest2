@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Footer } from '@/components/shared/footer';
 
 // Import the new design system
-import '@/styles/adcreative-inspired.css';
+// import '@/styles/adcreative-inspired.css'; // CSS file not found, commenting out
 
 export const metadata: Metadata = {
   title: 'Modern Design Preview | ProPaint Quote',

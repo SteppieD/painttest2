@@ -57,22 +57,24 @@ export function UnifiedHeader() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header>
-      <div>
+    <header className="bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50 border-b">
+      <div className="container mx-auto px-4 py-3">
         {/* Logo */}
-        <Link href="/">
-          <div>
-            <Palette />
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <Palette className="w-5 h-5 text-white" />
           </div>
-          <span>ProPaint Quote</span>
+          <span className="text-xl font-bold">ProPaint Quote</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav>
+        <nav className="hidden md:flex items-center gap-6">
           {/* Features */}
           <Link 
             href="/features" 
-           `}
+            className={`text-gray-600 hover:text-gray-900 font-medium ${
+              isActive('/features') ? 'text-gray-900' : ''
+            }`}
           >
             Features
           </Link>
@@ -148,14 +150,18 @@ export function UnifiedHeader() {
 
           <Link 
             href="/pricing" 
-           `}
+            className={`text-gray-600 hover:text-gray-900 font-medium ${
+              isActive('/pricing') ? 'text-gray-900' : ''
+            }`}
           >
             Pricing
           </Link>
 
           <Link 
             href="/about" 
-           `}
+            className={`text-gray-600 hover:text-gray-900 font-medium ${
+              isActive('/about') ? 'text-gray-900' : ''
+            }`}
           >
             About
           </Link>
@@ -192,7 +198,7 @@ export function UnifiedHeader() {
         {/* Mobile Menu Button */}
         <button
           onClick={toggleMobileMenu}
-         
+          className="md:hidden p-2 text-gray-600 hover:text-gray-900"
           aria-label="Toggle menu"
         >
           {isMobileMenuOpen ? (
@@ -204,8 +210,8 @@ export function UnifiedHeader() {
       </div>
 
       {/* Mobile Navigation Menu */}
-      <div`}>
-        <nav>
+      <div className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
+        <nav className="pt-4 pb-2 space-y-2">
           <Link 
             href="/features" 
            
@@ -217,10 +223,12 @@ export function UnifiedHeader() {
           <div>
             <button
               onClick={() => setActiveDropdown(activeDropdown === 'mobile-solutions' ? null : 'mobile-solutions')}
-             
+              className="flex items-center justify-between w-full px-3 py-2 text-gray-600 hover:text-gray-900 font-medium"
             >
               Solutions
-              <ChevronDown`} />
+              <ChevronDown className={`w-4 h-4 transition-transform ${
+                activeDropdown === 'mobile-solutions' ? 'rotate-180' : ''
+              }`} />
             </button>
             {activeDropdown === 'mobile-solutions' && (
               <div>
@@ -237,10 +245,12 @@ export function UnifiedHeader() {
           <div>
             <button
               onClick={() => setActiveDropdown(activeDropdown === 'mobile-resources' ? null : 'mobile-resources')}
-             
+              className="flex items-center justify-between w-full px-3 py-2 text-gray-600 hover:text-gray-900 font-medium"
             >
               Resources
-              <ChevronDown`} />
+              <ChevronDown className={`w-4 h-4 transition-transform ${
+                activeDropdown === 'mobile-resources' ? 'rotate-180' : ''
+              }`} />
             </button>
             {activeDropdown === 'mobile-resources' && (
               <div>

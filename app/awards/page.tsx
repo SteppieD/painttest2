@@ -228,8 +228,8 @@ export default function AwardsPage() {
               return (
                 <Card key={index}>
                   <CardHeader>
-                    <div px-3 py-1 rounded-full text-sm font-bold mb-4`}>
-                      <Icon`} />
+                    <div className={`${award.bgColor} ${award.color} px-3 py-1 rounded-full text-sm font-bold mb-4 inline-flex items-center gap-2`}>
+                      <Icon className="w-4 h-4" />
                       <span>{award.badge}</span>
                     </div>
                     <div>{award.year}</div>

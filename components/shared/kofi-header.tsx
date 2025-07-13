@@ -250,8 +250,7 @@ export function KofiHeader() {
           </div>
 
           <Link 
-            href="/pricing" 
-           `}
+            href="/pricing"
           >
             Pricing
           </Link>
@@ -361,7 +360,7 @@ export function KofiHeader() {
                  
                 >
                   Product
-                  <ChevronDown`} />
+                  <ChevronDown />
                 </button>
                 
                 {activeDropdown === 'mobile-product' && (
@@ -380,7 +379,7 @@ export function KofiHeader() {
                  
                 >
                   Solutions
-                  <ChevronDown`} />
+                  <ChevronDown />
                 </button>
                 
                 {activeDropdown === 'mobile-solutions' && (
@@ -399,7 +398,7 @@ export function KofiHeader() {
                  
                 >
                   Resources
-                  <ChevronDown`} />
+                  <ChevronDown />
                 </button>
                 
                 {activeDropdown === 'mobile-resources' && (
@@ -423,7 +422,7 @@ export function KofiHeader() {
                  
                 >
                   Company
-                  <ChevronDown`} />
+                  <ChevronDown />
                 </button>
                 
                 {activeDropdown === 'mobile-company' && (

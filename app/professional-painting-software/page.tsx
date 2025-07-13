@@ -270,7 +270,7 @@ export default function ProfessionalPaintingSoftwarePage() {
           
           <div>
             {pricingPlans.map((plan, index) => (
-              <Card key={index}`}>
+              <Card key={index}>
                 {plan.popular && (
                   <div>
                     <span>

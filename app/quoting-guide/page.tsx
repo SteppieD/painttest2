@@ -244,7 +244,7 @@ export default function QuotingGuidePage() {
           
           <div>
             {commonMistakes.map((item, index) => (
-              <Card key={index}`}>
+              <Card key={index}>
                 <CardContent>
                   <div>
                     <AlertCircle />
@@ -259,7 +259,7 @@ export default function QuotingGuidePage() {
                             ✓ Solution: {item.solution}
                           </p>
                         </div>
-                        <Badge variant="outline"`}>
+                        <Badge variant="outline">
                           {item.severity.toUpperCase()}
                         </Badge>
                       </div>

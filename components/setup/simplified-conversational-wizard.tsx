@@ -417,21 +417,21 @@ export function SimplifiedConversationalWizard({ accessCode, onComplete, onSkip,
   const progress = ((currentActiveStep + 1) / activeFlow.length) * 100;
 
   return (
-    <div>
-      <div>
-        <div>
-          <Building />
-          <h1>
+    <div className="max-w-4xl mx-auto p-6">
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-4">
+          <Building className="w-8 h-8 text-blue-600" />
+          <h1 className="text-3xl font-bold">
             {isUpdate ? 'Update Products & Pricing' : 'Quick Company Setup'}
           </h1>
         </div>
-        <div>
+        <div className="w-full bg-gray-200 rounded-full h-2">
           <div 
-            
-           %` }}
+            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${progress}%` }}
           />
         </div>
-        <p>
+        <p className="text-gray-600 text-center">
           Step {currentActiveStep + 1} of {activeFlow.length} (simplified setup)
         </p>
       </div>
@@ -442,10 +442,13 @@ export function SimplifiedConversationalWizard({ accessCode, onComplete, onSkip,
             {messages.map((message) => (
               <div
                 key={message.id}
-               `}
+                className={message.role === 'user' ? 'mb-4 text-right' : 'mb-4 text-left'}
               >
                 <div
-                 `}
+                  className={message.role === 'user' 
+                    ? 'inline-block p-3 rounded-lg max-w-[80%] bg-blue-500 text-white'
+                    : 'inline-block p-3 rounded-lg max-w-[80%] bg-gray-100 text-gray-900'
+                  }
                 >
                   {message.content}
                 </div>

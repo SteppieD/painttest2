@@ -146,7 +146,7 @@ export default function ContactPage() {
               const Icon = stat.icon;
               return (
                 <div key={index}>
-                  <Icon mx-auto mb-2`} />
+                  <Icon className={`${stat.color} mx-auto mb-2`} />
                   <div>{stat.number}</div>
                   <div>{stat.label}</div>
                 </div>
@@ -191,12 +191,12 @@ export default function ContactPage() {
               return (
                 <Card key={index}>
                   <CardContent>
-                    <div rounded-full flex items-center justify-center mx-auto mb-4`}>
-                      <Icon`} />
+                    <div className={`${method.bgColor} w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4`}>
+                      <Icon className={`${method.color} w-6 h-6`} />
                     </div>
                     <h3>{method.title}</h3>
                     <p>{method.description}</p>
-                    <p mb-2`}>{method.contact}</p>
+                    <p className={`${method.color} font-semibold mb-2`}>{method.contact}</p>
                     <p>{method.details}</p>
                     <Button variant="outline" size="sm">
                       {method.buttonText}

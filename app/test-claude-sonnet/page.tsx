@@ -111,13 +111,10 @@ export default function TestClaudeSonnet() {
                 {messages.map((message, index) => (
                   <div
                     key={index}
-                   `}
                   >
-                    <div
-                     `}
-                    >
+                    <div>
                       <div>{message.content}</div>
-                      <div`}>
+                      <div>
                         {new Date(message.timestamp).toLocaleTimeString()}
                       </div>
                     </div>

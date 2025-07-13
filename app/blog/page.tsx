@@ -213,7 +213,7 @@ export default function BlogPage() {
           
           <div>
             {featuredPosts.map((post, index) => (
-              <Card key={post.id}`}>
+              <Card key={post.id} className={`${index === 0 ? 'lg:col-span-2' : ''}`}>
                 <div>
                   {/* Category Badge */}
                   <div>
@@ -223,8 +223,8 @@ export default function BlogPage() {
                   </div>
                   
                   {/* Featured Image Placeholder */}
-                  <div flex items-center justify-center`}>
-                    <BookOpen />
+                  <div className="flex items-center justify-center">
+                    <BookOpen className="w-16 h-16 text-muted-foreground" />
                   </div>
                 </div>
                 
@@ -240,7 +240,7 @@ export default function BlogPage() {
                     <span>{formatDate(post.date)}</span>
                   </div>
                   
-                  <CardTitle hover:text-blue-600 transition-colors`}>
+                  <CardTitle className="hover:text-blue-600 transition-colors">
                     <Link href={`/blog/${post.slug}`}>
                       {post.title}
                     </Link>
@@ -365,7 +365,7 @@ export default function BlogPage() {
                        
                       >
                         <span>{category.name}</span>
-                        <span`}>
+                        <span className="text-sm text-muted-foreground">
                           {category.count}
                         </span>
                       </Link>

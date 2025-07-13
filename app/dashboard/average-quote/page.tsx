@@ -449,7 +449,7 @@ export default function AverageQuotePage() {
                 ) : (
                   <TrendingDown />
                 )}
-                <span`}>
+                <span>
                   {Math.abs(stats.monthlyTrend).toFixed(1)}% monthly
                 </span>
               </div>
@@ -553,8 +553,8 @@ export default function AverageQuotePage() {
                     {formatCurrency(data.average)}
                   </div>
                   <div 
-                   
-                   px`,
+                    style={{
+                      height: `${(data.average / maxAverage) * 200}px`,
                       minHeight: data.average > 0 ? '20px' : '0'
                     }}
                   />
@@ -588,8 +588,7 @@ export default function AverageQuotePage() {
                   </div>
                   <div>
                     <div 
-                     
-                     %` }}
+                      style={{ width: `${range.percentage}%` }}
                     >
                       {range.percentage > 5 && (
                         <span>
@@ -642,7 +641,7 @@ export default function AverageQuotePage() {
                       </td>
                       <td>{type.count}</td>
                       <td>
-                        <span`}>
+                        <span>
                           {type.average > stats.overallAverage ? '+' : ''}
                           {((type.average / stats.overallAverage - 1) * 100).toFixed(1)}%
                         </span>

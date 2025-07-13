@@ -188,7 +188,7 @@ export default function QuotePage({ params }: { params: { id: string } }) {
                   Created: {new Date(quote.created_at).toLocaleDateString()}
                 </p>
                 <div>
-                  <span`}>
+                  <span>
                     {quote.status || 'pending'}
                   </span>
                 </div>

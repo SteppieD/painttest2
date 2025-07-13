@@ -248,7 +248,7 @@ export default function QuotesPage() {
                 <div>
                   {/* Status Badge */}
                   <div>
-                    <span`}>
+                    <span>
                       {getStatusIcon(quote.status)}
                       <span>{quote.status}</span>
                     </span>

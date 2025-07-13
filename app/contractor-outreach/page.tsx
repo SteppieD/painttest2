@@ -159,8 +159,8 @@ Anyone interested? Drop a comment or DM me!`
             </div>
             <div>
               <div 
-               
-               %` }}
+                className="bg-blue-600 h-full rounded-full transition-all duration-300"
+                style={{ width: `${completionRate}%` }}
               />
             </div>
           </div>
@@ -208,10 +208,10 @@ Anyone interested? Drop a comment or DM me!`
                       <Circle size={20} />
                     )}
                     <div>
-                      <p`}>
+                      <p className={completedTasks.includes(task.id) ? 'text-gray-500 line-through' : 'text-gray-900'}>
                         {task.task}
                       </p>
-                      <span`}>
+                      <span className={`text-xs ${task.priority === 'high' ? 'text-red-600' : task.priority === 'medium' ? 'text-yellow-600' : 'text-gray-600'}`}>
                         {task.priority} priority
                       </span>
                     </div>

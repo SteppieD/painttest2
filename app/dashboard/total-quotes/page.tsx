@@ -310,7 +310,7 @@ export default function TotalQuotesPage() {
                 ) : (
                   <TrendingDown />
                 )}
-                <span`}>
+                <span>
                   {Math.abs(stats.monthlyGrowth).toFixed(1)}% vs last month
                 </span>
               </div>
@@ -400,8 +400,8 @@ export default function TotalQuotesPage() {
                 <div key={index}>
                   <div>{data.count}</div>
                   <div 
-                   
-                   px`,
+                    style={{
+                      height: `${(data.count / maxCount) * 200}px`,
                       minHeight: data.count > 0 ? '20px' : '0'
                     }}
                   />
@@ -473,7 +473,7 @@ export default function TotalQuotesPage() {
                       <td>{quote.customer_name}</td>
                       <td>{formatCurrency(quote.quote_amount)}</td>
                       <td>
-                        <span`}>
+                        <span>
                           {quote.status || 'pending'}
                         </span>
                       </td>

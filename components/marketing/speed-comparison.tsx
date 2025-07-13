@@ -16,13 +16,13 @@ interface ProcessStepProps {
 function ProcessStep({ step, title, time, description, isManual = false }: ProcessStepProps) {
   return (
     <div>
-      <div`}>
+      <div>
         {step}
       </div>
       <div>
         <div>
           <h4>{title}</h4>
-          <span`}>
+          <span>
             {time}
           </span>
         </div>
@@ -98,7 +98,7 @@ export function SpeedComparison({ className }: SpeedComparisonProps) {
   ]
 
   return (
-    <section`}>
+    <section>
       <div>
         <div>
           <h2>

@@ -49,7 +49,6 @@ export default function LiquidGlassDemo() {
               <button
                 key={demo.id}
                 onClick={() => setActiveDemo(demo.id)}
-               `}
               >
                 {demo.label}
               </button>

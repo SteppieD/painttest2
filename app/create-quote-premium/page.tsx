@@ -268,10 +268,10 @@ export default function PremiumQuoteCreationPage() {
       {/* Chat Messages */}
       <div>
         {messages.map((message) => (
-          <div key={message.id}`}>
-            <div`}>
+          <div key={message.id}>
+            <div>
               {/* Avatar */}
-              <div`}>
+              <div>
                 {message.type === 'user' ? (
                   <User />
                 ) : message.type === 'system' ? (
@@ -282,8 +282,8 @@ export default function PremiumQuoteCreationPage() {
               </div>
 
               {/* Message Content */}
-              <div`}>
-                <div`}>
+              <div>
+                <div>
                   <div>{message.content}</div>
                 </div>
 

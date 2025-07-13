@@ -39,8 +39,8 @@ export function QuoteTrainingModal({ isOpen, onClose, onUseExample }: QuoteTrain
   if (!isOpen) return null
 
   return (
-    <div>
-      <Card>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <Card className="max-w-4xl max-h-[85vh] overflow-hidden">
         <CardHeader>
           <div>
             <div>
@@ -117,7 +117,9 @@ export function QuoteTrainingModal({ isOpen, onClose, onUseExample }: QuoteTrain
               {EXAMPLE_QUOTES.map((quote, index) => (
                 <div 
                   key={index}
-                 `}
+                  className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                    currentExample === index ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                  }`}
                   onClick={() => setCurrentExample(index)}
                 >
                   <div>

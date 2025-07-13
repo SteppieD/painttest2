@@ -43,9 +43,9 @@ export function DashboardHeader() {
   };
 
   return (
-    <header>
-      <div>
-        <div>
+    <header className="bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50 border-b">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
           <Link href="/dashboard">
             <img 
               src="/paint-logo-transparent.png" 
@@ -58,10 +58,12 @@ export function DashboardHeader() {
           </Link>
           
           {/* Desktop Navigation */}
-          <nav>
+          <nav className="hidden md:flex items-center gap-6">
             <Link 
               href="/dashboard" 
-             `}
+              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActive('/dashboard') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900'
+              }`}
             >
               <Home />
               Dashboard
@@ -69,14 +71,14 @@ export function DashboardHeader() {
             
             {/* Quotes Dropdown */}
             <div 
-             
+              className="relative"
               onMouseEnter={() => setIsQuotesOpen(true)}
               onMouseLeave={() => setIsQuotesOpen(false)}
             >
-              <button`}>
+              <button className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
                 <FileText />
                 Quotes
-                <ChevronDown />
+                <ChevronDown className="w-4 h-4" />
               </button>
               
               {isQuotesOpen && (
@@ -101,7 +103,9 @@ export function DashboardHeader() {
             
             <Link 
               href="/dashboard/customers" 
-             `}
+              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActive('/dashboard/customers') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900'
+              }`}
             >
               <Users />
               Customers
@@ -109,7 +113,9 @@ export function DashboardHeader() {
             
             <Link 
               href="/dashboard/analytics" 
-             `}
+              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActive('/dashboard/analytics') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900'
+              }`}
             >
               <BarChart3 />
               Analytics
@@ -117,7 +123,9 @@ export function DashboardHeader() {
             
             <Link 
               href="/settings" 
-             `}
+              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActive('/settings') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900'
+              }`}
             >
               <Settings />
               Settings
@@ -156,7 +164,9 @@ export function DashboardHeader() {
             <nav>
               <Link 
                 href="/dashboard" 
-               `}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive('/dashboard') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900'
+                }`}
                 onClick={closeMobileMenu}
               >
                 <Home />
@@ -167,13 +177,13 @@ export function DashboardHeader() {
               <div>
                 <button
                   onClick={() => setIsQuotesOpen(!isQuotesOpen)}
-                 `}
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   <span>
                     <FileText />
                     Quotes
                   </span>
-                  <ChevronDown`} />
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isQuotesOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
                 {isQuotesOpen && (
@@ -198,7 +208,9 @@ export function DashboardHeader() {
               
               <Link 
                 href="/dashboard/customers" 
-               `}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive('/dashboard/customers') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900'
+                }`}
                 onClick={closeMobileMenu}
               >
                 <Users />
@@ -207,7 +219,9 @@ export function DashboardHeader() {
               
               <Link 
                 href="/dashboard/analytics" 
-               `}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive('/dashboard/analytics') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900'
+                }`}
                 onClick={closeMobileMenu}
               >
                 <BarChart3 />
@@ -216,7 +230,9 @@ export function DashboardHeader() {
               
               <Link 
                 href="/settings" 
-               `}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive('/settings') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900'
+                }`}
                 onClick={closeMobileMenu}
               >
                 <Settings />

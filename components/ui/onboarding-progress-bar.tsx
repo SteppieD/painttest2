@@ -40,8 +40,8 @@ export function OnboardingProgressBar({
         </div>
         <div>
           <div
-           
-           %` }}
+            className="h-1 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full transition-all duration-500"
+            style={{ width: `${progressPercentage}%` }}
           />
         </div>
       </div>
@@ -67,8 +67,8 @@ export function OnboardingProgressBar({
           <div>
             <div>
               <div
-               
-               %` }}
+                className="h-full bg-gradient-to-r from-blue-600 to-blue-700 rounded-full transition-all duration-500"
+                style={{ width: `${progressPercentage}%` }}
               />
             </div>
           </div>
@@ -79,7 +79,9 @@ export function OnboardingProgressBar({
           {steps.map((step, index) => (
             <div
               key={step.id}
-             
+              className={`flex items-start gap-4 p-4 rounded-lg transition-all ${
+                step.completed ? 'opacity-60' : step.active ? 'bg-blue-50 border-blue-200 border' : ''
+              }`}
             >
               <div>
                 {step.completed ? (
@@ -129,8 +131,8 @@ export function OnboardingProgressBar({
         {/* Progress Line */}
         <div>
           <div
-           
-           %` }}
+            className="h-full bg-gradient-to-r from-blue-600 to-blue-700 rounded-full transition-all duration-500"
+            style={{ width: `${progressPercentage}%` }}
           />
         </div>
 
@@ -139,11 +141,15 @@ export function OnboardingProgressBar({
           {steps.map((step, index) => (
             <div
               key={step.id}
-             
-             %` }}
+              className="relative z-10"
+              style={{ left: `${(index / (steps.length - 1)) * 100}%` }}
             >
               <div
-               
+                className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-medium text-sm transition-all ${
+                  step.completed 
+                    ? 'bg-blue-600 border-blue-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-600'
+                }`}
               >
                 {step.completed ? (
                   <CheckCircle2 />

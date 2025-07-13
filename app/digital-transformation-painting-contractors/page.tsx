@@ -392,7 +392,7 @@ export default function DigitalTransformationPaintingContractorsPage() {
                   <div>
                     <div>
                       <h3>{stack.category}</h3>
-                      <span`}>
+                      <span>
                         {stack.priority} Priority
                       </span>
                     </div>

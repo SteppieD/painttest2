@@ -152,29 +152,32 @@ export function FloatingActionButton({
 
   return (
     <div 
-     
+      className={`fab-container fixed ${getPositionClasses()} z-50 ${className || ''}`}
     >
       {/* Action Menu */}
       {isOpen && (
-        <div>
+        <div className="absolute bottom-16 right-0 mb-4 space-y-2">
           {fabActions.map((action, index) => (
             <div
               key={action.id}
-             ` 
+              className={`mb-3 transform transition-all duration-300 ${
+                isOpen
+                  ? "translate-y-0 opacity-100"
                   : "translate-y-4 opacity-0"
-              )}
-             ms` : '0ms' 
+              }`}
+              style={{
+                transitionDelay: isOpen ? `${index * 50}ms` : '0ms'
               }}
             >
               <Button
                 onClick={action.action}
-               
+                className={`w-full py-3 px-4 rounded-lg shadow-lg flex items-center gap-3 text-left transition-all ${action.bgColor} hover:scale-105`}
               >
-                <div>
-                  <div>
-                    <action.icon />
+                <div className="flex items-center gap-3">
+                  <div className="flex-shrink-0">
+                    <action.icon className="w-5 h-5" />
                   </div>
-                  <div>
+                  <div className="text-left">
                     <span>{action.label}</span>
                     {action.isPopular && (
                       <span>
@@ -192,7 +195,7 @@ export function FloatingActionButton({
       {/* Main FAB Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-       
+        className={`w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-gray-800 hover:bg-gray-900' : 'bg-blue-600 hover:bg-blue-700'}`}
         aria-label={isOpen ? "Close menu" : "Create new quote"}
       >
         {isOpen ? (
@@ -205,7 +208,7 @@ export function FloatingActionButton({
       {/* Backdrop for mobile */}
       {isOpen && (
         <div 
-         
+          className="fixed inset-0 bg-black/20 md:hidden -z-10"
           onClick={() => setIsOpen(false)}
         />
       )}
@@ -230,7 +233,7 @@ export function MiniFAB({
   return (
     <Button
       onClick={onClick}
-     
+      className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-105 ${color || 'bg-gray-600'} hover:brightness-110`}
       aria-label={label}
     >
       <Icon />
@@ -268,17 +271,20 @@ export function SpeedDialFAB({
   };
 
   return (
-    <div>
+    <div className={`fab-container fixed ${getPositionClasses()} z-50 ${className || ''}`}>
       {/* Speed dial actions */}
-      <div>
+      <div className="absolute bottom-16 mb-2 space-y-2">
         {actions.map((action, index) => (
           <div
             key={index}
-           ` 
-                : "translate-y-8 opacity-0 scale-50"
-            )}
-           ms` : '0ms' 
-            }}
+          className={`transform transition-all duration-300 ${
+            isOpen
+              ? "translate-y-0 opacity-100 scale-100"
+              : "translate-y-8 opacity-0 scale-50"
+          }`}
+          style={{
+            transitionDelay: isOpen ? `${index * 50}ms` : '0ms'
+          }}
           >
             <MiniFAB
               icon={action.icon}
@@ -296,7 +302,7 @@ export function SpeedDialFAB({
       {/* Main button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-       
+        className="w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 shadow-xl flex items-center justify-center transition-all duration-300"
       >
         {isOpen ? (
           <X />

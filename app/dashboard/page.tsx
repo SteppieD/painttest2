@@ -641,7 +641,7 @@ export default function DashboardPage() {
                       <div>
                         <div>
                           <h3>{quote.customer_name}</h3>
-                          <span`}>
+                          <span>
                             {quote.status || 'pending'}
                           </span>
                         </div>

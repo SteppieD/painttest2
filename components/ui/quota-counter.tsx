@@ -84,9 +84,9 @@ export function QuotaCounter({
 
   if (isLoading || !quotaData) {
     return (
-      <div>
-        <div />
-        <div />
+      <div className="flex items-center gap-2 h-8">
+        <div className="w-4 h-4 bg-gray-200 rounded animate-pulse" />
+        <div className="w-20 h-4 bg-gray-200 rounded animate-pulse" />
       </div>
     )
   }
@@ -98,17 +98,17 @@ export function QuotaCounter({
   // Header variant - compact for headers
   if (variant === 'header') {
     return (
-      <div>
-        <div>
-          <FileText />
-          <span>
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 text-gray-700">
+          <FileText className="w-4 h-4" />
+          <span className="font-medium">
             {quotaData.quotes_used}/{quotaData.quote_limit}
           </span>
         </div>
         {quotaData.is_trial && (
           <Badge 
             variant={isOverLimit ? "destructive" : isNearLimit ? "secondary" : "outline"}
-           
+            className="text-xs"
           >
             {isOverLimit ? "Limit Reached" : `${quotaData.quotes_remaining} left`}
           </Badge>
@@ -117,7 +117,7 @@ export function QuotaCounter({
           <Button 
             size="sm" 
             variant={isOverLimit ? "default" : "outline"}
-           
+            className="ml-2"
             onClick={() => {
               // Use router.push for better navigation experience
               window.location.href = '/pricing';
@@ -135,35 +135,35 @@ export function QuotaCounter({
     return (
       <Badge 
         variant={isOverLimit ? "destructive" : isNearLimit ? "secondary" : "outline"}
-       
+        className="flex items-center gap-1"
       >
-        <FileText />
+        <FileText className="w-3 h-3" />
         {quotaData.quotes_used}/{quotaData.quote_limit}
-        {isOverLimit && <AlertTriangle />}
+        {isOverLimit && <AlertTriangle className="w-3 h-3 ml-1" />}
       </Badge>
     )
   }
 
   // Full variant - detailed display
   return (
-    <div, className)}>
-      <div>
-        <div)}>
-          <FileText)} />
+    <div className={`p-6 ${className || ''}`}>
+      <div className="flex items-start gap-4">
+        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isOverLimit ? 'bg-red-100' : isNearLimit ? 'bg-yellow-100' : 'bg-blue-100'}`}>
+          <FileText className={`w-6 h-6 ${isOverLimit ? 'text-red-600' : isNearLimit ? 'text-yellow-600' : 'text-blue-600'}`} />
         </div>
         <div>
-          <div>
-            <span>
+          <div className="flex items-center gap-3">
+            <span className="text-lg font-semibold">
               {quotaData.quotes_used} of {quotaData.quote_limit} quotes used
             </span>
             {quotaData.is_trial && (
-              <Badge variant="outline">
-                <Crown />
+              <Badge variant="outline" className="flex items-center gap-1">
+                <Crown className="w-3 h-3" />
                 Trial
               </Badge>
             )}
           </div>
-          <p>
+          <p className="text-gray-600 mt-1">
             {isOverLimit 
               ? "Quote limit reached. Upgrade to create more quotes."
               : isNearLimit 
@@ -176,7 +176,7 @@ export function QuotaCounter({
       {showUpgrade && (isOverLimit || isNearLimit) && (
         <Button 
           variant={isOverLimit ? "default" : "outline"}
-         
+          className="ml-auto"
           onClick={() => {
             // Navigate to pricing page for upgrade
             window.location.href = '/pricing';

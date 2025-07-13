@@ -124,7 +124,7 @@ export default function DemoPage() {
               const Icon = stat.icon;
               return (
                 <div key={index}>
-                  <Icon mx-auto mb-2`} />
+                  <Icon />
                   <div>{stat.number}</div>
                   <div>{stat.label}</div>
                 </div>

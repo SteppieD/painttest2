@@ -320,7 +320,7 @@ export default function MobileAppPage() {
                 <div key={index}>
                   <div>
                     <div>
-                      <Icon`} />
+                      <Icon />
                     </div>
                     <div>
                       {step.step}

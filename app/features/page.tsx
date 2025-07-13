@@ -266,7 +266,7 @@ export default function FeaturesPage() {
               const isEven = index % 2 === 0;
               
               return (
-                <div key={index}`}>
+                <div key={index}>
                   <div>
                     <div>
                       <Icon />
@@ -300,7 +300,7 @@ export default function FeaturesPage() {
                     </div>
                   </div>
                   
-                  <div kofi-card bg-gradient-to-br from-orange-50 to-teal-50`}>
+                  <div>
                     <div>
                       <Icon />
                       <div>

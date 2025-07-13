@@ -492,8 +492,8 @@ export default function ThisMonthPage() {
                     </div>
                   )}
                   <div 
-                   
-                   px`,
+                    style={{
+                      height: `${(data.revenue / maxDailyRevenue) * 150}px`,
                       minHeight: data.revenue > 0 ? '20px' : '0'
                     }}
                   />
@@ -632,7 +632,7 @@ export default function ThisMonthPage() {
                       <td>{quote.customer_name}</td>
                       <td>{formatCurrency(quote.quote_amount)}</td>
                       <td>
-                        <span`}>
+                        <span>
                           {quote.status || 'pending'}
                         </span>
                       </td>

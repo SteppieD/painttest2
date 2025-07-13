@@ -160,7 +160,7 @@ export default function SEOPageTemplate({
 
       {/* Content Sections */}
       {content.sections.map((section, index) => (
-        <section key={index}`}>
+        <section key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
           <div>
             <div>
               <h2>{section.title}</h2>

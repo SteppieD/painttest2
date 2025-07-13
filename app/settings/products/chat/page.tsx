@@ -152,14 +152,10 @@ export default function ProductChatPage() {
           {messages.map((message, index) => (
             <div
               key={index}
-             `}
-             s` }}
             >
-              <div
-               `}
-              >
-                <div`}>
-                  <div`}>
+              <div>
+                <div>
+                  <div>
                     {message.role === "user" ? (
                       <span>U</span>
                     ) : (
@@ -167,7 +163,7 @@ export default function ProductChatPage() {
                     )}
                   </div>
                   <div>
-                    <p`}>
+                    <p>
                       {message.content}
                     </p>
                     <div>

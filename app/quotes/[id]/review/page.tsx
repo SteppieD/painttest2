@@ -344,7 +344,7 @@ export default function QuoteReviewPage({ params }: { params: { id: string } }) 
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div`}>
+              <div>
                 <div>
                   <div>
                     {getMarginHealthIcon()}

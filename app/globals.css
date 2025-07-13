@@ -7,29 +7,32 @@
    ================================================ */
 
 /* Core Design Systems - Keep these */
+@import '../styles/base-styles.css';
+/* Commenting out missing CSS files
 @import '../styles/design-system.css';
 @import '../styles/liquid-glass.css';
 @import '../styles/adcreative-design-system.css';
+*/
 
 /* Professional Theme */
-@import '../styles/professional-contractor-theme.css';
+/* @import '../styles/professional-contractor-theme.css'; */
 
 /* Navigation */
-@import '../styles/navigation-balance.css';
-@import '../styles/navigation-saas-best-practices.css';
+/* @import '../styles/navigation-balance.css'; */
+/* @import '../styles/navigation-saas-best-practices.css'; */
 
 /* ================================================
    BRAND COLOR SYSTEM
    New brand colors from logo
    ================================================ */
-@import '../styles/brand-color-system.css';
+/* @import '../styles/brand-color-system.css'; */
 
 /* ================================================
    COMPREHENSIVE CONTRAST FIX
    This replaces ALL previous contrast fixes
    ================================================ */
-@import '../styles/comprehensive-contrast-fix.css';
-@import '../styles/contrast-fixes-july.css';
+/* @import '../styles/comprehensive-contrast-fix.css'; */
+/* @import '../styles/contrast-fixes-july.css'; */
 
 /* ================================================
    DARK MODE & CONTRAST FIXES

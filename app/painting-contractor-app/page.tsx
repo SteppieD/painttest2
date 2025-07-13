@@ -450,7 +450,7 @@ export default function PaintingContractorAppPage() {
           
           <div>
             {pricingPlans.map((plan, index) => (
-              <Card key={index}`}>
+              <Card key={index}>
                 {plan.popular && (
                   <div>
                     <Badge>Most Popular</Badge>
@@ -472,7 +472,7 @@ export default function PaintingContractorAppPage() {
                       </li>
                     ))}
                   </ul>
-                  <Button`} asChild>
+                  <Button asChild>
                     <Link href="/trial-signup">
                       {plan.cta}
                     </Link>

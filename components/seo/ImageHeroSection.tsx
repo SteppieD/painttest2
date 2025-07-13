@@ -21,7 +21,7 @@ export function ImageHeroSection({
   backgroundClass = "bg-gradient-to-br from-blue-50 to-indigo-100"
 }: ImageHeroSectionProps) {
   return (
-    <section overflow-hidden`}>
+    <section>
       {/* Background Image with Overlay */}
       <div>
         <Image

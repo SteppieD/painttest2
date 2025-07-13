@@ -206,11 +206,8 @@ export default function SetupChatPage() {
             {messages.map((message) => (
               <div
                 key={message.id}
-               `}
               >
-                <div
-                 `}
-                >
+                <div>
                   <p>{message.content}</p>
                   
                   {/* Suggestions */}
